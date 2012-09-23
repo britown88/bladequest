@@ -120,11 +120,11 @@ public class Battle {
 				c.clearTargets();
 				c.setIdle(false);			
 				c.setIndex(i);
+				c.genWeaponSwing();
 			}
 			i++;
 			
 		}
-		
 		
 		buildPaints();
 		initUI();
@@ -542,7 +542,7 @@ public class Battle {
 											physicalDamage(c, e);
 											Point cPos = new Point(c.position);
 											cPos.offset(c.battleSpr.getWidth()/2, c.battleSpr.getHeight()/2);
-											Global.playAnimation("movetest", cPos, e.position);
+											//Global.playAnimation("movetest", cPos, e.position);
 											c.setIdle(true);
 											recedeChar();
 											changeState(battleStates.ACTWAIT);											

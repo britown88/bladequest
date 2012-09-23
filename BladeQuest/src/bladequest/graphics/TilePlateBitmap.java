@@ -9,7 +9,7 @@ public class TilePlateBitmap
 	public Bitmap bmp;
 	public TilePlateBitmap()
 	{
-		bmp = Bitmap.createBitmap(320, 320, Config.ARGB_4444);
+		bmp = Bitmap.createBitmap(320, 320, Config.ARGB_8888);
 		used = false;
 	}
 	

@@ -5,6 +5,7 @@ import java.util.List;
 import java.io.InputStream;
 
 import android.util.Log;
+import android.graphics.Color;
 import android.graphics.Point;
 import bladequest.statuseffects.*;
 import bladequest.system.BqActivity;
@@ -192,6 +193,32 @@ public class GameDataLoader
 		{
 			for(int i = 0; i < Stats.NUM_STATS.ordinal(); ++i)
 				itm.addStatMod(i, Integer.parseInt(dl.values.get(i)));
+		}
+		else if(dl.item.equals("swing"))
+		{
+			itm.initSwingData(dl.values.get(0));
+		}
+		else if(dl.item.equals("swingbase"))
+		{
+			itm.swingColor(
+					false, 
+					Integer.parseInt(dl.values.get(0)), 
+					Color.argb(
+							255, 
+							Integer.parseInt(dl.values.get(1)), 
+							Integer.parseInt(dl.values.get(2)), 
+							Integer.parseInt(dl.values.get(3))));
+		}
+		else if(dl.item.equals("swingslash"))
+		{
+			itm.swingColor(
+					true, 
+					Integer.parseInt(dl.values.get(0)), 
+					Color.argb(
+							255, 
+							Integer.parseInt(dl.values.get(1)), 
+							Integer.parseInt(dl.values.get(2)), 
+							Integer.parseInt(dl.values.get(3))));
 		}
 		else if(dl.item.equals("enditem"))
 		{

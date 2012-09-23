@@ -1,15 +1,19 @@
 package bladequest.world;
 
-import android.graphics.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+
+import android.graphics.Point;
+import android.graphics.Rect;
+import bladequest.combatactions.CombatAction;
 import bladequest.graphics.BattleSprite;
 import bladequest.graphics.BattleSprite.faces;
 import bladequest.graphics.Sprite;
-import bladequest.statuseffects.*;
+import bladequest.graphics.WeaponSwingDrawable;
+import bladequest.statuseffects.StatusEffect;
+import bladequest.statuseffects.seKO;
 import bladequest.world.Item.Type;
-import bladequest.combatactions.*;
-
-
-import java.util.*;
 
 public class Character 
 {
@@ -202,6 +206,17 @@ public class Character
 	
 	public void setAbilitiesName(String abilities){abilitiesName = abilities;}
 	public void setCombatAction(CombatAction action) { combAction = action; }
+	
+	public void genWeaponSwing()
+	{
+		if(hasTypeEquipped(Type.Weapon))
+			weapon.generateSwing();
+	}
+	
+	public WeaponSwingDrawable getWeaponSwing()
+	{
+		return hasTypeEquipped(Type.Weapon) ? weapon.getSwing() : null;
+	}
 	
 	public boolean hasTypeEquipped(Item.Type type)
 	{
@@ -1081,6 +1096,16 @@ public class Character
 	{
 		updateAnimation();
 		battleSpr.render(x, y, imageIndex, false);
+		
+		//draw weapon swing
+		if(battleSpr.getFace() == faces.Attack)
+		{
+			WeaponSwingDrawable swing = getWeaponSwing();
+			if(swing != null)
+				swing.render(imageIndex, x-20, y-6);
+		}
+			
+		
 	}
 	
 	public Point getPosition() { return position; }	

@@ -1,13 +1,46 @@
 package bladequest.world;
 
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
-import bladequest.UI.*;
+import android.content.res.AssetFileDescriptor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Paint;
+import android.graphics.Paint.Align;
+import android.graphics.Paint.Cap;
+import android.graphics.Paint.Style;
+import android.graphics.Point;
+import android.graphics.Rect;
+import android.graphics.Shader;
+import android.graphics.Typeface;
+import android.media.AudioManager;
+import android.media.SoundPool;
+import android.util.Log;
+import bladequest.UI.DebugScreen;
+import bladequest.UI.ListBox;
+import bladequest.UI.MainMenu;
 import bladequest.UI.MenuPanel.Anchors;
-import bladequest.graphics.*;
-import bladequest.graphics.BattleAnimObjState.PosTypes;
-import bladequest.graphics.BattleAnimObject.Types;
+import bladequest.UI.MerchantScreen;
+import bladequest.UI.MsgBox;
+import bladequest.UI.NameSelect;
+import bladequest.UI.SaveLoadMenu;
+import bladequest.graphics.BattleAnim;
+import bladequest.graphics.BattleSprite;
+import bladequest.graphics.Icon;
+import bladequest.graphics.Renderer;
+import bladequest.graphics.Scene;
+import bladequest.graphics.ScreenFader;
+import bladequest.graphics.Sprite;
+import bladequest.graphics.TextFactory;
+import bladequest.graphics.TilePlateBitmap;
+import bladequest.graphics.WeaponSwing;
 import bladequest.sound.MusicBox;
 import bladequest.sound.Song;
 import bladequest.system.BqActivity;
@@ -15,14 +48,6 @@ import bladequest.system.BqPanel;
 import bladequest.system.GameSaveLoader;
 import bladequest.system.Lock;
 import bladequest.system.MapLoadThread;
-
-import android.content.res.AssetFileDescriptor;
-import android.graphics.*;
-import android.graphics.Paint.Align;
-import android.graphics.Paint.Cap;
-import android.graphics.Paint.Style;
-import android.media.*;
-import android.util.Log;
 
 public class Global 
 {
@@ -60,6 +85,7 @@ public class Global
 	public static Map<String, Icon> icons;
 	public static Map<String, Merchant> merchants;
 	public static Map<String, BattleAnim> battleAnims;
+	public static Map<String, WeaponSwing> weaponSwingModels;
 	private static List<BattleAnim> playingAnims;
 	
 	public static SoundPool soundPool;
@@ -262,7 +288,7 @@ public class Global
 				mouseGridPos = newGridPos;
 				newTarget = true;
 				
-				playAnimation("poison", null, new Point(screenToVPX(x), screenToVPY(y)));
+				//playAnimation("poison", null, new Point(screenToVPX(x), screenToVPY(y)));
 				
 				//TestAnimation(screenToVPX(x), screenToVPY(y));
 			}
@@ -924,6 +950,13 @@ public class Global
 		
 		icons.put("arrow", new Icon(0,10));	
 	}
+	
+	private static void genWeaponSwings()
+	{
+		weaponSwingModels.put("sword", new WeaponSwing("sword", 0, 0));
+		weaponSwingModels.put("dagger", new WeaponSwing("dagger", 0, 1));
+		weaponSwingModels.put("staff", new WeaponSwing("staff", 0, 2));
+	}
 	public static void loadResources()
 	{
 		updatePaints();
@@ -941,6 +974,10 @@ public class Global
 		scenes = new HashMap<String, Scene>();
 		loadScenes("drawable/scenes");		
 		genIcons();
+		
+		weaponSwingModels = new HashMap<String, WeaponSwing>();
+		genWeaponSwings();
+		
 		//create shared tileplate bmp's
 		tilePlateBmps = new TilePlateBitmap[tilePlateBitmapCount];
 		for(int i = 0; i < tilePlateBitmapCount; ++i)
@@ -988,72 +1025,11 @@ public class Global
 		party = new Party(0, 0);	
 		
 		//load game data
-		GameDataLoader.load(activity);			
+		GameDataLoader.load(activity);	
+		
+		
 		return true;		
 	}
-	
-//	public static void TestAnimation(int x, int y)
-//	{
-//		
-//		
-//		battleAnim = new BattleAnim(60.0f);
-//		BattleAnimObject elipseTest = new BattleAnimObject(Types.Elipse, true);
-//		BattleAnimObjState state;
-//		
-//		BattleAnimObject slashTest = new BattleAnimObject(Types.Line, false);
-//		state = new BattleAnimObjState(0, PosTypes.Target);		
-//		state.strokeWidth = 0.0f;
-//		state.pos1 = new Point(16, -16);
-//		state.pos2 = new Point(16, -16);
-//		state.argb(255, 255, 255, 255);
-//		slashTest.addState(state);
-//		
-//		state = new BattleAnimObjState(15, PosTypes.Target);		
-//		state.strokeWidth = 5.0f;
-//		state.pos1 = new Point(16, -16);
-//		state.pos2 = new Point(-16, 16);
-//		state.argb(255, 128, 255, 255);
-//		slashTest.addState(state);
-//		
-//		state = new BattleAnimObjState(30, PosTypes.Target);		
-//		state.strokeWidth = 0.0f;
-//		state.pos1 = new Point(-16, 16);
-//		state.pos2 = new Point(-16, 16);
-//		state.argb(255, 255, 255, 255);
-//		slashTest.addState(state);
-//		
-//		battleAnim.addObject(slashTest);
-//		
-//		state = new BattleAnimObjState(30, PosTypes.Target);		
-//		state.size = new Point( 10, 10);
-//		state.argb(255, 255, 0, 0);
-//		state.strokeWidth = 50.0f;
-//		elipseTest.addState(state);
-//		
-//		state = new BattleAnimObjState(60, PosTypes.Target);		
-//		state.size = new Point( 1000, 1000);
-//		//state.pos1 = new Point(0, -100);
-//		state.strokeWidth = 1.0f;
-//		state.argb(0, 255, 0, 0);
-//		elipseTest.addState(state);
-//
-//		battleAnim.addObject(elipseTest);
-//		
-//		BattleAnimObject elipseTest2 = new BattleAnimObject(Types.Elipse, false);
-//		state = new BattleAnimObjState(0, PosTypes.Target);		
-//		state.setRandomRange(new Rect(-(vpWidth/2), -(vpHeight/2), (vpWidth/2), -(vpHeight/2)));
-//		state.size = new Point( 10, 10);
-//		state.argb(128, 255, 255, 0);
-//		elipseTest2.addState(state);
-//		state = new BattleAnimObjState(30, PosTypes.Target);
-//		state.size = new Point( 10, 10);
-//		state.argb(255, 255, 255, 0);
-//		elipseTest2.addState(state);
-//		battleAnim.addObject(elipseTest2);
-//		
-//		
-//		battleAnim.play(null, new Point(x, y));
-//	}
 	
 	//called when new game is selected from the title screen	
 	public static void NewGame()
@@ -1083,8 +1059,7 @@ public class Global
 		
 		//party.addCharacter("joy");				
 		switches.put("guardasleep", true);
-		switches.put("startgame", true);		
-		
+		switches.put("startgame", true);			
 		
 	}
 	

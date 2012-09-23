@@ -3,6 +3,7 @@ package bladequest.world;
 import java.util.*;
 
 import bladequest.battleactions.*;
+import bladequest.graphics.WeaponSwingDrawable;
 
 public class Item 
 {
@@ -12,6 +13,10 @@ public class Item
 	private int power, value;
 	private boolean equipped, sellable;
 	private int[] statMods;
+	
+	private String swingModel;
+	private int[] swingColorsBase, swingColorsSlash;
+	private WeaponSwingDrawable weaponSwing;
 	
 	private static int id_ = 0;
 	private int id;
@@ -38,6 +43,8 @@ public class Item
 		equipped = false;
 		useCount = 0;
 		
+		
+		
 	}
 	
 	public Item(Item i)
@@ -58,6 +65,18 @@ public class Item
 		this.type = i.type;
 		this.power = i.power;
 		this.equipped = i.equipped;
+		
+		//copy swing model data
+		if(i.swingModel != null)
+		{
+			this.initSwingData(i.swingModel);
+			for(int j = 0; j < 8; ++j)
+			{
+				this.swingColorsBase[j] = i.swingColorsBase[j];
+				this.swingColorsSlash[j] = i.swingColorsSlash[j];
+			}
+			
+		}
 		
 		//copy over stat mods
 		statMods = new int[Stats.NUM_STATS.ordinal()];	
@@ -101,6 +120,26 @@ public class Item
 	public void addStatMod(Stats stat, int amt){ statMods[stat.ordinal()] = amt;}
 	public void addStatMod(int stat, int amt){ statMods[stat] = amt;}
 	public int getStatMod(int stat){return statMods[stat]; }
+	
+	public void initSwingData(String swingModel)
+	{
+		this.swingModel = swingModel;
+		swingColorsBase = new int[8];
+		swingColorsSlash = new int[8];
+	}
+	
+	public void swingColor(boolean slash, int index, int c)
+	{
+		(slash ? swingColorsSlash : swingColorsBase)[index] = c;
+	}
+	
+	public void generateSwing()
+	{
+		if(weaponSwing != null)weaponSwing.release();		
+		weaponSwing = Global.weaponSwingModels.get(swingModel).genSwingDrawable(swingColorsBase, swingColorsSlash);
+	}
+	
+	public WeaponSwingDrawable getSwing() { return weaponSwing; }
 	
 	public void equip(Character c) 
 	{ 
