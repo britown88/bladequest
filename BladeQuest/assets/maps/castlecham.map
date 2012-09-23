@@ -1,0 +1,1077 @@
+[header]
+size 30 20
+tileset Castle
+displayname "Sphere Chamber"
+BGM inherit
+[tiles]
+t 0 0 1 3 b 0 0 0 0 
+t 1 0 1 3 b 0 0 0 0 
+t 2 0 1 3 b 0 0 0 0 
+t 3 0 1 3 b 0 0 0 0 
+t 4 0 1 3 b 0 0 0 0 
+t 5 0 1 3 b 0 0 0 0 
+t 6 0 1 3 b 0 0 0 0 
+t 7 0 1 3 b 0 0 0 0 
+t 8 0 1 3 b 0 0 0 0 
+t 9 0 1 3 b 0 0 0 0 
+t 10 0 1 3 b 0 0 0 0 
+t 11 0 2 3 b 0 0 0 0 
+t 12 0 0 0 b 0 0 0 0 
+t 13 0 1 0 b 0 0 0 0 
+t 14 0 1 0 b 0 0 0 0 
+t 15 0 1 0 b 0 0 0 0 
+t 16 0 2 0 b 0 0 0 0 
+t 17 0 0 3 b 0 0 0 0 
+t 18 0 1 3 b 0 0 0 0 
+t 19 0 1 3 b 0 0 0 0 
+t 20 0 1 3 b 0 0 0 0 
+t 21 0 1 3 b 0 0 0 0 
+t 22 0 1 3 b 0 0 0 0 
+t 23 0 1 3 b 0 0 0 0 
+t 24 0 1 3 b 0 0 0 0 
+t 25 0 1 3 b 0 0 0 0 
+t 26 0 1 3 b 0 0 0 0 
+t 27 0 1 3 b 0 0 0 0 
+t 28 0 1 3 b 0 0 0 0 
+t 29 0 1 3 b 0 0 0 0 
+t 0 1 1 3 b 0 0 0 0 
+t 1 1 1 3 b 0 0 0 0 
+t 2 1 1 3 b 0 0 0 0 
+t 3 1 1 3 b 0 0 0 0 
+t 4 1 1 3 b 0 0 0 0 
+t 5 1 1 3 b 0 0 0 0 
+t 6 1 1 3 b 0 0 0 0 
+t 7 1 1 3 b 0 0 0 0 
+t 8 1 1 3 b 0 0 0 0 
+t 9 1 1 3 b 0 0 0 0 
+t 10 1 1 3 b 0 0 0 0 
+t 11 1 1 3 b 0 0 0 0 
+t 12 1 6 3 b 0 0 0 0 
+t 13 1 5 14 b 0 0 0 0 
+t 14 1 6 14 b 0 0 0 0 
+t 15 1 7 14 b 0 0 0 0 
+t 16 1 8 3 b 0 0 0 0 
+t 17 1 1 3 b 0 0 0 0 
+t 18 1 1 3 b 0 0 0 0 
+t 19 1 1 3 b 0 0 0 0 
+t 20 1 1 3 b 0 0 0 0 
+t 21 1 1 3 b 0 0 0 0 
+t 22 1 1 3 b 0 0 0 0 
+t 23 1 1 3 b 0 0 0 0 
+t 24 1 1 3 b 0 0 0 0 
+t 25 1 1 3 b 0 0 0 0 
+t 26 1 1 3 b 0 0 0 0 
+t 27 1 1 3 b 0 0 0 0 
+t 28 1 1 3 b 0 0 0 0 
+t 29 1 1 3 b 0 0 0 0 
+t 0 2 1 3 b 0 0 0 0 
+t 1 2 1 3 b 0 0 0 0 
+t 2 2 1 3 b 0 0 0 0 
+t 3 2 1 3 b 0 0 0 0 
+t 4 2 1 3 b 0 0 0 0 
+t 5 2 1 3 b 0 0 0 0 
+t 6 2 1 3 b 0 0 0 0 
+t 7 2 1 3 b 0 0 0 0 
+t 8 2 1 3 b 0 0 0 0 
+t 9 2 5 7 b 0 0 0 0 
+t 10 2 1 3 b 0 0 0 0 
+t 11 2 3 0 b 0 0 0 0 
+t 12 2 6 3 b 0 0 0 0 
+t 13 2 5 15 b 0 0 0 0 
+t 15 2 7 15 b 0 0 0 0 
+t 16 2 8 3 b 0 0 0 0 
+t 17 2 3 0 b 0 0 0 0 
+t 18 2 1 3 b 0 0 0 0 
+t 19 2 3 7 b 0 0 0 0 
+t 20 2 1 3 b 0 0 0 0 
+t 21 2 1 3 b 0 0 0 0 
+t 22 2 1 3 b 0 0 0 0 
+t 23 2 1 3 b 0 0 0 0 
+t 24 2 1 3 b 0 0 0 0 
+t 25 2 1 3 b 0 0 0 0 
+t 26 2 1 3 b 0 0 0 0 
+t 27 2 1 3 b 0 0 0 0 
+t 28 2 1 3 b 0 0 0 0 
+t 29 2 1 3 b 0 0 0 0 
+t 0 3 1 3 b 0 0 0 0 
+t 1 3 1 3 b 0 0 0 0 
+t 2 3 1 3 b 0 0 0 0 
+t 3 3 1 3 b 0 0 0 0 
+t 4 3 1 3 b 0 0 0 0 
+t 5 3 1 3 b 0 0 0 0 
+t 6 3 1 3 b 0 0 0 0 
+t 7 3 5 7 b 0 0 0 0 
+t 8 3 1 4 b 0 0 0 0 
+t 9 3 2 4 b 0 0 0 0 
+t 10 3 3 0 b 0 0 0 0 
+t 11 3 3 1 b 0 0 0 0 
+t 12 3 6 3 b 0 0 0 0 
+t 13 3 5 16 b 0 0 0 0 
+t 14 3 6 16 b 0 0 0 0 
+t 15 3 7 16 b 0 0 0 0 
+t 16 3 8 3 b 0 0 0 0 
+t 17 3 3 1 b 0 0 0 0 
+t 18 3 3 0 b 0 0 0 0 
+t 19 3 0 4 b 0 0 0 0 
+t 20 3 1 4 b 0 0 0 0 
+t 21 3 3 7 b 0 0 0 0 
+t 22 3 1 3 b 0 0 0 0 
+t 23 3 1 3 b 0 0 0 0 
+t 24 3 1 3 b 0 0 0 0 
+t 25 3 1 3 b 0 0 0 0 
+t 26 3 1 3 b 0 0 0 0 
+t 27 3 1 3 b 0 0 0 0 
+t 28 3 1 3 b 0 0 0 0 
+t 29 3 1 3 b 0 0 0 0 
+t 0 4 1 3 b 0 0 0 0 
+t 1 4 1 3 b 0 0 0 0 
+t 2 4 1 3 b 0 0 0 0 
+t 3 4 1 3 b 0 0 0 0 
+t 4 4 1 3 b 0 0 0 0 
+t 5 4 1 3 b 0 0 0 0 
+t 6 4 1 3 b 0 0 0 0 
+t 7 4 2 3 b 0 0 0 0 
+t 8 4 0 0 b 0 0 0 0 
+t 9 4 2 0 b 0 0 0 0 
+t 10 4 3 1 b 0 0 0 0 
+t 11 4 3 0 b 0 0 0 0 
+t 12 4 0 1 b 0 0 0 0 
+t 13 4 1 1 b 0 0 0 0 
+t 14 4 1 1 b 0 0 0 0 
+t 15 4 1 1 b 0 0 0 0 
+t 16 4 2 1 b 0 0 0 0 
+t 17 4 3 0 b 0 0 0 0 
+t 18 4 3 1 b 0 0 0 0 
+t 19 4 0 0 b 0 0 0 0 
+t 20 4 2 0 b 0 0 0 0 
+t 21 4 0 3 b 0 0 0 0 
+t 22 4 1 3 b 0 0 0 0 
+t 23 4 1 3 b 0 0 0 0 
+t 24 4 1 3 b 0 0 0 0 
+t 25 4 1 3 b 0 0 0 0 
+t 26 4 1 3 b 0 0 0 0 
+t 27 4 1 3 b 0 0 0 0 
+t 28 4 1 3 b 0 0 0 0 
+t 29 4 1 3 b 0 0 0 0 
+t 0 5 1 3 b 0 0 0 0 
+t 1 5 1 3 b 0 0 0 0 
+t 2 5 1 3 b 0 0 0 0 
+t 3 5 1 3 b 0 0 0 0 
+t 4 5 1 3 b 0 0 0 0 
+t 5 5 1 3 b 0 0 0 0 
+t 6 5 1 3 b 0 0 0 0 
+t 7 5 2 3 b 0 0 0 0 
+t 8 5 0 1 b 0 0 0 0 
+t 9 5 2 1 b 0 0 0 0 
+t 10 5 3 0 b 0 0 0 0 
+t 11 5 3 1 b 1 1 1 1 
+t 12 5 1 9 b 0 0 0 0 
+t 13 5 1 9 b 0 0 0 0 
+t 14 5 1 9 b 0 0 0 0 
+t 15 5 1 9 b 0 0 0 0 
+t 16 5 1 9 b 0 0 0 0 
+t 17 5 3 1 b 1 1 1 1 
+t 18 5 3 0 b 0 0 0 0 
+t 19 5 0 1 b 0 0 0 0 
+t 20 5 2 1 b 0 0 0 0 
+t 21 5 0 3 b 0 0 0 0 
+t 22 5 1 3 b 0 0 0 0 
+t 23 5 1 3 b 0 0 0 0 
+t 24 5 1 3 b 0 0 0 0 
+t 25 5 1 3 b 0 0 0 0 
+t 26 5 1 3 b 0 0 0 0 
+t 27 5 1 3 b 0 0 0 0 
+t 28 5 1 3 b 0 0 0 0 
+t 29 5 1 3 b 0 0 0 0 
+t 0 6 1 3 b 0 0 0 0 
+t 1 6 1 3 b 0 0 0 0 
+t 2 6 1 3 b 0 0 0 0 
+t 3 6 1 3 b 0 0 0 0 
+t 4 6 1 3 b 0 0 0 0 
+t 5 6 1 3 b 0 0 0 0 
+t 6 6 1 3 b 0 0 0 0 
+t 7 6 2 3 b 0 0 0 0 
+t 8 6 1 9 b 1 1 1 1 
+t 9 6 3 0 b 0 0 0 0 
+t 10 6 3 1 b 0 0 0 0 
+t 11 6 1 9 b 1 1 1 1 
+t 12 6 1 9 b 0 0 0 0 
+t 13 6 6 8 b 0 0 0 0 
+t 14 6 7 8 b 0 0 0 0 
+t 15 6 8 8 b 0 0 0 0 
+t 16 6 1 9 b 0 0 0 0 
+t 17 6 1 9 b 1 1 1 1 
+t 18 6 3 1 b 0 0 0 0 
+t 19 6 3 0 b 0 0 0 0 
+t 20 6 1 9 b 1 1 1 1 
+t 21 6 0 3 b 0 0 0 0 
+t 22 6 1 3 b 0 0 0 0 
+t 23 6 1 3 b 0 0 0 0 
+t 24 6 1 3 b 0 0 0 0 
+t 25 6 1 3 b 0 0 0 0 
+t 26 6 1 3 b 0 0 0 0 
+t 27 6 1 3 b 0 0 0 0 
+t 28 6 1 3 b 0 0 0 0 
+t 29 6 1 3 b 0 0 0 0 
+t 0 7 1 3 b 0 0 0 0 
+t 1 7 1 3 b 0 0 0 0 
+t 2 7 1 3 b 0 0 0 0 
+t 3 7 1 3 b 0 0 0 0 
+t 4 7 1 3 b 0 0 0 0 
+t 5 7 1 3 b 0 0 0 0 
+t 6 7 1 3 b 0 0 0 0 
+t 7 7 2 3 b 1 1 1 1 
+t 8 7 1 9 b 0 0 0 0 
+t 9 7 3 1 b 1 1 1 1 
+t 10 7 1 9 b 1 1 1 1 
+t 11 7 1 9 b 0 0 0 0 
+t 12 7 1 9 b 0 0 0 0 
+t 13 7 6 9 b 0 0 0 0 
+t 14 7 7 9 b 0 0 0 0 
+t 15 7 8 9 b 0 0 0 0 
+t 16 7 1 9 b 0 0 0 0 
+t 17 7 1 9 b 0 0 0 0 
+t 18 7 1 9 b 1 1 1 1 
+t 19 7 3 1 b 1 1 1 1 
+t 20 7 1 9 b 0 0 0 0 
+t 21 7 0 3 b 1 1 1 1 
+t 22 7 1 3 b 0 0 0 0 
+t 23 7 1 3 b 0 0 0 0 
+t 24 7 1 3 b 0 0 0 0 
+t 25 7 1 3 b 0 0 0 0 
+t 26 7 1 3 b 0 0 0 0 
+t 27 7 1 3 b 0 0 0 0 
+t 28 7 1 3 b 0 0 0 0 
+t 29 7 1 3 b 0 0 0 0 
+t 0 8 1 3 b 0 0 0 0 
+t 1 8 1 3 b 0 0 0 0 
+t 2 8 1 3 b 0 0 0 0 
+t 3 8 1 3 b 0 0 0 0 
+t 4 8 1 3 b 0 0 0 0 
+t 5 8 1 3 b 0 0 0 0 
+t 6 8 1 3 b 0 0 0 0 
+t 7 8 5 5 b 1 1 1 1 
+t 8 8 1 9 b 0 0 0 0 
+t 9 8 1 9 b 0 0 0 0 
+t 10 8 1 9 b 0 0 0 0 
+t 11 8 1 9 b 0 0 0 0 
+t 12 8 1 9 b 0 0 0 0 
+t 13 8 6 11 b 0 0 0 0 
+t 14 8 7 11 b 0 0 0 0 
+t 15 8 8 11 b 0 0 0 0 
+t 16 8 1 9 b 0 0 0 0 
+t 17 8 1 9 b 0 0 0 0 
+t 18 8 1 9 b 0 0 0 0 
+t 19 8 1 9 b 0 0 0 0 
+t 20 8 1 9 b 0 0 0 0 
+t 21 8 3 5 b 1 1 1 1 
+t 22 8 1 3 b 0 0 0 0 
+t 23 8 1 3 b 0 0 0 0 
+t 24 8 1 3 b 0 0 0 0 
+t 25 8 1 3 b 0 0 0 0 
+t 26 8 1 3 b 0 0 0 0 
+t 27 8 1 3 b 0 0 0 0 
+t 28 8 1 3 b 0 0 0 0 
+t 29 8 1 3 b 0 0 0 0 
+t 0 9 1 3 b 0 0 0 0 
+t 1 9 1 3 b 0 0 0 0 
+t 2 9 1 3 b 0 0 0 0 
+t 3 9 1 3 b 0 0 0 0 
+t 4 9 1 3 b 0 0 0 0 
+t 5 9 1 3 b 0 0 0 0 
+t 6 9 1 3 b 0 0 0 0 
+t 7 9 1 3 b 0 0 0 0 
+t 8 9 5 5 b 1 1 1 1 
+t 9 9 1 9 b 0 0 0 0 
+t 10 9 1 9 b 0 0 0 0 
+t 11 9 3 0 b 1 1 1 1 
+t 12 9 1 9 b 0 0 0 0 
+t 13 9 6 11 b 0 0 0 0 
+t 14 9 7 11 b 0 0 0 0 
+t 15 9 8 11 b 0 0 0 0 
+t 16 9 1 9 b 0 0 0 0 
+t 17 9 3 0 b 1 1 1 1 
+t 18 9 1 9 b 0 0 0 0 
+t 19 9 1 9 b 0 0 0 0 
+t 20 9 3 5 b 1 1 1 1 
+t 21 9 1 3 b 0 0 0 0 
+t 22 9 1 3 b 0 0 0 0 
+t 23 9 1 3 b 0 0 0 0 
+t 24 9 1 3 b 0 0 0 0 
+t 25 9 1 3 b 0 0 0 0 
+t 26 9 1 3 b 0 0 0 0 
+t 27 9 1 3 b 0 0 0 0 
+t 28 9 1 3 b 0 0 0 0 
+t 29 9 1 3 b 0 0 0 0 
+t 0 10 1 3 b 0 0 0 0 
+t 1 10 1 3 b 0 0 0 0 
+t 2 10 1 3 b 0 0 0 0 
+t 3 10 1 3 b 0 0 0 0 
+t 4 10 1 3 b 0 0 0 0 
+t 5 10 1 3 b 0 0 0 0 
+t 6 10 1 3 b 0 0 0 0 
+t 7 10 1 3 b 0 0 0 0 
+t 8 10 1 3 b 0 0 0 0 
+t 9 10 5 5 b 1 1 1 1 
+t 10 10 1 9 b 0 0 0 0 
+t 11 10 3 1 b 1 1 1 1 
+t 12 10 1 9 b 0 0 0 0 
+t 13 10 6 11 b 0 0 0 0 
+t 14 10 7 11 b 0 0 0 0 
+t 15 10 8 11 b 0 0 0 0 
+t 16 10 1 9 b 0 0 0 0 
+t 17 10 3 1 b 1 1 1 1 
+t 18 10 1 9 b 0 0 0 0 
+t 19 10 3 5 b 1 1 1 1 
+t 20 10 1 3 b 0 0 0 0 
+t 21 10 1 3 b 0 0 0 0 
+t 22 10 1 3 b 0 0 0 0 
+t 23 10 1 3 b 0 0 0 0 
+t 24 10 1 3 b 0 0 0 0 
+t 25 10 1 3 b 0 0 0 0 
+t 26 10 1 3 b 0 0 0 0 
+t 27 10 1 3 b 0 0 0 0 
+t 28 10 1 3 b 0 0 0 0 
+t 29 10 1 3 b 0 0 0 0 
+t 0 11 1 3 b 0 0 0 0 
+t 1 11 1 3 b 0 0 0 0 
+t 2 11 1 3 b 0 0 0 0 
+t 3 11 1 3 b 0 0 0 0 
+t 4 11 1 3 b 0 0 0 0 
+t 5 11 1 3 b 0 0 0 0 
+t 6 11 1 3 b 0 0 0 0 
+t 7 11 1 3 b 0 0 0 0 
+t 8 11 1 3 b 0 0 0 0 
+t 9 11 1 3 b 0 0 0 0 
+t 10 11 5 5 b 1 1 1 1 
+t 11 11 1 9 b 0 0 0 0 
+t 12 11 1 9 b 0 0 0 0 
+t 13 11 6 11 b 0 0 0 0 
+t 14 11 7 11 b 0 0 0 0 
+t 15 11 8 11 b 0 0 0 0 
+t 16 11 1 9 b 0 0 0 0 
+t 17 11 1 9 b 0 0 0 0 
+t 18 11 3 5 b 1 1 1 1 
+t 19 11 1 3 b 0 0 0 0 
+t 20 11 1 3 b 0 0 0 0 
+t 21 11 1 3 b 0 0 0 0 
+t 22 11 1 3 b 0 0 0 0 
+t 23 11 1 3 b 0 0 0 0 
+t 24 11 1 3 b 0 0 0 0 
+t 25 11 1 3 b 0 0 0 0 
+t 26 11 1 3 b 0 0 0 0 
+t 27 11 1 3 b 0 0 0 0 
+t 28 11 1 3 b 0 0 0 0 
+t 29 11 1 3 b 0 0 0 0 
+t 0 12 1 3 b 0 0 0 0 
+t 1 12 1 3 b 0 0 0 0 
+t 2 12 1 3 b 0 0 0 0 
+t 3 12 1 3 b 0 0 0 0 
+t 4 12 1 3 b 0 0 0 0 
+t 5 12 1 3 b 0 0 0 0 
+t 6 12 1 3 b 0 0 0 0 
+t 7 12 1 3 b 0 0 0 0 
+t 8 12 1 3 b 0 0 0 0 
+t 9 12 1 3 b 0 0 0 0 
+t 10 12 1 3 b 0 0 0 0 
+t 11 12 5 5 b 1 1 1 1 
+t 12 12 1 9 b 0 0 0 0 
+t 13 12 6 11 b 0 0 0 0 
+t 14 12 7 11 b 0 0 0 0 
+t 15 12 8 11 b 0 0 0 0 
+t 16 12 1 9 b 0 0 0 0 
+t 17 12 3 5 b 1 1 1 1 
+t 18 12 1 3 b 0 0 0 0 
+t 19 12 1 3 b 0 0 0 0 
+t 20 12 1 3 b 0 0 0 0 
+t 21 12 1 3 b 0 0 0 0 
+t 22 12 1 3 b 0 0 0 0 
+t 23 12 1 3 b 0 0 0 0 
+t 24 12 1 3 b 0 0 0 0 
+t 25 12 1 3 b 0 0 0 0 
+t 26 12 1 3 b 0 0 0 0 
+t 27 12 1 3 b 0 0 0 0 
+t 28 12 1 3 b 0 0 0 0 
+t 29 12 1 3 b 0 0 0 0 
+t 0 13 1 3 b 0 0 0 0 
+t 1 13 1 3 b 0 0 0 0 
+t 2 13 1 3 b 0 0 0 0 
+t 3 13 1 3 b 0 0 0 0 
+t 4 13 1 3 b 0 0 0 0 
+t 5 13 1 3 b 0 0 0 0 
+t 6 13 1 3 b 0 0 0 0 
+t 7 13 1 3 b 0 0 0 0 
+t 8 13 5 7 b 0 0 0 0 
+t 9 13 1 4 b 0 0 0 0 
+t 10 13 1 4 b 0 0 0 0 
+t 11 13 1 4 b 0 0 0 0 
+t 12 13 2 4 b 1 1 1 1 
+t 13 13 6 11 b 0 0 0 0 
+t 14 13 7 11 b 0 0 0 0 
+t 15 13 8 11 b 0 0 0 0 
+t 16 13 0 4 b 1 1 1 1 
+t 17 13 1 4 b 0 0 0 0 
+t 18 13 1 4 b 0 0 0 0 
+t 19 13 1 4 b 0 0 0 0 
+t 20 13 3 7 b 0 0 0 0 
+t 21 13 1 3 b 0 0 0 0 
+t 22 13 1 3 b 0 0 0 0 
+t 23 13 1 3 b 0 0 0 0 
+t 24 13 1 3 b 0 0 0 0 
+t 25 13 1 3 b 0 0 0 0 
+t 26 13 1 3 b 0 0 0 0 
+t 27 13 1 3 b 0 0 0 0 
+t 28 13 1 3 b 0 0 0 0 
+t 29 13 1 3 b 0 0 0 0 
+t 0 14 1 3 b 0 0 0 0 
+t 1 14 1 3 b 0 0 0 0 
+t 2 14 1 3 b 0 0 0 0 
+t 3 14 1 3 b 0 0 0 0 
+t 4 14 1 3 b 0 0 0 0 
+t 5 14 1 3 b 0 0 0 0 
+t 6 14 1 3 b 0 0 0 0 
+t 7 14 1 3 b 0 0 0 0 
+t 8 14 2 3 b 0 0 0 0 
+t 9 14 1 0 b 0 0 0 0 
+t 10 14 1 0 b 0 0 0 0 
+t 11 14 1 0 b 0 0 0 0 
+t 12 14 1 0 b 1 1 1 1 
+t 13 14 6 11 b 0 0 0 0 
+t 14 14 7 11 b 0 0 0 0 
+t 15 14 8 11 b 0 0 0 0 
+t 16 14 1 0 b 1 1 1 1 
+t 17 14 1 0 b 0 0 0 0 
+t 18 14 1 0 b 0 0 0 0 
+t 19 14 1 0 b 0 0 0 0 
+t 20 14 0 3 b 0 0 0 0 
+t 21 14 1 3 b 0 0 0 0 
+t 22 14 1 3 b 0 0 0 0 
+t 23 14 1 3 b 0 0 0 0 
+t 24 14 1 3 b 0 0 0 0 
+t 25 14 1 3 b 0 0 0 0 
+t 26 14 1 3 b 0 0 0 0 
+t 27 14 1 3 b 0 0 0 0 
+t 28 14 1 3 b 0 0 0 0 
+t 29 14 1 3 b 0 0 0 0 
+t 0 15 1 3 b 0 0 0 0 
+t 1 15 1 3 b 0 0 0 0 
+t 2 15 1 3 b 0 0 0 0 
+t 3 15 1 3 b 0 0 0 0 
+t 4 15 1 3 b 0 0 0 0 
+t 5 15 1 3 b 0 0 0 0 
+t 6 15 1 3 b 0 0 0 0 
+t 7 15 1 3 b 0 0 0 0 
+t 8 15 2 3 b 0 0 0 0 
+t 9 15 1 1 b 1 1 1 1 
+t 10 15 1 1 b 0 0 0 0 
+t 11 15 1 1 b 0 0 0 0 
+t 12 15 1 1 b 1 1 1 1 
+t 13 15 6 11 b 0 0 0 0 
+t 14 15 7 11 b 0 0 0 0 
+t 15 15 8 11 b 0 0 0 0 
+t 16 15 1 1 b 1 1 1 1 
+t 17 15 1 1 b 0 0 0 0 
+t 18 15 1 1 b 0 0 0 0 
+t 19 15 1 1 b 1 1 1 1 
+t 20 15 0 3 b 0 0 0 0 
+t 21 15 1 3 b 0 0 0 0 
+t 22 15 1 3 b 0 0 0 0 
+t 23 15 1 3 b 0 0 0 0 
+t 24 15 1 3 b 0 0 0 0 
+t 25 15 1 3 b 0 0 0 0 
+t 26 15 1 3 b 0 0 0 0 
+t 27 15 1 3 b 0 0 0 0 
+t 28 15 1 3 b 0 0 0 0 
+t 29 15 1 3 b 0 0 0 0 
+t 0 16 1 3 b 0 0 0 0 
+t 1 16 1 3 b 0 0 0 0 
+t 2 16 1 3 b 0 0 0 0 
+t 3 16 1 3 b 0 0 0 0 
+t 4 16 1 3 b 0 0 0 0 
+t 5 16 1 3 b 0 0 0 0 
+t 6 16 1 3 b 0 0 0 0 
+t 7 16 1 3 b 0 0 0 0 
+t 8 16 2 3 b 1 1 1 1 
+t 9 16 1 9 b 0 0 0 0 
+t 10 16 3 0 b 1 1 1 1 
+t 11 16 1 9 b 0 0 0 0 
+t 12 16 1 9 b 1 1 1 1 
+t 13 16 6 11 b 0 0 0 0 
+t 14 16 7 11 b 0 0 0 0 
+t 15 16 8 11 b 0 0 0 0 
+t 16 16 1 9 b 1 1 1 1 
+t 17 16 1 9 b 0 0 0 0 
+t 18 16 3 0 b 1 1 1 1 
+t 19 16 1 9 b 0 0 0 0 
+t 20 16 0 3 b 1 1 1 1 
+t 21 16 1 3 b 0 0 0 0 
+t 22 16 1 3 b 0 0 0 0 
+t 23 16 1 3 b 0 0 0 0 
+t 24 16 1 3 b 0 0 0 0 
+t 25 16 1 3 b 0 0 0 0 
+t 26 16 1 3 b 0 0 0 0 
+t 27 16 1 3 b 0 0 0 0 
+t 28 16 1 3 b 0 0 0 0 
+t 29 16 1 3 b 0 0 0 0 
+t 0 17 1 3 b 0 0 0 0 
+t 1 17 1 3 b 0 0 0 0 
+t 2 17 1 3 b 0 0 0 0 
+t 3 17 1 3 b 0 0 0 0 
+t 4 17 1 3 b 0 0 0 0 
+t 5 17 1 3 b 0 0 0 0 
+t 6 17 1 3 b 0 0 0 0 
+t 7 17 1 3 b 0 0 0 0 
+t 8 17 2 3 b 1 1 1 1 
+t 9 17 1 9 b 0 0 0 0 
+t 10 17 3 1 b 1 1 1 1 
+t 11 17 1 9 b 1 1 1 1 
+t 12 17 1 9 b 0 0 0 0 
+t 13 17 6 11 b 0 0 0 0 
+t 14 17 7 11 b 0 0 0 0 
+t 15 17 8 11 b 0 0 0 0 
+t 16 17 1 9 b 0 0 0 0 
+t 17 17 1 9 b 1 1 1 1 
+t 18 17 3 1 b 1 1 1 1 
+t 19 17 1 9 b 0 0 0 0 
+t 20 17 0 3 b 1 1 1 1 
+t 21 17 1 3 b 0 0 0 0 
+t 22 17 1 3 b 0 0 0 0 
+t 23 17 1 3 b 0 0 0 0 
+t 24 17 1 3 b 0 0 0 0 
+t 25 17 1 3 b 0 0 0 0 
+t 26 17 1 3 b 0 0 0 0 
+t 27 17 1 3 b 0 0 0 0 
+t 28 17 1 3 b 0 0 0 0 
+t 29 17 1 3 b 0 0 0 0 
+t 0 18 1 3 b 0 0 0 0 
+t 1 18 1 3 b 0 0 0 0 
+t 2 18 1 3 b 0 0 0 0 
+t 3 18 1 3 b 0 0 0 0 
+t 4 18 1 3 b 0 0 0 0 
+t 5 18 1 3 b 0 0 0 0 
+t 6 18 1 3 b 0 0 0 0 
+t 7 18 1 3 b 0 0 0 0 
+t 8 18 5 5 b 1 1 1 1 
+t 9 18 1 9 b 0 0 0 0 
+t 10 18 1 9 b 0 0 0 0 
+t 11 18 1 9 b 0 0 0 0 
+t 12 18 1 9 b 0 0 0 0 
+t 13 18 6 11 b 0 0 0 0 
+t 14 18 7 11 b 0 0 0 0 
+t 15 18 8 11 b 0 0 0 0 
+t 16 18 1 9 b 0 0 0 0 
+t 17 18 1 9 b 0 0 0 0 
+t 18 18 1 9 b 0 0 0 0 
+t 19 18 1 9 b 0 0 0 0 
+t 20 18 3 5 b 1 1 1 1 
+t 21 18 1 3 b 0 0 0 0 
+t 22 18 1 3 b 0 0 0 0 
+t 23 18 1 3 b 0 0 0 0 
+t 24 18 1 3 b 0 0 0 0 
+t 25 18 1 3 b 0 0 0 0 
+t 26 18 1 3 b 0 0 0 0 
+t 27 18 1 3 b 0 0 0 0 
+t 28 18 1 3 b 0 0 0 0 
+t 29 18 1 3 b 0 0 0 0 
+t 0 19 1 3 b 0 0 0 0 
+t 1 19 1 3 b 0 0 0 0 
+t 2 19 1 3 b 0 0 0 0 
+t 3 19 1 3 b 0 0 0 0 
+t 4 19 1 3 b 0 0 0 0 
+t 5 19 1 3 b 0 0 0 0 
+t 6 19 1 3 b 0 0 0 0 
+t 7 19 1 3 b 0 0 0 0 
+t 8 19 1 3 b 0 0 0 0 
+t 9 19 1 3 b 1 1 1 1 
+t 10 19 1 3 b 1 1 1 1 
+t 11 19 1 3 b 1 1 1 1 
+t 12 19 2 3 b 1 1 1 1 
+t 13 19 6 11 b 0 0 0 0 
+t 14 19 7 11 b 0 0 0 0 
+t 15 19 8 11 b 0 0 0 0 
+t 16 19 0 3 b 1 1 1 1 
+t 17 19 1 3 b 1 1 1 1 
+t 18 19 1 3 b 1 1 1 1 
+t 19 19 1 3 b 1 1 1 1 
+t 20 19 1 3 b 0 0 0 0 
+t 21 19 1 3 b 0 0 0 0 
+t 22 19 1 3 b 0 0 0 0 
+t 23 19 1 3 b 0 0 0 0 
+t 24 19 1 3 b 0 0 0 0 
+t 25 19 1 3 b 0 0 0 0 
+t 26 19 1 3 b 0 0 0 0 
+t 27 19 1 3 b 0 0 0 0 
+t 28 19 1 3 b 0 0 0 0 
+t 29 19 1 3 b 0 0 0 0 
+t 12 0 0 14 a 0 0 0 0 
+t 13 0 1 14 a 0 0 0 0 
+t 14 0 2 14 a 0 0 0 0 
+t 15 0 3 14 a 0 0 0 0 
+t 16 0 4 14 a 0 0 0 0 
+t 11 1 4 3 a 0 0 0 0 
+t 12 1 0 15 a 0 0 0 0 
+t 16 1 4 15 a 0 0 0 0 
+t 17 1 4 3 a 0 0 0 0 
+t 10 2 4 3 a 0 0 0 0 
+t 12 2 0 16 a 0 0 0 0 
+t 14 2 6 15 a 0 0 0 0 
+t 16 2 4 16 a 0 0 0 0 
+t 18 2 4 3 a 0 0 0 0 
+t 10 3 4 0 a 0 0 0 0 
+t 12 3 0 17 a 0 0 0 0 
+t 16 3 4 17 a 0 0 0 0 
+t 18 3 4 0 a 0 0 0 0 
+t 10 4 4 1 a 0 0 0 0 
+t 12 4 0 18 a 0 0 0 0 
+t 13 4 1 18 a 0 0 0 0 
+t 14 4 2 18 a 0 0 0 0 
+t 15 4 3 18 a 0 0 0 0 
+t 16 4 4 18 a 0 0 0 0 
+t 18 4 4 1 a 0 0 0 0 
+t 8 5 6 0 a 0 0 0 0 t 7 0
+t 9 5 4 3 a 0 0 0 0 
+t 11 5 5 0 a 0 0 0 0 
+t 17 5 5 0 a 0 0 0 0 
+t 19 5 4 3 a 0 0 0 0 
+t 20 5 6 0 a 0 0 0 0 t 7 0
+t 8 6 6 1 a 0 0 0 0 
+t 10 6 6 0 a 0 0 0 0 t 7 0
+t 11 6 5 1 a 0 0 0 0 
+t 17 6 5 1 a 0 0 0 0 
+t 18 6 6 0 a 0 0 0 0 t 7 0
+t 20 6 6 1 a 0 0 0 0 
+t 10 7 6 1 a 0 0 0 0 
+t 13 7 6 2 a 0 0 0 0 
+t 14 7 7 2 a 0 0 0 0 
+t 15 7 8 2 a 0 0 0 0 
+t 18 7 6 1 a 0 0 0 0 
+t 8 8 2 2 a 0 0 0 0 
+t 11 8 4 3 a 0 0 0 0 
+t 17 8 4 3 a 0 0 0 0 
+t 20 8 0 2 a 0 0 0 0 
+t 9 9 2 2 a 0 0 0 0 
+t 11 9 4 0 a 0 0 0 0 
+t 17 9 4 0 a 0 0 0 0 
+t 19 9 0 2 a 0 0 0 0 
+t 10 10 2 2 a 0 0 0 0 
+t 11 10 4 1 a 0 0 0 0 
+t 17 10 4 1 a 0 0 0 0 
+t 18 10 0 2 a 0 0 0 0 
+t 11 11 2 2 a 0 0 0 0 
+t 17 11 0 2 a 0 0 0 0 
+t 12 12 2 2 a 0 0 0 0 
+t 16 12 0 2 a 0 0 0 0 
+t 10 15 4 3 a 0 0 0 0 
+t 12 15 5 0 a 0 0 0 0 
+t 16 15 5 0 a 0 0 0 0 
+t 18 15 4 3 a 0 0 0 0 
+t 10 16 4 0 a 0 0 0 0 
+t 11 16 6 0 a 0 0 0 0 t 7 0
+t 12 16 5 1 a 0 0 0 0 
+t 16 16 5 1 a 0 0 0 0 
+t 17 16 6 0 a 0 0 0 0 t 7 0
+t 18 16 4 0 a 0 0 0 0 
+t 10 17 4 1 a 0 0 0 0 
+t 11 17 6 1 a 0 0 0 0 
+t 17 17 6 1 a 0 0 0 0 
+t 18 17 4 1 a 0 0 0 0 
+t 9 18 1 2 a 0 0 0 0 
+t 10 18 1 2 a 0 0 0 0 
+t 11 18 1 2 a 0 0 0 0 
+t 12 18 2 2 a 0 0 0 0 
+t 16 18 0 2 a 0 0 0 0 
+t 17 18 1 2 a 0 0 0 0 
+t 18 18 1 2 a 0 0 0 0 
+t 19 18 1 2 a 0 0 0 0 
+[objects]
+object robe1 14 5
+addstate
+collision True True True True
+movement 0 0
+opts False True True
+sprite "robe"
+face 3
+endobject
+object robe2 16 6
+addstate
+collision True True True True
+movement 0 0
+opts False True True
+sprite "robe"
+face 0
+endobject
+object robe3 16 8
+addstate
+collision True True True True
+movement 0 0
+opts False True False
+sprite "robe"
+face 0
+endobject
+object robe4 12 8
+addstate
+collision True True True True
+movement 0 0
+opts False True False
+sprite "robe"
+face 2
+endobject
+object robe5 12 6
+addstate
+collision True True True True
+movement 0 0
+opts False True False
+sprite "robe"
+face 2
+endobject
+object orb 14 7
+addstate
+collision False False False False
+movement 0 0
+opts False False False
+layer above
+sprite "sword"
+face 3
+addstate
+collision False False False False
+movement 0 0
+opts False False False
+switchcondition glassbroken
+sprite "sword"
+face 1
+imageindex 0
+animated False
+addstate
+collision False False False False
+movement 0 0
+opts False False False
+switchcondition swordgone
+sprite ""
+face 3
+endobject
+object window 13 1
+addstate
+collision False False False False
+movement 0 0
+opts False False False
+sprite "tile 1 15"
+face 3
+addstate
+collision False False False False
+movement 0 0
+opts False False False
+switchcondition glassbroken
+sprite ""
+face 3
+endobject
+object window 14 1
+addstate
+collision False False False False
+movement 0 0
+opts False False False
+sprite "tile 2 15"
+face 3
+addstate
+collision False False False False
+movement 0 0
+opts False False False
+switchcondition glassbroken
+sprite ""
+face 3
+endobject
+object window 15 1
+addstate
+collision False False False False
+movement 0 0
+opts False False False
+sprite "tile 3 15"
+face 3
+addstate
+collision False False False False
+movement 0 0
+opts False False False
+switchcondition glassbroken
+sprite ""
+face 3
+endobject
+object window 15 2
+addstate
+collision False False False False
+movement 0 0
+opts False False False
+sprite "tile 3 16"
+face 3
+addstate
+collision False False False False
+movement 0 0
+opts False False False
+switchcondition glassbroken
+sprite ""
+face 3
+endobject
+object window 14 2
+addstate
+collision False False False False
+movement 0 0
+opts False False False
+sprite "tile 2 16"
+face 3
+addstate
+collision False False False False
+movement 0 0
+opts False False False
+switchcondition glassbroken
+sprite ""
+face 3
+endobject
+object window 13 2
+addstate
+collision False False False False
+movement 0 0
+opts False False False
+sprite "tile 1 16"
+face 3
+addstate
+collision False False False False
+movement 0 0
+opts False False False
+switchcondition glassbroken
+sprite ""
+face 3
+endobject
+object window 13 3
+addstate
+collision False False False False
+movement 0 0
+opts False False False
+sprite "tile 1 17"
+face 3
+addstate
+collision False False False False
+movement 0 0
+opts False False False
+switchcondition glassbroken
+sprite ""
+face 3
+endobject
+object window 14 3
+addstate
+collision False False False False
+movement 0 0
+opts False False False
+sprite "tile 2 17"
+face 3
+addstate
+collision False False False False
+movement 0 0
+opts False False False
+switchcondition glassbroken
+sprite ""
+face 3
+endobject
+object window 15 3
+addstate
+collision False False False False
+movement 0 0
+opts False False False
+sprite "tile 3 17"
+face 3
+addstate
+collision False False False False
+movement 0 0
+opts False False False
+switchcondition glassbroken
+sprite ""
+face 3
+endobject
+object finalscene 0 0
+addstate
+collision False False False False
+movement 0 0
+opts True False False
+autostart True
+sprite ""
+face 3
+action pausemusic
+action wait 1
+action message "?????:\nLessee...\nHow do you get out of this place?"
+action path party True
+decreasemovespeed
+decreasemovespeed
+moveup
+moveup
+moveup
+wait
+endpath
+action playmusic mystery True -1
+action fade 5 255 255 0 0 True True
+action fade 5 255 255 0 0 False True
+action message "?????:\nWoah, what the hell??"
+action path party True
+increasemovespeed
+increasemovespeed
+increasemovespeed
+increasemovespeed
+movedown
+movedown
+moveleft
+moveleft
+facedown
+decreasemovespeed
+decreasemovespeed
+endpath
+action wait 1
+action message "?????:\nWhat are they doing over there?"
+action fade 5 255 255 0 0 True True
+action fade 5 255 255 0 0 False True
+action message "?????:\nWhat the...??? I can't move!"
+action pan 2 -11 1 True
+action wait 2
+action path robe1 True
+decreasemovespeed
+movedown
+wait
+endpath
+action message "Robed Man:\nIt's reacting!\nThe Creators have answered our prayers!!!"
+action path robe3 True
+decreasemovespeed
+moveleft
+faceup
+wait
+endpath
+action message "Robed Man:\nBut what's causing it? Nothing has changed."
+action message "Robed Man:\nIt matters not.  "
+action message "Come, my brothers! Our goals shall soon be realized!"
+action wait 0.5
+action path robe2 False
+decreasemovespeed
+moveleft
+endpath
+action path robe3 False
+faceleft
+endpath
+action path robe4 False
+decreasemovespeed
+moveright
+endpath
+action path robe5 True
+decreasemovespeed
+moveright
+endpath
+action wait 2
+action message "?????:\nAAAAAAAAAAAAAAAHHH!!!!!!"
+action fade 2 255 255 0 0 True True
+action teleport 14 2 castlecham
+action fade 1 255 255 0 0 False True
+action path robe2 False
+faceup
+endpath
+action path robe3 False
+faceup
+endpath
+action path robe4 False
+faceup
+endpath
+action path robe5 False
+faceup
+endpath
+action path robe1 True
+increasemovespeed
+moveup
+endpath
+action message "Robed Man:\n!!!!!"
+action message "?????:\nWoah, hey, I don't like this one bit!"
+action message "Robed Man:\nWhat is this human doing here?!?"
+action message "Roland, get him down."
+action message "Robed Man:\nYes, brother."
+action path robe3 True
+moveright
+moveup
+moveup
+moveup
+moveleft
+faceup
+endpath
+action wait 1
+action fade 5 255 255 0 0 True True
+action fade 5 255 255 0 0 False True
+action wait 0.5
+action path robe1 True
+facedown
+endpath
+action message "Robed Man:\nThe sphere!"
+action wait 1
+action fade 5 255 255 0 0 True True
+action fade 5 255 255 0 0 False True
+action path orb True
+decreasemovespeed
+decreasemovespeed
+decreasemovespeed
+moveup
+wait
+endpath
+action wait 1
+action fade 5 255 255 0 0 True True
+action path robe1 False
+faceright
+increasemovespeed
+increasemovespeed
+lockfacing
+moveleft
+moveleft
+endpath
+action fade 5 255 255 0 0 False True
+action wait 1
+action path orb True
+moveup
+moveup
+moveup
+moveup
+endpath
+action wait 1
+action message "Robed Man:\nIt's reacting to the human!"
+action path robe1 True
+unlockfacing
+decreasemovespeed
+decreasemovespeed
+moveright
+moveright
+faceup
+endpath
+action message "Robed Man:\nNO! It can't be!!!"
+action wait 1
+action shake 4 1 False
+action wait 1
+action fade 1 255 255 0 0 True True
+action wait 1
+action switch glassbroken True
+action fade 1 255 255 0 0 False True
+action wait 1
+action message "Robed Man:\nIt has appeared! Joyeuse!"
+action message "I must have it!  Get it from that man now!"
+action pausemusic
+action wait 1
+action message "Woman's Voice:\nCome with me. I need your strength."
+action fade 5 255 255 0 0 True True
+action switch swordgone True
+action wait 3
+action path party False
+hide
+endpath
+action fade 0 255 255 0 0 False True
+action wait 2
+action fade 0 255 0 0 0 True True
+action wait 1
+action fade 1 255 0 0 0 False False
+action showscene demoscreen
+action switch scenedone True
+action resetgame
+addstate
+collision False False False False
+movement 0 0
+opts False False False
+switchcondition scenedone
+sprite ""
+face 3
+endobject
+[encounters]

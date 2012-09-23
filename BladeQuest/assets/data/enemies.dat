@@ -1,0 +1,53 @@
+[enemies]
+enemy rat "Rat" rat
+basestats 10 1 1 1
+level 4
+gold 23
+items potion 25 antidote 85 True
+ai 15
+ability bite 100 0 100
+endenemy
+#
+enemy guard "Guard" guard
+basestats 10 10 10 10
+level 25
+gold 1200
+endenemy
+#
+enemy zombie "Zombie" zombie
+basestats 7 3 1 3
+level 8
+gold 487
+endenemy
+#
+enemy hawk "Hawk" hawk
+basestats 3 3 3 3
+level 20
+gold 52
+endenemy
+#
+enemy gnome "Gnome" gnome
+basestate 3 3 3 3
+level 13
+gold 123
+endenemy
+#
+enemy bat "Bat" bat
+basestats 7 10 8 0
+level 6
+gold 42
+items potion 50 " " 0 True
+endenemy
+#
+enemy recruit "Recruit" guard
+basestats 10 0 0 0
+level 7
+gold 250
+bossmods 4.0f
+items potion 100 silversword 100 True
+ai 100
+ability recruit1 100 1 100
+ability recruit2 75 50 100
+ability recruit3 50 50 100
+ability recruit4 100 1 50
+endenemy

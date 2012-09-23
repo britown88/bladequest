@@ -1,0 +1,143 @@
+[battleanims]
+ba slice1 60.0
+obj line 0
+state 0 tar
+stroke 0
+pos 1 16 -16
+pos 2 16 -16
+argb 255 255 255 255
+endstate
+state 15 tar
+stroke 5.0
+pos 1 16 -16
+pos 2 -16 16
+argb 255 200 255 255
+endstate
+state 30 tar
+stroke 0
+pos 1 -16 16
+pos 2 -16 16
+argb 255 255 255 255
+endstate
+endobj
+endba
+#
+ba movetest 60.0
+obj elipse 0
+state 0 src
+size 0 0
+pos 1 0 0
+argb 0 255 0 0
+endstate
+state 30 tar
+size 100 100
+argb 255 255 0 0
+endstate
+endobj
+copylast 50 1
+endba
+
+ba poison 60.0
+obj elipse 1
+state 0 tar
+size 0 0
+pos 1 16 -8
+argb 255 180 80 180
+stroke 10
+endstate
+state 40 tar
+size 30 30
+pos 1 16 -48
+argb 255 180 80 180
+endstate
+endobj
+
+obj elipse 1
+state 20 tar
+size 0 0
+pos 1 -16 0
+argb 255 180 80 180
+stroke 10
+endstate
+state 60 tar
+size 30 30
+pos 1 -16 -40
+argb 255 180 80 180
+endstate
+endobj
+
+obj elipse 1
+state 40 tar
+size 0 0
+pos 1 0 8
+argb 255 180 80 180
+stroke 10
+endstate
+state 80 tar
+size 30 30
+pos 1 0 -32
+argb 255 180 80 180
+endstate
+endobj
+
+endba
+#
+ba logo 60.0
+obj bmp 0 titlemain
+
+state 0 scrn
+size 224 124
+pos 1 224 114
+argb 0 255 255 255
+colorize 1.0f
+endstate
+
+state 60 scrn
+size 224 124
+pos 1 224 114
+argb 255 255 255 255
+colorize 1.0f
+endstate
+
+state 180 scrn
+size 224 124
+pos 1 224 114
+argb 255 255 255 255
+colorize 0.0f
+endstate
+
+state 380 scrn
+size 224 124
+pos 1 224 114
+argb 255 255 255 255
+colorize 0.0f
+endstate
+
+endobj
+
+obj bmp 0 titlesub
+
+state 120 scrn
+size 224 124
+pos 1 224 114
+argb 0 255 255 255
+colorize 1.0f
+endstate
+
+state 180 scrn
+size 224 124
+pos 1 224 114
+argb 255 255 255 255
+colorize 1.0f
+endstate
+
+state 380 scrn
+size 224 124
+pos 1 224 114
+argb 255 255 255 255
+colorize 0.0f
+endstate
+
+endobj
+
+endba

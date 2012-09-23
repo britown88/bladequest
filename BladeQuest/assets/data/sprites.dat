@@ -1,0 +1,32 @@
+[sprites]
+worldsprite heroworld aramis 0 0
+worldsprite heroworld roland 1 0
+worldsprite heroworld sanson 2 0
+worldsprite heroworld reine 3 0
+worldsprite heroworld ursos 4 0
+worldsprite heroworld joy 5 0
+worldsprite heroworld curtana 0 1
+worldsprite heroworld luc 1 1
+worldsprite heroworld luc2 2 1
+worldsprite heroworld marie 3 1
+worldsprite heroworld carl 4 1
+#
+worldsprite npcsprites robe 0 0
+worldsprite npcsprites guard 1 0
+worldsprite npcsprites bandit 2 0
+#
+worldsprite switches switches 0 0
+worldsprite switches sword 1 0
+#
+enemysprite rat enemies32 48 32 0 0
+enemysprite bat enemies32 48 32 0 1
+enemysprite hawk enemies48 72 48 0 0
+enemysprite gnome enemies48 72 48 0 1
+enemysprite zombie enemies48 72 48 0 2
+enemysprite guard enemies48 72 48 1 0
+#
+battlesprite broland 0 0
+battlesprite baramis 1 0
+battlesprite bluc 2 0
+battlesprite bluc2 3 0
+battlesprite bjoy 0 1

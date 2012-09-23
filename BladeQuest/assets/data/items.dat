@@ -1,0 +1,59 @@
+[items]
+item knife "Knife" weapon dagger "A small and simple dagger."
+power 7
+value 10
+usableby aramis
+statmods 0 0 0 0 0 0 0 0 0 0 0 0 0
+enditem
+#
+item silversword "Silver Sword" weapon sword "Some believe the silver inlay wards off the undead."
+power 20
+value 123
+usableby aramis luc roland
+enditem
+#
+item felthat "Felt Hat" helmet lhelmet "Most basic of headwear."
+power 3
+value 45
+usableby aramis luc roland
+enditem
+#
+item cottonshirt "Cotton Shirt" torso ltorso "A simple shirt."
+power 4
+value 100
+usableby aramis luc roland
+enditem
+#
+item potion "Potion" usable orb "Restores 50 HP."
+value 50
+targettype single
+action bactDamage 50.0f fixed
+enditem
+#
+item megalixer "MegaLicksr" usable orb "Fully heals all allies."
+value 9999
+targettype allallies
+action bactDamage 9999.0f fixed
+enditem
+#
+item bomb "Bomb" usable orb "Devastating damage to all enemies."
+value 500
+targettype allenemies
+action bactDamage -9999.0f fixed
+enditem
+#
+item tommygun "Tommy Gun" usable orb "Unload a barrage of bullets on all enemies."
+value 25
+sellable False
+targettype allenemies
+action bactTommyGun 3 20
+enditem
+#
+item antidote "Antidote" usable orb "Cures Poison."
+value 50
+targettype single
+action bactRemoveStatus poison
+enditem
+#
+item prisonkey "Prison Key" key orb "Key to the castle prison cells."
+enditem

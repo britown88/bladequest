@@ -1,0 +1,34 @@
+[encounters]
+encounter 2rats
+enemy rat 150 96
+enemy rat 100 158
+endencounter
+#
+encounter rat
+enemy rat 128 128
+endencounter
+#
+encounter bat
+enemy bat 128 128
+endencounter
+#
+encounter zombie
+enemy zombie 128 128
+endencounter
+#
+encounter guard
+enemy guard 128 128
+endencounter
+#
+encounter recruit
+enemy recruit 128 128
+disablerunning
+endencounter
+#
+encounter 3guards
+enemy guard 128 78
+enemy guard 68 128
+enemy guard 128 178
+disablerunning
+endencounter
+
