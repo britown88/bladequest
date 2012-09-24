@@ -821,14 +821,17 @@ public class Global
 		InputStream is = null;
 		for(String filename : files)
 		{
-			try {is = activity.getAssets().open(path+"/"+filename);} catch (Exception e) {
-				Log.d(TAG, "Unable to open file "+path+"/"+filename);
-				closeGame();}
-			
-			bmpName = filename.substring(0, filename.lastIndexOf('.'));
-			
-			if(is != null)
-				bitmaps.put(bmpName, BitmapFactory.decodeStream(is));
+			if(filename.indexOf('.') != -1)
+			{
+				try {is = activity.getAssets().open(path+"/"+filename);} catch (Exception e) {
+					Log.d(TAG, "Unable to open file "+path+"/"+filename);
+					closeGame();}
+				
+				bmpName = filename.substring(0, filename.lastIndexOf('.'));
+				
+				if(is != null)
+					bitmaps.put(bmpName, BitmapFactory.decodeStream(is));
+			}			
 			
 		}
 		
@@ -845,14 +848,18 @@ public class Global
 		InputStream is = null;
 		for(String filename : files)
 		{
-			try {is = activity.getAssets().open(path+"/"+filename);} catch (Exception e) {
-				Log.d(TAG, "Unable to open file "+path+"/"+filename);
-				closeGame();}
+			if(filename.indexOf('.') != -1)
+			{
+				try {is = activity.getAssets().open(path+"/"+filename);} catch (Exception e) {
+					Log.d(TAG, "Unable to open file "+path+"/"+filename);
+					closeGame();}
+				
+				bmpName = filename.substring(0, filename.lastIndexOf('.'));
+				
+				if(is != null)
+					scenes.put(bmpName, new Scene(is));
+			}
 			
-			bmpName = filename.substring(0, filename.lastIndexOf('.'));
-			
-			if(is != null)
-				scenes.put(bmpName, new Scene(is));
 			
 		}
 		
@@ -860,7 +867,7 @@ public class Global
 	public static void loadMaps(String path)
 	{
 		String[] files = null;
-		String bmpName;		
+		String mapName;		
 
 		try{ files = activity.getAssets().list(path); } catch (Exception e) {
 			Log.d(TAG, "Unable to list files in Dir " + path);
@@ -868,9 +875,13 @@ public class Global
 		
 
 		for(String filename : files)
-		{			
-			bmpName = filename.substring(0, filename.lastIndexOf('.'));
-			maps.put(bmpName, path+"/"+filename);			
+		{
+			if(filename.indexOf('.') != -1)
+			{
+				mapName = filename.substring(0, filename.lastIndexOf('.'));
+				maps.put(mapName, path+"/"+filename);	
+			}
+					
 		}
 		
 	}
@@ -917,14 +928,17 @@ public class Global
 		
 		for(String filename : files)
 		{
-			try {afd = activity.getAssets().openFd(path+"/"+filename);} catch (Exception e) {
-				Log.d(TAG, "Unable to open file "+path+"/"+filename);
-				closeGame();}
-			
-			sfxName = filename.substring(0, filename.lastIndexOf('.'));
-			
-			if(afd != null)
-				sfx.put(sfxName, soundPool.load(afd, 1));			
+			if(filename.indexOf('.') != -1)
+			{
+				try {afd = activity.getAssets().openFd(path+"/"+filename);} catch (Exception e) {
+					Log.d(TAG, "Unable to open file "+path+"/"+filename);
+					closeGame();}
+				
+				sfxName = filename.substring(0, filename.lastIndexOf('.'));
+				
+				if(afd != null)
+					sfx.put(sfxName, soundPool.load(afd, 1));
+			}						
 		}
 		
 	}
@@ -972,6 +986,7 @@ public class Global
 		bitmaps = new HashMap<String, Bitmap>();
 		loadBitmaps("drawable/characters");
 		loadBitmaps("drawable/misc");
+		loadBitmaps("drawable/misc/title");
 		loadBitmaps("drawable/tilesets");				
 
 		scenes = new HashMap<String, Scene>();
