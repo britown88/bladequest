@@ -13,7 +13,9 @@ public class BattleAnim
 	private float framePeriod;
 	private int frame, finalFrame;
 	
-	private boolean playing, done;
+	private boolean playing, done, loops;
+	
+	private Point src, tar;
 	
 	private long startTime, frameTime;
 	private Paint text;
@@ -32,15 +34,18 @@ public class BattleAnim
 	{
 		this.objects = new ArrayList<BattleAnimObject>();
 		this.framePeriod = other.framePeriod;
+		this.loops = other.loops;
 		for(BattleAnimObject obj : other.objects)
 			addObject(new BattleAnimObject(obj));		
 		
 		playing = false;		
 	}
 	
+	public void loop() { loops = true; }
 	public void addObject(BattleAnimObject obj){objects.add(obj);}
 	public boolean Done() { return done; }
 	public boolean Playing() { return playing; }
+	public int getFinalFrame() { return finalFrame;}
 	
 	public void copyLastObject(int count, int frameOffset)
 	{
@@ -57,6 +62,8 @@ public class BattleAnim
 	
 	public void play(Point source, Point target)
 	{
+		this.src = source; this.tar = target;
+		
 		playing = true;
 		done = false;
 		
@@ -70,6 +77,13 @@ public class BattleAnim
 		finalFrame = 0;
 		for(BattleAnimObject obj : objects)
 			finalFrame = Math.max(finalFrame, obj.getEndFrame());
+		
+		//smooth end necessary for looping
+		for(BattleAnimObject obj : objects)
+			if(obj.getStartFrame() == 0 && obj.getEndFrame() == finalFrame)
+				obj.alwaysDraw();
+
+			
 	}
 	
 	//update currentFrame, update all objects, and end playing if past final frame
@@ -99,8 +113,22 @@ public class BattleAnim
 							obj.update(frame);
 					else
 					{
-						playing = false;
-						done = true;
+						//animation is over
+						if(loops)
+						{
+							play(src, tar);
+							for(BattleAnimObject obj : objects)								
+							{
+								obj.update(frame);
+								obj.render(frame);
+							}
+						}							
+						else
+						{
+							playing = false;
+							done = true;
+						}
+						
 					}
 				}
 			}

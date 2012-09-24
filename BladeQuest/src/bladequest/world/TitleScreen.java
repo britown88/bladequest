@@ -38,7 +38,9 @@ public class TitleScreen
 		titleWidth = titleMain.getWidth();
 		titleHeight = titleMain.getHeight();		
 		
-		titlescene = Global.scenes.get("title");
+		//titlescene = Global.scenes.get("title");
+		titlescene = Global.scenes.get("white");
+		
 		whitescene = Global.scenes.get("white");
 		
 		paint = Global.textFactory.getTextPaint(13, Color.WHITE, Align.CENTER);		
@@ -95,6 +97,7 @@ public class TitleScreen
 		case GameLogo:	
 			Global.screenFader.fadeOut(2);
 			Global.musicBox.play(openingSong, true, -1);
+			Global.playAnimation("title", null, null);
 			break;
 		case Menu:
 			titleScale = 2.0f;
@@ -260,6 +263,8 @@ public class TitleScreen
 				if(menu != null && !menu.Closed())
 					menu.render();
 			}
+			
+			Global.renderAnimations();
 			break;
 		case MenuTransition:
 		case Menu:

@@ -279,6 +279,8 @@ public class GameDataLoader
 		{	baObj.addState(baState);
 		}else if(dl.item.equals("endobj"))
 		{	ba.addObject(baObj);
+		}else if(dl.item.equals("loop"))
+		{	ba.loop();
 		}else if(dl.item.equals("endba"))
 		{ 
 			Global.battleAnims.put(baName, ba);			

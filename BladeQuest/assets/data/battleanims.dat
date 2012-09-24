@@ -1,6 +1,7 @@
 # Syntax:
 #
 # ba <animName> <FPS>
+#     [loop]
 #     obj <line/elipse/rect/bmp> <1/0:elipseOnly> [<bmpName>]
 #         state <frame> <tar/src/scrn>
 #             [stroke <strokeWidth>]
@@ -16,6 +17,61 @@
 #     [obj ...]
 # endba
 [battleanims]
+ba title 10.0f
+loop
+
+#cliff
+obj bmp 0 title-cliff
+state 0 scrn
+size 174 110
+pos 1 274 178
+argb 255 255 255 255
+endstate
+state 50 scrn
+size 174 110
+pos 1 274 178
+argb 255 255 255 255
+endstate
+endobj
+
+#clouds
+obj bmp 0 title-clouds
+state 0 scrn
+endstate
+endobj
+
+#clouds2
+obj bmp 0 title-clouds
+state 0 scrn
+endstate
+endobj
+
+#sky
+obj bmp 0 title-sky
+state 0 scrn
+endstate
+endobj
+
+#tree
+obj bmp 0 title-tree
+state 0 scrn
+endstate
+endobj
+
+#water
+obj bmp 0 title-water
+state 0 scrn
+endstate
+endobj
+
+#water2
+obj bmp 0 title-water
+state 0 scrn
+endstate
+endobj
+
+endba
+#
 ba slice1 60.0
 obj line 0
 state 0 tar

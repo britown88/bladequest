@@ -134,6 +134,7 @@ implements SurfaceHolder.Callback
     	{
     	case GS_TITLE:
     		Global.title.render();
+    		
     		Global.screenFader.render();
     		break;
     	case GS_SHOWSCENE:

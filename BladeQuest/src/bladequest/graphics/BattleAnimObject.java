@@ -25,6 +25,8 @@ public class BattleAnimObject
 	private Paint objPaint;
 	private Rect objRect, drawRect;
 	
+	private boolean alwaysDraw;
+	
 	public BattleAnimObject(Types type, boolean outlineOnly, String bmpName)
 	{
 		states = new ArrayList<BattleAnimObjState>();
@@ -58,7 +60,8 @@ public class BattleAnimObject
 		
 		objRect = new Rect();
 	}
-	
+
+	public void alwaysDraw() { alwaysDraw = true; }
 	public int getCurrentStateIndex() { return stateIndex; }
 	public BattleAnimObjState getCurrentState() { return currentState; }
 	public BattleAnimObjState getNextState() { return nextState; }
@@ -144,6 +147,7 @@ public class BattleAnimObject
 	
 	public void addState(BattleAnimObjState state){states.add(state);}
 	public int getEndFrame() { return endFrame; }
+	public int getStartFrame() { return startFrame; }
 	
 	private int linearInterpolation(int x0, int x1, float mu){return (int)(x0 * (1.0f-mu) + x1*mu);}
 	private float linearInterpolation(float x0, float x1, float mu){return x0 * (1.0f-mu) + x1*mu;}
@@ -239,7 +243,7 @@ public class BattleAnimObject
 				
 				//build final rect
 				updateRect();
-			}
+			}				
 			
 		}
 		
@@ -249,7 +253,7 @@ public class BattleAnimObject
 	public void render(int frame)
 	{
 		//if state is shown and frame is within object's screentime
-		if(workingState.show && frame >= startFrame && frame <= endFrame)
+		if((workingState.show && frame >= startFrame && frame <= endFrame) || alwaysDraw)
 		{
 			updateDrawPos();
 			

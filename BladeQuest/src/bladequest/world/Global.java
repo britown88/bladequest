@@ -544,7 +544,7 @@ public class Global
 		}
 		
 		//update
-		switch(Global.GameState)
+		switch(GameState)
 		{
 		case GS_MENUTRANSITION:
 			if(screenFader.isDone())
