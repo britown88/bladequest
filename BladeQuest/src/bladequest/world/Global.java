@@ -49,6 +49,9 @@ import bladequest.system.GameSaveLoader;
 import bladequest.system.Lock;
 import bladequest.system.MapLoadThread;
 
+
+//THIS IS A TEST COMMENT
+
 public class Global 
 {
 	private static final String TAG = Global.class.getSimpleName();

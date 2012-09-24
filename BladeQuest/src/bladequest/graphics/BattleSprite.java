@@ -7,7 +7,6 @@ import bladequest.world.Global;
 import android.graphics.*;
 import android.util.*;
 
-//test
 
 public class BattleSprite {
 	private Bitmap bitmap;
