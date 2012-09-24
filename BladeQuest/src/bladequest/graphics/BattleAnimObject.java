@@ -25,7 +25,7 @@ public class BattleAnimObject
 	private Paint objPaint;
 	private Rect objRect, drawRect;
 	
-	private boolean alwaysDraw;
+	private boolean alwaysDraw, linearInterp;
 	
 	public BattleAnimObject(Types type, boolean outlineOnly, String bmpName)
 	{
@@ -49,6 +49,7 @@ public class BattleAnimObject
 		this.outlineOnly = other.outlineOnly;
 		this.type = other.type;
 		this.bmpName = other.bmpName;
+		this.linearInterp = other.linearInterp;
 		
 		for(BattleAnimObjState state : other.states)
 			addState(new BattleAnimObjState(state));	
@@ -62,6 +63,7 @@ public class BattleAnimObject
 	}
 
 	public void alwaysDraw() { alwaysDraw = true; }
+	public void interpolateLinearly() { linearInterp = true; }
 	public int getCurrentStateIndex() { return stateIndex; }
 	public BattleAnimObjState getCurrentState() { return currentState; }
 	public BattleAnimObjState getNextState() { return nextState; }
@@ -235,10 +237,22 @@ public class BattleAnimObject
 				//---rotation
 				
 				//---position (including lines)
-				workingState.pos1.x = cubicInterpolation(y0.pos1.x, currentState.pos1.x, nextState.pos1.x, y3.pos1.x, progress);
-				workingState.pos1.y = cubicInterpolation(y0.pos1.y, currentState.pos1.y, nextState.pos1.y, y3.pos1.y, progress);
-				workingState.pos2.x = cubicInterpolation(y0.pos2.x, currentState.pos2.x, nextState.pos2.x, y3.pos2.x, progress);
-				workingState.pos2.y = cubicInterpolation(y0.pos2.y, currentState.pos2.y, nextState.pos2.y, y3.pos2.y, progress);
+				if(linearInterp)
+				{
+					workingState.pos1.x = linearInterpolation(currentState.pos1.x, nextState.pos1.x, progress);
+					workingState.pos1.y = linearInterpolation(currentState.pos1.y, nextState.pos1.y, progress);
+					workingState.pos2.x = linearInterpolation(currentState.pos2.x, nextState.pos2.x, progress);
+					workingState.pos2.y = linearInterpolation(currentState.pos2.y, nextState.pos2.y, progress);
+				
+				}
+				else
+				{
+					workingState.pos1.x = cubicInterpolation(y0.pos1.x, currentState.pos1.x, nextState.pos1.x, y3.pos1.x, progress);
+					workingState.pos1.y = cubicInterpolation(y0.pos1.y, currentState.pos1.y, nextState.pos1.y, y3.pos1.y, progress);
+					workingState.pos2.x = cubicInterpolation(y0.pos2.x, currentState.pos2.x, nextState.pos2.x, y3.pos2.x, progress);
+					workingState.pos2.y = cubicInterpolation(y0.pos2.y, currentState.pos2.y, nextState.pos2.y, y3.pos2.y, progress);
+					
+				}
 						
 				
 				//build final rect

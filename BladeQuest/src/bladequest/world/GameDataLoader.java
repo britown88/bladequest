@@ -259,8 +259,7 @@ public class GameDataLoader
 			else
 				baState.pos2 = new Point(Integer.parseInt(dl.values.get(1)), Integer.parseInt(dl.values.get(2)));
 		}else if(dl.item.equals("size"))
-		{	
-				baState.size = new Point(Integer.parseInt(dl.values.get(0)), Integer.parseInt(dl.values.get(1)));
+		{	baState.size = new Point(Integer.parseInt(dl.values.get(0)), Integer.parseInt(dl.values.get(1)));
 		}else if(dl.item.equals("show"))
 		{	baState.show = Integer.parseInt(dl.values.get(0)) != 0;	
 		}else if(dl.item.equals("colorize"))
@@ -279,6 +278,8 @@ public class GameDataLoader
 		{	baObj.addState(baState);
 		}else if(dl.item.equals("endobj"))
 		{	ba.addObject(baObj);
+		}else if(dl.item.equals("linterp"))
+		{	baObj.interpolateLinearly();
 		}else if(dl.item.equals("loop"))
 		{	ba.loop();
 		}else if(dl.item.equals("endba"))
