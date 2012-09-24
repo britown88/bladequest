@@ -1,3 +1,20 @@
+# Syntax:
+#
+# ba <animName> <FPS>
+#     obj <line/elipse/rect/bmp> <1/0:elipseOnly> [<bmpName>]
+#         state <frame> <tar/src/scrn>
+#             [stroke <strokeWidth>]
+#             [pos <1/2> <x> <y>]
+#             [size <width> <height>]
+#             [show <1/0>]
+#             [colorize <0.0-1.0>]
+#             [argb <a> <r> <g> <b>]
+#         endstate
+#         [state ...]
+#     endobj
+#     [copylast <count> <frameDelay>]
+#     [obj ...]
+# endba
 [battleanims]
 ba slice1 60.0
 obj line 0
