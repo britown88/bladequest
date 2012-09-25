@@ -819,7 +819,7 @@ public class Battle {
 			switch(currentState)
 			{				
 			case SELECTITEM:							
-				if(mainMenu.getSelectedEntry() != null && mainMenu.getSelectedEntry() != null)
+				if(mainMenu.getSelectedEntry() != null)
 				{
 					mpWindow.getTextAt(0).text = "Qty: "+((Item)mainMenu.getSelectedEntry().obj).getCount();
 					mpWindow.render();
@@ -827,7 +827,7 @@ public class Battle {
 				break;
 				
 			case SELECTABILITY:			
-				if(mainMenu.getSelectedEntry() != null && mainMenu.getSelectedEntry() != null)
+				if(mainMenu.getSelectedEntry() != null)
 				{
 					mpWindow.getTextAt(0).text = "Cost: "+((Ability)mainMenu.getSelectedEntry().obj).MPCost();
 					mpWindow.render();
@@ -1705,6 +1705,7 @@ public class Battle {
 						infoWindow.close();
 						String str = (String)(mainMenu.getSelectedEntry().obj);
 						handleOption(str);
+						mainMenu.clearSelectedEntry();
 						mainMenu.update();
 						Global.playSound("menusound1");
 						break;

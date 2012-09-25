@@ -98,8 +98,10 @@ public class BqThread extends Thread
 	    			if(Global.debugButton != null)
 	    			{
 	    				Global.debugButton.touchActionDown(x, y);
-	    				if(Global.debugButton.getSelectedEntry() == null)
-	            			Global.updateMousePosition(x, y, true);
+	    				Global.debugButton.clearSelectedEntry();
+	    				
+	    				//if(Global.debugButton.getSelectedEntry() == null)
+	            		Global.updateMousePosition(x, y, true);
 	    			}
 	    			else
 	    				Global.updateMousePosition(x, y, true);

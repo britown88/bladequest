@@ -113,6 +113,7 @@ public class ListBox extends MenuPanel
 	public boolean isScrolling() { return scrolling; }
 	
 	public ListBoxEntry getSelectedEntry() { return lastItemSelected; }
+	public void clearSelectedEntry() { lastItemSelected = null; }
 	public List<ListBoxEntry> getEntries() { return entries; }
 	public ListBoxEntry getEntryAt(int index) { return entries.get(index);}
 	public void setDisabledPaint(Paint p) { disabledTextPaint = p; }
@@ -237,7 +238,8 @@ public class ListBox extends MenuPanel
 		LBStates returnState = LBStates.Open;
 		
 		//do nothing if we're scrolling		
-		if(!scrolling && mouseDown)
+		
+		if(!scrolling)
 			returnState = selectedItem != null ? LBStates.Selected : LBStates.Close;
 
 		scrolling = false;
@@ -266,8 +268,7 @@ public class ListBox extends MenuPanel
 				}
 				else	
 					//dragged to left or right
-					if((int)(x / columnWidth) != (int)(startX / columnWidth)
-							&& frameRect.contains(x, y))
+					if(frameRect.contains(x, y))
 					{
 						//reevaluate which item is selected
 						selectedIndex = getSelectedIndex(x,y);
@@ -279,6 +280,8 @@ public class ListBox extends MenuPanel
 			}
 			else
 			{
+				selectedItem = null;
+				
 				if( (y > startY && itemBuffer >= numColumns) || 
 						(y < startY && itemBuffer + (numColumns*numRows) < entries.size()))
 				{
@@ -287,6 +290,7 @@ public class ListBox extends MenuPanel
 					if(scrollDelta < -(frameRect.height() / numRows))
 					{					
 						itemBuffer += numColumns;
+						update();
 						startY -= (frameRect.height() / numRows);
 						scrollDelta = 0;
 					}
@@ -294,6 +298,7 @@ public class ListBox extends MenuPanel
 					if(scrollDelta > (frameRect.height() / numRows))
 					{
 						itemBuffer -= numColumns;
+						update();
 						startY += (frameRect.height() / numRows);
 						scrollDelta = 0;
 					}
