@@ -1,5 +1,6 @@
 package bladequest.combat;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.graphics.Color;
@@ -7,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Paint.Cap;
 import android.graphics.Point;
+import android.graphics.Rect;
 import bladequest.UI.ListBox;
 import bladequest.UI.MenuPanel;
 import bladequest.UI.MenuPanel.Anchors;
@@ -36,8 +38,9 @@ public class BattleNew
 	private final String txtTargetSingleAlly = "Select ally...";
 	private final String txtTargetSingleEnemy = "Select enemy...";
 	private final String txtTargetEnemies = "Targeting all enemies...";
-	private final String txtTargetAllies = "Targeting all Allies...";
-	private final String txtTargetSelf = "Targeting self.";
+	private final String txtTargetAllies = "Targeting all allies...";
+	private final String txtTargetSelf = "Targeting self...";
+	private final String txtTargetEverybody = "Targeting everybody!";
 	private final String txtDefeat = "Annihilated...";
 	
 	private int selCharX;
@@ -50,11 +53,15 @@ public class BattleNew
 	private Character currentChar;
 	private int currentCharIndex;
 	private TargetTypes targetType;
+	private List<Character> targets;
+	private List<BattleEvent> battleEvents;
 	
 	private BattleStates state;
 	private Encounter encounter;
 
 	private List<Character> partyList;
+	
+	private Rect enemyArea;
 	
 	//gfx
 	private Paint selectPaint;
@@ -67,7 +74,9 @@ public class BattleNew
 	
 	public BattleNew()
 	{
-		//constructor
+		enemyArea = Global.vpToScreen(new Rect(0,0,partyPos.x-partyFrameBuffer, Global.vpHeight-frameMinHeight));
+		targets = new ArrayList<Character>();
+		battleEvents = new ArrayList<BattleEvent>();
 	}
 	
 	public void startBattle(String encounter)
@@ -282,6 +291,9 @@ public class BattleNew
 			case SingleEnemy:
 				changeStartBarText(txtTargetSingleEnemy);
 				break;
+			case Everybody:
+				changeStartBarText(txtTargetEverybody);
+				break;
 			}
 			changeStartBarText(txtTargetSingle);
 			mainMenu.close();
@@ -360,8 +372,10 @@ public class BattleNew
 	
 	private void nextCharacter()
 	{
-		nextChar = true;
+		changeState(BattleStates.SELECT);
+		//mainMenu.close();		
 		recedeChar();
+		nextChar = true;
 	}
 	
 	private void drawActors()
@@ -387,6 +401,12 @@ public class BattleNew
 		infoPanel.render();
 		mpWindow.render();
 		displayNamePanel.render();
+	}
+	private void drawSelect()
+	{
+		for(Character t : targets)
+			Global.renderer.drawRect(t.getRect(), selectPaint, true);
+
 	}
 	
 	public void update()
@@ -416,6 +436,7 @@ public class BattleNew
 		Global.map.getBackdrop().render();
 		drawActors();
 		drawPanels();
+		drawSelect();
 		
 	}
 	
@@ -449,7 +470,16 @@ public class BattleNew
 					changeState(BattleStates.SELECT);
 				else
 				{
-					nextCharacter();
+					if(targets.size() > 0)
+					{
+						//targets were selected
+						battleEvents.add(new BattleEvent(currentChar, targets, targetType));
+						nextCharacter();
+						targets.clear();
+					}
+					else
+						changeState(BattleStates.SELECT);
+					
 				}
 			}
 			
@@ -464,6 +494,10 @@ public class BattleNew
 		case SELECT:
 			mainMenu.touchActionDown(x, y);
 			break;
+		case TARGET:
+			if(mainMenu.Closed())
+				getTouchTargets(x, y);
+			break;
 		}
 	}
 	public void touchActionMove(int x, int y)
@@ -473,8 +507,37 @@ public class BattleNew
 		case SELECT:
 			mainMenu.touchActionMove(x, y);
 			break;
+		case TARGET:
+			if(mainMenu.Closed())
+				getTouchTargets(x, y);
+			break;
+			
 		}
 	}
+	private void getTouchTargets(int x, int y)
+	{
+		targets.clear();		
+		switch(targetType)
+		{
+		case Single:
+			if(enemyArea.contains(x, y))
+			{
+				int lowestDist = Math.abs(enemyArea.top - enemyArea.bottom) + Math.abs(enemyArea.left - enemyArea.right);
+				Enemy closest = null;
+				for(Enemy e : encounter.Enemies())
+				{
+					Point pos = Global.vpToScreen(e.getPosition());
+					int dist = Math.abs(pos.x - x) + Math.abs(pos.y - y);
+					if(dist < lowestDist) {lowestDist = dist;closest = e;}
+				}
+				
+				targets.add(closest);
+				
+			}
+		}		
+
+	}
+	
 	
 	public enum BattleStates
 	{

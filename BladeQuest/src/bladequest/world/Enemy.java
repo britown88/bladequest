@@ -1,6 +1,7 @@
 package bladequest.world;
 
 import android.graphics.*;
+
 import java.util.*;
 
 
@@ -157,10 +158,20 @@ public class Enemy extends Character
 		return exp;
 	}
 	
+	@Override
 	public void battleRender()
 	{
 		battleSpr.render(position.x, position.y, 0, true);
 	}
+	
+	@Override
+	public Rect getRect() 
+	{
+		return Global.vpToScreen(new Rect(
+				position.x-getWidth()/2, 
+				position.y-getHeight()/2, 
+				position.x+getWidth()/2, 
+				position.y+getHeight()/2));}
 	
 	@Override
 	protected void updateStats()

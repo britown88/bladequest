@@ -1114,6 +1114,7 @@ public class Character
 		battleRender(position.x, position.y);		
 	}
 	
+	public Rect getRect() {return Global.vpToScreen(new Rect(position.x, position.y, position.x+getWidth(), position.y+getHeight()));}
 	public Point getPosition() { return position; }	
 	public int getWidth() { return battleSpr.getWidth(); }
 	public int getHeight() { return battleSpr.getHeight(); }

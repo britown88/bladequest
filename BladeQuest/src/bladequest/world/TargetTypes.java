@@ -5,6 +5,7 @@ public enum TargetTypes
 	Single,
 	SingleEnemy,
 	SingleAlly,
+	Everybody,
 	AllAllies,
 	AllEnemies,
 	Self
