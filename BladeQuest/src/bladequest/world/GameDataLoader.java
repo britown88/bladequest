@@ -495,7 +495,7 @@ public class GameDataLoader
 		if(dl.item.equals("encounter"))
 		{
 			encName = dl.values.get(0);
-			enc = new Encounter(encName);
+			enc = new Encounter(encName, dl.values.get(1));
 		}
 		else if(dl.item.equals("enemy"))
 		{

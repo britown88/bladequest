@@ -21,7 +21,7 @@ public class ListBox extends MenuPanel
 	private boolean scrolling;	
 	private Paint textPaint, disabledTextPaint;
 	
-	public boolean thickOptSelect, drawAllFrames;	
+	public boolean thickOptSelect, hideOnClosed,drawAllFrames;	
 	
 	
 	public ListBox(Rect frameRect, int rows, int columns, Paint textPaint)
@@ -169,7 +169,7 @@ public class ListBox extends MenuPanel
 	{	
 		renderFrame();
 		
-		if(drawContent)
+		if(drawContent && !(hideOnClosed && closed))
 		{
 			//disable drawing for the first row if scrolling
 			//would display that above row 0

@@ -85,6 +85,7 @@ public class Character
 		learnableAbilities = new ArrayList<LearnableAbility>();
 		done = true;
 		portrait = new Point(0,0);
+		position = new Point(0,0);
 	}
 	
 	public Character(Character c)
@@ -127,6 +128,8 @@ public class Character
 		abilities = new ArrayList<Ability>(c.abilities);
 		learnableAbilities = new ArrayList<LearnableAbility>(c.learnableAbilities);
 		statusEffects = new ArrayList<StatusEffect>(c.statusEffects);
+		
+		position = new Point(0,0);
 	}
 	
 	public void setDone(boolean done) { this.done = done; }
@@ -985,72 +988,67 @@ public class Character
 		return battleSpr.getFace();
 	}
 	
-	public void setIdle(boolean ignoredamaged)
+	private boolean hasNegativeStatus()
 	{
-		if(battleSpr.getFace() != faces.Damaged || !ignoredamaged)
-		{
-			if(done)
-			{
-				boolean inflicted = false;
-				for(StatusEffect se : statusEffects)
-					if(se.isNegative())
-						inflicted = true;
-				
-				imageIndex = 0;
-				if(HP <= (float)stats[Stats.MaxHP.ordinal()]*0.25F || inflicted)
-				{
-					if(HP <= 0)
-						battleSpr.changeFace(BattleSprite.faces.Dead);	
-					else
-						battleSpr.changeFace(BattleSprite.faces.Weak);
-				}
-				else
-					if(Global.GameState == States.GS_BATTLE && action == Action.Guard && 
-							(Global.battle.getState() == Battle.battleStates.ACT ||
-									Global.battle.getState() == Battle.battleStates.ACTWAIT ||
-									Global.battle.getState() == Battle.battleStates.USEITEM))
-
-						battleSpr.changeFace(BattleSprite.faces.Ready);
-					else					
-						battleSpr.changeFace(BattleSprite.faces.Idle);
-			}
-			
-		}
-		
-	}
-	
-	public void setReady()
-	{
-		imageIndex = 0;
-		
-		boolean inflicted = false;
 		for(StatusEffect se : statusEffects)
 			if(se.isNegative())
-				inflicted = true;
+				return true;
 		
-		if(HP <= (float)stats[Stats.MaxHP.ordinal()]*0.25F || inflicted)
+		return false;
+	}
+	
+	//returns whether or not weak or dead was set
+	private boolean setWeakDead()
+	{
+		if(HP <= (float)stats[Stats.MaxHP.ordinal()]*0.25F || hasNegativeStatus())
 		{
 			if(HP <= 0)
 				battleSpr.changeFace(BattleSprite.faces.Dead);	
 			else
 				battleSpr.changeFace(BattleSprite.faces.Weak);
-		}			
+			
+			return true;
+		}
 		else
+			return false;
+	}
+	
+	
+	public void setIdle()
+	{
+		
+	}
+	
+	public void setIdle(boolean ignoredamaged)
+	{
+		if(battleSpr.getFace() != faces.Damaged)
+		{
+
+			imageIndex = 0;
+			if(!setWeakDead())
+				if(action == Action.Guard)
+					battleSpr.changeFace(BattleSprite.faces.Ready);
+				else					
+					battleSpr.changeFace(BattleSprite.faces.Idle);
+		}		
+	}	
+	public void setReady()
+	{
+		imageIndex = 0;
+		
+		if(!setWeakDead())
 		{
 			if(battleSpr.getFace() != BattleSprite.faces.Cast &&
 					battleSpr.getFace() != BattleSprite.faces.Use)
 			{
-				if(action == Action.Ability || 
-						(action == Action.CombatAction && 
-								combAction.getType() == DamageTypes.Magic))
+				if(action == Action.Ability || (action == Action.CombatAction &&combAction.getType() == DamageTypes.Magic))
+					//magical
 					battleSpr.changeFace(BattleSprite.faces.Casting);
 				else
+					//physical
 					battleSpr.changeFace(BattleSprite.faces.Ready);
-			}
-			
-				
-		}
-			
+			}					
+		}			
 	}
 	
 	public void setSwing()
@@ -1106,6 +1104,11 @@ public class Character
 		}
 			
 		
+	}
+	
+	public void battleRender()
+	{
+		battleRender(position.x, position.y);		
 	}
 	
 	public Point getPosition() { return position; }	

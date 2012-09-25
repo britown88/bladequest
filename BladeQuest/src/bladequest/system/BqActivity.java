@@ -91,6 +91,9 @@ implements OnGestureListener, AudioManager.OnAudioFocusChangeListener
 			case GS_BATTLE:
 				Global.battle.backButtonPressed();
 				break;
+			case GS_BATTLETEST:
+				Global.battleTest.backButtonPressed();
+				break;
 			case GS_MAINMENU:			
 				
 				Global.menu.backButtonPressed();

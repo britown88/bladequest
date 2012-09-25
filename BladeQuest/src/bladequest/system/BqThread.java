@@ -151,6 +151,22 @@ public class BqThread extends Thread
 	        		break;
 	        	}
 	    		break;
+	    	case GS_BATTLETEST:
+	    		switch (event.getAction())
+	        	{
+	        	case MotionEvent.ACTION_DOWN:
+	        		Global.battleTest.touchActionDown(x, y);
+	        		break;
+	        		
+	        	case MotionEvent.ACTION_UP:
+	        		Global.battleTest.touchActionUp(x, y);
+	        		break;
+	        		
+	        	case MotionEvent.ACTION_MOVE:
+	        		Global.battleTest.touchActionMove(x, y);
+	        		break;
+	        	}
+	    		break;
 	    	case GS_MAINMENU:
 	    		switch (event.getAction())
 	        	{

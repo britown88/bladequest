@@ -155,6 +155,8 @@ implements SurfaceHolder.Callback
     		break;
     	case GS_BATTLE:
     		Global.battle.render();
+    	case GS_BATTLETEST:
+    		Global.battleTest.render();
     		break;
     	case GS_MAINMENU:
     		Global.menu.render();

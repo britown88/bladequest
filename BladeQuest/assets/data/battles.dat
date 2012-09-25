@@ -1,31 +1,31 @@
 [encounters]
-encounter 2rats
+encounter 2rats inherit
 enemy rat 150 96
 enemy rat 100 158
 endencounter
 #
-encounter rat
+encounter rat inherit
 enemy rat 128 128
 endencounter
 #
-encounter bat
+encounter bat inherit
 enemy bat 128 128
 endencounter
 #
-encounter zombie
+encounter zombie inherit
 enemy zombie 128 128
 endencounter
 #
-encounter guard
+encounter guard inherit
 enemy guard 128 128
 endencounter
 #
-encounter recruit
+encounter recruit inherit
 enemy recruit 128 128
 disablerunning
 endencounter
 #
-encounter 3guards
+encounter 3guards inherit
 enemy guard 128 78
 enemy guard 68 128
 enemy guard 128 178

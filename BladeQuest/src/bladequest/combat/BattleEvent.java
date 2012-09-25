@@ -1,6 +1,9 @@
-package bladequest.world;
+package bladequest.combat;
 
 import java.util.List;
+
+import bladequest.world.Character;
+import bladequest.world.TargetTypes;
 
 public class BattleEvent 
 {
@@ -10,13 +13,5 @@ public class BattleEvent
 	
 	
 	
-	public enum ActionTypes
-	{
-		Attack,
-		Item,
-		Guard,
-		CombatAction,
-		Ability
-	}
 
 }
