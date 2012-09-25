@@ -17,11 +17,11 @@ public class ListBox extends MenuPanel
 	//private List<Integer> disabledIndices;
 	
 	private List<ListBoxEntry> entries;
-	private ListBoxEntry selectedItem;
-	private boolean scrolling/*, selected*/;	
+	private ListBoxEntry selectedItem, lastItemSelected;
+	private boolean scrolling;	
 	private Paint textPaint, disabledTextPaint;
 	
-	public boolean /*showOptSelect,*/ thickOptSelect, drawAllFrames;	
+	public boolean thickOptSelect, drawAllFrames;	
 	
 	
 	public ListBox(Rect frameRect, int rows, int columns, Paint textPaint)
@@ -112,7 +112,7 @@ public class ListBox extends MenuPanel
 	
 	public boolean isScrolling() { return scrolling; }
 	
-	public ListBoxEntry getSelectedEntry() { return selectedItem; }
+	public ListBoxEntry getSelectedEntry() { return lastItemSelected; }
 	public List<ListBoxEntry> getEntries() { return entries; }
 	public ListBoxEntry getEntryAt(int index) { return entries.get(index);}
 	public void setDisabledPaint(Paint p) { disabledTextPaint = p; }
@@ -211,20 +211,23 @@ public class ListBox extends MenuPanel
 		renderDarken();
 	}
 	
+	private boolean mouseDown;
+	
 	public void touchActionDown(int x, int y)
 	{
 		selectedIndex = getSelectedIndex(x,y);
-		selectedItem = selectedIndex < entries.size() ? entries.get(selectedIndex) : null;
+		
+		if(frameRect.contains(x, y))
+		{
+			if(selectedIndex < entries.size())
+				selectedItem = entries.get(selectedIndex);
+			
+			mouseDown = true;
+		}
 		
 		startY = y;
 		startX = x;
 		scrolling = false;
-		/*if(frameRect.contains(x, y))
-		{
-			selected = true;
-			showOptSelect = true;
-		}*/
-			
 	}
 	
 	//returns whether the box stays open, closes, or if an item was selected
@@ -234,74 +237,71 @@ public class ListBox extends MenuPanel
 		LBStates returnState = LBStates.Open;
 		
 		//do nothing if we're scrolling		
-		if(!scrolling)
+		if(!scrolling && mouseDown)
 			returnState = selectedItem != null ? LBStates.Selected : LBStates.Close;
 
 		scrolling = false;
-
-
+		mouseDown = false;
+		
+		lastItemSelected = selectedItem;
+		selectedItem = null;
+		
 		return returnState;
 	}
 	
 	public void touchActionMove(int x, int y)
 	{
-		selectedIndex = getSelectedIndex(x,y);
-		selectedItem = selectedIndex < entries.size() && frameRect.contains(x, y)? entries.get(selectedIndex) : null;
-		
-		
-		if(!scrolling)
+		if(mouseDown)
 		{
-			//dragged out of starting row
-			if( ((y > startY && itemBuffer >= numColumns) || 
-					(y < startY && itemBuffer + (numColumns*numRows) < entries.size())) && 
-					(int)(y / numRows) != (int)(startY / numRows))
+			if(!scrolling)
 			{
-				//start scrolling
-				scrolling = true;
-				//showOptSelect = false;
-				selectedItem = null;
-			}
-			else	
-				//dragged to left or right
-				if((int)(x / numColumns) != (int)(startX / numColumns)
-						&& frameRect.contains(x, y))
+				//dragged out of starting row
+				if( ((y > startY && itemBuffer >= numColumns) || 
+						(y < startY && itemBuffer + (numColumns*numRows) < entries.size())) && 
+						(int)(y / numRows) != (int)(startY / numRows))
 				{
-					//reevaluate which item is selected
-					selectedIndex = getSelectedIndex(x,y);
-					if(selectedIndex < entries.size())
+					//start scrolling
+					scrolling = true;
+					selectedItem = null;
+				}
+				else	
+					//dragged to left or right
+					if((int)(x / columnWidth) != (int)(startX / columnWidth)
+							&& frameRect.contains(x, y))
 					{
-						//showOptSelect = true;
-						selectedItem = entries.get(selectedIndex);
-					}
-						
-					else
-						selectedItem = null;
-				}			
-		}
-		
-		if(scrolling)
-		{
-			if( (y > startY && itemBuffer >= numColumns) || 
-					(y < startY && itemBuffer + (numColumns*numRows) < entries.size()))
+						//reevaluate which item is selected
+						selectedIndex = getSelectedIndex(x,y);
+						if(selectedIndex < entries.size())
+							selectedItem = entries.get(selectedIndex);							
+						else
+							selectedItem = null;
+					}			
+			}
+			else
 			{
-				
-				scrollDelta = y - startY;
-				if(scrollDelta < -(frameRect.height() / numRows))
-				{					
-					itemBuffer += numColumns;
-					startY -= (frameRect.height() / numRows);
-					scrollDelta = 0;
-				}
-				
-				if(scrollDelta > (frameRect.height() / numRows))
+				if( (y > startY && itemBuffer >= numColumns) || 
+						(y < startY && itemBuffer + (numColumns*numRows) < entries.size()))
 				{
-					itemBuffer -= numColumns;
-					startY += (frameRect.height() / numRows);
-					scrollDelta = 0;
+					
+					scrollDelta = y - startY;
+					if(scrollDelta < -(frameRect.height() / numRows))
+					{					
+						itemBuffer += numColumns;
+						startY -= (frameRect.height() / numRows);
+						scrollDelta = 0;
+					}
+					
+					if(scrollDelta > (frameRect.height() / numRows))
+					{
+						itemBuffer -= numColumns;
+						startY += (frameRect.height() / numRows);
+						scrollDelta = 0;
+					}
+					
 				}
-				
 			}
 		}
+		
 	}
 	
 	//pass mouse coordinates

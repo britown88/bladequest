@@ -1540,7 +1540,8 @@ public class Battle {
 				case Single:
 				case SingleAlly:
 				case SingleEnemy:
-					setMouseSelect(x, y);
+					if(infoWindow.Closed())
+						setMouseSelect(x, y);
 					break;
 				default:
 					break;
@@ -1550,7 +1551,8 @@ public class Battle {
 			case SELECT:
 			case SELECTITEM:
 			case SELECTABILITY:
-				mainMenu.touchActionDown(x, y);
+				if(infoWindow.Opened())
+					mainMenu.touchActionDown(x, y);
 				break;
 			case ACT:
 				break;
@@ -1703,6 +1705,7 @@ public class Battle {
 						infoWindow.close();
 						String str = (String)(mainMenu.getSelectedEntry().obj);
 						handleOption(str);
+						mainMenu.update();
 						Global.playSound("menusound1");
 						break;
 					}	
@@ -1714,46 +1717,54 @@ public class Battle {
 				
 				}
 				break;
-			case SELECTITEM:				
-				switch(mainMenu.touchActionUp(x, y))
+			case SELECTITEM:	
+				if(infoWindow.Opened())
 				{
-				case Close:
-					changeState(battleStates.SELECT);
-					Global.playSound("denied1");
-					break;
-				case Selected:
-					Item i = (Item)(mainMenu.getSelectedEntry().obj);
-					//Global.party.removeItem(i.getId(), 1);											
-					getChar(currentChar).setItemToUse(i);
-					getChar(currentChar).setReady();
-					targetType = i.getTargetType();
-					infoWindow.close();
-					changeState(battleStates.TARGET);
-					Global.playSound("menusound1");
-					break;
+					switch(mainMenu.touchActionUp(x, y))
+					{
+					case Close:
+						changeState(battleStates.SELECT);
+						Global.playSound("denied1");
+						break;
+					case Selected:
+						Item i = (Item)(mainMenu.getSelectedEntry().obj);
+						//Global.party.removeItem(i.getId(), 1);											
+						getChar(currentChar).setItemToUse(i);
+						getChar(currentChar).setReady();
+						targetType = i.getTargetType();
+						infoWindow.close();
+						changeState(battleStates.TARGET);
+						Global.playSound("menusound1");
+						break;
+					}
 				}
+				
 				break;
 				
-			case SELECTABILITY:				
-				switch(mainMenu.touchActionUp(x, y))
+			case SELECTABILITY:	
+				if(infoWindow.Opened())
 				{
-				case Close:
-					changeState(battleStates.SELECT);
-					Global.playSound("denied1");
-					break;
-				case Selected:
-					Ability a = (Ability)(mainMenu.getSelectedEntry().obj);
-					if(getChar(currentChar).getMP() >= a.MPCost())
+					switch(mainMenu.touchActionUp(x, y))
 					{
-						infoWindow.close();					
-						getChar(currentChar).setAbilityToUse(a);
-						getChar(currentChar).setReady();
-						targetType = a.TargetType();
-						changeState(battleStates.TARGET);
+					case Close:
+						changeState(battleStates.SELECT);
+						Global.playSound("denied1");
+						break;
+					case Selected:
+						Ability a = (Ability)(mainMenu.getSelectedEntry().obj);
+						if(getChar(currentChar).getMP() >= a.MPCost())
+						{
+							infoWindow.close();					
+							getChar(currentChar).setAbilityToUse(a);
+							getChar(currentChar).setReady();
+							targetType = a.TargetType();
+							changeState(battleStates.TARGET);
+						}
+						Global.playSound("menusound1");
+						break;
 					}
-					Global.playSound("menusound1");
-					break;
 				}
+				
 				
 				break;
 			case ACT:
@@ -1805,7 +1816,8 @@ public class Battle {
 				case Single:
 				case SingleAlly:
 				case SingleEnemy:
-					setMouseSelect(x, y);
+					if(infoWindow.Closed())
+						setMouseSelect(x, y);
 					break;
 				default:
 					break;
@@ -1814,7 +1826,8 @@ public class Battle {
 			case SELECT:						
 			case SELECTITEM:				
 			case SELECTABILITY:	
-				mainMenu.touchActionMove(x, y);				
+				if(infoWindow.Opened())
+					mainMenu.touchActionMove(x, y);				
 				break;
 			case ACT:
 				break;
