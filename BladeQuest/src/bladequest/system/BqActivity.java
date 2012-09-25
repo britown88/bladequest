@@ -70,7 +70,8 @@ implements OnGestureListener, AudioManager.OnAudioFocusChangeListener
 	@Override
     public boolean onTouchEvent(MotionEvent event) 
     {
-		touchEvents.add(event);
+		if(touchEvents.isEmpty())
+			touchEvents.add(event);
     	return gestureScanner.onTouchEvent(event);
     }   
 	
