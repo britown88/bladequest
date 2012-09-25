@@ -499,6 +499,11 @@ public class Global
 		return null;
 	}
 	
+	public static void clearAnimations()
+	{
+		playingAnims.clear();
+	}
+	
 	public static void updateAnimations()
 	{
 		for(BattleAnim anim : playingAnims)

@@ -247,7 +247,7 @@ public class SaveLoadMenu
 		{
 			showMessage("Delete this save?", true);
 			deleting = true;
-			menu.showOptSelect = false;
+			//menu.showOptSelect = false;
 			//menu.getSelectedEntry().move(0, 0, 10);	
 		}
 		

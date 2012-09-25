@@ -18,11 +18,10 @@ public class ListBox extends MenuPanel
 	
 	private List<ListBoxEntry> entries;
 	private ListBoxEntry selectedItem;
-	private boolean scrolling, selected;	
-	private Point selectPos;
+	private boolean scrolling/*, selected*/;	
 	private Paint textPaint, disabledTextPaint;
 	
-	public boolean showOptSelect, thickOptSelect, drawAllFrames;	
+	public boolean /*showOptSelect,*/ thickOptSelect, drawAllFrames;	
 	
 	
 	public ListBox(Rect frameRect, int rows, int columns, Paint textPaint)
@@ -89,7 +88,7 @@ public class ListBox extends MenuPanel
 		scrollDelta = 0;
 		selectedItem = null;
 		itemBuffer = 0;
-		showOptSelect = false;
+		//showOptSelect = false;
 		scrolling = false;
 		entries.clear();
 	}
@@ -122,6 +121,13 @@ public class ListBox extends MenuPanel
 	{
 		if(index <= entries.size())
 			entries.get(index).getTextAt(0).text = text;
+	}
+	
+	@Override
+	public void open()
+	{
+		super.open();
+		selectedItem = null;
 	}
 	
 	@Override	
@@ -176,7 +182,7 @@ public class ListBox extends MenuPanel
 				lbe.invertColors(false);
 			}
 						
-			if(showOptSelect && selectedIndex < entries.size())	
+			if(selectedItem != null && selectedIndex < entries.size())	
 			{
 				entries.get(selectedIndex).drawFrame = true;	
 				if(drawAllFrames)
@@ -208,16 +214,16 @@ public class ListBox extends MenuPanel
 	public void touchActionDown(int x, int y)
 	{
 		selectedIndex = getSelectedIndex(x,y);
-		selectedItem = selectedIndex < entries.size() && frameRect.contains(x, y) ? entries.get(selectedIndex) : null;
+		selectedItem = selectedIndex < entries.size() ? entries.get(selectedIndex) : null;
 		
 		startY = y;
 		startX = x;
 		scrolling = false;
-		if(frameRect.contains(x, y))
+		/*if(frameRect.contains(x, y))
 		{
 			selected = true;
 			showOptSelect = true;
-		}
+		}*/
 			
 	}
 	
@@ -228,45 +234,20 @@ public class ListBox extends MenuPanel
 		LBStates returnState = LBStates.Open;
 		
 		//do nothing if we're scrolling		
-		if(selected && !scrolling)
-		{			
-			if(frameRect.contains(x, y))
-			{
-				//we tapped inside the rect
-				if(selectedIndex < entries.size())
-				{
-					selectedItem = entries.get(selectedIndex);
-					returnState = LBStates.Selected;
-				}				
-			}
-			else
-			{
-				//we tapped outside, close the box
-				returnState = LBStates.Open;
-			}
-		}
-		
-		if(!selected && !scrolling)
-			//we tapped outside, close the box
-			returnState = frameRect.contains(x, y) ? LBStates.Open : LBStates.Close;
-		
+		if(!scrolling)
+			returnState = selectedItem != null ? LBStates.Selected : LBStates.Close;
+
 		scrolling = false;
-		showOptSelect = false;
-		selected = false;
-		if(returnState != LBStates.Selected)
-			selectedItem = null;
+
 
 		return returnState;
 	}
 	
 	public void touchActionMove(int x, int y)
 	{
-		//deselect if you are not on an item
-		int index = getSelectedIndex(x,y);
-		if(index >= entries.size())
-			selectedItem = null;
-
-			
+		selectedIndex = getSelectedIndex(x,y);
+		selectedItem = selectedIndex < entries.size() && frameRect.contains(x, y)? entries.get(selectedIndex) : null;
+		
 		
 		if(!scrolling)
 		{
@@ -277,7 +258,7 @@ public class ListBox extends MenuPanel
 			{
 				//start scrolling
 				scrolling = true;
-				showOptSelect = false;
+				//showOptSelect = false;
 				selectedItem = null;
 			}
 			else	
@@ -289,7 +270,7 @@ public class ListBox extends MenuPanel
 					selectedIndex = getSelectedIndex(x,y);
 					if(selectedIndex < entries.size())
 					{
-						showOptSelect = true;
+						//showOptSelect = true;
 						selectedItem = entries.get(selectedIndex);
 					}
 						
@@ -330,7 +311,7 @@ public class ListBox extends MenuPanel
 		int row = Math.max(0, y - frameRect.top)/rowHeight;
 		int column = Math.max(0, x - frameRect.left)/columnWidth;
 		
-		selectPos = new Point(column, row);		
+		//selectPos = new Point(column, row);		
 		return numColumns * row + column + itemBuffer;
 	}
 	

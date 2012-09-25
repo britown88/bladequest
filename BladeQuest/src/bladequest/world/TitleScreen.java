@@ -219,6 +219,7 @@ public class TitleScreen
 		Global.musicBox.play("", false, -1);
 		whitescene.unload();
 		titlescene.unload();
+		Global.clearAnimations();
 	}
 	
 	private void updateTitleSize()

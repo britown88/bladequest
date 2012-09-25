@@ -819,7 +819,7 @@ public class Battle {
 			switch(currentState)
 			{				
 			case SELECTITEM:							
-				if(mainMenu.showOptSelect && mainMenu.getSelectedEntry() != null)
+				if(mainMenu.getSelectedEntry() != null && mainMenu.getSelectedEntry() != null)
 				{
 					mpWindow.getTextAt(0).text = "Qty: "+((Item)mainMenu.getSelectedEntry().obj).getCount();
 					mpWindow.render();
@@ -827,7 +827,7 @@ public class Battle {
 				break;
 				
 			case SELECTABILITY:			
-				if(mainMenu.showOptSelect && mainMenu.getSelectedEntry() != null)
+				if(mainMenu.getSelectedEntry() != null && mainMenu.getSelectedEntry() != null)
 				{
 					mpWindow.getTextAt(0).text = "Cost: "+((Ability)mainMenu.getSelectedEntry().obj).MPCost();
 					mpWindow.render();
@@ -1594,95 +1594,99 @@ public class Battle {
 			
 				
 			case TARGET:
-				if(mainMenu.contains(x, y))
+				if(infoWindow.Closed())
 				{
-					//recedeChar();
-					infoWindow.open();
-					changeState(battleStates.SELECT);
-					getChar(currentChar).setIdle(false);
-					selectAllAllies = false;
-					selectAllEnemies = false;
-					if(getChar(currentChar).action == Action.Item)
-						getChar(currentChar).unuseItem();
-					Global.playSound("denied1");
-					showEnemySelect = false;
-				}
-				else
-				{
-					Global.playSound("menusound1");
-					switch(targetType)
+					if(mainMenu.contains(x, y))
 					{
-					case SingleAlly:
-					case SingleEnemy:
-					case Single:
-						if(selectedEnemy != null && enemyFrame.contains(x, y) && targetType != TargetTypes.SingleAlly)
+						//recedeChar();
+						infoWindow.open();
+						changeState(battleStates.SELECT);
+						getChar(currentChar).setIdle(false);
+						selectAllAllies = false;
+						selectAllEnemies = false;
+						if(getChar(currentChar).action == Action.Item)
+							getChar(currentChar).unuseItem();
+						Global.playSound("denied1");
+						showEnemySelect = false;
+					}
+					else 
+					{
+						Global.playSound("menusound1");
+						switch(targetType)
 						{
-							getChar(currentChar).addTarget(selectedEnemy);
+						case SingleAlly:
+						case SingleEnemy:
+						case Single:
+							if(selectedEnemy != null && enemyFrame.contains(x, y) && targetType != TargetTypes.SingleAlly)
+							{
+								getChar(currentChar).addTarget(selectedEnemy);
+								getChar(currentChar).setReady();
+								recedeChar();
+								nextChar = true;
+								changeState(battleStates.SELECT);
+								showEnemySelect = false;	
+								
+							}	
+							else if(targetType != TargetTypes.SingleEnemy)
+							{
+								for(Character c : Global.party.getPartyMembers(false))
+								{
+									if(c != null)
+									{
+										Rect cRect = new Rect(
+												Global.vpToScreenX(c.getPosition().x), 
+												Global.vpToScreenY(c.getPosition().y), 
+												Global.vpToScreenX(c.getPosition().x+64), 
+												Global.vpToScreenY(c.getPosition().y+64));
+										if(cRect.contains(x, y))
+										{
+											getChar(currentChar).addTarget(c);
+											getChar(currentChar).setReady();
+											recedeChar();
+											nextChar = true;
+											changeState(battleStates.SELECT);
+											showEnemySelect = false;
+										}
+									}
+									
+								}
+									
+							}
+							break;
+						case AllAllies:
+							for(Character c : Global.party.getPartyMembers(false))
+								if(c != null && !c.isDead())
+									getChar(currentChar).addTarget(c);
 							getChar(currentChar).setReady();
 							recedeChar();
 							nextChar = true;
 							changeState(battleStates.SELECT);
-							showEnemySelect = false;	
-							
-						}	
-						else if(targetType != TargetTypes.SingleEnemy)
-						{
-							for(Character c : Global.party.getPartyMembers(false))
-							{
-								if(c != null)
-								{
-									Rect cRect = new Rect(
-											Global.vpToScreenX(c.getPosition().x), 
-											Global.vpToScreenY(c.getPosition().y), 
-											Global.vpToScreenX(c.getPosition().x+64), 
-											Global.vpToScreenY(c.getPosition().y+64));
-									if(cRect.contains(x, y))
-									{
-										getChar(currentChar).addTarget(c);
-										getChar(currentChar).setReady();
-										recedeChar();
-										nextChar = true;
-										changeState(battleStates.SELECT);
-										showEnemySelect = false;
-									}
-								}
-								
-							}
-								
+							showEnemySelect = false;
+							selectAllAllies = false;
+							break;
+						case AllEnemies:
+							for(Character e : encounter.Enemies())
+								if(!e.isDead())
+									getChar(currentChar).addTarget(e);
+							getChar(currentChar).setReady();
+							recedeChar();
+							nextChar = true;
+							changeState(battleStates.SELECT);
+							showEnemySelect = false;
+							selectAllEnemies = false;
+							break;
+						case Self:
+							getChar(currentChar).addTarget(getChar(currentChar));
+							getChar(currentChar).setReady();
+							recedeChar();
+							nextChar = true;
+							changeState(battleStates.SELECT);
+							showEnemySelect = false;
+							break;
 						}
-						break;
-					case AllAllies:
-						for(Character c : Global.party.getPartyMembers(false))
-							if(c != null && !c.isDead())
-								getChar(currentChar).addTarget(c);
-						getChar(currentChar).setReady();
-						recedeChar();
-						nextChar = true;
-						changeState(battleStates.SELECT);
-						showEnemySelect = false;
-						selectAllAllies = false;
-						break;
-					case AllEnemies:
-						for(Character e : encounter.Enemies())
-							if(!e.isDead())
-								getChar(currentChar).addTarget(e);
-						getChar(currentChar).setReady();
-						recedeChar();
-						nextChar = true;
-						changeState(battleStates.SELECT);
-						showEnemySelect = false;
-						selectAllEnemies = false;
-						break;
-					case Self:
-						getChar(currentChar).addTarget(getChar(currentChar));
-						getChar(currentChar).setReady();
-						recedeChar();
-						nextChar = true;
-						changeState(battleStates.SELECT);
-						showEnemySelect = false;
-						break;
 					}
-				}
+					
+				}				
 				
 				break;
 			case SELECT:
