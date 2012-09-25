@@ -118,7 +118,7 @@ public class Battle {
 			if(c != null)
 			{
 				c.clearTargets();
-				c.setIdle(false);			
+				c.setIdle();			
 				c.setIndex(i);
 				c.genWeaponSwing();
 			}
@@ -254,7 +254,7 @@ public class Battle {
 		case TARGET:
 			
 			recedeChar();
-			getChar(currentChar).setIdle(false);
+			getChar(currentChar).setIdle();
 			selectAllAllies = false;
 			selectAllEnemies = false;
 			showCharSelect = false;
@@ -448,7 +448,7 @@ public class Battle {
 					else
 					if(currentActor < moveOrder.size() && !moveOrder.get(currentActor).isEnemy())
 					{
-						moveOrder.get(currentActor).setIdle(true);
+						moveOrder.get(currentActor).setIdle();
 						recedeChar();
 					}						
 					changeState(battleStates.ACTWAIT);
@@ -543,7 +543,7 @@ public class Battle {
 											Point cPos = new Point(c.position);
 											cPos.offset(c.battleSpr.getWidth()/2, c.battleSpr.getHeight()/2);
 											//Global.playAnimation("movetest", cPos, e.position);
-											c.setIdle(true);
+											c.setIdle();
 											recedeChar();
 											changeState(battleStates.ACTWAIT);											
 										}
@@ -921,7 +921,7 @@ public class Battle {
 				
 		else
 		{
-			getChar(currentChar).setIdle(false);
+			getChar(currentChar).setIdle();
 			
 			if(getChar(currentChar).action == Action.Item)
 				getChar(currentChar).unuseItem();
@@ -1322,7 +1322,7 @@ public class Battle {
 		
 		for(Character c : getAliveCharacters())
 		{
-			c.setIdle(true);
+			c.setIdle();
 			c.statusOnTurn(this);
 		}
 		
@@ -1450,7 +1450,7 @@ public class Battle {
 				if(moveOrder.indexOf(c) >= currentActor || c.getAction() == Character.Action.Guard)
 					c.setReady();				
 				else
-					c.setIdle(true);
+					c.setIdle();
 			}	
 		}	
 		else
@@ -1603,7 +1603,7 @@ public class Battle {
 						//recedeChar();
 						infoWindow.open();
 						changeState(battleStates.SELECT);
-						getChar(currentChar).setIdle(false);
+						getChar(currentChar).setIdle();
 						selectAllAllies = false;
 						selectAllEnemies = false;
 						if(getChar(currentChar).action == Action.Item)

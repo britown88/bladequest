@@ -132,7 +132,7 @@ public class DamageMarker
 			{
 				done = true;
 				if(Global.GameState == States.GS_BATTLE && !target.isEnemy() && dmgText == "")
-					target.setIdle(false);
+					target.setIdle();
 			}
 				
 		}

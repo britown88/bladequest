@@ -50,7 +50,6 @@ public class Character
 	
 	protected int index;
 	
-	private boolean done;
 	
 	private Item itemToUse;
 	protected Ability abilityToUse;
@@ -63,6 +62,7 @@ public class Character
 	private List<LearnableAbility> learnableAbilities;
 	
 	//fag for determining if a character has acted in the turn.
+	public boolean acting;	
 	public boolean acted;
 	
 	public Character(String name, String displayNam, String bSpr, String wSpr)
@@ -83,7 +83,6 @@ public class Character
 		statusEffects = new ArrayList<StatusEffect>();
 		abilities = new ArrayList<Ability>();
 		learnableAbilities = new ArrayList<LearnableAbility>();
-		done = true;
 		portrait = new Point(0,0);
 		position = new Point(0,0);
 	}
@@ -132,7 +131,7 @@ public class Character
 		position = new Point(0,0);
 	}
 	
-	public void setDone(boolean done) { this.done = done; }
+	public void setDone(boolean done) {  }
 	
 	public void setExp(int exp){this.exp = exp;}
 	public void setDisplayName(String str){displayName = str;}
@@ -162,8 +161,8 @@ public class Character
 	public List<Ability> getAbilities() { return abilities; }
 	public Item getItemToUse(){return itemToUse;}	
 	public Ability getAbilityToUse(){return abilityToUse;}	
-	public void setAttack(){action = Action.Attack;done = true;}	
-	public void guard(){action = Action.Guard; done = true;}	
+	public void setAttack(){action = Action.Attack;}	
+	public void guard(){action = Action.Guard;}	
 	public Action getAction(){return action;}	
 	public String getDisplayName(){return displayName;}	
 	public List<StatusEffect> getStatusEffects() { return statusEffects; }
@@ -462,11 +461,9 @@ public class Character
 	
 	public void useItem(Character target)
 	{	
-		done = false;
 		unuseItem();
 		Global.party.removeItem(itemToUse.getId(), 1);
 		itemToUse.execute(this, targets);
-		done = true;
 	}
 	
 	public TargetTypes getCombatActionTargetType() { return combAction.getTargetType(); }
@@ -475,15 +472,12 @@ public class Character
 	public void setUseCombatAction()
 	{
 		action = Action.CombatAction;
-		done = true;
 
 	}
 	
 	public void useCombatAction()
 	{
-		done = false;
 		combAction.execute(targets);
-		done = true;
 	}
 	
 	public void unuseItem()
@@ -496,13 +490,11 @@ public class Character
 		itemToUse = item;
 		itemToUse.use();
 		action = Action.Item;	
-		done = true;
 
 	}
 	
 	public Ability  useAbility()
 	{	
-		done = false;
 		MP -= abilityToUse.MPCost();
 		
 		if(Global.rand.nextInt(100) < abilityToUse.Accuracy())
@@ -513,8 +505,6 @@ public class Character
 				Global.battle.dmgText(t, "MISS", 0);
 		}
 		
-		done = true;
-		
 		return abilityToUse;
 			
 	}
@@ -524,7 +514,6 @@ public class Character
 		
 		abilityToUse = ability;
 		action = Action.Ability;	
-		done = true;
 	}
 	
 	//set stats between 0 and 10
@@ -1014,23 +1003,42 @@ public class Character
 	}
 	
 	
-	public void setIdle()
+	public void setFace(BattleSprite.faces newFace)
 	{
+		BattleSprite.faces oldFace = battleSpr.getFace();
+		boolean weak = HP <= (float)stats[Stats.MaxHP.ordinal()]*0.25F || hasNegativeStatus();
 		
+		switch(newFace)
+		{
+		case Idle:
+		case Ready:
+			if(dead) setFace(faces.Dead);
+			else if (weak) setFace(faces.Weak);
+			else battleSpr.changeFace(newFace);
+			break;
+		case Damaged:
+			break;
+		case Attack:
+		case Cast:
+		case Casting:		
+		case Dead:		
+		case Use:
+		case Victory:
+		case Weak:
+			battleSpr.changeFace(newFace);
+			break;		
+		}
 	}
 	
-	public void setIdle(boolean ignoredamaged)
+	public void setIdle()
 	{
-		if(battleSpr.getFace() != faces.Damaged)
-		{
+		imageIndex = 0;
 
-			imageIndex = 0;
-			if(!setWeakDead())
-				if(action == Action.Guard)
-					battleSpr.changeFace(BattleSprite.faces.Ready);
-				else					
-					battleSpr.changeFace(BattleSprite.faces.Idle);
-		}		
+		if(action == Action.Guard && acting)
+			setFace(faces.Ready);
+		else					
+			setFace(faces.Idle);
+		
 	}	
 	public void setReady()
 	{
@@ -1056,17 +1064,12 @@ public class Character
 		battleSpr.changeFace(BattleSprite.faces.Attack);
 		imageIndex = 0;
 		Global.resetImageTimer();
-		done = false;
 	}
 	
 	
-	public void updateSwing()
-	{
-		if(imageIndex == 1)
-			done = true;
-	}
+	public void updateSwing(){}
 	
-	public boolean isDone(){return done;}	
+	public boolean isDone(){return true;}	
 	//public void setDone(boolean b){done = b;}
 	
 	

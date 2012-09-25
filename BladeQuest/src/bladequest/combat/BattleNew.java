@@ -10,12 +10,13 @@ import android.graphics.Point;
 import bladequest.UI.ListBox;
 import bladequest.UI.MenuPanel;
 import bladequest.UI.MenuPanel.Anchors;
-import bladequest.graphics.Scene;
+import bladequest.graphics.BattleSprite.faces;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.world.Character;
 import bladequest.world.Encounter;
 import bladequest.world.Enemy;
 import bladequest.world.Global;
+import bladequest.world.TargetTypes;
 
 public class BattleNew 
 {	
@@ -30,6 +31,15 @@ public class BattleNew
 	private final int mpWindowHeight = 32;
 	private final int mpWindowWidth = 128;
 	
+	private final String txtStart = "Tap screen to start!";
+	private final String txtTargetSingle = "Select target...";
+	private final String txtTargetSingleAlly = "Select ally...";
+	private final String txtTargetSingleEnemy = "Select enemy...";
+	private final String txtTargetEnemies = "Targeting all enemies...";
+	private final String txtTargetAllies = "Targeting all Allies...";
+	private final String txtTargetSelf = "Targeting self.";
+	private final String txtDefeat = "Annihilated...";
+	
 	private int selCharX;
 	private boolean selCharOpening;
 	private boolean selCharOpened;
@@ -38,6 +48,8 @@ public class BattleNew
 	private boolean prevChar;
 	
 	private Character currentChar;
+	private int currentCharIndex;
+	private TargetTypes targetType;
 	
 	private BattleStates state;
 	private Encounter encounter;
@@ -64,29 +76,44 @@ public class BattleNew
 		this.encounter = new Encounter(Global.encounters.get(encounter));
 		
 		partyList = Global.party.getPartyList(false);
-		currentChar = partyList.get(0);
 		
-		//characters
-		Character[] party = Global.party.getPartyMembers(false);
-		for(int i = 0; i < 4; ++i)
-			if(party[i] != null)
+		//determine first nondead character
+		for(int i = 0; i < partyList.size(); ++i)
+			if(!partyList.get(i).isDead())
 			{
-				party[i].setIndex(i);
+				currentCharIndex = i;
+				currentChar = partyList.get(currentCharIndex);
+				break;
 			}
 		
-		//init
-		recedeChar();	
-		
-		//GFX
-		Global.map.getBackdrop().load();
-		buildPaints();
-		
-		//UI
-		initUI();
-		
-		update();
-		
+		//all characters are dead (this should never happen)
+		if(currentChar == null)
+			changeState(BattleStates.DEFEAT);
+		else
+		{
+			//characters
+			Character[] party = Global.party.getPartyMembers(false);
+			for(int i = 0; i < 4; ++i)
+				if(party[i] != null)
+				{
+					party[i].setIndex(i);
+					party[i].genWeaponSwing();
+					party[i].setFace(faces.Idle);
+				}
+			
+			//init
+			recedeChar();	
+			
+			//GFX
+			Global.map.getBackdrop().load();
+			buildPaints();
+			
+			//UI
+			initUI();		
+			update();
+		}		
 	}
+	
 	private void initUI()
 	{
 		buildCharacterPanes();
@@ -110,7 +137,7 @@ public class BattleNew
 	private void buildPanels()
 	{		
 		startBar = new MenuPanel(0, Global.vpHeight, partyPos.x - partyFrameBuffer, frameMinHeight);
-		startBar.addTextBox("Tap screen to start!", 5, frameMinHeight/2, battleText);
+		startBar.addTextBox(txtStart, 5, frameMinHeight/2, battleText);
 		startBar.anchor = Anchors.BottomLeft;
 		startBar.thickFrame = false;
 		
@@ -214,6 +241,7 @@ public class BattleNew
 		mainMenu.update();
 		
 	}
+	private void changeStartBarText(String str){startBar.getTextAt(0).text = str;}
 	
 	private void changeState(BattleStates newState)
 	{
@@ -222,16 +250,74 @@ public class BattleNew
 		case START:
 			recedeChar();
 			mainMenu.close();
+			changeStartBarText(txtStart);
+			currentChar.setFace(faces.Idle);
 			break;
 		case SELECT:
 			updateMenuOptions(newState);
 			mainMenu.open();
 			advanceChar();
+			currentChar.setFace(faces.Idle);
 			break;
+			
+		case TARGET:
+			currentChar.setFace(faces.Ready);
+			switch(targetType)
+			{
+			case AllAllies:
+				changeStartBarText(txtTargetAllies);
+				break;
+			case AllEnemies:
+				changeStartBarText(txtTargetEnemies);
+				break;
+			case Self:
+				changeStartBarText(txtTargetSelf);
+				break;
+			case Single:
+				changeStartBarText(txtTargetSingle);
+				break;
+			case SingleAlly:
+				changeStartBarText(txtTargetSingleAlly);
+				break;
+			case SingleEnemy:
+				changeStartBarText(txtTargetSingleEnemy);
+				break;
+			}
+			changeStartBarText(txtTargetSingle);
+			mainMenu.close();
+			
 		}
 		
 		state = newState;
 		
+	}
+	private void handleMenuOption(String opt)
+	{
+		if(opt.equals("atk"))
+		{
+			targetType = TargetTypes.Single;
+			changeState(BattleStates.TARGET);
+		}
+		else if(opt.equals("itm"))
+		{
+			changeState(BattleStates.START);
+		}
+		else if(opt.equals("act"))
+		{
+			changeState(BattleStates.START);
+		}
+		else if(opt.equals("grd"))
+		{
+			changeState(BattleStates.START);
+		}
+		else if(opt.equals("ab"))
+		{
+			changeState(BattleStates.START);
+		}
+		else if(opt.equals("run"))
+		{
+			changeState(BattleStates.START);
+		}
 	}
 	private void advanceChar()
 	{
@@ -272,6 +358,12 @@ public class BattleNew
 		
 	}
 	
+	private void nextCharacter()
+	{
+		nextChar = true;
+		recedeChar();
+	}
+	
 	private void drawActors()
 	{
 		for(Character c : partyList)
@@ -305,6 +397,19 @@ public class BattleNew
 		handleCharAdvancing();
 		updateCharacterPositions();
 		
+		if(nextChar && selCharClosed)
+		{
+			if(currentCharIndex + 1 < partyList.size())
+			{
+				currentChar = partyList.get(++currentCharIndex);
+				changeState(BattleStates.SELECT);
+			}
+			else
+				changeState(BattleStates.ACT);
+			
+			nextChar = false;
+		}
+		
 	}	
 	public void render()
 	{
@@ -328,9 +433,26 @@ public class BattleNew
 		case SELECT:
 			switch(mainMenu.touchActionUp(x, y))
 			{
+			case Selected:
+				handleMenuOption((String)(mainMenu.getSelectedEntry().obj));
+				break;
 			case Close:
 				changeState(BattleStates.START);
+				break;
+			default:
+				break;
 			}
+		case TARGET:
+			if(mainMenu.Closed())
+			{
+				if(startBar.contains(x, y))
+					changeState(BattleStates.SELECT);
+				else
+				{
+					nextCharacter();
+				}
+			}
+			
 			break;
 		}
 		
