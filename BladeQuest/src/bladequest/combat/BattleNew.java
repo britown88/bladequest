@@ -293,8 +293,7 @@ public class BattleNew
 							int index = (int)(System.currentTimeMillis() - actTimerStart)/actTimerLength;						
 							index -= 2;
 							
-							//add 2 frames of no movement before attacking and 1 frame after
-							
+							//add 2 frames of no movement before attacking and 1 frame after							
 							if(index < 0)
 							{
 								actor.setFace(faces.Ready);
@@ -313,8 +312,7 @@ public class BattleNew
 								actor.setImageIndex(0);
 							}
 							else if(index > 5)
-								nextActorInit();
-							//TODO: add swing anim						
+								nextActorInit();					
 						}
 						break;
 					case Ability:
@@ -514,14 +512,19 @@ public class BattleNew
 	}
 	private void previousCharacter()
 	{
-		if(currentCharIndex == 0)
-			changeState(BattleStates.START);
-		else
+		if(selCharOpened)
 		{
-			//changeState(BattleStates.SELECT);	
-			recedeChar();
-			prevChar = true;
+			if(currentCharIndex == 0)
+				changeState(BattleStates.START);
+			else
+			{			
+				recedeChar();
+				prevChar = true;
+				
+			}
+			
 		}
+		
 		
 	}
 	private void handleNextPrev()
@@ -615,7 +618,8 @@ public class BattleNew
 		switch(state)
 		{
 		case TARGET:
-			changeState(BattleStates.SELECT);
+			if(selCharOpened)
+				changeState(BattleStates.SELECT);
 			break;
 		case SELECT:
 			previousCharacter();
