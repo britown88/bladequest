@@ -500,11 +500,13 @@ public class Global
 		
 		return null;
 	}
-	public static void playAnimation(BattleAnim anim, Point source, Point target)
+	public static BattleAnim playAnimation(BattleAnim anim, Point source, Point target)
 	{
 		BattleAnim animCopy = new BattleAnim(anim);;
 		playingAnims.add(animCopy);
-		animCopy.play(source, target);		
+		animCopy.play(source, target);	
+		
+		return animCopy;
 	}
 	
 	public static void clearAnimations()

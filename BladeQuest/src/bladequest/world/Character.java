@@ -1118,6 +1118,14 @@ public class Character
 	
 	public Rect getRect() {return Global.vpToScreen(new Rect(position.x, position.y, position.x+getWidth(), position.y+getHeight()));}
 	public Point getPosition() { return position; }	
+	public Point getPosition(boolean center) 
+	{ 
+		Point p = new Point(position);
+		if(center && !isEnemy)
+			p.offset(battleSpr.getWidth()/2, battleSpr.getHeight()/2);
+		
+		return p; 
+	}	
 	public int getWidth() { return battleSpr.getWidth(); }
 	public int getHeight() { return battleSpr.getHeight(); }
 	public void setPosition(int x, int y) { position = new Point(x, y);}	

@@ -34,7 +34,7 @@ public class BattleNew
 	private final int mpWindowHeight = 32;
 	private final int mpWindowWidth = 128;
 	
-	private final int actTimerLength = 200;//milliseconds
+	private final int actTimerLength = 150;//milliseconds
 	
 	private final String txtStart = "Tap screen to start!";
 	private final String txtTargetSingle = "Select target...";
@@ -283,18 +283,36 @@ public class BattleNew
 					switch(actor.getAction())
 					{
 					case Attack:
-						if(actor.getBattleFrame() != faces.Attack )
+						if(!actor.acting)
 						{
-							actTimerStart = System.currentTimeMillis();
-							actor.setFace(faces.Attack);
-							actor.setImageIndex(0);
+							actTimerStart = System.currentTimeMillis();							
+							actor.acting = true;
 						}
 						else
 						{
 							int index = (int)(System.currentTimeMillis() - actTimerStart)/actTimerLength;						
-							if(index < 3)//<3
+							index -= 2;
+							
+							//add 2 frames of no movement before attacking and 1 frame after
+							
+							if(index < 0)
+							{
+								actor.setFace(faces.Ready);
+								actor.setImageIndex(0);
+							}							
+							else if(index >= 0 && index < 3)//<3
+							{
+								actor.setFace(faces.Attack);
 								actor.setImageIndex(index);
-							else
+								if(index == 1)
+									actor.playWeaponAnimation(actor.getPosition(true), targets.get(0).getPosition(true));
+							}								
+							else if(index == 3)
+							{
+								actor.setFace(faces.Ready);
+								actor.setImageIndex(0);
+							}
+							else if(index > 5)
 								nextActorInit();
 							//TODO: add swing anim						
 						}
@@ -319,6 +337,7 @@ public class BattleNew
 	private void nextActorInit()
 	{
 			nextActor = true;
+			battleEvents.get(0).getSource().acting = false;
 			recedeChar();		
 	}
 	private void nextActor()
@@ -329,6 +348,7 @@ public class BattleNew
 			recedeChar();
 			actor.setFace(faces.Idle);
 			actor.setImageIndex(0);
+			
 		}
 		
 		nextActor = false;
@@ -487,7 +507,7 @@ public class BattleNew
 	
 	private void nextCharacter()
 	{
-		changeState(BattleStates.SELECT);
+		//changeState(BattleStates.SELECT);
 		//mainMenu.close();		
 		recedeChar();
 		nextChar = true;
@@ -498,7 +518,7 @@ public class BattleNew
 			changeState(BattleStates.START);
 		else
 		{
-			changeState(BattleStates.SELECT);	
+			//changeState(BattleStates.SELECT);	
 			recedeChar();
 			prevChar = true;
 		}
@@ -586,6 +606,8 @@ public class BattleNew
 		drawPanels();
 		drawSelect();
 		
+		Global.renderAnimations();
+		
 	}
 	
 	public void backButtonPressed()
@@ -632,6 +654,7 @@ public class BattleNew
 					{
 						//targets were selected
 						addBattleEvent(currentChar, targets);
+						currentChar.setFace(faces.Ready);
 						nextCharacter();
 						targets.clear();
 					}

@@ -150,7 +150,12 @@ public class Item
 		battleAnim = model.genAnim(new BattleAnim(Global.battleAnims.get(swingAnim)));
 	}
 	
-	public void playAnimation(Point src, Point tar){Global.playAnimation(battleAnim, src, tar);}
+	private BattleAnim playingAnim;
+	public void playAnimation(Point src, Point tar)
+	{
+		if(playingAnim == null || playingAnim.Done())
+			playingAnim = Global.playAnimation(battleAnim, src, tar);
+	}
 	
 	
 	public WeaponSwingDrawable getSwing() { return weaponSwing; }
