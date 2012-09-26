@@ -19,6 +19,7 @@ import bladequest.world.Encounter;
 import bladequest.world.Enemy;
 import bladequest.world.Global;
 import bladequest.world.TargetTypes;
+import bladequest.world.Character.Action;
 
 public class BattleNew 
 {	
@@ -308,6 +309,7 @@ public class BattleNew
 		if(opt.equals("atk"))
 		{
 			targetType = TargetTypes.Single;
+			currentChar.setBattleAction(Action.Attack);
 			changeState(BattleStates.TARGET);
 		}
 		else if(opt.equals("itm"))
@@ -377,6 +379,18 @@ public class BattleNew
 		recedeChar();
 		nextChar = true;
 	}
+	private void previousCharacter()
+	{
+		if(currentCharIndex == 0)
+			changeState(BattleStates.START);
+		else
+		{
+			changeState(BattleStates.SELECT);	
+			recedeChar();
+			prevChar = true;
+		}
+		
+	}
 	
 	private void drawActors()
 	{
@@ -417,9 +431,19 @@ public class BattleNew
 		handleCharAdvancing();
 		updateCharacterPositions();
 		
-		if(nextChar && selCharClosed)
+		if((nextChar || prevChar) && selCharClosed)
 		{
-			if(currentCharIndex + 1 < partyList.size())
+			if(prevChar)
+			{
+				currentChar = partyList.get(--currentCharIndex);
+				changeState(BattleStates.SELECT);
+				
+				//remove most recent addition to event queue
+				battleEvents.remove(battleEvents.size()-1);
+				
+				//TODO: unuse unused items
+			}
+			else if(currentCharIndex + 1 < partyList.size())
 			{
 				currentChar = partyList.get(++currentCharIndex);
 				changeState(BattleStates.SELECT);
@@ -427,7 +451,7 @@ public class BattleNew
 			else
 				changeState(BattleStates.ACT);
 			
-			nextChar = false;
+			nextChar = prevChar = false;
 		}
 		
 	}	
@@ -442,6 +466,16 @@ public class BattleNew
 	
 	public void backButtonPressed()
 	{
+		switch(state)
+		{
+		case TARGET:
+			changeState(BattleStates.SELECT);
+			break;
+		case SELECT:
+			previousCharacter();
+			break;
+				
+		}
 		
 	}
 	public void touchActionUp(int x, int y)
@@ -521,23 +555,72 @@ public class BattleNew
 		{
 		case Single:
 			if(enemyArea.contains(x, y))
-			{
-				int lowestDist = Math.abs(enemyArea.top - enemyArea.bottom) + Math.abs(enemyArea.left - enemyArea.right);
-				Enemy closest = null;
-				for(Enemy e : encounter.Enemies())
-				{
-					Point pos = Global.vpToScreen(e.getPosition());
-					int dist = Math.abs(pos.x - x) + Math.abs(pos.y - y);
-					if(dist < lowestDist) {lowestDist = dist;closest = e;}
-				}
-				
-				targets.add(closest);
-				
-			}
+				targetEnemy(x, y);
+			else
+				targetAlly(x, y);
+			break;
+		case SingleEnemy:
+			if(enemyArea.contains(x, y))
+				targetEnemy(x, y);
+			break;
+		case SingleAlly:
+			targetAlly(x, y);
+			break;
+		case Self:
+			targets.add(currentChar);
+			break;
+		case AllAllies:
+			for(Character c : partyList)
+				targets.add(c);
+			break;
+		case AllEnemies:
+			for(Enemy e : encounter.Enemies())
+				if(!e.isDead())
+					targets.add(e);
+			break;
+		case Everybody:
+			for(Enemy e : encounter.Enemies())
+				if(!e.isDead())
+					targets.add(e);
+			for(Character c : partyList)
+				targets.add(c);
+			break;
+			
 		}		
 
 	}
-	
+	//add closest enemy; assumes tapped in enemy area
+	private void targetEnemy(int x, int y)
+	{
+		int lowestDist = Math.abs(enemyArea.top - enemyArea.bottom) + Math.abs(enemyArea.left - enemyArea.right);
+		Enemy closest = null;
+		for(Enemy e : encounter.Enemies())
+		{
+			if(!e.isDead())
+			{
+				Point pos = Global.vpToScreen(e.getPosition());
+				int dist = Math.abs(pos.x - x) + Math.abs(pos.y - y);
+				if(dist < lowestDist) {lowestDist = dist;closest = e;}
+			}			
+		}
+		
+		targets.add(closest);
+	}	
+	//target closest ally, assumes tapping within char rect
+	private void targetAlly(int x, int y)
+	{
+		for(Character c : partyList)
+			if(c.getRect().contains(x, y))
+			{
+				targets.add(c);
+				break;
+			}
+	}
+	private void setTarget(Character c)
+	{
+		targets.clear();
+		targets.add(c);
+	}
 	
 	public enum BattleStates
 	{

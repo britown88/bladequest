@@ -169,6 +169,9 @@ public class Character
 	public String getName(){return name;}	
 	public boolean isEnemy() { return isEnemy; }	
 	public void setHpMp(int hp, int mp){ this.HP = hp; this.MP = mp; }
+	
+	public void setBattleAction(Action action){this.action = action;}
+	
 	public int getStat(Stats stat)
 	{
 		if(stat == Stats.MaxHP)
