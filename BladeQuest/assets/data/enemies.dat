@@ -1,6 +1,7 @@
 [enemies]
 enemy rat "Rat" rat
 basestats 10 1 1 1
+atkanim slice1
 level 4
 gold 23
 items potion 25 antidote 85 True
@@ -8,31 +9,36 @@ ai 15
 ability bite 100 0 100
 endenemy
 #
-enemy guard "Guard" guard
+enemy guard "Guard" guar
+atkanim slice1d
 basestats 10 10 10 10
 level 25
 gold 1200
 endenemy
 #
 enemy zombie "Zombie" zombie
+atkanim slice1
 basestats 7 3 1 3
 level 8
 gold 487
 endenemy
 #
 enemy hawk "Hawk" hawk
+atkanim slice1
 basestats 3 3 3 3
 level 20
 gold 52
 endenemy
 #
 enemy gnome "Gnome" gnome
+atkanim slice1
 basestate 3 3 3 3
 level 13
 gold 123
 endenemy
 #
 enemy bat "Bat" bat
+atkanim slice1
 basestats 7 10 8 0
 level 6
 gold 42
@@ -40,6 +46,7 @@ items potion 50 " " 0 True
 endenemy
 #
 enemy recruit "Recruit" guard
+atkanim slice1
 basestats 10 0 0 0
 level 7
 gold 250

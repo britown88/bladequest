@@ -11,7 +11,7 @@ public class CombatAction
 	protected TargetTypes targetType;
 	
 	public CombatAction(){}	
-	public void execute(Vector<Character> targets){}
+	public void execute(List<Character> targets){}
 	
 	public String getName() { return name; }
 	public String getActionText() { return actionText; }

@@ -15,11 +15,11 @@ import bladequest.UI.MenuPanel.Anchors;
 import bladequest.graphics.BattleSprite.faces;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.world.Character;
+import bladequest.world.Character.Action;
 import bladequest.world.Encounter;
 import bladequest.world.Enemy;
 import bladequest.world.Global;
 import bladequest.world.TargetTypes;
-import bladequest.world.Character.Action;
 
 public class BattleNew 
 {	
@@ -250,6 +250,26 @@ public class BattleNew
 		
 	}
 	private void changeStartBarText(String str){startBar.getTextAt(0).text = str;}
+	private void showDisplayName(String str)
+	{
+		displayNamePanel.show();		
+		
+		Rect displayNameRect = new Rect();
+		nameDisplayPaint.getTextBounds(str, 0, str.length()-1, displayNameRect);
+		displayNameRect = Global.screenToVP(displayNameRect);
+		
+		
+		displayNamePanel.pos.x = (Global.vpWidth - displayNameRect.width())/2;
+		displayNamePanel.pos.y = 0;
+		displayNamePanel.width = displayNameRect.width();
+		displayNamePanel.height = displayNameRect.height();
+		displayNamePanel.update();
+		
+		displayNamePanel.getTextAt(0).text = str;
+		displayNamePanel.getTextAt(0).x = displayNamePanel.insetWidth()/2;
+		displayNamePanel.getTextAt(0).y = displayNamePanel.insetHeight()/2;
+
+	}
 	
 	//act state functions
 	private void initActState()
@@ -258,6 +278,10 @@ public class BattleNew
 		for(Enemy e : encounter.Enemies())
 			if(!e.isDead())
 				battleEvents.add(e.genBattleEvent(partyList, encounter.Enemies()));
+		
+		for(Character c : partyList)
+			if(!c.isDead())
+				addBattleEvent(c, c.getTargets());
 		
 		battleEvents = BattleCalc.genMoveOrder(battleEvents);
 
@@ -272,24 +296,60 @@ public class BattleNew
 			if(actor.isEnemy())
 			{
 				//enemy action code
-				nextActorInit();
+				if(!actor.acting)
+				{
+					actTimerStart = System.currentTimeMillis();							
+					actor.acting = true;
+					setTarget(actor);
+					if(actor.getAction() == Action.Ability)
+						showDisplayName(actor.getAbilityToUse().getDisplayName());
+				}
+				else
+				{
+					int index = (int)(System.currentTimeMillis() - actTimerStart)/actTimerLength;
+					
+					switch(actor.getAction())
+					{
+					case Attack:
+						if(index == 3)
+							((Enemy)actor).playAttackAnimation(actor.getPosition(true), targets.get(0).getPosition(true));
+						if(index > 7)
+						{
+							this.targets.clear();
+							nextActorInit();
+						}
+						break;
+					case Ability:
+						if(index > 7)
+						{
+							this.targets.clear();
+							displayNamePanel.hide();
+							nextActorInit();
+						}
+						break;
+					default:
+						nextActorInit();
+						break;
+					}					
+				}				
 			}
 			else
 			{
 				//player action code
 				currentChar = actor;
+				
 				if(selCharOpened)
-				{
-					switch(actor.getAction())
+				{					
+					if(!actor.acting)
 					{
-					case Attack:
-						if(!actor.acting)
+						actTimerStart = System.currentTimeMillis();							
+						actor.acting = true;
+					}
+					else
+					{
+						switch(actor.getAction())
 						{
-							actTimerStart = System.currentTimeMillis();							
-							actor.acting = true;
-						}
-						else
-						{
+						case Attack:
 							int index = (int)(System.currentTimeMillis() - actTimerStart)/actTimerLength;						
 							index -= 2;
 							
@@ -312,15 +372,16 @@ public class BattleNew
 								actor.setImageIndex(0);
 							}
 							else if(index > 5)
-								nextActorInit();					
-						}
-						break;
-					case Ability:
-					case CombatAction:
-					case Guard:
-					case Item:
-						break;
+								nextActorInit();
+							break;
+						case Ability:
+						case CombatAction:
+						case Guard:
+						case Item:
+							break;
+						}					
 					}
+					
 				}
 				else if(selCharClosed)
 					advanceChar();
@@ -359,7 +420,7 @@ public class BattleNew
 			if(currentChar == null)
 				changeState(BattleStates.DEFEAT);
 			else
-				changeState(BattleStates.SELECT);
+				changeState(BattleStates.START);
 		}
 		
 	}
@@ -536,9 +597,6 @@ public class BattleNew
 				currentChar = partyList.get(--currentCharIndex);
 				changeState(BattleStates.SELECT);
 				
-				//remove most recent addition to event queue
-				battleEvents.remove(battleEvents.size()-1);
-				
 				//TODO: unuse unused items
 			}
 			else if(currentCharIndex + 1 < partyList.size())
@@ -580,7 +638,22 @@ public class BattleNew
 	private void drawSelect()
 	{
 		for(Character t : targets)
+		{
 			Global.renderer.drawRect(t.getRect(), selectPaint, true);
+			
+			//draw enemy names
+			if(t.isEnemy())
+			{
+				Rect eRect = t.getRect();//HAHA AINT I FUNNY				
+				boolean drawTop = Global.vpToScreenY(eRect.top - (int)(enemyBattleText.getTextSize()/2)-4)> 0;
+				float drawY = drawTop ? 
+						eRect.top - enemyBattleText.getTextSize()/2 - 4 : 
+						eRect.bottom + enemyBattleText.getTextSize()/2-4;					
+				Global.renderer.drawText(t.getDisplayName(), eRect.centerX(), drawY, enemyBattleText);
+				
+			}
+		}
+			
 
 	}
 	
@@ -657,7 +730,7 @@ public class BattleNew
 					if(targets.size() > 0)
 					{
 						//targets were selected
-						addBattleEvent(currentChar, targets);
+						currentChar.setTargets(new ArrayList<Character>(targets));
 						currentChar.setFace(faces.Ready);
 						nextCharacter();
 						targets.clear();

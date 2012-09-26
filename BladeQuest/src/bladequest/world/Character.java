@@ -44,7 +44,7 @@ public class Character
 	private Sprite worldSpr;
 	public Point portrait;
 	
-	protected Vector<Character> targets;
+	protected List<Character> targets;
 	
 	protected int imageIndex;
 	
@@ -153,7 +153,8 @@ public class Character
 	public BattleSprite getBattleSprite() { return battleSpr; }
 	public void setIndex(int i){index = i;}	
 	public int Index(){return index;}	
-	public Vector<Character> getTargets(){return targets;}	
+	public List<Character> getTargets(){return targets;}	
+	public void setTargets(List<Character> targets){this.targets = targets;}	
 	public void addTarget(Character e){targets.add(e);}	
 	public void clearTargets(){targets.clear();}
 	public String getActionName() { return combAction.getName(); }

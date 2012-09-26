@@ -6,18 +6,19 @@ import java.util.List;
 import android.graphics.Point;
 import android.graphics.Rect;
 import bladequest.combat.BattleEvent;
-import bladequest.world.ObjectPath.Actions;
+import bladequest.graphics.BattleAnim;
 
 
 public class Enemy extends Character
 {	
 	private int gold;
-	private String commonItem, rareItem;
+	private String commonItem, rareItem, attackAnim;
 	private int commonDropRate, rareDropRate, abilityChance;
 	private boolean rareStealOnly;
 	private boolean stolen;
 	
 	private boolean bossFight;
+	private BattleAnim playingAnim;
 	
 	private List<EnemyAbility> abilities = new ArrayList<EnemyAbility>();
 	
@@ -45,10 +46,18 @@ public class Enemy extends Character
 		abilities = e.abilities;
 		abilityChance = e.abilityChance;
 		bossFight = e.bossFight;
+		attackAnim = e.attackAnim;
 		
 		stolen = false;
 	}
 	
+	public void setAttackAnimation(String attackAnim) {this.attackAnim = attackAnim;}
+	public void playAttackAnimation(Point src, Point tar)
+	{
+		if(playingAnim == null || playingAnim.Done())
+			playingAnim = Global.playAnimation(attackAnim, src, tar);
+
+	}
 	public void setAI(int abilityChance){this.abilityChance = abilityChance;}
 	
 	public void addAbility(String abilityName, int chanceToCast, int healthAbove, int healthBelow)
@@ -275,6 +284,8 @@ public class Enemy extends Character
 		
 		return def;
 	}
+
+	
 	
 	
 

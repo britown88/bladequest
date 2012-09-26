@@ -1,10 +1,12 @@
 package bladequest.combatactions;
 
-import java.util.Vector;
+import java.util.List;
 
-import bladequest.world.*;
 import bladequest.world.Character;
 import bladequest.world.DamageTypes;
+import bladequest.world.Enemy;
+import bladequest.world.Global;
+import bladequest.world.TargetTypes;
 
 
 public class combSteal extends CombatAction 
@@ -18,7 +20,7 @@ public class combSteal extends CombatAction
 	}
 	
 	@Override
-	public void execute(Vector<Character> targets)
+	public void execute(List<Character> targets)
 	{
 		Enemy target = (Enemy)targets.get(0);
 		

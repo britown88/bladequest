@@ -1,10 +1,10 @@
 package bladequest.combatactions;
 
-import java.util.Vector;
+import java.util.List;
 
 import bladequest.world.Character;
-import bladequest.world.TargetTypes;
 import bladequest.world.DamageTypes;
+import bladequest.world.TargetTypes;
 
 
 public class combStance extends CombatAction 
@@ -18,7 +18,7 @@ public class combStance extends CombatAction
 	}
 	
 	@Override
-	public void execute(Vector<Character> targets)
+	public void execute(List<Character> targets)
 	{
 		
 	}

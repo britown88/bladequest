@@ -452,6 +452,10 @@ public class GameDataLoader
 		{
 			e.modifyLevel(Integer.parseInt(dl.values.get(0)));
 		}
+		else if(dl.item.equals("atkanim"))
+		{
+			e.setAttackAnimation(dl.values.get(0));
+		}
 		else if(dl.item.equals("gold"))
 		{
 			e.setGold(Integer.parseInt(dl.values.get(0)));
