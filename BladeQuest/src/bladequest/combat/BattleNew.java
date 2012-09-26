@@ -61,6 +61,7 @@ public class BattleNew
 	private TargetTypes targetType;
 	private List<Character> targets;
 	private List<BattleEvent> battleEvents;
+	private List<DamageMarker> markers;
 	
 	private BattleStates state;
 	private Encounter encounter;
@@ -83,6 +84,7 @@ public class BattleNew
 		enemyArea = Global.vpToScreen(new Rect(0,0,partyPos.x-partyFrameBuffer, Global.vpHeight-frameMinHeight));
 		targets = new ArrayList<Character>();
 		battleEvents = new ArrayList<BattleEvent>();
+		markers = new ArrayList<DamageMarker>();
 	}
 	
 	public void startBattle(String encounter)
@@ -269,6 +271,20 @@ public class BattleNew
 		displayNamePanel.getTextAt(0).x = displayNamePanel.insetWidth()/2;
 		displayNamePanel.getTextAt(0).y = displayNamePanel.insetHeight()/2;
 
+	}
+	private void udpateDamageMarkers()
+	{
+		List<DamageMarker> delete = new ArrayList<DamageMarker>();
+		
+		for(DamageMarker dm : markers)
+			if(dm.isDone())
+				delete.add(dm);
+			else
+				dm.update();
+		
+		for(DamageMarker dm : delete)
+			markers.remove(dm);		
+		
 	}
 	
 	//act state functions
@@ -655,6 +671,11 @@ public class BattleNew
 		}
 			
 
+	}
+	private void drawDamageMarkers()
+	{
+		for(DamageMarker dm : markers)
+			dm.render();
 	}
 	
 	public void update()

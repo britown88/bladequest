@@ -82,32 +82,32 @@ public class DamageMarker
 	}
 	
 	public void update()
-	{		
-		timer++;
-		if(!show)
+	{	
+		if(!done)
 		{
-			show = true;
-			timer = 0;
-			target.modifyHP(value, false);
-			//TODO: damage is actually posted here
-		}
-		else
-		{
-			position.y += xSpeed;
-			xSpeed += 1;
-			
-			if (position.y > bottom)
-				position.y = bottom;
-			
-			if(timer > life)
+			timer++;
+			if(!show)
 			{
-				done = true;
-				//TODO: marker dies here
+				show = true;
+				timer = 0;
+				target.modifyHP(value, false);
+				//TODO: damage is actually posted here
 			}
+			else
+			{
+				position.y += xSpeed;
+				xSpeed += 1;
 				
-		}
-		
-
+				if (position.y > bottom)
+					position.y = bottom;
+				
+				if(timer > life)
+				{
+					done = true;
+					//TODO: marker dies here
+				}					
+			}
+		}	
 	}
 	
 	public boolean isShown(){return show;}	
@@ -115,19 +115,22 @@ public class DamageMarker
 	
 	public void render()
 	{
-		int i = Math.abs(value);
-		
-		if(dmgText == "")
+		if(show)
 		{
-			Global.renderer.drawText(""+i, position.x, position.y, paintOutline);
-			Global.renderer.drawText(""+i, position.x, position.y, paint);
+			int i = Math.abs(value);
+			
+			if(dmgText == "")
+			{
+				Global.renderer.drawText(""+i, position.x, position.y, paintOutline);
+				Global.renderer.drawText(""+i, position.x, position.y, paint);
+			}
+			else
+			{
+				Global.renderer.drawText(dmgText, position.x, position.y, paintOutline);
+				Global.renderer.drawText(dmgText, position.x, position.y, paint);
+			}
 		}
-		else
-		{
-			Global.renderer.drawText(dmgText, position.x, position.y, paintOutline);
-			Global.renderer.drawText(dmgText, position.x, position.y, paint);
-		}
-		
+				
 	}
 
 }
