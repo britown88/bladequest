@@ -4,7 +4,7 @@ power 7
 value 10
 usableby aramis
 statmods 0 0 0 0 0 0 0 0 0 0 0 0 0
-swing dagger
+swing dagger slice1
 swingbase 0 186 186 186
 swingbase 1 255 255 255
 swingbase 2 138 68 0
@@ -17,7 +17,7 @@ item silversword "Silver Sword" weapon sword "Some believe the silver inlay ward
 power 20
 value 123
 usableby aramis luc joy roland
-swing sword
+swing sword slice1
 swingbase 0 186 186 186
 swingbase 1 255 255 255
 swingslash 0 128 128 128
@@ -29,7 +29,7 @@ item silverstaff "Silver Staff" weapon staff "A magical staff."
 power 5
 value 500
 usableby joy roland
-swing staff
+swing staff slice1
 swingbase 0 186 186 186
 swingbase 1 255 255 255
 swingbase 2 0 0 186

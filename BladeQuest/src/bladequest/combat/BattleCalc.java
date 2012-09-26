@@ -34,9 +34,9 @@ public class BattleCalc
 				greater.add(be);
 		
 		
-		List<BattleEvent> returnList = new ArrayList<BattleEvent>(genMoveOrder(less));
+		List<BattleEvent> returnList = new ArrayList<BattleEvent>(genMoveOrder(greater));
 		returnList.add(pivot);
-		returnList.addAll(genMoveOrder(greater));		
+		returnList.addAll(genMoveOrder(less));		
 		
 		return returnList;
 	}

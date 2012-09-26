@@ -1,8 +1,12 @@
 package bladequest.world;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import bladequest.battleactions.*;
+import android.graphics.Point;
+import bladequest.battleactions.battleAction;
+import bladequest.graphics.BattleAnim;
+import bladequest.graphics.WeaponSwing;
 import bladequest.graphics.WeaponSwingDrawable;
 
 public class Item 
@@ -15,6 +19,8 @@ public class Item
 	private int[] statMods;
 	
 	private String swingModel;
+	private String swingAnim;
+	private BattleAnim battleAnim;
 	private int[] swingColorsBase, swingColorsSlash;
 	private WeaponSwingDrawable weaponSwing;
 	
@@ -69,7 +75,7 @@ public class Item
 		//copy swing model data
 		if(i.swingModel != null)
 		{
-			this.initSwingData(i.swingModel);
+			this.initSwingData(i.swingModel, i.swingAnim);
 			for(int j = 0; j < 8; ++j)
 			{
 				this.swingColorsBase[j] = i.swingColorsBase[j];
@@ -121,9 +127,10 @@ public class Item
 	public void addStatMod(int stat, int amt){ statMods[stat] = amt;}
 	public int getStatMod(int stat){return statMods[stat]; }
 	
-	public void initSwingData(String swingModel)
+	public void initSwingData(String swingModel, String swingAnim)
 	{
 		this.swingModel = swingModel;
+		this.swingAnim = swingAnim;
 		swingColorsBase = new int[8];
 		swingColorsSlash = new int[8];
 	}
@@ -135,9 +142,16 @@ public class Item
 	
 	public void generateSwing()
 	{
-		if(weaponSwing != null)weaponSwing.release();		
-		weaponSwing = Global.weaponSwingModels.get(swingModel).genSwingDrawable(swingColorsBase, swingColorsSlash);
+		if(weaponSwing != null)weaponSwing.release();	
+		
+		WeaponSwing model = Global.weaponSwingModels.get(swingModel);
+		
+		weaponSwing = model.genSwingDrawable(swingColorsBase, swingColorsSlash);
+		battleAnim = model.genAnim(new BattleAnim(Global.battleAnims.get(swingAnim)));
 	}
+	
+	public void playAnimation(Point src, Point tar){Global.playAnimation(battleAnim, src, tar);}
+	
 	
 	public WeaponSwingDrawable getSwing() { return weaponSwing; }
 	

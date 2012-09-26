@@ -28,10 +28,15 @@ public class WeaponSwing
 		
 	}
 	
+	private int[] baseColors, swingColors;
+	
 	public WeaponSwingDrawable genSwingDrawable(int[] base, int[] swing)
 	{
 		Bitmap newBmp = Bitmap.createBitmap(frameSize.x*3, frameSize.y, Config.ARGB_8888);
 		Bitmap swingBmp = Global.bitmaps.get("weaponswing");
+		
+		baseColors = base;
+		swingColors = swing;
 		
 		
 		for(int y = srcRect.top; y < srcRect.bottom; ++y)
@@ -52,6 +57,15 @@ public class WeaponSwing
 				}				
 			}		
 		return new WeaponSwingDrawable(newBmp, frameSize);
+	}
+
+	public BattleAnim genAnim(BattleAnim battleAnim) 
+	{
+		battleAnim.setFirstObjectColors(0, swingColors[0]);
+		battleAnim.setFirstObjectColors(1, swingColors[2]);
+		battleAnim.setFirstObjectColors(2, swingColors[0]);
+		
+		return battleAnim;
 	}
 	
 

@@ -34,6 +34,8 @@ public class BattleNew
 	private final int mpWindowHeight = 32;
 	private final int mpWindowWidth = 128;
 	
+	private final int actTimerLength = 200;//milliseconds
+	
 	private final String txtStart = "Tap screen to start!";
 	private final String txtTargetSingle = "Select target...";
 	private final String txtTargetSingleAlly = "Select ally...";
@@ -50,6 +52,9 @@ public class BattleNew
 	private boolean selCharClosed;
 	private boolean nextChar;
 	private boolean prevChar;
+	
+	private long actTimerStart;
+	private boolean nextActor;
 	
 	private Character currentChar;
 	private int currentCharIndex;
@@ -87,14 +92,7 @@ public class BattleNew
 		
 		partyList = Global.party.getPartyList(false);
 		
-		//determine first nondead character
-		for(int i = 0; i < partyList.size(); ++i)
-			if(!partyList.get(i).isDead())
-			{
-				currentCharIndex = i;
-				currentChar = partyList.get(currentCharIndex);
-				break;
-			}
+		selectFirstChar();
 		
 		//all characters are dead (this should never happen)
 		if(currentChar == null)
@@ -262,8 +260,90 @@ public class BattleNew
 				battleEvents.add(e.genBattleEvent(partyList, encounter.Enemies()));
 		
 		battleEvents = BattleCalc.genMoveOrder(battleEvents);
-		int foo = 8;
-		int bar = foo;
+
+	}
+	private void updateActStatus()
+	{
+		if(!nextActor)
+		{
+			Character actor = battleEvents.get(0).getSource();
+			List<Character> targets = battleEvents.get(0).getTargets();
+			
+			if(actor.isEnemy())
+			{
+				//enemy action code
+				nextActorInit();
+			}
+			else
+			{
+				//player action code
+				currentChar = actor;
+				if(selCharOpened)
+				{
+					switch(actor.getAction())
+					{
+					case Attack:
+						if(actor.getBattleFrame() != faces.Attack )
+						{
+							actTimerStart = System.currentTimeMillis();
+							actor.setFace(faces.Attack);
+							actor.setImageIndex(0);
+						}
+						else
+						{
+							int index = (int)(System.currentTimeMillis() - actTimerStart)/actTimerLength;						
+							if(index < 3)//<3
+								actor.setImageIndex(index);
+							else
+								nextActorInit();
+							//TODO: add swing anim						
+						}
+						break;
+					case Ability:
+					case CombatAction:
+					case Guard:
+					case Item:
+						break;
+					}
+				}
+				else if(selCharClosed)
+					advanceChar();
+			}
+		}
+		else
+			if(selCharClosed)
+				nextActor();	
+		
+	}
+	
+	private void nextActorInit()
+	{
+			nextActor = true;
+			recedeChar();		
+	}
+	private void nextActor()
+	{
+		Character actor = battleEvents.get(0).getSource();
+		if(!actor.isEnemy())
+		{
+			recedeChar();
+			actor.setFace(faces.Idle);
+			actor.setImageIndex(0);
+		}
+		
+		nextActor = false;
+		
+		battleEvents.remove(0);
+		
+		if(battleEvents.size() == 0)
+		{
+			selectFirstChar();
+			if(currentChar == null)
+				changeState(BattleStates.DEFEAT);
+			else
+				changeState(BattleStates.SELECT);
+		}
+		
 	}
 	
 	private void changeState(BattleStates newState)
@@ -386,6 +466,19 @@ public class BattleNew
 		
 		
 	}
+	private void selectFirstChar()
+	{
+		currentChar = null;
+		
+		//determine first nondead character
+		for(int i = 0; i < partyList.size(); ++i)
+			if(!partyList.get(i).isDead())
+			{
+				currentCharIndex = i;
+				currentChar = partyList.get(currentCharIndex);
+				break;
+			}
+	}
 	
 	private void addBattleEvent(Character source, List<Character> targets)
 	{
@@ -477,6 +570,13 @@ public class BattleNew
 		updateCharacterPositions();
 		
 		handleNextPrev();
+		
+		switch(state)
+		{
+		case ACT:
+			updateActStatus();
+			break;
+		}
 		
 	}	
 	public void render()

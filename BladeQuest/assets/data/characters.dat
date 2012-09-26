@@ -16,16 +16,22 @@ character joy "Joy" bjoy joy
 portrait 2 0
 abilities "Magic"
 combataction combWish
-basestats 7 10 4 2
-level 5
+basestats 3 3 6 10
+level 8
+equip silverstaff
+equip felthat
+equip cottonshirt
 endcharacter
 #
 character luc "Luc" bluc luc
 portrait 1 0
 abilities "Swordplay"
 combataction combStance
-basestats 7 10 4 2
-level 5
+basestats 10 4 7 2
+level 4
+equip silversword
+equip felthat
+equip cottonshirt
 endcharacter
 #
 character roland "Roland" broland roland

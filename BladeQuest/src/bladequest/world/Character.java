@@ -1033,6 +1033,7 @@ public class Character
 		}
 	}
 	
+	public void setImageIndex(int index){ imageIndex = index;}
 	public void setIdle()
 	{
 		imageIndex = 0;
@@ -1084,21 +1085,19 @@ public class Character
 			{	
 				imageIndex++;
 				
-				if(imageIndex >= battleSpr.getNumFrames())
-				{
-					if(battleSpr.getFace() == BattleSprite.faces.Attack)
-						imageIndex = 1;
-					else
-						imageIndex = 0;
-				}
+				if(imageIndex >= battleSpr.getNumFrames()) 
+					imageIndex = 0;
 					
 			}
 		}
 	}
 	
+	public void playWeaponAnimation(Point src, Point tar){if(weapEquipped()) weapon.playAnimation(src, tar);}
 	public void battleRender(int x, int y)
 	{
-		updateAnimation();
+		if(battleSpr.getFace() != faces.Attack)
+			updateAnimation();//dont update attack anim, it's managed by battle
+		
 		battleSpr.render(x, y, imageIndex, false);
 		
 		//draw weapon swing

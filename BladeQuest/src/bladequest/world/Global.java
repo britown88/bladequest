@@ -500,6 +500,12 @@ public class Global
 		
 		return null;
 	}
+	public static void playAnimation(BattleAnim anim, Point source, Point target)
+	{
+		BattleAnim animCopy = new BattleAnim(anim);;
+		playingAnims.add(animCopy);
+		animCopy.play(source, target);		
+	}
 	
 	public static void clearAnimations()
 	{
@@ -794,6 +800,7 @@ public class Global
 		
 		bSpr.addFrame(BattleSprite.faces.Attack, 32, x*3+1, y*5+0);
 		bSpr.addFrame(BattleSprite.faces.Attack, 32, x*3+0, y*5+0);
+		bSpr.addFrame(BattleSprite.faces.Attack, 32, x*3+0, y*5+0);//3rd frame repeats frame 2
 		
 		bSpr.addFrame(BattleSprite.faces.Use, 32, x*3+1, y*5+1);
 		

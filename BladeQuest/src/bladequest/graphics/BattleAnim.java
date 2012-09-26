@@ -60,6 +60,22 @@ public class BattleAnim
 		}
 	}
 	
+	public void setFirstObjectColors(int state, int c)
+	{
+		BattleAnimObject obj = objects.get(0);
+		
+		if(obj.states.size() > state)
+		{
+			obj.states.get(state).a = Color.alpha(c);
+			obj.states.get(state).r = Color.red(c);
+			obj.states.get(state).g = Color.green(c);
+			obj.states.get(state).b = Color.blue(c);
+		}
+			
+		
+		
+	}
+	
 	public void play(Point source, Point target)
 	{
 		this.src = source; this.tar = target;

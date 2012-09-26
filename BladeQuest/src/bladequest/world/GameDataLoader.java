@@ -196,7 +196,7 @@ public class GameDataLoader
 		}
 		else if(dl.item.equals("swing"))
 		{
-			itm.initSwingData(dl.values.get(0));
+			itm.initSwingData(dl.values.get(0), dl.values.get(1));
 		}
 		else if(dl.item.equals("swingbase"))
 		{
