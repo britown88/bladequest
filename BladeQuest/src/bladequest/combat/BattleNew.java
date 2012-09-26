@@ -253,6 +253,19 @@ public class BattleNew
 	}
 	private void changeStartBarText(String str){startBar.getTextAt(0).text = str;}
 	
+	//act state functions
+	private void initActState()
+	{		
+		//add enemy actions to event queue
+		for(Enemy e : encounter.Enemies())
+			if(!e.isDead())
+				battleEvents.add(e.genBattleEvent(partyList, encounter.Enemies()));
+		
+		battleEvents = BattleCalc.genMoveOrder(battleEvents);
+		int foo = 8;
+		int bar = foo;
+	}
+	
 	private void changeState(BattleStates newState)
 	{
 		switch(newState)
@@ -268,6 +281,10 @@ public class BattleNew
 			mainMenu.open();
 			advanceChar();
 			currentChar.setFace(faces.Idle);
+			break;
+		case ACT:
+			mainMenu.close();
+			initActState();
 			break;
 			
 		case TARGET:
@@ -296,9 +313,7 @@ public class BattleNew
 				changeStartBarText(txtTargetEverybody);
 				break;
 			}
-			changeStartBarText(txtTargetSingle);
-			mainMenu.close();
-			
+			mainMenu.close();			
 		}
 		
 		state = newState;
@@ -372,6 +387,11 @@ public class BattleNew
 		
 	}
 	
+	private void addBattleEvent(Character source, List<Character> targets)
+	{
+		battleEvents.add(new BattleEvent(source, targets));
+	}
+	
 	private void nextCharacter()
 	{
 		changeState(BattleStates.SELECT);
@@ -390,6 +410,31 @@ public class BattleNew
 			prevChar = true;
 		}
 		
+	}
+	private void handleNextPrev()
+	{
+		if((nextChar || prevChar) && selCharClosed)
+		{
+			if(prevChar)
+			{
+				currentChar = partyList.get(--currentCharIndex);
+				changeState(BattleStates.SELECT);
+				
+				//remove most recent addition to event queue
+				battleEvents.remove(battleEvents.size()-1);
+				
+				//TODO: unuse unused items
+			}
+			else if(currentCharIndex + 1 < partyList.size())
+			{
+				currentChar = partyList.get(++currentCharIndex);
+				changeState(BattleStates.SELECT);
+			}
+			else
+				changeState(BattleStates.ACT);
+			
+			nextChar = prevChar = false;
+		}
 	}
 	
 	private void drawActors()
@@ -431,28 +476,7 @@ public class BattleNew
 		handleCharAdvancing();
 		updateCharacterPositions();
 		
-		if((nextChar || prevChar) && selCharClosed)
-		{
-			if(prevChar)
-			{
-				currentChar = partyList.get(--currentCharIndex);
-				changeState(BattleStates.SELECT);
-				
-				//remove most recent addition to event queue
-				battleEvents.remove(battleEvents.size()-1);
-				
-				//TODO: unuse unused items
-			}
-			else if(currentCharIndex + 1 < partyList.size())
-			{
-				currentChar = partyList.get(++currentCharIndex);
-				changeState(BattleStates.SELECT);
-			}
-			else
-				changeState(BattleStates.ACT);
-			
-			nextChar = prevChar = false;
-		}
+		handleNextPrev();
 		
 	}	
 	public void render()
@@ -507,7 +531,7 @@ public class BattleNew
 					if(targets.size() > 0)
 					{
 						//targets were selected
-						battleEvents.add(new BattleEvent(currentChar, targets, targetType));
+						addBattleEvent(currentChar, targets);
 						nextCharacter();
 						targets.clear();
 					}

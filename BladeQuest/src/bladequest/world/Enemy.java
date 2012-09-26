@@ -1,8 +1,12 @@
 package bladequest.world;
 
-import android.graphics.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.*;
+import android.graphics.Point;
+import android.graphics.Rect;
+import bladequest.combat.BattleEvent;
+import bladequest.world.ObjectPath.Actions;
 
 
 public class Enemy extends Character
@@ -74,6 +78,50 @@ public class Enemy extends Character
 		
 		action = Action.Attack;
 		return;
+	}
+	
+	public BattleEvent genBattleEvent(List<Character> chars, List<Enemy> enemies)
+	{
+		Act();
+		List<Character> targets = new ArrayList<Character>();
+		List<Character> everybody = new ArrayList<Character>();
+		
+		for(Character c : chars)everybody.add(c);
+		for(Enemy e : enemies)everybody.add(e);
+		
+		switch(action)
+		{
+		case Ability:
+			switch(abilityToUse.TargetType())
+			{
+			case Single:
+			case SingleEnemy:
+				targets.add(chars.get(Global.rand.nextInt(chars.size())));
+				break;				
+			case SingleAlly:			
+				targets.add(enemies.get(Global.rand.nextInt(enemies.size())));
+				break;
+			case AllAllies:
+				for(Enemy e : enemies)targets.add(e);
+				break;
+			case AllEnemies:
+				for(Character c : chars)targets.add(c);
+				break;				
+			case Everybody:
+				for(Character c : everybody)targets.add(c);
+				break;
+			case Self:
+				targets.add(this);
+				break;
+			}			
+			break;
+		default://attack
+			targets.add(chars.get(Global.rand.nextInt(chars.size())));			
+			break;
+		}
+		
+		return new BattleEvent(this, targets);
+		
 	}
 	
 	public void setBossMods(float HP)
