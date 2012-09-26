@@ -17,7 +17,7 @@ portrait 2 0
 abilities "Magic"
 combataction combWish
 basestats 3 3 6 10
-level 8
+level 6
 equip silverstaff
 equip felthat
 equip cottonshirt
