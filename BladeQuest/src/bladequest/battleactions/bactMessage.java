@@ -7,7 +7,7 @@ import bladequest.world.Character;
 import bladequest.world.DamageTypes;
 import bladequest.world.Global;
 
-public class bactMessage extends battleAction
+public class bactMessage extends BattleAction
 {
 	String message;
 	

@@ -518,7 +518,7 @@ public class GameDataLoader
 		}
 	}
 	
-	private static battleAction loadBattleAction(DataLine dl)
+	private static BattleAction loadBattleAction(DataLine dl)
 	{
 		if(dl.values.get(0).equals("bactDamage"))
 		{

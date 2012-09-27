@@ -11,6 +11,7 @@ public class BattleEvent
 	private Character source;
 	private List<Character> targets;
 	
+	
 	public BattleEvent(Character source, List<Character> targets)
 	{
 		this.source = source;
@@ -19,6 +20,13 @@ public class BattleEvent
 	
 	public Character getSource() { return source; }
 	public List<Character> getTargets() { return targets;}
+	
+	
+	
+	public void init(List<DamageMarker> markers)
+	{
+		
+	}
 	
 
 	

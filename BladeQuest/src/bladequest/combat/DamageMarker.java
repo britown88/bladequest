@@ -90,7 +90,7 @@ public class DamageMarker
 			{
 				show = true;
 				timer = 0;
-				target.modifyHP(value, false);
+				//target.modifyHP(value, false);
 				//TODO: damage is actually posted here
 			}
 			else

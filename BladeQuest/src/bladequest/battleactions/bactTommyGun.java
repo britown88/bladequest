@@ -5,7 +5,7 @@ import java.util.*;
 import bladequest.world.*;
 import bladequest.world.Character;
 
-public class bactTommyGun extends battleAction
+public class bactTommyGun extends BattleAction
 {
 	private int bp, shots;
 	public bactTommyGun(int bp, int shots)

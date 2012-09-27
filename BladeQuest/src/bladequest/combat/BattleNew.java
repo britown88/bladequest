@@ -272,7 +272,7 @@ public class BattleNew
 		displayNamePanel.getTextAt(0).y = displayNamePanel.insetHeight()/2;
 
 	}
-	private void udpateDamageMarkers()
+	private void updateDamageMarkers()
 	{
 		List<DamageMarker> delete = new ArrayList<DamageMarker>();
 		
@@ -309,6 +309,15 @@ public class BattleNew
 			Character actor = battleEvents.get(0).getSource();
 			List<Character> targets = battleEvents.get(0).getTargets();
 			
+			//set frame text
+			switch(actor.getAction())
+			{case Attack:changeStartBarText(actor.getDisplayName()+" attacks!");break;
+			case Item:changeStartBarText(actor.getDisplayName()+" uses "+actor.getItemToUse().getName()+"!");break;
+			case Ability:changeStartBarText(actor.getDisplayName()+" casts "+actor.getAbilityToUse().getDisplayName()+"!");break;
+			case CombatAction:changeStartBarText(actor.getDisplayName()+actor.getCombatActionText());break;
+			default: break;}
+
+			
 			if(actor.isEnemy())
 			{
 				//enemy action code
@@ -328,8 +337,11 @@ public class BattleNew
 					{
 					case Attack:
 						if(index == 3)
+						{
 							((Enemy)actor).playAttackAnimation(actor.getPosition(true), targets.get(0).getPosition(true));
-						if(index > 7)
+							
+						}							
+						else if(index > 7)
 						{
 							this.targets.clear();
 							nextActorInit();
@@ -574,11 +586,9 @@ public class BattleNew
 				break;
 			}
 	}
-	
-	private void addBattleEvent(Character source, List<Character> targets)
-	{
-		battleEvents.add(new BattleEvent(source, targets));
-	}
+	private void postDamageMarker(int value, Character target){markers.add(new DamageMarker(value, target));}
+	private void postDamageMarker(String value, Character target){markers.add(new DamageMarker(value, target));}
+	private void addBattleEvent(Character source, List<Character> targets){battleEvents.add(new BattleEvent(source, targets));}
 	
 	private void nextCharacter()
 	{
@@ -685,6 +695,7 @@ public class BattleNew
 		
 		handleCharAdvancing();
 		updateCharacterPositions();
+		updateDamageMarkers();
 		
 		handleNextPrev();
 		
@@ -704,6 +715,7 @@ public class BattleNew
 		drawSelect();
 		
 		Global.renderAnimations();
+		drawDamageMarkers();
 		
 	}
 	

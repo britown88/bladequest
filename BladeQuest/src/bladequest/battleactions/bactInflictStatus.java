@@ -8,7 +8,7 @@ import bladequest.world.Global;
 
 
 
-public class bactInflictStatus extends battleAction
+public class bactInflictStatus extends BattleAction
 {
 	private StatusEffect se;
 	private boolean show;

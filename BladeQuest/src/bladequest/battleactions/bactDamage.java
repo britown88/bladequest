@@ -8,7 +8,7 @@ import bladequest.world.DamageTypes;
 import bladequest.world.Global;
 import bladequest.world.Stats;
 
-public class bactDamage extends battleAction
+public class bactDamage extends BattleAction
 {
 	float power;
 	DamageTypes type;

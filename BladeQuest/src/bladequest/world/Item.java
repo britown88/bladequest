@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.graphics.Point;
-import bladequest.battleactions.battleAction;
+import bladequest.battleactions.BattleAction;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.WeaponSwing;
 import bladequest.graphics.WeaponSwingDrawable;
@@ -29,7 +29,7 @@ public class Item
 	
 	public String idName;
 	
-	private List<battleAction> actions;
+	private List<BattleAction> actions;
 	private List<String> usableBy;
 	private TargetTypes targetType;
 	
@@ -41,7 +41,7 @@ public class Item
 		this.description = description;
 		count = 1;
 		id = id_++;
-		actions = new ArrayList<battleAction>();
+		actions = new ArrayList<BattleAction>();
 		usableBy = new ArrayList<String>();
 		statMods = new int[Stats.NUM_STATS.ordinal()];
 		this.type = type;
@@ -99,7 +99,7 @@ public class Item
 	public boolean isSellable() { return sellable; }
 	public void setSellable(boolean b) { sellable = b; }
 	
-	public void addAction(battleAction action){actions.add(action);}	
+	public void addAction(BattleAction action){actions.add(action);}	
 	public String getName(){return displayName;}	
 	public String getDescription(){return description;}
 	public int getCount(){return count - useCount;}	
@@ -182,7 +182,7 @@ public class Item
 	
 	public boolean willAffect(Character c)
 	{
-		for(battleAction ba : actions)
+		for(BattleAction ba : actions)
 			if(!ba.willAffectTarget(c))
 				return false;
 		

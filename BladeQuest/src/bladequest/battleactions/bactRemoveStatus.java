@@ -7,7 +7,7 @@ import bladequest.world.Character;
 import bladequest.world.Global;
 import bladequest.world.States;
 
-public class bactRemoveStatus extends battleAction
+public class bactRemoveStatus extends BattleAction
 {
 	private String se;
 	

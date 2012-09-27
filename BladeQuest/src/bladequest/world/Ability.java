@@ -3,7 +3,7 @@ package bladequest.world;
 import java.util.ArrayList;
 import java.util.List;
 
-import bladequest.battleactions.battleAction;
+import bladequest.battleactions.BattleAction;
 
 public class Ability 
 {
@@ -15,7 +15,7 @@ public class Ability
 	
 	public String name;
 	
-	private List<battleAction> actions;
+	private List<BattleAction> actions;
 	
 	public Ability(String name, String displayName, DamageTypes dmgType, TargetTypes targetType, int mpcost, int accuracy, boolean useableOutOfBattle)
 	{
@@ -29,7 +29,7 @@ public class Ability
 		this.accuracy = accuracy;
 		delay = 5;
 		
-		actions = new ArrayList<battleAction>();
+		actions = new ArrayList<BattleAction>();
 	}
 	
 	public void setActionDelay(int delay)
@@ -37,7 +37,7 @@ public class Ability
 		this.delay = delay;
 	}
 	public boolean isUsableOutOfBattle() { return usableOutOfBattle;}
-	public void addAction(battleAction action){actions.add(action);}
+	public void addAction(BattleAction action){actions.add(action);}
 	public String getDisplayName() { return displayName;}
 	public DamageTypes DmgType() { return dmgType;}
 	public TargetTypes TargetType() { return targetType;}
