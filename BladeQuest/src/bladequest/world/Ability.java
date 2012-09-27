@@ -52,14 +52,14 @@ public class Ability
 	
 	public void update()
 	{
-		if(actions.get(bactIndex).isDone())
+/*		if(actions.get(bactIndex).isDone())
 		{
 			bactIndex++;
 			if(bactIndex < actions.size())
 				actions.get(bactIndex).run(attacker, targets, bactIndex*delay);
 			else
 				running = false;
-		}
+		}*/
 	}
 	
 	
@@ -72,7 +72,7 @@ public class Ability
 		bactIndex = 0;
 		running = true;
 
-		actions.get(bactIndex).run(attacker, targets, 0);
+		//actions.get(bactIndex).run(attacker, targets, 0);
 	}
 
 }

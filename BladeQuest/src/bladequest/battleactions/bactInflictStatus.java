@@ -2,6 +2,7 @@ package bladequest.battleactions;
 
 import java.util.*;
 
+import bladequest.combat.DamageMarker;
 import bladequest.statuseffects.*;
 import bladequest.world.Character;
 import bladequest.world.Global;
@@ -13,14 +14,15 @@ public class bactInflictStatus extends BattleAction
 	private StatusEffect se;
 	private boolean show;
 	
-	public bactInflictStatus(boolean show, StatusEffect se)
+	public bactInflictStatus(int animFrame, boolean show, StatusEffect se)
 	{	
+		super(animFrame);
 		this.se = se;
 		this.show = show;
 	}
 	
 	@Override
-	public void run(Character attacker, List<Character> targets, int delay)
+	public void run(Character attacker, List<Character> targets, List<DamageMarker> markers)
 	{
 		for(Character t : targets)
 		{		
@@ -28,11 +30,11 @@ public class bactInflictStatus extends BattleAction
 				switch(Global.GameState)
 				{
 				case GS_BATTLE:
-					Global.battle.dmgText(t, se.Name().toUpperCase(), delay);
+					Global.battle.dmgText(t, se.Name().toUpperCase(), 0);
 					Global.playAnimation("poison", attacker.getPosition(), t.getPosition());
 					break;
 				case GS_MAINMENU:
-					Global.menu.dmgText(t, se.Name().toUpperCase(), delay);					
+					Global.menu.dmgText(t, se.Name().toUpperCase(), 0);					
 					break;
 				}
 			

@@ -57,32 +57,32 @@ enditem
 item potion "Potion" usable orb "Restores 50 HP."
 value 50
 targettype single
-action bactDamage 50.0f fixed
+action bactDamage 50.0f fixed 0
 enditem
 #
 item megalixer "MegaLicksr" usable orb "Fully heals all allies."
 value 9999
 targettype allallies
-action bactDamage 9999.0f fixed
+action bactDamage 9999.0f fixed 0
 enditem
 #
 item bomb "Bomb" usable orb "Devastating damage to all enemies."
 value 500
 targettype allenemies
-action bactDamage -9999.0f fixed
+action bactDamage -9999.0f fixed 0
 enditem
 #
 item tommygun "Tommy Gun" usable orb "Unload a barrage of bullets on all enemies."
 value 25
 sellable False
 targettype allenemies
-action bactTommyGun 3 20
+action bactTommyGun 3 20 0
 enditem
 #
 item antidote "Antidote" usable orb "Cures Poison."
 value 50
 targettype single
-action bactRemoveStatus poison
+action bactRemoveStatus poison 0
 enditem
 #
 item prisonkey "Prison Key" key orb "Key to the castle prison cells."

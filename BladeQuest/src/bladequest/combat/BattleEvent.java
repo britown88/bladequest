@@ -10,6 +10,7 @@ public class BattleEvent
 {
 	private Character source;
 	private List<Character> targets;
+	private List<DamageMarker> markers;
 	
 	
 	public BattleEvent(Character source, List<Character> targets)
@@ -25,6 +26,10 @@ public class BattleEvent
 	
 	public void init(List<DamageMarker> markers)
 	{
+		switch(source.getAction())
+		{
+		
+		}
 		
 	}
 	

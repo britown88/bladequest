@@ -2,20 +2,22 @@ package bladequest.battleactions;
 
 import java.util.*;
 
+import bladequest.combat.DamageMarker;
 import bladequest.world.*;
 import bladequest.world.Character;
 
 public class bactTommyGun extends BattleAction
 {
 	private int bp, shots;
-	public bactTommyGun(int bp, int shots)
+	public bactTommyGun(int animFrame, int bp, int shots)
 	{
+		super(animFrame);
 		this.bp = bp;
 		this.shots = shots;
 	}
 	
 	@Override
-	public void run(Character attacker, List<Character> targets, int delay)
+	public void run(Character attacker, List<Character> targets, List<DamageMarker> markers)
 	{
 		Character t;
 		for(int i = 0; i < shots; ++i)

@@ -2,6 +2,7 @@ package bladequest.battleactions;
 
 import java.util.*;
 
+import bladequest.combat.DamageMarker;
 import bladequest.statuseffects.*;
 import bladequest.world.Character;
 import bladequest.world.Global;
@@ -11,20 +12,21 @@ public class bactRemoveStatus extends BattleAction
 {
 	private String se;
 	
-	public bactRemoveStatus(String se)
+	public bactRemoveStatus(int animFrame, String se)
 	{	
+		super(animFrame);
 		this.se = se;
 	}
 	
 	@Override
-	public void run(Character attacker, List<Character> targets, int delay)
+	public void run(Character attacker, List<Character> targets, List<DamageMarker> markers)
 	{
 		for(Character t : targets)
 		{
 			t.removeStatusEffect(se);
 			
 			if(Global.GameState == States.GS_MAINMENU)
-				Global.menu.dmgText(t, "CURE", delay);	
+				Global.menu.dmgText(t, "CURE", 0);	
 		}
 			
 	}
