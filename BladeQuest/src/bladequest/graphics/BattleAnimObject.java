@@ -69,13 +69,19 @@ public class BattleAnimObject
 	public BattleAnimObjState getNextState() { return nextState; }
 	public BattleAnimObjState getworkingState() { return workingState; }
 	
+	private void genStartAndEndFrame()
+	{ 
+		startFrame = states.get(0).frame;
+		endFrame = states.get(states.size()-1).frame;
+	}
+	
+	
 	public void start(Point source, Point target)
 	{
 		this.source = source;
 		this.target = target;
 		
-		startFrame = states.get(0).frame;
-		endFrame = states.get(states.size()-1).frame;
+		genStartAndEndFrame();
 		
 		for(BattleAnimObjState state : states)
 			state.randomized = false;
@@ -148,8 +154,8 @@ public class BattleAnimObject
 	}
 	
 	public void addState(BattleAnimObjState state){states.add(state);}
-	public int getEndFrame() { return endFrame; }
-	public int getStartFrame() { return startFrame; }
+	public int getEndFrame() { genStartAndEndFrame();return endFrame; }
+	public int getStartFrame() { genStartAndEndFrame();return startFrame; }
 	
 	private int linearInterpolation(int x0, int x1, float mu){return (int)(x0 * (1.0f-mu) + x1*mu);}
 	private float linearInterpolation(float x0, float x1, float mu){return x0 * (1.0f-mu) + x1*mu;}

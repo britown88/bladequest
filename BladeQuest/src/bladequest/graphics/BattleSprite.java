@@ -109,11 +109,7 @@ public class BattleSprite {
 			Global.renderer.drawBitmap(bitmap, frameLists.get(face.ordinal()).get(index), 
 						new Rect(p.x, p.y,p.x+width, p.y+height), null);
 		}
-			
-
-		
-	}
-	
+	}	
 	
 	public void addFrame(faces face, int left, int top, int right, int bottom)
 	{

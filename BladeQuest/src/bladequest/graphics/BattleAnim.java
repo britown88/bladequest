@@ -46,7 +46,7 @@ public class BattleAnim
 	public void addObject(BattleAnimObject obj){objects.add(obj);}
 	public boolean Done() { return done; }
 	public boolean Playing() { return playing; }
-	public int getFinalFrame() { return finalFrame;}
+	public int getFinalFrame() { findFinalFrame();return finalFrame;}
 	
 	public void copyLastObject(int count, int frameOffset)
 	{
@@ -91,9 +91,7 @@ public class BattleAnim
 			obj.start(source, target);
 		
 		//find finalFrame
-		finalFrame = 0;
-		for(BattleAnimObject obj : objects)
-			finalFrame = Math.max(finalFrame, obj.getEndFrame());
+		findFinalFrame();
 		
 		//smooth end necessary for looping
 		for(BattleAnimObject obj : objects)
@@ -101,6 +99,13 @@ public class BattleAnim
 				obj.alwaysDraw();
 
 			
+	}
+	
+	private void findFinalFrame()
+	{
+		finalFrame = 0;
+		for(BattleAnimObject obj : objects)
+			finalFrame = Math.max(finalFrame, obj.getEndFrame());
 	}
 	
 	//update currentFrame, update all objects, and end playing if past final frame

@@ -2,6 +2,7 @@ package bladequest.battleactions;
 
 import java.util.*;
 
+import bladequest.combat.BattleCalc;
 import bladequest.combat.DamageMarker;
 import bladequest.world.Battle;
 import bladequest.world.Character;
@@ -26,27 +27,9 @@ public class bactDamage extends BattleAction
 	{
 		for(Character t : targets)
 		{
-			switch(type)
-			{
-			case Fixed:
-				switch(Global.GameState)
-				{
-				case GS_BATTLE:
-					Global.battle.applyDamage(t, (int)power, 0);
-					break;
-				case GS_MAINMENU:
-					Global.menu.applyDamage(t, (int)power, 0);					
-					break;
-				}
-				
-				break;
-			case Physical:
-				int ap = attacker.getBattlePower();
-				int boosted = (int)(ap*power);
-				Global.battle.applyDamage(t,-Battle.genDamage(attacker,t,boosted),0);
-				break;
-			}
-			
+			//TODO: actually do the damage
+			int dmg = BattleCalc.calculatedDamage(attacker, t, power, type);
+			markers.add(new DamageMarker(-dmg, t));			
 		}
 		
 	}

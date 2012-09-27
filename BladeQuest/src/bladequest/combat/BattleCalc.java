@@ -3,10 +3,43 @@ package bladequest.combat;
 import java.util.ArrayList;
 import java.util.List;
 
+import bladequest.world.DamageTypes;
+import bladequest.world.Global;
 import bladequest.world.Stats;
+import bladequest.world.Character;
 
 public class BattleCalc 
 {
+	
+	public static int calculatedDamage(Character attacker, Character defender, float power, DamageTypes type)
+	{
+		int AP = attacker.getBattlePower();
+		float DP = defender.getDefense();
+				
+		int BP = (int)(AP*power);
+		float coefficient = attacker == null ? 1.0f : attacker.getCoefficient();
+		float defenderTypeMod = defender.isEnemy() ? 10.0f : 4.0f;
+		int baseDmg = (int)((Math.max(1.0f, (BP * 2.0f) - DP) * defenderTypeMod * coefficient));		
+		
+		int variance = Global.rand.nextInt(20);		
+		int dmgMod = (int)((float)baseDmg*(float)((variance-10)/100.0F));
+		
+		int finalDmg = 0;
+		
+		switch(type)
+		{
+		case Fixed:
+			finalDmg = (int)power;
+			break;
+		case Physical:
+			finalDmg = baseDmg + dmgMod;
+			break;
+			//TODO: configure other damage types
+		}
+		
+		return finalDmg;
+	}
+	
 	//returns whether rhs has priority over lhs
 	private static boolean checkMovePriority(BattleEvent rhs, BattleEvent lhs)
 	{
@@ -41,14 +74,5 @@ public class BattleCalc
 		return returnList;
 	}
 	
-	/*function quicksort('array')
-    if length('array') <_ 1
-        return 'array'  // an array of zero or one elements is already sorted
-    select and remove a pivot value 'pivot' from 'array'
-    create empty lists 'less' and 'greater'
-    for each 'x' in 'array'
-        if 'x' <_ 'pivot' then append 'x' to 'less'
-        else append 'x' to 'greater'
-    return concatenate(quicksort('less'), 'pivot', quicksort('greater'))*/
 
 }

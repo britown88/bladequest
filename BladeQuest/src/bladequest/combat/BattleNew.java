@@ -461,8 +461,19 @@ public class BattleNew
 			else
 				changeState(BattleStates.START);
 		}
-		else if(!battleEvents.get(0).getSource().isEnemy())
-			advanceChar();		
+		else
+		{
+			Character actor = battleEvents.get(0).getSource();
+			if(!actor.isEnemy())
+			{
+				currentChar = actor;
+				advanceChar();
+			}
+			else
+				targets.add(actor);
+				
+		}
+			
 	}
 	
 	private void changeState(BattleStates newState)

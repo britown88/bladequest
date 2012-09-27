@@ -7,6 +7,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import bladequest.combat.BattleEvent;
 import bladequest.graphics.BattleAnim;
+import bladequest.graphics.BattleSprite;
 
 
 public class Enemy extends Character
@@ -219,6 +220,13 @@ public class Enemy extends Character
 		//return (int)Math.max(exp*(1.0f + baseMod)*(1.0f + lvlMod), 1.0f);
 		return exp;
 	}
+	
+	//override base class sprite-changing functions to do nothing
+	@Override
+	public void setFace(BattleSprite.faces newFace){}
+	@Override
+	public void setImageIndex(int index){}
+	
 	
 	@Override
 	public void battleRender()

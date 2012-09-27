@@ -61,7 +61,7 @@ public class BattleEvent
 			objects.add(new BattleEventObject(frameFromActIndex(4), faces.Attack, 2, source));	
 			objects.add(new BattleEventObject(frameFromActIndex(5), faces.Ready, 0, source));
 			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex), source.getWeaponAnimation(), source, targets));
-			objects.add(new BattleEventObject(frameFromActIndex(syncToAnimation(-1)), new bactDamage(0, 1.0f, DamageTypes.Physical), source, targets));
+			objects.add(new BattleEventObject(syncToAnimation(-1), new bactDamage(0, 1.0f, DamageTypes.Physical), source, targets));
 			objects.add(new BattleEventObject(frameFromActIndex(7)));
 			break;
 		case Ability:
@@ -84,15 +84,27 @@ public class BattleEvent
 		else
 		{
 			long frame = System.currentTimeMillis() - startTime;
-			int actIndex = (int)(frame / actTimerLength);
+			BattleEventObject rmObj = null;
+			//int actIndex = (int)(frame / actTimerLength);
+			for(BattleEventObject obj : objects)
+			{
+				if(obj.Frame() <= frame)
+				{
+					obj.execute(battle, markers);
+					rmObj = obj;
+					break;					
+				}
+			}
 			
-			
+			if(rmObj != null)
+			{
+				objects.remove(rmObj);			
+				if(objects.size() == 0)
+				{
+					running = false;
+					done = true;
+				}
+			}			
 		}
 	}
-	
-
-	
-	
-	
-
 }

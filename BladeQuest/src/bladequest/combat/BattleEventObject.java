@@ -84,8 +84,11 @@ public class BattleEventObject
 			combatAction.execute(targets);
 			break;
 		case ChangeFace:
-			source.setBattleFrame(face);
-			source.setImageIndex(imageIndex);
+			if(!source.isEnemy())
+			{
+				source.setBattleFrame(face);
+				source.setImageIndex(imageIndex);
+			}			
 			break;
 		default:
 			break;
