@@ -9,9 +9,9 @@ import bladequest.world.Character;
 public class bactTommyGun extends BattleAction
 {
 	private int bp, shots;
-	public bactTommyGun(int animFrame, int bp, int shots)
+	public bactTommyGun(int frame, int bp, int shots)
 	{
-		super(animFrame);
+		super(frame);
 		this.bp = bp;
 		this.shots = shots;
 	}

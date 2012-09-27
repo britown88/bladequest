@@ -7,6 +7,7 @@ import java.util.Vector;
 import android.graphics.Point;
 import android.graphics.Rect;
 import bladequest.combatactions.CombatAction;
+import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleSprite;
 import bladequest.graphics.BattleSprite.faces;
 import bladequest.graphics.Sprite;
@@ -1094,6 +1095,8 @@ public class Character
 	}
 	
 	public void playWeaponAnimation(Point src, Point tar){if(weapEquipped()) weapon.playAnimation(src, tar);}
+	public BattleAnim getWeaponAnimation(){if(weapEquipped()) return weapon.getAnim(); else return null;}
+	
 	public void battleRender(int x, int y)
 	{
 		if(battleSpr.getFace() != faces.Attack)

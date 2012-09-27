@@ -34,7 +34,6 @@ public class BattleNew
 	private final int mpWindowHeight = 32;
 	private final int mpWindowWidth = 128;
 	
-	private final int actTimerLength = 150;//milliseconds
 	
 	private final String txtStart = "Tap screen to start!";
 	private final String txtTargetSingle = "Select target...";
@@ -300,14 +299,22 @@ public class BattleNew
 				addBattleEvent(c, c.getTargets());
 		
 		battleEvents = BattleCalc.genMoveOrder(battleEvents);
+		
+		for(BattleEvent be : battleEvents)
+			be.init();
 
 	}
 	private void updateActStatus()
 	{
-		if(!nextActor)
+		if(nextActor)
 		{
-			Character actor = battleEvents.get(0).getSource();
-			List<Character> targets = battleEvents.get(0).getTargets();
+			if(selCharClosed)
+				nextActor();
+		}
+		else
+		{
+			BattleEvent currentEvent = battleEvents.get(0);
+			Character actor = currentEvent.getSource();
 			
 			//set frame text
 			switch(actor.getAction())
@@ -316,132 +323,136 @@ public class BattleNew
 			case Ability:changeStartBarText(actor.getDisplayName()+" casts "+actor.getAbilityToUse().getDisplayName()+"!");break;
 			case CombatAction:changeStartBarText(actor.getDisplayName()+actor.getCombatActionText());break;
 			default: break;}
-
 			
-			if(actor.isEnemy())
+			if(actor.isEnemy() || selCharOpened)
 			{
-				//enemy action code
-				if(!actor.acting)
+				currentEvent.update(this, markers);
+				if(currentEvent.isDone())
+					nextActorInit();
+			}	
+			else if(!actor.isEnemy())
+			{
+				currentChar = actor;
+				advanceChar();
+			}
+				
+		}			
+	}
+	
+/*	if(actor.isEnemy())
+	{
+		//enemy action code
+		if(!actor.acting)
+		{
+			actTimerStart = System.currentTimeMillis();							
+			actor.acting = true;
+			setTarget(actor);
+			if(actor.getAction() == Action.Ability)
+				showDisplayName(actor.getAbilityToUse().getDisplayName());
+		}
+		else
+		{
+			int index = (int)(System.currentTimeMillis() - actTimerStart)/actTimerLength;
+			
+			switch(actor.getAction())
+			{
+			case Attack:
+				if(index == 3)
 				{
-					actTimerStart = System.currentTimeMillis();							
-					actor.acting = true;
-					setTarget(actor);
-					if(actor.getAction() == Action.Ability)
-						showDisplayName(actor.getAbilityToUse().getDisplayName());
-				}
-				else
-				{
-					int index = (int)(System.currentTimeMillis() - actTimerStart)/actTimerLength;
+					((Enemy)actor).playAttackAnimation(actor.getPosition(true), targets.get(0).getPosition(true));
 					
-					switch(actor.getAction())
-					{
-					case Attack:
-						if(index == 3)
-						{
-							((Enemy)actor).playAttackAnimation(actor.getPosition(true), targets.get(0).getPosition(true));
-							
-						}							
-						else if(index > 7)
-						{
-							this.targets.clear();
-							nextActorInit();
-						}
-						break;
-					case Ability:
-						if(index > 7)
-						{
-							this.targets.clear();
-							displayNamePanel.hide();
-							nextActorInit();
-						}
-						break;
-					default:
-						nextActorInit();
-						break;
-					}					
-				}				
+				}							
+				else if(index > 7)
+				{
+					this.targets.clear();
+					nextActorInit();
+				}
+				break;
+			case Ability:
+				if(index > 7)
+				{
+					this.targets.clear();
+					displayNamePanel.hide();
+					nextActorInit();
+				}
+				break;
+			default:
+				nextActorInit();
+				break;
+			}					
+		}				
+	}
+	else
+	{
+		//player action code
+		currentChar = actor;
+		
+		if(selCharOpened)
+		{					
+			if(!actor.acting)
+			{
+				actTimerStart = System.currentTimeMillis();							
+				actor.acting = true;
 			}
 			else
 			{
-				//player action code
-				currentChar = actor;
-				
-				if(selCharOpened)
-				{					
-					if(!actor.acting)
-					{
-						actTimerStart = System.currentTimeMillis();							
-						actor.acting = true;
-					}
-					else
-					{
-						switch(actor.getAction())
-						{
-						case Attack:
-							int index = (int)(System.currentTimeMillis() - actTimerStart)/actTimerLength;						
-							index -= 2;
-							
-							//add 2 frames of no movement before attacking and 1 frame after							
-							if(index < 0)
-							{
-								actor.setFace(faces.Ready);
-								actor.setImageIndex(0);
-							}							
-							else if(index >= 0 && index < 3)//<3
-							{
-								actor.setFace(faces.Attack);
-								actor.setImageIndex(index);
-								if(index == 1)
-									actor.playWeaponAnimation(actor.getPosition(true), targets.get(0).getPosition(true));
-							}								
-							else if(index == 3)
-							{
-								actor.setFace(faces.Ready);
-								actor.setImageIndex(0);
-							}
-							else if(index > 5)
-								nextActorInit();
-							break;
-						case Ability:
-						case CombatAction:
-						case Guard:
-						case Item:
-							break;
-						}					
-					}
+				switch(actor.getAction())
+				{
+				case Attack:
+					int index = (int)(System.currentTimeMillis() - actTimerStart)/actTimerLength;						
+					index -= 2;
 					
-				}
-				else if(selCharClosed)
-					advanceChar();
+					//add 2 frames of no movement before attacking and 1 frame after							
+					if(index < 0)
+					{
+						actor.setFace(faces.Ready);
+						actor.setImageIndex(0);
+					}							
+					else if(index >= 0 && index < 3)//<3
+					{
+						actor.setFace(faces.Attack);
+						actor.setImageIndex(index);
+						if(index == 1)
+							actor.playWeaponAnimation(actor.getPosition(true), targets.get(0).getPosition(true));
+					}								
+					else if(index == 3)
+					{
+						actor.setFace(faces.Ready);
+						actor.setImageIndex(0);
+					}
+					else if(index > 5)
+						nextActorInit();
+					break;
+				case Ability:
+				case CombatAction:
+				case Guard:
+				case Item:
+					break;
+				}					
 			}
+			
 		}
-		else
-			if(selCharClosed)
-				nextActor();	
-		
-	}
+		else if(selCharClosed)
+			advanceChar();
+	}*/
 	
 	private void nextActorInit()
 	{
 			nextActor = true;
-			battleEvents.get(0).getSource().acting = false;
-			recedeChar();		
+			//battleEvents.get(0).getSource().acting = false;
+			Character actor = battleEvents.get(0).getSource();			
+			if(!actor.isEnemy())
+			{
+				recedeChar();
+				actor.setFace(faces.Idle);
+				actor.setImageIndex(0);
+			}
 	}
 	private void nextActor()
-	{
-		Character actor = battleEvents.get(0).getSource();
-		if(!actor.isEnemy())
-		{
-			recedeChar();
-			actor.setFace(faces.Idle);
-			actor.setImageIndex(0);
-			
-		}
-		
-		nextActor = false;
-		
-		battleEvents.remove(0);
-		
+	{		
+		nextActor = false;		
+		battleEvents.remove(0);		
+		targets.clear();
 		if(battleEvents.size() == 0)
 		{
 			selectFirstChar();
@@ -450,7 +461,8 @@ public class BattleNew
 			else
 				changeState(BattleStates.START);
 		}
-		
+		else if(!battleEvents.get(0).getSource().isEnemy())
+			advanceChar();		
 	}
 	
 	private void changeState(BattleStates newState)

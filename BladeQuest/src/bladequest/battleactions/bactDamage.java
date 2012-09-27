@@ -14,9 +14,9 @@ public class bactDamage extends BattleAction
 	float power;
 	DamageTypes type;
 	
-	public bactDamage(int animFrame, float power, DamageTypes type)
+	public bactDamage(int frame, float power, DamageTypes type)
 	{
-		super(animFrame);
+		super(frame);
 		this.power = power;
 		this.type = type;
 	}

@@ -52,6 +52,11 @@ public class Enemy extends Character
 	}
 	
 	public void setAttackAnimation(String attackAnim) {this.attackAnim = attackAnim;}
+	
+	@Override
+	public BattleAnim getWeaponAnimation(){return new BattleAnim(Global.battleAnims.get(attackAnim));}
+	
+	
 	public void playAttackAnimation(Point src, Point tar)
 	{
 		if(playingAnim == null || playingAnim.Done())

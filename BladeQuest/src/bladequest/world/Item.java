@@ -157,6 +157,8 @@ public class Item
 			playingAnim = Global.playAnimation(battleAnim, src, tar);
 	}
 	
+	public BattleAnim getAnim() { return battleAnim;}
+	
 	
 	public WeaponSwingDrawable getSwing() { return weaponSwing; }
 	

@@ -6,6 +6,7 @@ import android.graphics.Point;
 import bladequest.battleactions.BattleAction;
 import bladequest.combatactions.CombatAction;
 import bladequest.graphics.BattleAnim;
+import bladequest.graphics.BattleSprite;
 import bladequest.world.Character;
 import bladequest.world.Global;
 
@@ -16,6 +17,8 @@ public class BattleEventObject
 	private BattleAnim animation;
 	private BattleAction battleAction;
 	private CombatAction combatAction;
+	private BattleSprite.faces face;
+	private int imageIndex;
 	
 	private Character source;
 	private List<Character> targets;
@@ -49,8 +52,21 @@ public class BattleEventObject
 		this.source = source;
 		this.targets = targets;		
 	}
+	public BattleEventObject(int frame, BattleSprite.faces face, int imageIndex, Character source)
+	{
+		this.frame = frame;
+		this.type = types.ChangeFace;
+		this.imageIndex = imageIndex;
+		this.face = face;
+		this.source = source;	
+	}
+	public BattleEventObject(int frame)
+	{ 
+		this.frame = frame;
+		this.type = types.Done;
+	}
 	
-	public void execute(List<DamageMarker> markers)
+	public void execute(BattleNew battle, List<DamageMarker> markers)
 	{
 		Point targetP = null;
 		if(targets != null && targets.size() > 0)
@@ -67,6 +83,12 @@ public class BattleEventObject
 		case CombatAction:
 			combatAction.execute(targets);
 			break;
+		case ChangeFace:
+			source.setBattleFrame(face);
+			source.setImageIndex(imageIndex);
+			break;
+		default:
+			break;
 		}
 	}
 	
@@ -74,7 +96,9 @@ public class BattleEventObject
 	{
 		Animation,
 		BattleAction,
-		CombatAction
+		CombatAction,
+		ChangeFace,
+		Done
 	}
 
 }

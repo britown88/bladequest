@@ -6,7 +6,7 @@ level 4
 gold 23
 items potion 25 antidote 85 True
 ai 15
-ability bite 100 0 100
+#ability bite 100 0 100
 endenemy
 #
 enemy guard "Guard" guar

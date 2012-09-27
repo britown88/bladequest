@@ -14,9 +14,9 @@ public class bactInflictStatus extends BattleAction
 	private StatusEffect se;
 	private boolean show;
 	
-	public bactInflictStatus(int animFrame, boolean show, StatusEffect se)
+	public bactInflictStatus(int frame, boolean show, StatusEffect se)
 	{	
-		super(animFrame);
+		super(frame);
 		this.se = se;
 		this.show = show;
 	}

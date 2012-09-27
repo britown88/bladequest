@@ -12,9 +12,9 @@ public class bactMessage extends BattleAction
 {
 	String message;
 	
-	public bactMessage(int animFrame, String message)
+	public bactMessage(int frame, String message)
 	{
-		super(animFrame);
+		super(frame);
 		this.message = message;
 	}
 	

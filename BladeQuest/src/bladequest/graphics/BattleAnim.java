@@ -41,6 +41,7 @@ public class BattleAnim
 		playing = false;		
 	}
 	
+	public float getFrameLength(){ return framePeriod;}
 	public void loop() { loops = true; }
 	public void addObject(BattleAnimObject obj){objects.add(obj);}
 	public boolean Done() { return done; }

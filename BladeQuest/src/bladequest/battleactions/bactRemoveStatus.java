@@ -12,9 +12,9 @@ public class bactRemoveStatus extends BattleAction
 {
 	private String se;
 	
-	public bactRemoveStatus(int animFrame, String se)
+	public bactRemoveStatus(int frame, String se)
 	{	
-		super(animFrame);
+		super(frame);
 		this.se = se;
 	}
 	
