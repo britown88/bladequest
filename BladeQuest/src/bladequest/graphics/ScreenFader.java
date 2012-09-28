@@ -50,6 +50,7 @@ public class ScreenFader
 	}
 	
 	public boolean isDone() { return done; }
+	public boolean isFadedOut() { return done && !fadeIn; }
 	public boolean fadingOut() { return fading && !fadeIn;}
 	
 	public void setFaded()

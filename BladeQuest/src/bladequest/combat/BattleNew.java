@@ -19,6 +19,7 @@ import bladequest.world.Character.Action;
 import bladequest.world.Encounter;
 import bladequest.world.Enemy;
 import bladequest.world.Global;
+import bladequest.world.States;
 import bladequest.world.TargetTypes;
 
 public class BattleNew 
@@ -51,8 +52,6 @@ public class BattleNew
 	private boolean selCharClosed;
 	private boolean nextChar;
 	private boolean prevChar;
-	
-	private long actTimerStart;
 	private boolean nextActor;
 	
 	private Character currentChar;
@@ -230,7 +229,8 @@ public class BattleNew
 		for(Character c : partyList)
 			c.setPosition(partyPos.x, partyPos.y + (charYSpacing * c.Index()));
 		
-		currentChar.setPosition(partyPos.x-selCharX, partyPos.y + (charYSpacing * currentChar.Index()));
+		if(currentChar != null)
+			currentChar.setPosition(partyPos.x-selCharX, partyPos.y + (charYSpacing * currentChar.Index()));
 	}
 	private void updateMenuOptions(BattleStates state)
 	{
@@ -286,6 +286,91 @@ public class BattleNew
 		
 	}
 	
+	private void initVictory()
+	{
+		//play victory music
+		Global.musicBox.play("victory", true, -1);
+		
+		//get alive characters
+		List<Character> aliveChars = new ArrayList<Character>();
+		for(Character c : partyList)
+			if(!c.isDead()) aliveChars.add(c);
+		
+		int avgLevel, levelTotal = 0;
+		
+		//TODO: Unuse Items
+		
+		for(Character c : aliveChars)
+		{
+			c.setFace(faces.Victory);
+			levelTotal += c.getLevel();
+		}
+		avgLevel = levelTotal / aliveChars.size();
+		
+		//messageQueue.add("You are victorious!");
+		int gold = 0;
+		int exp = 0;
+		List<String> itemDrops = new ArrayList<String>();
+		for(Enemy e : encounter.Enemies())
+		{
+			gold += e.getGold();
+			exp += e.getExp(avgLevel); 
+			if(e.hasItems())
+			{
+				String item = e.getItem(false);
+				if(item != null)
+					itemDrops.add(item);
+			}
+			
+		}
+		
+		//pick random drop
+		String wonItem = null;
+		if(itemDrops.size() > 0)
+			wonItem = itemDrops.get(Global.rand.nextInt(itemDrops.size()));
+		
+		Global.party.addGold(gold);
+		
+		//messageQueue.add("Obtained " + gold + "G!");
+		//messageQueue.add("Earned " + exp + " experience!");
+		
+		String newAbilities = "";
+		
+		for(Character c : aliveChars)
+		{
+			int leftover = c.awardExperience(exp);
+			while(leftover > 0)
+			{
+				//messageQueue.add(c.getDisplayName() + " grew to level " + c.getLevel() + "!");
+				
+				do
+				{
+					newAbilities = c.checkForAbilities();
+					//if(newAbilities != "")
+						//messageQueue.add(c.getDisplayName() + " learned " + newAbilities + "!");
+					
+				}while(newAbilities != "");
+				
+				leftover = c.awardExperience(leftover);
+			}				
+		}
+		
+		if(wonItem != null)
+		{
+			Global.party.addItem(wonItem);	
+			//messageQueue.add("Found a " + Global.items.get(wonItem).getName() + "!");
+		}
+		//infoWindow.closeFrame();
+		
+		triggerEndBattle();
+	}
+	private void triggerEndBattle()
+	{
+		Global.screenFader.setFadeColor(255, 0, 0, 0);
+		Global.screenFader.fadeOut(2);
+		changeStartBarText("");
+
+	}
 	//act state functions
 	private void initActState()
 	{		
@@ -338,104 +423,6 @@ public class BattleNew
 				
 		}			
 	}
-	
-/*	if(actor.isEnemy())
-	{
-		//enemy action code
-		if(!actor.acting)
-		{
-			actTimerStart = System.currentTimeMillis();							
-			actor.acting = true;
-			setTarget(actor);
-			if(actor.getAction() == Action.Ability)
-				showDisplayName(actor.getAbilityToUse().getDisplayName());
-		}
-		else
-		{
-			int index = (int)(System.currentTimeMillis() - actTimerStart)/actTimerLength;
-			
-			switch(actor.getAction())
-			{
-			case Attack:
-				if(index == 3)
-				{
-					((Enemy)actor).playAttackAnimation(actor.getPosition(true), targets.get(0).getPosition(true));
-					
-				}							
-				else if(index > 7)
-				{
-					this.targets.clear();
-					nextActorInit();
-				}
-				break;
-			case Ability:
-				if(index > 7)
-				{
-					this.targets.clear();
-					displayNamePanel.hide();
-					nextActorInit();
-				}
-				break;
-			default:
-				nextActorInit();
-				break;
-			}					
-		}				
-	}
-	else
-	{
-		//player action code
-		currentChar = actor;
-		
-		if(selCharOpened)
-		{					
-			if(!actor.acting)
-			{
-				actTimerStart = System.currentTimeMillis();							
-				actor.acting = true;
-			}
-			else
-			{
-				switch(actor.getAction())
-				{
-				case Attack:
-					int index = (int)(System.currentTimeMillis() - actTimerStart)/actTimerLength;						
-					index -= 2;
-					
-					//add 2 frames of no movement before attacking and 1 frame after							
-					if(index < 0)
-					{
-						actor.setFace(faces.Ready);
-						actor.setImageIndex(0);
-					}							
-					else if(index >= 0 && index < 3)//<3
-					{
-						actor.setFace(faces.Attack);
-						actor.setImageIndex(index);
-						if(index == 1)
-							actor.playWeaponAnimation(actor.getPosition(true), targets.get(0).getPosition(true));
-					}								
-					else if(index == 3)
-					{
-						actor.setFace(faces.Ready);
-						actor.setImageIndex(0);
-					}
-					else if(index > 5)
-						nextActorInit();
-					break;
-				case Ability:
-				case CombatAction:
-				case Guard:
-				case Item:
-					break;
-				}					
-			}
-			
-		}
-		else if(selCharClosed)
-			advanceChar();
-	}*/
-	
 	private void nextActorInit()
 	{
 			nextActor = true;
@@ -453,29 +440,49 @@ public class BattleNew
 		nextActor = false;		
 		battleEvents.remove(0);		
 		targets.clear();
-		if(battleEvents.size() == 0)
-		{
-			selectFirstChar();
-			if(currentChar == null)
-				changeState(BattleStates.DEFEAT);
-			else
-				changeState(BattleStates.START);
-		}
+		
+		if(isVictory())
+			changeState(BattleStates.VICTORY);
+		else if(isDefeated())
+			changeState(BattleStates.DEFEAT);
 		else
 		{
-			Character actor = battleEvents.get(0).getSource();
-			if(!actor.isEnemy())
+			if(battleEvents.size() == 0)
 			{
-				currentChar = actor;
-				advanceChar();
+				selectFirstChar();
+				changeState(BattleStates.START);
 			}
 			else
-				targets.add(actor);
-				
+			{
+				Character actor = battleEvents.get(0).getSource();
+				if(!actor.isEnemy())
+				{
+					currentChar = actor;
+					advanceChar();
+				}
+				else
+					targets.add(actor);
+					
+			}
 		}
-			
 	}
-	
+	private boolean isDefeated()
+	{
+		for(Character c : partyList)
+			if(!c.isDead())
+				return false;
+		
+		return true;
+	}
+	private boolean isVictory()
+	{
+		for(Enemy e : encounter.Enemies())
+			if(!e.isDead())
+				return false;
+		
+		return true;
+	}
+		
 	private void changeState(BattleStates newState)
 	{
 		switch(newState)
@@ -498,7 +505,12 @@ public class BattleNew
 			mainMenu.close();
 			initActState();
 			break;
-			
+		case VICTORY:
+			initVictory();
+			break;
+		case DEFEAT:
+			changeStartBarText(txtDefeat);
+			break;			
 		case TARGET:
 			currentChar.setFace(faces.Ready);
 			switch(targetType)
@@ -611,8 +623,6 @@ public class BattleNew
 				break;
 			}
 	}
-	private void postDamageMarker(int value, Character target){markers.add(new DamageMarker(value, target));}
-	private void postDamageMarker(String value, Character target){markers.add(new DamageMarker(value, target));}
 	private void addBattleEvent(Character source, List<Character> targets){battleEvents.add(new BattleEvent(source, targets));}
 	
 	private void nextCharacter()
@@ -729,6 +739,17 @@ public class BattleNew
 		case ACT:
 			updateActStatus();
 			break;
+		case DEFEAT:
+		case VICTORY:
+			if(Global.screenFader.isFadedOut())
+			{
+				Global.map.getBackdrop().unload();
+				Global.screenFader.fadeIn(2);
+				Global.GameState = States.GS_WORLDMOVEMENT;
+				
+			}
+				
+			
 		}
 		
 	}	
@@ -741,6 +762,8 @@ public class BattleNew
 		
 		Global.renderAnimations();
 		drawDamageMarkers();
+		
+		Global.screenFader.render();
 		
 	}
 	
@@ -885,8 +908,8 @@ public class BattleNew
 				if(dist < lowestDist) {lowestDist = dist;closest = e;}
 			}			
 		}
-		
-		targets.add(closest);
+		if(closest != null)		
+			targets.add(closest);
 	}	
 	//target closest ally, assumes tapping within char rect
 	private void targetAlly(int x, int y)
