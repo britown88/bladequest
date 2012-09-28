@@ -1336,7 +1336,7 @@ public class Battle {
 	
 	public static int genDamage(Character attacker, Character defender)
 	{
-		return genDamage(attacker, defender, attacker.getBattlePower());
+		return genDamage(attacker, defender, attacker.getStat(Stats.BattlePower));
 	}
 	
 	public static int genDamage(float BP, Character defender)
@@ -1346,7 +1346,7 @@ public class Battle {
 	
 	public static int genDamage(Character attacker, Character defender, float BP)
 	{
-		float DP = defender.getDefense();
+		float DP = defender.getStat(Stats.Defense);
 		
 		int baseDmg;
 		float coefficient = attacker == null ? 1.0f : attacker.getCoefficient();

@@ -305,50 +305,41 @@ public class Enemy extends Character
 		stats[Stats.Vitality.ordinal()] = (int)(vit * Math.pow(lvl/99.0f, 2.0f));
 		stats[Stats.Intelligence.ordinal()] = (int)(intel * Math.pow(lvl/99.0f, 2.0f));
 		
-		str = stats[Stats.Strength.ordinal()];
-		agi = stats[Stats.Agility.ordinal()];
-		vit = stats[Stats.Vitality.ordinal()];
-		intel = stats[Stats.Intelligence.ordinal()];
+		updateSecondaryStats();		
+	}
+	
+	@Override
+	public void updateSecondaryStats()
+	{
+		float str = getStat(Stats.Strength);
+		float agi = getStat(Stats.Agility);
+		float vit = getStat(Stats.Vitality);
+		float intel = getStat(Stats.Intelligence);
+		float lvl = level;
 		
 		//speed based on agi
 		//( ( Agility x 3) + ( 255 / 99 ) x Level ) / 4
 		stats[Stats.Speed.ordinal()] = (int)(((agi*3.0f)+(255.0f/99.0f)*lvl)/4.0f);
 		
+		//Evade: 255 = 90% evasion
+		//Level 99: 10%
+		//Agility 255: 10%
+		float pointsPerPercent = 255.0f / 90f;
+		int levelBonus = (int)(((pointsPerPercent*10.0f)/99.0f)*lvl);
+		int agiBonus = (int)(((pointsPerPercent*10.0f)/255.0f)*agi);
+		stats[Stats.Evade.ordinal()] = levelBonus + agiBonus;
+		
 		//hp/mp based on vit and int	
 		stats[Stats.MaxHP.ordinal()] = (int)((((vit * 2.0f) + (255.0f/99.0f)*lvl) / 3.0f) * 20.0f * getCoefficient());
 		stats[Stats.MaxMP.ordinal()] = (int)(((intel * 2.0f + (255.0f/99.0f)*lvl) / 3.0f) * 7.0f * getCoefficient());
 
-	}
-	
-	@Override	
-	public int getBattlePower()
-	{
-		float lvl = level;
-		float str = stats[Stats.Strength.ordinal()];
+		//AP	
+		stats[Stats.BattlePower.ordinal()] = (int)(((str * 2.0f) + ((255.0f / 99.0f) * lvl)) / 3.0f);
 		
-		int bp = (int)(((str * 2.0f) + ((255.0f / 99.0f) * lvl)) / 3.0f);		
-		stats[Stats.BattlePower.ordinal()] = bp;
+		//Defense
+		stats[Stats.Defense.ordinal()] = (int)(((vit * 4.0f) + ((255.0f / 99.0f) * lvl)) / 5.0f);
 		
-		return bp;
 		
 	}
-	
-	@Override	
-	public int getDefense()
-	{
-		float lvl = level;
-		float vit = stats[Stats.Vitality.ordinal()];
-		
-		int def = (int)(((vit * 4.0f) + ((255.0f / 99.0f) * lvl)) / 5.0f);
-		stats[Stats.Defense.ordinal()] = def;		
-		
-		return def;
-	}
-
-	
-	
-	
-
-
 
 }

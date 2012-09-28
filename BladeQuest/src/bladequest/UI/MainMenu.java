@@ -403,12 +403,14 @@ public class MainMenu
 		int column3x = (int)(eqpStats.width*0.85f);
 		int arrowx = (int)(eqpStats.width*0.69f);
 		
+		selectedChar.updateSecondaryStats();
+		
 		//create labels and base stats
 		eqpStats.addTextBox("POW", column1x, (int)(eqpStats.height*(percentOfHeight*i)), menuText);
-		eqpStats.addTextBox(""+selectedChar.getBattlePower(), column2x, (int)(eqpStats.height*(percentOfHeight*i)), selectedChar.getStatMod(Stats.BattlePower) > 0 ? blueMenuText : selectedChar.getStatMod(Stats.BattlePower) < 0 ? redMenuText : menuTextCenter);
+		eqpStats.addTextBox(""+selectedChar.getStat(Stats.BattlePower), column2x, (int)(eqpStats.height*(percentOfHeight*i)), selectedChar.getStatMod(Stats.BattlePower) > 0 ? blueMenuText : selectedChar.getStatMod(Stats.BattlePower) < 0 ? redMenuText : menuTextCenter);
 		++i;		
 		eqpStats.addTextBox("DEF", column1x, (int)(eqpStats.height*(percentOfHeight*i)), menuText);
-		eqpStats.addTextBox(""+selectedChar.getDefense(), column2x, (int)(eqpStats.height*(percentOfHeight*i)), selectedChar.getStatMod(Stats.Defense) > 0 ? blueMenuText : selectedChar.getStatMod(Stats.Defense) < 0 ? redMenuText : menuTextCenter);
+		eqpStats.addTextBox(""+selectedChar.getStat(Stats.Defense), column2x, (int)(eqpStats.height*(percentOfHeight*i)), selectedChar.getStatMod(Stats.Defense) > 0 ? blueMenuText : selectedChar.getStatMod(Stats.Defense) < 0 ? redMenuText : menuTextCenter);
 		++i;		
 		eqpStats.addTextBox("M.POW", column1x, (int)(eqpStats.height*(percentOfHeight*i)), menuText);
 		eqpStats.addTextBox(""+selectedChar.getStat(Stats.MagicPower), column2x, (int)(eqpStats.height*(percentOfHeight*i)), selectedChar.getStatMod(Stats.MagicPower) > 0 ? blueMenuText : selectedChar.getStatMod(Stats.MagicPower) < 0 ? redMenuText : menuTextCenter);
@@ -583,8 +585,7 @@ public class MainMenu
 		charStatus.addTextBox("For Level Up:", (int)(menuWidth*0.75), abY + (int)(abHei*0.17*i++), blueMenuText);
 		charStatus.addTextBox(""+selectedChar.getRemainingExp(), charStatusAbilities.pos.x - 12, abY + (int)(abHei*0.17*i++), menuTextRight);
 		
-		selectedChar.getBattlePower();
-		selectedChar.getDefense();
+		selectedChar.updateSecondaryStats();
 		
 		//stats
 		int statY = charStatusAbilities.pos.y + charStatusAbilities.height;

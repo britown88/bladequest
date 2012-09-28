@@ -553,45 +553,45 @@ public class Character
 		stats[Stats.Vitality.ordinal()] = (int)(vit * Math.pow(lvl/99.0f, 2.0f));
 		stats[Stats.Intelligence.ordinal()] = (int)(intel * Math.pow(lvl/99.0f, 2.0f));
 		
-		str = stats[Stats.Strength.ordinal()];
-		agi = stats[Stats.Agility.ordinal()];
-		vit = stats[Stats.Vitality.ordinal()];
-		intel = stats[Stats.Intelligence.ordinal()];
+		updateSecondaryStats();
+	}
+	private int calcBP(float lvl, float str, float w){return (int)(((str * 2.0f) + (w * 2.0f) + ((255.0f / 99.0f) * lvl)) / 5.0f);}
+	private int calcDef(float lvl, float vit, float arm, float sh) { return (int)(((vit * 2.0f) + (arm * 2.0f) + (sh * 2.0f) + ((255.0f / 99.0f) * lvl)) / 5.0f);}
+	
+	public void updateSecondaryStats()
+	{
+		float str = getStat(Stats.Strength);
+		float agi = getStat(Stats.Agility);
+		float vit = getStat(Stats.Vitality);
+		float intel = getStat(Stats.Intelligence);
+		float lvl = level;
 		
 		//speed based on agi
 		//( ( Agility x 3) + ( 255 / 99 ) x Level ) / 4
 		stats[Stats.Speed.ordinal()] = (int)(((agi*3.0f)+(255.0f/99.0f)*lvl)/4.0f);
 		
+		//Evade: 255 = 90% evasion
+		//Level 99: 10%
+		//Agility 255: 10%
+		float pointsPerPercent = 255.0f / 90f;
+		int levelBonus = (int)(((pointsPerPercent*10.0f)/99.0f)*lvl);
+		int agiBonus = (int)(((pointsPerPercent*10.0f)/255.0f)*agi);
+		stats[Stats.Evade.ordinal()] = levelBonus + agiBonus;
+		
 		//hp/mp based on vit and int	
 		stats[Stats.MaxHP.ordinal()] = Math.min(9999, (int)((((vit * 2.0f) + (255.0f/99.0f)*lvl) / 3.0f) * 15.0f * getCoefficient()));
 		stats[Stats.MaxMP.ordinal()] = Math.min(999, (int)(((intel * 2.0f + (255.0f/99.0f)*lvl) / 3.0f) * 5.0f * getCoefficient()));
-
-	}
-	private int calcBP(float lvl, float str, float w){return (int)(((str * 2.0f) + (w * 2.0f) + ((255.0f / 99.0f) * lvl)) / 5.0f);}
-	private int calcDef(float lvl, float vit, float arm, float sh) { return (int)(((vit * 2.0f) + (arm * 2.0f) + (sh * 2.0f) + ((255.0f / 99.0f) * lvl)) / 5.0f);}
-	public int getBattlePower()
-	{
-		float lvl = level;
-		float str = Math.min(255, stats[Stats.Strength.ordinal()] + statMods[Stats.Strength.ordinal()]);
-		float w = weapEquipped() ? weapon.Power() : 0.0f;
+	
+		//AP
+		float w = weapEquipped() ? weapon.Power() : 0.0f;		
+		stats[Stats.BattlePower.ordinal()] = calcBP(lvl, str, w);
 		
-		int bp = calcBP(lvl, str, w);
-		stats[Stats.BattlePower.ordinal()] = bp;
-		
-		return Math.min(255, bp + statMods[Stats.BattlePower.ordinal()]);
-		
-	}
-	public int getDefense()
-	{
-		float lvl = level;		
-		float vit = Math.min(255, stats[Stats.Vitality.ordinal()] + statMods[Stats.Vitality.ordinal()]);
+		//Defense
 		float arm = (helmEquipped() ? helmet.Power() : 0.0f) + (torsoEquipped() ? torso.Power() : 0.0f);
 		float sh = shieldEquipped() ? shield.Power() : 0.0f;
+		stats[Stats.Defense.ordinal()] = calcDef(lvl, vit, arm, sh);
 		
-		int def = calcDef(lvl, vit, arm, sh);
-		stats[Stats.Defense.ordinal()] = def;		
-
-		return Math.min(255, def + statMods[Stats.Defense.ordinal()]);
+		
 	}
 	
 	//pass item equipment slot and this function will equip the best 
@@ -691,8 +691,7 @@ public class Character
 			moddedStats[j] += i.getStatMod(j);
 		
 		//update BP and Def and add existing stats
-		getBattlePower();
-		getDefense();
+		updateSecondaryStats();
 		for(int j = 0; j < Stats.NUM_STATS.ordinal(); ++j)
 			moddedStats[j] += stats[j];
 		
@@ -739,8 +738,7 @@ public class Character
 				moddedStats[j] -= getEquippedItem(type).getStatMod(j);
 		
 		//update BP and Def and add existing stats
-		getBattlePower();
-		getDefense();
+		updateSecondaryStats();
 		for(int j = 0; j < Stats.NUM_STATS.ordinal(); ++j)
 			moddedStats[j] += stats[j];
 		

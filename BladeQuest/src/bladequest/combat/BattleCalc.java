@@ -16,8 +16,11 @@ public class BattleCalc
 	
 	public static int calculatedDamage(Character attacker, Character defender, float power, DamageTypes type)
 	{
-		int AP = attacker.getBattlePower();
-		float DP = defender.getDefense();
+		attacker.updateSecondaryStats();
+		defender.updateSecondaryStats();
+		
+		int AP = attacker.getStat(Stats.BattlePower);
+		float DP = defender.getStat(Stats.Defense);
 				
 		int BP = (int)(AP*power);
 		float coefficient = attacker == null ? 1.0f : attacker.getCoefficient();
@@ -36,6 +39,10 @@ public class BattleCalc
 			break;
 		case Physical:
 			finalDmg = baseDmg + dmgMod;
+			break;
+		case Magic:
+		case MagicalIgnoreDef:
+		case PhysicalIgnoreDef:
 			break;
 			//TODO: configure other damage types
 		}
