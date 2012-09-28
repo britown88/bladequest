@@ -11,6 +11,10 @@ import bladequest.world.Character;
 public class BattleCalc 
 {
 	
+	public static final float maxEvade = 90.0f;
+	public static final float minEvade = 5.0f;
+	
+	
 	private static DamageReturnType damageReturnType;	
 	public static DamageReturnType getDmgReturnType(){return damageReturnType;}
 	
@@ -38,7 +42,32 @@ public class BattleCalc
 			finalDmg = (int)power;
 			break;
 		case Physical:
-			finalDmg = baseDmg + dmgMod;
+			int roll = Global.rand.nextInt(100);
+			int evadeChance = (int)((float)defender.getStat(Stats.Evade)*(maxEvade/255.0f));
+			
+			if(roll < evadeChance)
+				damageReturnType = DamageReturnType.Miss;
+			else
+			{
+				roll = Global.rand.nextInt(100);
+				int blockChance = (int)((float)defender.getStat(Stats.Block)*(255.0f/90.0f));				
+				if(roll < blockChance)
+					damageReturnType = DamageReturnType.Blocked;
+				else
+				{
+					roll = Global.rand.nextInt(100);
+					if(roll < 5)
+					{
+						damageReturnType = DamageReturnType.Critical;
+						finalDmg = (int)((float)(baseDmg + dmgMod) * 2.0f);
+					}
+					else
+					{
+						damageReturnType = DamageReturnType.Hit;
+						finalDmg = baseDmg + dmgMod;
+					}					
+				}				
+			}
 			break;
 		case Magic:
 		case MagicalIgnoreDef:

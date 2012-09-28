@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.graphics.Point;
 import android.graphics.Rect;
+import bladequest.combat.BattleCalc;
 import bladequest.combat.BattleEvent;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleAnimObjState;
@@ -324,10 +325,11 @@ public class Enemy extends Character
 		//Evade: 255 = 90% evasion
 		//Level 99: 10%
 		//Agility 255: 10%
-		float pointsPerPercent = 255.0f / 90f;
+		float pointsPerPercent = 255.0f / BattleCalc.maxEvade;
 		int levelBonus = (int)(((pointsPerPercent*10.0f)/99.0f)*lvl);
 		int agiBonus = (int)(((pointsPerPercent*10.0f)/255.0f)*agi);
-		stats[Stats.Evade.ordinal()] = levelBonus + agiBonus;
+		int minBonus = (int)(pointsPerPercent*BattleCalc.minEvade);
+		stats[Stats.Evade.ordinal()] = minBonus + levelBonus + agiBonus;
 		
 		//hp/mp based on vit and int	
 		stats[Stats.MaxHP.ordinal()] = (int)((((vit * 2.0f) + (255.0f/99.0f)*lvl) / 3.0f) * 20.0f * getCoefficient());

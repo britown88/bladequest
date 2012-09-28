@@ -28,14 +28,26 @@ public class bactDamage extends BattleAction
 	{
 		for(Character t : targets)
 		{
-			//TODO: actually do the damage
 			int dmg = BattleCalc.calculatedDamage(attacker, t, power, type);
-			if(dmg >= 0 && !t.isEnemy())
-				t.showDamaged();
-			t.modifyHP(-dmg, false);
-			markers.add(new DamageMarker(-dmg, t));			
+			switch(BattleCalc.getDmgReturnType())
+			{
+			case Blocked:
+				markers.add(new DamageMarker("BLOCK", t));	
+				break;
+			case Critical:
+				Global.screenFader.setFadeColor(255, 255, 255, 255);
+				Global.screenFader.flash(15);
+			case Hit:
+				if(dmg >= 0 && !t.isEnemy())
+					t.showDamaged();
+				t.modifyHP(-dmg, false);
+				markers.add(new DamageMarker(-dmg, t));	
+				break;
+			case Miss:
+				markers.add(new DamageMarker("MISS", t));	
+				break;
+			}	
 		}
-		
 	}
 	
 	@Override
