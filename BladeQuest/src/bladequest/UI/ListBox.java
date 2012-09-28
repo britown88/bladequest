@@ -113,6 +113,7 @@ public class ListBox extends MenuPanel
 	public boolean isScrolling() { return scrolling; }
 	
 	public ListBoxEntry getSelectedEntry() { return lastItemSelected; }
+	public ListBoxEntry getCurrentSelectedEntry() { return selectedItem; }//this may be dangerous
 	public void clearSelectedEntry() { lastItemSelected = null; }
 	public List<ListBoxEntry> getEntries() { return entries; }
 	public ListBoxEntry getEntryAt(int index) { return entries.get(index);}

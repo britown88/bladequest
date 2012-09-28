@@ -165,14 +165,15 @@ public class Character
 	
 	public void setBattleAction(Action action){this.action = action;}
 	
-	public int getStat(Stats stat)
+	public int getStat(Stats stat){return getStat(stat.ordinal());}	
+	public int getStat(int stat)
 	{
-		if(stat == Stats.MaxHP)
-			return Math.min(9999, stats[stat.ordinal()] + statMods[stat.ordinal()]);
-		else if(stat == Stats.MaxMP)
-			return Math.min(999, stats[stat.ordinal()] + statMods[stat.ordinal()]);
+		if(stat == Stats.MaxHP.ordinal())
+			return Math.min(9999, stats[stat] + statMods[stat]);
+		else if(stat == Stats.MaxMP.ordinal())
+			return Math.min(999, stats[stat] + statMods[stat]);
 		else
-			return Math.min(255, stats[stat.ordinal()] + statMods[stat.ordinal()]);
+			return Math.min(255, stats[stat] + statMods[stat]);
 	}	
 	public void modStat(int stat, int amt)
 	{
@@ -675,49 +676,25 @@ public class Character
 	
 	public int[] getModdedStats(Item i)
 	{
-		int[] moddedStats = new int[Stats.NUM_STATS.ordinal()];
+		int[] moddedStats = new int[Stats.NUM_STATS.ordinal()];		
+		Item currEquipped = null;
 		
-		//fill with current statmods
-		for(int j = 0; j < Stats.NUM_STATS.ordinal(); ++j)
-			moddedStats[j] = statMods[j];
-		
-		//remove currently equipped stat mods
 		if(hasTypeEquipped(i.getType()))
-			for(int j = 0; j < Stats.NUM_STATS.ordinal(); ++j)
-				moddedStats[j] -= getEquippedItem(i.getType()).getStatMod(j);
+			currEquipped = getEquippedItem(i.getType());
 		
-		//add new item statmods (if new item is being equipped)
-		for(int j = 0; j < Stats.NUM_STATS.ordinal(); ++j)
-			moddedStats[j] += i.getStatMod(j);
-		
-		//update BP and Def and add existing stats
+		equip(i.getId());
 		updateSecondaryStats();
-		for(int j = 0; j < Stats.NUM_STATS.ordinal(); ++j)
-			moddedStats[j] += stats[j];
 		
-		//if weapon, remove current BP, calculate new BP and add to moddedStats
-		if(i.getType() == Type.Weapon)
-		{
-			moddedStats[Stats.BattlePower.ordinal()] -= stats[Stats.BattlePower.ordinal()];
-			float lvl = level;
-			float str = Math.min(255, moddedStats[Stats.Strength.ordinal()]);
-			float w = i.Power();
-			moddedStats[Stats.BattlePower.ordinal()] += calcBP(lvl, str, w);
-			
-		}
+		for(int stat = 0; stat < Stats.NUM_STATS.ordinal(); ++stat)
+			moddedStats[stat] = getStat(stat);
 		
-		//if shield, torso, or helmet, remove current def, calculate new def and add to Modded Stats
-		else if(i.getType() == Type.Torso || i.getType() == Type.Shield || i.getType() == Type.Helmet)
-		{
-			moddedStats[Stats.Defense.ordinal()] -= stats[Stats.Defense.ordinal()];
-			float lvl = level;		
-			float vit = Math.min(255, moddedStats[Stats.Vitality.ordinal()]);
-			float arm = ((i.getType() == Type.Helmet) ? i.Power() : (helmEquipped() ? helmet.Power() : 0.0f) )
-					+ ((i.getType() == Type.Torso) ? i.Power() : (torsoEquipped() ? torso.Power() : 0.0f));
-			float sh = (i.getType() == Type.Shield) ? i.Power() : (shieldEquipped() ? shield.Power() : 0.0f);
-			moddedStats[Stats.Defense.ordinal()] += calcDef(lvl, vit, arm, sh);
-			
-		}
+		if(currEquipped != null)
+			equip(currEquipped.getId());
+		else
+			unequip(i.getType());	
+		
+		updateSecondaryStats();
+		
 		//return modded stats array		
 		return moddedStats;
 		
@@ -727,44 +704,23 @@ public class Character
 	public int[] getModdedStatsRmv(Type type)
 	{
 		int[] moddedStats = new int[Stats.NUM_STATS.ordinal()];
+	
+		Item currEquipped = null;
 		
-		//fill with current statmods
-		for(int j = 0; j < Stats.NUM_STATS.ordinal(); ++j)
-			moddedStats[j] = statMods[j];
-		
-		//remove currently equipped stat mods
 		if(hasTypeEquipped(type))
-			for(int j = 0; j < Stats.NUM_STATS.ordinal(); ++j)
-				moddedStats[j] -= getEquippedItem(type).getStatMod(j);
+			currEquipped = getEquippedItem(type);
 		
-		//update BP and Def and add existing stats
+		unequip(type);
 		updateSecondaryStats();
-		for(int j = 0; j < Stats.NUM_STATS.ordinal(); ++j)
-			moddedStats[j] += stats[j];
 		
-		//if weapon, remove current BP, calculate new BP and add to moddedStats
-		if(type == Type.Weapon)
-		{
-			moddedStats[Stats.BattlePower.ordinal()] -= stats[Stats.BattlePower.ordinal()];
-			float lvl = level;
-			float str = Math.min(255, moddedStats[Stats.Strength.ordinal()]);
-			float w = 0.0f;
-			moddedStats[Stats.BattlePower.ordinal()] += calcBP(lvl, str, w);
-			
-		}
+		for(int stat = 0; stat < Stats.NUM_STATS.ordinal(); ++stat)
+			moddedStats[stat] = getStat(stat);
 		
-		//if shield, torso, or helmet, remove current def, calculate new def and add to Modded Stats
-		else if(type == Type.Torso || type == Type.Shield || type == Type.Helmet)
-		{
-			moddedStats[Stats.Defense.ordinal()] -= stats[Stats.Defense.ordinal()];
-			float lvl = level;		
-			float vit = Math.min(255, moddedStats[Stats.Vitality.ordinal()]);
-			float arm = ((type == Type.Helmet) ? 0.0f : (helmEquipped() ? helmet.Power() : 0.0f) )
-					+ ((type == Type.Torso) ? 0.0f : (torsoEquipped() ? torso.Power() : 0.0f));
-			float sh = (type == Type.Shield) ? 0.0f : (shieldEquipped() ? shield.Power() : 0.0f);
-			moddedStats[Stats.Defense.ordinal()] += calcDef(lvl, vit, arm, sh);
-			
-		}
+		if(currEquipped != null)
+			equip(currEquipped.getId());
+		
+		
+		updateSecondaryStats();
 		//return modded stats array		
 		return moddedStats;
 		

@@ -12,6 +12,19 @@ swingslash 0 128 128 128
 swingslash 1 186 186 186
 swingslash 2 255 255 255
 enditem
+item qknife "Quick Knife" weapon dagger "A small and simple dagger."
+power 7
+value 10
+usableby aramis
+statmods 0 200 0 0 0 0 0 0 0 0 0 0 0
+swing dagger slice1
+swingbase 0 186 186 186
+swingbase 1 255 255 255
+swingbase 2 138 68 0
+swingslash 0 128 128 128
+swingslash 1 186 186 186
+swingslash 2 255 255 255
+enditem
 #
 item silversword "Silver Sword" weapon sword "Some believe the silver inlay wards off the undead."
 power 20
