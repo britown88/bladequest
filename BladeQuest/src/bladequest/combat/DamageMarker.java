@@ -104,6 +104,7 @@ public class DamageMarker
 				if(timer > life)
 				{
 					done = true;
+					if(target != null)target.clearDamaged();
 					//TODO: marker dies here
 				}					
 			}

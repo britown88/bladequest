@@ -484,7 +484,9 @@ public class BattleNew
 			recedeChar();
 			mainMenu.close();
 			changeStartBarText(txtStart);
-			currentChar.setFace(faces.Idle);
+			for(Character c : partyList)
+				if(c.getBattleSprite().getFace() != faces.Damaged)
+					c.setFace(faces.Idle);
 			break;
 		case SELECT:
 			updateMenuOptions(newState);

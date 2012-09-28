@@ -76,6 +76,7 @@ public class BattleEventObject
 		{
 		case Animation:
 			animation = Global.playAnimation(animation, source.getPosition(true), targetP);
+			
 			break;
 		case BattleAction:
 			battleAction.run(source, targets, markers);

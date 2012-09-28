@@ -4,6 +4,7 @@ import java.util.*;
 
 import bladequest.combat.BattleCalc;
 import bladequest.combat.DamageMarker;
+import bladequest.graphics.BattleSprite.faces;
 import bladequest.world.Battle;
 import bladequest.world.Character;
 import bladequest.world.DamageTypes;
@@ -29,6 +30,8 @@ public class bactDamage extends BattleAction
 		{
 			//TODO: actually do the damage
 			int dmg = BattleCalc.calculatedDamage(attacker, t, power, type);
+			if(dmg >= 0 && !t.isEnemy())
+				t.showDamaged();
 			markers.add(new DamageMarker(-dmg, t));			
 		}
 		

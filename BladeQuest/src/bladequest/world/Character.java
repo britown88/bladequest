@@ -1007,6 +1007,24 @@ public class Character
 			return false;
 	}
 	
+	private BattleSprite.faces savedFace;
+	public void showDamaged()
+	{
+		BattleSprite.faces face = battleSpr.getFace();
+		
+		if(face != faces.Attack)
+		{
+			savedFace = face;			
+			setFace(faces.Damaged);
+		}
+	}
+	public void clearDamaged()
+	{
+		BattleSprite.faces face = battleSpr.getFace();
+		if(face == faces.Damaged)
+			setFace(savedFace);
+	}
+	
 	
 	public void setFace(BattleSprite.faces newFace)
 	{
@@ -1022,7 +1040,6 @@ public class Character
 			else battleSpr.changeFace(newFace);
 			break;
 		case Damaged:
-			break;
 		case Attack:
 		case Cast:
 		case Casting:		
