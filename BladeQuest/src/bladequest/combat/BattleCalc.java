@@ -11,6 +11,9 @@ import bladequest.world.Character;
 public class BattleCalc 
 {
 	
+	private static DamageReturnType damageReturnType;	
+	public static DamageReturnType getDmgReturnType(){return damageReturnType;}
+	
 	public static int calculatedDamage(Character attacker, Character defender, float power, DamageTypes type)
 	{
 		int AP = attacker.getBattlePower();
@@ -72,6 +75,14 @@ public class BattleCalc
 		returnList.addAll(genMoveOrder(less));		
 		
 		return returnList;
+	}
+	
+	public enum DamageReturnType
+	{
+		Hit,
+		Miss,
+		Blocked,
+		Critical
 	}
 	
 

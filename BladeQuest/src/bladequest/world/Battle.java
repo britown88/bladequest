@@ -14,7 +14,7 @@ import java.util.*;
 
 
 public class Battle {
-	private final int frameMaxHeight = 96;
+	/*private final int frameMaxHeight = 96;
 	private final int frameMinHeight = 32;
 	private final int partyFrameBuffer = 32;
 	private final int advanceDistance = 32;
@@ -1901,5 +1901,5 @@ public class Battle {
 		All,
 		EnemiesOnly,
 		CharactersOnly
-	}
+	}*/
 }

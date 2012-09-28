@@ -28,7 +28,7 @@ public class sePoison extends StatusEffect
 	@Override
 	public void onTurn(Character c, Battle b) 
 	{
-		b.applyDamage(c, -Math.max(1, (int)((float)c.getStat(Stats.MaxHP)*(power/100.0f))), 50);
+		//b.applyDamage(c, -Math.max(1, (int)((float)c.getStat(Stats.MaxHP)*(power/100.0f))), 50);
 	}
 	
 	@Override

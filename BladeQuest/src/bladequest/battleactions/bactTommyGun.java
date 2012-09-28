@@ -26,7 +26,7 @@ public class bactTommyGun extends BattleAction
 				t = targets.get(Global.rand.nextInt(targets.size()));
 			}while(t.isDead());
 			
-			Global.battle.applyDamage(t, -Battle.genDamage(bp, t), i*5);
+			//Global.battle.applyDamage(t, -Battle.genDamage(bp, t), i*5);
 		}
 		
 	}

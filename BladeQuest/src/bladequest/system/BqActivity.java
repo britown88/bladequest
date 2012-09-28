@@ -89,7 +89,7 @@ implements OnGestureListener, AudioManager.OnAudioFocusChangeListener
 				Global.title.backButtonPressed();
 				break;
 			case GS_BATTLE:
-				Global.battle.backButtonPressed();
+				//Global.battle.backButtonPressed();
 				break;
 			case GS_BATTLETEST:
 				Global.battleTest.backButtonPressed();

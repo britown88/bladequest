@@ -21,12 +21,12 @@ public class bactMessage extends BattleAction
 	@Override
 	public void run(Character attacker, List<Character> targets, List<DamageMarker> markers)
 	{
-		Global.battle.addMessage(message);
+		//Global.battle.addMessage(message);
 			
 		
 	}
 	
 	@Override
-	public boolean isDone() {return Global.battle.messageQueue.size() == 0; }
+	public boolean isDone() {return true;/*Global.battle.messageQueue.size() == 0;*/ }
 
 }

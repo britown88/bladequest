@@ -32,6 +32,7 @@ public class bactDamage extends BattleAction
 			int dmg = BattleCalc.calculatedDamage(attacker, t, power, type);
 			if(dmg >= 0 && !t.isEnemy())
 				t.showDamaged();
+			t.modifyHP(-dmg, false);
 			markers.add(new DamageMarker(-dmg, t));			
 		}
 		

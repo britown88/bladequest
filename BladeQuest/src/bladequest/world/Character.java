@@ -49,9 +49,7 @@ public class Character
 	
 	protected int imageIndex;
 	
-	protected int index;
-	
-	
+	protected int index;	
 	private Item itemToUse;
 	protected Ability abilityToUse;
 	protected Action action;
@@ -61,10 +59,6 @@ public class Character
 	private List<StatusEffect> statusEffects;
 	private List<Ability> abilities;
 	private List<LearnableAbility> learnableAbilities;
-	
-	//fag for determining if a character has acted in the turn.
-	public boolean acting;	
-	public boolean acted;
 	
 	public Character(String name, String displayNam, String bSpr, String wSpr)
 	{
@@ -131,8 +125,7 @@ public class Character
 		
 		position = new Point(0,0);
 	}
-	
-	public void setDone(boolean done) {  }
+
 	
 	public void setExp(int exp){this.exp = exp;}
 	public void setDisplayName(String str){displayName = str;}
@@ -163,8 +156,6 @@ public class Character
 	public List<Ability> getAbilities() { return abilities; }
 	public Item getItemToUse(){return itemToUse;}	
 	public Ability getAbilityToUse(){return abilityToUse;}	
-	public void setAttack(){action = Action.Attack;}	
-	public void guard(){action = Action.Guard;}	
 	public Action getAction(){return action;}	
 	public String getDisplayName(){return displayName;}	
 	public List<StatusEffect> getStatusEffects() { return statusEffects; }
@@ -502,13 +493,13 @@ public class Character
 	{	
 		MP -= abilityToUse.MPCost();
 		
-		if(Global.rand.nextInt(100) < abilityToUse.Accuracy())
+		/*if(Global.rand.nextInt(100) < abilityToUse.Accuracy())
 			abilityToUse.execute(this, targets);
 		else
 		{
 			for(Character t : targets)
 				Global.battle.dmgText(t, "MISS", 0);
-		}
+		}*/
 		
 		return abilityToUse;
 			
@@ -785,7 +776,7 @@ public class Character
 	{
 		HP = 0;
 		dead = true;
-		battleSpr.changeFace(BattleSprite.faces.Dead);
+		setFace(faces.Dead);
 		
 		//remove onDeath status effects
 		List<StatusEffect> newList = new ArrayList<StatusEffect>();		
@@ -801,7 +792,7 @@ public class Character
 	{
 		dead = false;
 		removeStatusEffect("KO");
-		battleSpr.changeFace(BattleSprite.faces.Idle);		
+		setFace(faces.Idle);	
 		HP = Math.max(1, HP);		
 	}
 	
@@ -826,7 +817,7 @@ public class Character
 					newList.add(se);			
 				
 			statusEffects = newList;
-			battleSpr.changeFace(BattleSprite.faces.Idle);
+			setFace(faces.Idle);
 			//setIdle(false);	
 		}
 		
@@ -853,11 +844,7 @@ public class Character
 					return;
 			
 			se.onInflict(this);
-			if(se.isNegative() && !isEnemy)
-				if(dead)
-					battleSpr.changeFace(BattleSprite.faces.Dead);
-				else
-					battleSpr.changeFace(BattleSprite.faces.Weak);	
+			setFace(battleSpr.getFace());
 				
 			statusEffects.add(se);
 		}
@@ -943,8 +930,7 @@ public class Character
 		if(dead)
 			revive();
 		
-		cureAdverseStatuses();
-		
+		cureAdverseStatuses();		
 		
 		HP = getStat(Stats.MaxHP);
 		MP = getStat(Stats.MaxMP);	
@@ -973,14 +959,10 @@ public class Character
 	
 	public void setBattleFrame(BattleSprite.faces face)
 	{
-		battleSpr.changeFace(face);
+		setFace(face);
 		imageIndex = 0;
 	}
-	
-	public BattleSprite.faces getBattleFrame()
-	{
-		return battleSpr.getFace();
-	}
+
 	
 	private boolean hasNegativeStatus()
 	{
@@ -990,22 +972,7 @@ public class Character
 		
 		return false;
 	}
-	
-	//returns whether or not weak or dead was set
-	private boolean setWeakDead()
-	{
-		if(HP <= (float)stats[Stats.MaxHP.ordinal()]*0.25F || hasNegativeStatus())
-		{
-			if(HP <= 0)
-				battleSpr.changeFace(BattleSprite.faces.Dead);	
-			else
-				battleSpr.changeFace(BattleSprite.faces.Weak);
-			
-			return true;
-		}
-		else
-			return false;
-	}
+
 	
 	private BattleSprite.faces savedFace;
 	public void showDamaged()
@@ -1028,73 +995,34 @@ public class Character
 	
 	public void setFace(BattleSprite.faces newFace)
 	{
-		BattleSprite.faces oldFace = battleSpr.getFace();
-		boolean weak = HP <= (float)stats[Stats.MaxHP.ordinal()]*0.25F || hasNegativeStatus();
-		
-		switch(newFace)
+		if(!isEnemy)
 		{
-		case Idle:
-		case Ready:
-			if(dead) setFace(faces.Dead);
-			else if (weak) setFace(faces.Weak);
-			else battleSpr.changeFace(newFace);
-			break;
-		case Damaged:
-		case Attack:
-		case Cast:
-		case Casting:		
-		case Dead:		
-		case Use:
-		case Victory:
-		case Weak:
-			battleSpr.changeFace(newFace);
-			break;		
+			BattleSprite.faces oldFace = battleSpr.getFace();
+			boolean weak = HP <= (float)stats[Stats.MaxHP.ordinal()]*0.25F || hasNegativeStatus();
+			
+			switch(newFace)
+			{
+			case Idle:
+			case Ready:
+				if(dead) setFace(faces.Dead);
+				else if (weak) setFace(faces.Weak);
+				else battleSpr.changeFace(newFace);
+				break;
+			case Damaged:
+			case Attack:
+			case Cast:
+			case Casting:		
+			case Dead:		
+			case Use:
+			case Victory:
+			case Weak:
+				battleSpr.changeFace(newFace);
+				break;
+			}				
 		}
 	}
 	
 	public void setImageIndex(int index){ imageIndex = index;}
-	public void setIdle()
-	{
-		imageIndex = 0;
-
-		if(action == Action.Guard && acting)
-			setFace(faces.Ready);
-		else					
-			setFace(faces.Idle);
-		
-	}	
-	public void setReady()
-	{
-		imageIndex = 0;
-		
-		if(!setWeakDead())
-		{
-			if(battleSpr.getFace() != BattleSprite.faces.Cast &&
-					battleSpr.getFace() != BattleSprite.faces.Use)
-			{
-				if(action == Action.Ability || (action == Action.CombatAction &&combAction.getType() == DamageTypes.Magic))
-					//magical
-					battleSpr.changeFace(BattleSprite.faces.Casting);
-				else
-					//physical
-					battleSpr.changeFace(BattleSprite.faces.Ready);
-			}					
-		}			
-	}
-	
-	public void setSwing()
-	{
-		battleSpr.changeFace(BattleSprite.faces.Attack);
-		imageIndex = 0;
-		Global.resetImageTimer();
-	}
-	
-	
-	public void updateSwing(){}
-	
-	public boolean isDone(){return true;}	
-	//public void setDone(boolean b){done = b;}
-	
 	
 	private void updateAnimation()
 	{
@@ -1114,27 +1042,22 @@ public class Character
 	public void playWeaponAnimation(Point src, Point tar){if(weapEquipped()) weapon.playAnimation(src, tar);}
 	public BattleAnim getWeaponAnimation(){if(weapEquipped()) return weapon.getAnim(); else return null;}
 	
-	public void battleRender(int x, int y)
+	public void battleRender()
 	{
 		if(battleSpr.getFace() != faces.Attack)
 			updateAnimation();//dont update attack anim, it's managed by battle
 		
-		battleSpr.render(x, y, imageIndex, false);
+		battleSpr.render(position.x, position.y, imageIndex, false);
 		
 		//draw weapon swing
 		if(battleSpr.getFace() == faces.Attack)
 		{
 			WeaponSwingDrawable swing = getWeaponSwing();
 			if(swing != null)
-				swing.render(imageIndex, x-20, y-6);
+				swing.render(imageIndex, position.x-20, position.y-6);
 		}
 			
 		
-	}
-	
-	public void battleRender()
-	{
-		battleRender(position.x, position.y);		
 	}
 	
 	public Rect getRect() {return Global.vpToScreen(new Rect(position.x, position.y, position.x+getWidth(), position.y+getHeight()));}

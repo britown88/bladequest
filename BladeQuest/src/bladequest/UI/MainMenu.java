@@ -9,7 +9,6 @@ import bladequest.UI.MsgBox.YesNo;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.world.Character;
 import bladequest.world.Ability;
-import bladequest.world.DamageMarker;
 import bladequest.world.Global;
 import bladequest.world.Item;
 import bladequest.world.Item.Type;
@@ -30,7 +29,7 @@ public class MainMenu
 	private final int menuWidth, barHeight;
 	
 	private menuStates currentState;
-	private Vector<DamageMarker> markers;
+	//private Vector<DamageMarker> markers;
 	private Item itemToUse;
 	private Character selectedChar, nextChar;
 	private Item selectedEqpItem;
@@ -84,7 +83,7 @@ public class MainMenu
 	{
 		currentState = menuStates.Root;
 		
-		markers= new Vector<DamageMarker>();
+		//markers= new Vector<DamageMarker>();
 		
 		menuWidth = (int)((float)Global.vpWidth * (menuWidthVpPercent/100.0f));
 		barHeight = (int)((float)Global.vpHeight * (menuHeightVpPercent/100.0f));
@@ -850,8 +849,8 @@ public class MainMenu
 			
 			for(ListBoxEntry lbi : charUseScreen.getEntries())
 			{
-				if(((Character)lbi.obj).getName().equals(c.getName()))
-					markers.add(new DamageMarker(dmg, c, delay, lbi.frameRect.left + lbi.width/2, lbi.frameRect.top + lbi.width/2));
+				//if(((Character)lbi.obj).getName().equals(c.getName()))
+					//markers.add(new DamageMarker(dmg, c, delay, lbi.frameRect.left + lbi.width/2, lbi.frameRect.top + lbi.width/2));
 				
 			}
 //			ListBoxEntry lbi = charUseScreen.getSelectedEntry();
@@ -866,13 +865,13 @@ public class MainMenu
 		{
 		case ItemUse:
 			ListBoxEntry lbi = charUseScreen.getSelectedEntry();
-			markers.add(new DamageMarker(str, c, delay, lbi.frameRect.left + lbi.width/2, lbi.frameRect.top + lbi.width/2));
+			//markers.add(new DamageMarker(str, c, delay, lbi.frameRect.left + lbi.width/2, lbi.frameRect.top + lbi.width/2));
 			break;
 		}
 	}
 	private void updateMarkers()
 	{
-		Vector<DamageMarker> toRemove = new Vector<DamageMarker>();
+/*		Vector<DamageMarker> toRemove = new Vector<DamageMarker>();
 		
 		for(DamageMarker d : markers)
 		{
@@ -882,7 +881,7 @@ public class MainMenu
 		}
 		
 		for(DamageMarker d : toRemove)
-			markers.remove(d);
+			markers.remove(d);*/
 	}
 	private void darken(){darkening = true;}	
 	private void undarken(){darkening = false;}	
@@ -1325,8 +1324,8 @@ public class MainMenu
 			charUseInfo.update();
 			charUseDesc.update();
 			
-			if(itemToUse.getCount() == 0 && markers.size() == 0)
-				changeState(menuStates.ItemSelect);
+			//if(itemToUse.getCount() == 0 && markers.size() == 0)
+				//changeState(menuStates.ItemSelect);
 			break;
 			
 			
@@ -1529,9 +1528,9 @@ public class MainMenu
 		messageBox.render();
 		
 		//render dmgMarkers
-		for(DamageMarker d : markers)
+/*		for(DamageMarker d : markers)
 			if(d.isShown())
-				d.render();
+				d.render();*/
 	}
 		
 	public void onFling(float velocityX, float velocityY)

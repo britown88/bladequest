@@ -608,7 +608,7 @@ public class Global
     	case GS_PAUSE:
     		break;
     	case GS_BATTLE:
-    		battle.update();
+    		//battle.update();
     		break;  
     	case GS_BATTLETEST:
     		battleTest.update();
@@ -619,8 +619,8 @@ public class Global
     		{
     			imageScale = 1.0F;
     			battle = new Battle();
-    			battle.setEncounter(encounter);
-    			battle.initBattle();
+    			//battle.setEncounter(encounter);
+    			//battle.initBattle();
     		}
     		
     		break;

@@ -30,7 +30,7 @@ public class bactInflictStatus extends BattleAction
 				switch(Global.GameState)
 				{
 				case GS_BATTLE:
-					Global.battle.dmgText(t, se.Name().toUpperCase(), 0);
+					//Global.battle.dmgText(t, se.Name().toUpperCase(), 0);
 					Global.playAnimation("poison", attacker.getPosition(), t.getPosition());
 					break;
 				case GS_MAINMENU:

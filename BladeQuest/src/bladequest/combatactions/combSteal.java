@@ -29,21 +29,21 @@ public class combSteal extends CombatAction
 			String item = target.getItem(true);
 			if(item == null)
 			{
-				Global.battle.dmgText(target, "MISS", 0);
-				Global.battle.setFrameText("Failed to steal!");
+				//Global.battle.dmgText(target, "MISS", 0);
+				//Global.battle.setFrameText("Failed to steal!");
 			}
 			else
 			{
 				Global.party.addItem(item);
 				
-				Global.battle.dmgText(target, "STEAL!", 0);
-				Global.battle.setFrameText("Stole a "+ Global.items.get(item).getName() +"!");
+				//Global.battle.dmgText(target, "STEAL!", 0);
+				//Global.battle.setFrameText("Stole a "+ Global.items.get(item).getName() +"!");
 			}
 		}
 		else
 		{
-			Global.battle.dmgText(target, "FAIL", 0);
-			Global.battle.setFrameText("Doesn't have anything!");
+			//Global.battle.dmgText(target, "FAIL", 0);
+			//Global.battle.setFrameText("Doesn't have anything!");
 		}
 		
 		
