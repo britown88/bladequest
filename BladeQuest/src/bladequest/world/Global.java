@@ -1136,4 +1136,10 @@ public class Global
 		
 	}
 
+	public static boolean noRunningAnims() 
+	{
+		
+		return playingAnims.isEmpty();
+	}
+
 }

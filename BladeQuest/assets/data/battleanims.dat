@@ -3,6 +3,7 @@
 # ba <animName> <FPS>
 #     [loop]
 #     obj <line/elipse/rect/bmp> <1/0:elipseOnly> [<bmpName>]
+#         [bmpsrc <left> <top> <right> <bottom>]
 #         state <frame> <tar/src/scrn>
 #             [stroke <strokeWidth>]
 #             [pos <1/2> <x> <y>]

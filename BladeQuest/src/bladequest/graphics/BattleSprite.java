@@ -22,6 +22,7 @@ public class BattleSprite {
 	public int getWidth() { return width; }
 	public int getHeight() { return height; }
 	public int getNumFrames() { return frameLists.get(face.ordinal()).size(); }
+	public String getBmpName() { return bmpName; }
 	
 	public enum faces
 	{
@@ -110,6 +111,11 @@ public class BattleSprite {
 						new Rect(p.x, p.y,p.x+width, p.y+height), null);
 		}
 	}	
+	
+	public Rect getFrameRect(faces face, int index)
+	{
+		return frameLists.get(face.ordinal()).get(index);
+	}
 	
 	public void addFrame(faces face, int left, int top, int right, int bottom)
 	{

@@ -34,7 +34,7 @@ public class Character
 	protected int HP;
 	protected int MP;
 	
-	private boolean dead;
+	protected boolean dead;
 	private String abilitiesName;
 	
 	protected int level;

@@ -282,6 +282,11 @@ public class GameDataLoader
 		{	baObj.interpolateLinearly();
 		}else if(dl.item.equals("loop"))
 		{	ba.loop();
+		}else if(dl.item.equals("bmpsrc"))
+		{	baObj.setBmpSrcRect(Integer.parseInt(dl.values.get(0)), 
+				Integer.parseInt(dl.values.get(1)), 
+				Integer.parseInt(dl.values.get(2)), 
+				Integer.parseInt(dl.values.get(3)));
 		}else if(dl.item.equals("endba"))
 		{ 
 			Global.battleAnims.put(baName, ba);			

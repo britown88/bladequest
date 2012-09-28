@@ -7,6 +7,11 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import bladequest.combat.BattleEvent;
 import bladequest.graphics.BattleAnim;
+import bladequest.graphics.BattleAnimObjState;
+import bladequest.graphics.BattleAnimObjState.PosTypes;
+import bladequest.graphics.BattleAnimObject;
+import bladequest.graphics.BattleAnimObject.Types;
+import bladequest.graphics.BattleSprite.faces;
 import bladequest.graphics.BattleSprite;
 
 
@@ -139,6 +144,47 @@ public class Enemy extends Character
 		
 	}
 	
+	private void playDeathAnimation()
+	{
+		BattleAnim anim = new BattleAnim(60.0f);
+		
+		BattleAnimObject baObj = new BattleAnimObject(Types.Bitmap, false, battleSpr.getBmpName());
+		Rect srcRect = battleSpr.getFrameRect(faces.Idle, 0);
+		baObj.setBmpSrcRect(srcRect.left, srcRect.top, srcRect.right, srcRect.bottom);
+		
+		BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Source);
+		state.argb(255, 255, 255, 255);
+		state.pos1 = new Point(0,0);
+		state.size = new Point(battleSpr.getWidth(), battleSpr.getHeight());
+		baObj.addState(state);
+		
+		state = new BattleAnimObjState(30, PosTypes.Source);
+		state.argb(255, 255, 255, 255);
+		state.pos1 = new Point(0,0);
+		state.size = new Point(battleSpr.getWidth(), battleSpr.getHeight());
+		baObj.addState(state);
+		
+		state = new BattleAnimObjState(90, PosTypes.Source);
+		state.argb(0, 255, 0, 0);
+		state.colorize = 1.0f;
+		state.pos1 = new Point(0,0);
+		state.size = new Point(battleSpr.getWidth(), battleSpr.getHeight());
+		baObj.addState(state);
+		
+		anim.addObject(baObj);
+		
+		Global.playAnimation(anim, position, null);
+	}
+	
+	@Override
+	public void modifyHP(float HP, boolean percentage)
+	{
+		super.modifyHP(HP, percentage);
+		
+		if(dead)
+			playDeathAnimation();		
+	}
+	
 	public void setBossMods(float HP)
 	{
 		bossFight = true;
@@ -231,7 +277,8 @@ public class Enemy extends Character
 	@Override
 	public void battleRender()
 	{
-		battleSpr.render(position.x, position.y, 0, true);
+		if(!dead)
+			battleSpr.render(position.x, position.y, 0, true);
 	}
 	
 	@Override

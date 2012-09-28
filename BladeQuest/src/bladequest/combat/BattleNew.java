@@ -367,7 +367,7 @@ public class BattleNew
 	private void triggerEndBattle()
 	{
 		Global.screenFader.setFadeColor(255, 0, 0, 0);
-		Global.screenFader.fadeOut(2);
+		//Global.screenFader.fadeOut(2);
 		changeStartBarText("");
 
 	}
@@ -436,17 +436,22 @@ public class BattleNew
 			}
 	}
 	private void nextActor()
-	{		
-		nextActor = false;		
-		battleEvents.remove(0);		
+	{	
+		
 		targets.clear();
 		
 		if(isVictory())
-			changeState(BattleStates.VICTORY);
+		{
+			if(Global.noRunningAnims() && markers.isEmpty())
+				changeState(BattleStates.VICTORY);
+		}			
 		else if(isDefeated())
 			changeState(BattleStates.DEFEAT);
 		else
 		{
+			nextActor = false;
+			battleEvents.remove(0);
+			
 			if(battleEvents.size() == 0)
 			{
 				selectFirstChar();
@@ -461,7 +466,7 @@ public class BattleNew
 					advanceChar();
 				}
 				else
-					targets.add(actor);
+					setTarget(actor);
 					
 			}
 		}
