@@ -158,13 +158,13 @@ public class Enemy extends Character
 		state.size = new Point(battleSpr.getWidth(), battleSpr.getHeight());
 		baObj.addState(state);
 		
-		state = new BattleAnimObjState(30, PosTypes.Source);
+		state = new BattleAnimObjState(15, PosTypes.Source);
 		state.argb(255, 255, 255, 255);
 		state.pos1 = new Point(0,0);
 		state.size = new Point(battleSpr.getWidth(), battleSpr.getHeight());
 		baObj.addState(state);
 		
-		state = new BattleAnimObjState(90, PosTypes.Source);
+		state = new BattleAnimObjState(75, PosTypes.Source);
 		state.argb(0, 255, 0, 0);
 		state.colorize = 1.0f;
 		state.pos1 = new Point(0,0);

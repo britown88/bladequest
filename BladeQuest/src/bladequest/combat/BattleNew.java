@@ -367,7 +367,7 @@ public class BattleNew
 	private void triggerEndBattle()
 	{
 		Global.screenFader.setFadeColor(255, 0, 0, 0);
-		//Global.screenFader.fadeOut(2);
+		Global.screenFader.fadeOut(2);
 		changeStartBarText("");
 
 	}
@@ -494,6 +494,9 @@ public class BattleNew
 							if(targets.get(0).isEnemy())
 								//select new enemy
 								aliveTargets.add(aliveEnemies.get(Global.rand.nextInt(aliveEnemies.size())));
+							else
+								//reselect original target
+								aliveTargets.add(targets.get(0));
 
 					}
 					//reset targets
@@ -704,14 +707,20 @@ public class BattleNew
 				
 				//TODO: unuse unused items
 			}
-			else if(currentCharIndex + 1 < partyList.size())
+			else 
 			{
-				currentChar = partyList.get(++currentCharIndex);
-				changeState(BattleStates.SELECT);
-			}
-			else
-				changeState(BattleStates.ACT);
-			
+				//loop until nondead party member
+				do ++currentCharIndex;
+				while(currentCharIndex < partyList.size() && partyList.get(currentCharIndex).isDead());
+				
+				if(currentCharIndex < partyList.size())
+				{					
+					currentChar = partyList.get(currentCharIndex);
+					changeState(BattleStates.SELECT);
+				}
+				else
+					changeState(BattleStates.ACT);				
+			}			
 			nextChar = prevChar = false;
 		}
 	}
