@@ -401,6 +401,9 @@ public class BattleNew
 			BattleEvent currentEvent = battleEvents.get(0);
 			Character actor = currentEvent.getSource();
 			
+			
+			
+			
 			//set frame text
 			switch(actor.getAction())
 			{case Attack:changeStartBarText(actor.getDisplayName()+" attacks!");break;
@@ -419,9 +422,8 @@ public class BattleNew
 			{
 				currentChar = actor;
 				advanceChar();
-			}
-				
-		}			
+			}				
+	}			
 	}
 	private void nextActorInit()
 	{
@@ -446,7 +448,10 @@ public class BattleNew
 				changeState(BattleStates.VICTORY);
 		}			
 		else if(isDefeated())
-			changeState(BattleStates.DEFEAT);
+		{
+			if(Global.noRunningAnims() && markers.isEmpty())
+				changeState(BattleStates.DEFEAT);
+		}			
 		else
 		{
 			nextActor = false;
@@ -459,15 +464,49 @@ public class BattleNew
 			}
 			else
 			{
+				BattleEvent currentEvent = battleEvents.get(0);
 				Character actor = battleEvents.get(0).getSource();
-				if(!actor.isEnemy())
-				{
-					currentChar = actor;
-					advanceChar();
-				}
-				else
-					setTarget(actor);
+				List<Character> targets = currentEvent.getTargets();
+				List<Character> aliveTargets = new ArrayList<Character>();
+				//fill alive targets
+				for(Character c : targets)if(!c.isDead())aliveTargets.add(c);			
+				
+				if(actor.isDead())
+					nextActorInit();
+				else 
+				{					
+					//reset to random characters if targeting a dead guy
+					if(aliveTargets.isEmpty())
+					{
+						List<Character> aliveChars = new ArrayList<Character>();
+						List<Enemy> aliveEnemies = new ArrayList<Enemy>();
+						for(Character c : partyList)if(!c.isDead())aliveChars.add(c);
+						for(Enemy e : encounter.Enemies())if(!e.isDead())aliveEnemies.add(e);
+						
+						if(actor.isEnemy())
+							if(targets.get(0).isEnemy())
+								//select new enemy
+								aliveTargets.add(aliveEnemies.get(Global.rand.nextInt(aliveEnemies.size())));
+							else
+								//select new ally
+								aliveTargets.add(aliveChars.get(Global.rand.nextInt(aliveChars.size())));
+						else
+							if(targets.get(0).isEnemy())
+								//select new enemy
+								aliveTargets.add(aliveEnemies.get(Global.rand.nextInt(aliveEnemies.size())));
+
+					}
+					//reset targets
+					currentEvent.setTargets(aliveTargets);
 					
+					if(!actor.isEnemy())
+					{
+						currentChar = actor;
+						advanceChar();
+					}
+					else
+						setTarget(actor);
+				}
 			}
 		}
 	}

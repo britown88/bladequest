@@ -14,7 +14,7 @@ import java.util.*;
 
 
 public class Battle {
-	/*private final int frameMaxHeight = 96;
+	private final int frameMaxHeight = 96;
 	private final int frameMinHeight = 32;
 	private final int partyFrameBuffer = 32;
 	private final int advanceDistance = 32;
@@ -37,7 +37,7 @@ public class Battle {
 	
 	boolean endBattleFlag;
 	
-	private Vector<DamageMarker> markers;
+	//private Vector<DamageMarker> markers;
 	private String frameText;
 	
 	
@@ -86,7 +86,7 @@ public class Battle {
 	public Battle()
 	{
 		messageQueue = new Vector<String>();
-		markers= new Vector<DamageMarker>();
+		//markers= new Vector<DamageMarker>();
 		moveOrder = new Vector<Character>();
 		
 		actTimer = 0;
@@ -118,7 +118,7 @@ public class Battle {
 			if(c != null)
 			{
 				c.clearTargets();
-				c.setIdle();			
+				//c.setIdle();			
 				c.setIndex(i);
 				c.genWeaponSwing();
 			}
@@ -254,7 +254,7 @@ public class Battle {
 		case TARGET:
 			
 			recedeChar();
-			getChar(currentChar).setIdle();
+			//getChar(currentChar).setIdle();
 			selectAllAllies = false;
 			selectAllEnemies = false;
 			showCharSelect = false;
@@ -356,9 +356,9 @@ public class Battle {
 
 		Global.renderAnimations();
 		
-		for(DamageMarker d : markers)
-			if(d.isShown())
-				d.render();
+		//for(DamageMarker d : markers)
+			//if(d.isShown())
+				//d.render();
 		
 		displayNamePanel.render();
 		
@@ -441,7 +441,7 @@ public class Battle {
 				break;
 				
 			case USEITEM:
-				if(markers.size() == 0)
+				/*if(markers.size() == 0)
 				{
 					if(runningAbility != null && runningAbility.running)
 						break;
@@ -452,7 +452,7 @@ public class Battle {
 						recedeChar();
 					}						
 					changeState(battleStates.ACTWAIT);
-				}
+				}*/
 					
 				break;
 				
@@ -530,7 +530,7 @@ public class Battle {
 								switch(c.getAction())
 								{
 								case Attack:
-									if(c.isDone())
+									/*if(c.isDone())
 									{
 										if(e.isDead())
 										{
@@ -550,7 +550,7 @@ public class Battle {
 									}
 									else
 										c.updateSwing();
-										
+										*/
 									break;
 									
 								case Item:
@@ -624,7 +624,7 @@ public class Battle {
 								{
 									advanceChar();
 									acting = true;
-									getChar(currentChar).acted = true;
+									//getChar(currentChar).acted = true;
 									switch (getChar(currentChar).getAction())
 									{
 									case CombatAction:
@@ -644,7 +644,7 @@ public class Battle {
 										break;																	
 									default:
 										frameText = moveOrder.get(currentActor).getDisplayName() +" attacks!";
-										getChar(currentChar).setSwing();
+										//getChar(currentChar).setSwing();
 										attackMissed = (Global.rand.nextInt(100) <= 5);
 										attackCritical = (Global.rand.nextInt(100) <= 5);
 										Global.playSound("swordslash3");
@@ -750,12 +750,12 @@ public class Battle {
 				//draw character sprite		
 				if(i == currentChar)
 				{
-					c.battleRender(partyPos.x - selCharX, partyPos.y + (charYSpacing*i));
+					//c.battleRender(partyPos.x - selCharX, partyPos.y + (charYSpacing*i));
 					c.setPosition(partyPos.x - selCharX, partyPos.y + (charYSpacing*i) + 4);
 				}
 				else
 				{
-					c.battleRender(partyPos.x, partyPos.y + (charYSpacing*i));
+					//c.battleRender(partyPos.x, partyPos.y + (charYSpacing*i));
 					c.setPosition(partyPos.x, partyPos.y + (charYSpacing*i) + 4);
 				}				
 				
@@ -860,18 +860,18 @@ public class Battle {
 	}
 	private void updateMarkers()
 	{
-		Vector<DamageMarker> toRemove = new Vector<DamageMarker>();
+		//Vector<DamageMarker> toRemove = new Vector<DamageMarker>();
 		
-		for(DamageMarker d : markers)
+		/*for(DamageMarker d : markers)
 		{
 			d.update();
 			
 			if(d.isDone())
 				toRemove.add(d);
-		}
+		}*/
 		
-		for(DamageMarker d : toRemove)
-			markers.remove(d);
+		/*for(DamageMarker d : toRemove)
+			markers.remove(d);*/
 	}
 	
 	
@@ -921,7 +921,7 @@ public class Battle {
 				
 		else
 		{
-			getChar(currentChar).setIdle();
+			//getChar(currentChar).setIdle();
 			
 			if(getChar(currentChar).action == Action.Item)
 				getChar(currentChar).unuseItem();
@@ -944,8 +944,8 @@ public class Battle {
 		{
 		case SELECT:
 			frameText = defaultFrameText;
-			for(Character c : getAliveCharacters())
-				c.setDone(true);
+			/*for(Character c : getAliveCharacters())
+				c.setDone(true);*/
 			
 			mainMenu.clearObjects();
 			mainMenu.addItem("Attack", "atk", false);
@@ -1011,8 +1011,8 @@ public class Battle {
 			acting = false;
 			currentActor = 0;
 			
-			for(Character c : Global.party.getPartyMembers(false))
-				if(c != null) c.acted = false;
+			/*for(Character c : Global.party.getPartyMembers(false))
+				if(c != null) c.acted = false;*/
 
 
 			break;
@@ -1024,9 +1024,9 @@ public class Battle {
 			
 			int avgLevel, levelTotal = 0;
 			
-			for(Character c : Global.party.getPartyMembers(false))
+			/*for(Character c : Global.party.getPartyMembers(false))
 				if(c != null && !c.acted && c.action == Action.Item)
-					c.unuseItem();
+					c.unuseItem();*/
 			
 			do{					
 				if(getChar(currentChar) != null && getChar(currentChar).action == Action.Item)
@@ -1143,15 +1143,15 @@ public class Battle {
 		}
 		else if(opt.equals("atk"))
 		{
-			getChar(currentChar).setAttack();
-			getChar(currentChar).setReady();				
+			/*getChar(currentChar).setAttack();
+			getChar(currentChar).setReady();*/				
 			targetType = TargetTypes.Single;
 			changeState(battleStates.TARGET);
 		}
 		else if(opt.equals("grd"))
 		{
-			getChar(currentChar).guard();
-			getChar(currentChar).setReady();				
+			/*getChar(currentChar).guard();
+			getChar(currentChar).setReady();*/				
 			recedeChar();
 			nextChar = true;
 			changeState(battleStates.SELECT);
@@ -1164,7 +1164,7 @@ public class Battle {
 		else if(opt.equals("act"))
 		{
 			getChar(currentChar).setUseCombatAction();
-			getChar(currentChar).setReady();				
+			/*getChar(currentChar).setReady();*/				
 			targetType = getChar(currentChar).getCombatActionTargetType();
 			changeState(battleStates.TARGET);
 		}
@@ -1322,7 +1322,7 @@ public class Battle {
 		
 		for(Character c : getAliveCharacters())
 		{
-			c.setIdle();
+			/*c.setIdle();*/
 			c.statusOnTurn(this);
 		}
 		
@@ -1387,10 +1387,10 @@ public class Battle {
 		return temp;
 	}
 	
-	public void addDamageMarker(DamageMarker marker)
+	/*public void addDamageMarker(DamageMarker marker)
 	{
 		markers.add(marker);
-	}
+	}*/
 	
 	public void physicalDamage(Character attacker, Character defender)
 	{
@@ -1447,10 +1447,10 @@ public class Battle {
 								
 			else
 			{
-				if(moveOrder.indexOf(c) >= currentActor || c.getAction() == Character.Action.Guard)
+				/*if(moveOrder.indexOf(c) >= currentActor || c.getAction() == Character.Action.Guard)
 					c.setReady();				
 				else
-					c.setIdle();
+					c.setIdle();*/
 			}	
 		}	
 		else
@@ -1468,12 +1468,12 @@ public class Battle {
 	
 	public void applyDamage(Character c, int dmg, int delay)	
 	{
-		markers.add(new DamageMarker(dmg, c, delay));
+		//markers.add(new DamageMarker(dmg, c, delay));
 	}
 	
 	public void dmgText(Character c, String str, int delay)
 	{
-		markers.add(new DamageMarker(str, c, delay));
+		//markers.add(new DamageMarker(str, c, delay));
 	}
 	
 	private void Annihilated()
@@ -1603,7 +1603,7 @@ public class Battle {
 						//recedeChar();
 						infoWindow.open();
 						changeState(battleStates.SELECT);
-						getChar(currentChar).setIdle();
+						//getChar(currentChar).setIdle();
 						selectAllAllies = false;
 						selectAllEnemies = false;
 						if(getChar(currentChar).action == Action.Item)
@@ -1622,7 +1622,7 @@ public class Battle {
 							if(selectedEnemy != null && enemyFrame.contains(x, y) && targetType != TargetTypes.SingleAlly)
 							{
 								getChar(currentChar).addTarget(selectedEnemy);
-								getChar(currentChar).setReady();
+								//getChar(currentChar).setReady();
 								recedeChar();
 								nextChar = true;
 								changeState(battleStates.SELECT);
@@ -1643,7 +1643,7 @@ public class Battle {
 										if(cRect.contains(x, y))
 										{
 											getChar(currentChar).addTarget(c);
-											getChar(currentChar).setReady();
+											//getChar(currentChar).setReady();
 											recedeChar();
 											nextChar = true;
 											changeState(battleStates.SELECT);
@@ -1659,7 +1659,7 @@ public class Battle {
 							for(Character c : Global.party.getPartyMembers(false))
 								if(c != null && !c.isDead())
 									getChar(currentChar).addTarget(c);
-							getChar(currentChar).setReady();
+							//getChar(currentChar).setReady();
 							recedeChar();
 							nextChar = true;
 							changeState(battleStates.SELECT);
@@ -1670,7 +1670,7 @@ public class Battle {
 							for(Character e : encounter.Enemies())
 								if(!e.isDead())
 									getChar(currentChar).addTarget(e);
-							getChar(currentChar).setReady();
+							//getChar(currentChar).setReady();
 							recedeChar();
 							nextChar = true;
 							changeState(battleStates.SELECT);
@@ -1679,7 +1679,7 @@ public class Battle {
 							break;
 						case Self:
 							getChar(currentChar).addTarget(getChar(currentChar));
-							getChar(currentChar).setReady();
+							//getChar(currentChar).setReady();
 							recedeChar();
 							nextChar = true;
 							changeState(battleStates.SELECT);
@@ -1731,7 +1731,7 @@ public class Battle {
 						Item i = (Item)(mainMenu.getSelectedEntry().obj);
 						//Global.party.removeItem(i.getId(), 1);											
 						getChar(currentChar).setItemToUse(i);
-						getChar(currentChar).setReady();
+						//getChar(currentChar).setReady();
 						targetType = i.getTargetType();
 						infoWindow.close();
 						changeState(battleStates.TARGET);
@@ -1757,7 +1757,7 @@ public class Battle {
 						{
 							infoWindow.close();					
 							getChar(currentChar).setAbilityToUse(a);
-							getChar(currentChar).setReady();
+							//getChar(currentChar).setReady();
 							targetType = a.TargetType();
 							changeState(battleStates.TARGET);
 						}
@@ -1901,5 +1901,5 @@ public class Battle {
 		All,
 		EnemiesOnly,
 		CharactersOnly
-	}*/
+	}
 }

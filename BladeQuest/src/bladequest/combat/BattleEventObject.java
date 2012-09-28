@@ -22,6 +22,7 @@ public class BattleEventObject
 	
 	private Character source;
 	private List<Character> targets;
+	public void setTargets( List<Character> targets){this.targets = targets;}
 	
 	private types type;	
 	public types Type(){return type;}

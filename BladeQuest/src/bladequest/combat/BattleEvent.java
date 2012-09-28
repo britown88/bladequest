@@ -15,7 +15,6 @@ public class BattleEvent
 	
 	private Character source;
 	private List<Character> targets;
-	private List<DamageMarker> markers;
 	private List<BattleEventObject> objects;
 	
 	private boolean running, done;
@@ -51,6 +50,14 @@ public class BattleEvent
 		int actualFrame = (int)(anim.getFrameLength() * (anim.getFinalFrame()*animPercent));
 		
 		return startFrame + actualFrame;
+	}
+	
+	public void setTargets(List<Character> targets)
+	{
+		this.targets = targets;
+		for(BattleEventObject obj : objects)
+			obj.setTargets(targets);
+			
 	}
 	
 	public void init()
