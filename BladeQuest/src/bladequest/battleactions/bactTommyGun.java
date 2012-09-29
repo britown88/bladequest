@@ -2,6 +2,7 @@ package bladequest.battleactions;
 
 import java.util.*;
 
+import bladequest.combat.BattleNew;
 import bladequest.combat.DamageMarker;
 import bladequest.world.*;
 import bladequest.world.Character;
@@ -17,7 +18,7 @@ public class bactTommyGun extends BattleAction
 	}
 	
 	@Override
-	public void run(Character attacker, List<Character> targets, List<DamageMarker> markers)
+	public void run(BattleNew battle, Character attacker, List<Character> targets, List<DamageMarker> markers)
 	{
 		Character t;
 		for(int i = 0; i < shots; ++i)

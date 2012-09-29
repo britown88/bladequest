@@ -80,7 +80,7 @@ public class BattleEventObject
 			
 			break;
 		case BattleAction:
-			battleAction.run(source, targets, markers);
+			battleAction.run(battle, source, targets, markers);
 			break;
 		case CombatAction:
 			combatAction.execute(targets);

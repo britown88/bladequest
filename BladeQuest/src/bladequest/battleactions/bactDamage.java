@@ -3,6 +3,7 @@ package bladequest.battleactions;
 import java.util.*;
 
 import bladequest.combat.BattleCalc;
+import bladequest.combat.BattleNew;
 import bladequest.combat.DamageMarker;
 import bladequest.graphics.BattleSprite.faces;
 import bladequest.world.Battle;
@@ -24,7 +25,7 @@ public class bactDamage extends BattleAction
 	}
 	
 	@Override
-	public void run(Character attacker, List<Character> targets, List<DamageMarker> markers)
+	public void run(BattleNew battle, Character attacker, List<Character> targets, List<DamageMarker> markers)
 	{
 		for(Character t : targets)
 		{

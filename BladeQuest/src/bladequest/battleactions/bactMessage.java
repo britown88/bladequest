@@ -2,6 +2,7 @@ package bladequest.battleactions;
 
 import java.util.*;
 
+import bladequest.combat.BattleNew;
 import bladequest.combat.DamageMarker;
 import bladequest.world.Battle;
 import bladequest.world.Character;
@@ -19,7 +20,7 @@ public class bactMessage extends BattleAction
 	}
 	
 	@Override
-	public void run(Character attacker, List<Character> targets, List<DamageMarker> markers)
+	public void run(BattleNew battle, Character attacker, List<Character> targets, List<DamageMarker> markers)
 	{
 		//Global.battle.addMessage(message);
 			
