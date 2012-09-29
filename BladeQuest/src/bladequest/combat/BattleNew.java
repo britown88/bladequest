@@ -107,6 +107,7 @@ public class BattleNew
 					party[i].setIndex(i);
 					party[i].genWeaponSwing();
 					party[i].setFace(faces.Idle);
+					party[i].setImageIndex(0);
 				}
 			
 			//init
