@@ -24,10 +24,13 @@ public class bactRemoveStatus extends BattleAction
 	{
 		for(Character t : targets)
 		{
-			t.removeStatusEffect(se);
-			
-			if(Global.GameState == States.GS_MAINMENU)
-				Global.menu.dmgText(t, "CURE", 0);	
+			if(t.hasStatus(se))
+			{
+				t.removeStatusEffect(se);
+				markers.add(new DamageMarker("CURE", t));
+			}
+			else				
+				markers.add(new DamageMarker("MISS", t));
 		}
 			
 	}

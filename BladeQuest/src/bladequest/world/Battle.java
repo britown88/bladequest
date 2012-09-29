@@ -380,12 +380,12 @@ public class Battle {
 		
 		updateCharStats();
 		
-		if(runningAbility != null && runningAbility.running)
+/*		if(runningAbility != null && runningAbility.running)
 		{
 			runningAbility.update();
 			if(!runningAbility.running)
 				runningAbility = null;
-		}
+		}*/
 		
 		if(messageQueue.size() > 0)
 		{

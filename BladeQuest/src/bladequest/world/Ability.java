@@ -4,20 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bladequest.battleactions.BattleAction;
+import bladequest.graphics.BattleAnim;
 
 public class Ability 
 {
 	private String displayName;
 	private DamageTypes dmgType;	
 	private TargetTypes targetType;
-	private int mpcost, accuracy, delay;	
+	private int mpcost, accuracy;	
 	private boolean usableOutOfBattle;
+	private String animation;
 	
 	public String name;
 	
 	private List<BattleAction> actions;
 	
-	public Ability(String name, String displayName, DamageTypes dmgType, TargetTypes targetType, int mpcost, int accuracy, boolean useableOutOfBattle)
+	public Ability(String name, String displayName, String animation, DamageTypes dmgType, TargetTypes targetType, int mpcost, int accuracy, boolean useableOutOfBattle)
 	{
 		this.name = name;
 		this.displayName = displayName;
@@ -25,54 +27,24 @@ public class Ability
 		this.targetType = targetType;
 		this.mpcost = mpcost;
 		this.usableOutOfBattle = usableOutOfBattle;
+		this.animation = animation;
 
 		this.accuracy = accuracy;
-		delay = 5;
 		
 		actions = new ArrayList<BattleAction>();
 	}
-	
-	public void setActionDelay(int delay)
-	{
-		this.delay = delay;
-	}
 	public boolean isUsableOutOfBattle() { return usableOutOfBattle;}
 	public void addAction(BattleAction action){actions.add(action);}
+	public List<BattleAction> getActions() { return actions;}
 	public String getDisplayName() { return displayName;}
 	public DamageTypes DmgType() { return dmgType;}
 	public TargetTypes TargetType() { return targetType;}
 	public int MPCost() { return mpcost;}
 	public int Accuracy() { return accuracy;}
 	
-	private int bactIndex;
-	public boolean running = false;
-	
-	private Character attacker;
-	private List<Character> targets;
-	
-	public void update()
+	public BattleAnim getAnimation()
 	{
-/*		if(actions.get(bactIndex).isDone())
-		{
-			bactIndex++;
-			if(bactIndex < actions.size())
-				actions.get(bactIndex).run(attacker, targets, bactIndex*delay);
-			else
-				running = false;
-		}*/
+		return Global.battleAnims.get(animation);
+		//Global.playAnimation(animation, src.getPosition(true), target.getPosition(true));
 	}
-	
-	
-	
-	public void execute(Character attacker, List<Character> targets)
-	{
-		this.attacker = attacker;
-		this.targets = targets;
-		
-		bactIndex = 0;
-		running = true;
-
-		//actions.get(bactIndex).run(attacker, targets, 0);
-	}
-
 }

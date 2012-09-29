@@ -26,22 +26,15 @@ public class bactInflictStatus extends BattleAction
 	public void run(BattleNew battle, Character attacker, List<Character> targets, List<DamageMarker> markers)
 	{
 		for(Character t : targets)
-		{		
-			if(show)			
-				switch(Global.GameState)
-				{
-				case GS_BATTLE:
-					//Global.battle.dmgText(t, se.Name().toUpperCase(), 0);
-					Global.playAnimation("poison", attacker.getPosition(), t.getPosition());
-					break;
-				case GS_MAINMENU:
-					Global.menu.dmgText(t, se.Name().toUpperCase(), 0);					
-					break;
-				}
-			
-			t.applyStatusEffect(se);
-		}
-		
+		{
+			if(!t.isDead())
+			{
+				markers.add(new DamageMarker(se.Name().toUpperCase(), t));			
+				t.applyStatusEffect(se);
+			}	
+			else
+				markers.add(new DamageMarker("MISS", t));
+		}		
 	}
 	
 	@Override

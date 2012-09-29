@@ -3,9 +3,11 @@ package bladequest.combat;
 import java.util.ArrayList;
 import java.util.List;
 
+import bladequest.battleactions.BattleAction;
 import bladequest.battleactions.bactDamage;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleSprite.faces;
+import bladequest.world.Ability;
 import bladequest.world.Character;
 import bladequest.world.DamageTypes;
 
@@ -79,6 +81,15 @@ public class BattleEvent
 			objects.add(new BattleEventObject(frameFromActIndex(7)));
 			break;
 		case Ability:
+			Ability ab = source.getAbilityToUse();
+			anim = ab.getAnimation();
+			animStartIndex = 3;
+			
+			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex), anim, source, targets));
+			for(BattleAction action : ab.getActions())
+				objects.add(new BattleEventObject(syncToAnimation(action.getFrame()), action, source, targets));
+			objects.add(new BattleEventObject(syncToAnimation(-1)));
+			
 			break;
 		case CombatAction:
 			break;

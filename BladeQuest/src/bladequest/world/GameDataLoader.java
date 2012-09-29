@@ -381,16 +381,13 @@ public class GameDataLoader
 			ab = new Ability(
 					abName,
 					dl.values.get(1), 
-					getDamageType(dl.values.get(2)), 
-					getTargetType(dl.values.get(3)), 
-					Integer.parseInt(dl.values.get(4)), 
-					Integer.parseInt(dl.values.get(5)),
-					Boolean.parseBoolean(dl.values.get(6)));
+					dl.values.get(2), 
+					getDamageType(dl.values.get(3)), 
+					getTargetType(dl.values.get(4)), 
+					Integer.parseInt(dl.values.get(5)), 
+					Integer.parseInt(dl.values.get(6)),
+					Boolean.parseBoolean(dl.values.get(7)));
 			
-		}
-		else if(dl.item.equals("delay"))
-		{
-			ab.setActionDelay(Integer.parseInt(dl.values.get(0)));
 		}
 		else if(dl.item.equals("action"))
 		{
@@ -546,13 +543,6 @@ public class GameDataLoader
 		else if(dl.values.get(0).equals("bactRemoveStatus"))
 		{
 			return new bactRemoveStatus(Integer.parseInt(dl.values.get(2)),dl.values.get(1));
-		}
-		else if(dl.values.get(0).equals("bactTommyGun"))
-		{
-			return new bactTommyGun(
-					Integer.parseInt(dl.values.get(3)),
-					Integer.parseInt(dl.values.get(1)), 
-					Integer.parseInt(dl.values.get(2)));
 		}
 		else
 			return null;

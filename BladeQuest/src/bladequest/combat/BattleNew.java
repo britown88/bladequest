@@ -381,7 +381,7 @@ public class BattleNew
 				battleEvents.add(e.genBattleEvent(partyList, encounter.Enemies()));
 		
 		for(Character c : partyList)
-			if(!c.isDead())
+			if(!c.isDead() && c.getAction() != Action.Guard)
 				addBattleEvent(c, c.getTargets());
 		
 		battleEvents = BattleCalc.genMoveOrder(battleEvents);
@@ -429,6 +429,7 @@ public class BattleNew
 	private void nextActorInit()
 	{
 			nextActor = true;
+			displayNamePanel.hide();
 			//battleEvents.get(0).getSource().acting = false;
 			Character actor = battleEvents.get(0).getSource();			
 			if(!actor.isEnemy())
@@ -502,6 +503,11 @@ public class BattleNew
 					}
 					//reset targets
 					currentEvent.setTargets(aliveTargets);
+					
+					if(actor.getAction() == Action.Ability)
+						showDisplayName(actor.getAbilityToUse().getDisplayName());
+					else if(actor.getAction() == Action.Item)
+						showDisplayName(actor.getItemToUse().getName());
 					
 					if(!actor.isEnemy())
 					{
@@ -609,7 +615,9 @@ public class BattleNew
 		}
 		else if(opt.equals("grd"))
 		{
-			changeState(BattleStates.START);
+			currentChar.setFace(faces.Ready);
+			currentChar.setBattleAction(Action.Guard);
+			nextCharacter();
 		}
 		else if(opt.equals("ab"))
 		{
@@ -850,7 +858,7 @@ public class BattleNew
 				handleMenuOption((String)(mainMenu.getSelectedEntry().obj));
 				break;
 			case Close:
-				changeState(BattleStates.START);
+				previousCharacter();
 				break;
 			default:
 				break;

@@ -3,6 +3,7 @@ package bladequest.statuseffects;
 import bladequest.world.Battle;
 import bladequest.world.Character;
 import bladequest.world.Global;
+import bladequest.world.States;
 import bladequest.world.Stats;
 
 public class sePoison extends StatusEffect
@@ -32,7 +33,12 @@ public class sePoison extends StatusEffect
 	}
 	
 	@Override
-	public void onInflict(Character c) {}
+	public void onInflict(Character c) 
+	{
+		if(Global.GameState == States.GS_BATTLETEST)
+			Global.playAnimation("poison", null, c.getPosition(true));
+		
+	}
 	
 	@Override
 	public void onRemove(Character c) {}

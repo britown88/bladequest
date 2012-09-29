@@ -1,46 +1,44 @@
 [abilities]
-ability poisonjab "Poison Jab" physical single 2 100 False
-action bactInflictStatus True sePoison 10 0
+ability poisonjab "Poison Jab" movetest physical single 2 100 False
+action bactInflictStatus True sePoison 10 -1
 endability
 #
-ability frostwish "Frost Wish" magic allallies 5 100 True
-action bactDamage 1.0f magic 0
+ability frostwish "Frost Wish" movetest magic allallies 5 100 True
+action bactDamage 1.0f magic -1
 endability
 #
-ability dblattack "Dbl Attack" physical single 4 100 False
-delay 25
-action bactDamage 0.9f physical 0
-action bactDamage 0.9f physical 0
+ability dblattack "Dbl Attack" movetest physical single 4 100 False
+action bactDamage 0.9f physical -1
+action bactDamage 0.9f physical -1
 endability
 #
-ability bite "Bite" physical single 5 100 False
-delay 25
-action bactDamage 1.5f physical 0
-action bactInflictStatus True sePoison 5 0
+ability bite "Bite" movetest physical single 5 100 False
+action bactDamage 1.5f physical -1
+action bactInflictStatus True sePoison 5 -1
 endability
 #
-ability recruit1 "Clashing Super Hit" physical single 0 100 False
-action bactMessage "Chew on this!!!" 0
-action bactDamage 0.5f physical 0
+ability recruit1 "Clashing Super Hit" movetest physical single 0 100 False
+action bactMessage "Chew on this!!!" -1
+action bactDamage 0.5f physical -1
 endability
 #
-ability recruit2 "Special Mega Kick" physical single 0 75 False
+ability recruit2 "Special Mega Kick" movetest physical single 0 75 False
 action bactMessage "Bet you won't see THIS coming!" 0
-action bactDamage 0.75f physical 0
+action bactDamage 0.75f physical -1
 endability
 #
-ability recruit3 "Climactic Finisher" physical single 0 75 False
+ability recruit3 "Climactic Finisher" movetest physical single 0 75 False
 action bactMessage "This'll teach ya! Huzzah!" 0
-action bactDamage 1.0f physical 0
+action bactDamage 1.0f physical -1
 endability
 #
-ability recruit4 "Dynamo Supernova" physical single 0 75 False
+ability recruit4 "Dynamo Supernova" movetest physical single 0 75 False
 action bactMessage "RRRRAAAAAAAAAAAAAA!!!!!" 0
-action bactDamage 0.1f physical 0
-action bactDamage 0.1f physical 0
-action bactDamage 0.1f physical 0
-action bactDamage 0.1f physical 0
-action bactDamage 0.1f physical 0
-action bactDamage 0.1f physical 0
+action bactDamage 0.1f physical -1
+action bactDamage 0.1f physical -1
+action bactDamage 0.1f physical -1
+action bactDamage 0.1f physical -1
+action bactDamage 0.1f physical -1
+action bactDamage 0.1f physical -1
 endability
 
