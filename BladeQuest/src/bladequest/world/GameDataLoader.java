@@ -525,24 +525,24 @@ public class GameDataLoader
 		if(dl.values.get(0).equals("bactDamage"))
 		{
 			return new bactDamage(
-					Integer.parseInt(dl.values.get(3)),
-					Float.parseFloat(dl.values.get(1)), 
-					getDamageType(dl.values.get(2)));
+					Integer.parseInt(dl.values.get(1)),
+					Float.parseFloat(dl.values.get(2)), 
+					getDamageType(dl.values.get(3)));
 		}
 		else if(dl.values.get(0).equals("bactInflictStatus"))
 		{
 			return new bactInflictStatus(
-					Integer.parseInt(dl.values.get(3)),
-					Boolean.parseBoolean(dl.values.get(1)),
-					loadStatusEffect(dl, 2));
+					Integer.parseInt(dl.values.get(1)),
+					Boolean.parseBoolean(dl.values.get(2)),
+					loadStatusEffect(dl, 3));
 		}
 		else if(dl.values.get(0).equals("bactMessage"))
 		{
-			return new bactMessage(Integer.parseInt(dl.values.get(2)),dl.values.get(1));
+			return new bactMessage(Integer.parseInt(dl.values.get(1)),dl.values.get(2));
 		}
 		else if(dl.values.get(0).equals("bactRemoveStatus"))
 		{
-			return new bactRemoveStatus(Integer.parseInt(dl.values.get(2)),dl.values.get(1));
+			return new bactRemoveStatus(Integer.parseInt(dl.values.get(1)),dl.values.get(2));
 		}
 		else
 			return null;

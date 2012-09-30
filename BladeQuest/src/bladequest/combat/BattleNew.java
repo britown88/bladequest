@@ -388,14 +388,15 @@ public class BattleNew
 		
 		for(BattleEvent be : battleEvents)
 			be.init();
-
+		
+		nextActor(true);
 	}
 	private void updateActStatus()
 	{
 		if(nextActor)
 		{
 			if(selCharClosed)
-				nextActor();
+				nextActor(false);
 		}
 		else
 		{
@@ -403,28 +404,13 @@ public class BattleNew
 			Character actor = currentEvent.getSource();
 			
 			
-			
-			
-			//set frame text
-			switch(actor.getAction())
-			{case Attack:changeStartBarText(actor.getDisplayName()+" attacks!");break;
-			case Item:changeStartBarText(actor.getDisplayName()+" uses "+actor.getItemToUse().getName()+"!");break;
-			case Ability:changeStartBarText(actor.getDisplayName()+" casts "+actor.getAbilityToUse().getDisplayName()+"!");break;
-			case CombatAction:changeStartBarText(actor.getDisplayName()+actor.getCombatActionText());break;
-			default: break;}
-			
 			if(actor.isEnemy() || selCharOpened)
 			{
 				currentEvent.update(this, markers);
 				if(currentEvent.isDone())
 					nextActorInit();
-			}	
-			else if(!actor.isEnemy())
-			{
-				currentChar = actor;
-				advanceChar();
-			}				
-	}			
+			}					
+		}			
 	}
 	private void nextActorInit()
 	{
@@ -439,9 +425,8 @@ public class BattleNew
 				actor.setImageIndex(0);
 			}
 	}
-	private void nextActor()
+	private void nextActor(boolean firstActor)
 	{	
-		
 		targets.clear();
 		
 		if(isVictory())
@@ -457,7 +442,8 @@ public class BattleNew
 		else
 		{
 			nextActor = false;
-			battleEvents.remove(0);
+			if(!firstActor)
+				battleEvents.remove(0);
 			
 			if(battleEvents.size() == 0)
 			{
@@ -471,7 +457,15 @@ public class BattleNew
 				List<Character> targets = currentEvent.getTargets();
 				List<Character> aliveTargets = new ArrayList<Character>();
 				//fill alive targets
-				for(Character c : targets)if(!c.isDead())aliveTargets.add(c);			
+				for(Character c : targets)if(!c.isDead())aliveTargets.add(c);
+				
+				//set frame text
+				switch(actor.getAction())
+				{case Attack:changeStartBarText(actor.getDisplayName()+" attacks!");break;
+				case Item:changeStartBarText(actor.getDisplayName()+" uses "+actor.getItemToUse().getName()+"!");break;
+				case Ability:changeStartBarText(actor.getDisplayName()+" casts "+actor.getAbilityToUse().getDisplayName()+"!");break;
+				case CombatAction:changeStartBarText(actor.getDisplayName()+actor.getCombatActionText());break;
+				default: break;}
 				
 				if(actor.isDead())
 					nextActorInit();

@@ -1,44 +1,44 @@
 [abilities]
 ability poisonjab "Poison Jab" movetest physical single 2 100 False
-action bactInflictStatus True sePoison 10 -1
+action bactInflictStatus -1 True sePoison 10
 endability
 #
 ability frostwish "Frost Wish" movetest magic allallies 5 100 True
-action bactDamage 1.0f magic -1
+action bactDamage -1 1.0f magic
 endability
 #
 ability dblattack "Dbl Attack" movetest physical single 4 100 False
-action bactDamage 0.9f physical -1
-action bactDamage 0.9f physical -1
+action bactDamage -1 0.9f physical
+action bactDamage -1 0.9f physical
 endability
 #
 ability bite "Bite" movetest physical single 5 100 False
-action bactDamage 1.5f physical -1
-action bactInflictStatus True sePoison 5 -1
+action bactDamage -1 1.5f physical
+action bactInflictStatus -1 True sePoison 5
 endability
 #
 ability recruit1 "Clashing Super Hit" movetest physical single 0 100 False
-action bactMessage "Chew on this!!!" -1
-action bactDamage 0.5f physical -1
+action bactMessage -1 "Chew on this!!!"
+action bactDamage -1 0.5f physical
 endability
 #
 ability recruit2 "Special Mega Kick" movetest physical single 0 75 False
-action bactMessage "Bet you won't see THIS coming!" 0
-action bactDamage 0.75f physical -1
+action bactMessage -1 "Bet you won't see THIS coming!"
+action bactDamage -1 0.75f physical
 endability
 #
 ability recruit3 "Climactic Finisher" movetest physical single 0 75 False
-action bactMessage "This'll teach ya! Huzzah!" 0
-action bactDamage 1.0f physical -1
+action bactMessage -1 "This'll teach ya! Huzzah!"
+action bactDamage -1 1.0f physical
 endability
 #
 ability recruit4 "Dynamo Supernova" movetest physical single 0 75 False
-action bactMessage "RRRRAAAAAAAAAAAAAA!!!!!" 0
-action bactDamage 0.1f physical -1
-action bactDamage 0.1f physical -1
-action bactDamage 0.1f physical -1
-action bactDamage 0.1f physical -1
-action bactDamage 0.1f physical -1
-action bactDamage 0.1f physical -1
+action bactMessage -1 "RRRRAAAAAAAAAAAAAA!!!!!"
+action bactDamage -1 0.1f physical
+action bactDamage -1 0.1f physical
+action bactDamage -1 0.1f physical
+action bactDamage -1 0.1f physical
+action bactDamage -1 0.1f physical
+action bactDamage -1 0.1f physical
 endability
 
