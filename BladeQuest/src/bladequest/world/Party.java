@@ -721,13 +721,13 @@ public class Party
 	{
 		Sprite spr = firstCharSpr;
 		if(vect.x > 0)
-			spr.changeFace(Sprite.faces.Right);
+			spr.changeFace("right");
 		else if(vect.x < 0)
-			spr.changeFace(Sprite.faces.Left);
+			spr.changeFace("left");
 		else if(vect.y > 0)
-			spr.changeFace(Sprite.faces.Down);
+			spr.changeFace("down");
 		else if(vect.y < 0)
-			spr.changeFace(Sprite.faces.Up);
+			spr.changeFace("up");
 	}
 	
 	//faces a point in the world	
@@ -735,10 +735,10 @@ public class Party
 	{
 		Sprite spr = firstCharSpr;
 		
-		if(gridPos.x < p.x) spr.changeFace(Sprite.faces.Right);
-		else if(gridPos.y < p.y) spr.changeFace(Sprite.faces.Down);
-		else if(gridPos.x > p.x) spr.changeFace(Sprite.faces.Left);
-		else if(gridPos.y > p.y) spr.changeFace(Sprite.faces.Up);	
+		if(gridPos.x < p.x) spr.changeFace("right");
+		else if(gridPos.y < p.y) spr.changeFace("down");
+		else if(gridPos.x > p.x) spr.changeFace("left");
+		else if(gridPos.y > p.y) spr.changeFace("up");	
 		
 	}
 	
@@ -763,7 +763,7 @@ public class Party
 		else
 		{
 			spr= c.getWorldSprite();
-			Sprite.faces face = firstCharSpr == null ? Sprite.faces.Down : firstCharSpr.getFace();			
+			String face = firstCharSpr == null ? "down" : firstCharSpr.getFace();			
 			firstCharSpr = c.getWorldSprite();
 			
 			spr.changeFace(face);

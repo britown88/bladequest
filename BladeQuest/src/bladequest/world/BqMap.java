@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bladequest.actions.*;
-import bladequest.graphics.Sprite.faces;
 import bladequest.graphics.*;
 import bladequest.system.*;
 
@@ -314,7 +313,7 @@ public class BqMap
 		gameOverObject.setStateCollision(0, false, false, false, false);
 		gameOverObject.setStateMovement(0, 0, 0);
 		gameOverObject.setStateOpts(0, true, false, false);
-		gameOverObject.setStateFace(0, faces.Down);
+		gameOverObject.setStateFace(0, "down");
 		gameOverObject.addAction(0, new actMessage("Guard: \nHe's over here!"));
 		gameOverObject.addAction(0, new actMessage("Throw him back in his cell!"));
 		gameOverObject.addAction(0, new actTeleportParty(gameOverObject, 15, 5, "prisonb2"));
@@ -506,16 +505,16 @@ public class BqMap
 			switch(face)
 			{
 			case 0:
-				loadedObject.setStateFace(loadedStateIndex, Sprite.faces.Left);
+				loadedObject.setStateFace(loadedStateIndex, "left");
 				break;
 			case 1:
-				loadedObject.setStateFace(loadedStateIndex, Sprite.faces.Up);
+				loadedObject.setStateFace(loadedStateIndex, "up");
 				break;
 			case 2:
-				loadedObject.setStateFace(loadedStateIndex, Sprite.faces.Right);
+				loadedObject.setStateFace(loadedStateIndex, "right");
 				break;
 			case 3:
-				loadedObject.setStateFace(loadedStateIndex, Sprite.faces.Down);
+				loadedObject.setStateFace(loadedStateIndex, "down");
 				break;
 			}
 			

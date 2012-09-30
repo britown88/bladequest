@@ -1,10 +1,12 @@
 package bladequest.graphics;
 
-import android.graphics.Rect;
-import android.graphics.Bitmap;
-import bladequest.world.Global;
-
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
+
+import android.graphics.Bitmap;
+import android.graphics.Rect;
+import bladequest.world.Global;
 
 
 
@@ -13,25 +15,15 @@ public class Sprite {
 	private String bmpName;
 	private int width;
 	private int height;
-	private faces face;
+	private String face;
 	
 	public String name;
 	
-	private Vector<Vector<Rect>> frameLists;
+	private Map<String, Vector<Rect>> frameLists;
 	
 	public int getWidth() { return width; }
 	public int getHeight() { return height; }
-	public int getNumFrames() { return frameLists.get(face.ordinal()).size(); }
-	
-	public enum faces
-	{
-		//world states
-		Left,
-		Right,
-		Up,
-		Down
-	}
-
+	public int getNumFrames() { return frameLists.get(face).size(); }
 	
 	public Sprite(String name, String bitmap, int width, int height)
 	{
@@ -40,9 +32,8 @@ public class Sprite {
 		this.bitmap = Global.bitmaps.get(bitmap);
 		this.width = width;
 		this.height = height;
-		face = faces.Down;
 		
-		createFrameList();	
+		frameLists = new HashMap<String, Vector<Rect>>();	
 	}
 	
 	public Sprite(Sprite spr)
@@ -63,30 +54,17 @@ public class Sprite {
 			bitmap = null;
 			width = 0;
 			height = 0;
-			face = Sprite.faces.Down;		
-			
-			createFrameList();	
-		}
-		
+			frameLists = new HashMap<String, Vector<Rect>>();	
+		}		
 	}
 	
-	private void createFrameList()
-	{
-		frameLists = new Vector<Vector<Rect>>();
-		
-		for(int j = 0; j < 4; j++)
-			frameLists.add(new Vector<Rect>());
-		
-	}
-
-	
-	public void changeFace(faces face){this.face = face;}
-	public faces getFace() { return face; }
+	public void changeFace(String face){this.face = face;}
+	public String getFace() { return face; }
 	
 	
 	public void render(int x, int y, int index)
 	{			
-		Global.renderer.drawBitmap(bitmap, frameLists.get(face.ordinal()).get(index), 
+		Global.renderer.drawBitmap(bitmap, frameLists.get(face).get(index), 
 					new Rect(
 							Global.worldToScreenX(x), 
 							Global.worldToScreenY(y), 
@@ -97,7 +75,7 @@ public class Sprite {
 	
 	public void renderFromVP(int x, int y, int index)
 	{			
-		Global.renderer.drawBitmap(bitmap, frameLists.get(face.ordinal()).get(index), 
+		Global.renderer.drawBitmap(bitmap, frameLists.get(face).get(index), 
 					new Rect(
 							Global.vpToScreenX(x), 
 							Global.vpToScreenY(y), 
@@ -106,16 +84,21 @@ public class Sprite {
 					null);
 	}
 	
-	public void addFrame(faces face, int left, int top, int right, int bottom)
+	public void addFrame(String face, int left, int top, int right, int bottom)
 	{
-		frameLists.get(face.ordinal()).add(new Rect(left, top,right, bottom));
+		if(!frameLists.containsKey(face))
+			frameLists.put(face, new Vector<Rect>());
+		
+		frameLists.get(face).add(new Rect(left, top,right, bottom));
 	}
 	
 	
-	public void addFrame(faces face, int size, int x, int y)
+	public void addFrame(String face, int size, int x, int y)
 	{
-
-		frameLists.get(face.ordinal()).add(new Rect(x*size, y*size, x*size+size, y*size+size));
+		if(!frameLists.containsKey(face))
+			frameLists.put(face, new Vector<Rect>());
+		
+		frameLists.get(face).add(new Rect(x*size, y*size, x*size+size, y*size+size));
 	}
 
 	

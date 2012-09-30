@@ -100,7 +100,7 @@ public class ObjectState {
 	public boolean hasPath() { return objPath != null; }
 	public void setMoveSpeed(int i) { moveSpeed = 1; }
 	
-	public void setFace(Sprite.faces face){if(spr != null) spr.changeFace(face);}
+	public void setFace(String face){if(spr != null) spr.changeFace(face);}
 	public void setImageIndex(int index){imageIndex = index;}
 	public void setAnimated(boolean animated) { this.animated = animated; }
 	public void setOpts(boolean waitOnActivate, boolean faceOnMove, boolean faceOnActivate) 
@@ -180,31 +180,31 @@ public class ObjectState {
 			switch(objPath.nextAction())
 			{
 			case MoveLeft:
-				move(Sprite.faces.Left, true);
+				move("left", true);
 				break;
 			case MoveUp:
-				move(Sprite.faces.Up, true);
+				move("up", true);
 				break;
 			case MoveRight:
-				move(Sprite.faces.Right, true);
+				move("right", true);
 				break;
 			case MoveDown:
-				move(Sprite.faces.Down, true);
+				move("down", true);
 				break;
 			case FaceLeft:
-				parent.Face(Sprite.faces.Left);
+				parent.Face("left");
 				HandleObjectPath();
 				break;
 			case FaceUp:
-				parent.Face(Sprite.faces.Up);
+				parent.Face("up");
 				HandleObjectPath();
 				break;
 			case FaceRight:
-				parent.Face(Sprite.faces.Right);
+				parent.Face("right");
 				HandleObjectPath();
 				break;
 			case FaceDown:
-				parent.Face(Sprite.faces.Down);
+				parent.Face("down");
 				HandleObjectPath();
 				break;
 			case IncreaseMoveSpeed:
@@ -247,13 +247,13 @@ public class ObjectState {
 		{
 			Point vect = new Point (Global.party.getGridPos().x-parent.getGridPos().x, Global.party.getGridPos().y-parent.getGridPos().y);
 			if(vect.x > 0)
-				spr.changeFace(Sprite.faces.Right);
+				spr.changeFace("right");
 			if(vect.x < 0)
-				spr.changeFace(Sprite.faces.Left);
+				spr.changeFace("left");
 			if(vect.y < 0)
-				spr.changeFace(Sprite.faces.Up);
+				spr.changeFace("up");
 			if(vect.y > 0)
-				spr.changeFace(Sprite.faces.Down);			
+				spr.changeFace("down");			
 		}		
 	}
 	
@@ -311,16 +311,16 @@ public class ObjectState {
 				switch(ri)
 				{
 				case 0:
-					move(Sprite.faces.Up, false);
+					move("up", false);
 					break;
 				case 1:
-					move(Sprite.faces.Down, false);
+					move("down", false);
 					break;
 				case 2:
-					move(Sprite.faces.Left, false);
+					move("left", false);
 					break;
 				case 3:
-					move(Sprite.faces.Right, false);
+					move("right", false);
 					break;					
 				}
 			}
@@ -382,12 +382,12 @@ public class ObjectState {
 
 	}
 	
-	private void move(Sprite.faces face, boolean ignorePartyCollision)
+	private void move(String face, boolean ignorePartyCollision)
 	{
 		parent.setTarget(face, ignorePartyCollision);		
 	}
 	
-	public void face(Sprite.faces face)
+	public void face(String face)
 	{
 		if(faceOnMove && tileSprite == null)
 			spr.changeFace(face);

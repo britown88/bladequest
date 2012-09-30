@@ -779,17 +779,19 @@ public class Global
 	{
 		Sprite spr = new Sprite(name, bitmap, 32, 32);		
 		
-		spr.addFrame(Sprite.faces.Down,16, x*3+1, y*4+0);
-		spr.addFrame(Sprite.faces.Down, 16, x*3+2, y*4+0);	
+		spr.addFrame("down",16, x*3+1, y*4+0);
+		spr.addFrame("down", 16, x*3+2, y*4+0);	
 		
-		spr.addFrame(Sprite.faces.Up, 16, x*3+1, y*4+1);
-		spr.addFrame(Sprite.faces.Up, 16, x*3+2, y*4+1);
+		spr.addFrame("up", 16, x*3+1, y*4+1);
+		spr.addFrame("up", 16, x*3+2, y*4+1);
 		
-		spr.addFrame(Sprite.faces.Left, 16, x*3+1, y*4+2);
-		spr.addFrame(Sprite.faces.Left, 16, x*3+2, y*4+2);
+		spr.addFrame("left", 16, x*3+1, y*4+2);
+		spr.addFrame("left", 16, x*3+2, y*4+2);
 		
-		spr.addFrame(Sprite.faces.Right, 16, x*3+1, y*4+3);
-		spr.addFrame(Sprite.faces.Right, 16, x*3+2, y*4+3);
+		spr.addFrame("right", 16, x*3+1, y*4+3);
+		spr.addFrame("right", 16, x*3+2, y*4+3);
+		
+		spr.changeFace("down");
 		
 		sprites.put(name, spr);		
 	}
@@ -1059,8 +1061,11 @@ public class Global
 		setPanned(0, 0);
 			
 		//add target reticle sprite
-		sprites.put("target", new Sprite("target", "target", 32, 32));
-		sprites.get("target").addFrame(Sprite.faces.Down, 16, 0, 0);		
+		
+		Sprite spr = new Sprite("target", "target", 32, 32);
+		spr.addFrame("down", 16, 0, 0);
+		spr.changeFace("down");
+		sprites.put("target", spr);		
 		
 		//create party
 		party = new Party(0, 0);	

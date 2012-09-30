@@ -48,7 +48,7 @@ public class GameObject {
 	public void setStateMovement(int index, int moveRange, int moveDelay){states.get(index).setMovement(moveRange, moveDelay);}
 	public void setStateImageIndex(int index, int imageIndex){states.get(index).setImageIndex(imageIndex);}
 	public void setStateAnimated(int index, boolean animated){states.get(index).setAnimated(animated);}
-	public void setStateFace(int index, Sprite.faces face){states.get(index).setFace(face);}	
+	public void setStateFace(int index, String face){states.get(index).setFace(face);}	
 	public void setStateLayer(int index, Layer layer){states.get(index).setLayer(layer);}
 	public void setStateAutoStart(int index, boolean autoStart){states.get(index).setAutoStart(autoStart);}	
 	public Layer getLayer(){return states.get(currentState).getLayer();}
@@ -65,7 +65,7 @@ public class GameObject {
 	public Action getAction(int stateIndex, int actionIndex){return states.get(stateIndex).getAction(actionIndex); }
 	public int numActions(int index) { return states.get(index).numActions(); }
 	
-	public void Face(Sprite.faces face) { states.get(currentState).face(face); }
+	public void Face(String face) { states.get(currentState).face(face); }
 	
 	public boolean hasActions(){ return states.get(currentState).hasActions();}
 	
@@ -99,26 +99,20 @@ public class GameObject {
 				states.get(currentState).clearActions();
 	}
 	
-	public void setTarget(Sprite.faces face, boolean ignoreParty)
+	public void setTarget(String face, boolean ignoreParty)
 	{
 		if(!faceLocked)
 			states.get(currentState).face(face);
 		
-		switch(face)
-		{
-		case Up:
+		if(face.equals("up"))
 			target = new Point(gridPos.x, gridPos.y - 1);
-			break;
-		case Down:
+		else if(face.equals("down"))
 			target = new Point(gridPos.x, gridPos.y + 1);
-			break;
-		case Left:
+		else if(face.equals("left"))
 			target = new Point(gridPos.x - 1, gridPos.y);
-			break;
-		case Right:
-			target = new Point(gridPos.x + 1, gridPos.y);
-			break;
-		}
+		else if(face.equals("right"))
+			target = new Point(gridPos.x + 1, gridPos.y);			
+
 		boolean collision = false;
 		
 		//check for object collision

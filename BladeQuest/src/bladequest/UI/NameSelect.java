@@ -9,7 +9,6 @@ import bladequest.world.Character;
 import bladequest.world.Global;
 import bladequest.world.States;
 import bladequest.graphics.Sprite;
-import bladequest.graphics.Sprite.faces;
 import android.graphics.Paint;
 
 public class NameSelect 
@@ -74,7 +73,7 @@ public class NameSelect
 		this.character = c;
 		closed = closing = false;
 		this.spr = new Sprite(c.getWorldSprite());
-		spr.changeFace(faces.Down);
+		spr.changeFace("down");
 		
 		//use default name
 		newName = Global.characters.get(c.getName()).getDisplayName();
