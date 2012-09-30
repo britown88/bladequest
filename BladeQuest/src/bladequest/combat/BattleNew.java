@@ -16,9 +16,11 @@ import bladequest.graphics.BattleSprite.faces;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.world.Character;
 import bladequest.world.Character.Action;
+import bladequest.world.Ability;
 import bladequest.world.Encounter;
 import bladequest.world.Enemy;
 import bladequest.world.Global;
+import bladequest.world.Item;
 import bladequest.world.States;
 import bladequest.world.TargetTypes;
 
@@ -165,7 +167,7 @@ public class BattleNew
 		mpWindow = new MenuPanel(0, Global.vpHeight - frameMaxHeight-mpWindowHeight, mpWindowWidth, mpWindowHeight);
 		mpWindow.thickFrame = false;
 		mpWindow.addTextBox("", 5, mpWindowHeight/2, battleText);
-		mpWindow.hide();
+		//mpWindow.hide();
 	}
 	private void buildMainMenu()
 	{
@@ -244,7 +246,14 @@ public class BattleNew
 			mainMenu.addItem(currentChar.getActionName(), "act", false);
 			mainMenu.addItem("Guard", "grd", false);
 			mainMenu.addItem(currentChar.getAbilitiesName(), "ab", false);
-			mainMenu.addItem("Run", "run", false);			
+			mainMenu.addItem("Run", "run", false);		
+			mainMenu.update();
+			break;
+		case SELECTABILITY:
+			mainMenu.clearObjects();
+			for(Ability a : currentChar.getAbilities())
+				mainMenu.addItem(a.getDisplayName(), a, a.MPCost() > currentChar.getMP());
+			mainMenu.update();
 			break;
 		}
 		
@@ -540,14 +549,17 @@ public class BattleNew
 			mainMenu.close();
 			changeStartBarText(txtStart);
 			for(Character c : partyList)
-				if(c.getBattleSprite().getFace() != faces.Damaged)
-					c.setFace(faces.Idle);
+				c.setFace(faces.Idle);
 			break;
 		case SELECT:
 			updateMenuOptions(newState);
 			mainMenu.open();
 			advanceChar();
 			currentChar.setFace(faces.Idle);
+			break;
+		case SELECTABILITY:
+		case SELECTITEM:
+			updateMenuOptions(newState);
 			break;
 		case ACT:
 			mainMenu.close();
@@ -560,7 +572,7 @@ public class BattleNew
 			changeStartBarText(txtDefeat);
 			break;			
 		case TARGET:
-			currentChar.setFace(faces.Ready);
+			
 			switch(targetType)
 			{
 			case AllAllies:
@@ -597,15 +609,16 @@ public class BattleNew
 		{
 			targetType = TargetTypes.Single;
 			currentChar.setBattleAction(Action.Attack);
+			currentChar.setFace(faces.Ready);
 			changeState(BattleStates.TARGET);
 		}
 		else if(opt.equals("itm"))
 		{
-			changeState(BattleStates.START);
+			changeState(BattleStates.SELECTITEM);
 		}
 		else if(opt.equals("act"))
 		{
-			changeState(BattleStates.START);
+			changeState(BattleStates.SELECT);
 		}
 		else if(opt.equals("grd"))
 		{
@@ -615,11 +628,11 @@ public class BattleNew
 		}
 		else if(opt.equals("ab"))
 		{
-			changeState(BattleStates.START);
+			changeState(BattleStates.SELECTABILITY);
 		}
 		else if(opt.equals("run"))
 		{
-			changeState(BattleStates.START);
+			changeState(BattleStates.SELECT);
 		}
 	}
 	private void advanceChar()
@@ -749,7 +762,26 @@ public class BattleNew
 			startBar.render();
 		
 		infoPanel.render();
-		mpWindow.render();
+		
+		switch(state)
+		{				
+		case SELECTITEM:							
+			if(mainMenu.getCurrentSelectedEntry() != null)
+			{
+				mpWindow.getTextAt(0).text = "Qty: "+((Item)mainMenu.getCurrentSelectedEntry().obj).getCount();
+				mpWindow.render();
+			}
+			break;
+			
+		case SELECTABILITY:			
+			if(mainMenu.getCurrentSelectedEntry() != null)
+			{
+				mpWindow.getTextAt(0).text = "Cost: "+((Ability)mainMenu.getCurrentSelectedEntry().obj).MPCost();
+				mpWindow.render();
+			}
+			break;
+		
+		}
 		displayNamePanel.render();
 	}
 	private void drawSelect()
@@ -803,11 +835,8 @@ public class BattleNew
 				Global.screenFader.fadeIn(2);
 				Global.GameState = States.GS_WORLDMOVEMENT;
 				
-			}
-				
-			
-		}
-		
+			}		
+		}		
 	}	
 	public void render()
 	{
@@ -857,27 +886,55 @@ public class BattleNew
 			default:
 				break;
 			}
-		case TARGET:
-			if(mainMenu.Closed())
+			break;
+		case SELECTABILITY:
+			switch(mainMenu.touchActionUp(x, y))
 			{
-				if(startBar.contains(x, y))
-					changeState(BattleStates.SELECT);
-				else
-				{
-					if(targets.size() > 0)
-					{
-						//targets were selected
-						currentChar.setTargets(new ArrayList<Character>(targets));
-						currentChar.setFace(faces.Ready);
-						nextCharacter();
-						targets.clear();
-					}
-					else
-						changeState(BattleStates.SELECT);
-					
-				}
+			case Selected:
+				Ability ab = (Ability)(mainMenu.getSelectedEntry().obj);
+				targetType = ab.TargetType();
+				currentChar.setFace(faces.Casting);
+				currentChar.setAbilityToUse(ab);
+				changeState(BattleStates.TARGET);
+				break;
+			case Close:
+				changeState(BattleStates.SELECT);
+				break;
+			default:break;
 			}
-			
+			break;
+		case SELECTITEM:
+			switch(mainMenu.touchActionUp(x, y))
+			{
+			case Selected:
+				Item itm = (Item)(mainMenu.getSelectedEntry().obj);
+				targetType = itm.getTargetType();
+				currentChar.setFace(faces.Ready);
+				currentChar.setItemToUse(itm);
+				changeState(BattleStates.TARGET);
+				break;
+			case Close:
+				changeState(BattleStates.SELECT);
+				break;
+			default:break;
+			}
+			break;
+		case TARGET:
+			if(startBar.contains(x, y))
+				changeState(BattleStates.SELECT);
+			else
+			{
+				if(targets.size() > 0)
+				{
+					//targets were selected
+					currentChar.setTargets(new ArrayList<Character>(targets));
+					currentChar.setFace(faces.Ready);
+					nextCharacter();
+					targets.clear();
+				}
+				else
+					changeState(BattleStates.SELECT);					
+			}			
 			break;
 		}
 		
@@ -886,12 +943,13 @@ public class BattleNew
 	{
 		switch(state)
 		{
+		case SELECTABILITY:
+		case SELECTITEM:
 		case SELECT:
 			mainMenu.touchActionDown(x, y);
 			break;
 		case TARGET:
-			if(mainMenu.Closed())
-				getTouchTargets(x, y);
+			getTouchTargets(x, y);
 			break;
 		}
 	}
@@ -899,12 +957,13 @@ public class BattleNew
 	{
 		switch(state)
 		{
+		case SELECTABILITY:
+		case SELECTITEM:
 		case SELECT:
 			mainMenu.touchActionMove(x, y);
 			break;
 		case TARGET:
-			if(mainMenu.Closed())
-				getTouchTargets(x, y);
+			getTouchTargets(x, y);
 			break;
 			
 		}

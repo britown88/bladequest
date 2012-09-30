@@ -7,6 +7,7 @@ import bladequest.world.DamageTypes;
 import bladequest.world.Global;
 import bladequest.world.Stats;
 import bladequest.world.Character;
+import bladequest.world.Character.Action;
 
 public class BattleCalc 
 {
@@ -25,6 +26,10 @@ public class BattleCalc
 		
 		int AP = attacker.getStat(Stats.BattlePower);
 		float DP = defender.getStat(Stats.Defense);
+		
+		//guarding
+		if(defender.getAction() == Action.Guard)
+			DP *= 1.5f;
 				
 		int BP = (int)(AP*power);
 		float coefficient = attacker == null ? 1.0f : attacker.getCoefficient();

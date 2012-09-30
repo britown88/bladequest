@@ -27,7 +27,7 @@ public class bactInflictStatus extends BattleAction
 	{
 		for(Character t : targets)
 		{
-			if(!t.isDead())
+			if(!t.isDead() && !t.hasStatus(se.Name()))
 			{
 				markers.add(new DamageMarker(se.Name().toUpperCase(), t));			
 				t.applyStatusEffect(se);
@@ -40,7 +40,7 @@ public class bactInflictStatus extends BattleAction
 	@Override
 	public boolean willAffectTarget(Character target) 
 	{		
-		return !target.isDead(); 
+		return !target.isDead() && !target.hasStatus(se.Name()); 
 	}
 
 }

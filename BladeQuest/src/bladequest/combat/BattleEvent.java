@@ -54,6 +54,15 @@ public class BattleEvent
 		return startFrame + actualFrame;
 	}
 	
+	//get the frameIndex that falls aftr the end of the animation
+	private int getFinalAnimFrameIndex()
+	{
+		int finalFrame = syncToAnimation(-1);
+		int index = (int)(finalFrame / actTimerLength)+1;
+		
+		return index;
+	}
+	
 	public void setTargets(List<Character> targets)
 	{
 		this.targets = targets;
@@ -85,10 +94,14 @@ public class BattleEvent
 			anim = ab.getAnimation();
 			animStartIndex = 3;
 			
+			int finalIndex = getFinalAnimFrameIndex();
+			
+			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex), faces.Cast, 0, source));
 			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex), anim, source, targets));
 			for(BattleAction action : ab.getActions())
 				objects.add(new BattleEventObject(syncToAnimation(action.getFrame()), action, source, targets));
-			objects.add(new BattleEventObject(syncToAnimation(-1)));
+			objects.add(new BattleEventObject(frameFromActIndex(finalIndex), faces.Ready, 0, source));
+			objects.add(new BattleEventObject(frameFromActIndex(finalIndex+2)));
 			
 			break;
 		case CombatAction:

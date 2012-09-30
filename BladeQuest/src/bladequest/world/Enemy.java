@@ -292,24 +292,6 @@ public class Enemy extends Character
 				position.y+getHeight()/2));}
 	
 	@Override
-	protected void updateStats()
-	{
-		float str = baseStats[Stats.Strength.ordinal()];
-		float agi = baseStats[Stats.Agility.ordinal()];
-		float vit = baseStats[Stats.Vitality.ordinal()];
-		float intel = baseStats[Stats.Intelligence.ordinal()];
-		float lvl = level;
-		
-		//stat = (basestat/99)*level
-		stats[Stats.Strength.ordinal()] = (int)(str * Math.pow(lvl/99.0f, 2.0f));
-		stats[Stats.Agility.ordinal()] = (int)(agi * Math.pow(lvl/99.0f, 2.0f));
-		stats[Stats.Vitality.ordinal()] = (int)(vit * Math.pow(lvl/99.0f, 2.0f));
-		stats[Stats.Intelligence.ordinal()] = (int)(intel * Math.pow(lvl/99.0f, 2.0f));
-		
-		updateSecondaryStats();		
-	}
-	
-	@Override
 	public void updateSecondaryStats()
 	{
 		float str = getStat(Stats.Strength);

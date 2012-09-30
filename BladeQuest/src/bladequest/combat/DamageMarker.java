@@ -90,8 +90,6 @@ public class DamageMarker
 			{
 				show = true;
 				timer = 0;
-				//target.modifyHP(value, false);
-				//TODO: damage is actually posted here
 			}
 			else
 			{
@@ -104,8 +102,8 @@ public class DamageMarker
 				if(timer > life)
 				{
 					done = true;
-					if(target != null)target.clearDamaged();
-					//TODO: marker dies here
+					if(target != null)
+						target.clearDamaged();
 				}					
 			}
 		}	
