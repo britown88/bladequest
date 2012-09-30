@@ -44,6 +44,7 @@ public class BattleCalc
 		switch(type)
 		{
 		case Fixed:
+			damageReturnType = DamageReturnType.Hit;
 			finalDmg = (int)power;
 			break;
 		case Physical:

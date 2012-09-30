@@ -72,6 +72,8 @@ public class Item
 		this.power = i.power;
 		this.equipped = i.equipped;
 		
+		this.swingAnim = i.swingAnim;
+		
 		//copy swing model data
 		if(i.swingModel != null)
 		{
@@ -99,6 +101,7 @@ public class Item
 	public boolean isSellable() { return sellable; }
 	public void setSellable(boolean b) { sellable = b; }
 	
+	public List<BattleAction> getActions() { return actions;}
 	public void addAction(BattleAction action){actions.add(action);}	
 	public String getName(){return displayName;}	
 	public String getDescription(){return description;}
@@ -127,6 +130,9 @@ public class Item
 	public void addStatMod(int stat, int amt){ statMods[stat] = amt;}
 	public int getStatMod(int stat){return statMods[stat]; }
 	
+	public void setAnim(String anim){this.swingAnim = anim;}
+	public String getAnimName(){return swingAnim;}
+	
 	public void initSwingData(String swingModel, String swingAnim)
 	{
 		this.swingModel = swingModel;
@@ -149,12 +155,10 @@ public class Item
 		weaponSwing = model.genSwingDrawable(swingColorsBase, swingColorsSlash);
 		battleAnim = model.genAnim(new BattleAnim(Global.battleAnims.get(swingAnim)));
 	}
-	
-	private BattleAnim playingAnim;
+
 	public void playAnimation(Point src, Point tar)
 	{
-		if(playingAnim == null || playingAnim.Done())
-			playingAnim = Global.playAnimation(battleAnim, src, tar);
+		Global.playAnimation(battleAnim, src, tar);
 	}
 	
 	public BattleAnim getAnim() { return battleAnim;}

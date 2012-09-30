@@ -255,6 +255,12 @@ public class BattleNew
 				mainMenu.addItem(a.getDisplayName(), a, a.MPCost() > currentChar.getMP());
 			mainMenu.update();
 			break;
+		case SELECTITEM:
+			mainMenu.clearObjects();
+			for(Item i : Global.party.getInventory(true))
+				mainMenu.addItem(i.getName(), i, false);
+			mainMenu.update();
+			break;
 		}
 		
 		mainMenu.update();
@@ -508,7 +514,10 @@ public class BattleNew
 					currentEvent.setTargets(aliveTargets);
 					
 					if(actor.getAction() == Action.Ability)
+					{
 						showDisplayName(actor.getAbilityToUse().getDisplayName());
+						actor.useAbility();
+					}						
 					else if(actor.getAction() == Action.Item)
 						showDisplayName(actor.getItemToUse().getName());
 					
@@ -555,6 +564,7 @@ public class BattleNew
 			updateMenuOptions(newState);
 			mainMenu.open();
 			advanceChar();
+			targets.clear();
 			currentChar.setFace(faces.Idle);
 			break;
 		case SELECTABILITY:
@@ -577,9 +587,11 @@ public class BattleNew
 			{
 			case AllAllies:
 				changeStartBarText(txtTargetAllies);
+				getTouchTargets(-1, -1);
 				break;
 			case AllEnemies:
 				changeStartBarText(txtTargetEnemies);
+				getTouchTargets(-1, -1);
 				break;
 			case Self:
 				changeStartBarText(txtTargetSelf);
@@ -595,6 +607,7 @@ public class BattleNew
 				break;
 			case Everybody:
 				changeStartBarText(txtTargetEverybody);
+				getTouchTargets(-1, -1);
 				break;
 			}
 			mainMenu.close();			
@@ -891,11 +904,14 @@ public class BattleNew
 			switch(mainMenu.touchActionUp(x, y))
 			{
 			case Selected:
-				Ability ab = (Ability)(mainMenu.getSelectedEntry().obj);
-				targetType = ab.TargetType();
-				currentChar.setFace(faces.Casting);
-				currentChar.setAbilityToUse(ab);
-				changeState(BattleStates.TARGET);
+				if(!mainMenu.getSelectedEntry().Disabled())
+				{
+					Ability ab = (Ability)(mainMenu.getSelectedEntry().obj);
+					targetType = ab.TargetType();
+					currentChar.setFace(faces.Casting);
+					currentChar.setAbilityToUse(ab);
+					changeState(BattleStates.TARGET);
+				}				
 				break;
 			case Close:
 				changeState(BattleStates.SELECT);
@@ -928,7 +944,6 @@ public class BattleNew
 				{
 					//targets were selected
 					currentChar.setTargets(new ArrayList<Character>(targets));
-					currentChar.setFace(faces.Ready);
 					nextCharacter();
 					targets.clear();
 				}

@@ -491,20 +491,9 @@ public class Character
 
 	}
 	
-	public Ability  useAbility()
+	public void useAbility()
 	{	
-		MP -= abilityToUse.MPCost();
-		
-		/*if(Global.rand.nextInt(100) < abilityToUse.Accuracy())
-			abilityToUse.execute(this, targets);
-		else
-		{
-			for(Character t : targets)
-				Global.battle.dmgText(t, "MISS", 0);
-		}*/
-		
-		return abilityToUse;
-			
+		MP = Math.max(0,  MP-abilityToUse.MPCost());			
 	}
 	
 	public void setAbilityToUse(Ability ability)
@@ -787,6 +776,7 @@ public class Character
 			{
 				s.onRemove(this);
 				statusEffects.remove(s);
+				setFace(battleSpr.getFace());
 				//setIdle(false);
 				return;
 			}		
@@ -801,9 +791,8 @@ public class Character
 					return;
 			
 			se.onInflict(this);
-			setFace(battleSpr.getFace());
-				
 			statusEffects.add(se);
+			setFace(battleSpr.getFace());			
 		}
 		
 	}
@@ -965,15 +954,16 @@ public class Character
 				else if (weak) setFace(faces.Weak);
 				else battleSpr.changeFace(newFace);
 				break;
-			case Damaged:
-			case Attack:
-			case Cast:
-			case Casting:		
-			case Dead:		
-			case Use:
-			case Victory:
+			case Dead:
+				if(!dead) battleSpr.changeFace(faces.Idle);
+				else battleSpr.changeFace(newFace);					
+				break;
 			case Weak:
-				battleSpr.changeFace(newFace);
+				if(!weak) battleSpr.changeFace(faces.Idle);
+				else battleSpr.changeFace(newFace);					
+				break;
+			default:
+				battleSpr.changeFace(newFace);				
 				break;
 			}				
 		}

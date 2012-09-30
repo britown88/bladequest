@@ -513,7 +513,7 @@ public class Battle {
 									
 									break;
 								case Ability:
-									runningAbility = e.useAbility();
+									//runningAbility = e.useAbility();
 									changeState(battleStates.USEITEM);
 									break;								
 								}
@@ -559,7 +559,7 @@ public class Battle {
 									break;
 									
 								case Ability:
-									runningAbility = c.useAbility();								
+									//runningAbility = c.useAbility();								
 									changeState(battleStates.USEITEM);	
 									break;
 									

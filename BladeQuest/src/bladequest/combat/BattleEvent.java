@@ -10,6 +10,8 @@ import bladequest.graphics.BattleSprite.faces;
 import bladequest.world.Ability;
 import bladequest.world.Character;
 import bladequest.world.DamageTypes;
+import bladequest.world.Global;
+import bladequest.world.Item;
 
 public class BattleEvent 
 {
@@ -73,6 +75,7 @@ public class BattleEvent
 	
 	public void init()
 	{
+		int finalIndex;
 		done = running = false;
 		
 		switch(source.getAction())
@@ -94,7 +97,7 @@ public class BattleEvent
 			anim = ab.getAnimation();
 			animStartIndex = 3;
 			
-			int finalIndex = getFinalAnimFrameIndex();
+			finalIndex = getFinalAnimFrameIndex();
 			
 			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex), faces.Cast, 0, source));
 			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex), anim, source, targets));
@@ -107,6 +110,18 @@ public class BattleEvent
 		case CombatAction:
 			break;
 		case Item:
+			Item itm = source.getItemToUse();
+			anim = new BattleAnim(Global.battleAnims.get(itm.getAnimName()));
+			animStartIndex = 3;			
+			finalIndex = getFinalAnimFrameIndex();
+			
+			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex), faces.Use, 0, source));
+			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex), anim, source, targets));
+			for(BattleAction action : itm.getActions())
+				objects.add(new BattleEventObject(syncToAnimation(action.getFrame()), action, source, targets));
+			objects.add(new BattleEventObject(frameFromActIndex(finalIndex), faces.Ready, 0, source));
+			objects.add(new BattleEventObject(frameFromActIndex(finalIndex+2)));
+			
 			break;
 		}
 		

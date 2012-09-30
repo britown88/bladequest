@@ -69,24 +69,28 @@ enditem
 #
 item potion "Potion" usable orb "Restores 50 HP."
 value 50
+anim movetest
 targettype single
-action bactDamage -1 50.0f fixed 0
+action bactDamage -1 -50.0f fixed 0
 enditem
 #
 item megalixer "MegaLicksr" usable orb "Fully heals all allies."
 value 9999
+anim movetest
 targettype allallies
-action bactDamage -1 9999.0f fixed 0
+action bactDamage -1 -9999.0f fixed 0
 enditem
 #
 item bomb "Bomb" usable orb "Devastating damage to all enemies."
 value 500
+anim movetest
 targettype allenemies
-action bactDamage -1 -9999.0f fixed 0
+action bactDamage -1 9999.0f fixed 0
 enditem
 #
 item antidote "Antidote" usable orb "Cures Poison."
 value 50
+anim movetest
 targettype single
 action bactRemoveStatus -1 poison 0
 enditem

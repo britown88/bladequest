@@ -177,6 +177,10 @@ public class GameDataLoader
 		{
 			itm.setTargetType(getTargetType(dl.values.get(0)));
 		}
+		else if(dl.item.equals("anim"))
+		{
+			itm.setAnim(dl.values.get(0));
+		}
 		else if(dl.item.equals("sellable"))
 		{
 			itm.setSellable(Boolean.parseBoolean(dl.values.get(0)));
