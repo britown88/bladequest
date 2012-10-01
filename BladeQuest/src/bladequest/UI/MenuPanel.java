@@ -149,6 +149,7 @@ public class MenuPanel
 	public void show() { drawFrame = true; drawContent = true;}
 	
 	public boolean isMoving() { return moving;}
+	public boolean isShown() { return drawFrame && drawContent;}
 	
 	
 	public int insetWidth() { return inset.x > 0 ? width + (2*inset.x) : width - (2*inset.x); }

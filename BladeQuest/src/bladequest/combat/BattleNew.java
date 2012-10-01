@@ -35,8 +35,7 @@ public class BattleNew
 	private final int statFrameBuffer = 16;
 	private final int charYSpacing = 64;
 	private final int mpWindowHeight = 32;
-	private final int mpWindowWidth = 128;
-	
+	private final int mpWindowWidth = 128;	
 	
 	private final String txtStart = "Tap screen to start!";
 	private final String txtTargetSingle = "Select target...";
@@ -62,6 +61,7 @@ public class BattleNew
 	private List<Character> targets;
 	private List<BattleEvent> battleEvents;
 	private List<DamageMarker> markers;
+	private List<String> messageQueue;
 	
 	private BattleStates state;
 	private Encounter encounter;
@@ -85,6 +85,7 @@ public class BattleNew
 		targets = new ArrayList<Character>();
 		battleEvents = new ArrayList<BattleEvent>();
 		markers = new ArrayList<DamageMarker>();
+		messageQueue = new ArrayList<String>();
 	}
 	
 	public void startBattle(String encounter)
@@ -221,11 +222,18 @@ public class BattleNew
 	}
 	private void updatePanels()
 	{
-		startBar.update();
-		infoPanel.update();
+		startBar.update();		
 		displayNamePanel.update();
 		mpWindow.update();
 		mainMenu.update();
+		
+		if(messageQueue.size() == 0 && infoPanel.isShown())
+			infoPanel.hide();
+		else
+			if(messageQueue.size() > 0)
+				infoPanel.getTextAt(0).text = messageQueue.get(0);
+		
+		infoPanel.update();
 	}
 	private void updateCharacterPositions()
 	{
@@ -325,7 +333,8 @@ public class BattleNew
 		}
 		avgLevel = levelTotal / aliveChars.size();
 		
-		//messageQueue.add("You are victorious!");
+		addMessage("You are victorious!");
+
 		int gold = 0;
 		int exp = 0;
 		List<String> itemDrops = new ArrayList<String>();
@@ -349,8 +358,9 @@ public class BattleNew
 		
 		Global.party.addGold(gold);
 		
-		//messageQueue.add("Obtained " + gold + "G!");
-		//messageQueue.add("Earned " + exp + " experience!");
+		addMessage("Obtained " + gold + "G!");
+		addMessage("Earned " + exp + " experience!");
+
 		
 		String newAbilities = "";
 		
@@ -359,13 +369,13 @@ public class BattleNew
 			int leftover = c.awardExperience(exp);
 			while(leftover > 0)
 			{
-				//messageQueue.add(c.getDisplayName() + " grew to level " + c.getLevel() + "!");
+				addMessage(c.getDisplayName() + " grew to level " + c.getLevel() + "!");
 				
 				do
 				{
 					newAbilities = c.checkForAbilities();
-					//if(newAbilities != "")
-						//messageQueue.add(c.getDisplayName() + " learned " + newAbilities + "!");
+					if(newAbilities != "")
+						addMessage(c.getDisplayName() + " learned " + newAbilities + "!");
 					
 				}while(newAbilities != "");
 				
@@ -376,11 +386,9 @@ public class BattleNew
 		if(wonItem != null)
 		{
 			Global.party.addItem(wonItem);	
-			//messageQueue.add("Found a " + Global.items.get(wonItem).getName() + "!");
-		}
-		//infoWindow.closeFrame();
+			addMessage("Found a " + Global.items.get(wonItem).getName() + "!");
+		}		
 		
-		triggerEndBattle();
 	}
 	private void triggerEndBattle()
 	{
@@ -702,6 +710,12 @@ public class BattleNew
 			}
 	}
 	private void addBattleEvent(Character source, List<Character> targets){battleEvents.add(new BattleEvent(source, targets));}
+	public void addMessage(String str)
+	{
+		messageQueue.add(str);
+		infoPanel.show();
+		updatePanels();
+	}
 	
 	private void nextCharacter()
 	{
@@ -842,6 +856,8 @@ public class BattleNew
 		
 		handleNextPrev();
 		
+		
+		
 		switch(state)
 		{
 		case ACT:
@@ -849,13 +865,15 @@ public class BattleNew
 			break;
 		case DEFEAT:
 		case VICTORY:
-			if(Global.screenFader.isFadedOut())
-			{
-				Global.map.getBackdrop().unload();
-				Global.screenFader.fadeIn(2);
-				Global.GameState = States.GS_WORLDMOVEMENT;
-				
-			}		
+			if(messageQueue.size() == 0 && Global.screenFader.isFadedIn())
+				triggerEndBattle();
+			else				
+				if(Global.screenFader.isFadedOut())
+				{
+					Global.map.getBackdrop().unload();
+					Global.screenFader.fadeIn(2);
+					Global.GameState = States.GS_WORLDMOVEMENT;				
+				}		
 		}		
 	}	
 	public void render()
@@ -890,116 +908,129 @@ public class BattleNew
 	}
 	public void touchActionUp(int x, int y)
 	{
-		switch(state)
+		if(messageQueue.size() > 0)
 		{
-		case START:
-			changeState(BattleStates.SELECT);
-			break;
-		case SELECT:
-			switch(mainMenu.touchActionUp(x, y))
+			messageQueue.remove(0);
+		}
+		else
+		{
+			switch(state)
 			{
-			case Selected:
-				handleMenuOption((String)(mainMenu.getSelectedEntry().obj));
+			case START:
+				changeState(BattleStates.SELECT);
 				break;
-			case Close:
-				previousCharacter();
-				break;
-			default:
-				break;
-			}
-			break;
-		case SELECTABILITY:
-			switch(mainMenu.touchActionUp(x, y))
-			{
-			case Selected:
-				if(!mainMenu.getSelectedEntry().Disabled())
+			case SELECT:
+				switch(mainMenu.touchActionUp(x, y))
 				{
-					Ability ab = (Ability)(mainMenu.getSelectedEntry().obj);
-					targetType = ab.TargetType();
-					currentChar.setFace(faces.Casting);
-					currentChar.setAbilityToUse(ab);
-					changeState(BattleStates.TARGET);
-				}				
-				break;
-			case Close:
-				changeState(BattleStates.SELECT);
-				break;
-			default:break;
-			}
-			break;
-		case SELECTITEM:
-			switch(mainMenu.touchActionUp(x, y))
-			{
-			case Selected:
-				Item itm = (Item)(mainMenu.getSelectedEntry().obj);
-				targetType = itm.getTargetType();
-				currentChar.setFace(faces.Ready);
-				currentChar.setItemToUse(itm);
-				changeState(BattleStates.TARGET);
-				break;
-			case Close:
-				changeState(BattleStates.SELECT);
-				break;
-			default:break;
-			}
-			break;
-		case TARGET:
-			if(startBar.contains(x, y))
-			{
-				if(currentChar.getAction() == Action.Item)
-					currentChar.unuseItem();
-				changeState(BattleStates.SELECT);
-			}
-				
-			else
-			{
-				if(targets.size() > 0)
-				{
-					//targets were selected
-					currentChar.setTargets(new ArrayList<Character>(targets));
-					nextCharacter();
-					targets.clear();
+				case Selected:
+					handleMenuOption((String)(mainMenu.getSelectedEntry().obj));
+					break;
+				case Close:
+					previousCharacter();
+					break;
+				default:
+					break;
 				}
-				else
+				break;
+			case SELECTABILITY:
+				switch(mainMenu.touchActionUp(x, y))
+				{
+				case Selected:
+					if(!mainMenu.getSelectedEntry().Disabled())
+					{
+						Ability ab = (Ability)(mainMenu.getSelectedEntry().obj);
+						targetType = ab.TargetType();
+						currentChar.setFace(faces.Casting);
+						currentChar.setAbilityToUse(ab);
+						changeState(BattleStates.TARGET);
+					}				
+					break;
+				case Close:
+					changeState(BattleStates.SELECT);
+					break;
+				default:break;
+				}
+				break;
+			case SELECTITEM:
+				switch(mainMenu.touchActionUp(x, y))
+				{
+				case Selected:
+					Item itm = (Item)(mainMenu.getSelectedEntry().obj);
+					targetType = itm.getTargetType();
+					currentChar.setFace(faces.Ready);
+					currentChar.setItemToUse(itm);
+					changeState(BattleStates.TARGET);
+					break;
+				case Close:
+					changeState(BattleStates.SELECT);
+					break;
+				default:break;
+				}
+				break;
+			case TARGET:
+				if(startBar.contains(x, y))
 				{
 					if(currentChar.getAction() == Action.Item)
 						currentChar.unuseItem();
-					changeState(BattleStates.SELECT);	
+					changeState(BattleStates.SELECT);
 				}
-									
-			}			
-			break;
-		}
-		
+					
+				else
+				{
+					if(targets.size() > 0)
+					{
+						//targets were selected
+						currentChar.setTargets(new ArrayList<Character>(targets));
+						nextCharacter();
+						targets.clear();
+					}
+					else
+					{
+						if(currentChar.getAction() == Action.Item)
+							currentChar.unuseItem();
+						changeState(BattleStates.SELECT);	
+					}
+										
+				}			
+				break;
+			}
+		}		
 	}
 	public void touchActionDown(int x, int y)
 	{
-		switch(state)
+		if(messageQueue.size() == 0)
 		{
-		case SELECTABILITY:
-		case SELECTITEM:
-		case SELECT:
-			mainMenu.touchActionDown(x, y);
-			break;
-		case TARGET:
-			getTouchTargets(x, y);
-			break;
-		}
+			switch(state)
+			{
+			case SELECTABILITY:
+			case SELECTITEM:
+			case SELECT:
+				mainMenu.touchActionDown(x, y);
+				break;
+			case TARGET:
+				getTouchTargets(x, y);
+				break;
+			}
+		}		
 	}
 	public void touchActionMove(int x, int y)
 	{
-		switch(state)
+		if(messageQueue.size() == 0)
 		{
-		case SELECTABILITY:
-		case SELECTITEM:
-		case SELECT:
-			mainMenu.touchActionMove(x, y);
-			break;
-		case TARGET:
-			getTouchTargets(x, y);
-			break;
-			
+			switch(state)
+			{
+			case SELECTABILITY:
+			case SELECTITEM:
+			case SELECT:
+				mainMenu.touchActionMove(x, y);
+				break;
+			case TARGET:
+				getTouchTargets(x, y);
+				break;
+				
+			}
 		}
+		
 	}
 	private void getTouchTargets(int x, int y)
 	{
