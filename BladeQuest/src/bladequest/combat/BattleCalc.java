@@ -14,6 +14,8 @@ public class BattleCalc
 	
 	public static final float maxEvade = 90.0f;
 	public static final float minEvade = 5.0f;
+	public static final float maxCrit = 90.0f;
+	public static final float minCrit = 5.0f;
 	
 	
 	private static DamageReturnType damageReturnType;	
@@ -62,7 +64,8 @@ public class BattleCalc
 				else
 				{
 					roll = Global.rand.nextInt(100);
-					if(roll < 5)
+					int critChance = (int)((float)attacker.getStat(Stats.Crit)*(maxCrit/255.0f));
+					if(roll < critChance)
 					{
 						damageReturnType = DamageReturnType.Critical;
 						finalDmg = (int)((float)(baseDmg + dmgMod) * 2.0f);

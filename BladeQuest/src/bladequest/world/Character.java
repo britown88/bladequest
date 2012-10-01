@@ -571,6 +571,10 @@ public class Character
 		int minBonus = (int)(pointsPerPercent*BattleCalc.minEvade);
 		stats[Stats.Evade.ordinal()] = minBonus + levelBonus + agiBonus;
 		
+		pointsPerPercent = 255.0f / BattleCalc.maxCrit;
+		minBonus = (int)(pointsPerPercent*BattleCalc.minCrit);
+		stats[Stats.Crit.ordinal()] = minBonus;
+		
 		//hp/mp based on vit and int	
 		stats[Stats.MaxHP.ordinal()] = Math.min(9999, (int)((((vit * 2.0f) + (255.0f/99.0f)*lvl) / 3.0f) * 15.0f * getCoefficient()));
 		stats[Stats.MaxMP.ordinal()] = Math.min(999, (int)(((intel * 2.0f + (255.0f/99.0f)*lvl) / 3.0f) * 5.0f * getCoefficient()));

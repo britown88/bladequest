@@ -392,7 +392,7 @@ public class MainMenu
 	}	
 	private void updateEquipStats()
 	{
-		float percentOfHeight = 1.0f / 12.0f;
+		float percentOfHeight = 1.0f / 13.0f;
 		int i = 1;
 		
 		eqpStats.clear();
@@ -438,12 +438,15 @@ public class MainMenu
 		++i;		
 		eqpStats.addTextBox("BLK", column1x, (int)(eqpStats.height*(percentOfHeight*i)), menuText);
 		eqpStats.addTextBox(""+selectedChar.getStat(Stats.Block), column2x, (int)(eqpStats.height*(percentOfHeight*i)), selectedChar.getStatMod(Stats.Block) > 0 ? blueMenuTextCenter : selectedChar.getStatMod(Stats.Block) < 0 ? redMenuTextCenter : menuTextCenter);
+		++i;		
+		eqpStats.addTextBox("CRIT", column1x, (int)(eqpStats.height*(percentOfHeight*i)), menuText);
+		eqpStats.addTextBox(""+selectedChar.getStat(Stats.Crit), column2x, (int)(eqpStats.height*(percentOfHeight*i)), selectedChar.getStatMod(Stats.Crit) > 0 ? blueMenuTextCenter : selectedChar.getStatMod(Stats.Crit) < 0 ? redMenuTextCenter : menuTextCenter);
 		
 		
 		if(selectedEqpItem != null || eqpRemove)
 		{
 			//create arrows
-			for(int j = 1; j < 12; ++j)
+			for(int j = 1; j < 13; ++j)
 				eqpStats.addPicBox(Global.createIcon("arrow", arrowx, (int)(eqpStats.height*(percentOfHeight*j)), iconScale));
 			
 			//get new stats
@@ -464,6 +467,7 @@ public class MainMenu
 			eqpStats.addTextBox(""+newStats[Stats.Speed.ordinal()], 		column3x, (int)(eqpStats.height*(percentOfHeight*i++)), newStats[Stats.Speed.ordinal()] 		> selectedChar.getStat(Stats.Speed) 		? blueMenuTextCenter : newStats[Stats.Speed.ordinal()] 			< selectedChar.getStat(Stats.Speed) 		? redMenuTextCenter : menuTextCenter);
 			eqpStats.addTextBox(""+newStats[Stats.Evade.ordinal()], 		column3x, (int)(eqpStats.height*(percentOfHeight*i++)), newStats[Stats.Evade.ordinal()] 		> selectedChar.getStat(Stats.Evade) 		? blueMenuTextCenter : newStats[Stats.Evade.ordinal()] 			< selectedChar.getStat(Stats.Evade) 		? redMenuTextCenter : menuTextCenter);
 			eqpStats.addTextBox(""+newStats[Stats.Block.ordinal()], 		column3x, (int)(eqpStats.height*(percentOfHeight*i++)), newStats[Stats.Block.ordinal()] 		> selectedChar.getStat(Stats.Block) 		? blueMenuTextCenter : newStats[Stats.Block.ordinal()] 			< selectedChar.getStat(Stats.Block) 		? redMenuTextCenter : menuTextCenter);
+			eqpStats.addTextBox(""+newStats[Stats.Crit.ordinal()], 			column3x, (int)(eqpStats.height*(percentOfHeight*i++)), newStats[Stats.Crit.ordinal()] 			> selectedChar.getStat(Stats.Crit) 			? blueMenuTextCenter : newStats[Stats.Crit.ordinal()] 			< selectedChar.getStat(Stats.Crit) 			? redMenuTextCenter : menuTextCenter);
 			
 			
 		}
@@ -617,7 +621,7 @@ public class MainMenu
 		charStatus.addTextBox("INT:", (int)(Global.vpWidth*0.33)+buff, statY + (int)(statHei*0.2*i), blueMenuText);
 		charStatus.addTextBox(""+selectedChar.getStat(Stats.Intelligence), (int)(Global.vpWidth*0.51)+buff, statY + (int)(statHei*0.2*i++), menuText);
 				
-		i = 2;
+		i = 1;
 		charStatus.addTextBox("SPD:", (int)(Global.vpWidth*0.66)+buff, statY + (int)(statHei*0.2*i), blueMenuText);
 		charStatus.addTextBox(""+selectedChar.getStat(Stats.Speed), (int)(Global.vpWidth*0.84)+buff, statY + (int)(statHei*0.2*i++), menuText);
 		
@@ -627,6 +631,8 @@ public class MainMenu
 		charStatus.addTextBox("BLK:", (int)(Global.vpWidth*0.66)+buff, statY + (int)(statHei*0.2*i), blueMenuText);
 		charStatus.addTextBox(""+selectedChar.getStat(Stats.Block), (int)(Global.vpWidth*0.84)+buff, statY + (int)(statHei*0.2*i++), menuText);
 		
+		charStatus.addTextBox("CRIT:", (int)(Global.vpWidth*0.66)+buff, statY + (int)(statHei*0.2*i), blueMenuText);
+		charStatus.addTextBox(""+selectedChar.getStat(Stats.Crit), (int)(Global.vpWidth*0.84)+buff, statY + (int)(statHei*0.2*i++), menuText);
 		
 		//Abilities Labels
 		charStatusAbilities.changeItemText(0, selectedChar.getActionName());
