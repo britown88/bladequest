@@ -115,6 +115,9 @@ public class BattleEvent
 			animStartIndex = 3;			
 			finalIndex = getFinalAnimFrameIndex();
 			
+			//resets item count and removes from inventory
+			source.useItem();
+			
 			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex), faces.Use, 0, source));
 			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex), anim, source, targets));
 			for(BattleAction action : itm.getActions())

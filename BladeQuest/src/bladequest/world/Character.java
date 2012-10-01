@@ -457,11 +457,11 @@ public class Character
 		}
 	}
 	
-	public void useItem(Character target)
+	public void useItem()
 	{	
 		unuseItem();
 		Global.party.removeItem(itemToUse.getId(), 1);
-		itemToUse.execute(this, targets);
+		//itemToUse.execute(this, targets);
 	}
 	
 	public TargetTypes getCombatActionTargetType() { return combAction.getTargetType(); }

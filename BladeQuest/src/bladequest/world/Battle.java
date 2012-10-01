@@ -554,7 +554,7 @@ public class Battle {
 									break;
 									
 								case Item:
-									c.useItem(e);								
+									c.useItem();								
 									changeState(battleStates.USEITEM);	
 									break;
 									

@@ -313,8 +313,10 @@ public class BattleNew
 			if(!c.isDead()) aliveChars.add(c);
 		
 		int avgLevel, levelTotal = 0;
-		
-		//TODO: Unuse Items
+
+		for(Character c : partyList)
+			if(c.getAction() == Action.Item)
+				c.unuseItem();
 		
 		for(Character c : aliveChars)
 		{
@@ -731,10 +733,15 @@ public class BattleNew
 		{
 			if(prevChar)
 			{
+				if(currentChar.getAction() == Action.Item)
+					currentChar.unuseItem();
+				
 				currentChar = partyList.get(--currentCharIndex);
 				changeState(BattleStates.SELECT);
 				
-				//TODO: unuse unused items
+				if(currentChar.getAction() == Action.Item)
+					currentChar.unuseItem();
+
 			}
 			else 
 			{
@@ -870,8 +877,9 @@ public class BattleNew
 		switch(state)
 		{
 		case TARGET:
-			if(selCharOpened)
-				changeState(BattleStates.SELECT);
+			changeState(BattleStates.SELECT);
+			if(currentChar.getAction() == Action.Item)
+				currentChar.unuseItem();
 			break;
 		case SELECT:
 			previousCharacter();
@@ -937,7 +945,12 @@ public class BattleNew
 			break;
 		case TARGET:
 			if(startBar.contains(x, y))
+			{
+				if(currentChar.getAction() == Action.Item)
+					currentChar.unuseItem();
 				changeState(BattleStates.SELECT);
+			}
+				
 			else
 			{
 				if(targets.size() > 0)
@@ -948,7 +961,12 @@ public class BattleNew
 					targets.clear();
 				}
 				else
-					changeState(BattleStates.SELECT);					
+				{
+					if(currentChar.getAction() == Action.Item)
+						currentChar.unuseItem();
+					changeState(BattleStates.SELECT);	
+				}
+									
 			}			
 			break;
 		}
