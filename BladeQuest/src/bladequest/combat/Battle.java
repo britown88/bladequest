@@ -390,6 +390,18 @@ public class Battle
 		}		
 		
 	}
+	private void initDefeat()
+	{
+		changeStartBarText(txtDefeat);
+		
+		//clear further actions of the calling object
+		if(Global.BattleStartObject != null)
+			Global.BattleStartObject.clearActions();
+		
+		Global.party.allowMovement = true;
+		Global.setPanned(0, 0);				
+		Global.map.gameOverObject.execute();
+	}
 	private void triggerEndBattle()
 	{
 		Global.screenFader.setFadeColor(255, 0, 0, 0);
@@ -589,7 +601,7 @@ public class Battle
 			initVictory();
 			break;
 		case DEFEAT:
-			changeStartBarText(txtDefeat);
+			initDefeat();			
 			break;			
 		case TARGET:
 			
@@ -855,8 +867,6 @@ public class Battle
 		updateDamageMarkers();
 		
 		handleNextPrev();
-		
-		
 		
 		switch(state)
 		{
