@@ -16,14 +16,10 @@ public enum Stats
 	Evade,
 	Block,
 	Crit,
-	FireAtk,
-	EarthAtk,
-	WindAtk,
-	WaterAtk,
-	FireDef,
-	EarthDef,
-	WindDef,
-	WaterDef,
+	Fire,
+	Earth,
+	Wind,
+	Water,
 	NUM_STATS
 	
 }

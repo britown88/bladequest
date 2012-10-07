@@ -801,14 +801,14 @@ public class Character
 		
 	}
 	
-	public void statusOnTurn(Battle b)
+/*	public void statusOnTurn(Battle b)
 	{
 		for(StatusEffect se : statusEffects)
 		{
 			se.onTurn(this, b);
 		}
 	}
-	
+	*/
 
 	//returns overlap exp if user leveld up, 0 if not
 	public int awardExperience(int exp)

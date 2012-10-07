@@ -67,7 +67,7 @@ public class BattleEventObject
 		this.type = types.Done;
 	}
 	
-	public void execute(BattleNew battle, List<DamageMarker> markers)
+	public void execute(Battle battle, List<DamageMarker> markers)
 	{
 		Point targetP = null;
 		if(targets != null && targets.size() > 0)
@@ -80,7 +80,7 @@ public class BattleEventObject
 			
 			break;
 		case BattleAction:
-			battleAction.run(battle, source, targets, markers);
+			battleAction.run(source, targets, markers);
 			break;
 		case CombatAction:
 			combatAction.execute(targets);

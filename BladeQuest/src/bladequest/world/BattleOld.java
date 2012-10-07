@@ -13,7 +13,7 @@ import bladequest.world.Character.Action;
 import java.util.*;
 
 
-public class Battle {
+public class BattleOld {
 	private final int frameMaxHeight = 96;
 	private final int frameMinHeight = 32;
 	private final int partyFrameBuffer = 32;
@@ -83,7 +83,7 @@ public class Battle {
 	
 	
 	//constructor
-	public Battle()
+	public BattleOld()
 	{
 		messageQueue = new Vector<String>();
 		//markers= new Vector<DamageMarker>();
@@ -1323,12 +1323,12 @@ public class Battle {
 		for(Character c : getAliveCharacters())
 		{
 			/*c.setIdle();*/
-			c.statusOnTurn(this);
+			//c.statusOnTurn(this);
 		}
 		
 		for(Enemy e: getAliveEnemies())
 		{
-			e.statusOnTurn(this);
+			//e.statusOnTurn(this);
 		}
 			
 		

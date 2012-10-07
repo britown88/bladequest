@@ -31,7 +31,7 @@ import bladequest.UI.MerchantScreen;
 import bladequest.UI.MsgBox;
 import bladequest.UI.NameSelect;
 import bladequest.UI.SaveLoadMenu;
-import bladequest.combat.BattleNew;
+import bladequest.combat.Battle;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleSprite;
 import bladequest.graphics.Icon;
@@ -157,7 +157,7 @@ public class Global
 	
 	public static Party party;
 	public static Battle battle;
-	public static BattleNew battleTest;
+	public static Battle battleTest;
 	public static MainMenu menu;
 	public static NameSelect nameSelect;
 	public static SaveLoadMenu saveLoadMenu;
@@ -608,19 +608,14 @@ public class Global
     	case GS_PAUSE:
     		break;
     	case GS_BATTLE:
-    		//battle.update();
+    		battle.update();
     		break;  
-    	case GS_BATTLETEST:
-    		battleTest.update();
-    		break;
     	case GS_BATTLETRANSITION:
     		imageScale += 0.10F*imageScale;
     		if(imageScale >= 15.0F)
     		{
     			imageScale = 1.0F;
-    			battle = new Battle();
-    			//battle.setEncounter(encounter);
-    			//battle.initBattle();
+    			battleTest.startBattle(encounter);
     		}
     		
     		break;
@@ -712,18 +707,17 @@ public class Global
 	
 	public static void beginBattle(GameObject go, String en)
 	{
-		/*BattleStartObject = go;
+		BattleStartObject = go;
 		encounter = en;
 		GameState = States.GS_BATTLETRANSITION;
 		musicBox.saveSong();
 		if(encounters.get(en).isBossFight)
 			musicBox.play("boss", true, -1);
 		else
-			musicBox.play("battle", true, -1);*/
+			musicBox.play("battle", true, -1);
 		
-		battleTest = new BattleNew();
-		GameState = States.GS_BATTLETEST;
-		battleTest.startBattle(en);
+		if(battle == null)
+			battle = new Battle();
 	}
 	
 	public static void startGame()

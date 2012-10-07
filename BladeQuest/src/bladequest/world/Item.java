@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.graphics.Point;
 import bladequest.battleactions.BattleAction;
+import bladequest.combat.DamageMarker;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.WeaponSwing;
 import bladequest.graphics.WeaponSwingDrawable;
@@ -180,10 +181,10 @@ public class Item
 			c.modStat(j, -statMods[j]);
 	}
 	
-	public void execute(Character attacker, List<Character> targets)
+	public void execute(Character attacker, List<Character> targets, List<DamageMarker> markers)
 	{
-		/*for(int i = 0; i < actions.size(); ++i)
-			actions.get(i).run(attacker, targets, i*5);*/
+		for(int i = 0; i < actions.size(); ++i)
+			actions.get(i).run(attacker, targets, markers);
 	}
 	
 	public boolean willAffect(Character c)

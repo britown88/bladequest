@@ -3,7 +3,7 @@ item knife "Knife" weapon dagger "A small and simple dagger."
 power 7
 value 10
 usableby aramis
-statmods 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+statmods 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 swing dagger slice1
 swingbase 0 186 186 186
 swingbase 1 255 255 255
@@ -16,7 +16,7 @@ item qknife "Quick Knife" weapon dagger "A small and simple dagger."
 power 7
 value 10
 usableby aramis
-statmods 0 200 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+statmods 0 200 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 swing dagger slice1
 swingbase 0 186 186 186
 swingbase 1 255 255 255

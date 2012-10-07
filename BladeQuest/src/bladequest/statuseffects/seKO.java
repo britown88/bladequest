@@ -1,9 +1,7 @@
 package bladequest.statuseffects;
 
-import bladequest.world.Battle;
+import bladequest.combat.Battle;
 import bladequest.world.Character;
-import bladequest.world.Global;
-import bladequest.world.Stats;
 
 public class seKO extends StatusEffect
 {	

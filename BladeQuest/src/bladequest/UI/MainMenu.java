@@ -1,22 +1,27 @@
 package bladequest.UI;
 
-import android.graphics.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Paint.Align;
-import android.view.MotionEvent;
+import android.graphics.Point;
+import android.graphics.Rect;
 import bladequest.UI.ListBox.LBStates;
 import bladequest.UI.MenuPanel.Anchors;
 import bladequest.UI.MsgBox.YesNo;
+import bladequest.combat.DamageMarker;
 import bladequest.statuseffects.StatusEffect;
-import bladequest.world.Character;
 import bladequest.world.Ability;
+import bladequest.world.Character;
 import bladequest.world.Global;
 import bladequest.world.Item;
 import bladequest.world.Item.Type;
+import bladequest.world.States;
 import bladequest.world.Stats;
 import bladequest.world.TargetTypes;
-import bladequest.world.States;
-
-import java.util.*;
 
 public class MainMenu 
 {
@@ -29,7 +34,7 @@ public class MainMenu
 	private final int menuWidth, barHeight;
 	
 	private menuStates currentState;
-	//private Vector<DamageMarker> markers;
+	private Vector<DamageMarker> markers;
 	private Item itemToUse;
 	private Character selectedChar, nextChar;
 	private Item selectedEqpItem;
@@ -878,8 +883,7 @@ public class MainMenu
 	}
 	private void updateMarkers()
 	{
-		//TODO: Update Markers
-/*		Vector<DamageMarker> toRemove = new Vector<DamageMarker>();
+		Vector<DamageMarker> toRemove = new Vector<DamageMarker>();
 		
 		for(DamageMarker d : markers)
 		{
@@ -889,7 +893,7 @@ public class MainMenu
 		}
 		
 		for(DamageMarker d : toRemove)
-			markers.remove(d);*/
+			markers.remove(d);
 	}
 	private void darken(){darkening = true;}	
 	private void undarken(){darkening = false;}	
@@ -1204,7 +1208,7 @@ public class MainMenu
 		
 		if(willAffect)
 		{
-			itemToUse.execute(c, charList);
+			itemToUse.execute(c, charList, markers);
 			Global.party.removeItem(itemToUse.getId(), 1);
 			updateCharUseScreen();
 		}	
@@ -1536,9 +1540,9 @@ public class MainMenu
 		messageBox.render();
 		
 		//render dmgMarkers
-/*		for(DamageMarker d : markers)
+		for(DamageMarker d : markers)
 			if(d.isShown())
-				d.render();*/
+				d.render();
 	}
 		
 	public void onFling(float velocityX, float velocityY)

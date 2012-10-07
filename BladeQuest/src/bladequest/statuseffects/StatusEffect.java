@@ -1,6 +1,6 @@
 package bladequest.statuseffects;
 
-import bladequest.world.Battle;
+import bladequest.combat.Battle;
 import bladequest.world.Character;
 
 public class StatusEffect 

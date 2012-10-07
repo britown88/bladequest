@@ -139,31 +139,15 @@ public class BqThread extends Thread
 	    		switch (event.getAction())
 	        	{
 	        	case MotionEvent.ACTION_DOWN:
-	        		//Global.battle.touchActionDown(x, y);
+	        		Global.battle.touchActionDown(x, y);
 	        		break;
 	        		
 	        	case MotionEvent.ACTION_UP:
-	        		//Global.battle.touchActionUp(x, y);
+	        		Global.battle.touchActionUp(x, y);
 	        		break;
 	        		
 	        	case MotionEvent.ACTION_MOVE:
-	        		//Global.battle.touchActionMove(x, y);
-	        		break;
-	        	}
-	    		break;
-	    	case GS_BATTLETEST:
-	    		switch (event.getAction())
-	        	{
-	        	case MotionEvent.ACTION_DOWN:
-	        		Global.battleTest.touchActionDown(x, y);
-	        		break;
-	        		
-	        	case MotionEvent.ACTION_UP:
-	        		Global.battleTest.touchActionUp(x, y);
-	        		break;
-	        		
-	        	case MotionEvent.ACTION_MOVE:
-	        		Global.battleTest.touchActionMove(x, y);
+	        		Global.battle.touchActionMove(x, y);
 	        		break;
 	        	}
 	    		break;

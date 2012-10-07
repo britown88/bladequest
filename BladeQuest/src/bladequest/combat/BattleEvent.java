@@ -130,7 +130,7 @@ public class BattleEvent
 		
 	}
 	
-	public void update(BattleNew battle, List<DamageMarker> markers)
+	public void update(Battle battle, List<DamageMarker> markers)
 	{
 		if(!running)
 		{

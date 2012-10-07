@@ -24,7 +24,7 @@ import bladequest.world.Item;
 import bladequest.world.States;
 import bladequest.world.TargetTypes;
 
-public class BattleNew 
+public class Battle 
 {	
 	private final int frameMaxHeight = 96;
 	private final int frameMinHeight = 32;
@@ -79,7 +79,7 @@ public class BattleNew
 	private MenuPanel characterPanes[];
 	private ListBox mainMenu;
 	
-	public BattleNew()
+	public Battle()
 	{
 		enemyArea = Global.vpToScreen(new Rect(0,0,partyPos.x-partyFrameBuffer, Global.vpHeight-frameMinHeight));
 		targets = new ArrayList<Character>();
