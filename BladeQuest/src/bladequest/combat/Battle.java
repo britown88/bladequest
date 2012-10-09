@@ -417,9 +417,15 @@ public class Battle
 			if(!e.isDead())
 				battleEvents.add(e.genBattleEvent(partyList, encounter.Enemies()));
 		
+		
+		int charCount = 0;
 		for(Character c : partyList)
 			if(!c.isDead() && c.getAction() != Action.Guard)
+			{
 				addBattleEvent(c, c.getTargets());
+				charCount++;
+			}
+				
 		
 		battleEvents = BattleCalc.genMoveOrder(battleEvents);
 		
@@ -594,6 +600,7 @@ public class Battle
 			updateMenuOptions(newState);
 			break;
 		case ACT:
+			targets.clear();
 			mainMenu.close();
 			initActState();
 			break;
@@ -990,9 +997,11 @@ public class Battle
 					if(targets.size() > 0)
 					{
 						//targets were selected
+						//changeState(BattleStates.SELECT);
 						currentChar.setTargets(new ArrayList<Character>(targets));
 						nextCharacter();
-						targets.clear();
+						//targets.clear();
+					
 					}
 					else
 					{

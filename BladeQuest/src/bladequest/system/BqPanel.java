@@ -17,7 +17,7 @@ public class BqPanel extends SurfaceView
 implements SurfaceHolder.Callback
 {
 	private BqRenderThread renderThread;
-	private BqThread updateThread;
+	public BqThread updateThread;
 	private static final String TAG = BqPanel.class.getSimpleName();
 	private Paint blackpaint;
 	

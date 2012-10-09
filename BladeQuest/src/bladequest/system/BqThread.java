@@ -54,7 +54,7 @@ public class BqThread extends Thread
 		
 	}
 	
-	private void onTouchEvent(MotionEvent event) 
+	public void onTouchEvent(MotionEvent event) 
     {
 		if(event != null)
 		{

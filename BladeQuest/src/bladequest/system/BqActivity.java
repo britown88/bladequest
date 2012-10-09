@@ -72,6 +72,10 @@ implements OnGestureListener, AudioManager.OnAudioFocusChangeListener
     {
 		if(touchEvents.isEmpty())
 			touchEvents.add(event);
+		
+		//panel.updateThread.onTouchEvent(event);
+		
+		
     	return gestureScanner.onTouchEvent(event);
     }   
 	
