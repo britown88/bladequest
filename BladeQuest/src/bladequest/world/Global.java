@@ -1087,7 +1087,7 @@ public class Global
 //		party.teleport(16, 5);		
 //		party.insertCharacter("aramis", 1);			
 //		LoadMap("prisonb2");
-//		
+		
 		//test params
 		party.teleport(1, 3);		
 		//party.insertCharacter("aramis", 1);	
