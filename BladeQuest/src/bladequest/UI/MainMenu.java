@@ -88,7 +88,7 @@ public class MainMenu
 	{
 		currentState = menuStates.Root;
 		
-		//markers= new Vector<DamageMarker>();
+		markers= new Vector<DamageMarker>();
 		
 		menuWidth = (int)((float)Global.vpWidth * (menuWidthVpPercent/100.0f));
 		barHeight = (int)((float)Global.vpHeight * (menuHeightVpPercent/100.0f));

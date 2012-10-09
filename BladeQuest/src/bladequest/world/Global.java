@@ -157,7 +157,6 @@ public class Global
 	
 	public static Party party;
 	public static Battle battle;
-	public static Battle battleTest;
 	public static MainMenu menu;
 	public static NameSelect nameSelect;
 	public static SaveLoadMenu saveLoadMenu;
@@ -615,7 +614,9 @@ public class Global
     		if(imageScale >= 15.0F)
     		{
     			imageScale = 1.0F;
-    			battleTest.startBattle(encounter);
+    			GameState = States.GS_BATTLE;
+    			update();
+    			
     		}
     		
     		break;
@@ -718,6 +719,8 @@ public class Global
 		
 		if(battle == null)
 			battle = new Battle();
+		
+		battle.startBattle(encounter);
 	}
 	
 	public static void startGame()
