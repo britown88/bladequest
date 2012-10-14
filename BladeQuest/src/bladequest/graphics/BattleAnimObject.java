@@ -25,6 +25,7 @@ public class BattleAnimObject
 
 	private Paint objPaint;
 	private Rect objRect, drawRect;
+	private Bitmap customBmp;
 	
 	private boolean alwaysDraw, linearInterp;
 	
@@ -44,6 +45,22 @@ public class BattleAnimObject
 		
 	}
 	
+	public BattleAnimObject(Types type, boolean outlineOnly, Bitmap customBmp)
+	{
+		states = new ArrayList<BattleAnimObjState>();
+		this.outlineOnly = outlineOnly;
+		
+		this.type = type;
+		this.customBmp = customBmp;
+		objPaint = new Paint();
+		objPaint.setStyle(outlineOnly || type == Types.Line ? Style.STROKE : Style.FILL);
+		objPaint.setAntiAlias(true);
+		//objPaint.setStrokeCap(Cap.)
+		
+		objRect = new Rect();
+		
+	}
+	
 	public BattleAnimObject(BattleAnimObject other)
 	{
 		states = new ArrayList<BattleAnimObjState>();
@@ -51,7 +68,7 @@ public class BattleAnimObject
 		this.type = other.type;
 		this.bmpName = other.bmpName;
 		this.linearInterp = other.linearInterp;
-		
+		this.customBmp = other.customBmp;
 		
 		
 		for(BattleAnimObjState state : other.states)
@@ -292,7 +309,7 @@ public class BattleAnimObject
 				Global.renderer.drawElipse(drawRect, new Paint(objPaint));
 				break;
 			case Bitmap:
-				Global.renderer.drawBitmap(Global.bitmaps.get(bmpName), workingState.bmpSrcRect, drawRect, new Paint(objPaint));
+				Global.renderer.drawBitmap(customBmp == null ? Global.bitmaps.get(bmpName) : customBmp, workingState.bmpSrcRect, drawRect, new Paint(objPaint));
 				break;
 			case Line:
 				Global.renderer.drawLine(

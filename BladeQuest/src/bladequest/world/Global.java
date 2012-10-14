@@ -496,14 +496,15 @@ public class Global
 		return i;
 	}
 	
-	public static BattleAnim playAnimation(String name, Point source, Point target)
+	public static BattleAnim playAnimation(String name, Point source, Point target){return playAnimation(name, source, target, false);}
+	public static BattleAnim playAnimation(String name, Point source, Point target, boolean sendToBack)
 	{
 		BattleAnim anim = battleAnims.get(name);
 		if(anim != null)
 		{
 			anim = new BattleAnim(anim);
-			
-			playingAnims.add(anim);
+			if(sendToBack) playingAnims.add(0, anim);
+			else playingAnims.add(anim);
 			anim.play(source, target);
 			
 			return anim;
@@ -511,10 +512,13 @@ public class Global
 		
 		return null;
 	}
-	public static BattleAnim playAnimation(BattleAnim anim, Point source, Point target)
+	public static BattleAnim playAnimation(BattleAnim anim, Point source, Point target){return playAnimation(anim, source, target, false);}
+	public static BattleAnim playAnimation(BattleAnim anim, Point source, Point target, boolean sendToBack)
 	{
-		BattleAnim animCopy = new BattleAnim(anim);;
-		playingAnims.add(animCopy);
+		BattleAnim animCopy = new BattleAnim(anim);
+		if(sendToBack) playingAnims.add(0, animCopy);
+		else playingAnims.add(animCopy);
+		
 		animCopy.play(source, target);	
 		
 		return animCopy;

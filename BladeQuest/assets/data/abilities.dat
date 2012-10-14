@@ -12,8 +12,8 @@ action bactDamage -1 0.9f physical
 action bactDamage -1 0.9f physical
 endability
 #
-ability bite "Bite" movetest physical single 5 100 False
-action bactDamage -1 1.5f physical
+ability bite "Bite" bite physical single 5 100 False
+action bactDamage 15 1.5f physical
 action bactInflictStatus -1 True sePoison 5
 endability
 #

@@ -176,7 +176,7 @@ public class Enemy extends Character
 		
 		anim.addObject(baObj);
 		
-		Global.playAnimation(anim, position, null);
+		Global.playAnimation(anim, position, null, true);
 	}
 	
 	@Override

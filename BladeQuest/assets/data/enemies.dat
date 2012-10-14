@@ -1,7 +1,7 @@
 [enemies]
 enemy rat "Rat" rat
 basestats 10 1 1 1
-atkanim slice1
+atkanim bite
 level 4
 gold 23
 items potion 25 antidote 85 True

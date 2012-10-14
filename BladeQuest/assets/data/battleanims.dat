@@ -18,6 +18,61 @@
 #     [obj ...]
 # endba
 [battleanims]
+ba bite 60.0
+#top teeth
+obj bmp 0 animsprites
+
+state 0 tar
+bmpsrc 128 0 160 32
+pos 1 0 -32
+size 64 64
+argb 255 255 255 255
+endstate
+
+state 15 tar
+bmpsrc 128 0 160 32
+pos 1 0 0
+size 64 64
+argb 255 255 255 255
+endstate
+
+state 60 tar
+bmpsrc 128 0 160 32
+pos 1 0 0
+size 64 64
+argb 0 255 255 255
+endstate
+
+endobj
+
+
+#bottom teeth
+obj bmp 0 animsprites
+
+state 0 tar
+bmpsrc 96 0 128 32
+pos 1 0 32
+size 64 64
+argb 255 255 255 255
+endstate
+
+state 15 tar
+bmpsrc 96 0 128 32
+pos 1 0 0
+size 64 64
+argb 255 255 255 255
+endstate
+
+state 60 tar
+bmpsrc 96 0 128 32
+pos 1 0 0
+size 64 64
+argb 0 255 255 255
+endstate
+
+endobj
+endba
+
 ba title 20.0f
 loop
 

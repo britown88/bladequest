@@ -154,7 +154,7 @@ public class Item
 		WeaponSwing model = Global.weaponSwingModels.get(swingModel);
 		
 		weaponSwing = model.genSwingDrawable(swingColorsBase, swingColorsSlash);
-		battleAnim = model.genAnim(new BattleAnim(Global.battleAnims.get(swingAnim)));
+		battleAnim = weaponSwing.genAnim();
 	}
 
 	public void playAnimation(Point src, Point tar)

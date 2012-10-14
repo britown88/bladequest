@@ -9,22 +9,26 @@ import bladequest.world.Global;
 
 public class WeaponSwing 
 {
-	private final Point frameSize = new Point(42, 38);
+	private static final Point frameSize = new Point(42, 38);
+	private static final Point animFrameSize = new Point(32, 32);
 	private String id;
 	
-	private Rect srcRect;
+	private Rect srcRect, animSrcRect;
 	
 	public WeaponSwing(String id, int fileX, int fileY)
 	{
 		this.id = id;
-		
-		
-		
 		srcRect = new Rect(
 				fileX * (frameSize.x * 3), 
 				fileY * frameSize.y,
 				fileX * (frameSize.x * 3)+(frameSize.x * 3),
 				fileY * frameSize.y + frameSize.y);		
+		
+		animSrcRect = new Rect(
+				fileX * (animFrameSize.x * 3), 
+				fileY * animFrameSize.y,
+				fileX * (animFrameSize.x * 3)+(animFrameSize.x * 3),
+				fileY * animFrameSize.y + animFrameSize.y);	
 		
 	}
 	
@@ -34,7 +38,7 @@ public class WeaponSwing
 	{
 		Bitmap newBmp = Bitmap.createBitmap(frameSize.x*3, frameSize.y, Config.ARGB_8888);
 		Bitmap swingBmp = Global.bitmaps.get("weaponswing");
-		
+				
 		baseColors = base;
 		swingColors = swing;
 		
@@ -55,18 +59,29 @@ public class WeaponSwing
 							relativePos.y, 
 							(drawSlash ? swing[cIndex] : base[cIndex]));					
 				}				
-			}		
-		return new WeaponSwingDrawable(newBmp, frameSize);
-	}
-
-	public BattleAnim genAnim(BattleAnim battleAnim) 
-	{
-		battleAnim.setFirstObjectColors(0, swingColors[0]);
-		battleAnim.setFirstObjectColors(1, swingColors[2]);
-		battleAnim.setFirstObjectColors(2, swingColors[0]);
+			}
 		
-		return battleAnim;
+		Bitmap newAnimBmp = Bitmap.createBitmap(animFrameSize.x*3, animFrameSize.y, Config.ARGB_8888);
+		Bitmap animBmp = Global.bitmaps.get("animsprites");
+		
+		for(int y = animSrcRect.top; y < animSrcRect.bottom; ++y)
+			for(int x = animSrcRect.left; x < animSrcRect.right; ++x)
+			{
+				int c = animBmp.getPixel(x, y);
+				
+				if(Color.alpha(c) == 255)
+				{
+					Point relativePos = new Point(x - animSrcRect.left, y - animSrcRect.top);
+					int cIndex = Color.red(c) / 32;
+					
+					newAnimBmp.setPixel(
+							relativePos.x, 
+							relativePos.y, 
+							swing[cIndex]);					
+				}				
+			}
+		
+		return new WeaponSwingDrawable(newBmp, frameSize, newAnimBmp, animFrameSize);
 	}
-	
 
 }
