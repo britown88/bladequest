@@ -69,34 +69,10 @@ implements OnGestureListener, AudioManager.OnAudioFocusChangeListener
 	
 	@Override
     public boolean onTouchEvent(MotionEvent event) 
-    {
-		//if(touchEvents.isEmpty())
-		
-//		if(touchEvents.size() > 0 && 
-//				touchEvents.get(touchEvents.size()-1).getAction() == event.getAction() && 
-//				event.getAction() == MotionEvent.ACTION_UP)
-//			return gestureScanner.onTouchEvent(event);
-		
+    {		
 		MotionEvent newEvent = MotionEvent.obtain(event);
-		touchEvents.add(newEvent);
-		
-		switch (newEvent.getAction())
-    	{
-    	case MotionEvent.ACTION_DOWN:
-    		Global.logMessage("Sent  Down " + touchEvents.size());
-    		break;
-    	case MotionEvent.ACTION_UP:
-    		Global.logMessage("Sent  Up   " + touchEvents.size());   		
-    		break;
-    	case MotionEvent.ACTION_MOVE:
-    		Global.logMessage("Sent  Move " + touchEvents.size());
-    		break;
-    	}
-			
-		
-		//panel.updateThread.onTouchEvent(event);
-		
-		//return true;
+		touchEvents.add(newEvent);		
+
     	return gestureScanner.onTouchEvent(event);
     }   
 	

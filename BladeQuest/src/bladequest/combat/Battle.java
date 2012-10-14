@@ -409,28 +409,25 @@ public class Battle
 		changeStartBarText("");
 
 	}
+	
 	//act state functions
 	private void initActState()
-	{		
+	{	
+		battleEvents.clear();
+		
 		//add enemy actions to event queue
 		for(Enemy e : encounter.Enemies())
 			if(!e.isDead())
 				battleEvents.add(e.genBattleEvent(partyList, encounter.Enemies()));
-		
-		
-		int charCount = 0;
+
 		for(Character c : partyList)
 			if(!c.isDead() && c.getAction() != Action.Guard)
-			{
 				addBattleEvent(c, c.getTargets());
-				charCount++;
-			}
-				
 		
 		battleEvents = BattleCalc.genMoveOrder(battleEvents);
 		
 		for(BattleEvent be : battleEvents)
-			be.init();
+			be.init();		
 		
 		nextActor(true);
 	}

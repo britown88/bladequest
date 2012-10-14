@@ -62,22 +62,7 @@ public class BqThread extends Thread
 				MotionEvent[] events = new MotionEvent[size];
 				
 				for(int i = 0; i < size; ++i)
-				{
-					events[i] =  Global.activity.touchEvents.get(i);
-//					switch (events[i].getAction())
-//			    	{
-//			    	case MotionEvent.ACTION_DOWN:
-//			    		Global.logMessage("Read  Down " + Global.activity.touchEvents.size());
-//			    		break;
-//			    	case MotionEvent.ACTION_UP:
-//			    		Global.logMessage("Read  Up   " + Global.activity.touchEvents.size());   		
-//			    		break;
-//			    	case MotionEvent.ACTION_MOVE:
-//			    		Global.logMessage("Read  Move " + Global.activity.touchEvents.size());
-//			    		break;
-//			    	}
-				}
-					
+					events[i] =  Global.activity.touchEvents.get(i);					
 				
 				for(MotionEvent me : events)
 				{
@@ -92,21 +77,7 @@ public class BqThread extends Thread
 	private void onTouchEvent(MotionEvent event) 
     {
 		if(event != null)
-		{
-			switch (event.getAction())
-	    	{
-	    	case MotionEvent.ACTION_DOWN:
-	    		Global.logMessage("Acted Down " + Global.activity.touchEvents.size());
-	    		break;
-	    	case MotionEvent.ACTION_UP:
-	    		Global.logMessage("Acted Up   " + Global.activity.touchEvents.size());   		
-	    		break;
-	    	case MotionEvent.ACTION_MOVE:
-	    		Global.logMessage("Acted Move " + Global.activity.touchEvents.size());
-	    		break;
-	    	}
-			
-			
+		{			
 			int x = (int)event.getX();
 			int y =	(int)event.getY();
 			

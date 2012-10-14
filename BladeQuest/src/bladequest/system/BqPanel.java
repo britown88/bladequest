@@ -203,18 +203,14 @@ implements SurfaceHolder.Callback
     private void drawLog()
 	{
 		int i = 0;
-		
-		Global.renderer.drawText("Func  Act  Queue", Global.vpToScreenX(0), Global.vpToScreenY(10), logText);
-		Global.renderer.drawText("----------------", Global.vpToScreenX(0), Global.vpToScreenY(20), logText);
-		
-		
+				
 		if(Global.gameLog != null)
 		{
 			List<String> events = new ArrayList<String>(Global.gameLog);
 			events = events.subList(events.size()-Math.min(10, events.size()), events.size());
 			
 			for(String str : events)
-				Global.renderer.drawText(str, Global.vpToScreenX(0), Global.vpToScreenY(40+i++*20), logText);
+				Global.renderer.drawText(str, Global.vpToScreenX(0), Global.vpToScreenY(10+i++*20), logText);
 		
 		}
 	}
