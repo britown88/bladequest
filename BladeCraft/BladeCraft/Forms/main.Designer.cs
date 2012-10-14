@@ -44,6 +44,7 @@
             this.chMapName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.mapRightClick = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gameDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.mapRightClick.SuspendLayout();
@@ -85,6 +86,8 @@
             // 
             // editToolStripMenuItem
             // 
+            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.gameDataToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.editToolStripMenuItem.Text = "Edit";
@@ -163,6 +166,14 @@
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
+            // gameDataToolStripMenuItem
+            // 
+            this.gameDataToolStripMenuItem.Name = "gameDataToolStripMenuItem";
+            this.gameDataToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F4;
+            this.gameDataToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.gameDataToolStripMenuItem.Text = "Game Data";
+            this.gameDataToolStripMenuItem.Click += new System.EventHandler(this.gameDataToolStripMenuItem_Click);
+            // 
             // main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -204,6 +215,7 @@
         private System.Windows.Forms.ColumnHeader chFileName;
         private System.Windows.Forms.ContextMenuStrip mapRightClick;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem gameDataToolStripMenuItem;
     }
 }
 

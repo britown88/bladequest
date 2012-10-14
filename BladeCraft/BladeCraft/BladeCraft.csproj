@@ -220,6 +220,12 @@
     <Compile Include="Forms\ZoneForm.Designer.cs">
       <DependentUpon>ZoneForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\GameDataForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\GameDataForm.Designer.cs">
+      <DependentUpon>GameDataForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Classes\Tile.cs" />
@@ -270,6 +276,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ActionForms\formWait.resx">
       <DependentUpon>formWait.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\GameDataForm.resx">
+      <DependentUpon>GameDataForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\NewActionForm.resx">
       <DependentUpon>NewActionForm.cs</DependentUpon>
