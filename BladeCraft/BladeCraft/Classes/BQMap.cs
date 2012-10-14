@@ -420,7 +420,7 @@ namespace BladeCraft.Classes
             {
                 loadState.addAction(
                         new actMerchant(values[1],
-                            (float)Convert.ToDecimal(values[2])));
+                            (float)Convert.ToDouble(values[2])));
             }
             else if (action == "nameselect")
             {

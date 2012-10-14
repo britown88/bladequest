@@ -15,7 +15,7 @@ namespace BladeCraft
     {
         //private BQMap map;
         private MapInfoForm infoForm;
-        private MapForm mapForm;
+        private GameDataForm dataForm;
 
         public main()
         {
@@ -138,6 +138,17 @@ namespace BladeCraft
                 //rightClickMenu.Show(mapPanel.PointToScreen(new Point(e.X, e.Y)));
                 mapRightClick.Show(lvwMaps.PointToScreen(new Point(e.X, e.Y)));
             }
+        }
+
+        private void gameDataToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (dataForm == null || dataForm.IsDisposed)
+            {
+                dataForm = new GameDataForm();
+                dataForm.MdiParent = this;
+            }
+            dataForm.Show();
+            dataForm.Focus();
         }
 
 
