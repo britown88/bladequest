@@ -151,21 +151,23 @@ public class Enemy extends Character
 		
 		BattleAnimObject baObj = new BattleAnimObject(Types.Bitmap, false, battleSpr.getBmpName());
 		Rect srcRect = battleSpr.getFrameRect(faces.Idle, 0);
-		baObj.setBmpSrcRect(srcRect.left, srcRect.top, srcRect.right, srcRect.bottom);
 		
 		BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Source);
+		state.setBmpSrcRect(srcRect.left, srcRect.top, srcRect.right, srcRect.bottom);
 		state.argb(255, 255, 255, 255);
 		state.pos1 = new Point(0,0);
 		state.size = new Point(battleSpr.getWidth(), battleSpr.getHeight());
 		baObj.addState(state);
 		
 		state = new BattleAnimObjState(15, PosTypes.Source);
+		state.setBmpSrcRect(srcRect.left, srcRect.top, srcRect.right, srcRect.bottom);
 		state.argb(255, 255, 255, 255);
 		state.pos1 = new Point(0,0);
 		state.size = new Point(battleSpr.getWidth(), battleSpr.getHeight());
 		baObj.addState(state);
 		
 		state = new BattleAnimObjState(75, PosTypes.Source);
+		state.setBmpSrcRect(srcRect.left, srcRect.top, srcRect.right, srcRect.bottom);
 		state.argb(0, 255, 0, 0);
 		state.colorize = 1.0f;
 		state.pos1 = new Point(0,0);

@@ -287,7 +287,7 @@ public class GameDataLoader
 		}else if(dl.item.equals("loop"))
 		{	ba.loop();
 		}else if(dl.item.equals("bmpsrc"))
-		{	baObj.setBmpSrcRect(Integer.parseInt(dl.values.get(0)), 
+		{	baState.setBmpSrcRect(Integer.parseInt(dl.values.get(0)), 
 				Integer.parseInt(dl.values.get(1)), 
 				Integer.parseInt(dl.values.get(2)), 
 				Integer.parseInt(dl.values.get(3)));

@@ -19,7 +19,7 @@ public class BattleAnimObject
 	private Types type;
 	private boolean outlineOnly;
 	public Point source, target, lineDrawPos1, lineDrawPos2;
-	private Rect bmpSrcRect;
+	
 	
 	private BattleAnimObjState workingState, currentState, nextState, y0, y3;
 
@@ -52,8 +52,7 @@ public class BattleAnimObject
 		this.bmpName = other.bmpName;
 		this.linearInterp = other.linearInterp;
 		
-		if(other.bmpSrcRect != null)
-			this.bmpSrcRect = new Rect(other.bmpSrcRect);
+		
 		
 		for(BattleAnimObjState state : other.states)
 			addState(new BattleAnimObjState(state));	
@@ -67,10 +66,7 @@ public class BattleAnimObject
 	}
 
 	
-	public void setBmpSrcRect(int left, int top, int right, int bottom)
-	{
-		bmpSrcRect = new Rect(left, top, right, bottom);
-	}
+	
 	public void alwaysDraw() { alwaysDraw = true; }
 	public void interpolateLinearly() { linearInterp = true; }
 	public int getCurrentStateIndex() { return stateIndex; }
@@ -296,7 +292,7 @@ public class BattleAnimObject
 				Global.renderer.drawElipse(drawRect, new Paint(objPaint));
 				break;
 			case Bitmap:
-				Global.renderer.drawBitmap(Global.bitmaps.get(bmpName), bmpSrcRect, drawRect, new Paint(objPaint));
+				Global.renderer.drawBitmap(Global.bitmaps.get(bmpName), workingState.bmpSrcRect, drawRect, new Paint(objPaint));
 				break;
 			case Line:
 				Global.renderer.drawLine(

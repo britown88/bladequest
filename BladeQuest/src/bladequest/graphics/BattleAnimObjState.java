@@ -22,6 +22,9 @@ public class BattleAnimObjState
 	private boolean random;
 	private Rect randomRange;
 	
+	public Rect bmpSrcRect;
+	
+	public void setBmpSrcRect(int left, int top, int right, int bottom){bmpSrcRect = new Rect(left, top, right, bottom);}
 	public void setRandomRange(Rect range){randomRange = range; random = true;}
 	public void randomize(BattleAnimObject parent)
 	{
@@ -92,6 +95,9 @@ public class BattleAnimObjState
 			this.randomRange = new Rect(other.randomRange);
 		this.randomized = other.randomized;
 		this.colorize = other.colorize;
+		
+		if(other.bmpSrcRect != null)
+			this.bmpSrcRect = new Rect(other.bmpSrcRect);
 	}
 	
 	public enum PosTypes

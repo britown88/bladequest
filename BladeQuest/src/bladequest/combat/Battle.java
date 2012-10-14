@@ -885,6 +885,7 @@ public class Battle
 				if(Global.screenFader.isFadedOut())
 				{
 					Global.map.getBackdrop().unload();
+					Global.musicBox.resumeLastSong();
 					Global.screenFader.fadeIn(2);
 					Global.GameState = States.GS_WORLDMOVEMENT;				
 				}		
