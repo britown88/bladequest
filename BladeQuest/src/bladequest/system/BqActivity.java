@@ -70,12 +70,33 @@ implements OnGestureListener, AudioManager.OnAudioFocusChangeListener
 	@Override
     public boolean onTouchEvent(MotionEvent event) 
     {
-		if(touchEvents.isEmpty())
-			touchEvents.add(event);
+		//if(touchEvents.isEmpty())
+		
+//		if(touchEvents.size() > 0 && 
+//				touchEvents.get(touchEvents.size()-1).getAction() == event.getAction() && 
+//				event.getAction() == MotionEvent.ACTION_UP)
+//			return gestureScanner.onTouchEvent(event);
+		
+		MotionEvent newEvent = MotionEvent.obtain(event);
+		touchEvents.add(newEvent);
+		
+		switch (newEvent.getAction())
+    	{
+    	case MotionEvent.ACTION_DOWN:
+    		Global.logMessage("Sent  Down " + touchEvents.size());
+    		break;
+    	case MotionEvent.ACTION_UP:
+    		Global.logMessage("Sent  Up   " + touchEvents.size());   		
+    		break;
+    	case MotionEvent.ACTION_MOVE:
+    		Global.logMessage("Sent  Move " + touchEvents.size());
+    		break;
+    	}
+			
 		
 		//panel.updateThread.onTouchEvent(event);
 		
-		
+		//return true;
     	return gestureScanner.onTouchEvent(event);
     }   
 	
@@ -177,6 +198,7 @@ implements OnGestureListener, AudioManager.OnAudioFocusChangeListener
 	@Override
     public boolean onDown(MotionEvent e)
     {
+		//Global.logMessage("Down");
     	//viewA.setText("-" + "DOWN" + "-");
     	return true;
     }
@@ -184,6 +206,7 @@ implements OnGestureListener, AudioManager.OnAudioFocusChangeListener
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
     {
+    	//Global.logMessage("Fling");
     	switch(Global.GameState)
     	{
     	case GS_MAINMENU:
@@ -196,6 +219,7 @@ implements OnGestureListener, AudioManager.OnAudioFocusChangeListener
     @Override
     public void onLongPress(MotionEvent e)
     {
+    	//Global.logMessage("LongPress");
     	switch(Global.GameState)
     	{
     	case GS_TITLE:
@@ -208,6 +232,7 @@ implements OnGestureListener, AudioManager.OnAudioFocusChangeListener
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
     {
     	//viewA.setText("-" + "SCROLL" + "-");
+    	//Global.logMessage("Scroll");
     	return true;
     }
     
@@ -215,12 +240,14 @@ implements OnGestureListener, AudioManager.OnAudioFocusChangeListener
     public void onShowPress(MotionEvent e)
     {
     	//viewA.setText("-" + "SHOW PRESS" + "-");
+    	//Global.logMessage("ShowPress");
     }    
     
     @Override
     public boolean onSingleTapUp(MotionEvent e)    
     {
     	//viewA.setText("-" + "SINGLE TAP UP" + "-");
+    	//Global.logMessage("SingleTapUp");
     	return true;
     }
     

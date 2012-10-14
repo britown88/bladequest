@@ -1,16 +1,18 @@
 package bladequest.system;
 
-import bladequest.graphics.TilePlate;
-import bladequest.world.*;
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
-import android.graphics.*;
-import android.graphics.Paint.Style;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Paint.Align;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.util.Log;
+import bladequest.graphics.TilePlate;
+import bladequest.world.Global;
 
 
 public class BqPanel extends SurfaceView 
@@ -19,7 +21,7 @@ implements SurfaceHolder.Callback
 	private BqRenderThread renderThread;
 	public BqThread updateThread;
 	private static final String TAG = BqPanel.class.getSimpleName();
-	private Paint blackpaint;
+	private Paint blackpaint, logText;
 	
 	public BqPanel(Activity activity)
 	{
@@ -31,6 +33,8 @@ implements SurfaceHolder.Callback
 		setFocusable(true);	
 		blackpaint = new Paint();
 		blackpaint.setColor(Color.BLACK);
+		
+		logText = Global.textFactory.getTextPaint(13, Color.WHITE, Align.LEFT);
 	}
 	
 	//@Override
@@ -185,6 +189,7 @@ implements SurfaceHolder.Callback
     	}	
     	
     	drawForeground();
+    	drawLog();
     	
     }
     
@@ -194,6 +199,25 @@ implements SurfaceHolder.Callback
     {    	
     	Global.renderer.drawColor(Color.BLACK);
     }
+    
+    private void drawLog()
+	{
+		int i = 0;
+		
+		Global.renderer.drawText("Func  Act  Queue", Global.vpToScreenX(0), Global.vpToScreenY(10), logText);
+		Global.renderer.drawText("----------------", Global.vpToScreenX(0), Global.vpToScreenY(20), logText);
+		
+		
+		if(Global.gameLog != null)
+		{
+			List<String> events = new ArrayList<String>(Global.gameLog);
+			events = events.subList(events.size()-Math.min(10, events.size()), events.size());
+			
+			for(String str : events)
+				Global.renderer.drawText(str, Global.vpToScreenX(0), Global.vpToScreenY(40+i++*20), logText);
+		
+		}
+	}
     
     private void drawWorld()
     {
@@ -223,6 +247,8 @@ implements SurfaceHolder.Callback
     	//draw msgbox
     	if(Global.worldMsgBox != null)
     		Global.worldMsgBox.render();
+    	
+    	
 
     }
     

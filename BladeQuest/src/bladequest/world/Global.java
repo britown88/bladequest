@@ -154,6 +154,8 @@ public class Global
 	public static ScreenShaker screenShaker;
 	public static MusicBox musicBox;
 	public static TargetReticle target;
+
+	public static List<String> gameLog; 
 	
 	public static Party party;
 	public static Battle battle;
@@ -184,6 +186,16 @@ public class Global
 	
 	public static TilePlateBitmap[] tilePlateBmps;	
 	public static int tilePlateBitmapCount = 24;
+	
+	public static void logMessage(String str)
+	{
+		if(gameLog == null)
+			gameLog = new ArrayList<String>();
+		
+		gameLog.add(str);
+	}
+	
+	
 	
 	public static void genValidPathArea(List<Point> nodes)
 	{

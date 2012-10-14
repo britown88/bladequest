@@ -26,18 +26,14 @@ public class BqThread extends Thread
 	{
 		long startTime, frameTime;
 		int sleepTime;
-		List<MotionEvent> touchEvents;
+		
 		
 		while(running)
 		{
 	    	startTime = System.currentTimeMillis();
 	    	Global.update();
 	    	
-	    	//handle input
-	    	touchEvents = new ArrayList<MotionEvent>(Global.activity.touchEvents);
-	    	Global.activity.touchEvents.clear();
-	    	for(MotionEvent me : touchEvents)
-	    		onTouchEvent(me);	    	
+	    	handleInput();  	
 	    	
 	    	gamePanel.onDraw();
 	    	
@@ -54,10 +50,63 @@ public class BqThread extends Thread
 		
 	}
 	
-	public void onTouchEvent(MotionEvent event) 
+	private void handleInput()
+	{
+		
+		if(Global.activity.touchEvents != null)
+    	{
+			int size = Global.activity.touchEvents.size();
+			
+			if(size > 0)
+			{
+				MotionEvent[] events = new MotionEvent[size];
+				
+				for(int i = 0; i < size; ++i)
+				{
+					events[i] =  Global.activity.touchEvents.get(i);
+//					switch (events[i].getAction())
+//			    	{
+//			    	case MotionEvent.ACTION_DOWN:
+//			    		Global.logMessage("Read  Down " + Global.activity.touchEvents.size());
+//			    		break;
+//			    	case MotionEvent.ACTION_UP:
+//			    		Global.logMessage("Read  Up   " + Global.activity.touchEvents.size());   		
+//			    		break;
+//			    	case MotionEvent.ACTION_MOVE:
+//			    		Global.logMessage("Read  Move " + Global.activity.touchEvents.size());
+//			    		break;
+//			    	}
+				}
+					
+				
+				for(MotionEvent me : events)
+				{
+					onTouchEvent(me);
+					Global.activity.touchEvents.remove(me);
+					me.recycle();
+				}	
+			}			
+    	}
+	}
+	
+	private void onTouchEvent(MotionEvent event) 
     {
 		if(event != null)
 		{
+			switch (event.getAction())
+	    	{
+	    	case MotionEvent.ACTION_DOWN:
+	    		Global.logMessage("Acted Down " + Global.activity.touchEvents.size());
+	    		break;
+	    	case MotionEvent.ACTION_UP:
+	    		Global.logMessage("Acted Up   " + Global.activity.touchEvents.size());   		
+	    		break;
+	    	case MotionEvent.ACTION_MOVE:
+	    		Global.logMessage("Acted Move " + Global.activity.touchEvents.size());
+	    		break;
+	    	}
+			
+			
 			int x = (int)event.getX();
 			int y =	(int)event.getY();
 			
