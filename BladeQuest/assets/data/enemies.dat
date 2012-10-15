@@ -9,8 +9,8 @@ ai 15
 ability bite 100 0 100
 endenemy
 #
-enemy guard "Guard" guar
-atkanim slice1d
+enemy guard "Guard" guard
+atkanim slice1
 basestats 10 10 10 10
 level 25
 gold 1200

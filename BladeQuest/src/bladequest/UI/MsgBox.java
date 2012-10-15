@@ -183,7 +183,7 @@ public class MsgBox extends MenuPanel
 				}
 				currentChar++;
 				
-				Global.playSound("dlg");
+				Global.playSound("menusound1");
 			}
 			
 		}			
