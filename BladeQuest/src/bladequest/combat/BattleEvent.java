@@ -108,6 +108,13 @@ public class BattleEvent
 			
 			break;
 		case CombatAction:
+			animStartIndex = 3;
+			
+			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex), faces.Cast, 0, source));
+			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex+1), source.getCombatAction(), source, targets));
+			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex+3), faces.Ready, 0, source));
+			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex+5)));
+			
 			break;
 		case Item:
 			Item itm = source.getItemToUse();

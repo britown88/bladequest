@@ -1,8 +1,10 @@
 package bladequest.combatactions;
-import java.util.*;
+import java.util.List;
+
+import bladequest.combat.DamageMarker;
 import bladequest.world.Character;
-import bladequest.world.TargetTypes;
 import bladequest.world.DamageTypes;
+import bladequest.world.TargetTypes;
 
 public class CombatAction 
 {
@@ -11,7 +13,7 @@ public class CombatAction
 	protected TargetTypes targetType;
 	
 	public CombatAction(){}	
-	public void execute(List<Character> targets){}
+	public void execute(List<Character> targets, List<DamageMarker> markers){}
 	
 	public String getName() { return name; }
 	public String getActionText() { return actionText; }

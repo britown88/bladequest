@@ -564,7 +564,7 @@ public class BattleOld {
 									break;
 									
 								case CombatAction:
-									c.useCombatAction();
+									//c.useCombatAction();
 									changeState(battleStates.USEITEM);
 									break;
 								}						

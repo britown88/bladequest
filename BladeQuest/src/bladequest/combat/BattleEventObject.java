@@ -83,7 +83,7 @@ public class BattleEventObject
 			battleAction.run(source, targets, markers);
 			break;
 		case CombatAction:
-			combatAction.execute(targets);
+			combatAction.execute(targets, markers);
 			break;
 		case ChangeFace:
 			if(!source.isEnemy())

@@ -466,16 +466,12 @@ public class Character
 	
 	public TargetTypes getCombatActionTargetType() { return combAction.getTargetType(); }
 	public String getCombatActionText() { return combAction.getActionText(); }
+	public CombatAction getCombatAction() { return combAction; }
 	
 	public void setUseCombatAction()
 	{
 		action = Action.CombatAction;
 
-	}
-	
-	public void useCombatAction()
-	{
-		combAction.execute(targets);
 	}
 	
 	public void unuseItem()

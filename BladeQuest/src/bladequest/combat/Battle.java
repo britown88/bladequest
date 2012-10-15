@@ -274,7 +274,7 @@ public class Battle
 		mainMenu.update();
 		
 	}
-	private void changeStartBarText(String str){startBar.getTextAt(0).text = str;}
+	public void changeStartBarText(String str){startBar.getTextAt(0).text = str;}
 	private void showDisplayName(String str)
 	{
 		displayNamePanel.show();		
@@ -657,7 +657,10 @@ public class Battle
 		}
 		else if(opt.equals("act"))
 		{
-			changeState(BattleStates.SELECT);
+			targetType = currentChar.getCombatActionTargetType();
+			currentChar.setBattleAction(Action.CombatAction);
+			currentChar.setFace(faces.Ready);
+			changeState(BattleStates.TARGET);
 		}
 		else if(opt.equals("grd"))
 		{

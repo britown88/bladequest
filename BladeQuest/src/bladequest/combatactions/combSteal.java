@@ -2,6 +2,7 @@ package bladequest.combatactions;
 
 import java.util.List;
 
+import bladequest.combat.DamageMarker;
 import bladequest.world.Character;
 import bladequest.world.DamageTypes;
 import bladequest.world.Enemy;
@@ -20,7 +21,7 @@ public class combSteal extends CombatAction
 	}
 	
 	@Override
-	public void execute(List<Character> targets)
+	public void execute(List<Character> targets, List<DamageMarker> markers)
 	{
 		Enemy target = (Enemy)targets.get(0);
 		
@@ -29,21 +30,21 @@ public class combSteal extends CombatAction
 			String item = target.getItem(true);
 			if(item == null)
 			{
-				//Global.battle.dmgText(target, "MISS", 0);
-				//Global.battle.setFrameText("Failed to steal!");
+				markers.add(new DamageMarker("MISS", target));	
+				Global.battle.changeStartBarText("Failed to steal!");
 			}
 			else
 			{
 				Global.party.addItem(item);
 				
-				//Global.battle.dmgText(target, "STEAL!", 0);
-				//Global.battle.setFrameText("Stole a "+ Global.items.get(item).getName() +"!");
+				markers.add(new DamageMarker("STEAL", target));
+				Global.battle.changeStartBarText("Stole a "+ Global.items.get(item).getName() +"!");
 			}
 		}
 		else
 		{
-			//Global.battle.dmgText(target, "FAIL", 0);
-			//Global.battle.setFrameText("Doesn't have anything!");
+			markers.add(new DamageMarker("FAIL", target));
+			Global.battle.changeStartBarText("Doesn't have anything!");
 		}
 		
 		
