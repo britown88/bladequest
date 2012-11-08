@@ -649,7 +649,7 @@ public class Global
     		{
     			map.playBGM(true);
     			GameState = States.GS_WORLDMOVEMENT; 
-    			//screenFader.fadeIn(10);
+    			screenFader.fadeIn(10);
     				
     			delay();
     		}
@@ -1102,27 +1102,27 @@ public class Global
 		loading = false;
 
 		//demo start info, do not fuck with!
-		screenFader.setFadeColor(255, 0, 0, 0);
-		screenFader.setFaded();
-		party.teleport(16, 5);		
-		party.insertCharacter("aramis", 1);			
-		LoadMap("prisonb2");
+//		screenFader.setFadeColor(255, 0, 0, 0);
+//		screenFader.setFaded();
+//		party.teleport(16, 5);		
+//		party.insertCharacter("aramis", 1);			
+//		LoadMap("prisonb2");
 		
-//		//test params
-//		party.teleport(1, 3);		
-//		//party.insertCharacter("aramis", 1);	
-//		party.addCharacter("aramis");
-//		party.getCharacter("aramis").setDisplayName("?????");		
-//		
-//		LoadMap("test");	
-//		party.addCharacter("joy");
-//		//for(int i = 0; i < 10; ++i)
-//		//party.getPartyMembers()[0].applyStatusEffect(new sePoison(100));
-//		party.addCharacter("luc");		
-//		
-//		//party.addCharacter("joy");				
-//		switches.put("guardasleep", true);
-//		switches.put("startgame", true);			
+		//test params
+		party.teleport(1, 3);		
+		//party.insertCharacter("aramis", 1);	
+		party.addCharacter("aramis");
+		party.getCharacter("aramis").setDisplayName("?????");		
+		
+		LoadMap("test");	
+		party.addCharacter("joy");
+		//for(int i = 0; i < 10; ++i)
+		//party.getPartyMembers()[0].applyStatusEffect(new sePoison(100));
+		party.addCharacter("luc");		
+		
+		//party.addCharacter("joy");				
+		switches.put("guardasleep", true);
+		switches.put("startgame", true);			
 		
 	}
 	

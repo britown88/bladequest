@@ -935,7 +935,12 @@ public class Character
 	{
 		BattleSprite.faces face = battleSpr.getFace();
 		if(face == faces.Damaged)
+		{
+			//reset to idle before setting to avoid oldface loop
+			battleSpr.changeFace(faces.Idle);
 			setFace(savedFace);
+		}
+			
 	}
 	
 	
@@ -949,6 +954,12 @@ public class Character
 			switch(newFace)
 			{
 			case Idle:
+				if(oldFace == faces.Damaged)
+				{
+					//dont go to idle if being hurt, go to idle after
+					savedFace = faces.Idle;
+					break;
+				}					
 			case Ready:
 				if(dead) setFace(faces.Dead);
 				else if (weak) setFace(faces.Weak);
