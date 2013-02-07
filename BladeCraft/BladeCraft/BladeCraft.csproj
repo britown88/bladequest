@@ -55,6 +55,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Classes\EncounterZone.cs" />
+    <Compile Include="Classes\GameData\BQGameData.cs" />
     <Compile Include="Classes\Objects\Actions\actFade.cs" />
     <Compile Include="Classes\Objects\Actions\Action.cs" />
     <Compile Include="Classes\Objects\Actions\actMessage.cs" />
@@ -178,6 +179,12 @@
     <Compile Include="Forms\ActionForms\formWait.Designer.cs">
       <DependentUpon>formWait.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\BitmapSelect.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BitmapSelect.Designer.cs">
+      <DependentUpon>BitmapSelect.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\NewActionForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -276,6 +283,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ActionForms\formWait.resx">
       <DependentUpon>formWait.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BitmapSelect.resx">
+      <DependentUpon>BitmapSelect.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\GameDataForm.resx">
       <DependentUpon>GameDataForm.cs</DependentUpon>

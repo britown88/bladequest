@@ -17,11 +17,15 @@ namespace BladeCraft
         private MapInfoForm infoForm;
         private GameDataForm dataForm;
 
+        private BQGameData gameData;
+
         public main()
         {
             InitializeComponent();
             //mapForm = new MapForm();
             //map = new BQMap("newmap", 30, 20, "New Map", "", false);
+
+            gameData = new BQGameData();
             
         }
 
@@ -29,6 +33,7 @@ namespace BladeCraft
         {
 
             readMaps();
+            gameData.load();
 
             //mapForm.MdiParent = this;
             //mapForm.Dock = DockStyle.Fill;
