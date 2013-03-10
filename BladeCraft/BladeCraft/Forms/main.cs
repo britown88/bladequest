@@ -26,6 +26,8 @@ namespace BladeCraft
             //map = new BQMap("newmap", 30, 20, "New Map", "", false);
 
             gameData = new BQGameData();
+
+            
             
         }
 
@@ -34,6 +36,9 @@ namespace BladeCraft
 
             readMaps();
             gameData.load();
+
+            //bitmapselect selectform = new bitmapselect(gamedata.bitmaps);
+            //var result = selectform.showdialog();
 
             //mapForm.MdiParent = this;
             //mapForm.Dock = DockStyle.Fill;

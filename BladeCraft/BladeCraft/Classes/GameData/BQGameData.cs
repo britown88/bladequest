@@ -13,20 +13,26 @@ namespace BladeCraft.Classes
 {
     class BQGameData
     {
-        private Dictionary<string, Bitmap> bitmaps;
+        public Dictionary<string, Bitmap> Bitmaps { get; private set; }
+        public List<Sprite> BattleSprites { get; private set; }
+        public List<Sprite> EnemySprites { get; private set; }
+        public List<Sprite> WorldSprites { get; private set; }
 
         public BQGameData()
         {
-            bitmaps = new Dictionary<string, Bitmap>();
+            Bitmaps = new Dictionary<string, Bitmap>();
+            BattleSprites = new List<Sprite>();
+            EnemySprites = new List<Sprite>();
+            WorldSprites = new List<Sprite>();
 
         }
 
         public void load()
         {
             loadBitmaps();
-        }
 
-        public Dictionary<string, Bitmap> GetBitmaps() { return bitmaps; }
+            
+        }
 
         private void loadBitmaps(string dir = "\\assets\\drawable")
         {
@@ -35,8 +41,8 @@ namespace BladeCraft.Classes
 
             foreach (string path in bmpFiles)
             {
-                string bmpName = path.Replace(Application.StartupPath + "\\assets\\drawable\\", "").Replace(".png", "");
-                bitmaps.Add(bmpName, new Bitmap(path));
+                string bmpName = path.Replace(Application.StartupPath + "\\assets\\drawable\\", "").ToLower().Replace(".png", "");
+                Bitmaps.Add(bmpName, new Bitmap(path));
 
             }
 

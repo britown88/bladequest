@@ -28,23 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.lvwFiles = new System.Windows.Forms.ListView();
+            this.components = new System.ComponentModel.Container();
             this.label1 = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.bmpPanel = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnCancel = new System.Windows.Forms.Button();
+            this.btnUse = new System.Windows.Forms.Button();
+            this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
+            this.tvwFiles = new System.Windows.Forms.TreeView();
             this.SuspendLayout();
-            // 
-            // lvwFiles
-            // 
-            this.lvwFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lvwFiles.Location = new System.Drawing.Point(12, 29);
-            this.lvwFiles.Name = "lvwFiles";
-            this.lvwFiles.Size = new System.Drawing.Size(146, 287);
-            this.lvwFiles.TabIndex = 0;
-            this.lvwFiles.UseCompatibleStateImageBehavior = false;
             // 
             // label1
             // 
@@ -55,15 +47,16 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "File";
             // 
-            // panel1
+            // bmpPanel
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.bmpPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.Location = new System.Drawing.Point(165, 29);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(228, 258);
-            this.panel1.TabIndex = 2;
+            this.bmpPanel.Location = new System.Drawing.Point(165, 29);
+            this.bmpPanel.Name = "bmpPanel";
+            this.bmpPanel.Size = new System.Drawing.Size(228, 258);
+            this.bmpPanel.TabIndex = 2;
+            this.bmpPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.bmpPanel_Paint);
             // 
             // label2
             // 
@@ -74,14 +67,34 @@
             this.label2.TabIndex = 3;
             this.label2.Text = "Preview:";
             // 
-            // button1
+            // btnCancel
             // 
-            this.button1.Location = new System.Drawing.Point(318, 293);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "Use";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnCancel.Location = new System.Drawing.Point(318, 293);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(75, 23);
+            this.btnCancel.TabIndex = 4;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.UseVisualStyleBackColor = true;
+            // 
+            // btnUse
+            // 
+            this.btnUse.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.btnUse.Location = new System.Drawing.Point(237, 293);
+            this.btnUse.Name = "btnUse";
+            this.btnUse.Size = new System.Drawing.Size(75, 23);
+            this.btnUse.TabIndex = 5;
+            this.btnUse.Text = "Use";
+            this.btnUse.UseVisualStyleBackColor = true;
+            // 
+            // tvwFiles
+            // 
+            this.tvwFiles.FullRowSelect = true;
+            this.tvwFiles.Location = new System.Drawing.Point(12, 29);
+            this.tvwFiles.Name = "tvwFiles";
+            this.tvwFiles.Size = new System.Drawing.Size(147, 258);
+            this.tvwFiles.TabIndex = 6;
+            this.tvwFiles.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvwFiles_AfterSelect);
             // 
             // BitmapSelect
             // 
@@ -89,11 +102,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(405, 328);
             this.ControlBox = false;
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.tvwFiles);
+            this.Controls.Add(this.btnUse);
+            this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.bmpPanel);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.lvwFiles);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "BitmapSelect";
             this.Text = "Select Bitmap";
@@ -105,10 +119,12 @@
 
         #endregion
 
-        private System.Windows.Forms.ListView lvwFiles;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel bmpPanel;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.Button btnUse;
+        private System.IO.Ports.SerialPort serialPort1;
+        private System.Windows.Forms.TreeView tvwFiles;
     }
 }
