@@ -12,7 +12,7 @@ namespace BladeCraft.Forms
     {
 
         private Dictionary<string, Bitmap> bitmaps;
-        public Bitmap SelectedBitmap { get; private set; }
+        public String SelectedBitmap { get; private set; }
 
 
         public BitmapSelect(Dictionary<string, Bitmap> bitmaps)
@@ -65,7 +65,7 @@ namespace BladeCraft.Forms
                     }
 
                     TreeNode fileNode = new TreeNode(bmpName);
-                    fileNode.Tag = bitmaps[path];
+                    fileNode.Tag = path;
                     currentNode.Nodes.Add(fileNode);
                 }
                 else
@@ -73,7 +73,7 @@ namespace BladeCraft.Forms
                     //add a node at the base level
                     String bmpName = expandedPath[0];
                     TreeNode baseNode = new TreeNode(bmpName);
-                    baseNode.Tag = bitmaps[path];
+                    baseNode.Tag = path;
                     tvwFiles.Nodes.Add(baseNode);
                 }
             }
@@ -85,13 +85,17 @@ namespace BladeCraft.Forms
             Graphics g = e.Graphics;
 
             if (SelectedBitmap != null)
-                g.DrawImage(SelectedBitmap, new Point(0, 0));
+                g.DrawImage(bitmaps[SelectedBitmap], new Point(0, 0));
         }
 
         private void tvwFiles_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            SelectedBitmap = (Bitmap)e.Node.Tag;
-            bmpPanel.Invalidate();
+            if (e.Node.Tag != null)
+            {
+                SelectedBitmap = (String)e.Node.Tag;
+                bmpPanel.Invalidate();
+            }
+            
         }
     }
 }

@@ -55,6 +55,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Classes\EncounterZone.cs" />
+    <Compile Include="Classes\FileLineReader.cs" />
     <Compile Include="Classes\GameData\BQGameData.cs" />
     <Compile Include="Classes\GameData\Sprite.cs" />
     <Compile Include="Classes\Objects\Actions\actFade.cs" />

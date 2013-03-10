@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace BladeCraft.Classes
 {
-    class Sprite
+    public class Sprite
     {
         public enum SpriteType
         {
@@ -14,12 +14,12 @@ namespace BladeCraft.Classes
             World = 2
         }
 
-        public SpriteType Type { get; private set; }
-        public String Name { get; private set; }
-        public String Bitmap { get; private set; }
+        public SpriteType Type { get; set; }
+        public String Name { get; set; }
+        public String Bitmap { get; set; }
         public Point Pos { get; private set; }
-        public int SrcSize { get; private set; }
-        public int DestSize { get; private set; }
+        public int SrcSize { get; set; }
+        public int DestSize { get; set; }
 
         public Sprite(String bitmap, String name, int x, int y)
         {
@@ -32,6 +32,7 @@ namespace BladeCraft.Classes
         public Sprite(String name, int x, int y)
         {
             Type = SpriteType.Battle;
+            Bitmap = "characers\\herobattlers";
             Name = name;
             Pos = new Point(x, y);
         }
@@ -44,6 +45,16 @@ namespace BladeCraft.Classes
             Pos = new Point(x, y);
             SrcSize = srcSize;
             DestSize = destSize;
+        }
+
+        public Sprite(Sprite other)
+        {
+            Type = other.Type;
+            Bitmap = other.Bitmap;
+            Name = other.Name;
+            Pos = new Point(other.Pos.X, other.Pos.Y);
+            SrcSize = other.SrcSize;
+            DestSize = other.DestSize;
         }
 
     }

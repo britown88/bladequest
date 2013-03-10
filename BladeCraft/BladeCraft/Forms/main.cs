@@ -154,7 +154,7 @@ namespace BladeCraft
         {
             if (dataForm == null || dataForm.IsDisposed)
             {
-                dataForm = new GameDataForm();
+                dataForm = new GameDataForm(gameData);
                 dataForm.MdiParent = this;
             }
             dataForm.Show();
