@@ -75,13 +75,10 @@ namespace BladeCraft
                 addSpriteToListview(sprite);
         }
 
-        private void addSpriteToListview(Sprite sprite, int index = -1, bool groupChange = false)
+        private void addSpriteToListview(Sprite sprite)
         {
             ListViewItem item;
-            if (index != -1 && !groupChange)
-                item = lvwSprites.Items.Insert(index, sprite.Name, sprite.Name, 0);
-            else
-                item = lvwSprites.Items.Add(sprite.Name, sprite.Name, 0);
+            item = lvwSprites.Items.Add(sprite.Name, sprite.Name, 0);
 
             item.Group = lvwSprites.Groups[(int)sprite.Type];
             item.Tag = sprite;
@@ -150,16 +147,26 @@ namespace BladeCraft
             int index = -1;
             if (lvwSprites.Items.ContainsKey(workingSprite.Name))
             {
-                index = lvwSprites.Items[workingSprite.Name].Index;
-                addSpriteToListview(workingSpriteCopy, index, workingSprite.Type != workingSpriteCopy.Type);
-                lvwSprites.Items.Remove(lvwSprites.Items[workingSprite.Name]);
+                if (workingSprite.Type != workingSpriteCopy.Type)
+                {
+                    lvwSprites.Items.Remove(lvwSprites.Items[workingSprite.Name]);
+                    addSpriteToListview(workingSpriteCopy);
+                }
+                else
+                {
+                    var item = lvwSprites.Items[workingSprite.Name];
+                    item.Name = workingSpriteCopy.Name;
+                    item.Text = workingSpriteCopy.Name;
+                    item.Tag = workingSpriteCopy;
+                    index = lvwSprites.Items[workingSprite.Name].Index - 1;
+                }
+
+                
             }
             else
-                addSpriteToListview(workingSpriteCopy, index);
+                addSpriteToListview(workingSpriteCopy);
 
         }
-
-        
 
         private void lvwSprites_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -170,12 +177,9 @@ namespace BladeCraft
             {
                 newSprite = false;
                 updateSpriteTab((Sprite)lvwSprites.SelectedItems[0].Tag);
-            }
-                
+            } 
             
         }
-
-        
 
         private void btnSetBitmap_Click(object sender, EventArgs e)
         {
