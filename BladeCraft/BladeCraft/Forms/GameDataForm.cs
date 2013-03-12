@@ -55,10 +55,12 @@ namespace BladeCraft
         #region Sprite Tab
 
         Sprite workingSprite, workingSpriteCopy;
+        bool newSprite;
 
         void initSpriteTab()
         {
             Sprite blankSprite = new Sprite("TEST", "TEST", 0, 0);
+            newSprite = true;
             updateSpriteTab(blankSprite);
 
             //Populate Listview
@@ -73,12 +75,16 @@ namespace BladeCraft
                 addSpriteToListview(sprite);
         }
 
-        private void addSpriteToListview(Sprite sprite)
+        private void addSpriteToListview(Sprite sprite, int index = -1, bool groupChange = false)
         {
-            ListViewItem item = new ListViewItem(lvwSprites.Groups[(int)sprite.Type]);
-            item.Text = sprite.Name;
+            ListViewItem item;
+            if (index != -1 && !groupChange)
+                item = lvwSprites.Items.Insert(index, sprite.Name, sprite.Name, 0);
+            else
+                item = lvwSprites.Items.Add(sprite.Name, sprite.Name, 0);
+
+            item.Group = lvwSprites.Groups[(int)sprite.Type];
             item.Tag = sprite;
-            lvwSprites.Items.Add(item);
         }
 
         void leaveSpriteTab()
@@ -131,23 +137,45 @@ namespace BladeCraft
             }
         }
 
-        private void dataTabs_Selected(object sender, TabControlEventArgs e)
+        private void saveCurrentSprite()
         {
-            if (tabInitFunctions.ContainsKey(e.TabPage.Name))
-                tabInitFunctions[e.TabPage.Name]();
+            workingSpriteCopy.Name = txtSpriteName.Text;
+            workingSpriteCopy.Type = (Sprite.SpriteType)cmbSpriteType.SelectedIndex;
+            workingSpriteCopy.Bitmap = txtBitmap.Text;
+            workingSpriteCopy.Pos.X = (int)numPosX.Value;
+            workingSpriteCopy.Pos.Y = (int)numPosY.Value;
+            workingSpriteCopy.SrcSize = (int)numSrcSize.Value;
+            workingSpriteCopy.DestSize = (int)numDestSize.Value;
+
+            int index = -1;
+            if (lvwSprites.Items.ContainsKey(workingSprite.Name))
+            {
+                index = lvwSprites.Items[workingSprite.Name].Index;
+                addSpriteToListview(workingSpriteCopy, index, workingSprite.Type != workingSpriteCopy.Type);
+                lvwSprites.Items.Remove(lvwSprites.Items[workingSprite.Name]);
+            }
+            else
+                addSpriteToListview(workingSpriteCopy, index);
+
         }
 
-        private void dataTabs_Deselected(object sender, TabControlEventArgs e)
-        {
-            if (tabLeaveFunctions.ContainsKey(e.TabPage.Name))
-                tabLeaveFunctions[e.TabPage.Name]();
-        }
+        
 
         private void lvwSprites_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if(!newSprite)
+                saveCurrentSprite();
+
             if (lvwSprites.SelectedItems.Count > 0)
+            {
+                newSprite = false;
                 updateSpriteTab((Sprite)lvwSprites.SelectedItems[0].Tag);
+            }
+                
+            
         }
+
+        
 
         private void btnSetBitmap_Click(object sender, EventArgs e)
         {
@@ -251,9 +279,17 @@ namespace BladeCraft
         }
         #endregion
 
-        
+        private void dataTabs_Selected(object sender, TabControlEventArgs e)
+        {
+            if (tabInitFunctions.ContainsKey(e.TabPage.Name))
+                tabInitFunctions[e.TabPage.Name]();
+        }
 
-
+        private void dataTabs_Deselected(object sender, TabControlEventArgs e)
+        {
+            if (tabLeaveFunctions.ContainsKey(e.TabPage.Name))
+                tabLeaveFunctions[e.TabPage.Name]();
+        }
 
     }
 }

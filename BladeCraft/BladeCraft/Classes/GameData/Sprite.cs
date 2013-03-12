@@ -17,7 +17,7 @@ namespace BladeCraft.Classes
         public SpriteType Type { get; set; }
         public String Name { get; set; }
         public String Bitmap { get; set; }
-        public Point Pos { get; private set; }
+        public Point Pos;
         public int SrcSize { get; set; }
         public int DestSize { get; set; }
 
@@ -32,7 +32,7 @@ namespace BladeCraft.Classes
         public Sprite(String name, int x, int y)
         {
             Type = SpriteType.Battle;
-            Bitmap = "characers\\herobattlers";
+            Bitmap = "characters\\herobattlers";
             Name = name;
             Pos = new Point(x, y);
         }
