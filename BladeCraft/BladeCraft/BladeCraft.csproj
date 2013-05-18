@@ -39,10 +39,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
@@ -58,6 +54,7 @@
     <Compile Include="Classes\FileLineReader.cs" />
     <Compile Include="Classes\GameData\BQGameData.cs" />
     <Compile Include="Classes\GameData\Sprite.cs" />
+    <Compile Include="Classes\ListViewItemComparer.cs" />
     <Compile Include="Classes\Objects\Actions\actFade.cs" />
     <Compile Include="Classes\Objects\Actions\Action.cs" />
     <Compile Include="Classes\Objects\Actions\actMessage.cs" />

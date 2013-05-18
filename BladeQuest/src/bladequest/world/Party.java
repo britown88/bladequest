@@ -544,26 +544,21 @@ public class Party
 			for(StatusEffect se : c.getStatusEffects())
 				se.onStep(c);
 		
-		//check if menu needs to open
-		if(Global.openMenuFlag)		
-			Global.openMainMenuSafe();//only open when gridaligned	
-		//check if debug needs to open
-		else if(Global.openDebugFlag)		
-			Global.openDebugMenuSafe();//only open when gridaligned
-		
 		else//dont go into battle if menu was opened
 		{
 			//check for encounters, if not, continue movement
 			if(objPath != null)
-			{
 				HandleObjectPath();
-			}
 			else
 			{
-				if(!stepActivate() && !initBattle())			
-					mapPath();	
-				else
+				if(stepActivate() || initBattle())
 					clearMovementPath();
+				else if(Global.openMenuFlag)		
+					Global.openMainMenuSafe();
+				else if(Global.openDebugFlag)		
+					Global.openDebugMenuSafe();
+				else
+					mapPath();
 			}
 		}		
 	}

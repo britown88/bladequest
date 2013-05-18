@@ -28,8 +28,8 @@ namespace BladeCraft.Forms
             encounterRate.Value = zone.encounterRate;
             X.Value = zone.zone.X;
             Y.Value = zone.zone.Y;
-            Width.Value = zone.zone.Width;
-            Height.Value = zone.zone.Height;
+            numWidth.Value = zone.zone.Width;
+            numHeight.Value = zone.zone.Height;
 
             foreach (string str in zone.encounters)
                 lvwEncounters.Items.Add(str);
@@ -40,8 +40,8 @@ namespace BladeCraft.Forms
             zone.encounterRate = (int)encounterRate.Value;
             zone.zone.X = (int)X.Value;
             zone.zone.Y = (int)Y.Value;
-            zone.zone.Width = (int)Width.Value;
-            zone.zone.Height = (int)Height.Value;
+            zone.zone.Width = (int)numWidth.Value;
+            zone.zone.Height = (int)numHeight.Value;
 
             zone.encounters.Clear();
             foreach (ListViewItem item in lvwEncounters.Items)

@@ -88,7 +88,7 @@ public class BqThread extends Thread
 				for(int ke : events)
 				{
 					onKeyEvent(ke);
-					Global.activity.keyEvents.remove(ke);
+					Global.activity.keyEvents.remove((Integer)ke);
 				}	
 			}			
     	}

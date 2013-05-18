@@ -213,6 +213,7 @@
             this.btnSave.TabIndex = 13;
             this.btnSave.Text = "Save";
             this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // btnCancel
             // 
@@ -376,6 +377,7 @@
             this.btnNew.TabIndex = 5;
             this.btnNew.Text = "New";
             this.btnNew.UseVisualStyleBackColor = true;
+            this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
             // 
             // groupBox1
             // 
@@ -419,6 +421,7 @@
             this.txtBitmap.ReadOnly = true;
             this.txtBitmap.Size = new System.Drawing.Size(112, 20);
             this.txtBitmap.TabIndex = 5;
+            this.txtBitmap.TextChanged += new System.EventHandler(this.txtBitmap_TextChanged);
             // 
             // label2
             // 

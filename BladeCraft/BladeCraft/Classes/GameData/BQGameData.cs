@@ -16,9 +16,7 @@ namespace BladeCraft.Classes
         delegate void FileAction(String filepath);
 
         public Dictionary<string, Bitmap> Bitmaps { get; private set; }
-        public List<Sprite> BattleSprites { get; private set; }
-        public List<Sprite> EnemySprites { get; private set; }
-        public List<Sprite> WorldSprites { get; private set; }
+        public List<Sprite> Sprites { get; private set; } 
 
         private FileLineReader lineReader = new FileLineReader();
 
@@ -38,9 +36,7 @@ namespace BladeCraft.Classes
         public BQGameData()
         {
             Bitmaps = new Dictionary<string, Bitmap>();
-            BattleSprites = new List<Sprite>();
-            EnemySprites = new List<Sprite>();
-            WorldSprites = new List<Sprite>();
+            Sprites = new List<Sprite>();
 
             lineFunctionDictionaries["[abilities]"] = abilityLineFunctions;
             lineFunctionDictionaries["[battleanims]"] = animLineFunctions;
@@ -62,8 +58,27 @@ namespace BladeCraft.Classes
         {
             loadFiles("\\assets\\drawable", fileActionBitmap);
             loadFiles("\\assets\\data", fileActionData);
-
             
+        }
+
+        public void save()
+        {
+
+            saveSprites("\\assets\\data\\sprites.dat");
+
+        }
+
+        private void saveSprites(String file)
+        {
+            StreamWriter writer = new StreamWriter(Application.StartupPath + file);
+
+            writer.WriteLine("[sprites]");
+
+            foreach (Sprite sprite in Sprites)
+                sprite.write(writer);
+
+            writer.Close();
+
         }
 
         private void fileActionBitmap(String filepath)
@@ -114,7 +129,7 @@ namespace BladeCraft.Classes
             String name = values[1];
             Point pos = new Point(Convert.ToInt32(values[2]), Convert.ToInt32(values[3]));
 
-            WorldSprites.Add(new Sprite(bitmap, name, pos.X, pos.Y));
+            Sprites.Add(new Sprite(bitmap, name, pos.X, pos.Y));
 
         }
 
@@ -123,7 +138,7 @@ namespace BladeCraft.Classes
             String name = values[0];
             Point pos = new Point(Convert.ToInt32(values[1]), Convert.ToInt32(values[2]));
 
-            WorldSprites.Add(new Sprite(name, pos.X, pos.Y));
+            Sprites.Add(new Sprite(name, pos.X, pos.Y));
         }
 
         private void lfSpritesEnemysprite(String item, String[] values)
@@ -134,7 +149,7 @@ namespace BladeCraft.Classes
             int srcSize = Convert.ToInt32(values[3]);
             Point pos = new Point(Convert.ToInt32(values[4]), Convert.ToInt32(values[5]));
 
-            WorldSprites.Add(new Sprite(bitmap, name, destSize, srcSize, pos.X, pos.Y));
+            Sprites.Add(new Sprite(bitmap, name, destSize, srcSize, pos.X, pos.Y));
         }
 
         

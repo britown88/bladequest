@@ -39,17 +39,17 @@
             this.X = new System.Windows.Forms.NumericUpDown();
             this.Y = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
-            this.Height = new System.Windows.Forms.NumericUpDown();
+            this.numHeight = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
-            this.Width = new System.Windows.Forms.NumericUpDown();
+            this.numWidth = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.encounterRate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.X)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Y)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Height)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Width)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numHeight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numWidth)).BeginInit();
             this.SuspendLayout();
             // 
             // lvwEncounters
@@ -148,17 +148,17 @@
             this.label3.TabIndex = 7;
             this.label3.Text = "Y:";
             // 
-            // Height
+            // numHeight
             // 
-            this.Height.Location = new System.Drawing.Point(178, 126);
-            this.Height.Maximum = new decimal(new int[] {
+            this.numHeight.Location = new System.Drawing.Point(178, 126);
+            this.numHeight.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
-            this.Height.Name = "Height";
-            this.Height.Size = new System.Drawing.Size(94, 20);
-            this.Height.TabIndex = 10;
+            this.numHeight.Name = "numHeight";
+            this.numHeight.Size = new System.Drawing.Size(94, 20);
+            this.numHeight.TabIndex = 10;
             // 
             // label4
             // 
@@ -169,17 +169,17 @@
             this.label4.TabIndex = 9;
             this.label4.Text = "H:";
             // 
-            // Width
+            // numWidth
             // 
-            this.Width.Location = new System.Drawing.Point(178, 152);
-            this.Width.Maximum = new decimal(new int[] {
+            this.numWidth.Location = new System.Drawing.Point(178, 152);
+            this.numWidth.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
-            this.Width.Name = "Width";
-            this.Width.Size = new System.Drawing.Size(94, 20);
-            this.Width.TabIndex = 12;
+            this.numWidth.Name = "numWidth";
+            this.numWidth.Size = new System.Drawing.Size(94, 20);
+            this.numWidth.TabIndex = 12;
             // 
             // label5
             // 
@@ -218,9 +218,9 @@
             this.ControlBox = false;
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
-            this.Controls.Add(this.Width);
+            this.Controls.Add(this.numWidth);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.Height);
+            this.Controls.Add(this.numHeight);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.Y);
             this.Controls.Add(this.label3);
@@ -238,8 +238,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.encounterRate)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.X)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Y)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Height)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Width)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numHeight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numWidth)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -256,9 +256,9 @@
         private System.Windows.Forms.NumericUpDown X;
         private System.Windows.Forms.NumericUpDown Y;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.NumericUpDown Height;
+        private System.Windows.Forms.NumericUpDown numHeight;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.NumericUpDown Width;
+        private System.Windows.Forms.NumericUpDown numWidth;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.ColumnHeader columnHeader1;

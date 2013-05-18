@@ -3,6 +3,7 @@ package bladequest.system;
 import bladequest.world.Global;
 import bladequest.world.States;
 
+import android.annotation.SuppressLint;
 import android.app.*;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -69,6 +70,7 @@ implements OnGestureListener, AudioManager.OnAudioFocusChangeListener
     }
 
 	
+	@SuppressLint("Recycle")
 	@Override
     public boolean onTouchEvent(MotionEvent event) 
     {		

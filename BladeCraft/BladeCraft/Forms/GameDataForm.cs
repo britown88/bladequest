@@ -59,20 +59,24 @@ namespace BladeCraft
 
         void initSpriteTab()
         {
-            Sprite blankSprite = new Sprite("TEST", "TEST", 0, 0);
+            Sprite blankSprite = new Sprite("", "", 0, 0);
             newSprite = true;
             updateSpriteTab(blankSprite);
 
             //Populate Listview
             lvwSprites.Items.Clear();
-            foreach(Sprite sprite in gameData.BattleSprites)
+            foreach(Sprite sprite in gameData.Sprites)
                 addSpriteToListview(sprite);
 
-            foreach (Sprite sprite in gameData.EnemySprites)
-                addSpriteToListview(sprite);
+            lvwSprites.ListViewItemSorter = new ListViewItemComparer();
+            lvwSprites.Sort();
+        }
 
-            foreach (Sprite sprite in gameData.WorldSprites)
-                addSpriteToListview(sprite);
+        private void btnNew_Click(object sender, EventArgs e)
+        {
+            Sprite blankSprite = new Sprite("", "", 0, 0);
+            newSprite = true;
+            updateSpriteTab(blankSprite);
         }
 
         private void addSpriteToListview(Sprite sprite)
@@ -80,7 +84,7 @@ namespace BladeCraft
             ListViewItem item;
             item = lvwSprites.Items.Add(sprite.Name, sprite.Name, 0);
 
-            item.Group = lvwSprites.Groups[(int)sprite.Type];
+            item.Group = lvwSprites.Groups[(int)sprite.SpriteType];
             item.Tag = sprite;
         }
 
@@ -90,7 +94,7 @@ namespace BladeCraft
 
         void updateSpriteTab(Classes.Sprite sprite)
         {
-            cmbSpriteType.SelectedIndex = (int)sprite.Type;
+            cmbSpriteType.SelectedIndex = (int)sprite.SpriteType;
             txtSpriteName.Text = sprite.Name;
             txtBitmap.Text = sprite.Bitmap;
             numPosX.Value = sprite.Pos.X;
@@ -106,26 +110,27 @@ namespace BladeCraft
 
         private void cmbSpriteType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(workingSprite != null)
-                workingSpriteCopy.Type = (Sprite.SpriteType)cmbSpriteType.SelectedIndex;
+            //if(workingSprite != null)
+                //workingSpriteCopy.SpriteType = (Sprite.SpriteTypes)cmbSpriteType.SelectedIndex;
 
             switch (cmbSpriteType.SelectedIndex)
             {
 
-                case (int)Sprite.SpriteType.Battle:
+                case (int)Sprite.SpriteTypes.Battle:
                     btnSetBitmap.Enabled = false;
-                    txtBitmap.Text = "characters\\herobattlers";
+                    workingSpriteCopy.Bitmap = "characters\\herobattlers";
+                    txtBitmap.Text = workingSpriteCopy.Bitmap;
                     numSrcSize.Enabled = false;
                     numDestSize.Enabled = false;
                     break;
 
-                case (int)Sprite.SpriteType.Enemy:
+                case (int)Sprite.SpriteTypes.Enemy:
                     btnSetBitmap.Enabled = true;
                     numSrcSize.Enabled = true;
                     numDestSize.Enabled = true;
                     break;
 
-                case (int)Sprite.SpriteType.World:
+                case (int)Sprite.SpriteTypes.World:
                     btnSetBitmap.Enabled = true;
                     numSrcSize.Enabled = false;
                     numDestSize.Enabled = false;
@@ -137,48 +142,77 @@ namespace BladeCraft
         private void saveCurrentSprite()
         {
             workingSpriteCopy.Name = txtSpriteName.Text;
-            workingSpriteCopy.Type = (Sprite.SpriteType)cmbSpriteType.SelectedIndex;
+            workingSpriteCopy.SpriteType = (Sprite.SpriteTypes)cmbSpriteType.SelectedIndex;
             workingSpriteCopy.Bitmap = txtBitmap.Text;
             workingSpriteCopy.Pos.X = (int)numPosX.Value;
             workingSpriteCopy.Pos.Y = (int)numPosY.Value;
             workingSpriteCopy.SrcSize = (int)numSrcSize.Value;
             workingSpriteCopy.DestSize = (int)numDestSize.Value;
 
-            int index = -1;
-            if (lvwSprites.Items.ContainsKey(workingSprite.Name))
-            {
-                if (workingSprite.Type != workingSpriteCopy.Type)
-                {
-                    lvwSprites.Items.Remove(lvwSprites.Items[workingSprite.Name]);
-                    addSpriteToListview(workingSpriteCopy);
-                }
-                else
-                {
-                    var item = lvwSprites.Items[workingSprite.Name];
-                    item.Name = workingSpriteCopy.Name;
-                    item.Text = workingSpriteCopy.Name;
-                    item.Tag = workingSpriteCopy;
-                    index = lvwSprites.Items[workingSprite.Name].Index - 1;
-                }
+            bool replace = false;
+            var oldGroup = lvwSprites.Groups[(int)workingSprite.SpriteType];
+            var newGroup = lvwSprites.Groups[(int)workingSpriteCopy.SpriteType];
 
-                
+            if (workingSpriteCopy.Name.Length < 1)
+            {
+                MessageBox.Show("Please enter a sprite name!");
+                return;
+
+            }  
+            else if (workingSpriteCopy.Bitmap.Length < 1)
+            {
+                MessageBox.Show("Please select a bitmap!");
+                return;
+            }
+            else if ((workingSpriteCopy.Name != workingSprite.Name && oldGroup.Items.ContainsKey(workingSpriteCopy.Name)) ||
+                        (oldGroup != newGroup && newGroup.Items.ContainsKey(workingSpriteCopy.Name)))
+            {
+                replace = true;
+                if (MessageBox.Show("Sprite name exists. Replace?", "Confirm replace", MessageBoxButtons.YesNo) == DialogResult.No)
+                    return;                    
+            }
+
+            if (replace)
+                lvwSprites.Items.Remove(newGroup.Items[workingSpriteCopy.Name]);
+
+            if (oldGroup.Items.ContainsKey(workingSprite.Name))
+            {
+                var item = oldGroup.Items[workingSprite.Name];
+                item.Group = newGroup;
+                item.Name = workingSpriteCopy.Name;
+                item.Text = workingSpriteCopy.Name;
+                item.Tag = workingSpriteCopy;
+
             }
             else
+            {               
+                    
                 addSpriteToListview(workingSpriteCopy);
+                
+            }
+
+            lvwSprites.Sort();
 
         }
 
         private void lvwSprites_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(!newSprite)
-                saveCurrentSprite();
-
             if (lvwSprites.SelectedItems.Count > 0)
             {
+                if(!newSprite)
+                    saveCurrentSprite();
+
                 newSprite = false;
                 updateSpriteTab((Sprite)lvwSprites.SelectedItems[0].Tag);
-            } 
-            
+            }
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            saveCurrentSprite();
+            newSprite = false;
+            updateSpriteTab(workingSpriteCopy);
+
         }
 
         private void btnSetBitmap_Click(object sender, EventArgs e)
@@ -200,6 +234,13 @@ namespace BladeCraft
             if (gameData.Bitmaps.ContainsKey(workingSpriteCopy.Bitmap))
                 g.DrawImage(gameData.Bitmaps[workingSpriteCopy.Bitmap], new Point(0, 0));
         }
+
+        private void txtBitmap_TextChanged(object sender, EventArgs e)
+        {
+            BitmapPanel.Invalidate();
+        }
+
+        
 
         #endregion
 
@@ -293,7 +334,15 @@ namespace BladeCraft
         {
             if (tabLeaveFunctions.ContainsKey(e.TabPage.Name))
                 tabLeaveFunctions[e.TabPage.Name]();
+
+            gameData.save();
         }
+
+        
+
+        
+
+        
 
     }
 }
