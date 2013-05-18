@@ -7,8 +7,6 @@ import bladequest.UI.ListBox.LBStates;
 import bladequest.world.Global;
 import bladequest.world.States;
 
-import java.util.*;
-
 public class BqThread extends Thread
 {
 	private BqPanel gamePanel;
@@ -121,6 +119,8 @@ public class BqThread extends Thread
 				break;
 			case GS_SAVELOADMENU:				
 				Global.saveLoadMenu.backButtonPressed();
+				break;
+			default:
 				break;
 			}
 			break;
@@ -342,6 +342,8 @@ public class BqThread extends Thread
 	        		break;
 	        	}
 	    		break;
+			default:
+				break;
 	    		
 	    	}
 		}

@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import bladequest.graphics.TilePlate;
@@ -22,6 +22,11 @@ implements SurfaceHolder.Callback
 	public BqThread updateThread;
 	private static final String TAG = BqPanel.class.getSimpleName();
 	private Paint blackpaint, logText;
+	
+	public BqPanel(Context c)
+	{
+		super(c);		
+	}
 	
 	public BqPanel(Activity activity)
 	{

@@ -8,7 +8,7 @@ import android.content.Context;
 import android.graphics.Point;
 import android.util.Log;
 import bladequest.world.Global;
-import bladequest.world.Character;
+import bladequest.world.PlayerCharacter;
 import bladequest.world.Item;
 import bladequest.world.Party;
 import bladequest.world.PlayTimer;
@@ -25,7 +25,7 @@ public class GameSaveLoader
 	private final String SaveFile = "saves";
 	
 	private GameSave tempSave;	
-	private Character c;
+	private PlayerCharacter c;
 	
 	public GameSave save;
 	
@@ -65,7 +65,7 @@ public class GameSaveLoader
 		save.fc2b = Global.fc2b;
 		
 		//default charNames
-		for(Character c : Global.characters.values())
+		for(PlayerCharacter c : Global.characters.values())
 			save.defaultNames.put(c.getName(), c.getDisplayName());
 		
 		//merchant limited qty items
@@ -85,9 +85,9 @@ public class GameSaveLoader
 			save.items.add(it);
 		}
 			
-		for(Character c : Global.party.getPartyMembers(true))
+		for(PlayerCharacter c : Global.party.getPartyMembers(true))
 			if(c != null)
-				save.characters.add(new Character(c));	
+				save.characters.add(new PlayerCharacter(c));	
 			else
 				save.characters.add(null);
 		
@@ -133,7 +133,7 @@ public class GameSaveLoader
 				Global.merchants.get(lql.getKey()).setLimitedQtyItem(entry.getKey(), entry.getValue(), false);
 	
 		int i = 0;
-		for(Character c : save.characters)
+		for(PlayerCharacter c : save.characters)
 			Global.party.insertCharacter(c, i++);	
 		
 		Global.loading = true;
@@ -191,7 +191,7 @@ public class GameSaveLoader
 			
 			//characters
 			int index = 0;
-			for(Character c : gs.characters)
+			for(PlayerCharacter c : gs.characters)
 			{
 				if(c != null)
 				{
@@ -347,7 +347,7 @@ public class GameSaveLoader
 		}
 		else if(dl.item.equals("character"))
 		{
-			c = new Character(Global.characters.get(dl.values.get(0)));
+			c = new PlayerCharacter(Global.characters.get(dl.values.get(0)));
 			c.setDisplayName(dl.values.get(1));
 			int index = Integer.parseInt(dl.values.get(2));
 			while(index > tempSave.characters.size())

@@ -1,12 +1,10 @@
 package bladequest.battleactions;
 
-import java.util.*;
+import java.util.List;
 
 import bladequest.combat.BattleCalc;
-import bladequest.combat.Battle;
 import bladequest.combat.DamageMarker;
-import bladequest.graphics.BattleSprite.faces;
-import bladequest.world.Character;
+import bladequest.world.PlayerCharacter;
 import bladequest.world.DamageTypes;
 import bladequest.world.Global;
 import bladequest.world.Stats;
@@ -24,9 +22,9 @@ public class bactDamage extends BattleAction
 	}
 	
 	@Override
-	public void run(Character attacker, List<Character> targets, List<DamageMarker> markers)
+	public void run(PlayerCharacter attacker, List<PlayerCharacter> targets, List<DamageMarker> markers)
 	{
-		for(Character t : targets)
+		for(PlayerCharacter t : targets)
 		{
 			int dmg = BattleCalc.calculatedDamage(attacker, t, power, type);
 			switch(BattleCalc.getDmgReturnType())
@@ -51,7 +49,7 @@ public class bactDamage extends BattleAction
 	}
 	
 	@Override
-	public boolean willAffectTarget(Character target) 
+	public boolean willAffectTarget(PlayerCharacter target) 
 	{		
 		return (!target.isDead() && 
 				power > 0 && 

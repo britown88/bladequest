@@ -1,16 +1,18 @@
 package bladequest.graphics;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Point;
 import bladequest.world.GameObject;
 import bladequest.world.Global;
 
-import android.graphics.*;
-import android.graphics.Bitmap.Config;
-
 public class TilePlate 
 {
-	private boolean loaded,loading, empty, unloadAfterLoadFlag, foreground;
+	private boolean loaded,loading, empty, unloadAfterLoadFlag/*, foreground*/;
 	private List<Tile> tiles;
 	private List<GameObject> objects;
 	private Bitmap tileset;
@@ -30,7 +32,7 @@ public class TilePlate
 		loading = false;
 		platePos = new Point(x, y);
 		unloadAfterLoadFlag = false;
-		this.foreground = foreground;
+		//this.foreground = foreground;
 	}
 	
 	public void render(List<TilePlate> loadList)

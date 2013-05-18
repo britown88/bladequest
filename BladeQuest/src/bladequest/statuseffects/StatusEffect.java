@@ -1,7 +1,7 @@
 package bladequest.statuseffects;
 
 import bladequest.combat.Battle;
-import bladequest.world.Character;
+import bladequest.world.PlayerCharacter;
 
 public class StatusEffect 
 {
@@ -23,10 +23,10 @@ public class StatusEffect
 	public boolean isCurable() { return curable; }
 	public String Name() { return name; }
 	
-	public void onTurn(Character c, Battle b) {}
-	public void onInflict(Character c) {}
-	public void onRemove(Character c) {}
-	public void onStep(Character c) {}	
+	public void onTurn(PlayerCharacter c, Battle b) {}
+	public void onInflict(PlayerCharacter c) {}
+	public void onRemove(PlayerCharacter c) {}
+	public void onStep(PlayerCharacter c) {}	
 	
 	public String saveLine() { return ""; }
 

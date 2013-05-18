@@ -1,10 +1,9 @@
 package bladequest.world;
 
-import android.graphics.Rect;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+
+import android.graphics.Rect;
 
 public class EncounterZone 
 {

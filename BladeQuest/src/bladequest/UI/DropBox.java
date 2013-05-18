@@ -1,8 +1,8 @@
 package bladequest.UI;
 
+import android.graphics.Point;
+import android.graphics.Rect;
 import bladequest.world.Global;
-import android.graphics.*;
-import android.graphics.Paint.Align;
 
 public class DropBox extends MenuPanel
 {

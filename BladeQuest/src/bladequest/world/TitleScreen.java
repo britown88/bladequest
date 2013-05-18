@@ -114,6 +114,8 @@ public class TitleScreen
 			Global.screenFader.fadeIn(4);
 			
 			break;
+		default:
+			break;
 		}
 		
 		state = newState;
@@ -191,6 +193,8 @@ public class TitleScreen
 				buildMenu();
 				menu.open();
 			}			
+			break;
+		default:
 			break;
 		}
 		
@@ -280,6 +284,8 @@ public class TitleScreen
 		case LoadMenu:
 			Global.saveLoadMenu.render();
 			break;
+		default:
+			break;
 		}
 		//canvas.drawBitmap(titleMain, Global.vpToScreenX(0), Global.vpToScreenY(0), null);
 	}
@@ -290,6 +296,8 @@ public class TitleScreen
 		{
 		case LoadMenu:
 			Global.saveLoadMenu.onLongPress();
+			break;
+		default:
 			break;
 		}
 	}
@@ -326,6 +334,8 @@ public class TitleScreen
 		case LoadMenu:
 			Global.saveLoadMenu.touchActionMove(x, y);
 			break;
+		default:
+			break;
 		}
 		
 	}
@@ -359,11 +369,15 @@ public class TitleScreen
 				this.state = TitleStates.GameLogo;
 				menu.close();
 				break;
+			default:
+				break;
 			}
 			
 			break;
 		case LoadMenu:
 			Global.saveLoadMenu.touchActionUp(x, y);
+			break;
+		default:
 			break;
 		}
 	}
@@ -380,6 +394,8 @@ public class TitleScreen
 			break;
 		case LoadMenu:
 			Global.saveLoadMenu.touchActionDown(x, y);
+			break;
+		default:
 			break;
 		}
 		

@@ -1,7 +1,6 @@
 package bladequest.UI;
 
 import android.graphics.Paint;
-import android.graphics.Point;
 import bladequest.world.Global;
 
 public class TextBox 

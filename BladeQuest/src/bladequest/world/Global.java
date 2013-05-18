@@ -76,7 +76,7 @@ public class Global
 	public static Map<String, Bitmap> bitmaps;
 	public static Map<String, Scene> scenes;
 	public static Map<String, Sprite> sprites;
-	public static Map<String, Character> characters;
+	public static Map<String, PlayerCharacter> characters;
 	public static Map<String, Enemy> enemies;
 	public static Map<String, BattleSprite> battleSprites;
 	public static Map<String, Boolean> switches;
@@ -369,7 +369,7 @@ public class Global
 
 	}
 	
-	public static void openNameSelect(Character c)
+	public static void openNameSelect(PlayerCharacter c)
 	{
 		if(nameSelect == null)
 			nameSelect = new NameSelect();
@@ -657,6 +657,8 @@ public class Global
     	case GS_NAMESELECT:
     		nameSelect.update();
     		break;
+		default:
+			break;
     	}
     			
 		if(inputDelay)
@@ -1061,7 +1063,7 @@ public class Global
 	{	
 		if(sprites== null)sprites = new HashMap<String, Sprite>(); else sprites.clear();
 		if(switches== null)switches = new HashMap<String, Boolean>(); else switches.clear();
-		if(characters== null)characters = new HashMap<String, Character>(); else characters.clear();
+		if(characters== null)characters = new HashMap<String, PlayerCharacter>(); else characters.clear();
 		if(enemies== null)enemies = new HashMap<String, Enemy>(); else enemies.clear();
 		if(battleSprites== null)battleSprites = new HashMap<String, BattleSprite>(); else battleSprites.clear();
 		if(encounters== null)encounters = new HashMap<String, Encounter>(); else encounters.clear();

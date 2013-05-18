@@ -17,7 +17,7 @@ import bladequest.statuseffects.StatusEffect;
 import bladequest.statuseffects.seKO;
 import bladequest.world.Item.Type;
 
-public class Character 
+public class PlayerCharacter 
 {
 	protected String name;
 	protected String displayName;
@@ -46,7 +46,7 @@ public class Character
 	private Sprite worldSpr;
 	public Point portrait;
 	
-	protected List<Character> targets;
+	protected List<PlayerCharacter> targets;
 	
 	protected int imageIndex;
 	
@@ -61,7 +61,7 @@ public class Character
 	private List<Ability> abilities;
 	private List<LearnableAbility> learnableAbilities;
 	
-	public Character(String name, String displayNam, String bSpr, String wSpr)
+	public PlayerCharacter(String name, String displayNam, String bSpr, String wSpr)
 	{
 		this.name = name;
 		this.displayName = displayNam;
@@ -75,7 +75,7 @@ public class Character
 		statMods = new int[Stats.NUM_STATS.ordinal()];
 		baseStats = new int[4];
 		abilitiesName = "";
-		targets = new Vector<Character>();
+		targets = new Vector<PlayerCharacter>();
 		statusEffects = new ArrayList<StatusEffect>();
 		abilities = new ArrayList<Ability>();
 		learnableAbilities = new ArrayList<LearnableAbility>();
@@ -83,9 +83,9 @@ public class Character
 		position = new Point(0,0);
 	}
 	
-	public Character(Character c)
+	public PlayerCharacter(PlayerCharacter c)
 	{
-		targets = new Vector<Character>();
+		targets = new Vector<PlayerCharacter>();
 		statusEffects = new ArrayList<StatusEffect>();
 		displayName = c.displayName;
 		name = c.name;
@@ -148,9 +148,9 @@ public class Character
 	public BattleSprite getBattleSprite() { return battleSpr; }
 	public void setIndex(int i){index = i;}	
 	public int Index(){return index;}	
-	public List<Character> getTargets(){return targets;}	
-	public void setTargets(List<Character> targets){this.targets = targets;}	
-	public void addTarget(Character e){targets.add(e);}	
+	public List<PlayerCharacter> getTargets(){return targets;}	
+	public void setTargets(List<PlayerCharacter> targets){this.targets = targets;}	
+	public void addTarget(PlayerCharacter e){targets.add(e);}	
 	public void clearTargets(){targets.clear();}
 	public String getActionName() { return combAction.getName(); }
 	public String getAbilitiesName() { return abilitiesName; }	
@@ -227,6 +227,8 @@ public class Character
 		case Helmet: return helmEquipped();
 		case Accessory: return accessEquipped();
 		case Torso: return torsoEquipped();
+		default:
+			break;
 		}
 		return false;		
 	}
@@ -244,6 +246,8 @@ public class Character
 		case Helmet: return helmet;
 		case Accessory: return accessory;
 		case Torso: return torso;
+		default:
+			break;
 		}
 		return null;
 	}
@@ -293,6 +297,8 @@ public class Character
 			case Torso:	torso = item;break;			
 			case Helmet:helmet = item;break;			
 			case Accessory:	accessory = item;break;
+			default:
+				break;
 			}
 		}
 		
@@ -385,6 +391,8 @@ public class Character
 			item.equip(this);
 			Global.party.removeItem(id, 1);
 			break;
+		default:
+			break;
 		}
 	}
 	
@@ -453,6 +461,8 @@ public class Character
 				Global.party.addItem(accessory.getId());
 				accessory = null;
 			}			
+			break;
+		default:
 			break;
 		}
 	}
@@ -657,6 +667,8 @@ public class Character
 							bestItem = i;
 					}
 				}				
+				break;
+			default:
 				break;
 			}
 			

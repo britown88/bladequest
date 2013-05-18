@@ -2,9 +2,8 @@ package bladequest.battleactions;
 
 import java.util.List;
 
-import bladequest.combat.Battle;
 import bladequest.combat.DamageMarker;
-import bladequest.world.Character;
+import bladequest.world.PlayerCharacter;
 
 public class BattleAction 
 {
@@ -12,8 +11,8 @@ public class BattleAction
 	
 	public int getFrame(){return frame;}
 	public BattleAction(int frame){this.frame = frame;}	
-	public void run(Character attacker, List<Character> target, List<DamageMarker> markers){}
+	public void run(PlayerCharacter attacker, List<PlayerCharacter> target, List<DamageMarker> markers){}
 	public boolean isDone() {return true; }
-	public boolean willAffectTarget(Character target){ return true;}
+	public boolean willAffectTarget(PlayerCharacter target){ return true;}
 
 }

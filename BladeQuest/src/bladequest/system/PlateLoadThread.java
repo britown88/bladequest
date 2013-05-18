@@ -1,10 +1,8 @@
 package bladequest.system;
 
-import bladequest.graphics.TilePlate;
-import bladequest.world.*;
-import java.util.*;
+import java.util.List;
 
-import java.util.*;
+import bladequest.graphics.TilePlate;
 
 public class PlateLoadThread extends Thread
 {

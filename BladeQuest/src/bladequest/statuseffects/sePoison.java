@@ -1,7 +1,7 @@
 package bladequest.statuseffects;
 
 import bladequest.combat.Battle;
-import bladequest.world.Character;
+import bladequest.world.PlayerCharacter;
 import bladequest.world.Global;
 import bladequest.world.States;
 
@@ -26,13 +26,13 @@ public class sePoison extends StatusEffect
 	}
 	
 	@Override
-	public void onTurn(Character c, Battle b) 
+	public void onTurn(PlayerCharacter c, Battle b) 
 	{
 		//b.applyDamage(c, -Math.max(1, (int)((float)c.getStat(Stats.MaxHP)*(power/100.0f))), 50);
 	}
 	
 	@Override
-	public void onInflict(Character c) 
+	public void onInflict(PlayerCharacter c) 
 	{
 		if(Global.GameState == States.GS_BATTLE)
 			Global.playAnimation("poison", null, c.getPosition(true));
@@ -40,10 +40,10 @@ public class sePoison extends StatusEffect
 	}
 	
 	@Override
-	public void onRemove(Character c) {}
+	public void onRemove(PlayerCharacter c) {}
 	
 	@Override
-	public void onStep(Character c) 
+	public void onStep(PlayerCharacter c) 
 	{
 		stepCount++;
 		

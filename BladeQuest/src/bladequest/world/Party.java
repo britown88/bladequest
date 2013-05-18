@@ -1,14 +1,18 @@
 package bladequest.world;
 
 
-import android.graphics.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import android.graphics.Point;
+import android.graphics.Rect;
 import bladequest.graphics.Sprite;
 import bladequest.graphics.Tile;
-import bladequest.pathfinding.*;
+import bladequest.pathfinding.AStarObstacle;
+import bladequest.pathfinding.AStarPath;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.world.Item.Type;
-
-import java.util.*;
 
 public class Party 
 {
@@ -36,7 +40,7 @@ public class Party
 	
 	public final static int partyCount = 10;
 	
-	public Character partyMembers[];
+	public PlayerCharacter partyMembers[];
 	private List<Item> inventory;
 	
 	private static int noEncounterBuffer = 15;
@@ -55,7 +59,7 @@ public class Party
 		target = new Point(gridPos);
 		
 		//init party
-		partyMembers = new Character[partyCount];
+		partyMembers = new PlayerCharacter[partyCount];
 		inventory = new ArrayList<Item>();
 		
 		imageIndex = 0;
@@ -73,11 +77,11 @@ public class Party
 	public boolean isGridAligned() { return gridaligned; }
 
 	
-	public Character[] getPartyMembers(boolean includeAll)
+	public PlayerCharacter[] getPartyMembers(boolean includeAll)
 	{
 		if(!includeAll)
 		{
-			Character[] chars = new Character[4];
+			PlayerCharacter[] chars = new PlayerCharacter[4];
 			for(int i = 0; i < 4; ++i)
 				chars[i] = partyMembers[i];
 			
@@ -87,9 +91,9 @@ public class Party
 			return partyMembers;
 	}
 	
-	public List<Character> getPartyList(boolean includeAll)
+	public List<PlayerCharacter> getPartyList(boolean includeAll)
 	{
-		List<Character> newList = new ArrayList<Character>();
+		List<PlayerCharacter> newList = new ArrayList<PlayerCharacter>();
 		for(int i = 0; i < (includeAll?partyCount:4); ++i)
 			if(partyMembers[i] != null)
 				newList.add(partyMembers[i]);
@@ -337,7 +341,7 @@ public class Party
 		for(int i = 0; i < partyCount; ++i)
 			if(partyMembers[i] == null)
 			{
-				partyMembers[i] = new Character(Global.characters.get(str));
+				partyMembers[i] = new PlayerCharacter(Global.characters.get(str));
 				return;
 			}
 				
@@ -346,11 +350,11 @@ public class Party
 	public void insertCharacter(String str, int index)
 	{
 		if(index < partyCount)
-			partyMembers[index] = new Character(Global.characters.get(str));
+			partyMembers[index] = new PlayerCharacter(Global.characters.get(str));
 
 				
 	}
-	public void insertCharacter(Character c, int index)
+	public void insertCharacter(PlayerCharacter c, int index)
 	{
 		if(index < partyCount)
 			partyMembers[index] = c;
@@ -364,9 +368,9 @@ public class Party
 	public List<Point> getPath(){return movePath;}
 	
 	//gets character from party, null if character is not in party
-	public Character getCharacter(String name)
+	public PlayerCharacter getCharacter(String name)
 	{
-		for(Character c : partyMembers)
+		for(PlayerCharacter c : partyMembers)
 			if(c != null && c.getName().equals(name))
 				return c;
 		
@@ -397,7 +401,7 @@ public class Party
 	private boolean initBattle()
 	{
 		boolean annihilated = true;
-		for(Character c : partyMembers)
+		for(PlayerCharacter c : partyMembers)
 			if(c != null && !c.isDead())
 				annihilated = false;
 		
@@ -539,7 +543,7 @@ public class Party
 		gridaligned = true;
 		gridPos = movePath.get(0);
 		
-		for(Character c : partyMembers)
+		for(PlayerCharacter c : partyMembers)
 			if(c != null)
 			for(StatusEffect se : c.getStatusEffects())
 				se.onStep(c);
@@ -702,7 +706,7 @@ public class Party
 
 	}
 	
-	private Character getFirstChar()
+	private PlayerCharacter getFirstChar()
 	{
 		for(int i = 0; i < 4; ++i)
 			if( partyMembers[i] != null  && !partyMembers[i].isDead())
@@ -751,7 +755,7 @@ public class Party
 	
 	private void updateAnimation()
 	{
-		Character c = getFirstChar();
+		PlayerCharacter c = getFirstChar();
 		Sprite spr;
 		if(c == null)
 			spr = firstCharSpr;

@@ -2,7 +2,7 @@ package bladequest.actions;
 
 import bladequest.world.GameObject;
 import bladequest.world.Global;
-import bladequest.world.Character;
+import bladequest.world.PlayerCharacter;
 
 public class actNameSelect extends Action
 {
@@ -18,9 +18,9 @@ public class actNameSelect extends Action
 	@Override
 	public void run()
 	{
-		Character c = null;
+		PlayerCharacter c = null;
 		//look for character in current party
-		for(Character ch : Global.party.getPartyList(true))
+		for(PlayerCharacter ch : Global.party.getPartyList(true))
 			if(ch.getName().equals(chName))
 			{
 				c = ch;

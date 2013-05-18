@@ -1,7 +1,6 @@
 package bladequest.actions;
 
-import bladequest.world.Character;
-import bladequest.world.GameObject;
+import bladequest.world.PlayerCharacter;
 import bladequest.world.Global;
 
 public class actRestoreParty extends Action {
@@ -14,7 +13,7 @@ public class actRestoreParty extends Action {
 	@Override
 	public void run()
 	{
-		for(Character c : Global.party.getPartyMembers(false))
+		for(PlayerCharacter c : Global.party.getPartyMembers(false))
 		{
 			if(c != null)
 				c.fullRestore();

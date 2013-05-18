@@ -1,6 +1,5 @@
 package bladequest.world;
 
-import android.os.Vibrator;
 import android.graphics.Point;
 
 public class ScreenShaker 

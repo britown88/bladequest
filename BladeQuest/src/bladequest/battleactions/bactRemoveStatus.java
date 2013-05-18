@@ -1,13 +1,9 @@
 package bladequest.battleactions;
 
-import java.util.*;
+import java.util.List;
 
-import bladequest.combat.Battle;
 import bladequest.combat.DamageMarker;
-import bladequest.statuseffects.*;
-import bladequest.world.Character;
-import bladequest.world.Global;
-import bladequest.world.States;
+import bladequest.world.PlayerCharacter;
 
 public class bactRemoveStatus extends BattleAction
 {
@@ -20,9 +16,9 @@ public class bactRemoveStatus extends BattleAction
 	}
 	
 	@Override
-	public void run(Character attacker, List<Character> targets, List<DamageMarker> markers)
+	public void run(PlayerCharacter attacker, List<PlayerCharacter> targets, List<DamageMarker> markers)
 	{
-		for(Character t : targets)
+		for(PlayerCharacter t : targets)
 		{
 			if(t.hasStatus(se))
 			{
@@ -36,7 +32,7 @@ public class bactRemoveStatus extends BattleAction
 	}
 	
 	@Override
-	public boolean willAffectTarget(Character target) 
+	public boolean willAffectTarget(PlayerCharacter target) 
 	{		
 		return target.hasStatus(se); 
 	}

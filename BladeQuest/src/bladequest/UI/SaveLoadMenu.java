@@ -1,19 +1,15 @@
 package bladequest.UI;
 
-import bladequest.UI.ListBox.LBStates;
-import bladequest.UI.MenuPanel.Anchors;
-import bladequest.UI.MsgBox.YesNo;
-import bladequest.world.Global;
-import bladequest.world.PlayTimer;
-import bladequest.world.States;
-import bladequest.world.Character;
-import bladequest.system.GameSave;
-
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.Point;
 import android.graphics.Paint.Align;
+import android.graphics.Rect;
+import bladequest.UI.ListBox.LBStates;
+import bladequest.UI.MsgBox.YesNo;
+import bladequest.system.GameSave;
+import bladequest.world.PlayerCharacter;
+import bladequest.world.Global;
+import bladequest.world.PlayTimer;
 
 public class SaveLoadMenu 
 {
@@ -69,7 +65,7 @@ public class SaveLoadMenu
 			entry.clear();
 			
 			int highestLevel = 0;			
-			for(Character c : save.characters)
+			for(PlayerCharacter c : save.characters)
 				if(c != null && c.getLevel() > highestLevel)
 					highestLevel = c.getLevel();
 			
@@ -84,7 +80,7 @@ public class SaveLoadMenu
 			
 			int cindex = 0;
 			int portraitSize = (int)(menu.getRowHeight()*0.75f);
-			for(Character c : save.characters)
+			for(PlayerCharacter c : save.characters)
 			{
 				if(c != null) 
 				{

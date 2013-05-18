@@ -1,10 +1,10 @@
 package bladequest.graphics;
 
-import android.graphics.*;
-import android.graphics.Paint.Align;
-import bladequest.world.Global;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.*;
+import android.graphics.Color;
+import android.graphics.Point;
 
 public class BattleAnim 
 {
@@ -18,7 +18,7 @@ public class BattleAnim
 	private Point src, tar;
 	
 	private long startTime, frameTime;
-	private Paint text;
+	//private Paint text;
 	
 	
 	public BattleAnim(float fps)
@@ -27,7 +27,7 @@ public class BattleAnim
 		this.framePeriod = 1000.0f / fps;
 		
 		playing = false;
-		text = Global.textFactory.getTextPaint(9, Color.WHITE, Align.LEFT);
+		//text = Global.textFactory.getTextPaint(9, Color.WHITE, Align.LEFT);
 	}
 	
 	public BattleAnim(BattleAnim other)

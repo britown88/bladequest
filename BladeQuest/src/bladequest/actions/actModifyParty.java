@@ -1,6 +1,5 @@
 package bladequest.actions;
 
-import bladequest.world.GameObject;
 import bladequest.world.Global;
 
 public class actModifyParty extends Action

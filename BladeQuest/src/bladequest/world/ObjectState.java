@@ -1,14 +1,14 @@
 package bladequest.world;
 
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.List;
 
 import android.graphics.Point;
-import bladequest.actions.*;
+import bladequest.actions.Action;
+import bladequest.actions.actMessage;
 import bladequest.graphics.Sprite;
 import bladequest.graphics.Tile;
 import bladequest.system.DataLine;
-import bladequest.world.ObjectPath.Actions;
 
 public class ObjectState {
 	private Sprite spr;
@@ -39,8 +39,6 @@ public class ObjectState {
 	private long objPathWaitStart;
 	private boolean objPathWaiting;
 	private int moveSpeed = 3;
-	
-	private int skipActions;
 	
 	public ObjectState(GameObject parent)
 	{	

@@ -4,7 +4,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Point;
-import bladequest.world.Character;
+import bladequest.world.PlayerCharacter;
 import bladequest.world.Global;
 
 public class DamageMarker 
@@ -23,25 +23,25 @@ public class DamageMarker
 	
 	private float xSpeed;
 	private boolean done;
-	private Character target;
+	private PlayerCharacter target;
 	private String dmgText;
 	private boolean manualPos;
 	
-	public DamageMarker(int value, Character c)
+	public DamageMarker(int value, PlayerCharacter c)
 	{
 		this.target = c;
 		this.value = value;
 		this.dmgText = "";
 		init();
 	}
-	public DamageMarker(String str, Character c)
+	public DamageMarker(String str, PlayerCharacter c)
 	{
 		this.target = c;
 		this.value = 0;		
 		this.dmgText = str;
 		init();
 	}	
-	public DamageMarker(int value, Character c, int x, int y)
+	public DamageMarker(int value, PlayerCharacter c, int x, int y)
 	{
 		this.target = c;
 		this.value = value;
@@ -50,7 +50,7 @@ public class DamageMarker
 		manualPos = true;
 		init();
 	}	
-	public DamageMarker(String str, Character c, int x, int y)
+	public DamageMarker(String str, PlayerCharacter c, int x, int y)
 	{
 		this.target = c;
 		this.value = 0;		

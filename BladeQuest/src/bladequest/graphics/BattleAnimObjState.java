@@ -1,8 +1,7 @@
 package bladequest.graphics;
 
-import android.graphics.Rect;
 import android.graphics.Point;
-
+import android.graphics.Rect;
 import bladequest.world.Global;
 
 public class BattleAnimObjState 
@@ -48,6 +47,8 @@ public class BattleAnimObjState
 		case Target:
 			pos1.offset(parent.target.x, parent.target.y);
 			pos2.offset(parent.target.x, parent.target.y);
+			break;
+		default:
 			break;
 		}
 		

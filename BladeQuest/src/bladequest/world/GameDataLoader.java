@@ -165,12 +165,10 @@ public class GameDataLoader
 		}
 		else if(dl.item.equals("usableby"))
 		{
-			int i = 0;
 			for(String c : dl.values)
 			{
 				if(c.length() > 1)
 					itm.addUsableBy(c);
-				++i;
 			}
 		}
 		else if(dl.item.equals("targettype"))
@@ -321,12 +319,12 @@ public class GameDataLoader
 					Integer.parseInt(dl.values.get(2)));
 	}
 	
-	private static Character c;	
+	private static PlayerCharacter c;	
 	private static void loadCharacterLine(DataLine dl)
 	{		
 		if(dl.item.equals("character"))
 		{
-			c = new Character(
+			c = new PlayerCharacter(
 					dl.values.get(0),
 					dl.values.get(1),
 					dl.values.get(2),

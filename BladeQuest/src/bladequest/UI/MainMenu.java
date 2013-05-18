@@ -15,7 +15,7 @@ import bladequest.UI.MsgBox.YesNo;
 import bladequest.combat.DamageMarker;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.world.Ability;
-import bladequest.world.Character;
+import bladequest.world.PlayerCharacter;
 import bladequest.world.Global;
 import bladequest.world.Item;
 import bladequest.world.Item.Type;
@@ -26,7 +26,7 @@ import bladequest.world.TargetTypes;
 public class MainMenu 
 {
 	private Paint menuText, menuTextRight, menuTextCenter, grayMenuText, 
-	grayMenuTextCenter, redMenuText, blueMenuText, redMenuTextCenter, 
+	/*grayMenuTextCenter, redMenuText, */blueMenuText, redMenuTextCenter, 
 	blueMenuTextCenter, smallText, smallTextCenter, smallTextRight;
 	private final float menuWidthVpPercent = 28.0f; 
 	private final float menuHeightVpPercent = 16.0f;
@@ -36,7 +36,7 @@ public class MainMenu
 	private menuStates currentState;
 	private Vector<DamageMarker> markers;
 	private Item itemToUse;
-	private Character selectedChar, nextChar;
+	private PlayerCharacter selectedChar, nextChar;
 	private Item selectedEqpItem;
 	
 	//root
@@ -114,8 +114,8 @@ public class MainMenu
 		menuTextRight = Global.textFactory.getTextPaint(13, Color.WHITE, Align.RIGHT);
 		
 		grayMenuText = Global.textFactory.getTextPaint(13, Color.GRAY, Align.LEFT);
-		grayMenuTextCenter = Global.textFactory.getTextPaint(13, Color.GRAY, Align.CENTER);		
-		redMenuText = Global.textFactory.getTextPaint(13, Color.RED, Align.LEFT);
+		//grayMenuTextCenter = Global.textFactory.getTextPaint(13, Color.GRAY, Align.CENTER);		
+		//redMenuText = Global.textFactory.getTextPaint(13, Color.RED, Align.LEFT);
 		blueMenuText = Global.textFactory.getTextPaint(13, Color.CYAN, Align.LEFT);
 		redMenuTextCenter = Global.textFactory.getTextPaint(13, Color.RED, Align.CENTER);
 		blueMenuTextCenter = Global.textFactory.getTextPaint(13, Color.CYAN, Align.CENTER);
@@ -165,7 +165,7 @@ public class MainMenu
 	private void buildCharPlates()
 	{		
 		//build character plates
-		Character[] chars = Global.party.getPartyMembers(false);
+		PlayerCharacter[] chars = Global.party.getPartyMembers(false);
 		
 		for(int i = 0; i < 4; ++i)
 		{
@@ -274,7 +274,7 @@ public class MainMenu
 	}
 	private void buildCharUseScreen()
 	{
-		List<Character> chars = Global.party.getPartyList(false);
+		List<PlayerCharacter> chars = Global.party.getPartyList(false);
 		
 		int width = (int)((Global.vpWidth*0.85f)/4.0f);
 		
@@ -297,7 +297,7 @@ public class MainMenu
 	}
 	public void updateCharUseScreen()
 	{
-		List<Character> chars = Global.party.getPartyList(false);
+		List<PlayerCharacter> chars = Global.party.getPartyList(false);
 		charUseScreen.clear();
 		//charUseScreen.updateFrame();
 		int width = charUseScreen.getColumnWidth();
@@ -312,7 +312,7 @@ public class MainMenu
 		
 		//update frames		
 		ListBoxEntry lbi;
-		for(Character c : chars)
+		for(PlayerCharacter c : chars)
 		{
 			lbi = charUseScreen.addItem(c.getDisplayName(), c, false);
 			charUseScreen.update();
@@ -841,6 +841,8 @@ public class MainMenu
 			case OptionFrameColor:
 				changeState(menuStates.Options);
 				break;
+			default:
+				break;
 			}
 		}		
 		
@@ -853,31 +855,35 @@ public class MainMenu
 	}
 	
 
-	public void applyDamage(Character c, int dmg, int delay)
+	public void applyDamage(PlayerCharacter c, int dmg, int delay)
 	{
 		switch(currentState)
 		{
 		case ItemUse:
 			
-			for(ListBoxEntry lbi : charUseScreen.getEntries())
+/*			for(ListBoxEntry lbi : charUseScreen.getEntries())
 			{
-				//if(((Character)lbi.obj).getName().equals(c.getName()))
-					//markers.add(new DamageMarker(dmg, c, delay, lbi.frameRect.left + lbi.width/2, lbi.frameRect.top + lbi.width/2));
+				if(((Character)lbi.obj).getName().equals(c.getName()))
+					markers.add(new DamageMarker(dmg, c, delay, lbi.frameRect.left + lbi.width/2, lbi.frameRect.top + lbi.width/2));
 				
-			}
+			}*/
 //			ListBoxEntry lbi = charUseScreen.getSelectedEntry();
 //			markers.add(new DamageMarker(dmg, c, delay, lbi.frameRect.left + lbi.width/2, lbi.frameRect.top + lbi.width/2));
+			break;
+		default:
 			break;
 		}
 		
 	}
-	public void dmgText(Character c, String str, int delay)
+	public void dmgText(PlayerCharacter c, String str, int delay)
 	{
 		switch(currentState)
 		{
 		case ItemUse:
-			ListBoxEntry lbi = charUseScreen.getSelectedEntry();
+			//ListBoxEntry lbi = charUseScreen.getSelectedEntry();
 			//markers.add(new DamageMarker(str, c, delay, lbi.frameRect.left + lbi.width/2, lbi.frameRect.top + lbi.width/2));
+			break;
+		default:
 			break;
 		}
 	}
@@ -1086,6 +1092,8 @@ public class MainMenu
 				fillInventory();
 				itemToUse = null;
 				break;
+			default:
+				break;
 			}
 			break;
 		case Root:
@@ -1115,6 +1123,8 @@ public class MainMenu
 				charStatusGrow.close();
 				sideBar.setClosed();
 				break;
+			default:
+				break;
 			}
 			break;	
 		case Options:
@@ -1142,6 +1152,8 @@ public class MainMenu
 					showMessage("We at Dapper Hat kindly recommend that you choose a darker setting.", false);
 				}
 				
+				break;
+			default:
 				break;			
 			}
 			
@@ -1180,26 +1192,28 @@ public class MainMenu
 		case EquipSelectChar:
 			darken();
 			break;
+		default:
+			break;
 		
 		}
 		
 		currentState = state;
 	}
 	
-	private void useItem(Character c)
+	private void useItem(PlayerCharacter c)
 	{
-		List<Character> charList;
+		List<PlayerCharacter> charList;
 		
 		if(itemToUse.getTargetType() == TargetTypes.AllAllies)
 			charList = Global.party.getPartyList(false);
 		else
 		{
-			charList = new ArrayList<Character>();
+			charList = new ArrayList<PlayerCharacter>();
 			charList.add(c);
 		}	
 		
 		boolean willAffect = false;		
-		for(Character ch : charList)
+		for(PlayerCharacter ch : charList)
 			if(itemToUse.willAffect(ch))
 			{
 				willAffect = true;
@@ -1338,6 +1352,8 @@ public class MainMenu
 			
 			//if(itemToUse.getCount() == 0 && markers.size() == 0)
 				//changeState(menuStates.ItemSelect);
+			break;
+		default:
 			break;
 			
 			
@@ -1530,6 +1546,8 @@ public class MainMenu
 				charUseDesc.render();
 			}
 				
+			break;
+		default:
 			break;			
 			
 		}
@@ -1552,7 +1570,7 @@ public class MainMenu
 		case CharStatus:
 		case SkillSelect:
 		case Equip:
-			List<Character> charList = Global.party.getPartyList(false);
+			List<PlayerCharacter> charList = Global.party.getPartyList(false);
 			if(charList.size() > 1 && Math.abs(velocityY) < 300 && Math.abs(velocityX) > 300)
 			{
 				undarken();
@@ -1560,7 +1578,7 @@ public class MainMenu
 				
 				//determine current index
 				int i = 0;
-				for(Character c : charList)
+				for(PlayerCharacter c : charList)
 				{
 					if(c.getName().equals(selectedChar.getName()))
 						break;
@@ -1594,6 +1612,8 @@ public class MainMenu
 					
 						
 			}
+			break;
+		default:
 			break;
 		}
 	}
@@ -1632,6 +1652,8 @@ public class MainMenu
 				case ItemUse:				
 				case ItemSort:
 					changeState(menuStates.ItemSelect);
+					break;
+				default:
 					break;
 
 				}
@@ -1719,6 +1741,8 @@ public class MainMenu
 				case ItemUse:
 					charUseScreen.touchActionMove(x, y);
 					break;
+				default:
+					break;
 				}
 			}
 			
@@ -1744,6 +1768,8 @@ public class MainMenu
 					case Root:
 						Global.restartGame();
 						break;
+					default:
+						break;
 					}
 				}
 				
@@ -1761,10 +1787,10 @@ public class MainMenu
 					
 					selectedPanel = rootCharPlates.touchActionUp(x, y);				
 					//update party order based on charplates order
-					for(int i = 0; i < 4; ++i) Global.party.partyMembers[i] = (Character)rootCharPlates.panels[i].obj;
+					for(int i = 0; i < 4; ++i) Global.party.partyMembers[i] = (PlayerCharacter)rootCharPlates.panels[i].obj;
 					if(selectedPanel != null)
 					{
-						selectedChar = (Character)selectedPanel.obj;
+						selectedChar = (PlayerCharacter)selectedPanel.obj;
 						updateCharStatus();					
 						changeState(menuStates.CharStatus);
 					}
@@ -1774,11 +1800,11 @@ public class MainMenu
 				case EquipSelectChar:
 					selectedPanel = rootCharPlates.touchActionUp(x, y);	
 					//update party order based on charplates order
-					for(int i = 0; i < 4; ++i) Global.party.partyMembers[i] = (Character)rootCharPlates.panels[i].obj;
+					for(int i = 0; i < 4; ++i) Global.party.partyMembers[i] = (PlayerCharacter)rootCharPlates.panels[i].obj;
 					//open equip screen with selected character
 					if(selectedPanel != null)
 					{
-						selectedChar = (Character)selectedPanel.obj;
+						selectedChar = (PlayerCharacter)selectedPanel.obj;
 						changeState(currentState == menuStates.EquipSelectChar ? menuStates.Equip : menuStates.SkillSelect);
 					}
 					break;	
@@ -1836,7 +1862,7 @@ public class MainMenu
 							if(i.getType() != Type.Usable)
 							{
 								List<String> charNames = new ArrayList<String>();
-								Character c;
+								PlayerCharacter c;
 								for(String str : i.getUsableChars())
 								{
 									c = Global.party.getCharacter(str);
@@ -1904,6 +1930,8 @@ public class MainMenu
 								equipItemType = null;
 								updateEquipScreen();
 								break;
+							default:
+								break;
 							}
 						}
 						else
@@ -1941,6 +1969,8 @@ public class MainMenu
 					case Selected:
 						handleInvSortOption((String)invSort.getSelectedEntry().obj);
 						break;
+					default:
+						break;
 					}
 					break;
 					
@@ -1953,11 +1983,15 @@ public class MainMenu
 						changeState(menuStates.ItemSelect);
 						break;
 					case Selected:
-						useItem((Character)charUseScreen.getSelectedEntry().obj);
+						useItem((PlayerCharacter)charUseScreen.getSelectedEntry().obj);
 						
 						
 						break;
+					default:
+						break;
 					}
+					break;
+				default:
 					break;
 				}
 			}
@@ -2036,6 +2070,8 @@ public class MainMenu
 					break;
 				case ItemUse:
 					charUseScreen.touchActionDown(x, y);
+					break;
+				default:
 					break;
 				}
 			}

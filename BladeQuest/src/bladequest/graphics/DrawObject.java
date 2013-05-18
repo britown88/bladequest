@@ -1,6 +1,10 @@
 package bladequest.graphics;
 
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.RectF;
 
 public class DrawObject 
 {	
@@ -75,7 +79,7 @@ public class DrawObject
 		this.b = b;
 	}
 	
-	private void applyARGBtoBitmap(Paint p, int a, int r, int g, int b, float t)
+/*	private void applyARGBtoBitmap(Paint p, int a, int r, int g, int b, float t)
 	{
 		
 		float[] colorTransform = {
@@ -86,7 +90,7 @@ public class DrawObject
 		
 		p.setColorFilter(new ColorMatrixColorFilter(colorTransform));
 		p.setAlpha(a);
-	}
+	}*/
 	
 	public void render(Canvas canvas)
 	{

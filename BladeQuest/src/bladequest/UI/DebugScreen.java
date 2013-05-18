@@ -7,15 +7,12 @@ import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import bladequest.UI.ListBox.LBStates;
 import bladequest.world.Global;
-import bladequest.world.Merchant;
-import bladequest.world.States;
 import bladequest.world.Item;
+import bladequest.world.States;
 
 public class DebugScreen 
 {
-	private Paint menuText, menuTextRight, menuTextCenter, grayMenuText, 
-	grayMenuTextCenter, redMenuText, blueMenuText, redMenuTextCenter, 
-	blueMenuTextCenter, smallText, smallTextCenter, smallTextRight;
+	private Paint menuText, menuTextRight;
 	
 	private final float menuWidthVpPercent = 28.0f; 
 	private final float menuHeightVpPercent = 16.0f;
@@ -41,21 +38,11 @@ public class DebugScreen
 	
 	private void buildPaints()
 	{
-		smallText = Global.textFactory.getTextPaint(9, Color.WHITE, Align.LEFT);				
-		smallTextCenter = Global.textFactory.getTextPaint(9, Color.WHITE, Align.CENTER);		
-		smallTextRight = Global.textFactory.getTextPaint(9, Color.WHITE, Align.RIGHT);	
 		
 		menuText = Global.textFactory.getTextPaint(13, Color.WHITE, Align.LEFT);	
-		menuTextCenter = Global.textFactory.getTextPaint(13, Color.WHITE, Align.CENTER);	
 		menuTextRight = Global.textFactory.getTextPaint(13, Color.WHITE, Align.RIGHT);
 		
-		grayMenuText = Global.textFactory.getTextPaint(13, Color.GRAY, Align.LEFT);
-		grayMenuTextCenter = Global.textFactory.getTextPaint(13, Color.GRAY, Align.CENTER);		
-		redMenuText = Global.textFactory.getTextPaint(13, Color.RED, Align.LEFT);
-		blueMenuText = Global.textFactory.getTextPaint(13, Color.CYAN, Align.LEFT);
-		redMenuTextCenter = Global.textFactory.getTextPaint(13, Color.RED, Align.CENTER);
-		blueMenuTextCenter = Global.textFactory.getTextPaint(13, Color.CYAN, Align.CENTER);
-	}
+		}
 	private void buildPanels()
 	{
 		rootMenu = new ListBox(0, 0, menuWidth, barHeight*4, 5, 1, menuText);
@@ -155,6 +142,8 @@ public class DebugScreen
 		case Items:
 			updateItemList();
 			break;
+		default:
+			break;
 
 		}
 		
@@ -177,6 +166,8 @@ public class DebugScreen
 		case Items:
 			itemList.update();
 			break;
+		default:
+			break;
 
 		}
 		
@@ -194,6 +185,8 @@ public class DebugScreen
 			break;
 		case Items:
 			itemList.render();
+			break;
+		default:
 			break;
 
 		}
@@ -219,6 +212,8 @@ public class DebugScreen
 				break;
 			case Items:
 				itemList.touchActionMove(x, y);
+				break;
+			default:
 				break;
 
 			}
@@ -281,6 +276,8 @@ public class DebugScreen
 					
 				}
 				break;
+			default:
+				break;
 
 			}
 		}
@@ -301,6 +298,8 @@ public class DebugScreen
 				break;
 			case Items:
 				itemList.touchActionDown(x, y);
+				break;
+			default:
 				break;
 
 			}

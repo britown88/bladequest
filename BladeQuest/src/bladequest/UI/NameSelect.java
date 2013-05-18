@@ -1,28 +1,28 @@
 package bladequest.UI;
 
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import bladequest.UI.ListBox.LBStates;
 import bladequest.UI.MenuPanel.Anchors;
 import bladequest.UI.MsgBox.YesNo;
-import bladequest.world.Character;
+import bladequest.graphics.Sprite;
+import bladequest.world.PlayerCharacter;
 import bladequest.world.Global;
 import bladequest.world.States;
-import bladequest.graphics.Sprite;
-import android.graphics.Paint;
 
 public class NameSelect 
 {
-	private final float menuWidthVpPercent = 28.0f; 
+	//private final float menuWidthVpPercent = 28.0f; 
 	private final float menuHeightVpPercent = 16.0f;
 	private final int nameLength = 8;
 	
-	private final int menuWidth, barHeight;
+	private final int  barHeight;
 	
 	private ListBox keyboard, menu;
 	private MenuPanel namePanel;
 	private MsgBox messageBox;
-	private Character character;
+	private PlayerCharacter character;
 	
 	private boolean closing, closed;
 	
@@ -38,7 +38,7 @@ public class NameSelect
 	
 	public NameSelect()
 	{
-		menuWidth = (int)((float)Global.vpWidth * (menuWidthVpPercent/100.0f));
+		//menuWidth = (int)((float)Global.vpWidth * (menuWidthVpPercent/100.0f));
 		barHeight = (int)((float)Global.vpHeight * (menuHeightVpPercent/100.0f));
 		menuText = Global.textFactory.getTextPaint(13, Color.WHITE, Align.CENTER);
 		
@@ -68,7 +68,7 @@ public class NameSelect
 		menu.addItem("Done", "don", false);
 	}	
 	
-	public void open(Character c)
+	public void open(PlayerCharacter c)
 	{
 		this.character = c;
 		closed = closing = false;

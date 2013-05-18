@@ -7,7 +7,7 @@ import bladequest.battleactions.BattleAction;
 import bladequest.combatactions.CombatAction;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleSprite;
-import bladequest.world.Character;
+import bladequest.world.PlayerCharacter;
 import bladequest.world.Global;
 
 public class BattleEventObject 
@@ -20,16 +20,16 @@ public class BattleEventObject
 	private BattleSprite.faces face;
 	private int imageIndex;
 	
-	private Character source;
-	private List<Character> targets;
-	public void setTargets( List<Character> targets){this.targets = targets;}
+	private PlayerCharacter source;
+	private List<PlayerCharacter> targets;
+	public void setTargets( List<PlayerCharacter> targets){this.targets = targets;}
 	
 	private types type;	
 	public types Type(){return type;}
 	public int Frame(){return frame;}
 	public BattleAnim Animation(){ return animation; }
 	
-	public BattleEventObject(int frame, BattleAnim animation, Character source, List<Character> targets)
+	public BattleEventObject(int frame, BattleAnim animation, PlayerCharacter source, List<PlayerCharacter> targets)
 	{
 		this.frame = frame;
 		this.type = types.Animation;
@@ -37,7 +37,7 @@ public class BattleEventObject
 		this.source = source;
 		this.targets = targets;		
 	}
-	public BattleEventObject(int frame, BattleAction battleAction, Character source, List<Character> targets)
+	public BattleEventObject(int frame, BattleAction battleAction, PlayerCharacter source, List<PlayerCharacter> targets)
 	{
 		this.frame = frame;
 		this.type = types.BattleAction;
@@ -45,7 +45,7 @@ public class BattleEventObject
 		this.source = source;
 		this.targets = targets;		
 	}
-	public BattleEventObject(int frame, CombatAction combatAction, Character source, List<Character> targets)
+	public BattleEventObject(int frame, CombatAction combatAction, PlayerCharacter source, List<PlayerCharacter> targets)
 	{
 		this.frame = frame;
 		this.type = types.CombatAction;
@@ -53,7 +53,7 @@ public class BattleEventObject
 		this.source = source;
 		this.targets = targets;		
 	}
-	public BattleEventObject(int frame, BattleSprite.faces face, int imageIndex, Character source)
+	public BattleEventObject(int frame, BattleSprite.faces face, int imageIndex, PlayerCharacter source)
 	{
 		this.frame = frame;
 		this.type = types.ChangeFace;

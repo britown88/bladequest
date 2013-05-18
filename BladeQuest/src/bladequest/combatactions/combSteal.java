@@ -3,7 +3,7 @@ package bladequest.combatactions;
 import java.util.List;
 
 import bladequest.combat.DamageMarker;
-import bladequest.world.Character;
+import bladequest.world.PlayerCharacter;
 import bladequest.world.DamageTypes;
 import bladequest.world.Enemy;
 import bladequest.world.Global;
@@ -21,7 +21,7 @@ public class combSteal extends CombatAction
 	}
 	
 	@Override
-	public void execute(List<Character> targets, List<DamageMarker> markers)
+	public void execute(List<PlayerCharacter> targets, List<DamageMarker> markers)
 	{
 		Enemy target = (Enemy)targets.get(0);
 		

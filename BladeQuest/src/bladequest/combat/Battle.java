@@ -14,9 +14,9 @@ import bladequest.UI.MenuPanel;
 import bladequest.UI.MenuPanel.Anchors;
 import bladequest.graphics.BattleSprite.faces;
 import bladequest.statuseffects.StatusEffect;
-import bladequest.world.Character;
-import bladequest.world.Character.Action;
 import bladequest.world.Ability;
+import bladequest.world.PlayerCharacter;
+import bladequest.world.PlayerCharacter.Action;
 import bladequest.world.Encounter;
 import bladequest.world.Enemy;
 import bladequest.world.Global;
@@ -55,10 +55,10 @@ public class Battle
 	private boolean prevChar;
 	private boolean nextActor;
 	
-	private Character currentChar;
+	private PlayerCharacter currentChar;
 	private int currentCharIndex;
 	private TargetTypes targetType;
-	private List<Character> targets;
+	private List<PlayerCharacter> targets;
 	private List<BattleEvent> battleEvents;
 	private List<DamageMarker> markers;
 	private List<String> messageQueue;
@@ -66,7 +66,7 @@ public class Battle
 	private BattleStates state;
 	private Encounter encounter;
 
-	private List<Character> partyList;
+	private List<PlayerCharacter> partyList;
 	
 	private Rect enemyArea;
 	
@@ -82,7 +82,7 @@ public class Battle
 	public Battle()
 	{
 		enemyArea = Global.vpToScreen(new Rect(0,0,partyPos.x-partyFrameBuffer, Global.vpHeight-frameMinHeight));
-		targets = new ArrayList<Character>();
+		targets = new ArrayList<PlayerCharacter>();
 		battleEvents = new ArrayList<BattleEvent>();
 		markers = new ArrayList<DamageMarker>();
 		messageQueue = new ArrayList<String>();
@@ -103,7 +103,7 @@ public class Battle
 		else
 		{
 			//characters
-			Character[] party = Global.party.getPartyMembers(false);
+			PlayerCharacter[] party = Global.party.getPartyMembers(false);
 			for(int i = 0; i < 4; ++i)
 				if(party[i] != null)
 				{
@@ -199,7 +199,7 @@ public class Battle
 	
 	private void updateCharacterPanes()
 	{		
-		for(Character c : partyList)
+		for(PlayerCharacter c : partyList)
 		{
 			int i = c.Index();
 			
@@ -237,7 +237,7 @@ public class Battle
 	}
 	private void updateCharacterPositions()
 	{
-		for(Character c : partyList)
+		for(PlayerCharacter c : partyList)
 			c.setPosition(partyPos.x, partyPos.y + (charYSpacing * c.Index()));
 		
 		if(currentChar != null)
@@ -268,6 +268,8 @@ public class Battle
 			for(Item i : Global.party.getInventory(true))
 				mainMenu.addItem(i.getName(), i, false);
 			mainMenu.update();
+			break;
+		default:
 			break;
 		}
 		
@@ -316,17 +318,17 @@ public class Battle
 		Global.musicBox.play("victory", true, -1);
 		
 		//get alive characters
-		List<Character> aliveChars = new ArrayList<Character>();
-		for(Character c : partyList)
+		List<PlayerCharacter> aliveChars = new ArrayList<PlayerCharacter>();
+		for(PlayerCharacter c : partyList)
 			if(!c.isDead()) aliveChars.add(c);
 		
 		int avgLevel, levelTotal = 0;
 
-		for(Character c : partyList)
+		for(PlayerCharacter c : partyList)
 			if(c.getAction() == Action.Item)
 				c.unuseItem();
 		
-		for(Character c : aliveChars)
+		for(PlayerCharacter c : aliveChars)
 		{
 			c.setFace(faces.Victory);
 			levelTotal += c.getLevel();
@@ -364,7 +366,7 @@ public class Battle
 		
 		String newAbilities = "";
 		
-		for(Character c : aliveChars)
+		for(PlayerCharacter c : aliveChars)
 		{
 			int leftover = c.awardExperience(exp);
 			while(leftover > 0)
@@ -420,7 +422,7 @@ public class Battle
 			if(!e.isDead())
 				battleEvents.add(e.genBattleEvent(partyList, encounter.Enemies()));
 
-		for(Character c : partyList)
+		for(PlayerCharacter c : partyList)
 			if(!c.isDead() && c.getAction() != Action.Guard)
 				addBattleEvent(c, c.getTargets());
 		
@@ -441,7 +443,7 @@ public class Battle
 		else
 		{
 			BattleEvent currentEvent = battleEvents.get(0);
-			Character actor = currentEvent.getSource();
+			PlayerCharacter actor = currentEvent.getSource();
 			
 			
 			if(actor.isEnemy() || selCharOpened)
@@ -457,7 +459,7 @@ public class Battle
 			nextActor = true;
 			displayNamePanel.hide();
 			//battleEvents.get(0).getSource().acting = false;
-			Character actor = battleEvents.get(0).getSource();			
+			PlayerCharacter actor = battleEvents.get(0).getSource();			
 			if(!actor.isEnemy())
 			{
 				recedeChar();
@@ -493,11 +495,11 @@ public class Battle
 			else
 			{
 				BattleEvent currentEvent = battleEvents.get(0);
-				Character actor = battleEvents.get(0).getSource();
-				List<Character> targets = currentEvent.getTargets();
-				List<Character> aliveTargets = new ArrayList<Character>();
+				PlayerCharacter actor = battleEvents.get(0).getSource();
+				List<PlayerCharacter> targets = currentEvent.getTargets();
+				List<PlayerCharacter> aliveTargets = new ArrayList<PlayerCharacter>();
 				//fill alive targets
-				for(Character c : targets)if(!c.isDead())aliveTargets.add(c);
+				for(PlayerCharacter c : targets)if(!c.isDead())aliveTargets.add(c);
 				
 				//set frame text
 				switch(actor.getAction())
@@ -514,9 +516,9 @@ public class Battle
 					//reset to random characters if targeting a dead guy
 					if(aliveTargets.isEmpty())
 					{
-						List<Character> aliveChars = new ArrayList<Character>();
+						List<PlayerCharacter> aliveChars = new ArrayList<PlayerCharacter>();
 						List<Enemy> aliveEnemies = new ArrayList<Enemy>();
-						for(Character c : partyList)if(!c.isDead())aliveChars.add(c);
+						for(PlayerCharacter c : partyList)if(!c.isDead())aliveChars.add(c);
 						for(Enemy e : encounter.Enemies())if(!e.isDead())aliveEnemies.add(e);
 						
 						if(actor.isEnemy())
@@ -559,7 +561,7 @@ public class Battle
 	}
 	private boolean isDefeated()
 	{
-		for(Character c : partyList)
+		for(PlayerCharacter c : partyList)
 			if(!c.isDead())
 				return false;
 		
@@ -582,7 +584,7 @@ public class Battle
 			recedeChar();
 			mainMenu.close();
 			changeStartBarText(txtStart);
-			for(Character c : partyList)
+			for(PlayerCharacter c : partyList)
 				c.setFace(faces.Idle);
 			break;
 		case SELECT:
@@ -636,7 +638,9 @@ public class Battle
 				getTouchTargets(-1, -1);
 				break;
 			}
-			mainMenu.close();			
+			mainMenu.close();
+		default:
+			break;			
 		}
 		
 		state = newState;
@@ -728,7 +732,7 @@ public class Battle
 				break;
 			}
 	}
-	private void addBattleEvent(Character source, List<Character> targets){battleEvents.add(new BattleEvent(source, targets));}
+	private void addBattleEvent(PlayerCharacter source, List<PlayerCharacter> targets){battleEvents.add(new BattleEvent(source, targets));}
 	public void addMessage(String str)
 	{
 		messageQueue.add(str);
@@ -796,7 +800,7 @@ public class Battle
 	
 	private void drawActors()
 	{
-		for(Character c : partyList)
+		for(PlayerCharacter c : partyList)
 		{
 			c.battleRender();
 			characterPanes[c.Index()].render();
@@ -833,13 +837,15 @@ public class Battle
 				mpWindow.render();
 			}
 			break;
+		default:
+			break;
 		
 		}
 		displayNamePanel.render();
 	}
 	private void drawSelect()
 	{
-		for(Character t : targets)
+		for(PlayerCharacter t : targets)
 		{
 			Global.renderer.drawRect(t.getRect(), selectPaint, true);
 			
@@ -891,7 +897,9 @@ public class Battle
 					Global.musicBox.resumeLastSong();
 					Global.screenFader.fadeIn(2);
 					Global.GameState = States.GS_WORLDMOVEMENT;				
-				}		
+				}
+		default:
+			break;		
 		}		
 	}	
 	public void render()
@@ -919,6 +927,8 @@ public class Battle
 			break;
 		case SELECT:
 			previousCharacter();
+			break;
+		default:
 			break;
 				
 		}
@@ -999,7 +1009,7 @@ public class Battle
 					{
 						//targets were selected
 						//changeState(BattleStates.SELECT);
-						currentChar.setTargets(new ArrayList<Character>(targets));
+						currentChar.setTargets(new ArrayList<PlayerCharacter>(targets));
 						nextCharacter();
 						//targets.clear();
 					
@@ -1012,6 +1022,8 @@ public class Battle
 					}
 										
 				}			
+				break;
+			default:
 				break;
 			}
 		}		
@@ -1030,6 +1042,8 @@ public class Battle
 			case TARGET:
 				getTouchTargets(x, y);
 				break;
+			default:
+				break;
 			}
 		}		
 	}
@@ -1046,6 +1060,8 @@ public class Battle
 				break;
 			case TARGET:
 				getTouchTargets(x, y);
+				break;
+			default:
 				break;
 				
 			}
@@ -1074,7 +1090,7 @@ public class Battle
 			targets.add(currentChar);
 			break;
 		case AllAllies:
-			for(Character c : partyList)
+			for(PlayerCharacter c : partyList)
 				targets.add(c);
 			break;
 		case AllEnemies:
@@ -1086,7 +1102,7 @@ public class Battle
 			for(Enemy e : encounter.Enemies())
 				if(!e.isDead())
 					targets.add(e);
-			for(Character c : partyList)
+			for(PlayerCharacter c : partyList)
 				targets.add(c);
 			break;
 			
@@ -1113,14 +1129,14 @@ public class Battle
 	//target closest ally, assumes tapping within char rect
 	private void targetAlly(int x, int y)
 	{
-		for(Character c : partyList)
+		for(PlayerCharacter c : partyList)
 			if(c.getRect().contains(x, y))
 			{
 				targets.add(c);
 				break;
 			}
 	}
-	private void setTarget(Character c)
+	private void setTarget(PlayerCharacter c)
 	{
 		targets.clear();
 		targets.add(c);

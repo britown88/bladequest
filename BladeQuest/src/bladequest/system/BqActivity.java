@@ -1,22 +1,21 @@
 package bladequest.system;
 
-import bladequest.world.Global;
-import bladequest.world.States;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.annotation.SuppressLint;
-import android.app.*;
+import android.app.Activity;
+import android.content.Context;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
-import android.content.Context;
-
-import java.util.*;
+import bladequest.world.Global;
 
 public class BqActivity extends Activity 
 implements OnGestureListener, AudioManager.OnAudioFocusChangeListener
@@ -139,6 +138,8 @@ implements OnGestureListener, AudioManager.OnAudioFocusChangeListener
     	case GS_MAINMENU:
     		Global.menu.onFling(velocityX, velocityY);
     		break;
+		default:
+			break;
     	}
     	return true;
     }
@@ -152,6 +153,8 @@ implements OnGestureListener, AudioManager.OnAudioFocusChangeListener
     	case GS_TITLE:
     		Global.title.onLongPress();
     		break;
+		default:
+			break;
     	}
     }
     

@@ -6,8 +6,8 @@ import java.util.List;
 import bladequest.world.DamageTypes;
 import bladequest.world.Global;
 import bladequest.world.Stats;
-import bladequest.world.Character;
-import bladequest.world.Character.Action;
+import bladequest.world.PlayerCharacter;
+import bladequest.world.PlayerCharacter.Action;
 
 public class BattleCalc 
 {
@@ -21,7 +21,7 @@ public class BattleCalc
 	private static DamageReturnType damageReturnType;	
 	public static DamageReturnType getDmgReturnType(){return damageReturnType;}
 	
-	public static int calculatedDamage(Character attacker, Character defender, float power, DamageTypes type)
+	public static int calculatedDamage(PlayerCharacter attacker, PlayerCharacter defender, float power, DamageTypes type)
 	{
 		attacker.updateSecondaryStats();
 		defender.updateSecondaryStats();

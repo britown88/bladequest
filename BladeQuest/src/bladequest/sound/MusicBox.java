@@ -1,9 +1,8 @@
 package bladequest.sound;
 
-import bladequest.world.Global;
-import android.content.ContextWrapper;
 import android.content.res.AssetFileDescriptor;
 import android.media.JetPlayer;
+import bladequest.world.Global;
 
 
 public class MusicBox implements JetPlayer.OnJetEventListener
@@ -11,7 +10,7 @@ public class MusicBox implements JetPlayer.OnJetEventListener
 	private JetPlayer jet;
 	private String playingSong, lastSong;
 	private boolean paused, done, nonInfinite;
-	private JetPlayer.OnJetEventListener listener;
+	//private JetPlayer.OnJetEventListener listener;
 	
 	public MusicBox(AssetFileDescriptor afd)
 	{

@@ -1,12 +1,11 @@
 package bladequest.world;
 
-import bladequest.actions.*;
-import bladequest.graphics.Sprite;
+import java.util.ArrayList;
+import java.util.List;
+
+import android.graphics.Point;
+import bladequest.actions.Action;
 import bladequest.graphics.Tile;
-
-import java.util.*;
-
-import android.graphics.*;
 
 public class GameObject {
 	private String name;

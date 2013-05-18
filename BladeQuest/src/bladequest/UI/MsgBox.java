@@ -4,7 +4,7 @@ import android.graphics.*;
 import android.graphics.Paint.Align;
 import bladequest.UI.ListBox.LBStates;
 import bladequest.world.Global;
-import bladequest.world.Character;
+import bladequest.world.PlayerCharacter;
 
 import java.util.*;
 
@@ -311,9 +311,9 @@ public class MsgBox extends MenuPanel
 			int last  = str.lastIndexOf('$');
 			String charName = str.substring(first+1, last);
 			
-			Character c = null;
+			PlayerCharacter c = null;
 			//search immediate party first
-			for(Character ch : Global.party.getPartyList(true))
+			for(PlayerCharacter ch : Global.party.getPartyList(true))
 			{
 				if(ch.getName().equals(charName))
 				{

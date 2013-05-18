@@ -3,7 +3,7 @@ package bladequest.combatactions;
 import java.util.List;
 
 import bladequest.combat.DamageMarker;
-import bladequest.world.Character;
+import bladequest.world.PlayerCharacter;
 import bladequest.world.DamageTypes;
 import bladequest.world.TargetTypes;
 
@@ -19,7 +19,7 @@ public class combStance extends CombatAction
 	}
 	
 	@Override
-	public void execute(List<Character> targets, List<DamageMarker> markers)
+	public void execute(List<PlayerCharacter> targets, List<DamageMarker> markers)
 	{
 		
 	}

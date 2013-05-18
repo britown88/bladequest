@@ -19,7 +19,7 @@ public class Ability
 	
 	private List<BattleAction> actions;
 	
-	public Ability(String name, String displayName, String animation, DamageTypes dmgType, TargetTypes targetType, int mpcost, int accuracy, boolean useableOutOfBattle)
+	public Ability(String name, String displayName, String animation, DamageTypes dmgType, TargetTypes targetType, int mpcost, int accuracy, boolean usableOutOfBattle)
 	{
 		this.name = name;
 		this.displayName = displayName;

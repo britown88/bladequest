@@ -1,10 +1,9 @@
 package bladequest.world;
 
-import java.util.Random;
-
-import android.graphics.*;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Paint.Align;
-import bladequest.graphics.*;
+import bladequest.graphics.Sprite;
 
 public class LoadingScreen 
 {

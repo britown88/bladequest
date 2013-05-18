@@ -10,7 +10,7 @@ import bladequest.world.Global;
 public class WeaponSwingDrawable 
 {
 	private Rect[] srcFrames, animSrcFrames;
-	private Point frameSize, animFrameSize;
+	private Point frameSize/*, animFrameSize*/;
 	private Bitmap bmp, animBmp;
 	
 	public WeaponSwingDrawable(Bitmap bmp, Point frameSize, Bitmap animBmp, Point animFrameSize)
@@ -25,7 +25,7 @@ public class WeaponSwingDrawable
 		for(int i = 0; i < 3; ++i)
 			animSrcFrames[i] = new Rect(i * animFrameSize.x,0,i * animFrameSize.x + animFrameSize.x,animFrameSize.y);
 		this.animBmp = animBmp;		
-		this.animFrameSize = animFrameSize;
+		//this.animFrameSize = animFrameSize;
 	}
 	
 	public void release()

@@ -11,13 +11,13 @@ public class WeaponSwing
 {
 	private static final Point frameSize = new Point(42, 38);
 	private static final Point animFrameSize = new Point(32, 32);
-	private String id;
+	//private String id;
 	
 	private Rect srcRect, animSrcRect;
 	
 	public WeaponSwing(String id, int fileX, int fileY)
 	{
-		this.id = id;
+		//this.id = id;
 		srcRect = new Rect(
 				fileX * (frameSize.x * 3), 
 				fileY * frameSize.y,
@@ -32,15 +32,15 @@ public class WeaponSwing
 		
 	}
 	
-	private int[] baseColors, swingColors;
+	//private int[] baseColors, swingColors;
 	
 	public WeaponSwingDrawable genSwingDrawable(int[] base, int[] swing)
 	{
 		Bitmap newBmp = Bitmap.createBitmap(frameSize.x*3, frameSize.y, Config.ARGB_8888);
 		Bitmap swingBmp = Global.bitmaps.get("weaponswing");
 				
-		baseColors = base;
-		swingColors = swing;
+		//baseColors = base;
+		//swingColors = swing;
 		
 		
 		for(int y = srcRect.top; y < srcRect.bottom; ++y)

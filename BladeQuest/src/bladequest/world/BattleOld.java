@@ -1,4 +1,4 @@
-package bladequest.world;
+/*package bladequest.world;
 
 import android.graphics.*;
 import android.graphics.Paint.Align;
@@ -380,12 +380,12 @@ public class BattleOld {
 		
 		updateCharStats();
 		
-/*		if(runningAbility != null && runningAbility.running)
+		if(runningAbility != null && runningAbility.running)
 		{
 			runningAbility.update();
 			if(!runningAbility.running)
 				runningAbility = null;
-		}*/
+		}
 		
 		if(messageQueue.size() > 0)
 		{
@@ -441,7 +441,7 @@ public class BattleOld {
 				break;
 				
 			case USEITEM:
-				/*if(markers.size() == 0)
+				if(markers.size() == 0)
 				{
 					if(runningAbility != null && runningAbility.running)
 						break;
@@ -452,7 +452,7 @@ public class BattleOld {
 						recedeChar();
 					}						
 					changeState(battleStates.ACTWAIT);
-				}*/
+				}
 					
 				break;
 				
@@ -530,7 +530,7 @@ public class BattleOld {
 								switch(c.getAction())
 								{
 								case Attack:
-									/*if(c.isDone())
+									if(c.isDone())
 									{
 										if(e.isDead())
 										{
@@ -550,7 +550,7 @@ public class BattleOld {
 									}
 									else
 										c.updateSwing();
-										*/
+										
 									break;
 									
 								case Item:
@@ -862,16 +862,16 @@ public class BattleOld {
 	{
 		//Vector<DamageMarker> toRemove = new Vector<DamageMarker>();
 		
-		/*for(DamageMarker d : markers)
+		for(DamageMarker d : markers)
 		{
 			d.update();
 			
 			if(d.isDone())
 				toRemove.add(d);
-		}*/
+		}
 		
-		/*for(DamageMarker d : toRemove)
-			markers.remove(d);*/
+		for(DamageMarker d : toRemove)
+			markers.remove(d);
 	}
 	
 	
@@ -944,8 +944,8 @@ public class BattleOld {
 		{
 		case SELECT:
 			frameText = defaultFrameText;
-			/*for(Character c : getAliveCharacters())
-				c.setDone(true);*/
+			for(Character c : getAliveCharacters())
+				c.setDone(true);
 			
 			mainMenu.clearObjects();
 			mainMenu.addItem("Attack", "atk", false);
@@ -1011,8 +1011,8 @@ public class BattleOld {
 			acting = false;
 			currentActor = 0;
 			
-			/*for(Character c : Global.party.getPartyMembers(false))
-				if(c != null) c.acted = false;*/
+			for(Character c : Global.party.getPartyMembers(false))
+				if(c != null) c.acted = false;
 
 
 			break;
@@ -1024,9 +1024,9 @@ public class BattleOld {
 			
 			int avgLevel, levelTotal = 0;
 			
-			/*for(Character c : Global.party.getPartyMembers(false))
+			for(Character c : Global.party.getPartyMembers(false))
 				if(c != null && !c.acted && c.action == Action.Item)
-					c.unuseItem();*/
+					c.unuseItem();
 			
 			do{					
 				if(getChar(currentChar) != null && getChar(currentChar).action == Action.Item)
@@ -1143,15 +1143,15 @@ public class BattleOld {
 		}
 		else if(opt.equals("atk"))
 		{
-			/*getChar(currentChar).setAttack();
-			getChar(currentChar).setReady();*/				
+			getChar(currentChar).setAttack();
+			getChar(currentChar).setReady();				
 			targetType = TargetTypes.Single;
 			changeState(battleStates.TARGET);
 		}
 		else if(opt.equals("grd"))
 		{
-			/*getChar(currentChar).guard();
-			getChar(currentChar).setReady();*/				
+			getChar(currentChar).guard();
+			getChar(currentChar).setReady();				
 			recedeChar();
 			nextChar = true;
 			changeState(battleStates.SELECT);
@@ -1164,7 +1164,7 @@ public class BattleOld {
 		else if(opt.equals("act"))
 		{
 			getChar(currentChar).setUseCombatAction();
-			/*getChar(currentChar).setReady();*/				
+			getChar(currentChar).setReady();				
 			targetType = getChar(currentChar).getCombatActionTargetType();
 			changeState(battleStates.TARGET);
 		}
@@ -1322,7 +1322,7 @@ public class BattleOld {
 		
 		for(Character c : getAliveCharacters())
 		{
-			/*c.setIdle();*/
+			c.setIdle();
 			//c.statusOnTurn(this);
 		}
 		
@@ -1387,10 +1387,10 @@ public class BattleOld {
 		return temp;
 	}
 	
-	/*public void addDamageMarker(DamageMarker marker)
+	public void addDamageMarker(DamageMarker marker)
 	{
 		markers.add(marker);
-	}*/
+	}
 	
 	public void physicalDamage(Character attacker, Character defender)
 	{
@@ -1447,10 +1447,10 @@ public class BattleOld {
 								
 			else
 			{
-				/*if(moveOrder.indexOf(c) >= currentActor || c.getAction() == Character.Action.Guard)
+				if(moveOrder.indexOf(c) >= currentActor || c.getAction() == Character.Action.Guard)
 					c.setReady();				
 				else
-					c.setIdle();*/
+					c.setIdle();
 			}	
 		}	
 		else
@@ -1903,3 +1903,4 @@ public class BattleOld {
 		CharactersOnly
 	}
 }
+*/

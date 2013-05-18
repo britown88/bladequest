@@ -8,7 +8,7 @@ import bladequest.battleactions.bactDamage;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleSprite.faces;
 import bladequest.world.Ability;
-import bladequest.world.Character;
+import bladequest.world.PlayerCharacter;
 import bladequest.world.DamageTypes;
 import bladequest.world.Global;
 import bladequest.world.Item;
@@ -17,8 +17,8 @@ public class BattleEvent
 {
 	private static final long actTimerLength = 150;//milliseconds
 	
-	private Character source;
-	private List<Character> targets;
+	private PlayerCharacter source;
+	private List<PlayerCharacter> targets;
 	private List<BattleEventObject> objects;
 	
 	private boolean running, done;
@@ -27,16 +27,16 @@ public class BattleEvent
 	private BattleAnim anim;	
 	private int animStartIndex;
 	
-	public BattleEvent(Character source, List<Character> targets)
+	public BattleEvent(PlayerCharacter source, List<PlayerCharacter> targets)
 	{
 		this.source = source;
-		this.targets = new ArrayList<Character>(targets);	
+		this.targets = new ArrayList<PlayerCharacter>(targets);	
 		
 		objects = new ArrayList<BattleEventObject>();
 	}
 	
-	public Character getSource() { return source; }
-	public List<Character> getTargets() { return targets;}	
+	public PlayerCharacter getSource() { return source; }
+	public List<PlayerCharacter> getTargets() { return targets;}	
 	public boolean isDone(){ return done;}	
 	private int frameFromActIndex(int index){return (int)(index*actTimerLength);}	
 	
@@ -65,7 +65,7 @@ public class BattleEvent
 		return index;
 	}
 	
-	public void setTargets(List<Character> targets)
+	public void setTargets(List<PlayerCharacter> targets)
 	{
 		this.targets = targets;
 		for(BattleEventObject obj : objects)
@@ -132,6 +132,8 @@ public class BattleEvent
 			objects.add(new BattleEventObject(frameFromActIndex(finalIndex), faces.Ready, 0, source));
 			objects.add(new BattleEventObject(frameFromActIndex(finalIndex+2)));
 			
+			break;
+		default:
 			break;
 		}
 		

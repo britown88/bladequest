@@ -1,7 +1,6 @@
 package bladequest.graphics;
 
 import bladequest.world.Global;
-import android.graphics.*;
 
 public class ScreenFader 
 {

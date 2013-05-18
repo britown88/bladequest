@@ -9,14 +9,12 @@ import bladequest.world.Global;
 import bladequest.world.Item;
 import bladequest.world.Merchant;
 import bladequest.world.States;
-import bladequest.world.TargetTypes;
-import bladequest.world.Item.Type;
 
 public class MerchantScreen 
 {
 	private Paint menuText, menuTextRight, menuTextCenter, grayText, 
-	grayTextCenter, grayTextRight, redMenuText, blueMenuText, redMenuTextCenter, 
-	blueMenuTextCenter, smallText, smallTextCenter, smallTextRight;
+	grayTextCenter, grayTextRight/*, redMenuText, blueMenuText, redMenuTextCenter, 
+	blueMenuTextCenter, smallText, smallTextCenter, smallTextRight*/;
 	
 	private final float menuWidthVpPercent = 28.0f; 
 	private final float menuHeightVpPercent = 16.0f;
@@ -27,7 +25,7 @@ public class MerchantScreen
 	
 	private MsgBox msgBox;
 	private Merchant merchant;
-	private Item item;
+	//private Item item;
 	private float discount;
 	
 	private ListBox rootMenu, items;
@@ -55,10 +53,10 @@ public class MerchantScreen
 	
 	private void buildPaints()
 	{
-		smallText = Global.textFactory.getTextPaint(9, Color.WHITE, Align.LEFT);				
+		/*smallText = Global.textFactory.getTextPaint(9, Color.WHITE, Align.LEFT);				
 		smallTextCenter = Global.textFactory.getTextPaint(9, Color.WHITE, Align.CENTER);		
 		smallTextRight = Global.textFactory.getTextPaint(9, Color.WHITE, Align.RIGHT);	
-		
+		*/
 		menuText = Global.textFactory.getTextPaint(13, Color.WHITE, Align.LEFT);	
 		menuTextCenter = Global.textFactory.getTextPaint(13, Color.WHITE, Align.CENTER);	
 		menuTextRight = Global.textFactory.getTextPaint(13, Color.WHITE, Align.RIGHT);
@@ -67,11 +65,11 @@ public class MerchantScreen
 		grayTextCenter = Global.textFactory.getTextPaint(13, Color.GRAY, Align.CENTER);		
 		grayTextRight = Global.textFactory.getTextPaint(13, Color.GRAY, Align.RIGHT);	
 		
-		redMenuText = Global.textFactory.getTextPaint(13, Color.RED, Align.LEFT);
+		/*redMenuText = Global.textFactory.getTextPaint(13, Color.RED, Align.LEFT);
 		blueMenuText = Global.textFactory.getTextPaint(13, Color.CYAN, Align.LEFT);
 		redMenuTextCenter = Global.textFactory.getTextPaint(13, Color.RED, Align.CENTER);
 		blueMenuTextCenter = Global.textFactory.getTextPaint(13, Color.CYAN, Align.CENTER);
-	}
+	*/}
 	private void buildPanels()
 	{
 		goldPanel = new MenuPanel(0, Global.vpHeight - MsgBox.msgBoxHeight, menuWidth, barHeight);
@@ -448,7 +446,7 @@ public class MerchantScreen
 				state = items.touchActionUp(x, y);
 				if(state == LBStates.Selected)
 				{
-					item = (Item)(items.getSelectedEntry().obj);
+					//item = (Item)(items.getSelectedEntry().obj);
 					selling = currentState == states.Selling;
 					changeState(states.BuySellConfirm);
 				}

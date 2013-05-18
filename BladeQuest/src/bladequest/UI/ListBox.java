@@ -1,17 +1,19 @@
 package bladequest.UI;
 
-import android.graphics.*;
-import android.graphics.Paint.Align;
-import bladequest.world.Global;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.*;
+import android.graphics.Paint;
+import android.graphics.Paint.Align;
+import android.graphics.Rect;
+import bladequest.world.Global;
 
 //List Boxes can be given a list of items that can be displayed and scrolled through
 //When an object is selected, the selected Object is saved and can be retrieved 
 //by the parent object
 public class ListBox extends MenuPanel
 {
-	private int numRows, numColumns, rowHeight, columnWidth, startY, startX, itemBuffer, scrollDelta, selectedIndex;
+	private int numRows, numColumns, rowHeight, columnWidth, startY, /*startX, */itemBuffer, scrollDelta, selectedIndex;
 	//private List<String> itemNames;
 	//private List<Object> items;
 	//private List<Integer> disabledIndices;
@@ -228,7 +230,7 @@ public class ListBox extends MenuPanel
 		}
 		
 		startY = y;
-		startX = x;
+		//startX = x;
 		scrolling = false;
 	}
 	

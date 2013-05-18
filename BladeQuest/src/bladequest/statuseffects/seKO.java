@@ -1,7 +1,7 @@
 package bladequest.statuseffects;
 
 import bladequest.combat.Battle;
-import bladequest.world.Character;
+import bladequest.world.PlayerCharacter;
 
 public class seKO extends StatusEffect
 {	
@@ -19,15 +19,15 @@ public class seKO extends StatusEffect
 	}
 	
 	@Override
-	public void onTurn(Character c, Battle b) {}
+	public void onTurn(PlayerCharacter c, Battle b) {}
 	
 	@Override
-	public void onInflict(Character c) {}
+	public void onInflict(PlayerCharacter c) {}
 	
 	@Override
-	public void onRemove(Character c) {}
+	public void onRemove(PlayerCharacter c) {}
 	
 	@Override
-	public void onStep(Character c) {}	
+	public void onStep(PlayerCharacter c) {}	
 
 }

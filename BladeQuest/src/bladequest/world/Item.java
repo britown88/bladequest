@@ -167,27 +167,27 @@ public class Item
 	
 	public WeaponSwingDrawable getSwing() { return weaponSwing; }
 	
-	public void equip(Character c) 
+	public void equip(PlayerCharacter c) 
 	{ 
 		equipped = true; 
 		for(int j = 0; j < Stats.NUM_STATS.ordinal(); ++j)
 			c.modStat(j, statMods[j]);
 
 	}
-	public void unequip(Character c) 
+	public void unequip(PlayerCharacter c) 
 	{ 
 		equipped = false; 
 		for(int j = 0; j < Stats.NUM_STATS.ordinal(); ++j)
 			c.modStat(j, -statMods[j]);
 	}
 	
-	public void execute(Character attacker, List<Character> targets, List<DamageMarker> markers)
+	public void execute(PlayerCharacter attacker, List<PlayerCharacter> targets, List<DamageMarker> markers)
 	{
 		for(int i = 0; i < actions.size(); ++i)
 			actions.get(i).run(attacker, targets, markers);
 	}
 	
-	public boolean willAffect(Character c)
+	public boolean willAffect(PlayerCharacter c)
 	{
 		for(BattleAction ba : actions)
 			if(!ba.willAffectTarget(c))

@@ -16,7 +16,7 @@ import bladequest.graphics.BattleSprite.faces;
 import bladequest.graphics.BattleSprite;
 
 
-public class Enemy extends Character
+public class Enemy extends PlayerCharacter
 {	
 	private int gold;
 	private String commonItem, rareItem, attackAnim;
@@ -101,13 +101,13 @@ public class Enemy extends Character
 		return;
 	}
 	
-	public BattleEvent genBattleEvent(List<Character> chars, List<Enemy> enemies)
+	public BattleEvent genBattleEvent(List<PlayerCharacter> chars, List<Enemy> enemies)
 	{
 		Act();
-		List<Character> targets = new ArrayList<Character>();
-		List<Character> everybody = new ArrayList<Character>();
+		List<PlayerCharacter> targets = new ArrayList<PlayerCharacter>();
+		List<PlayerCharacter> everybody = new ArrayList<PlayerCharacter>();
 		
-		for(Character c : chars)everybody.add(c);
+		for(PlayerCharacter c : chars)everybody.add(c);
 		for(Enemy e : enemies)everybody.add(e);
 		
 		switch(action)
@@ -126,10 +126,10 @@ public class Enemy extends Character
 				for(Enemy e : enemies)targets.add(e);
 				break;
 			case AllEnemies:
-				for(Character c : chars)targets.add(c);
+				for(PlayerCharacter c : chars)targets.add(c);
 				break;				
 			case Everybody:
-				for(Character c : everybody)targets.add(c);
+				for(PlayerCharacter c : everybody)targets.add(c);
 				break;
 			case Self:
 				targets.add(this);
