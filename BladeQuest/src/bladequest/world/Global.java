@@ -336,7 +336,7 @@ public class Global
 		{
 			if(party.isGridAligned())
 				openMainMenuSafe();
-			else				
+			else			
 				openMenuFlag = true;
 		}
 		
@@ -1056,8 +1056,7 @@ public class Global
 		
 		soundPool.play(sfx.get(sound), streamVolume, streamVolume, 1, 0, 0f);
 	}
-		
-	
+			
 	public static boolean createWorld()
 	{	
 		if(sprites== null)sprites = new HashMap<String, Sprite>(); else sprites.clear();

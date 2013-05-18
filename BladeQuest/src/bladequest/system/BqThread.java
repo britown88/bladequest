@@ -1,5 +1,7 @@
 package bladequest.system;
 
+import android.media.AudioManager;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import bladequest.UI.ListBox.LBStates;
 import bladequest.world.Global;
@@ -31,11 +33,10 @@ public class BqThread extends Thread
 		while(running)
 		{
 	    	startTime = System.currentTimeMillis();
-	    	Global.update();
 	    	
-	    	handleInput();  	
-	    	
-	    	gamePanel.onDraw();
+	    	handleInput();  
+	    	Global.update();	
+	    	gamePanel.draw();
 	    	
 	    	Global.lock.lock();
 	    	Global.renderer.swap();	    	
@@ -72,6 +73,85 @@ public class BqThread extends Thread
 				}	
 			}			
     	}
+		
+		if(Global.activity.keyEvents != null)
+    	{
+			int size = Global.activity.keyEvents.size();
+			
+			if(size > 0)
+			{
+				int[] events = new int[size];
+				
+				for(int i = 0; i < size; ++i)
+					events[i] =  Global.activity.keyEvents.get(i);					
+				
+				for(int ke : events)
+				{
+					onKeyEvent(ke);
+					Global.activity.keyEvents.remove(ke);
+				}	
+			}			
+    	}
+	}
+	
+	private void onKeyEvent(int event)
+	{
+		switch(event)
+		{
+		case KeyEvent.KEYCODE_BACK:
+			switch(Global.GameState)
+			{
+			case GS_WORLDMOVEMENT:
+				break;
+			case GS_TITLE:
+				Global.title.backButtonPressed();
+				break;
+			case GS_BATTLE:
+				Global.battle.backButtonPressed();
+				break;
+			case GS_MAINMENU:			
+				
+				Global.menu.backButtonPressed();
+				break;	
+			case GS_MERCHANT:
+				Global.merchantScreen.backButtonPressed();
+				break;
+			case GS_DEBUG:
+				Global.debugScreen.backButtonPressed();
+				break;
+			case GS_SAVELOADMENU:				
+				Global.saveLoadMenu.backButtonPressed();
+				break;
+			}
+			break;
+			
+		case KeyEvent.KEYCODE_MENU:
+			switch(Global.GameState)
+			{
+			case GS_WORLDMOVEMENT:
+				Global.openMainMenu();
+				break;
+			case GS_MAINMENU:
+				Global.closeMainMenu();
+				break;
+				
+			default:
+                break;					
+			}
+			break;
+			
+	    case KeyEvent.KEYCODE_VOLUME_UP:
+	    	Global.audioMgr.adjustStreamVolume(AudioManager.STREAM_MUSIC,
+	                AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);
+	    	break;
+	        
+	    case KeyEvent.KEYCODE_VOLUME_DOWN:
+	    	Global.audioMgr.adjustStreamVolume(AudioManager.STREAM_MUSIC,
+	                AudioManager.ADJUST_LOWER, AudioManager.FLAG_SHOW_UI);
+	        break;
+
+		}
+		
 	}
 	
 	private void onTouchEvent(MotionEvent event) 

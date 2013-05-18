@@ -24,6 +24,7 @@ implements OnGestureListener, AudioManager.OnAudioFocusChangeListener
 	
 	private static final String TAG = BqActivity.class.getSimpleName();
 	public List<MotionEvent> touchEvents;
+	public List<Integer> keyEvents;
 	public BqPanel panel;
 	
 	private GestureDetector gestureScanner;
@@ -34,6 +35,7 @@ implements OnGestureListener, AudioManager.OnAudioFocusChangeListener
         super.onCreate(savedInstanceState);
         
         touchEvents = new ArrayList<MotionEvent>();
+        keyEvents = new ArrayList<Integer>();
         
         // requesting to turn the title OFF
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -79,61 +81,8 @@ implements OnGestureListener, AudioManager.OnAudioFocusChangeListener
 	@Override
     public boolean onKeyDown(int keyCode, KeyEvent event) 
 	{ 
-		switch(keyCode)
-		{
-		case KeyEvent.KEYCODE_BACK:
-			switch(Global.GameState)
-			{
-			case GS_WORLDMOVEMENT:
-				break;
-			case GS_TITLE:
-				Global.title.backButtonPressed();
-				break;
-			case GS_BATTLE:
-				Global.battle.backButtonPressed();
-				break;
-			case GS_MAINMENU:			
-				
-				Global.menu.backButtonPressed();
-				break;	
-			case GS_MERCHANT:
-				Global.merchantScreen.backButtonPressed();
-				break;
-			case GS_DEBUG:
-				Global.debugScreen.backButtonPressed();
-				break;
-			case GS_SAVELOADMENU:				
-				Global.saveLoadMenu.backButtonPressed();
-				break;
-			}
-			break;
-			
-		case KeyEvent.KEYCODE_MENU:
-			switch(Global.GameState)
-			{
-			case GS_WORLDMOVEMENT:
-				Global.openMainMenu();
-				break;
-			case GS_MAINMENU:
-				Global.closeMainMenu();
-				break;
-				
-			default:
-                break;					
-			}
-			break;
-			
-	    case KeyEvent.KEYCODE_VOLUME_UP:
-	    	Global.audioMgr.adjustStreamVolume(AudioManager.STREAM_MUSIC,
-	                AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);
-	        return true;
-	        
-	    case KeyEvent.KEYCODE_VOLUME_DOWN:
-	    	Global.audioMgr.adjustStreamVolume(AudioManager.STREAM_MUSIC,
-	                AudioManager.ADJUST_LOWER, AudioManager.FLAG_SHOW_UI);
-	        return true;
-
-		}
+		keyEvents.add(keyCode);
+		
     	
         return true;
 	}

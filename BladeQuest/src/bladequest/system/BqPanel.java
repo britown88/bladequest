@@ -129,7 +129,7 @@ implements SurfaceHolder.Callback
     }       
     
     //@Override
-    protected void onDraw() 
+    protected void draw() 
     {   
     	//canvas.clipRect(global.vpRect);
     	drawBackground();
