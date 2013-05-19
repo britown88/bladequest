@@ -1136,29 +1136,44 @@ public class Global
 		
 		loading = false;
 
-		//demo start info, do not fuck with!
-		screenFader.setFadeColor(255, 0, 0, 0);
-		screenFader.setFaded();
-		party.teleport(16, 5);		
-		party.insertCharacter("aramis", 1);	
-		party.getCharacter("aramis").setDisplayName("?????");	
-		LoadMap("prisonb2");
+//		//demo start info, do not fuck with!
+//		screenFader.setFadeColor(255, 0, 0, 0);
+//		screenFader.setFaded();
+//		party.teleport(16, 5);		
+//		party.insertCharacter("aramis", 1);	
+//		party.getCharacter("aramis").setDisplayName("?????");	
+//		LoadMap("prisonb2");
 		
-//		//test params
-//		party.teleport(1, 3);		
-//		//party.insertCharacter("aramis", 1);	
-//		party.addCharacter("aramis");
-//		party.getCharacter("aramis").setDisplayName("?????");		
-//		
-//		LoadMap("test");	
-//		party.addCharacter("joy");
-//		//for(int i = 0; i < 10; ++i)
-//		//party.getPartyMembers()[0].applyStatusEffect(new sePoison(100));
-//		party.addCharacter("luc");		
-//		
-//		//party.addCharacter("joy");				
-//		switches.put("guardasleep", true);
-//		switches.put("startgame", true);			
+		//test params
+		party.teleport(1, 3);		
+		//party.insertCharacter("aramis", 1);	
+		party.addCharacter("aramis");
+		party.getCharacter("aramis").setDisplayName("?????");		
+		
+			
+		party.addCharacter("joy");
+		party.addCharacter("luc");	
+		
+		for(PlayerCharacter pc : party.getPartyMembers(true))
+		{
+			if(pc != null)
+			{
+				pc.modifyLevel(99, false);
+				pc.fullRestore();
+				pc.modifyHP(-85.0f, true);
+			}
+		}
+		
+		for(int i = 0; i < 99; ++i)
+			party.addItem("potion");
+		
+		LoadMap("test");
+			
+			
+		
+		//party.addCharacter("joy");				
+		switches.put("guardasleep", true);
+		switches.put("startgame", true);			
 		
 	}
 	

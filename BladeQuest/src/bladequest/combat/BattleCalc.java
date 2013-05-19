@@ -54,7 +54,7 @@ public class BattleCalc
 			damageReturnType = DamageReturnType.Hit;
 			finalDmg = (int)power;
 			break;
-		case PhysicalIgnoreDef:  //when def is implemented			
+		case PhysicalIgnoreDef:	
 		case Physical:
 			int roll = Global.rand.nextInt(100);
 			int evadeChance = (int)((float)defender.getStat(Stats.Evade)*(maxEvade/255.0f));

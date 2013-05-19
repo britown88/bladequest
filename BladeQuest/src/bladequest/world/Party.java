@@ -718,9 +718,9 @@ public class Party
 	
 	private PlayerCharacter getFirstChar()
 	{
-		for(int i = 0; i < 4; ++i)
-			if( partyMembers[i] != null  && partyMembers[i].isInBattle())
-				return partyMembers[i];
+		for(PlayerCharacter pc : getPartyMembers(false))
+			if(pc != null && pc.isInBattle())
+				return pc;
 		
 		return null;
 	}

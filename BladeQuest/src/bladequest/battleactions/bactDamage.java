@@ -49,6 +49,30 @@ public class bactDamage extends BattleAction
 	}
 	
 	@Override
+	public void runOutsideOfBattle(PlayerCharacter attacker, List<PlayerCharacter> targets, List<DamageMarker> markers)
+	{
+		for(PlayerCharacter t : targets)
+		{
+			int dmg = BattleCalc.calculatedDamage(attacker, t, power, type);
+			switch(BattleCalc.getDmgReturnType())
+			{
+			case Blocked:
+				markers.add(new DamageMarker("BLOCK", t));	
+				break;
+			case Critical:
+				markers.add(new DamageMarker("CRIT", t));	
+			case Hit:
+				t.modifyHP(-dmg, false);
+				markers.add(new DamageMarker(-dmg, t));	
+				break;
+			case Miss:
+				markers.add(new DamageMarker("MISS", t));	
+				break;
+			}	
+		}
+	}
+	
+	@Override
 	public boolean willAffectTarget(PlayerCharacter target) 
 	{		
 		return (target.isInBattle() && 

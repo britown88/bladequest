@@ -312,6 +312,7 @@ public class MainMenu
 		
 		//update frames		
 		ListBoxEntry lbi;
+		int i = 0;
 		for(PlayerCharacter c : chars)
 		{
 			lbi = charUseScreen.addItem(c.getDisplayName(), c, false);
@@ -326,7 +327,12 @@ public class MainMenu
 			
 			lbi.addTextBox("" + c.getHP() + "/" + c.getStat(Stats.MaxHP), width/2, (int)(charUseScreen.getRowHeight() - (charUseScreen.getRowHeight()-width - menuTextCenter.getTextSize()/2)*0.75f), smallTextCenter);
 			lbi.addTextBox("" + c.getMP() + "/" + c.getStat(Stats.MaxMP), width/2, (int)(charUseScreen.getRowHeight() - (charUseScreen.getRowHeight()-width - menuTextCenter.getTextSize()/2)*0.50f), smallTextCenter);
+		
 			
+			//charUseScreen.update();
+			c.setPosition(charUseScreen.getTopLeft().x + i*width + width/2, charUseScreen.getTopLeft().y + width - 6);		
+			
+			i++;
 		
 			List<StatusEffect> seList = c.getStatusEffects();
 			if(seList.size() > 0)

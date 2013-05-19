@@ -13,6 +13,7 @@ public class BattleAction
 	public int getFrame(){return frame;}
 	public BattleAction(int frame){this.frame = frame;}	
 	public void run(PlayerCharacter attacker, List<PlayerCharacter> target, List<DamageMarker> markers){}
+	public void runOutsideOfBattle(PlayerCharacter attacker, List<PlayerCharacter> targets, List<DamageMarker> markers) {}
 	public boolean isDone() {return true; }
 	public boolean willAffectTarget(PlayerCharacter target){ return true;}
 	public void setBuilder(BattleEventBuilder builder) {}
