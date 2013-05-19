@@ -25,7 +25,7 @@ import android.media.SoundPool;
 import android.util.Log;
 import bladequest.UI.DebugScreen;
 import bladequest.UI.ListBox;
-import bladequest.UI.MainMenu;
+import bladequest.UI.MainMenu.MainMenu;
 import bladequest.UI.MenuPanel.Anchors;
 import bladequest.UI.MerchantScreen;
 import bladequest.UI.MsgBox;
@@ -1136,7 +1136,7 @@ public class Global
 		
 		loading = false;
 
-		//demo start info, do not fuck with!
+//		//demo start info, do not fuck with!
 //		screenFader.setFadeColor(255, 0, 0, 0);
 //		screenFader.setFaded();
 //		party.teleport(16, 5);		
@@ -1150,15 +1150,30 @@ public class Global
 		party.addCharacter("aramis");
 		party.getCharacter("aramis").setDisplayName("?????");		
 		
-		LoadMap("test");	
+			
 		party.addCharacter("joy");
-		//for(int i = 0; i < 10; ++i)
-		//party.getPartyMembers()[0].applyStatusEffect(new sePoison(100));
-		party.addCharacter("luc");		
+		party.addCharacter("luc");	
+		
+		for(PlayerCharacter pc : party.getPartyMembers(true))
+		{
+			if(pc != null)
+			{
+				pc.modifyLevel(99, false);
+				pc.fullRestore();
+				pc.modifyHP(-85.0f, true);
+			}
+		}
+		
+		for(int i = 0; i < 99; ++i)
+			party.addItem("potion");
+		
+		LoadMap("test");
+			
+			
 		
 		//party.addCharacter("joy");				
-//		switches.put("guardasleep", true);
-//		switches.put("startgame", true);			
+		switches.put("guardasleep", true);
+		switches.put("startgame", true);			
 		
 	}
 	

@@ -132,6 +132,7 @@ public class MenuPanel
 	public void setOpenSize(int width, int height) { opens = true; openSize.x = width; openSize.y = height;}
 	public void setClosedSize(int width, int height) { closedSize.x = width; closedSize.y = height;}
 	
+	public Point getPos() { return pos; }
 	public Rect getRect() { updateFrame(); return frameRect; }
 	public boolean contains(int x, int y) { return getRect().contains(x, y); }
 	public void addTextBox(String text, int x, int y, Paint textPaint){ textBoxes.add(new TextBox(text, x, y, textPaint));}

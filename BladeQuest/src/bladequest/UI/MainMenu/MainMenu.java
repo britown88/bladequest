@@ -1,4 +1,4 @@
-package bladequest.UI;
+package bladequest.UI.MainMenu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,16 +9,25 @@ import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Point;
 import android.graphics.Rect;
+import bladequest.UI.DropBox;
+import bladequest.UI.ListBox;
+import bladequest.UI.ListBoxEntry;
+import bladequest.UI.MenuPanel;
+import bladequest.UI.MsgBox;
+import bladequest.UI.NumberPicker;
 import bladequest.UI.ListBox.LBStates;
+import bladequest.UI.MainMenu.MainMenuState.FlingDirections;
 import bladequest.UI.MenuPanel.Anchors;
 import bladequest.UI.MsgBox.YesNo;
+import bladequest.combat.BattleState;
 import bladequest.combat.DamageMarker;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.world.Ability;
-import bladequest.world.PlayerCharacter;
 import bladequest.world.Global;
 import bladequest.world.Item;
 import bladequest.world.Item.Type;
+import bladequest.world.PlayerCharacter.Action;
+import bladequest.world.PlayerCharacter;
 import bladequest.world.States;
 import bladequest.world.Stats;
 import bladequest.world.TargetTypes;
@@ -82,10 +91,12 @@ public class MainMenu
 	
 	private Item.Type equipItemType;
 	
+	private MainMenuStateMachine stateMachine; 
 	
 	
 	public MainMenu()
 	{
+		stateMachine = new MainMenuStateMachine();
 		currentState = menuStates.Root;
 		
 		markers= new Vector<DamageMarker>();
@@ -102,6 +113,32 @@ public class MainMenu
 		buildPaints();
 		
 	}	
+	
+	private MainMenuState getRootState()
+	{
+		return new MainMenuState()
+		{
+			@Override
+			public void changeStateTo(MainMenuState state) {}
+			@Override
+			public void onSwitchedTo(MainMenuState prevState) {}
+			@Override
+			public void update() {}
+			@Override
+			public void render() {}
+			@Override
+			public void onFling(FlingDirections direction) {}
+			@Override
+			public void backButtonPressed() {}
+			@Override
+			public void touchActionUp(int x, int y) {}
+			@Override
+			public void touchActionMove(int x, int y) {}
+			@Override
+			public void touchActionDown(int x, int y) {}
+		};
+	}
+	
 	
 	private void buildPaints()
 	{		
@@ -326,8 +363,7 @@ public class MainMenu
 			
 			lbi.addTextBox("" + c.getHP() + "/" + c.getStat(Stats.MaxHP), width/2, (int)(charUseScreen.getRowHeight() - (charUseScreen.getRowHeight()-width - menuTextCenter.getTextSize()/2)*0.75f), smallTextCenter);
 			lbi.addTextBox("" + c.getMP() + "/" + c.getStat(Stats.MaxMP), width/2, (int)(charUseScreen.getRowHeight() - (charUseScreen.getRowHeight()-width - menuTextCenter.getTextSize()/2)*0.50f), smallTextCenter);
-			
-		
+				
 			List<StatusEffect> seList = c.getStatusEffects();
 			if(seList.size() > 0)
 			{
@@ -854,6 +890,11 @@ public class MainMenu
 		close = false;
 	}
 	
+	
+	public void cancelToState(MainMenuState prevState)
+	{
+		stateMachine.resetToState(prevState);				
+	}
 
 	public void applyDamage(PlayerCharacter c, int dmg, int delay)
 	{

@@ -41,18 +41,16 @@ public class DamageMarker
 		this.dmgText = str;
 		init();
 	}	
-	public DamageMarker(int value, PlayerCharacter c, int x, int y)
+	public DamageMarker(int value, int x, int y)
 	{
-		this.target = c;
 		this.value = value;
 		this.dmgText = "";
 		this.position = new Point(x, y);
 		manualPos = true;
 		init();
 	}	
-	public DamageMarker(String str, PlayerCharacter c, int x, int y)
+	public DamageMarker(String str, int x, int y)
 	{
-		this.target = c;
 		this.value = 0;		
 		this.dmgText = str;
 		this.position = new Point(x, y);
