@@ -8,8 +8,16 @@ public class BattleStateMachine {
 		{
 			currentState.changeStateTo(newState);
 		}
+		newState.setPreviousState(currentState);
 		newState.onSwitchedTo(currentState);
 		currentState = newState;
+	}
+	//Cancel back to a previous state
+	public void resetToState(BattleState prevState)
+	{
+		//no "changeStateTo", no parent set
+		prevState.onSwitchedTo(currentState);
+		currentState = prevState;
 	}
 	public BattleState getState()
 	{

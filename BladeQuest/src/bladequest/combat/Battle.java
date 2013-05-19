@@ -58,7 +58,6 @@ public class Battle
 	
 	private PlayerCharacter currentChar;
 	private int currentCharIndex;
-	private TargetTypes targetType;
 	private List<PlayerCharacter> targets;
 	private List<BattleEvent> battleEvents;
 	private List<DamageMarker> markers;
@@ -91,8 +90,6 @@ public class Battle
 		messageQueue = new ArrayList<String>();
 	}
 	
-	
-
 	private BattleState getStartState()
 	{
 		return new BattleState()
@@ -104,7 +101,6 @@ public class Battle
 			}
 		};
 	}
-	
 	private BattleState getWaitingForInputState()
 	{
 		return new BattleState()
@@ -126,7 +122,6 @@ public class Battle
 			}
 		};
 	}
-	
 	private BattleState getSelectState()
 	{
 		return new BattleState()
@@ -179,7 +174,6 @@ public class Battle
 			}
 		};
 	}
-
 	private BattleState getSelectItemState()
 	{
 		return new BattleState()
@@ -214,13 +208,12 @@ public class Battle
 				{
 				case Selected:
 					Item itm = (Item)(mainMenu.getSelectedEntry().obj);
-					targetType = itm.getTargetType();
 					currentChar.setFace(faces.Ready);
 					currentChar.setItemToUse(itm);
-					stateMachine.setState(getTargetState());
+					stateMachine.setState(getTargetState(itm.getTargetType()));
 					break;
 				case Close:
-					stateMachine.setState(getSelectState());
+					cancelToPrevState();
 					break;
 				default:
 					break;
@@ -238,7 +231,6 @@ public class Battle
 			}
 		};
 	}
-	
 	private BattleState getSelectAbilityState()
 	{
 		return new BattleState() {
@@ -276,14 +268,13 @@ public class Battle
 					if(!mainMenu.getSelectedEntry().Disabled())
 					{
 						Ability ab = (Ability)(mainMenu.getSelectedEntry().obj);
-						targetType = ab.TargetType();
 						currentChar.setFace(faces.Casting);
 						currentChar.setAbilityToUse(ab);
-						stateMachine.setState(getTargetState());
+						stateMachine.setState(getTargetState(ab.TargetType()));
 					}				
 					break;
 				case Close:
-					stateMachine.setState(getSelectState());
+					cancelToPrevState();
 					break;
 				default:break;
 				}
@@ -300,24 +291,27 @@ public class Battle
 			}			
 		};
 	}
-	
-	private BattleState getTargetState()
+	public BattleState getTargetState(TargetTypes targetType)
 	{
 		return new BattleState() {
-			BattleState prevState;
+			private TargetTypes targetType;
+			BattleState initialize(TargetTypes targetType)
+			{
+				this.targetType = targetType;
+				return this;
+			}
 			@Override
 			public void onSwitchedTo(BattleState PrevState)
 			{
-				this.prevState = PrevState;
 				switch(targetType)
 				{
 				case AllAllies:
 					changeStartBarText(txtTargetAllies);
-					getTouchTargets(-1, -1);
+					getTouchTargets(-1, -1, targetType);
 					break;
 				case AllEnemies:
 					changeStartBarText(txtTargetEnemies);
-					getTouchTargets(-1, -1);
+					getTouchTargets(-1, -1, targetType);
 					break;
 				case Self:
 					changeStartBarText(txtTargetSelf);
@@ -333,28 +327,23 @@ public class Battle
 					break;
 				case Everybody:
 					changeStartBarText(txtTargetEverybody);
-					getTouchTargets(-1, -1);
+					getTouchTargets(-1, -1, targetType);
 					break;
 				}
 				mainMenu.close();
 			}
-			public void cancel()
-			{
-				if(currentChar.getAction() == Action.Item)
-					currentChar.unuseItem();
-				stateMachine.setState(prevState);				
-			}
+
 			@Override
 			public void backButtonPressed()
 			{
-				cancel();
+				cancelToPrevState();
 			}
 			@Override
 			public void touchActionUp(int x, int y)
 			{
 				if(startBar.contains(x, y))
 				{
-					cancel();
+					cancelToPrevState();
 				}
 				else
 				{
@@ -367,23 +356,22 @@ public class Battle
 					}
 					else
 					{
-						cancel();
+						cancelToPrevState();
 					}
 				}		
 			}
 			@Override
 			public void touchActionDown(int x, int y)
 			{
-				getTouchTargets(x,y);
+				getTouchTargets(x,y, targetType);
 			}			
 			@Override
 			public void touchActionMove(int x, int y)
 			{
-				getTouchTargets(x,y);
+				getTouchTargets(x,y, targetType);
 			}			
-		};
+		}.initialize(targetType);
 	}
-	
 	private BattleState getActState()
 	{
 		return new BattleState() {
@@ -432,7 +420,6 @@ public class Battle
 			}			
 		};
 	}
-	
 	private BattleState getEscapedState()
 	{
 		return new BattleState() {
@@ -961,10 +948,9 @@ public class Battle
 	{
 		if(opt.equals("atk"))
 		{
-			targetType = TargetTypes.Single;
 			currentChar.setBattleAction(Action.Attack);
 			currentChar.setFace(faces.Ready);
-			stateMachine.setState(getTargetState());
+			stateMachine.setState(getTargetState(TargetTypes.Single));
 		}
 		else if(opt.equals("itm"))
 		{
@@ -972,10 +958,9 @@ public class Battle
 		}
 		else if(opt.equals("act"))
 		{
-			targetType = currentChar.getCombatActionTargetType();
 			currentChar.setBattleAction(Action.CombatAction);
 			currentChar.setFace(faces.Ready);
-			stateMachine.setState(getTargetState());
+			stateMachine.setState(getTargetState(currentChar.getCombatActionTargetType()));
 		}
 		else if(opt.equals("grd"))
 		{
@@ -1219,7 +1204,7 @@ public class Battle
 		}
 		
 	}
-	private void getTouchTargets(int x, int y)
+	private void getTouchTargets(int x, int y, TargetTypes targetType)
 	{
 		targets.clear();		
 		switch(targetType)
@@ -1291,6 +1276,13 @@ public class Battle
 	{
 		targets.clear();
 		targets.add(c);
+	}
+	
+	public void cancelToState(BattleState prevState)
+	{
+		if(currentChar.getAction() == Action.Item)
+			currentChar.unuseItem();
+		stateMachine.resetToState(prevState);				
 	}
 	
 	public Encounter getEncounter()
