@@ -237,8 +237,12 @@ public class BattleAnimObject
 				
 				//interpolation			
 				//---size
-				workingState.size.x = cosineInterpolation(currentState.size.x, nextState.size.x, progress);
-				workingState.size.y = cosineInterpolation(currentState.size.y, nextState.size.y, progress);
+				if(currentState.size.x != nextState.size.x || currentState.size.y != nextState.size.y)
+				{
+					workingState.size.x = cosineInterpolation(currentState.size.x, nextState.size.x, progress);
+					workingState.size.y = cosineInterpolation(currentState.size.y, nextState.size.y, progress);
+					
+				}
 				
 				//---color
 				
@@ -247,7 +251,7 @@ public class BattleAnimObject
 				workingState.g = cosineInterpolation(currentState.g, nextState.g, progress);
 				workingState.b = cosineInterpolation(currentState.b, nextState.b, progress);
 				
-				if(type == Types.Line || outlineOnly)
+				if((type == Types.Line || outlineOnly) && currentState.strokeWidth != nextState.strokeWidth)
 					workingState.strokeWidth = linearInterpolation(currentState.strokeWidth, nextState.strokeWidth, progress);
 				
 				//bitmap colorization
@@ -267,23 +271,36 @@ public class BattleAnimObject
 				//---rotation
 				
 				//---position (including lines)
+
 				if(linearInterp)
 				{
-					workingState.pos1.x = linearInterpolation(currentState.pos1.x, nextState.pos1.x, progress);
-					workingState.pos1.y = linearInterpolation(currentState.pos1.y, nextState.pos1.y, progress);
-					workingState.pos2.x = linearInterpolation(currentState.pos2.x, nextState.pos2.x, progress);
-					workingState.pos2.y = linearInterpolation(currentState.pos2.y, nextState.pos2.y, progress);
-				
+					if(currentState.pos1.x != nextState.pos1.x)
+					{
+						workingState.pos1.x = linearInterpolation(currentState.pos1.x, nextState.pos1.x, progress);
+						workingState.pos2.x = linearInterpolation(currentState.pos2.x, nextState.pos2.x, progress);
+					}
+					
+					if(currentState.pos1.y != nextState.pos1.y)
+					{
+						workingState.pos1.y = linearInterpolation(currentState.pos1.y, nextState.pos1.y, progress);
+						workingState.pos2.y = linearInterpolation(currentState.pos2.y, nextState.pos2.y, progress);
+					}						
 				}
 				else
 				{
-					workingState.pos1.x = cubicInterpolation(y0.pos1.x, currentState.pos1.x, nextState.pos1.x, y3.pos1.x, progress);
-					workingState.pos1.y = cubicInterpolation(y0.pos1.y, currentState.pos1.y, nextState.pos1.y, y3.pos1.y, progress);
-					workingState.pos2.x = cubicInterpolation(y0.pos2.x, currentState.pos2.x, nextState.pos2.x, y3.pos2.x, progress);
-					workingState.pos2.y = cubicInterpolation(y0.pos2.y, currentState.pos2.y, nextState.pos2.y, y3.pos2.y, progress);
+					if(currentState.pos1.x != nextState.pos1.x)
+					{
+						workingState.pos1.x = cubicInterpolation(y0.pos1.x, currentState.pos1.x, nextState.pos1.x, y3.pos1.x, progress);
+						workingState.pos2.x = cubicInterpolation(y0.pos2.x, currentState.pos2.x, nextState.pos2.x, y3.pos2.x, progress);
+					}
 					
-				}
+					if(currentState.pos1.y != nextState.pos1.y)
+					{
+						workingState.pos1.y = cubicInterpolation(y0.pos1.y, currentState.pos1.y, nextState.pos1.y, y3.pos1.y, progress);
+						workingState.pos2.y = cubicInterpolation(y0.pos2.y, currentState.pos2.y, nextState.pos2.y, y3.pos2.y, progress);
 						
+					}						
+				}
 				
 				//build final rect
 				updateRect();

@@ -1,24 +1,25 @@
 package bladequest.world;
 
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Paint.Align;
+import android.graphics.Rect;
 import bladequest.UI.ListBox;
 import bladequest.UI.MenuPanel.Anchors;
 import bladequest.UI.SaveLoadMenu;
+import bladequest.graphics.BattleAnim;
 import bladequest.graphics.Scene;
 import bladequest.system.DataLoadThread;
-
-import android.graphics.*;
-import android.graphics.Paint.Align;
 
 
 public class TitleScreen 
 {
-	private Bitmap titleMain, titleSub, dapperlogo;
-	private float titleScale, scaleAccel;
-	private Rect dest, logodest;
-	private int titleWidth, titleHeight;
-	private Scene titlescene, whitescene;
+	private Bitmap dapperlogo;
+	private Rect logodest;
+	private Scene whitescene;
 	private Paint paint, greyPaint;
-	private TitleStates state, oldState;
+	private TitleStates state;
 	private ListBox menu;
 	
 	private DataLoadThread dataThread;
@@ -27,26 +28,18 @@ public class TitleScreen
 	private final int openspeed = 15;
 	private final String openingSong = "aramis";
 	
+	private BattleAnim playingAnim;
+	
 	public TitleScreen()
 	{
-		state = TitleStates.NotStarted;		
-		
-		titleMain = Global.bitmaps.get("titlemain");
-		titleSub = Global.bitmaps.get("titlesub");
-		dapperlogo = Global.bitmaps.get("dapperhatlogo");
-		
-		titleWidth = titleMain.getWidth();
-		titleHeight = titleMain.getHeight();		
-		
-		//titlescene = Global.scenes.get("title");
-		titlescene = Global.scenes.get("white");
-		
+		state = TitleStates.NotStarted;			
+
+		dapperlogo = Global.bitmaps.get("dapperhatlogo");		
 		whitescene = Global.scenes.get("white");
 		
 		paint = Global.textFactory.getTextPaint(13, Color.WHITE, Align.CENTER);		
 		greyPaint = Global.textFactory.getTextPaint(13, Color.GRAY, Align.CENTER);		
 		
-		dest = new Rect();
 		logodest = new Rect();
 		
 	}
@@ -66,22 +59,16 @@ public class TitleScreen
 		Global.fc1b = 200;
 		Global.fc2r = 0;
 		Global.fc2g = 0;
-		Global.fc2b = 100;		
+		Global.fc2b = 100;	
 		
-		Global.screenFader.setFadeColor(255, 0, 0, 0);
-		Global.screenFader.setFaded();	
-		Global.screenFader.fadeIn(4);
+		Global.screenFader.setFadeColor(255, 255, 255, 255);
 		
-		titleScale = 30.0f;	
-		scaleAccel = 0.05f;
 		
 		startTime = System.currentTimeMillis();
 		
 		dataThread = new DataLoadThread();
 		dataThread.run();
 		
-		if(!titlescene.isLoaded())
-			titlescene.load();
 		if(!whitescene.isLoaded())
 			whitescene.load();
 		
@@ -89,30 +76,34 @@ public class TitleScreen
 	
 	private void changeState(TitleStates newState)
 	{
-		oldState = state;
 		switch(newState)
 		{
 		case Company:
 			break;
 		case GameLogo:	
-			Global.screenFader.fadeOut(2);
 			Global.musicBox.play(openingSong, true, -1);
-			Global.playAnimation("title", null, null);
+			playingAnim = Global.playAnimation("title", null, null);
+			break;
+		case CompanyTransition:
+			Global.screenFader.fadeOut(2);
 			break;
 		case Menu:
-			titleScale = 2.0f;
-			updateTitleSize();
+			Global.musicBox.play(openingSong, false, -1);
+			Global.clearAnimations();
+			playingAnim = Global.playAnimation("titleloop", null, null);
+			Global.screenFader.clear();
+			
 			buildMenu();
 			menu.open();			
 			break;
 		case MenuTransition:
 			Global.saveLoadMenu.open(SaveLoadMenu.LOADING);
-			menu.close();
+			Global.screenFader.setFadeColor(255, 0, 0, 0);
 			Global.screenFader.fadeOut(4);
+			menu.close();
 			break;
 		case LoadMenu:
 			Global.screenFader.fadeIn(4);
-			
 			break;
 		default:
 			break;
@@ -121,6 +112,30 @@ public class TitleScreen
 		state = newState;
 	}
 	
+	private void buildMenu()
+	{
+		menu = new ListBox(
+				Global.vpWidth / 2, 
+				Global.vpHeight - 48, 
+				(int)(Global.vpWidth*0.25f), 0, 3, 1, paint);
+		menu.setOpenSize(menu.width, 96);
+		menu.anchor = Anchors.TrueCenter;
+		menu.openSpeed = openspeed;
+		menu.setDisabledPaint(greyPaint);
+		
+		menu.addItem("New Game", "new", false);
+		menu.addItem("Continue", "con", !Global.saveLoader.hasSaves());
+		menu.addItem("Quit", "quit", false);
+	}
+	
+	private void close()
+	{
+		Global.screenFader.setFadeColor(255, 0, 0, 0);
+		Global.musicBox.play("", false, -1);
+		whitescene.unload();
+		Global.clearAnimations();
+	}
+		
 	private void handleOption(String opt)
 	{
 		if(opt.equals("new"))
@@ -142,47 +157,45 @@ public class TitleScreen
 	
 	public void update()
 	{
+		logodest = new Rect(
+				Global.vpToScreenX((int)((Global.vpWidth - dapperlogo.getWidth())/2)),
+				Global.vpToScreenY((int)((Global.vpHeight - dapperlogo.getHeight())/2)),
+				Global.vpToScreenX((int)((Global.vpWidth - dapperlogo.getWidth())/2) + dapperlogo.getWidth()),
+				Global.vpToScreenY((int)((Global.vpHeight - dapperlogo.getHeight())/2) + dapperlogo.getHeight()));
+
+		
 		switch(state)
 		{
 		case Company:			
 			float elapsed = (System.currentTimeMillis() - startTime)/1000.0f;		
-			logodest = new Rect(
-					Global.vpToScreenX((int)((Global.vpWidth - dapperlogo.getWidth())/2)),
-					Global.vpToScreenY((int)((Global.vpHeight - dapperlogo.getHeight())/2)),
-					Global.vpToScreenX((int)((Global.vpWidth - dapperlogo.getWidth())/2) + dapperlogo.getWidth()),
-					Global.vpToScreenY((int)((Global.vpHeight - dapperlogo.getHeight())/2) + dapperlogo.getHeight()));
-
+			
 			if(dataThread.isDone() && elapsed >= logoViewTime)
-				changeState(TitleStates.GameLogo);
-				
+				changeState(TitleStates.CompanyTransition);				
 			
 			break;
-		case GameLogo:
+		case CompanyTransition:
 			if(Global.screenFader.isDone())
 			{
-				Global.screenFader.clear();
-				if(titleScale > 2.0f)
-				{
-					titleScale -= scaleAccel;
-					scaleAccel += .0001;
-				}
-				else
-					titleScale = 2.0f;
-				
-				updateTitleSize();					
+				Global.screenFader.fadeIn(2);
+				changeState(TitleStates.GameLogo);
 			}
+			break;
+		case GameLogo:
+			if(playingAnim.Done())
+				changeState(TitleStates.Menu);
+			
 			if(menu != null && !menu.Closed())
 				menu.update();
 			break;
 		case Menu:
-			Global.screenFader.clear();
 			menu.update();
 			
 			break;
 		case MenuTransition:
 			menu.update();
-			if(Global.screenFader.isDone())				
+			if(Global.screenFader.isFadedOut())
 				changeState(TitleStates.LoadMenu);
+			
 
 			break;
 		case LoadMenu:
@@ -190,6 +203,8 @@ public class TitleScreen
 			if(Global.saveLoadMenu.isClosed())
 			{
 				state = TitleStates.Menu;
+				Global.screenFader.setFadeColor(255, 0, 0, 0);
+				Global.screenFader.fadeIn(4);
 				buildMenu();
 				menu.open();
 			}			
@@ -198,42 +213,6 @@ public class TitleScreen
 			break;
 		}
 		
-		
-		
-	}
-	
-	private void buildMenu()
-	{
-		menu = new ListBox(
-				Global.vpWidth / 2, 
-				Global.vpHeight - 48, 
-				(int)(Global.vpWidth*0.25f), 0, 3, 1, paint);
-		menu.setOpenSize(menu.width, 96);
-		menu.anchor = Anchors.TrueCenter;
-		menu.openSpeed = openspeed;
-		menu.setDisabledPaint(greyPaint);
-		
-		menu.addItem("New Game", "new", false);
-		menu.addItem("Continue", "con", !Global.saveLoader.hasSaves());
-		menu.addItem("Quit", "quit", false);
-	}
-	
-	private void close()
-	{
-		Global.musicBox.play("", false, -1);
-		whitescene.unload();
-		titlescene.unload();
-		Global.clearAnimations();
-	}
-	
-	private void updateTitleSize()
-	{
-		dest = new Rect(
-				Global.vpToScreenX((int)((Global.vpWidth - (titleWidth*titleScale))/2)),
-				Global.vpToScreenY((int)((Global.vpHeight - (titleHeight*titleScale))/2)),
-				Global.vpToScreenX((int)((Global.vpWidth - (titleWidth*titleScale))/2) + (int)(titleWidth*titleScale)),
-				Global.vpToScreenY((int)((Global.vpHeight - (titleHeight*titleScale))/2) + (int)(titleHeight*titleScale)));
-		
 	}
 	
 	public void render()
@@ -241,42 +220,23 @@ public class TitleScreen
 		switch(state)
 		{
 		case Company:
-			//Global.renderer.drawColor(Color.WHITE);
+		case CompanyTransition:
 			whitescene.render();
 			Global.renderer.drawBitmap(dapperlogo, null, logodest, null);			
 			break;
 		case GameLogo:
-			if(!Global.screenFader.isDone() && oldState == TitleStates.Company)
-			{
-				whitescene.render();
-				Global.renderer.drawBitmap(dapperlogo, null, logodest, null);
-			}
-			else
-			{
-				titlescene.render();				
-				
-				Global.renderer.drawBitmap(titleMain, null, dest, null);
-				if(titleScale == 2.0f)
-				{
-					Global.renderer.drawBitmap(titleSub, null, dest, null);
-					//if(menu == null || menu.Closed())
-					Global.renderer.drawText("Tap to Start!", 
-						Global.vpToScreenX(Global.vpWidth / 2), 
-						Global.vpToScreenY(Global.vpHeight - 32), paint);					
-				}
-				
-				if(menu != null && !menu.Closed())
-					menu.render();
-			}
-			
 			Global.renderAnimations();
+				
+			if(menu != null && !menu.Closed())
+				menu.render();
+
+			
 			break;
 		case MenuTransition:
 		case Menu:
-			titlescene.render();
-			Global.renderer.drawBitmap(titleMain, null, dest, null);
-			Global.renderer.drawBitmap(titleSub, null, dest, null);
-			if(!menu.Closed())
+			Global.renderAnimations();
+			
+			if(menu != null && !menu.Closed())
 				menu.render();
 			
 			break;
@@ -287,7 +247,8 @@ public class TitleScreen
 		default:
 			break;
 		}
-		//canvas.drawBitmap(titleMain, Global.vpToScreenX(0), Global.vpToScreenY(0), null);
+		
+		Global.screenFader.render();
 	}
 	
 	public void onLongPress()
@@ -308,6 +269,7 @@ public class TitleScreen
 		{
 		case LoadMenu:
 			Global.saveLoadMenu.backButtonPressed();
+			
 			break;
 		case Menu:
 			this.state = TitleStates.GameLogo;
@@ -344,16 +306,11 @@ public class TitleScreen
 		switch(state)
 		{
 		case Company:
-			changeState(TitleStates.GameLogo);
+			if(dataThread.isDone())
+				changeState(TitleStates.CompanyTransition);
 			break;
-		case GameLogo:
-			if(titleScale > 2.0f)
-			{
-				titleScale = 2.0f;
-				Global.musicBox.play(openingSong, false, -1);
-			}
-			else	
-				changeState(TitleStates.Menu);	
+		case GameLogo:	
+			changeState(TitleStates.Menu);	
 
 			break;
 		case Menu:
@@ -385,10 +342,6 @@ public class TitleScreen
 	{
 		switch(state)
 		{
-		case Company:
-			break;
-		case GameLogo:
-			break;
 		case Menu:
 			menu.touchActionDown(x, y);
 			break;
@@ -404,6 +357,7 @@ public class TitleScreen
 	{
 		NotStarted,
 		Company,
+		CompanyTransition,
 		GameLogo,
 		Menu,
 		MenuTransition,

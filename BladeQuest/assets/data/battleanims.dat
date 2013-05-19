@@ -73,9 +73,7 @@ endstate
 endobj
 endba
 
-ba title 20.0f
-loop
-
+ba title 60.0f
 #sky
 obj bmp 0 title-sky
 state 0 scrn
@@ -83,7 +81,7 @@ size 448 96
 pos 1 224 48
 argb 255 255 255 255
 endstate
-state 1000 scrn
+state 750 scrn
 size 448 96
 pos 1 224 48
 argb 255 255 255 255
@@ -97,7 +95,7 @@ size 448 192
 pos 1 224 192
 argb 255 255 255 255
 endstate
-state 1000 scrn
+state 750 scrn
 size 448 192
 pos 1 224 192
 argb 255 255 255 255
@@ -112,7 +110,7 @@ size 448 94
 pos 1 224 47
 argb 255 255 255 255
 endstate
-state 1000 scrn
+state 750 scrn
 size 448 94
 pos 1 -224 47
 argb 255 255 255 255
@@ -127,7 +125,156 @@ size 448 94
 pos 1 672 47
 argb 255 255 255 255
 endstate
-state 1000 scrn
+state 750 scrn
+size 448 94
+pos 1 224 47
+argb 255 255 255 255
+endstate
+endobj
+
+#tree
+obj bmp 0 title-tree
+linterp
+state 0 scrn
+size 316 288
+pos 1 178 144
+argb 255 255 255 255
+endstate
+state 250 scrn
+size 316 288
+pos 1 178 144
+argb 255 255 255 255
+endstate
+state 500 scrn
+size 316 288
+pos 1 158 144
+argb 255 255 255 255
+endstate
+state 750 scrn
+size 316 288
+pos 1 158 144
+argb 255 255 255 255
+endstate
+endobj
+
+#cliff
+obj bmp 0 title-cliff
+linterp
+state 0 scrn
+size 174 110
+pos 1 535 233
+argb 255 255 255 255
+endstate
+state 250 scrn
+size 174 110
+pos 1 535 233
+argb 255 255 255 255
+endstate
+state 500 scrn
+size 174 110
+pos 1 361 233
+argb 255 255 255 255
+endstate
+state 750 scrn
+size 174 110
+pos 1 361 233
+argb 255 255 255 255
+endstate
+
+endobj
+
+#logo
+obj bmp 0 titlemain
+state 500 scrn
+size 224 124
+pos 1 224 114
+argb 0 255 255 255
+colorize 1.0f
+endstate
+state 550 scrn
+size 224 124
+pos 1 224 114
+argb 255 255 255 255
+colorize 1.0f
+endstate
+state 600 scrn
+size 224 124
+pos 1 224 114
+argb 255 255 255 255
+colorize 0.0f
+endstate
+state 750 scrn
+size 224 124
+pos 1 224 114
+argb 255 255 255 255
+colorize 0.0f
+endstate
+endobj
+
+#logo2
+obj bmp 0 titlesub
+state 550 scrn
+size 224 124
+pos 1 224 114
+argb 0 255 255 255
+colorize 1.0f
+endstate
+state 600 scrn
+size 224 124
+pos 1 224 114
+argb 255 255 255 255
+colorize 1.0f
+endstate
+state 750 scrn
+size 224 124
+pos 1 224 114
+argb 255 255 255 255
+colorize 0.0f
+endstate
+endobj
+
+endba
+
+#title loop
+ba titleloop 60.0f
+loop
+#sky
+obj bmp 0 title-sky
+state 0 scrn
+size 448 96
+pos 1 224 48
+argb 255 255 255 255
+endstate
+state 750 scrn
+size 448 96
+pos 1 224 48
+argb 255 255 255 255
+endstate
+endobj
+
+#water
+obj bmp 0 title-water
+state 0 scrn
+size 448 192
+pos 1 224 192
+argb 255 255 255 255
+endstate
+state 750 scrn
+size 448 192
+pos 1 224 192
+argb 255 255 255 255
+endstate
+endobj
+
+#clouds
+obj bmp 0 title-clouds
+linterp
+state 0 scrn
+size 448 94
+pos 1 224 47
+argb 255 255 255 255
+endstate
+state 750 scrn
 size 448 94
 pos 1 224 47
 argb 255 255 255 255
@@ -141,7 +288,7 @@ size 316 288
 pos 1 158 144
 argb 255 255 255 255
 endstate
-state 1000 scrn
+state 750 scrn
 size 316 288
 pos 1 158 144
 argb 255 255 255 255
@@ -155,10 +302,43 @@ size 174 110
 pos 1 361 233
 argb 255 255 255 255
 endstate
-state 1000 scrn
+state 750 scrn
 size 174 110
 pos 1 361 233
 argb 255 255 255 255
+endstate
+
+endobj
+
+#logo
+obj bmp 0 titlemain
+state 0 scrn
+size 224 124
+pos 1 224 114
+argb 255 255 255 255
+colorize 0.0f
+endstate
+state 750 scrn
+size 224 124
+pos 1 224 114
+argb 255 255 255 255
+colorize 0.0f
+endstate
+endobj
+
+#logo2
+obj bmp 0 titlesub
+state 0 scrn
+size 224 124
+pos 1 224 114
+argb 255 255 255 255
+colorize 0.0f
+endstate
+state 750 scrn
+size 224 124
+pos 1 224 114
+argb 255 255 255 255
+colorize 0.0f
 endstate
 endobj
 

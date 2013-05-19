@@ -133,7 +133,6 @@ public class SaveLoadMenu
 				}
 				
 				closed = true;
-				Global.clearAnimations();
 			}
 		}
 		
