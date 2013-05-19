@@ -36,6 +36,7 @@ public class PlayerCharacter
 	protected int MP;
 	
 	protected boolean dead;
+	protected boolean escaped;
 	private String abilitiesName;
 	
 	protected int level;
@@ -84,6 +85,7 @@ public class PlayerCharacter
 		portrait = new Point(0,0);
 		position = new Point(0,0);
 		visible = true;
+		escaped = false;
 	}
 	
 	public PlayerCharacter(PlayerCharacter c)
@@ -129,6 +131,7 @@ public class PlayerCharacter
 		
 		position = new Point(0,0);
 		visible = c.visible;
+		escaped = c.escaped;
 	}
 
 	
@@ -206,6 +209,7 @@ public class PlayerCharacter
 	public int getHP(){return HP;}
 	public int getMP(){return MP;}
 	public boolean isDead(){return dead;}
+	public boolean isInBattle(){return !dead && !escaped;}
 	public int getLevel(){return level;}
 	
 	public void setAbilitiesName(String abilities){abilitiesName = abilities;}
@@ -1021,7 +1025,7 @@ public class PlayerCharacter
 		if(battleSpr.getFace() != faces.Attack)
 			updateAnimation();//dont update attack anim, it's managed by battle
 		
-		if (visible)
+		if (visible && !getEscaped())
 		{
 			battleSpr.render(position.x, position.y, imageIndex, false);
 			
@@ -1055,13 +1059,17 @@ public class PlayerCharacter
 	public void setVisible(boolean isVisible) {visible = isVisible;}
 	public boolean getVisible() { return visible;}
 	
+	public void setEscaped(boolean escape) {escaped = escape;}
+	public boolean getEscaped() {return escaped;}
+	
 	public enum Action
 	{
 		Attack,
 		Item,
 		Guard,
 		CombatAction,
-		Ability
+		Ability,
+		Run
 	}
 
 }

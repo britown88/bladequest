@@ -4,14 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bladequest.battleactions.BattleAction;
+import bladequest.battleactions.bactChangeVisibility;
 import bladequest.battleactions.bactDamage;
+import bladequest.battleactions.bactTryEscape;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleSprite.faces;
 import bladequest.world.Ability;
-import bladequest.world.PlayerCharacter;
 import bladequest.world.DamageTypes;
 import bladequest.world.Global;
 import bladequest.world.Item;
+import bladequest.world.PlayerCharacter;
 
 public class BattleEvent 
 {
@@ -70,6 +72,31 @@ public class BattleEvent
 	  }
 	}
 	
+	private BattleEventBuilder makeBattleEventBuilder()
+	{
+		return new BattleEventBuilder()
+		{	 
+			@Override				 
+			public List<PlayerCharacter> getTargets()
+			{
+				return targets;
+			}
+			@Override				 
+			public PlayerCharacter getSource()
+		    {
+				return source;
+			}
+			@Override
+			public void setAnimation(BattleAnim anim, int frameOffset) {
+				setBattleAnimation(anim, frameOffset);
+			}
+			@Override
+			public void addEventObject(BattleEventObject eventObj) {
+				objects.add(eventObj);
+			}
+		};	
+	}
+	
 	public void setTargets(List<PlayerCharacter> targets)
 	{
 		this.targets = targets;
@@ -112,27 +139,7 @@ public class BattleEvent
 			
 			break;
 		case CombatAction:
-			source.getCombatAction().buildEvents(new BattleEventBuilder()
-			{	 
-				@Override				 
-				public List<PlayerCharacter> getTargets()
-				{
-					return targets;
-				}
-				@Override				 
-				public PlayerCharacter getSource()
-			    {
-					return source;
-				}
-				@Override
-				public void setAnimation(BattleAnim anim, int frameOffset) {
-					setBattleAnimation(anim, frameOffset);
-				}
-				@Override
-				public void addEventObject(BattleEventObject eventObj) {
-					objects.add(eventObj);
-				}
-			});
+			source.getCombatAction().buildEvents(makeBattleEventBuilder());
 			break;
 		case Item:
 			Item itm = source.getItemToUse();
@@ -150,6 +157,10 @@ public class BattleEvent
 			objects.add(new BattleEventObject(frameFromActIndex(finalIndex), faces.Ready, 0, source));
 			objects.add(new BattleEventObject(frameFromActIndex(finalIndex+2)));
 			
+			break;
+		case Run:
+			animStartIndex = 3;
+			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex), new bactTryEscape(animStartIndex, makeBattleEventBuilder()), source, targets));
 			break;
 		default:
 			break;

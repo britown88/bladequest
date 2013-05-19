@@ -29,13 +29,14 @@ public class Battle
 	private final int frameMaxHeight = 96;
 	private final int frameMinHeight = 32;
 	private final int partyFrameBuffer = 32;
-	private final int advanceDistance = 32;
 	private final int charMoveSpeed = 7;
-	private final Point partyPos = new Point(Global.vpWidth - 128, 0);
 	private final int statFrameBuffer = 16;
 	private final int charYSpacing = 64;
 	private final int mpWindowHeight = 32;
-	private final int mpWindowWidth = 128;	
+	private final int mpWindowWidth = 128;
+	
+	public static final int advanceDistance = 32;
+	public static final Point partyPos = new Point(Global.vpWidth - 128, 0);
 	
 	private final String txtStart = "Tap screen to start!";
 	private final String txtTargetSingle = "Select target...";
@@ -86,6 +87,12 @@ public class Battle
 		battleEvents = new ArrayList<BattleEvent>();
 		markers = new ArrayList<DamageMarker>();
 		messageQueue = new ArrayList<String>();
+	}
+	
+	private void resetEscapeState()
+	{
+		for(PlayerCharacter c : partyList)
+			c.setEscaped(false);
 	}
 	
 	public void startBattle(String encounter)
@@ -317,10 +324,10 @@ public class Battle
 		//play victory music
 		Global.musicBox.play("victory", true, -1);
 		
-		//get alive characters
+		//get characters still in the battle 
 		List<PlayerCharacter> aliveChars = new ArrayList<PlayerCharacter>();
 		for(PlayerCharacter c : partyList)
-			if(!c.isDead()) aliveChars.add(c);
+			if(c.isInBattle()) aliveChars.add(c);
 		
 		int avgLevel, levelTotal = 0;
 
@@ -342,6 +349,7 @@ public class Battle
 		List<String> itemDrops = new ArrayList<String>();
 		for(Enemy e : encounter.Enemies())
 		{
+			if (e.getEscaped()) continue;
 			gold += e.getGold();
 			exp += e.getExp(avgLevel); 
 			if(e.hasItems())
@@ -392,6 +400,11 @@ public class Battle
 		}		
 		
 	}
+	private void initEscaped()
+	{
+		addMessage("You have escaped!");		
+	}
+
 	private void initDefeat()
 	{
 		changeStartBarText(txtDefeat);
@@ -419,11 +432,11 @@ public class Battle
 		
 		//add enemy actions to event queue
 		for(Enemy e : encounter.Enemies())
-			if(!e.isDead())
+			if(e.isInBattle())
 				battleEvents.add(e.genBattleEvent(partyList, encounter.Enemies()));
 
 		for(PlayerCharacter c : partyList)
-			if(!c.isDead() && c.getAction() != Action.Guard)
+			if(c.isInBattle() && c.getAction() != Action.Guard)
 				addBattleEvent(c, c.getTargets());
 		
 		battleEvents = BattleCalc.genMoveOrder(battleEvents);
@@ -480,7 +493,12 @@ public class Battle
 		{
 			if(Global.noRunningAnims() && markers.isEmpty())
 				changeState(BattleStates.DEFEAT);
-		}			
+		}
+		else if (isEscaped())
+		{
+			if(Global.noRunningAnims() && markers.isEmpty())
+				changeState(BattleStates.ESCAPED);			
+		}
 		else
 		{
 			nextActor = false;
@@ -504,14 +522,15 @@ public class Battle
 				case Item:changeStartBarText(actor.getDisplayName()+" uses "+actor.getItemToUse().getName()+"!");break;
 				case Ability:changeStartBarText(actor.getDisplayName()+" casts "+actor.getAbilityToUse().getDisplayName()+"!");break;
 				case CombatAction:changeStartBarText(actor.getDisplayName()+actor.getCombatActionText());break;
+				case Run:changeStartBarText(actor.getDisplayName()+" tries to run!");break;
 				default: break;}
 				
-				if(actor.isDead())
+				if(!actor.isInBattle())
 					nextActorInit();
 				else 
 				{					
 					//reset targets
-					currentEvent.setTargets(getLivingTargets(actor, targets));
+					currentEvent.setTargets(getTargetable(actor, targets));
 					
 					if(actor.getAction() == Action.Ability)
 					{
@@ -519,7 +538,13 @@ public class Battle
 						actor.useAbility();
 					}						
 					else if(actor.getAction() == Action.Item)
+					{
 						showDisplayName(actor.getItemToUse().getName());
+					}
+					else if (actor.getAction() == Action.Run)
+					{
+						showDisplayName("Run");
+					}
 					
 					if(!actor.isEnemy())
 					{
@@ -532,19 +557,19 @@ public class Battle
 			}
 		}
 	}
-	public List<PlayerCharacter> getLivingTargets(PlayerCharacter actor, List<PlayerCharacter> targets)
+	public List<PlayerCharacter> getTargetable(PlayerCharacter actor, List<PlayerCharacter> targets)
 	{
 		List<PlayerCharacter> aliveTargets = new ArrayList<PlayerCharacter>();
 		//fill alive targets
-		for(PlayerCharacter c : targets) if(!c.isDead())aliveTargets.add(c);
+		for(PlayerCharacter c : targets) if(c.isInBattle()) aliveTargets.add(c);
 		
 		//reset to random characters if targeting a dead guy
-		if(aliveTargets.isEmpty())
+		if(aliveTargets.isEmpty() && !targets.isEmpty())
 		{
 			List<PlayerCharacter> aliveChars = new ArrayList<PlayerCharacter>();
 			List<Enemy> aliveEnemies = new ArrayList<Enemy>();
-			for(PlayerCharacter c : partyList)if(!c.isDead())aliveChars.add(c);
-			for(Enemy e : encounter.Enemies())if(!e.isDead())aliveEnemies.add(e);
+			for(PlayerCharacter c : partyList)if(c.isInBattle())aliveChars.add(c);
+			for(Enemy e : encounter.Enemies())if(e.isInBattle())aliveEnemies.add(e);
 			
 			if(actor.isEnemy())
 				if(targets.get(0).isEnemy())
@@ -573,10 +598,18 @@ public class Battle
 		
 		return true;
 	}
+	private boolean isEscaped()
+	{
+		for(PlayerCharacter c : partyList)
+			if(c.isInBattle())
+				return false;
+		
+		return !isDefeated();	  
+	}
 	private boolean isVictory()
 	{
 		for(Enemy e : encounter.Enemies())
-			if(!e.isDead())
+			if(e.isInBattle())
 				return false;
 		
 		return true;
@@ -614,7 +647,10 @@ public class Battle
 			break;
 		case DEFEAT:
 			initDefeat();			
-			break;			
+			break;
+		case ESCAPED:
+			initEscaped();
+			break;
 		case TARGET:
 			
 			switch(targetType)
@@ -684,7 +720,8 @@ public class Battle
 		}
 		else if(opt.equals("run"))
 		{
-			changeState(BattleStates.SELECT);
+			currentChar.setBattleAction(Action.Run);
+			nextCharacter();
 		}
 	}
 	private void advanceChar()
@@ -731,7 +768,7 @@ public class Battle
 		
 		//determine first nondead character
 		for(int i = 0; i < partyList.size(); ++i)
-			if(!partyList.get(i).isDead())
+			if(partyList.get(i).isInBattle())
 			{
 				currentCharIndex = i;
 				currentChar = partyList.get(currentCharIndex);
@@ -790,7 +827,7 @@ public class Battle
 			{
 				//loop until nondead party member
 				do ++currentCharIndex;
-				while(currentCharIndex < partyList.size() && partyList.get(currentCharIndex).isDead());
+				while(currentCharIndex < partyList.size() && !partyList.get(currentCharIndex).isInBattle());
 				
 				if(currentCharIndex < partyList.size())
 				{					
@@ -894,11 +931,13 @@ public class Battle
 			break;
 		case DEFEAT:
 		case VICTORY:
+		case ESCAPED:
 			if(messageQueue.size() == 0 && Global.screenFader.isFadedIn())
 				triggerEndBattle();
 			else				
 				if(Global.screenFader.isFadedOut())
 				{
+					resetEscapeState();
 					Global.map.getBackdrop().unload();
 					Global.musicBox.resumeLastSong();
 					Global.screenFader.fadeIn(2);
@@ -1101,12 +1140,12 @@ public class Battle
 			break;
 		case AllEnemies:
 			for(Enemy e : encounter.Enemies())
-				if(!e.isDead())
+				if(e.isInBattle())
 					targets.add(e);
 			break;
 		case Everybody:
 			for(Enemy e : encounter.Enemies())
-				if(!e.isDead())
+				if(e.isInBattle())
 					targets.add(e);
 			for(PlayerCharacter c : partyList)
 				targets.add(c);
@@ -1148,6 +1187,11 @@ public class Battle
 		targets.add(c);
 	}
 	
+	public Encounter getEncounter()
+	{
+		return encounter;
+	}
+	
 	public enum BattleStates
 	{
 		START,
@@ -1156,9 +1200,9 @@ public class Battle
 		SELECTABILITY,
 		TARGET,
 		ACT,
-		RUN,
 		VICTORY,
-		DEFEAT		
+		DEFEAT,
+		ESCAPED
 	}
 	
 }
