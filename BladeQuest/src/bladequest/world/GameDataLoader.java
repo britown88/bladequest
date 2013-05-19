@@ -1,21 +1,34 @@
 package bladequest.world;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.InputStream;
 
-import android.util.Log;
 import android.graphics.Color;
 import android.graphics.Point;
-import bladequest.statuseffects.*;
+import android.util.Log;
+import bladequest.battleactions.BattleAction;
+import bladequest.battleactions.bactDamage;
+import bladequest.battleactions.bactInflictStatus;
+import bladequest.battleactions.bactMessage;
+import bladequest.battleactions.bactRemoveStatus;
+import bladequest.combatactions.CombatAction;
+import bladequest.combatactions.combAuras;
+import bladequest.combatactions.combDragonForm;
+import bladequest.combatactions.combStance;
+import bladequest.combatactions.combSteal;
+import bladequest.combatactions.combWish;
+import bladequest.graphics.BattleAnim;
+import bladequest.graphics.BattleAnimObjState;
+import bladequest.graphics.BattleAnimObjState.PosTypes;
+import bladequest.graphics.BattleAnimObject;
+import bladequest.graphics.BattleAnimObject.Types;
+import bladequest.statuseffects.StatusEffect;
+import bladequest.statuseffects.seKO;
+import bladequest.statuseffects.sePoison;
 import bladequest.system.BqActivity;
 import bladequest.system.DataLine;
 import bladequest.system.FileReader;
-import bladequest.battleactions.*;
-import bladequest.combatactions.*;
-import bladequest.graphics.*;
-import bladequest.graphics.BattleAnimObjState.PosTypes;
-import bladequest.graphics.BattleAnimObject.Types;
 
 public class GameDataLoader 
 {
@@ -627,6 +640,8 @@ public class GameDataLoader
 			return new combSteal();
 		else if(str.equals("combWish"))
 			return new combWish();
+		else if(str.equals("combAuras"))
+			return new combAuras();		
 		else
 			return null;
 	}

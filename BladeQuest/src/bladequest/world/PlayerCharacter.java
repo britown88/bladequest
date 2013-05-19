@@ -7,6 +7,7 @@ import java.util.Vector;
 import android.graphics.Point;
 import android.graphics.Rect;
 import bladequest.combat.BattleCalc;
+import bladequest.combat.BattleEventBuilderObject;
 import bladequest.combatactions.CombatAction;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleSprite;
@@ -61,6 +62,9 @@ public class PlayerCharacter
 	private List<StatusEffect> statusEffects;
 	private List<Ability> abilities;
 	private List<LearnableAbility> learnableAbilities;
+	
+	private BattleEventBuilderObject battleEventBuilderObj;
+	private String combatActionText;
 	
 	private boolean visible;
 	
@@ -166,6 +170,7 @@ public class PlayerCharacter
 	public Ability getAbilityToUse(){return abilityToUse;}	
 	public Action getAction(){return action;}	
 	public String getDisplayName(){return displayName;}	
+	public void setStatusEffects(List<StatusEffect> statusEffects) { this.statusEffects = statusEffects; }
 	public List<StatusEffect> getStatusEffects() { return statusEffects; }
 	public String getName(){return name;}	
 	public boolean isEnemy() { return isEnemy; }	
@@ -482,8 +487,8 @@ public class PlayerCharacter
 		//itemToUse.execute(this, targets);
 	}
 	
-	public TargetTypes getCombatActionTargetType() { return combAction.getTargetType(); }
-	public String getCombatActionText() { return combAction.getActionText(); }
+	public String getCombatActionText() { return combatActionText; }
+	public void setCombatActionText(String text) {combatActionText = text; }
 	public CombatAction getCombatAction() { return combAction; }
 	
 	public void setUseCombatAction()
@@ -1055,6 +1060,15 @@ public class PlayerCharacter
 	public void setPosition(int x, int y) { position = new Point(x, y);}	
 	public void setPosition(Point p) {position = p;}
 	
+	
+	public void setEventBuilder(BattleEventBuilderObject eventBuilder)
+	{
+		battleEventBuilderObj = eventBuilder;
+	}
+	public BattleEventBuilderObject getEventBuilder()
+	{
+		return battleEventBuilderObj;
+	}
 	
 	public void setVisible(boolean isVisible) {visible = isVisible;}
 	public boolean getVisible() { return visible;}

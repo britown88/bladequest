@@ -8,6 +8,7 @@ import bladequest.battleactions.bactDamage;
 import bladequest.battleactions.bactTryEscape;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleSprite.faces;
+import bladequest.statuseffects.StatusEffect;
 import bladequest.world.Ability;
 import bladequest.world.DamageTypes;
 import bladequest.world.Global;
@@ -28,6 +29,8 @@ public class BattleEvent
 	
 	private BattleAnim anim;	
 	private int animStartIndex;
+	
+	private List<StatusEffect> endTurnStatuses;
 	
 	public BattleEvent(PlayerCharacter source, List<PlayerCharacter> targets)
 	{
@@ -102,7 +105,39 @@ public class BattleEvent
 		objects.clear();
 		init();
 	}
-	
+	public static BattleEventBuilderObject abilityToBattleEventBuilder(Ability ability)
+	{
+		return new BattleEventBuilderObject()
+		{
+			Ability ability;
+			public BattleEventBuilderObject initialize(Ability ability)
+			{
+				this.ability = ability;
+				return this;
+			}
+			@Override
+			public void buildEvents(BattleEventBuilder builder) {
+				PlayerCharacter source = builder.getSource();
+				List<PlayerCharacter> targets = builder.getTargets();
+				BattleAnim anim = ability.getAnimation();
+				int animStartIndex = 3;
+				
+				int animStartTime = frameFromActIndex(animStartIndex);
+				int finalIndex = (int)((animStartTime + anim.syncToAnimation(1.0f))/actTimerLength)+1;
+				
+				builder.setAnimation(anim, animStartIndex);
+				
+				builder.addEventObject(new BattleEventObject(frameFromActIndex(animStartIndex), faces.Cast, 0, source));
+				
+				for(BattleAction action : ability.getActions())
+					builder.addEventObject(new BattleEventObject(animStartTime + anim.syncToAnimation(action.getFrame()), action, source, targets));
+				
+				builder.addEventObject(new BattleEventObject(frameFromActIndex(finalIndex), faces.Ready, 0, source));
+				builder.addEventObject(new BattleEventObject(frameFromActIndex(finalIndex+2)));
+			}
+			
+		}.initialize(ability);
+	}
 	public void init()
 	{
 		int finalIndex;
@@ -124,21 +159,10 @@ public class BattleEvent
 			break;
 		case Ability:
 			Ability ab = source.getAbilityToUse();
-			anim = ab.getAnimation();
-			animStartIndex = 3;
-			
-			finalIndex = getFinalAnimFrameIndex();
-			
-			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex), faces.Cast, 0, source));
-			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex), anim, source, targets));
-			for(BattleAction action : ab.getActions())
-				objects.add(new BattleEventObject(syncToAnimationWithOffset(action.getFrame()), action, source, targets));
-			objects.add(new BattleEventObject(frameFromActIndex(finalIndex), faces.Ready, 0, source));
-			objects.add(new BattleEventObject(frameFromActIndex(finalIndex+2)));
-			
+			abilityToBattleEventBuilder(ab).buildEvents(makeBattleEventBuilder());
 			break;
 		case CombatAction:
-			source.getCombatAction().buildEvents(makeBattleEventBuilder());
+			source.getEventBuilder().buildEvents(makeBattleEventBuilder());
 			break;
 		case Item:
 			Item itm = source.getItemToUse();
@@ -161,6 +185,8 @@ public class BattleEvent
 			animStartIndex = 3;
 			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex), new bactTryEscape(animStartIndex, makeBattleEventBuilder()), source, targets));
 			break;
+		case Guard:
+			objects.add(new BattleEventObject(0));  //insta-fail.
 		default:
 			break;
 		}
@@ -169,6 +195,12 @@ public class BattleEvent
 	
 	public void update(Battle battle, List<DamageMarker> markers)
 	{
+		if (!source.isInBattle())
+		{
+			running = false;
+			done = true;
+			return;
+		}
 		if(!running)
 		{
 			running = true;
@@ -194,8 +226,29 @@ public class BattleEvent
 				objects.remove(rmObj);			
 				if(objects.size() == 0)
 				{
-					running = false;
-					done = true;
+					running = false;					
+					if (endTurnStatuses == null) //haven't resolved end turn statuses yet.
+					{
+						//player turn over, apply status.
+						//clone the list, apply all, but don't apply newly added statuses.
+						//e.g. double buffer.						
+						endTurnStatuses = new ArrayList<StatusEffect>(source.getStatusEffects());
+					}
+					while (objects.isEmpty())
+					{
+						if (endTurnStatuses.isEmpty())
+						{
+							endTurnStatuses = null; //nothing more to do, we can end the turn.
+							done  = true;
+							return;
+						}
+						else  //try and apply a status effect.
+						{
+							StatusEffect firstStatus = endTurnStatuses.get(0);
+							endTurnStatuses.remove(0);
+							firstStatus.onTurn(makeBattleEventBuilder());
+						}						
+					}
 				}
 			}			
 		}

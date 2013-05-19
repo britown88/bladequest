@@ -1,6 +1,7 @@
 package bladequest.statuseffects;
 
 import bladequest.combat.Battle;
+import bladequest.combat.BattleEventBuilder;
 import bladequest.world.PlayerCharacter;
 
 public class seKO extends StatusEffect
@@ -11,6 +12,7 @@ public class seKO extends StatusEffect
 		icon = "KO";
 		curable = false;
 		removeOnDeath = false;
+		battleOnly = false;
 	}
 	@Override
 	public String saveLine() 
@@ -19,7 +21,7 @@ public class seKO extends StatusEffect
 	}
 	
 	@Override
-	public void onTurn(PlayerCharacter c, Battle b) {}
+	public void onTurn(BattleEventBuilder eventBuilder) {}
 	
 	@Override
 	public void onInflict(PlayerCharacter c) {}

@@ -12,15 +12,16 @@ import android.graphics.Rect;
 import bladequest.UI.ListBox;
 import bladequest.UI.MenuPanel;
 import bladequest.UI.MenuPanel.Anchors;
+import bladequest.combatactions.CombatActionBuilder;
 import bladequest.graphics.BattleSprite.faces;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.world.Ability;
-import bladequest.world.PlayerCharacter;
-import bladequest.world.PlayerCharacter.Action;
 import bladequest.world.Encounter;
 import bladequest.world.Enemy;
 import bladequest.world.Global;
 import bladequest.world.Item;
+import bladequest.world.PlayerCharacter;
+import bladequest.world.PlayerCharacter.Action;
 import bladequest.world.States;
 import bladequest.world.TargetTypes;
 
@@ -176,129 +177,52 @@ public class Battle
 	}
 	private BattleState getSelectItemState()
 	{
-		return new BattleState()
+		return new BattleMenuState(getCombatActionBuilder())
 		{
 			@Override
-			public void menuUpdate()
+			public void drawSelectedObject(Object obj)
 			{
-				mainMenu.clearObjects();
+				mpWindow.getTextAt(0).text = "Qty: "+((Item)obj).getCount();
+				mpWindow.render();
+			}
+			@Override
+			public void onSelected(Object obj) {
+				Item itm = (Item)(mainMenu.getSelectedEntry().obj);
+				currentChar.setFace(faces.Ready);
+				currentChar.setItemToUse(itm);
+				stateMachine.setState(getTargetState(itm.getTargetType()));
+			}
+
+			@Override
+			public void addMenuItems() {
 				for(Item i : Global.party.getInventory(true))
 					mainMenu.addItem(i.getName(), i, false);
-				mainMenu.update();
-			}
-			@Override
-			public void onSwitchedTo(BattleState prevState)
-			{
-				menuUpdate();
-				mainMenu.open();
-			}
-			@Override
-			public void drawPanels()
-			{							
-				if(mainMenu.getCurrentSelectedEntry() != null)
-				{
-					mpWindow.getTextAt(0).text = "Qty: "+((Item)mainMenu.getCurrentSelectedEntry().obj).getCount();
-					mpWindow.render();
-				}
-			}
-			@Override
-			public void backButtonPressed()
-			{
-				cancelToPrevState();
-			}
-			@Override			
-			public void touchActionUp(int x, int y) 
-			{
-				switch(mainMenu.touchActionUp(x, y))
-				{
-				case Selected:
-					Item itm = (Item)(mainMenu.getSelectedEntry().obj);
-					currentChar.setFace(faces.Ready);
-					currentChar.setItemToUse(itm);
-					stateMachine.setState(getTargetState(itm.getTargetType()));
-					break;
-				case Close:
-					cancelToPrevState();
-					break;
-				default:
-					break;
-				}
-			}
-			@Override
-			public void touchActionDown(int x, int y)
-			{
-				mainMenu.touchActionDown(x, y);
-			}
-			@Override
-			public void touchActionMove(int x, int y)
-			{
-				mainMenu.touchActionMove(x, y);
 			}
 		};
 	}
 	private BattleState getSelectAbilityState()
 	{
-		return new BattleState() {
+		return new BattleMenuState(getCombatActionBuilder())
+		{
 			@Override
-			public void menuUpdate()
+			public void drawSelectedObject(Object obj)
 			{
-				mainMenu.clearObjects();
+				mpWindow.getTextAt(0).text = "Cost: "+((Ability)obj).MPCost();
+				mpWindow.render();
+			}
+			@Override
+			public void onSelected(Object obj) {
+				Ability ab = (Ability)(mainMenu.getSelectedEntry().obj);
+				currentChar.setFace(faces.Casting);
+				currentChar.setAbilityToUse(ab);
+				stateMachine.setState(getTargetState(ab.TargetType()));
+			}
+
+			@Override
+			public void addMenuItems() {
 				for(Ability a : currentChar.getAbilities())
 					mainMenu.addItem(a.getDisplayName(), a, a.MPCost() > currentChar.getMP());
-				mainMenu.update();
 			}
-			
-			@Override
-			public void onSwitchedTo(BattleState PrevState)
-			{
-				menuUpdate();
-				mainMenu.open();
-			}
-			
-			@Override
-			public void drawPanels()
-			{			
-				if(mainMenu.getCurrentSelectedEntry() != null)
-				{
-					mpWindow.getTextAt(0).text = "Cost: "+((Ability)mainMenu.getCurrentSelectedEntry().obj).MPCost();
-					mpWindow.render();
-				}
-			}
-			@Override
-			public void backButtonPressed()
-			{
-				cancelToPrevState();
-			}
-			@Override			
-			public void touchActionUp(int x, int y)
-			{
-				switch(mainMenu.touchActionUp(x, y))
-				{
-				case Selected:
-					if(!mainMenu.getSelectedEntry().Disabled())
-					{
-						Ability ab = (Ability)(mainMenu.getSelectedEntry().obj);
-						currentChar.setFace(faces.Casting);
-						currentChar.setAbilityToUse(ab);
-						stateMachine.setState(getTargetState(ab.TargetType()));
-					}				
-					break;
-				case Close:
-					cancelToPrevState();
-					break;
-				default:break;
-				}
-			}
-			@Override
-			public void touchActionDown(int x, int y)
-			{
-				mainMenu.touchActionDown(x, y);
-			}			
-			@Override
-			public void touchActionMove(int x, int y)
-			{
-				mainMenu.touchActionMove(x, y);
-			}			
 		};
 	}
 	public BattleState getTargetState(TargetTypes targetType)
@@ -454,12 +378,26 @@ public class Battle
 		else				
 			if(Global.screenFader.isFadedOut())
 			{
+				clearBattleOnlyEffects();
 				resetEscapeState();
 				Global.map.getBackdrop().unload();
 				Global.musicBox.resumeLastSong();
 				Global.screenFader.fadeIn(2);
 				Global.GameState = States.GS_WORLDMOVEMENT;				
 			}
+	}
+	
+	private void clearBattleOnlyEffects()
+	{
+		for (PlayerCharacter c : partyList)
+		{
+			c.setStatusEffects(StatusEffect.filterList(c.getStatusEffects(), new StatusEffect.Filter()
+			{
+				public boolean filter(StatusEffect effect) {
+					return !effect.isBattleOnly();
+				}
+			}));
+		}
 	}
 	private void resetEscapeState()
 	{
@@ -783,7 +721,7 @@ public class Battle
 				battleEvents.add(e.genBattleEvent(partyList, encounter.Enemies()));
 
 		for(PlayerCharacter c : partyList)
-			if(c.isInBattle() && c.getAction() != Action.Guard)
+			if(c.isInBattle())
 				addBattleEvent(c, c.getTargets());
 		
 		battleEvents = BattleCalc.genMoveOrder(battleEvents);
@@ -806,11 +744,13 @@ public class Battle
 			PlayerCharacter actor = currentEvent.getSource();
 			
 			
-			if(actor.isEnemy() || selCharOpened)
+			if(actor.isEnemy() || selCharOpened || actor.getAction() == Action.Guard)
 			{
 				currentEvent.update(this, markers);
 				if(currentEvent.isDone())
+				{
 					nextActorInit();
+				}
 			}					
 		}			
 	}
@@ -827,10 +767,12 @@ public class Battle
 				actor.setImageIndex(0);
 			}
 	}
-	private void nextActor(boolean firstActor)
-	{	
-		targets.clear();
-		
+	private boolean isBattleOver()
+	{
+		return isVictory() || isDefeated() || isEscaped();
+	}
+	private void applyBattleOver()
+	{
 		if(isVictory())
 		{
 			if(Global.noRunningAnims() && markers.isEmpty())
@@ -845,6 +787,15 @@ public class Battle
 		{
 			if(Global.noRunningAnims() && markers.isEmpty())
 				stateMachine.setState(getEscapedState());
+		}		
+	}
+	private void nextActor(boolean firstActor)
+	{	
+		targets.clear();
+		
+		if (isBattleOver())
+		{
+			applyBattleOver();
 		}
 		else
 		{
@@ -870,6 +821,7 @@ public class Battle
 				case Ability:changeStartBarText(actor.getDisplayName()+" casts "+actor.getAbilityToUse().getDisplayName()+"!");break;
 				case CombatAction:changeStartBarText(actor.getDisplayName()+actor.getCombatActionText());break;
 				case Run:changeStartBarText(actor.getDisplayName()+" tries to run!");break;
+				case Guard:changeStartBarText(actor.getDisplayName()+" is guarding!");break;
 				default: break;}
 				
 				if(!actor.isInBattle())
@@ -896,7 +848,8 @@ public class Battle
 					if(!actor.isEnemy())
 					{
 						currentChar = actor;
-						advanceChar();
+						if (actor.getAction() != Action.Guard)
+							advanceChar();
 					}
 					else
 						setTarget(actor);
@@ -961,6 +914,36 @@ public class Battle
 		
 		return true;
 	}
+	private CombatActionBuilder getCombatActionBuilder()
+	{
+		return new CombatActionBuilder()
+		{
+			public ListBox getMenu() {
+				return mainMenu;
+			}
+
+			@Override
+			public PlayerCharacter getUser() {
+				return currentChar;
+			}
+
+			@Override
+			public Battle getBattle() {
+				return Global.battle;  //hackish for now... "this" is wrong to use here.
+			}
+
+			@Override
+			public BattleStateMachine getStateMachine() {
+				return stateMachine;
+			}
+
+			@Override
+			public MenuPanel getMPWindow() {
+				return mpWindow;
+			}
+			
+		};
+	}
 	private void handleMenuOption(String opt)
 	{
 		if(opt.equals("atk"))
@@ -976,8 +959,7 @@ public class Battle
 		else if(opt.equals("act"))
 		{
 			currentChar.setBattleAction(Action.CombatAction);
-			currentChar.setFace(faces.Ready);
-			stateMachine.setState(getTargetState(currentChar.getCombatActionTargetType()));
+			currentChar.getCombatAction().onSelected(getCombatActionBuilder());
 		}
 		else if(opt.equals("grd"))
 		{

@@ -15,7 +15,7 @@ endcharacter
 character joy "Joy" bjoy joy
 portrait 2 0
 abilities "Magic"
-combataction combWish
+combataction combAuras
 basestats 3 3 6 10
 level 6
 equip silverstaff
