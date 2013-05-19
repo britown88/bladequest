@@ -5,7 +5,6 @@ import java.util.List;
 
 import bladequest.combat.BattleMenuState;
 import bladequest.combat.BattleState;
-import bladequest.world.Ability;
 import bladequest.world.DamageTypes;
 import bladequest.world.TargetTypes;
 

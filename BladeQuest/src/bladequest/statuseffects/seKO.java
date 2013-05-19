@@ -1,6 +1,5 @@
 package bladequest.statuseffects;
 
-import bladequest.combat.Battle;
 import bladequest.combat.BattleEventBuilder;
 import bladequest.world.PlayerCharacter;
 
