@@ -11,7 +11,7 @@ endability
 #
 ability zornhau "Zornhau" noanim physicalignoredef allenemies 5 100 False
 startsDisabled
-action bactDelayedDamageAll 3 1.2f physicalignoredef movetest 2
+action bactAttackRandomTargets 3 0.5f physicalignoredef 15 5.0f
 action bactBreakStance -1
 endability
 #

@@ -229,7 +229,7 @@ public class BattleEvent
 	}
 	public void update(Battle battle, List<DamageMarker> markers)
 	{
-		if (!source.isInBattle())
+		if (!source.isInBattle() || battle.isBattleOver())
 		{
 			running = false;
 			done = true;
@@ -245,7 +245,7 @@ public class BattleEvent
 			long frame = System.currentTimeMillis() - startTime;
 			BattleEventObject rmObj = null;
 			boolean hasPositive = false;
-			//int actIndex = (int)(frame / actTimerLength);
+
 			for(BattleEventObject obj : objects)
 			{
 				if (obj.Frame() < 0) continue;

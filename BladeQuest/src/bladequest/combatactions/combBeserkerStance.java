@@ -1,6 +1,7 @@
 package bladequest.combatactions;
 
 import bladequest.battleactions.bactInflictStatus;
+import bladequest.battleactions.bactLeaveStance;
 import bladequest.combat.BattleEvent;
 import bladequest.combat.BattleEventBuilder;
 import bladequest.combat.BattleEventObject;
@@ -27,10 +28,14 @@ public class combBeserkerStance extends Stance {
 		actionText = " shifted to beserker stance."; ///?????
 		broken = false;
 	}
+	public boolean equalTo(Stance rhs)
+	{
+		return (combBeserkerStance)(rhs) != null;
+	}
 	@Override
 	public String getStatusName()
 	{
-		return "Beserker Stance";	
+		return "Beserker";	
 	}
 	StatusEffect getBeserkStatus()
 	{
@@ -66,7 +71,7 @@ public class combBeserkerStance extends Stance {
 				statShift = (int)(c.getUnModdedStat(Stats.BattlePower) * 0.25f);
 			}
 			public void onInflict(PlayerCharacter c) 
-			{
+			{			
 				trySetEnabledState(c.getAbility("assault"), true);
 				trySetEnabledState(c.getAbility("zornhau"), true);
 				
@@ -94,9 +99,6 @@ public class combBeserkerStance extends Stance {
 		PlayerCharacter source = builder.getSource();
 		builder.addEventObject(new BattleEventObject(BattleEvent.frameFromActIndex(0), faces.Ready, 0, source));
 		
-		//end current stance, if there is one.
-		Stance.leaveStance(source);
-		
 		BattleAnim anim = Global.battleAnims.get("movetest");
 		
 		int frame = animStartIndex;		
@@ -107,6 +109,7 @@ public class combBeserkerStance extends Stance {
 		builder.addEventObject(new BattleEventObject(startFrameTime, anim, source, builder.getTargets()));
 		
 		//actual implementation of the beserk
+		builder.addEventObject(new BattleEventObject(endFrameTime, new bactLeaveStance(endFrameTime), source, builder.getTargets()));
 		builder.addEventObject(new BattleEventObject(endFrameTime, new bactInflictStatus(endFrameTime, false, getBeserkStatus()), source, builder.getTargets()));
 		
 		
