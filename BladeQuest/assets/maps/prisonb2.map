@@ -714,7 +714,6 @@ action message "?????:\nThere's no getting around this guy.  Guess I'll catch a 
 action fade 1 255 0 0 0 True True
 action restore
 action switch guardasleep True
-action openbubble sleep sleepguard -1 True False
 action switch prisonguardnewspeech True
 action fade 2 255 0 0 0 False True
 addstate
@@ -1088,6 +1087,7 @@ movement 0 0
 opts True True False
 switchcondition guardasleep
 sprite "guard"
+bubble sleep
 face 3
 action message "Guard:\nzzzzzzzzz..."
 action message "?????:\nSleepin' on the job, eh?"
@@ -1101,6 +1101,7 @@ movement 0 0
 opts True False False
 itemcondition prisonkey
 sprite "guard"
+bubble sleep
 face 3
 action openbubble exclam sleepguard 2 False False 
 action message "Guard:\nHey!"

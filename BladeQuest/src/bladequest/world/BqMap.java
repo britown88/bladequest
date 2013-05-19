@@ -405,6 +405,7 @@ public class BqMap
 		commands.put("layer", new CommandLine(){public void execute(DataLine dl) {layer(dl);};});
 		commands.put("autostart", new CommandLine(){public void execute(DataLine dl) {autostart(dl);};});
 		commands.put("sprite", new CommandLine(){public void execute(DataLine dl) {sprite(dl);};});
+		commands.put("bubble", new CommandLine(){public void execute(DataLine dl) {bubble(dl);};});
 		commands.put("action", new CommandLine(){public void execute(DataLine dl) {action(dl);};});
 		commands.put("switchcondition", new CommandLine(){public void execute(DataLine dl) {switchcondition(dl);};});
 		commands.put("itemcondition", new CommandLine(){public void execute(DataLine dl) {itemcondition(dl);};});
@@ -510,6 +511,8 @@ public class BqMap
 		if(dl.values.get(0).length() > 0)
 			loadedObject.setStateSprite(loadedStateIndex, 
 				dl.values.get(0));}
+	private void bubble(DataLine dl){
+		loadedObject.setStateBubble(loadedStateIndex, dl.values.get(0));}
 	private void action(DataLine dl){loadActionLine(dl);}
 	private void switchcondition(DataLine dl){
 		loadedObject.addSwitchCondition(

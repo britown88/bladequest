@@ -1055,6 +1055,7 @@ public class Global
 		screenShaker = new ScreenShaker();
 		target = new TargetReticle();
 		textFactory = new TextFactory(Typeface.createFromAsset(activity.getAssets(),"fonts/pressstart.ttf"));
+		playingReactions = new HashMap<String, Map<String,ReactionBubble>>();
 		
 		bitmaps = new HashMap<String, Bitmap>();
 		loadBitmaps("drawable/characters");
@@ -1136,28 +1137,28 @@ public class Global
 		loading = false;
 
 		//demo start info, do not fuck with!
-/*		screenFader.setFadeColor(255, 0, 0, 0);
+		screenFader.setFadeColor(255, 0, 0, 0);
 		screenFader.setFaded();
 		party.teleport(16, 5);		
 		party.insertCharacter("aramis", 1);	
 		party.getCharacter("aramis").setDisplayName("?????");	
-		LoadMap("prisonb2");*/
+		LoadMap("prisonb2");
 		
-		//test params
-		party.teleport(1, 3);		
-		//party.insertCharacter("aramis", 1);	
-		party.addCharacter("aramis");
-		party.getCharacter("aramis").setDisplayName("?????");		
-		
-		LoadMap("test");	
-		party.addCharacter("joy");
-		//for(int i = 0; i < 10; ++i)
-		//party.getPartyMembers()[0].applyStatusEffect(new sePoison(100));
-		party.addCharacter("luc");		
-		
-		//party.addCharacter("joy");				
-		switches.put("guardasleep", true);
-		switches.put("startgame", true);			
+//		//test params
+//		party.teleport(1, 3);		
+//		//party.insertCharacter("aramis", 1);	
+//		party.addCharacter("aramis");
+//		party.getCharacter("aramis").setDisplayName("?????");		
+//		
+//		LoadMap("test");	
+//		party.addCharacter("joy");
+//		//for(int i = 0; i < 10; ++i)
+//		//party.getPartyMembers()[0].applyStatusEffect(new sePoison(100));
+//		party.addCharacter("luc");		
+//		
+//		//party.addCharacter("joy");				
+//		switches.put("guardasleep", true);
+//		switches.put("startgame", true);			
 		
 	}
 	
@@ -1200,47 +1201,45 @@ public class Global
 	}
 
 
-	private static Map<String, ReactionBubble> playingReactions;
+	private static Map<String, Map<String, ReactionBubble>> playingReactions;
 	
 	public static void openReactionBubble(ReactionBubble bubble, String target, Point drawPos, float duration, boolean loop)
 	{
-		if(playingReactions == null)
-			playingReactions = new HashMap<String, ReactionBubble>();
+		if(!playingReactions.containsKey(map.Name()))
+			playingReactions.put(map.Name(), new HashMap<String, ReactionBubble>());		
 		
 		bubble.open(drawPos, duration, loop);		
-		playingReactions.put(target, bubble);
+		playingReactions.get(map.Name()).put(target, bubble);
 	}
 	
 	public static void closeReactionBubble(String target)
 	{
-		if(playingReactions == null)
-			playingReactions = new HashMap<String, ReactionBubble>();
-		
-		if(playingReactions.get(target) != null)
-			playingReactions.remove(target);
+		if(playingReactions.containsKey(map.Name()))
+			if(playingReactions.get(map.Name()).get(target) != null)
+				playingReactions.get(map.Name()).remove(target);
 	}
 	
 	private static void updateReactionBubbles()
 	{
-		if(playingReactions == null)
-			playingReactions = new HashMap<String, ReactionBubble>();
+		if(playingReactions.containsKey(map.Name()))
+		{
+			List<String> playingBubbleNames = new ArrayList<String>();
+			for(String name : playingReactions.get(map.Name()).keySet())
+				if(playingReactions.get(map.Name()).get(name).isDone())
+					playingBubbleNames.add(name);			
+			
+			for(String name : playingBubbleNames)
+				playingReactions.get(map.Name()).remove(name);
+		}
 		
-		List<String> playingBubbleNames = new ArrayList<String>();
-		for(String name : playingReactions.keySet())
-			if(playingReactions.get(name).isDone())
-				playingBubbleNames.add(name);			
 		
-		for(String name : playingBubbleNames)
-			playingReactions.remove(name);
 	}
 
 	public static void renderReactionBubbles() 
 	{
-		if(playingReactions == null)
-			playingReactions = new HashMap<String, ReactionBubble>();
-		
-		for(ReactionBubble bubble : playingReactions.values())
-			bubble.render();
+		if(playingReactions.containsKey(map.Name()))
+			for(ReactionBubble bubble : playingReactions.get(map.Name()).values())
+				bubble.render();
 		
 	}
 
