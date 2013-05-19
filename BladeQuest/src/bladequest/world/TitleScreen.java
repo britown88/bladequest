@@ -28,6 +28,8 @@ public class TitleScreen
 	private final int openspeed = 15;
 	private final String openingSong = "aramis";
 	
+	private boolean skippedIntro;
+	
 	private BattleAnim playingAnim;
 	
 	public TitleScreen()
@@ -53,6 +55,7 @@ public class TitleScreen
 		Global.stretchScreen = true;
 		if(Global.panel != null)
 			Global.panel.scaleImage();
+		skippedIntro = false;
 		
 		Global.fc1r = 0;
 		Global.fc1g = 0;
@@ -88,10 +91,12 @@ public class TitleScreen
 			Global.screenFader.fadeOut(2);
 			break;
 		case Menu:
-			Global.musicBox.play(openingSong, false, -1);
+			
 			Global.clearAnimations();
 			playingAnim = Global.playAnimation("titleloop", null, null);
 			Global.screenFader.clear();
+			
+			skippedIntro = true;
 			
 			buildMenu();
 			menu.open();			
@@ -104,6 +109,11 @@ public class TitleScreen
 			break;
 		case LoadMenu:
 			Global.screenFader.fadeIn(4);
+			break;
+		case NewgameTransition:
+			menu.close();
+			Global.screenFader.setFadeColor(255, 0, 0, 0);
+			Global.screenFader.fadeOut(1);
 			break;
 		default:
 			break;
@@ -140,8 +150,7 @@ public class TitleScreen
 	{
 		if(opt.equals("new"))
 		{
-			close();
-			Global.NewGame();
+			changeState(TitleStates.NewgameTransition);
 		}
 		else if(opt.equals("con"))
 		{
@@ -150,7 +159,7 @@ public class TitleScreen
 		}
 		else if(opt.equals("quit"))
 		{
-			close();
+			menu.close();
 			Global.closeGame();
 		}
 	}
@@ -209,6 +218,16 @@ public class TitleScreen
 				menu.open();
 			}			
 			break;
+		case NewgameTransition:
+			menu.update();
+			if(Global.screenFader.isDone())	
+			{
+				close();
+				Global.NewGame();
+			}
+				
+
+			break;
 		default:
 			break;
 		}
@@ -225,13 +244,7 @@ public class TitleScreen
 			Global.renderer.drawBitmap(dapperlogo, null, logodest, null);			
 			break;
 		case GameLogo:
-			Global.renderAnimations();
-				
-			if(menu != null && !menu.Closed())
-				menu.render();
-
-			
-			break;
+		case NewgameTransition:
 		case MenuTransition:
 		case Menu:
 			Global.renderAnimations();
@@ -240,7 +253,6 @@ public class TitleScreen
 				menu.render();
 			
 			break;
-
 		case LoadMenu:
 			Global.saveLoadMenu.render();
 			break;
@@ -310,8 +322,13 @@ public class TitleScreen
 				changeState(TitleStates.CompanyTransition);
 			break;
 		case GameLogo:	
+			if(!skippedIntro)
+			{
+				Global.musicBox.play("", false, -1);
+				Global.musicBox.play(openingSong, false, -1);
+				
+			}
 			changeState(TitleStates.Menu);	
-
 			break;
 		case Menu:
 			
@@ -361,6 +378,7 @@ public class TitleScreen
 		GameLogo,
 		Menu,
 		MenuTransition,
+		NewgameTransition,
 		LoadMenu
 	}
 
