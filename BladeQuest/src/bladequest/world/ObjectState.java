@@ -6,6 +6,7 @@ import java.util.List;
 import android.graphics.Point;
 import bladequest.actions.Action;
 import bladequest.actions.actMessage;
+import bladequest.graphics.ReactionBubble;
 import bladequest.graphics.Sprite;
 import bladequest.graphics.Tile;
 import bladequest.system.DataLine;
@@ -30,13 +31,15 @@ public class ObjectState {
 	
 	private List<Action> actionList; 
 	private List<String> switchList; 
-	private List<String> itemReqList;
-	
+	private List<String> itemReqList;	
 	
 	private ObjectPath objPath;
 	private long objPathWaitStart;
 	private boolean objPathWaiting;
 	private int moveSpeed = 3;
+	
+	private String bubbleName;
+	
 	
 	public ObjectState(GameObject parent)
 	{	
@@ -96,6 +99,8 @@ public class ObjectState {
 	public boolean hasPath() { return objPath != null; }
 	public void setMoveSpeed(int i) { moveSpeed = 1; }
 	
+	public void setBubble(String name){bubbleName = name; }
+	
 	public void setFace(String face){if(spr != null) spr.changeFace(face);}
 	public void setImageIndex(int index){imageIndex = index;}
 	public void setAnimated(boolean animated) { this.animated = animated; }
@@ -124,6 +129,22 @@ public class ObjectState {
 		}
 		else
 			this.spr  = new Sprite(Global.sprites.get(spr));
+	}
+	
+	public void deinit()
+	{
+		if(bubbleName != null)
+			Global.closeReactionBubble(parent.Name());
+	}
+	
+	public void init()
+	{
+		if(bubbleName != null)
+		{
+			ReactionBubble bubble = new ReactionBubble(Global.reactionBubbles.get(bubbleName));
+			Point drawPos = new Point(parent.getWorldPos().x, parent.getWorldPos().y - 32);
+			Global.openReactionBubble(bubble, parent.Name(), drawPos, -1, true);
+		}			
 	}
 	
 	public boolean execute()
