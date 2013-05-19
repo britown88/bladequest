@@ -73,7 +73,7 @@ endstate
 endobj
 endba
 
-ba title 60.0f
+ba title 80.0f
 #sky
 obj bmp 0 title-sky
 state 0 scrn
@@ -90,7 +90,18 @@ endobj
 
 #water
 obj bmp 0 title-water
+linterp
 state 0 scrn
+size 448 192
+pos 1 244 192
+argb 255 255 255 255
+endstate
+state 250 scrn
+size 448 192
+pos 1 244 192
+argb 255 255 255 255
+endstate
+state 500 scrn
 size 448 192
 pos 1 224 192
 argb 255 255 255 255
@@ -101,6 +112,33 @@ pos 1 224 192
 argb 255 255 255 255
 endstate
 endobj
+
+#water2
+obj bmp 0 title-water
+linterp
+state 0 scrn
+size 448 192
+pos 1 -203 192
+argb 255 255 255 255
+endstate
+state 250 scrn
+size 448 192
+pos 1 -203 192
+argb 255 255 255 255
+endstate
+state 500 scrn
+size 448 192
+pos 1 -223 192
+argb 255 255 255 255
+endstate
+state 750 scrn
+size 448 192
+pos 1 -223 192
+argb 255 255 255 255
+endstate
+endobj
+
+
 
 #clouds
 obj bmp 0 title-clouds
