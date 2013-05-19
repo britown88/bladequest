@@ -172,7 +172,7 @@ public class MainMenu
 			rootCharPlates.panels[i].clear();
 			rootCharPlates.panels[i].show();
 			
-			if(chars[i] == null)
+			if(chars[i] == null  || chars[i].getEscaped())
 			{
 				rootCharPlates.panels[i].hide();
 				rootCharPlates.panels[i].obj = null;

@@ -51,7 +51,7 @@ public class bactDamage extends BattleAction
 	@Override
 	public boolean willAffectTarget(PlayerCharacter target) 
 	{		
-		return (!target.isDead() && 
+		return (target.isInBattle() && 
 				power > 0 && 
 				target.getHP() < target.getStat(Stats.MaxHP)) 
 				|| 

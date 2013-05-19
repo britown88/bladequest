@@ -29,13 +29,14 @@ public class Battle
 	private final int frameMaxHeight = 96;
 	private final int frameMinHeight = 32;
 	private final int partyFrameBuffer = 32;
-	private final int advanceDistance = 32;
 	private final int charMoveSpeed = 7;
-	private final Point partyPos = new Point(Global.vpWidth - 128, 0);
 	private final int statFrameBuffer = 16;
 	private final int charYSpacing = 64;
 	private final int mpWindowHeight = 32;
-	private final int mpWindowWidth = 128;	
+	private final int mpWindowWidth = 128;
+	
+	public static final int advanceDistance = 32;
+	public static final Point partyPos = new Point(Global.vpWidth - 128, 0);
 	
 	private final String txtStart = "Tap screen to start!";
 	private final String txtTargetSingle = "Select target...";
@@ -57,13 +58,11 @@ public class Battle
 	
 	private PlayerCharacter currentChar;
 	private int currentCharIndex;
-	private TargetTypes targetType;
 	private List<PlayerCharacter> targets;
 	private List<BattleEvent> battleEvents;
 	private List<DamageMarker> markers;
 	private List<String> messageQueue;
 	
-	private BattleStates state;
 	private Encounter encounter;
 
 	private List<PlayerCharacter> partyList;
@@ -79,8 +78,11 @@ public class Battle
 	private MenuPanel characterPanes[];
 	private ListBox mainMenu;
 	
+	private BattleStateMachine stateMachine;
+	
 	public Battle()
 	{
+		stateMachine = new BattleStateMachine();
 		enemyArea = Global.vpToScreen(new Rect(0,0,partyPos.x-partyFrameBuffer, Global.vpHeight-frameMinHeight));
 		targets = new ArrayList<PlayerCharacter>();
 		battleEvents = new ArrayList<BattleEvent>();
@@ -88,9 +90,376 @@ public class Battle
 		messageQueue = new ArrayList<String>();
 	}
 	
+	private BattleState getStartState()
+	{
+		return new BattleState()
+		{
+			@Override
+			public void touchActionUp(int x, int y) 
+			{
+				stateMachine.setState(getSelectState());
+			}
+		};
+	}
+	private BattleState getWaitingForInputState()
+	{
+		return new BattleState()
+		{
+			@Override
+			public void touchActionUp(int x, int y) 
+			{
+				stateMachine.setState(getSelectState());
+			}
+			
+			@Override
+			public void onSwitchedTo(BattleState prevState)
+			{
+				recedeChar();
+				mainMenu.close();
+				changeStartBarText(txtStart);
+				for(PlayerCharacter c : partyList)
+					c.setFace(faces.Idle);
+			}
+		};
+	}
+	private BattleState getSelectState()
+	{
+		return new BattleState()
+		{
+			@Override
+			public void menuUpdate()
+			{
+				mainMenu.clearObjects();
+				mainMenu.addItem("Attack", "atk", false);
+				mainMenu.addItem("Item", "itm", false);
+				mainMenu.addItem(currentChar.getActionName(), "act", false);
+				mainMenu.addItem("Guard", "grd", false);
+				mainMenu.addItem(currentChar.getAbilitiesName(), "ab", false);
+				mainMenu.addItem("Run", "run", false);		
+				mainMenu.update();
+			}
+			@Override
+			public void onSwitchedTo(BattleState prevState)
+			{
+				menuUpdate();
+				mainMenu.open();
+				advanceChar();
+				targets.clear();
+				currentChar.setFace(faces.Idle);
+			}
+			@Override
+			public void backButtonPressed()
+			{
+				previousCharacter();
+			}
+			@Override
+			public void touchActionUp(int x, int y) 
+			{
+				switch(mainMenu.touchActionUp(x, y))
+				{
+				case Selected:
+					handleMenuOption((String)(mainMenu.getSelectedEntry().obj));
+					break;
+				case Close:
+					previousCharacter();
+					break;
+				default:
+					break;
+				}
+			}
+			@Override
+			public void touchActionDown(int x, int y)
+			{
+				mainMenu.touchActionDown(x, y);
+			}
+		};
+	}
+	private BattleState getSelectItemState()
+	{
+		return new BattleState()
+		{
+			@Override
+			public void menuUpdate()
+			{
+				mainMenu.clearObjects();
+				for(Item i : Global.party.getInventory(true))
+					mainMenu.addItem(i.getName(), i, false);
+				mainMenu.update();
+			}
+			@Override
+			public void onSwitchedTo(BattleState prevState)
+			{
+				menuUpdate();
+				mainMenu.open();
+			}
+			@Override
+			public void drawPanels()
+			{							
+				if(mainMenu.getCurrentSelectedEntry() != null)
+				{
+					mpWindow.getTextAt(0).text = "Qty: "+((Item)mainMenu.getCurrentSelectedEntry().obj).getCount();
+					mpWindow.render();
+				}
+			}
+			@Override
+			public void touchActionUp(int x, int y) 
+			{
+				switch(mainMenu.touchActionUp(x, y))
+				{
+				case Selected:
+					Item itm = (Item)(mainMenu.getSelectedEntry().obj);
+					currentChar.setFace(faces.Ready);
+					currentChar.setItemToUse(itm);
+					stateMachine.setState(getTargetState(itm.getTargetType()));
+					break;
+				case Close:
+					cancelToPrevState();
+					break;
+				default:
+					break;
+				}
+			}
+			@Override
+			public void touchActionDown(int x, int y)
+			{
+				mainMenu.touchActionDown(x, y);
+			}
+			@Override
+			public void touchActionMove(int x, int y)
+			{
+				mainMenu.touchActionMove(x, y);
+			}
+		};
+	}
+	private BattleState getSelectAbilityState()
+	{
+		return new BattleState() {
+			@Override
+			public void menuUpdate()
+			{
+				mainMenu.clearObjects();
+				for(Ability a : currentChar.getAbilities())
+					mainMenu.addItem(a.getDisplayName(), a, a.MPCost() > currentChar.getMP());
+				mainMenu.update();
+			}
+			
+			@Override
+			public void onSwitchedTo(BattleState PrevState)
+			{
+				menuUpdate();
+				mainMenu.open();
+			}
+			
+			@Override
+			public void drawPanels()
+			{			
+				if(mainMenu.getCurrentSelectedEntry() != null)
+				{
+					mpWindow.getTextAt(0).text = "Cost: "+((Ability)mainMenu.getCurrentSelectedEntry().obj).MPCost();
+					mpWindow.render();
+				}
+			}
+			@Override
+			public void touchActionUp(int x, int y)
+			{
+				switch(mainMenu.touchActionUp(x, y))
+				{
+				case Selected:
+					if(!mainMenu.getSelectedEntry().Disabled())
+					{
+						Ability ab = (Ability)(mainMenu.getSelectedEntry().obj);
+						currentChar.setFace(faces.Casting);
+						currentChar.setAbilityToUse(ab);
+						stateMachine.setState(getTargetState(ab.TargetType()));
+					}				
+					break;
+				case Close:
+					cancelToPrevState();
+					break;
+				default:break;
+				}
+			}
+			@Override
+			public void touchActionDown(int x, int y)
+			{
+				mainMenu.touchActionDown(x, y);
+			}			
+			@Override
+			public void touchActionMove(int x, int y)
+			{
+				mainMenu.touchActionMove(x, y);
+			}			
+		};
+	}
+	public BattleState getTargetState(TargetTypes targetType)
+	{
+		return new BattleState() {
+			private TargetTypes targetType;
+			BattleState initialize(TargetTypes targetType)
+			{
+				this.targetType = targetType;
+				return this;
+			}
+			@Override
+			public void onSwitchedTo(BattleState PrevState)
+			{
+				switch(targetType)
+				{
+				case AllAllies:
+					changeStartBarText(txtTargetAllies);
+					getTouchTargets(-1, -1, targetType);
+					break;
+				case AllEnemies:
+					changeStartBarText(txtTargetEnemies);
+					getTouchTargets(-1, -1, targetType);
+					break;
+				case Self:
+					changeStartBarText(txtTargetSelf);
+					break;
+				case Single:
+					changeStartBarText(txtTargetSingle);
+					break;
+				case SingleAlly:
+					changeStartBarText(txtTargetSingleAlly);
+					break;
+				case SingleEnemy:
+					changeStartBarText(txtTargetSingleEnemy);
+					break;
+				case Everybody:
+					changeStartBarText(txtTargetEverybody);
+					getTouchTargets(-1, -1, targetType);
+					break;
+				}
+				mainMenu.close();
+			}
+
+			@Override
+			public void backButtonPressed()
+			{
+				cancelToPrevState();
+			}
+			@Override
+			public void touchActionUp(int x, int y)
+			{
+				if(startBar.contains(x, y))
+				{
+					cancelToPrevState();
+				}
+				else
+				{
+					if(targets.size() > 0)
+					{
+						//targets were selected
+						currentChar.setTargets(new ArrayList<PlayerCharacter>(targets));
+						nextCharacter();
+					
+					}
+					else
+					{
+						cancelToPrevState();
+					}
+				}		
+			}
+			@Override
+			public void touchActionDown(int x, int y)
+			{
+				getTouchTargets(x,y, targetType);
+			}			
+			@Override
+			public void touchActionMove(int x, int y)
+			{
+				getTouchTargets(x,y, targetType);
+			}			
+		}.initialize(targetType);
+	}
+	private BattleState getActState()
+	{
+		return new BattleState() {
+			@Override
+			public void onSwitchedTo(BattleState prevState)
+			{
+				targets.clear();
+				mainMenu.close();
+				initActState();				
+			}
+			@Override
+			public void update()
+			{
+				updateActStatus();
+			}
+		};
+	}
+	private BattleState getDefeatState()
+	{
+		return new BattleState()
+		{
+			@Override
+			public void onSwitchedTo(BattleState prevState)
+			{
+				initDefeat();
+			}		
+			@Override
+			public void update()
+			{
+				endOfBattleUpdate();
+			}
+		};
+	}
+	private BattleState getVictoryState()
+	{
+		return new BattleState() {
+			@Override
+			public void onSwitchedTo(BattleState prevState)
+			{
+				initVictory();
+			}
+			@Override
+			public void update()
+			{
+				endOfBattleUpdate();
+			}			
+		};
+	}
+	private BattleState getEscapedState()
+	{
+		return new BattleState() {
+			@Override
+			public void onSwitchedTo(BattleState prevState)
+			{
+				initEscaped();
+			}
+			@Override
+			public void update()
+			{
+				endOfBattleUpdate();
+			}			
+		};
+	}
+	
+	
+	private void endOfBattleUpdate()
+	{
+		if(messageQueue.size() == 0 && Global.screenFader.isFadedIn())
+			triggerEndBattle();
+		else				
+			if(Global.screenFader.isFadedOut())
+			{
+				resetEscapeState();
+				Global.map.getBackdrop().unload();
+				Global.musicBox.resumeLastSong();
+				Global.screenFader.fadeIn(2);
+				Global.GameState = States.GS_WORLDMOVEMENT;				
+			}
+	}
+	private void resetEscapeState()
+	{
+		for(PlayerCharacter c : partyList)
+			c.setEscaped(false);
+	}
+	
 	public void startBattle(String encounter)
 	{
-		this.state = BattleStates.START;
+		stateMachine.setState(getStartState());
 		this.encounter = new Encounter(Global.encounters.get(encounter));
 		
 		partyList = Global.party.getPartyList(false);
@@ -99,7 +468,7 @@ public class Battle
 		
 		//all characters are dead (this should never happen)
 		if(currentChar == null)
-			changeState(BattleStates.DEFEAT);
+			stateMachine.setState(getDefeatState());
 		else
 		{
 			//characters
@@ -243,39 +612,7 @@ public class Battle
 		if(currentChar != null)
 			currentChar.setPosition(partyPos.x-selCharX, partyPos.y + (charYSpacing * currentChar.Index()));
 	}
-	private void updateMenuOptions(BattleStates state)
-	{
-		switch(state)
-		{
-		case SELECT:
-			mainMenu.clearObjects();
-			mainMenu.addItem("Attack", "atk", false);
-			mainMenu.addItem("Item", "itm", false);
-			mainMenu.addItem(currentChar.getActionName(), "act", false);
-			mainMenu.addItem("Guard", "grd", false);
-			mainMenu.addItem(currentChar.getAbilitiesName(), "ab", false);
-			mainMenu.addItem("Run", "run", false);		
-			mainMenu.update();
-			break;
-		case SELECTABILITY:
-			mainMenu.clearObjects();
-			for(Ability a : currentChar.getAbilities())
-				mainMenu.addItem(a.getDisplayName(), a, a.MPCost() > currentChar.getMP());
-			mainMenu.update();
-			break;
-		case SELECTITEM:
-			mainMenu.clearObjects();
-			for(Item i : Global.party.getInventory(true))
-				mainMenu.addItem(i.getName(), i, false);
-			mainMenu.update();
-			break;
-		default:
-			break;
-		}
-		
-		mainMenu.update();
-		
-	}
+
 	public void changeStartBarText(String str){startBar.getTextAt(0).text = str;}
 	private void showDisplayName(String str)
 	{
@@ -317,10 +654,10 @@ public class Battle
 		//play victory music
 		Global.musicBox.play("victory", true, -1);
 		
-		//get alive characters
+		//get characters still in the battle 
 		List<PlayerCharacter> aliveChars = new ArrayList<PlayerCharacter>();
 		for(PlayerCharacter c : partyList)
-			if(!c.isDead()) aliveChars.add(c);
+			if(c.isInBattle()) aliveChars.add(c);
 		
 		int avgLevel, levelTotal = 0;
 
@@ -342,6 +679,7 @@ public class Battle
 		List<String> itemDrops = new ArrayList<String>();
 		for(Enemy e : encounter.Enemies())
 		{
+			if (e.getEscaped()) continue;
 			gold += e.getGold();
 			exp += e.getExp(avgLevel); 
 			if(e.hasItems())
@@ -392,6 +730,11 @@ public class Battle
 		}		
 		
 	}
+	private void initEscaped()
+	{
+		addMessage("You have escaped!");		
+	}
+
 	private void initDefeat()
 	{
 		changeStartBarText(txtDefeat);
@@ -419,11 +762,11 @@ public class Battle
 		
 		//add enemy actions to event queue
 		for(Enemy e : encounter.Enemies())
-			if(!e.isDead())
+			if(e.isInBattle())
 				battleEvents.add(e.genBattleEvent(partyList, encounter.Enemies()));
 
 		for(PlayerCharacter c : partyList)
-			if(!c.isDead() && c.getAction() != Action.Guard)
+			if(c.isInBattle() && c.getAction() != Action.Guard)
 				addBattleEvent(c, c.getTargets());
 		
 		battleEvents = BattleCalc.genMoveOrder(battleEvents);
@@ -474,13 +817,18 @@ public class Battle
 		if(isVictory())
 		{
 			if(Global.noRunningAnims() && markers.isEmpty())
-				changeState(BattleStates.VICTORY);
+				stateMachine.setState(getVictoryState());
 		}			
 		else if(isDefeated())
 		{
 			if(Global.noRunningAnims() && markers.isEmpty())
-				changeState(BattleStates.DEFEAT);
-		}			
+				stateMachine.setState(getDefeatState());
+		}
+		else if (isEscaped())
+		{
+			if(Global.noRunningAnims() && markers.isEmpty())
+				stateMachine.setState(getEscapedState());
+		}
 		else
 		{
 			nextActor = false;
@@ -490,7 +838,7 @@ public class Battle
 			if(battleEvents.size() == 0)
 			{
 				selectFirstChar();
-				changeState(BattleStates.START);
+				stateMachine.setState(getWaitingForInputState());
 			}
 			else
 			{
@@ -504,14 +852,15 @@ public class Battle
 				case Item:changeStartBarText(actor.getDisplayName()+" uses "+actor.getItemToUse().getName()+"!");break;
 				case Ability:changeStartBarText(actor.getDisplayName()+" casts "+actor.getAbilityToUse().getDisplayName()+"!");break;
 				case CombatAction:changeStartBarText(actor.getDisplayName()+actor.getCombatActionText());break;
+				case Run:changeStartBarText(actor.getDisplayName()+" tries to run!");break;
 				default: break;}
 				
-				if(actor.isDead())
+				if(!actor.isInBattle())
 					nextActorInit();
 				else 
 				{					
 					//reset targets
-					currentEvent.setTargets(getLivingTargets(actor, targets));
+					currentEvent.setTargets(getTargetable(actor, targets));
 					
 					if(actor.getAction() == Action.Ability)
 					{
@@ -519,7 +868,13 @@ public class Battle
 						actor.useAbility();
 					}						
 					else if(actor.getAction() == Action.Item)
+					{
 						showDisplayName(actor.getItemToUse().getName());
+					}
+					else if (actor.getAction() == Action.Run)
+					{
+						showDisplayName("Run");
+					}
 					
 					if(!actor.isEnemy())
 					{
@@ -532,19 +887,19 @@ public class Battle
 			}
 		}
 	}
-	public List<PlayerCharacter> getLivingTargets(PlayerCharacter actor, List<PlayerCharacter> targets)
+	public List<PlayerCharacter> getTargetable(PlayerCharacter actor, List<PlayerCharacter> targets)
 	{
 		List<PlayerCharacter> aliveTargets = new ArrayList<PlayerCharacter>();
 		//fill alive targets
-		for(PlayerCharacter c : targets) if(!c.isDead())aliveTargets.add(c);
+		for(PlayerCharacter c : targets) if(c.isInBattle()) aliveTargets.add(c);
 		
 		//reset to random characters if targeting a dead guy
-		if(aliveTargets.isEmpty())
+		if(aliveTargets.isEmpty() && !targets.isEmpty())
 		{
 			List<PlayerCharacter> aliveChars = new ArrayList<PlayerCharacter>();
 			List<Enemy> aliveEnemies = new ArrayList<Enemy>();
-			for(PlayerCharacter c : partyList)if(!c.isDead())aliveChars.add(c);
-			for(Enemy e : encounter.Enemies())if(!e.isDead())aliveEnemies.add(e);
+			for(PlayerCharacter c : partyList)if(c.isInBattle())aliveChars.add(c);
+			for(Enemy e : encounter.Enemies())if(e.isInBattle())aliveEnemies.add(e);
 			
 			if(actor.isEnemy())
 				if(targets.get(0).isEnemy())
@@ -573,104 +928,39 @@ public class Battle
 		
 		return true;
 	}
+	private boolean isEscaped()
+	{
+		for(PlayerCharacter c : partyList)
+			if(c.isInBattle())
+				return false;
+		
+		return !isDefeated();	  
+	}
 	private boolean isVictory()
 	{
 		for(Enemy e : encounter.Enemies())
-			if(!e.isDead())
+			if(e.isInBattle())
 				return false;
 		
 		return true;
-	}
-		
-	private void changeState(BattleStates newState)
-	{
-		switch(newState)
-		{
-		case START:
-			recedeChar();
-			mainMenu.close();
-			changeStartBarText(txtStart);
-			for(PlayerCharacter c : partyList)
-				c.setFace(faces.Idle);
-			break;
-		case SELECT:
-			updateMenuOptions(newState);
-			mainMenu.open();
-			advanceChar();
-			targets.clear();
-			currentChar.setFace(faces.Idle);
-			break;
-		case SELECTABILITY:
-		case SELECTITEM:
-			updateMenuOptions(newState);
-			break;
-		case ACT:
-			targets.clear();
-			mainMenu.close();
-			initActState();
-			break;
-		case VICTORY:
-			initVictory();
-			break;
-		case DEFEAT:
-			initDefeat();			
-			break;			
-		case TARGET:
-			
-			switch(targetType)
-			{
-			case AllAllies:
-				changeStartBarText(txtTargetAllies);
-				getTouchTargets(-1, -1);
-				break;
-			case AllEnemies:
-				changeStartBarText(txtTargetEnemies);
-				getTouchTargets(-1, -1);
-				break;
-			case Self:
-				changeStartBarText(txtTargetSelf);
-				break;
-			case Single:
-				changeStartBarText(txtTargetSingle);
-				break;
-			case SingleAlly:
-				changeStartBarText(txtTargetSingleAlly);
-				break;
-			case SingleEnemy:
-				changeStartBarText(txtTargetSingleEnemy);
-				break;
-			case Everybody:
-				changeStartBarText(txtTargetEverybody);
-				getTouchTargets(-1, -1);
-				break;
-			}
-			mainMenu.close();
-		default:
-			break;			
-		}
-		
-		state = newState;
-		
 	}
 	private void handleMenuOption(String opt)
 	{
 		if(opt.equals("atk"))
 		{
-			targetType = TargetTypes.Single;
 			currentChar.setBattleAction(Action.Attack);
 			currentChar.setFace(faces.Ready);
-			changeState(BattleStates.TARGET);
+			stateMachine.setState(getTargetState(TargetTypes.Single));
 		}
 		else if(opt.equals("itm"))
 		{
-			changeState(BattleStates.SELECTITEM);
+			stateMachine.setState(getSelectItemState());
 		}
 		else if(opt.equals("act"))
 		{
-			targetType = currentChar.getCombatActionTargetType();
 			currentChar.setBattleAction(Action.CombatAction);
 			currentChar.setFace(faces.Ready);
-			changeState(BattleStates.TARGET);
+			stateMachine.setState(getTargetState(currentChar.getCombatActionTargetType()));
 		}
 		else if(opt.equals("grd"))
 		{
@@ -680,11 +970,12 @@ public class Battle
 		}
 		else if(opt.equals("ab"))
 		{
-			changeState(BattleStates.SELECTABILITY);
+			stateMachine.setState(getSelectAbilityState());
 		}
 		else if(opt.equals("run"))
 		{
-			changeState(BattleStates.SELECT);
+			currentChar.setBattleAction(Action.Run);
+			nextCharacter();
 		}
 	}
 	private void advanceChar()
@@ -731,7 +1022,7 @@ public class Battle
 		
 		//determine first nondead character
 		for(int i = 0; i < partyList.size(); ++i)
-			if(!partyList.get(i).isDead())
+			if(partyList.get(i).isInBattle())
 			{
 				currentCharIndex = i;
 				currentChar = partyList.get(currentCharIndex);
@@ -748,7 +1039,6 @@ public class Battle
 	
 	private void nextCharacter()
 	{
-		//changeState(BattleStates.SELECT);
 		//mainMenu.close();		
 		recedeChar();
 		nextChar = true;
@@ -758,7 +1048,7 @@ public class Battle
 		if(selCharOpened)
 		{
 			if(currentCharIndex == 0)
-				changeState(BattleStates.START);
+				stateMachine.setState(getWaitingForInputState());
 			else
 			{			
 				recedeChar();
@@ -780,7 +1070,7 @@ public class Battle
 					currentChar.unuseItem();
 				
 				currentChar = partyList.get(--currentCharIndex);
-				changeState(BattleStates.SELECT);
+				stateMachine.setState(getSelectState());
 				
 				if(currentChar.getAction() == Action.Item)
 					currentChar.unuseItem();
@@ -790,15 +1080,15 @@ public class Battle
 			{
 				//loop until nondead party member
 				do ++currentCharIndex;
-				while(currentCharIndex < partyList.size() && partyList.get(currentCharIndex).isDead());
+				while(currentCharIndex < partyList.size() && !partyList.get(currentCharIndex).isInBattle());
 				
 				if(currentCharIndex < partyList.size())
 				{					
 					currentChar = partyList.get(currentCharIndex);
-					changeState(BattleStates.SELECT);
+					stateMachine.setState(getSelectState());
 				}
 				else
-					changeState(BattleStates.ACT);				
+					stateMachine.setState(getActState());
 			}			
 			nextChar = prevChar = false;
 		}
@@ -826,27 +1116,8 @@ public class Battle
 		
 		infoPanel.render();
 		
-		switch(state)
-		{				
-		case SELECTITEM:							
-			if(mainMenu.getCurrentSelectedEntry() != null)
-			{
-				mpWindow.getTextAt(0).text = "Qty: "+((Item)mainMenu.getCurrentSelectedEntry().obj).getCount();
-				mpWindow.render();
-			}
-			break;
-			
-		case SELECTABILITY:			
-			if(mainMenu.getCurrentSelectedEntry() != null)
-			{
-				mpWindow.getTextAt(0).text = "Cost: "+((Ability)mainMenu.getCurrentSelectedEntry().obj).MPCost();
-				mpWindow.render();
-			}
-			break;
-		default:
-			break;
+		stateMachine.getState().drawPanels();
 		
-		}
 		displayNamePanel.render();
 	}
 	private void drawSelect()
@@ -887,26 +1158,7 @@ public class Battle
 		
 		handleNextPrev();
 		
-		switch(state)
-		{
-		case ACT:
-			updateActStatus();
-			break;
-		case DEFEAT:
-		case VICTORY:
-			if(messageQueue.size() == 0 && Global.screenFader.isFadedIn())
-				triggerEndBattle();
-			else				
-				if(Global.screenFader.isFadedOut())
-				{
-					Global.map.getBackdrop().unload();
-					Global.musicBox.resumeLastSong();
-					Global.screenFader.fadeIn(2);
-					Global.GameState = States.GS_WORLDMOVEMENT;				
-				}
-		default:
-			break;		
-		}		
+		stateMachine.getState().update();
 	}	
 	public void render()
 	{
@@ -924,21 +1176,7 @@ public class Battle
 	
 	public void backButtonPressed()
 	{
-		switch(state)
-		{
-		case TARGET:
-			changeState(BattleStates.SELECT);
-			if(currentChar.getAction() == Action.Item)
-				currentChar.unuseItem();
-			break;
-		case SELECT:
-			previousCharacter();
-			break;
-		default:
-			break;
-				
-		}
-		
+		stateMachine.getState().backButtonPressed();
 	}
 	public void touchActionUp(int x, int y)
 	{
@@ -948,133 +1186,25 @@ public class Battle
 		}
 		else
 		{
-			switch(state)
-			{
-			case START:
-				changeState(BattleStates.SELECT);
-				break;
-			case SELECT:
-				switch(mainMenu.touchActionUp(x, y))
-				{
-				case Selected:
-					handleMenuOption((String)(mainMenu.getSelectedEntry().obj));
-					break;
-				case Close:
-					previousCharacter();
-					break;
-				default:
-					break;
-				}
-				break;
-			case SELECTABILITY:
-				switch(mainMenu.touchActionUp(x, y))
-				{
-				case Selected:
-					if(!mainMenu.getSelectedEntry().Disabled())
-					{
-						Ability ab = (Ability)(mainMenu.getSelectedEntry().obj);
-						targetType = ab.TargetType();
-						currentChar.setFace(faces.Casting);
-						currentChar.setAbilityToUse(ab);
-						changeState(BattleStates.TARGET);
-					}				
-					break;
-				case Close:
-					changeState(BattleStates.SELECT);
-					break;
-				default:break;
-				}
-				break;
-			case SELECTITEM:
-				switch(mainMenu.touchActionUp(x, y))
-				{
-				case Selected:
-					Item itm = (Item)(mainMenu.getSelectedEntry().obj);
-					targetType = itm.getTargetType();
-					currentChar.setFace(faces.Ready);
-					currentChar.setItemToUse(itm);
-					changeState(BattleStates.TARGET);
-					break;
-				case Close:
-					changeState(BattleStates.SELECT);
-					break;
-				default:break;
-				}
-				break;
-			case TARGET:
-				if(startBar.contains(x, y))
-				{
-					if(currentChar.getAction() == Action.Item)
-						currentChar.unuseItem();
-					changeState(BattleStates.SELECT);
-				}
-					
-				else
-				{
-					if(targets.size() > 0)
-					{
-						//targets were selected
-						//changeState(BattleStates.SELECT);
-						currentChar.setTargets(new ArrayList<PlayerCharacter>(targets));
-						nextCharacter();
-						//targets.clear();
-					
-					}
-					else
-					{
-						if(currentChar.getAction() == Action.Item)
-							currentChar.unuseItem();
-						changeState(BattleStates.SELECT);	
-					}
-										
-				}			
-				break;
-			default:
-				break;
-			}
+			stateMachine.getState().touchActionUp(x, y);
 		}		
 	}
 	public void touchActionDown(int x, int y)
 	{
 		if(messageQueue.size() == 0)
 		{
-			switch(state)
-			{
-			case SELECTABILITY:
-			case SELECTITEM:
-			case SELECT:
-				mainMenu.touchActionDown(x, y);
-				break;
-			case TARGET:
-				getTouchTargets(x, y);
-				break;
-			default:
-				break;
-			}
+			stateMachine.getState().touchActionDown(x, y);
 		}		
 	}
 	public void touchActionMove(int x, int y)
 	{
 		if(messageQueue.size() == 0)
 		{
-			switch(state)
-			{
-			case SELECTABILITY:
-			case SELECTITEM:
-			case SELECT:
-				mainMenu.touchActionMove(x, y);
-				break;
-			case TARGET:
-				getTouchTargets(x, y);
-				break;
-			default:
-				break;
-				
-			}
+			stateMachine.getState().touchActionMove(x, y);
 		}
 		
 	}
-	private void getTouchTargets(int x, int y)
+	private void getTouchTargets(int x, int y, TargetTypes targetType)
 	{
 		targets.clear();		
 		switch(targetType)
@@ -1101,12 +1231,12 @@ public class Battle
 			break;
 		case AllEnemies:
 			for(Enemy e : encounter.Enemies())
-				if(!e.isDead())
+				if(e.isInBattle())
 					targets.add(e);
 			break;
 		case Everybody:
 			for(Enemy e : encounter.Enemies())
-				if(!e.isDead())
+				if(e.isInBattle())
 					targets.add(e);
 			for(PlayerCharacter c : partyList)
 				targets.add(c);
@@ -1148,17 +1278,15 @@ public class Battle
 		targets.add(c);
 	}
 	
-	public enum BattleStates
+	public void cancelToState(BattleState prevState)
 	{
-		START,
-		SELECT,
-		SELECTITEM,
-		SELECTABILITY,
-		TARGET,
-		ACT,
-		RUN,
-		VICTORY,
-		DEFEAT		
+		if(currentChar.getAction() == Action.Item)
+			currentChar.unuseItem();
+		stateMachine.resetToState(prevState);				
 	}
 	
+	public Encounter getEncounter()
+	{
+		return encounter;
+	}
 }
