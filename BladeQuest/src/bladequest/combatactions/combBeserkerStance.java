@@ -18,7 +18,7 @@ public class combBeserkerStance extends Stance {
 	
 	public combBeserkerStance()
 	{
-		name = "Beserker Stance";
+		name = "Beserker";
 		type = DamageTypes.Magic; //ignored
 		targetType = TargetTypes.Self;
 		
