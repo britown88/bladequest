@@ -571,6 +571,13 @@ public class Battle
 		for(PlayerCharacter c : partyList)
 		{
 			int i = c.Index();
+		
+			
+			if (c.getEscaped())
+			{
+				characterPanes[i].hide();
+				continue;
+			}			
 			
 			characterPanes[i].clear();			
 			
