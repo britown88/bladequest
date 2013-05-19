@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.util.Log;
 import bladequest.battleactions.BattleAction;
+import bladequest.battleactions.bactAttackRandomTargets;
 import bladequest.battleactions.bactBreakStance;
 import bladequest.battleactions.bactDamage;
 import bladequest.battleactions.bactDelayedDamageAll;
@@ -559,6 +560,15 @@ public class GameDataLoader
 					dl.values.get(4),
 					Integer.parseInt(dl.values.get(5)));
 		}
+		else if(dl.values.get(0).equals("bactAttackRandomTargets"))
+		{
+			return new bactAttackRandomTargets(
+					Integer.parseInt(dl.values.get(1)),
+					Float.parseFloat(dl.values.get(2)), 
+					getDamageType(dl.values.get(3)),
+					Integer.parseInt(dl.values.get(4)),
+					Float.parseFloat(dl.values.get(5)));
+		}		
 		else if(dl.values.get(0).equals("bactBreakStance"))
 		{
 			return new bactBreakStance(

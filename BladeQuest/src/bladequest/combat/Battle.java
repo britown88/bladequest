@@ -173,6 +173,11 @@ public class Battle
 			{
 				mainMenu.touchActionDown(x, y);
 			}
+			@Override
+			public void touchActionMove(int x, int y)
+			{
+				mainMenu.touchActionMove(x, y);
+			}			
 		};
 	}
 	private BattleState getSelectItemState()
@@ -777,7 +782,7 @@ public class Battle
 				actor.setImageIndex(0);
 			}
 	}
-	private boolean isBattleOver()
+	public boolean isBattleOver()
 	{
 		return isVictory() || isDefeated() || isEscaped();
 	}
