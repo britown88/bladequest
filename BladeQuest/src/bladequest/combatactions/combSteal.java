@@ -77,7 +77,7 @@ public class combSteal extends CombatAction
 	   if (xNormalized > 1.0f) xNormalized = 1.0f; //floating point stupidity
 	   float angle = (float)Math.acos(xNormalized);
 	   //check orientation (ghetto det check)
-	   if (vectorTo.y > 0)
+	   if (vectorTo.y < 0)
 	   {
 		   angle = (float)(Math.PI * 2  - angle);
 	   }
@@ -111,9 +111,9 @@ public class combSteal extends CombatAction
 		float height = distance / 6;
 		
 	    final int steps = 10;
-	    final int stepTime = 3;
+	    final int stepTime = 2;
 	    
-	    final float stepSize = (float)(Math.PI / steps-1);
+	    final float stepSize = (float)(Math.PI / (steps-1));
 	    
 	    float offsetAngle = stealOffsetAngle(vectorTo, distance);
 	    
@@ -123,7 +123,7 @@ public class combSteal extends CombatAction
 	    {
 	    	float angle = stepSize * i;
 	    	float x = (float)Math.cos((double)angle) * (distance/2);
-	    	float y = (float)Math.sin((double)angle) * (height/2);
+	    	float y = (float)Math.sin((double)angle) * (-height/2);
 	        Point p = getRotatedPoint(x, y, offsetAngle);
 	        points.add(add(p, center));
 	    }
