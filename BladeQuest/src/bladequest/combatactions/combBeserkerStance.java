@@ -1,5 +1,6 @@
 package bladequest.combatactions;
 
+import android.R.bool;
 import bladequest.battleactions.bactInflictStatus;
 import bladequest.combat.BattleEvent;
 import bladequest.combat.BattleEventBuilder;
@@ -7,6 +8,7 @@ import bladequest.combat.BattleEventObject;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleSprite.faces;
 import bladequest.statuseffects.StatusEffect;
+import bladequest.world.Ability;
 import bladequest.world.DamageTypes;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
@@ -48,15 +50,22 @@ public class combBeserkerStance extends Stance {
 				this.stance = stance;
 				return this;
 			}
+			private void trySetEnabledState(Ability ability, boolean on)
+			{
+				if (ability != null)
+				{
+					ability.setEnabled(on);
+				}
+			}
 			public void onInflict(PlayerCharacter c) 
 			{
-				c.addAbility("assault");
-				c.addAbility("zornhau");
+				trySetEnabledState(c.getAbility("assault"), true);
+				trySetEnabledState(c.getAbility("zornhau"), true);
 			}
 			public void onRemove(PlayerCharacter c) 
 			{
-				c.removeAbility("assault");
-				c.removeAbility("zornhau");
+				trySetEnabledState(c.getAbility("assault"), false);
+				trySetEnabledState(c.getAbility("zornhau"), false);
 			}
 			public Stance getStance() 
 			{

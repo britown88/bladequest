@@ -907,6 +907,17 @@ public class PlayerCharacter
 			}
 		}
 	}
+	public Ability getAbility(String abilityName)
+	{
+		for (Ability ability : abilities)
+		{
+			if (ability.name.equals(abilityName))
+			{
+				return ability;
+			}
+		}
+		return null;
+	}
 	public void addLearnableAbility(String name, int level)
 	{
 		learnableAbilities.add(new LearnableAbility(name, level));

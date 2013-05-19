@@ -26,6 +26,8 @@ endcharacter
 character luc "Luc" bluc luc
 portrait 1 0
 abilities "Swordplay"
+ability assault
+ability zornhau
 combataction combStance
 basestats 10 4 7 2
 level 4

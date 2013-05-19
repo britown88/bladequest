@@ -221,7 +221,7 @@ public class Battle
 			@Override
 			public void addMenuItems() {
 				for(Ability a : currentChar.getAbilities())
-					mainMenu.addItem(a.getDisplayName(), a, a.MPCost() > currentChar.getMP());
+					mainMenu.addItem(a.getDisplayName(), a, !a.isEnabled() || a.MPCost() > currentChar.getMP());
 			}
 		};
 	}
