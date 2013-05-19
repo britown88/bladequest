@@ -15,8 +15,7 @@ public class ObjectState {
 	private Tile tileSprite;
 	private int currentAction;
 	private boolean isRunning;
-	private boolean autoStart, animated, faceOnMove, faceOnActivate, waitOnActivate;
-	
+	private boolean autoStart, animated, faceOnMove, faceOnActivate, waitOnActivate;	
 	
 	private Layer layer; 
 	private boolean[] collSides;
@@ -26,7 +25,6 @@ public class ObjectState {
 	private int moveRange;
 	
 	private int imageIndex;
-
 	
 	private GameObject parent;
 	
@@ -280,7 +278,7 @@ public class ObjectState {
 	}
 	
 	public void update()
-	{	
+	{			
 		if(isRunning && waitOnActivate)
 			Global.party.allowMovement = false;
 		
@@ -409,9 +407,7 @@ public class ObjectState {
 		{
 			if(animated)
 					updateAnimation();
-				spr.render(x, y, imageIndex);
-
-				
+			spr.render(x, y, imageIndex);				
 		}
 		else
 			if(tileSprite != null)

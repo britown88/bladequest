@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.graphics.Point;
 import bladequest.actions.Action;
+import bladequest.graphics.ReactionBubble;
 import bladequest.graphics.Tile;
 
 public class GameObject {
@@ -52,6 +53,16 @@ public class GameObject {
 	public void setStateAutoStart(int index, boolean autoStart){states.get(index).setAutoStart(autoStart);}	
 	public Layer getLayer(){return states.get(currentState).getLayer();}
 	public void addState(){states.add(new ObjectState(this));}
+	
+	public void openReactionBubble(ReactionBubble bubble, float duration, boolean loop)
+	{
+		Global.openReactionBubble(bubble, name, new Point(worldPos.x, worldPos.y - 32), duration, loop);
+	}
+	public void closeReactionBubble()
+	{
+		Global.closeReactionBubble(name);
+	}
+	
 	public void setStateSprite(int index, String str){states.get(index).setSprite(str);}
 	public void addAction(int index, Action act){states.get(index).addAction(act);}	
 	public void addSwitchCondition(int index, String str){states.get(index).addSwitchCondition(str);}
@@ -175,6 +186,7 @@ public class GameObject {
 	
 	public void update()
 	{
+		
 		updateState();
 		
 		if(states.get(currentState).isRunning())
@@ -254,7 +266,11 @@ public class GameObject {
 	public void render() 
 	{
 		if(!hide)
+		{
 			states.get(currentState).render(worldPos.x, worldPos.y);
+
+		}
+			
 
 	}
 

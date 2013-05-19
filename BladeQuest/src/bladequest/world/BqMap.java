@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import android.graphics.Bitmap;
@@ -23,6 +24,7 @@ import bladequest.actions.actPanControl;
 import bladequest.actions.actPath;
 import bladequest.actions.actPauseMusic;
 import bladequest.actions.actPlayMusic;
+import bladequest.actions.actReactionBubble;
 import bladequest.actions.actResetGame;
 import bladequest.actions.actRestoreParty;
 import bladequest.actions.actSaveMenu;
@@ -431,6 +433,8 @@ public class BqMap
 		commands.put("actsavemenu", new CommandLine(){public void execute(DataLine dl) {actsavemenu(dl);};});
 		commands.put("actteleport", new CommandLine(){public void execute(DataLine dl) {actteleport(dl);};});
 		commands.put("actwait", new CommandLine(){public void execute(DataLine dl) {actwait(dl);};});
+		commands.put("actopenbubble", new CommandLine(){public void execute(DataLine dl) {actOpenBubble(dl);};});
+		commands.put("actclosebubble", new CommandLine(){public void execute(DataLine dl) {actCloseBubble(dl);};});
 		
 		commands.put("moveleft", new CommandLine(){public void execute(DataLine dl) {patmoveleft(dl);};});
 		commands.put("moveup", new CommandLine(){public void execute(DataLine dl) {patmoveup(dl);};});
@@ -452,7 +456,7 @@ public class BqMap
 	}	
 	
 	private void size(DataLine dl){mapSize = new Point(Integer.parseInt(dl.values.get(0)), Integer.parseInt(dl.values.get(1)));}
-	private void tileset(DataLine dl){tilesetName = dl.values.get(0).toLowerCase();backdrop = Global.scenes.get(tilesetName + "backdrop");initTilePlates();}
+	private void tileset(DataLine dl){tilesetName = dl.values.get(0).toLowerCase(Locale.US);backdrop = Global.scenes.get(tilesetName + "backdrop");initTilePlates();}
 	private void displayname(DataLine dl){displayName = dl.values.get(0);}
 	private void BGM(DataLine dl){defaultBGM = dl.values.get(0);}
 	
@@ -607,6 +611,21 @@ public class BqMap
 	private void actpausemusic(DataLine dl){
 		loadedObject.addAction(loadedStateIndex, 
 			new actPauseMusic());}
+	
+	private void actOpenBubble(DataLine dl){
+		loadedObject.addAction(loadedStateIndex, 
+				new actReactionBubble(
+						dl.values.get(1), 
+						dl.values.get(2), 
+						Float.parseFloat(dl.values.get(3)), 
+						Boolean.parseBoolean(dl.values.get(4)),
+						Boolean.parseBoolean(dl.values.get(5))));
+	}
+	private void actCloseBubble(DataLine dl){
+		loadedObject.addAction(loadedStateIndex, 
+				new actReactionBubble(dl.values.get(1)));
+	}
+	
 	private void actpan(DataLine dl){
 		loadedObject.addAction(loadedStateIndex, 
 			new actPanControl(

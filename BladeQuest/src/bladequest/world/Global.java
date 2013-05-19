@@ -35,6 +35,7 @@ import bladequest.combat.Battle;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleSprite;
 import bladequest.graphics.Icon;
+import bladequest.graphics.ReactionBubble;
 import bladequest.graphics.Renderer;
 import bladequest.graphics.Scene;
 import bladequest.graphics.ScreenFader;
@@ -87,6 +88,7 @@ public class Global
 	public static Map<String, Song> music;
 	public static Map<String, Integer> sfx;
 	public static Map<String, Icon> icons;
+	public static Map<String, ReactionBubble> reactionBubbles;
 	public static Map<String, Merchant> merchants;
 	public static Map<String, BattleAnim> battleAnims;
 	public static Map<String, WeaponSwing> weaponSwingModels;
@@ -603,6 +605,8 @@ public class Global
 			break;
 		//case GS_SHOWSCENE:
     	case GS_WORLDMOVEMENT:
+    		updateReactionBubbles();
+    		
     		if(worldMsgBox != null)
     			worldMsgBox.update();
     		
@@ -788,6 +792,33 @@ public class Global
 		appRunning = false;
         activity.panel.destroyContext();
         activity.finish();
+	}
+	
+	private static void CreateReactionBubble(String name, int frameLength, int x, int y, int frameCount)
+	{
+		
+		Sprite spr = new Sprite(name, "reactionbubbles", 32, 64);	
+		
+		for(int i = 0; i < frameCount; ++i)
+			spr.addFrame("down", new Rect((x+i)*16, y*32, (x+i)*16+16, y*32+32));
+		
+		spr.changeFace("down");
+		
+		Global.reactionBubbles.put(name, new ReactionBubble(spr, frameLength));
+
+	}
+	
+	private static void genReactionBubbles()
+	{
+		reactionBubbles = new HashMap<String, ReactionBubble>();
+		CreateReactionBubble("blank", 0, 0, 0, 1);
+		CreateReactionBubble("sleep", 20, 1, 0, 4);
+		CreateReactionBubble("qmark", 5, 5, 0, 2);
+		CreateReactionBubble("angry", 5, 7, 0, 4);
+		CreateReactionBubble("dots", 15, 0, 1, 3);
+		CreateReactionBubble("exclam", 5, 3, 1, 3);
+		CreateReactionBubble("sweat", 8, 6, 1, 3);
+		
 	}
 	
 	//created all the sprites and faces for a standard character in the spritesheet
@@ -1034,6 +1065,7 @@ public class Global
 		scenes = new HashMap<String, Scene>();
 		loadScenes("drawable/scenes");		
 		genIcons();
+		genReactionBubbles();
 		
 		weaponSwingModels = new HashMap<String, WeaponSwing>();
 		genWeaponSwings();
@@ -1072,6 +1104,7 @@ public class Global
 		if(maps== null)maps = new HashMap<String, String>(); else maps.clear(); 
 		if(merchants== null)merchants = new HashMap<String, Merchant>(); else merchants.clear(); 
 		if(battleAnims== null)battleAnims = new HashMap<String, BattleAnim>(); else battleAnims.clear(); 
+		//if(reactionBubbles== null)reactionBubbles = new HashMap<String, ReactionBubble>(); else reactionBubbles.clear(); 
 		
 		//reset pan
 		setPanned(0, 0);
@@ -1103,27 +1136,28 @@ public class Global
 		loading = false;
 
 		//demo start info, do not fuck with!
-//		screenFader.setFadeColor(255, 0, 0, 0);
-//		screenFader.setFaded();
-//		party.teleport(16, 5);		
-//		party.insertCharacter("aramis", 1);			
-//		LoadMap("prisonb2");
+		screenFader.setFadeColor(255, 0, 0, 0);
+		screenFader.setFaded();
+		party.teleport(16, 5);		
+		party.insertCharacter("aramis", 1);	
+		party.getCharacter("aramis").setDisplayName("?????");	
+		LoadMap("prisonb2");
 		
 		//test params
-		party.teleport(1, 3);		
+		//party.teleport(1, 3);		
 		//party.insertCharacter("aramis", 1);	
-		party.addCharacter("aramis");
-		party.getCharacter("aramis").setDisplayName("?????");		
+		//party.addCharacter("aramis");
+		//party.getCharacter("aramis").setDisplayName("?????");		
 		
-		LoadMap("test");	
-		party.addCharacter("joy");
+		//LoadMap("test");	
+		//party.addCharacter("joy");
 		//for(int i = 0; i < 10; ++i)
 		//party.getPartyMembers()[0].applyStatusEffect(new sePoison(100));
-		party.addCharacter("luc");		
+		//party.addCharacter("luc");		
 		
 		//party.addCharacter("joy");				
-		switches.put("guardasleep", true);
-		switches.put("startgame", true);			
+		//switches.put("guardasleep", true);
+		//switches.put("startgame", true);			
 		
 	}
 	
@@ -1163,6 +1197,51 @@ public class Global
 	{
 		
 		return playingAnims.isEmpty();
+	}
+
+
+	private static Map<String, ReactionBubble> playingReactions;
+	
+	public static void openReactionBubble(ReactionBubble bubble, String target, Point drawPos, float duration, boolean loop)
+	{
+		if(playingReactions == null)
+			playingReactions = new HashMap<String, ReactionBubble>();
+		
+		bubble.open(drawPos, duration, loop);		
+		playingReactions.put(target, bubble);
+	}
+	
+	public static void closeReactionBubble(String target)
+	{
+		if(playingReactions == null)
+			playingReactions = new HashMap<String, ReactionBubble>();
+		
+		if(playingReactions.get(target) != null)
+			playingReactions.remove(target);
+	}
+	
+	private static void updateReactionBubbles()
+	{
+		if(playingReactions == null)
+			playingReactions = new HashMap<String, ReactionBubble>();
+		
+		List<String> playingBubbleNames = new ArrayList<String>();
+		for(String name : playingReactions.keySet())
+			if(playingReactions.get(name).isDone())
+				playingBubbleNames.add(name);			
+		
+		for(String name : playingBubbleNames)
+			playingReactions.remove(name);
+	}
+
+	public static void renderReactionBubbles() 
+	{
+		if(playingReactions == null)
+			playingReactions = new HashMap<String, ReactionBubble>();
+		
+		for(ReactionBubble bubble : playingReactions.values())
+			bubble.render();
+		
 	}
 
 }

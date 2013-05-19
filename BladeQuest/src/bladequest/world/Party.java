@@ -7,6 +7,7 @@ import java.util.List;
 
 import android.graphics.Point;
 import android.graphics.Rect;
+import bladequest.graphics.ReactionBubble;
 import bladequest.graphics.Sprite;
 import bladequest.graphics.Tile;
 import bladequest.pathfinding.AStarObstacle;
@@ -367,6 +368,16 @@ public class Party
 	public int getGold(){return gold;}	
 	public List<Point> getPath(){return movePath;}
 	
+	public void openReactionBubble(ReactionBubble bubble, float duration, boolean loop)
+	{
+		Global.openReactionBubble(bubble, "party", new Point(worldPos.x, worldPos.y - 32), duration, loop);
+	}
+	public void closeReactionBubble()
+	{
+		Global.closeReactionBubble("party");
+	}
+
+	
 	//gets character from party, null if character is not in party
 	public PlayerCharacter getCharacter(String name)
 	{
@@ -548,27 +559,26 @@ public class Party
 			for(StatusEffect se : c.getStatusEffects())
 				se.onStep(c);
 		
-		else//dont go into battle if menu was opened
+		//check for encounters, if not, continue movement
+		if(objPath != null)
+			HandleObjectPath();
+		else
 		{
-			//check for encounters, if not, continue movement
-			if(objPath != null)
-				HandleObjectPath();
+			if(stepActivate() || initBattle())
+				clearMovementPath();
+			else if(Global.openMenuFlag)		
+				Global.openMainMenuSafe();
+			else if(Global.openDebugFlag)		
+				Global.openDebugMenuSafe();
 			else
-			{
-				if(stepActivate() || initBattle())
-					clearMovementPath();
-				else if(Global.openMenuFlag)		
-					Global.openMainMenuSafe();
-				else if(Global.openDebugFlag)		
-					Global.openDebugMenuSafe();
-				else
-					mapPath();
-			}
-		}		
+				mapPath();
+		}
+	
 	}
 	
 	public void update()
 	{
+		
 		//handle path waiting
 		if(objPathWaiting)
 		{
@@ -747,6 +757,7 @@ public class Party
 		{
 			Sprite spr = firstCharSpr;
 			spr.render(worldPos.x, worldPos.y, imageIndex);
+
 		}
 		
 	}

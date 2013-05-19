@@ -660,6 +660,20 @@ sprite "tile 7 5"
 face 3
 action battle 2rats
 endobject
+object BUBBLES 6 3
+addstate
+collision True True True True
+movement 0 0
+opts False False False
+sprite "tile 7 5"
+face 3
+action openbubble sleep party 2 True True
+action openbubble qmark party 2 False True
+action openbubble angry party 2 True True
+action openbubble dots party 2 True True
+action openbubble exclam party 2 False True
+action openbubble sweat party 2 False True
+endobject
 object Heals 2 5
 addstate
 collision True True True True

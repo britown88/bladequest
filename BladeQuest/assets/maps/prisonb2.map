@@ -714,6 +714,7 @@ action message "?????:\nThere's no getting around this guy.  Guess I'll catch a 
 action fade 1 255 0 0 0 True True
 action restore
 action switch guardasleep True
+action openbubble sleep sleepguard -1 True False
 action switch prisonguardnewspeech True
 action fade 2 255 0 0 0 False True
 addstate
@@ -1097,13 +1098,17 @@ action inventory prisonkey 1 False
 addstate
 collision True True True True
 movement 0 0
-opts False False False
+opts True False False
 itemcondition prisonkey
 sprite "guard"
 face 3
+action openbubble exclam sleepguard 2 False False 
 action message "Guard:\nHey!"
-action message "....."
-action message "zzzzzzzz...."
+action closebubble sleepguard
+action wait 1.0
+action openbubble dots sleepguard 1 False False ait
+action wait 2.0
+action openbubble sleep sleepguard -1 True False 
 endobject
 object bonesantidote 2 5
 addstate

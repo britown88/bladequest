@@ -8,8 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import bladequest.world.Global;
 
-
-
 public class Sprite {
 	private Bitmap bitmap;
 	private String bmpName;
@@ -85,20 +83,19 @@ public class Sprite {
 	}
 	
 	public void addFrame(String face, int left, int top, int right, int bottom)
-	{
-		if(!frameLists.containsKey(face))
-			frameLists.put(face, new Vector<Rect>());
-		
-		frameLists.get(face).add(new Rect(left, top,right, bottom));
+	{		
+		addFrame(face, new Rect(left, top, right, bottom));
 	}
-	
-	
 	public void addFrame(String face, int size, int x, int y)
 	{
+		addFrame(face, new Rect(x*size, y*size, x*size+size, y*size+size));
+	}
+	public void addFrame(String face, Rect rect)
+	{
 		if(!frameLists.containsKey(face))
 			frameLists.put(face, new Vector<Rect>());
 		
-		frameLists.get(face).add(new Rect(x*size, y*size, x*size+size, y*size+size));
+		frameLists.get(face).add(rect);
 	}
 
 	

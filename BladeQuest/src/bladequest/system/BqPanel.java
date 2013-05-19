@@ -232,7 +232,8 @@ implements SurfaceHolder.Callback
     	Global.map.renderBackgroundObjs();  	
     	Global.party.render();      	 
     	Global.map.renderForeground(loadList);
-    	Global.map.renderForegroundObjs(); 
+    	Global.map.renderForegroundObjs();
+    	Global.renderReactionBubbles();
     	Global.renderAnimations();
     	Global.map.renderDisplayName();    	
     	Global.screenFader.render();
