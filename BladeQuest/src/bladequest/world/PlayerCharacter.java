@@ -750,7 +750,18 @@ public class PlayerCharacter
 		setFace(faces.Dead);
 		
 		//remove onDeath status effects
-		List<StatusEffect> newList = new ArrayList<StatusEffect>();		
+		List<StatusEffect> newList = new ArrayList<StatusEffect>();
+		
+		for (StatusEffect se : StatusEffect.filterList(statusEffects, new StatusEffect.Filter(){
+			@Override
+			public boolean filter(StatusEffect effect) {
+				return effect.removesOnDeath();
+			}
+		})) 
+		{
+			se.onRemove(this);
+		}
+		
 		for(StatusEffect se : statusEffects)
 			if(!se.removesOnDeath())
 				newList.add(se);		
@@ -895,6 +906,17 @@ public class PlayerCharacter
 				return;
 			}
 		}
+	}
+	public Ability getAbility(String abilityName)
+	{
+		for (Ability ability : abilities)
+		{
+			if (ability.name.equals(abilityName))
+			{
+				return ability;
+			}
+		}
+		return null;
 	}
 	public void addLearnableAbility(String name, int level)
 	{

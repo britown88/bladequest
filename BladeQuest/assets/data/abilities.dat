@@ -5,10 +5,12 @@ action bactInflictStatus -1 True sePoison 10
 endability
 #
 ability assault "Assault" movetest physicalignoredef single 2 100 False
+startsDisabled
 action bactDamage -1 1.0f physicalignoredef
 endability
 #
 ability zornhau "Zornhau" noanim physicalignoredef allenemies 5 100 False
+startsDisabled
 action bactDelayedDamageAll 3 1.2f physicalignoredef movetest 2
 action bactBreakStance 9
 endability

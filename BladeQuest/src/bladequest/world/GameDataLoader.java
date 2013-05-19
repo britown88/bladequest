@@ -406,6 +406,10 @@ public class GameDataLoader
 					Boolean.parseBoolean(dl.values.get(7)));
 			
 		}
+		else if(dl.item.equals("startsDisabled"))
+		{
+			ab.setEnabled(false);
+		}
 		else if(dl.item.equals("action"))
 		{
 			ab.addAction(loadBattleAction(dl));

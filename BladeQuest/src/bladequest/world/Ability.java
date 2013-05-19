@@ -15,6 +15,7 @@ public class Ability
 	private int mpcost, accuracy;	
 	private boolean usableOutOfBattle;
 	private String animation;
+	private boolean enabled;
 	
 	public String name;
 	
@@ -29,8 +30,8 @@ public class Ability
 		this.mpcost = mpcost;
 		this.usableOutOfBattle = usableOutOfBattle;
 		this.animation = animation;
-
 		this.accuracy = accuracy;
+		this.enabled = true;
 		
 		actions = new ArrayList<BattleAction>();
 	}
@@ -49,6 +50,8 @@ public class Ability
 	public TargetTypes TargetType() { return targetType;}
 	public int MPCost() { return mpcost;}
 	public int Accuracy() { return accuracy;}
+	public boolean isEnabled() { return enabled;}
+	public void setEnabled(boolean enabled) {this.enabled = enabled;}
 	
 	public BattleAnim getAnimation()
 	{

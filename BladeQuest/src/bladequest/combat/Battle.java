@@ -221,7 +221,7 @@ public class Battle
 			@Override
 			public void addMenuItems() {
 				for(Ability a : currentChar.getAbilities())
-					mainMenu.addItem(a.getDisplayName(), a, a.MPCost() > currentChar.getMP());
+					mainMenu.addItem(a.getDisplayName(), a, !a.isEnabled() || a.MPCost() > currentChar.getMP());
 			}
 		};
 	}
@@ -249,6 +249,7 @@ public class Battle
 					break;
 				case Self:
 					changeStartBarText(txtTargetSelf);
+					getTouchTargets(-1, -1, targetType);
 					break;
 				case Single:
 					changeStartBarText(txtTargetSingle);
@@ -769,7 +770,7 @@ public class Battle
 			displayNamePanel.hide();
 			//battleEvents.get(0).getSource().acting = false;
 			PlayerCharacter actor = battleEvents.get(0).getSource();			
-			if(!actor.isEnemy())
+			if(!actor.isEnemy() && actor.getAction() != Action.Guard)
 			{
 				recedeChar();
 				actor.setFace(faces.Idle);
@@ -1132,6 +1133,8 @@ public class Battle
 	{
 		for(PlayerCharacter t : targets)
 		{
+			if (t.getEscaped()) continue;
+			
 			Global.renderer.drawRect(t.getRect(), selectPaint, true);
 			
 			//draw enemy names
