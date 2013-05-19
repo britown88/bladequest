@@ -750,7 +750,18 @@ public class PlayerCharacter
 		setFace(faces.Dead);
 		
 		//remove onDeath status effects
-		List<StatusEffect> newList = new ArrayList<StatusEffect>();		
+		List<StatusEffect> newList = new ArrayList<StatusEffect>();
+		
+		for (StatusEffect se : StatusEffect.filterList(statusEffects, new StatusEffect.Filter(){
+			@Override
+			public boolean filter(StatusEffect effect) {
+				return effect.removesOnDeath();
+			}
+		})) 
+		{
+			se.onRemove(this);
+		}
+		
 		for(StatusEffect se : statusEffects)
 			if(!se.removesOnDeath())
 				newList.add(se);		

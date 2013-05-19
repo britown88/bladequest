@@ -48,7 +48,9 @@ public class bactTryEscape  extends BattleAction {
 		state.argb(255, 255, 255, 255);
 		state.pos1 = new Point((Global.vpWidth-Battle.partyPos.x-Battle.advanceDistance), 0);
 		state.size = new Point(playerSprite.getWidth(), playerSprite.getHeight());
-		baObj.addState(state);				
+		baObj.addState(state);		
+		
+		baObj.interpolateLinearly();
 		
 		anim.addObject(baObj);
 		
