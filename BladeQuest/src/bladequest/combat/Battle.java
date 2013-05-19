@@ -202,6 +202,11 @@ public class Battle
 				}
 			}
 			@Override
+			public void backButtonPressed()
+			{
+				cancelToPrevState();
+			}
+			@Override			
 			public void touchActionUp(int x, int y) 
 			{
 				switch(mainMenu.touchActionUp(x, y))
@@ -260,6 +265,11 @@ public class Battle
 				}
 			}
 			@Override
+			public void backButtonPressed()
+			{
+				cancelToPrevState();
+			}
+			@Override			
 			public void touchActionUp(int x, int y)
 			{
 				switch(mainMenu.touchActionUp(x, y))
