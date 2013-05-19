@@ -1,9 +1,10 @@
 package bladequest.combatactions;
 import java.util.List;
 
+import bladequest.combat.BattleEventBuilder;
 import bladequest.combat.DamageMarker;
-import bladequest.world.PlayerCharacter;
 import bladequest.world.DamageTypes;
+import bladequest.world.PlayerCharacter;
 import bladequest.world.TargetTypes;
 
 public class CombatAction 
@@ -14,6 +15,7 @@ public class CombatAction
 	
 	public CombatAction(){}	
 	public void execute(List<PlayerCharacter> targets, List<DamageMarker> markers){}
+	public void buildEvents(BattleEventBuilder builder){}
 	
 	public String getName() { return name; }
 	public String getActionText() { return actionText; }

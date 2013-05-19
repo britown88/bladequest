@@ -61,6 +61,8 @@ public class PlayerCharacter
 	private List<Ability> abilities;
 	private List<LearnableAbility> learnableAbilities;
 	
+	private boolean visible;
+	
 	public PlayerCharacter(String name, String displayNam, String bSpr, String wSpr)
 	{
 		this.name = name;
@@ -81,6 +83,7 @@ public class PlayerCharacter
 		learnableAbilities = new ArrayList<LearnableAbility>();
 		portrait = new Point(0,0);
 		position = new Point(0,0);
+		visible = true;
 	}
 	
 	public PlayerCharacter(PlayerCharacter c)
@@ -125,6 +128,7 @@ public class PlayerCharacter
 		statusEffects = new ArrayList<StatusEffect>(c.statusEffects);
 		
 		position = new Point(0,0);
+		visible = c.visible;
 	}
 
 	
@@ -1017,16 +1021,18 @@ public class PlayerCharacter
 		if(battleSpr.getFace() != faces.Attack)
 			updateAnimation();//dont update attack anim, it's managed by battle
 		
-		battleSpr.render(position.x, position.y, imageIndex, false);
-		
-		//draw weapon swing
-		if(battleSpr.getFace() == faces.Attack)
+		if (visible)
 		{
-			WeaponSwingDrawable swing = getWeaponSwing();
-			if(swing != null)
-				swing.render(imageIndex, position.x-20, position.y-6);
-		}
+			battleSpr.render(position.x, position.y, imageIndex, false);
 			
+			//draw weapon swing
+			if(battleSpr.getFace() == faces.Attack)
+			{
+				WeaponSwingDrawable swing = getWeaponSwing();
+				if(swing != null)
+					swing.render(imageIndex, position.x-20, position.y-6);
+			}
+		}	
 		
 	}
 	
@@ -1044,6 +1050,10 @@ public class PlayerCharacter
 	public int getHeight() { return battleSpr.getHeight(); }
 	public void setPosition(int x, int y) { position = new Point(x, y);}	
 	public void setPosition(Point p) {position = p;}
+	
+	
+	public void setVisible(boolean isVisible) {visible = isVisible;}
+	public boolean getVisible() { return visible;}
 	
 	public enum Action
 	{

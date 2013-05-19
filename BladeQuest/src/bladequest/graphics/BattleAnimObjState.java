@@ -103,9 +103,9 @@ public class BattleAnimObjState
 	
 	public enum PosTypes
 	{
-		Source,
-		Target,
-		Screen
+		Source,  //relative to source
+		Target, //relative to target
+		Screen  //absolute coordinates
 	}
 
 }

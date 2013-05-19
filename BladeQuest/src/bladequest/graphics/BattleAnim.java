@@ -40,7 +40,19 @@ public class BattleAnim
 		
 		playing = false;		
 	}
-	
+	//take the frame number from an animation and convert it to the frame time of the event
+	public int syncToAnimation(int frame)
+	{
+		int actualFrame = (int)(getFrameLength() * (frame == -1 ? getFinalFrame() : frame));
+		
+		return actualFrame;
+	}
+	public int syncToAnimation(float animPercent)
+	{
+		int actualFrame = (int)(getFrameLength() * (getFinalFrame()*animPercent));
+		
+		return actualFrame;
+	}
 	public float getFrameLength(){ return framePeriod;}
 	public void loop() { loops = true; }
 	public void addObject(BattleAnimObject obj){objects.add(obj);}

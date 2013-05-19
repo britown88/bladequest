@@ -497,9 +497,6 @@ public class Battle
 				BattleEvent currentEvent = battleEvents.get(0);
 				PlayerCharacter actor = battleEvents.get(0).getSource();
 				List<PlayerCharacter> targets = currentEvent.getTargets();
-				List<PlayerCharacter> aliveTargets = new ArrayList<PlayerCharacter>();
-				//fill alive targets
-				for(PlayerCharacter c : targets)if(!c.isDead())aliveTargets.add(c);
 				
 				//set frame text
 				switch(actor.getAction())
@@ -513,32 +510,8 @@ public class Battle
 					nextActorInit();
 				else 
 				{					
-					//reset to random characters if targeting a dead guy
-					if(aliveTargets.isEmpty())
-					{
-						List<PlayerCharacter> aliveChars = new ArrayList<PlayerCharacter>();
-						List<Enemy> aliveEnemies = new ArrayList<Enemy>();
-						for(PlayerCharacter c : partyList)if(!c.isDead())aliveChars.add(c);
-						for(Enemy e : encounter.Enemies())if(!e.isDead())aliveEnemies.add(e);
-						
-						if(actor.isEnemy())
-							if(targets.get(0).isEnemy())
-								//select new enemy
-								aliveTargets.add(aliveEnemies.get(Global.rand.nextInt(aliveEnemies.size())));
-							else
-								//select new ally
-								aliveTargets.add(aliveChars.get(Global.rand.nextInt(aliveChars.size())));
-						else
-							if(targets.get(0).isEnemy())
-								//select new enemy
-								aliveTargets.add(aliveEnemies.get(Global.rand.nextInt(aliveEnemies.size())));
-							else
-								//reselect original target
-								aliveTargets.add(targets.get(0));
-
-					}
 					//reset targets
-					currentEvent.setTargets(aliveTargets);
+					currentEvent.setTargets(getLivingTargets(actor, targets));
 					
 					if(actor.getAction() == Action.Ability)
 					{
@@ -558,6 +531,39 @@ public class Battle
 				}
 			}
 		}
+	}
+	public List<PlayerCharacter> getLivingTargets(PlayerCharacter actor, List<PlayerCharacter> targets)
+	{
+		List<PlayerCharacter> aliveTargets = new ArrayList<PlayerCharacter>();
+		//fill alive targets
+		for(PlayerCharacter c : targets) if(!c.isDead())aliveTargets.add(c);
+		
+		//reset to random characters if targeting a dead guy
+		if(aliveTargets.isEmpty())
+		{
+			List<PlayerCharacter> aliveChars = new ArrayList<PlayerCharacter>();
+			List<Enemy> aliveEnemies = new ArrayList<Enemy>();
+			for(PlayerCharacter c : partyList)if(!c.isDead())aliveChars.add(c);
+			for(Enemy e : encounter.Enemies())if(!e.isDead())aliveEnemies.add(e);
+			
+			if(actor.isEnemy())
+				if(targets.get(0).isEnemy())
+					//select new enemy
+					aliveTargets.add(aliveEnemies.get(Global.rand.nextInt(aliveEnemies.size())));
+				else
+					//select new ally
+					aliveTargets.add(aliveChars.get(Global.rand.nextInt(aliveChars.size())));
+			else
+				if(targets.get(0).isEnemy())
+					//select new enemy
+					aliveTargets.add(aliveEnemies.get(Global.rand.nextInt(aliveEnemies.size())));
+				else
+					//reselect original target
+					aliveTargets.add(targets.get(0));
+
+		}
+		
+		return aliveTargets;
 	}
 	private boolean isDefeated()
 	{

@@ -16,6 +16,7 @@ import bladequest.world.Item;
 public class BattleEvent 
 {
 	private static final long actTimerLength = 150;//milliseconds
+	public static int frameFromActIndex(int index){return (int)(index*actTimerLength);}	
 	
 	private PlayerCharacter source;
 	private List<PlayerCharacter> targets;
@@ -38,39 +39,42 @@ public class BattleEvent
 	public PlayerCharacter getSource() { return source; }
 	public List<PlayerCharacter> getTargets() { return targets;}	
 	public boolean isDone(){ return done;}	
-	private int frameFromActIndex(int index){return (int)(index*actTimerLength);}	
 	
-	//take the frame number from an animation and convert it to the frame time of the event
-	private int syncToAnimation(int frame)
+	private int syncToAnimationWithOffset(int frame)
 	{
-		int startFrame = frameFromActIndex(animStartIndex);
-		int actualFrame = (int)(anim.getFrameLength() * (frame == -1 ? anim.getFinalFrame() : frame));
-		
-		return startFrame + actualFrame;
+	  return anim.syncToAnimation(frame) + frameFromActIndex(animStartIndex);
 	}
-	private int syncToAnimation(float animPercent)
+	
+	private int syncToAnimationWithOffset(float framePercent)
 	{
-		int startFrame = frameFromActIndex(animStartIndex);
-		int actualFrame = (int)(anim.getFrameLength() * (anim.getFinalFrame()*animPercent));
-		
-		return startFrame + actualFrame;
+	  return anim.syncToAnimation(framePercent) + frameFromActIndex(animStartIndex);
 	}
+	
 	
 	//get the frameIndex that falls aftr the end of the animation
 	private int getFinalAnimFrameIndex()
 	{
-		int finalFrame = syncToAnimation(-1);
+		int finalFrame = syncToAnimationWithOffset(-1);
 		int index = (int)(finalFrame / actTimerLength)+1;
 		
 		return index;
 	}
 	
+	private void setBattleAnimation(BattleAnim newAnim, int animOffset)
+	{
+	  anim = newAnim;
+	  animStartIndex = animOffset;
+	  if (anim != null)
+	  {
+		  objects.add(new BattleEventObject(frameFromActIndex(animStartIndex), anim, source, targets));
+	  }
+	}
+	
 	public void setTargets(List<PlayerCharacter> targets)
 	{
 		this.targets = targets;
-		for(BattleEventObject obj : objects)
-			obj.setTargets(targets);
-			
+		objects.clear();
+		init();
 	}
 	
 	public void init()
@@ -89,7 +93,7 @@ public class BattleEvent
 			objects.add(new BattleEventObject(frameFromActIndex(4), faces.Attack, 2, source));	
 			objects.add(new BattleEventObject(frameFromActIndex(5), faces.Ready, 0, source));
 			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex), source.getWeaponAnimation(), source, targets));
-			objects.add(new BattleEventObject(syncToAnimation(0.5f), new bactDamage(0, 1.0f, DamageTypes.Physical), source, targets));
+			objects.add(new BattleEventObject(syncToAnimationWithOffset(0.5f), new bactDamage(0, 1.0f, DamageTypes.Physical), source, targets));
 			objects.add(new BattleEventObject(frameFromActIndex(7)));
 			break;
 		case Ability:
@@ -102,19 +106,33 @@ public class BattleEvent
 			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex), faces.Cast, 0, source));
 			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex), anim, source, targets));
 			for(BattleAction action : ab.getActions())
-				objects.add(new BattleEventObject(syncToAnimation(action.getFrame()), action, source, targets));
+				objects.add(new BattleEventObject(syncToAnimationWithOffset(action.getFrame()), action, source, targets));
 			objects.add(new BattleEventObject(frameFromActIndex(finalIndex), faces.Ready, 0, source));
 			objects.add(new BattleEventObject(frameFromActIndex(finalIndex+2)));
 			
 			break;
 		case CombatAction:
-			animStartIndex = 3;
-			
-			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex), faces.Cast, 0, source));
-			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex+1), source.getCombatAction(), source, targets));
-			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex+3), faces.Ready, 0, source));
-			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex+5)));
-			
+			source.getCombatAction().buildEvents(new BattleEventBuilder()
+			{	 
+				@Override				 
+				public List<PlayerCharacter> getTargets()
+				{
+					return targets;
+				}
+				@Override				 
+				public PlayerCharacter getSource()
+			    {
+					return source;
+				}
+				@Override
+				public void setAnimation(BattleAnim anim, int frameOffset) {
+					setBattleAnimation(anim, frameOffset);
+				}
+				@Override
+				public void addEventObject(BattleEventObject eventObj) {
+					objects.add(eventObj);
+				}
+			});
 			break;
 		case Item:
 			Item itm = source.getItemToUse();
@@ -128,7 +146,7 @@ public class BattleEvent
 			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex), faces.Use, 0, source));
 			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex), anim, source, targets));
 			for(BattleAction action : itm.getActions())
-				objects.add(new BattleEventObject(syncToAnimation(action.getFrame()), action, source, targets));
+				objects.add(new BattleEventObject(syncToAnimationWithOffset(action.getFrame()), action, source, targets));
 			objects.add(new BattleEventObject(frameFromActIndex(finalIndex), faces.Ready, 0, source));
 			objects.add(new BattleEventObject(frameFromActIndex(finalIndex+2)));
 			
