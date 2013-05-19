@@ -28,6 +28,8 @@ public class TitleScreen
 	private final int openspeed = 15;
 	private final String openingSong = "aramis";
 	
+	private boolean skippedIntro;
+	
 	private BattleAnim playingAnim;
 	
 	public TitleScreen()
@@ -53,6 +55,7 @@ public class TitleScreen
 		Global.stretchScreen = true;
 		if(Global.panel != null)
 			Global.panel.scaleImage();
+		skippedIntro = false;
 		
 		Global.fc1r = 0;
 		Global.fc1g = 0;
@@ -92,6 +95,8 @@ public class TitleScreen
 			Global.clearAnimations();
 			playingAnim = Global.playAnimation("titleloop", null, null);
 			Global.screenFader.clear();
+			
+			skippedIntro = true;
 			
 			buildMenu();
 			menu.open();			
@@ -317,10 +322,13 @@ public class TitleScreen
 				changeState(TitleStates.CompanyTransition);
 			break;
 		case GameLogo:	
-			Global.musicBox.play("", false, -1);
-			Global.musicBox.play(openingSong, false, -1);
+			if(!skippedIntro)
+			{
+				Global.musicBox.play("", false, -1);
+				Global.musicBox.play(openingSong, false, -1);
+				
+			}
 			changeState(TitleStates.Menu);	
-
 			break;
 		case Menu:
 			
