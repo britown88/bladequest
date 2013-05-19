@@ -12,7 +12,7 @@ endability
 ability zornhau "Zornhau" noanim physicalignoredef allenemies 5 100 False
 startsDisabled
 action bactDelayedDamageAll 3 1.2f physicalignoredef movetest 2
-action bactBreakStance 9
+action bactBreakStance -1
 endability
 #
 ability frostwish "Frost Wish" movetest magic allallies 5 100 True

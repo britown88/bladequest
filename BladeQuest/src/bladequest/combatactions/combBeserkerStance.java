@@ -1,6 +1,5 @@
 package bladequest.combatactions;
 
-import android.R.bool;
 import bladequest.battleactions.bactInflictStatus;
 import bladequest.combat.BattleEvent;
 import bladequest.combat.BattleEventBuilder;
@@ -12,6 +11,7 @@ import bladequest.world.Ability;
 import bladequest.world.DamageTypes;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
+import bladequest.world.Stats;
 import bladequest.world.TargetTypes;
 
 public class combBeserkerStance extends Stance {
@@ -37,6 +37,8 @@ public class combBeserkerStance extends Stance {
 		return new StatusEffect(getStatusName(), false)
 		{
 			Stance stance;
+			int statShift;
+			
 			{
 				icon = ""; //shouldn't show.
 				negative = false;
@@ -44,6 +46,8 @@ public class combBeserkerStance extends Stance {
 				curable = false;
 				battleOnly = true;
 				hidden = false; //show name for status switch!
+				
+				statShift = 0;
 			}
 			StatusEffect initialize(Stance stance)
 			{
@@ -57,15 +61,25 @@ public class combBeserkerStance extends Stance {
 					ability.setEnabled(on);
 				}
 			}
+			public void getStatShift(PlayerCharacter c)
+			{
+				statShift = (int)(c.getUnModdedStat(Stats.BattlePower) * 0.25f);
+			}
 			public void onInflict(PlayerCharacter c) 
 			{
 				trySetEnabledState(c.getAbility("assault"), true);
 				trySetEnabledState(c.getAbility("zornhau"), true);
+				
+				getStatShift(c);
+				c.modStat(Stats.BattlePower.ordinal(), statShift);
+				c.modStat(Stats.Defense.ordinal(), -statShift);
 			}
 			public void onRemove(PlayerCharacter c) 
 			{
 				trySetEnabledState(c.getAbility("assault"), false);
 				trySetEnabledState(c.getAbility("zornhau"), false);
+				c.modStat(Stats.BattlePower.ordinal(), -statShift);
+				c.modStat(Stats.Defense.ordinal(), statShift);				
 			}
 			public Stance getStance() 
 			{

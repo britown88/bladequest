@@ -48,8 +48,6 @@ public class bactDelayedDamageAll extends BattleAction {
 			frameNum += frameDelay;
 		}
 		builder.addEventObject(new BattleEventObject(endFrameTime, faces.Ready, 0, attacker));
-		//multiple done actions is legit.  Only the last one counts.
-		builder.addEventObject(new BattleEventObject(endFrameTime));
 	}
 	public void setBuilder(BattleEventBuilder builder) 
 	{

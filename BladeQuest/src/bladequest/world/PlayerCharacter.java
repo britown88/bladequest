@@ -188,6 +188,16 @@ public class PlayerCharacter
 		else
 			return Math.min(255, stats[stat] + statMods[stat]);
 	}	
+	public int getUnModdedStat(Stats stat){return getUnModdedStat(stat.ordinal());}	
+	public int getUnModdedStat(int stat)
+	{
+		if(stat == Stats.MaxHP.ordinal())
+			return Math.min(9999, stats[stat]);
+		else if(stat == Stats.MaxMP.ordinal())
+			return Math.min(999, stats[stat]);
+		else
+			return Math.min(255, stats[stat]);
+	}		
 	public void modStat(int stat, int amt)
 	{
 		statMods[stat] += amt;
