@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bladequest.battleactions.BattleAction;
-import bladequest.battleactions.bactChangeVisibility;
 import bladequest.battleactions.bactDamage;
 import bladequest.battleactions.bactTryEscape;
 import bladequest.graphics.BattleAnim;
