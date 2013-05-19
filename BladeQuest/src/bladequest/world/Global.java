@@ -25,7 +25,7 @@ import android.media.SoundPool;
 import android.util.Log;
 import bladequest.UI.DebugScreen;
 import bladequest.UI.ListBox;
-import bladequest.UI.MainMenu;
+import bladequest.UI.MainMenu.MainMenu;
 import bladequest.UI.MenuPanel.Anchors;
 import bladequest.UI.MerchantScreen;
 import bladequest.UI.MsgBox;
@@ -1136,13 +1136,6 @@ public class Global
 		
 		loading = false;
 
-		//demo start info, do not fuck with!
-		screenFader.setFadeColor(255, 0, 0, 0);
-		screenFader.setFaded();
-		party.teleport(16, 5);		
-		party.insertCharacter("aramis", 1);	
-		party.getCharacter("aramis").setDisplayName("?????");	
-		LoadMap("prisonb2");
 //		//demo start info, do not fuck with!
 //		screenFader.setFadeColor(255, 0, 0, 0);
 //		screenFader.setFaded();

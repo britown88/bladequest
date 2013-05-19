@@ -994,7 +994,9 @@ public class PlayerCharacter
 		
 		if(face != faces.Attack)
 		{
-			savedFace = face;			
+			if(face != faces.Damaged)
+				savedFace = face;
+			
 			setFace(faces.Damaged);
 		}
 	}
