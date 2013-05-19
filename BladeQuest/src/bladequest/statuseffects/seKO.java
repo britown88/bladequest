@@ -10,6 +10,7 @@ public class seKO extends StatusEffect
 	{
 		super("KO", true);
 		icon = "KO";
+		hidden = false;
 		curable = false;
 		removeOnDeath = false;
 		battleOnly = false;

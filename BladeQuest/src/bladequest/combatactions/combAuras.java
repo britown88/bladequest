@@ -19,7 +19,6 @@ public class combAuras extends CombatAction  {
 		
 		actionText = " has use bugged out, contact the dev team!";
 	}
-		
 	private List<CombatAction> getAuras()
 	{
 		List<CombatAction> out = new ArrayList<CombatAction>();

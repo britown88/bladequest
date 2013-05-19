@@ -21,6 +21,7 @@ public class seRegen extends StatusEffect {
 		icon = "poison"; //deal with it nerds
 		curable = false;
 		removeOnDeath = true;
+		hidden = false;
 		battleOnly = true;
 		this.minHeal = minHeal;
 		this.maxHeal = maxHeal;

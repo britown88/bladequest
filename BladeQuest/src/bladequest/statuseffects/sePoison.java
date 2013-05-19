@@ -27,6 +27,7 @@ public class sePoison extends StatusEffect
 		curable = true;
 		removeOnDeath = true;
 		battleOnly = false;
+		hidden = false;
 		stepCount = 0;
 	}
 	@Override

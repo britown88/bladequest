@@ -3,14 +3,15 @@ package bladequest.statuseffects;
 import java.util.ArrayList;
 import java.util.List;
 
-import bladequest.combat.Battle;
 import bladequest.combat.BattleEventBuilder;
+import bladequest.combatactions.Stance;
 import bladequest.world.PlayerCharacter;
 
 public class StatusEffect 
 {
 	protected String name, icon;
 	protected boolean 
+	    hidden,  //don't show as icon
 		negative,//negative status effects like poison
 		removeOnDeath,
 		curable,
@@ -22,12 +23,16 @@ public class StatusEffect
 		this.negative = negative;
 	}
 	
-	public String icon() { return icon; }	
+	public String icon() { return icon; }
+	public boolean isHidden() { return hidden; }
 	public boolean isNegative() { return negative; }
 	public boolean removesOnDeath() { return removeOnDeath; }
 	public boolean isCurable() { return curable; }
 	public boolean isBattleOnly() {return battleOnly;}
 	public String Name() { return name; }
+	
+	//for stance statuses only
+	public Stance getStance() {return null;}
 	
 	public void onTurn(BattleEventBuilder eventBuilder) {}
 	public void onInflict(PlayerCharacter c) {}

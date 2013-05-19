@@ -32,6 +32,11 @@ public class BattleCalc
 		//guarding
 		if(defender.getAction() == Action.Guard)
 			DP *= 1.5f;
+		
+		if (type == DamageTypes.PhysicalIgnoreDef)
+		{
+			DP = 0.0f;
+		}
 				
 		int BP = (int)(AP*power);
 		float coefficient = attacker == null ? 1.0f : attacker.getCoefficient();
@@ -49,6 +54,7 @@ public class BattleCalc
 			damageReturnType = DamageReturnType.Hit;
 			finalDmg = (int)power;
 			break;
+		case PhysicalIgnoreDef:  //when def is implemented			
 		case Physical:
 			int roll = Global.rand.nextInt(100);
 			int evadeChance = (int)((float)defender.getStat(Stats.Evade)*(maxEvade/255.0f));
@@ -80,7 +86,6 @@ public class BattleCalc
 			break;
 		case Magic:
 		case MagicalIgnoreDef:
-		case PhysicalIgnoreDef:
 			break;
 			//TODO: configure other damage types
 		}

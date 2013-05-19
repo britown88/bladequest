@@ -885,7 +885,17 @@ public class PlayerCharacter
 	{
 		abilities.add(Global.abilities.get(name));
 	}
-	
+	public void removeAbility(String name)
+	{
+		for (Ability ability : abilities)
+		{
+			if (ability.name.equals(name))
+			{
+				abilities.remove(ability);
+				return;
+			}
+		}
+	}
 	public void addLearnableAbility(String name, int level)
 	{
 		learnableAbilities.add(new LearnableAbility(name, level));

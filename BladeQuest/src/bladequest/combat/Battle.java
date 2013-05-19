@@ -391,6 +391,15 @@ public class Battle
 	{
 		for (PlayerCharacter c : partyList)
 		{
+			for (StatusEffect effect: StatusEffect.filterList(c.getStatusEffects(), new StatusEffect.Filter()
+			{
+				public boolean filter(StatusEffect effect) {
+					return effect.isBattleOnly();
+				}
+			}))
+			{
+				effect.onRemove(c);
+			}
 			c.setStatusEffects(StatusEffect.filterList(c.getStatusEffects(), new StatusEffect.Filter()
 			{
 				public boolean filter(StatusEffect effect) {
@@ -536,7 +545,7 @@ public class Battle
 			float iconScale = 1.5f;
 			int j = 0, d = (int)(Global.iconSize*iconScale + 2);
 			for(StatusEffect se : c.getStatusEffects())
-				if(j < 4 && se.icon().length() > 0)
+				if(j < 4 && !se.isHidden() && se.icon().length() > 0)
 					characterPanes[i].addPicBox(Global.createIcon(se.icon(),(d/2) +  d*j++,-(d/2),iconScale));
 			
 			

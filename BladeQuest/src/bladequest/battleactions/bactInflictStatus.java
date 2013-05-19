@@ -28,12 +28,18 @@ public class bactInflictStatus extends BattleAction
 		{
 			if(t.isInBattle() && !t.hasStatus(se.Name()))
 			{
-				markers.add(new DamageMarker(se.Name().toUpperCase(Locale.US), t));	
+				if (!se.isHidden())
+				{
+					markers.add(new DamageMarker(se.Name().toUpperCase(Locale.US), t));	
+				}	
 				
 				t.applyStatusEffect(se);
 			}	
-			else
+			else if (!se.isHidden())
+			{
+				
 				markers.add(new DamageMarker("MISS", t));
+			}
 		}		
 	}
 	

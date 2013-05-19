@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.util.Log;
 import bladequest.battleactions.BattleAction;
+import bladequest.battleactions.bactBreakStance;
 import bladequest.battleactions.bactDamage;
 import bladequest.battleactions.bactInflictStatus;
 import bladequest.battleactions.bactMessage;
@@ -544,6 +545,11 @@ public class GameDataLoader
 					Float.parseFloat(dl.values.get(2)), 
 					getDamageType(dl.values.get(3)));
 		}
+		else if(dl.values.get(0).equals("bactBreakStance"))
+		{
+			return new bactBreakStance(
+					Integer.parseInt(dl.values.get(1)));
+		}		
 		else if(dl.values.get(0).equals("bactInflictStatus"))
 		{
 			return new bactInflictStatus(
