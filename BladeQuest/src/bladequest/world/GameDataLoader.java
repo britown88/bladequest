@@ -10,6 +10,7 @@ import android.util.Log;
 import bladequest.battleactions.BattleAction;
 import bladequest.battleactions.bactBreakStance;
 import bladequest.battleactions.bactDamage;
+import bladequest.battleactions.bactDelayedDamageAll;
 import bladequest.battleactions.bactInflictStatus;
 import bladequest.battleactions.bactMessage;
 import bladequest.battleactions.bactRemoveStatus;
@@ -544,6 +545,15 @@ public class GameDataLoader
 					Integer.parseInt(dl.values.get(1)),
 					Float.parseFloat(dl.values.get(2)), 
 					getDamageType(dl.values.get(3)));
+		}
+		else if(dl.values.get(0).equals("bactDelayedDamageAll"))
+		{
+			return new bactDelayedDamageAll(
+					Integer.parseInt(dl.values.get(1)),
+					Float.parseFloat(dl.values.get(2)), 
+					getDamageType(dl.values.get(3)),
+					dl.values.get(4),
+					Integer.parseInt(dl.values.get(5)));
 		}
 		else if(dl.values.get(0).equals("bactBreakStance"))
 		{

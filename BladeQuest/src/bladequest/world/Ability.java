@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bladequest.battleactions.BattleAction;
+import bladequest.combat.BattleEventBuilder;
 import bladequest.graphics.BattleAnim;
 
 public class Ability 
@@ -35,7 +36,14 @@ public class Ability
 	}
 	public boolean isUsableOutOfBattle() { return usableOutOfBattle;}
 	public void addAction(BattleAction action){actions.add(action);}
-	public List<BattleAction> getActions() { return actions;}
+	public List<BattleAction> getActions(BattleEventBuilder builder) 
+	{
+		for (BattleAction action : actions)
+		{
+			action.setBuilder(builder);
+		}
+		return actions;
+	}
 	public String getDisplayName() { return displayName;}
 	public DamageTypes DmgType() { return dmgType;}
 	public TargetTypes TargetType() { return targetType;}
@@ -44,6 +52,7 @@ public class Ability
 	
 	public BattleAnim getAnimation()
 	{
+		if (animation.equals("noanim")) return null;
 		return Global.battleAnims.get(animation);
 		//Global.playAnimation(animation, src.getPosition(true), target.getPosition(true));
 	}

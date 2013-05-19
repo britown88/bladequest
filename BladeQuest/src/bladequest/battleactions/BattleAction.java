@@ -2,6 +2,7 @@ package bladequest.battleactions;
 
 import java.util.List;
 
+import bladequest.combat.BattleEventBuilder;
 import bladequest.combat.DamageMarker;
 import bladequest.world.PlayerCharacter;
 
@@ -14,5 +15,5 @@ public class BattleAction
 	public void run(PlayerCharacter attacker, List<PlayerCharacter> target, List<DamageMarker> markers){}
 	public boolean isDone() {return true; }
 	public boolean willAffectTarget(PlayerCharacter target){ return true;}
-
+	public void setBuilder(BattleEventBuilder builder) {}
 }

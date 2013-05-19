@@ -71,6 +71,9 @@ public class combBeserkerStance extends Stance {
 		PlayerCharacter source = builder.getSource();
 		builder.addEventObject(new BattleEventObject(BattleEvent.frameFromActIndex(0), faces.Ready, 0, source));
 		
+		//end current stance, if there is one.
+		Stance.leaveStance(source);
+		
 		BattleAnim anim = Global.battleAnims.get("movetest");
 		
 		int frame = animStartIndex;		

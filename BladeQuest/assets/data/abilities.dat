@@ -8,9 +8,9 @@ ability assault "Assault" movetest physicalignoredef single 2 100 False
 action bactDamage -1 1.0f physicalignoredef
 endability
 #
-ability zornhau "Zornhau" movetest physicalignoredef allenemies 5 100 False
-action bactDamage -1 0.8f physicalignoredef
-action bactBreakStance -1
+ability zornhau "Zornhau" noanim physicalignoredef allenemies 5 100 False
+action bactDelayedDamageAll 3 1.2f physicalignoredef movetest 2
+action bactBreakStance 9
 endability
 #
 ability frostwish "Frost Wish" movetest magic allallies 5 100 True

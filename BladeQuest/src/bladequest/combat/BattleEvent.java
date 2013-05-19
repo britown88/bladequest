@@ -123,16 +123,32 @@ public class BattleEvent
 				int animStartIndex = 3;
 				
 				int animStartTime = frameFromActIndex(animStartIndex);
-				int finalIndex = (int)((animStartTime + anim.syncToAnimation(1.0f))/actTimerLength)+1;
+				int finalIndex = animStartIndex;
 				
-				builder.setAnimation(anim, animStartIndex);
+				if (anim != null)
+				{
+					builder.setAnimation(anim, animStartIndex);
+					finalIndex = (int)((frameFromActIndex(finalIndex) + anim.syncToAnimation(1.0f))/actTimerLength)+1;
+					builder.addEventObject(new BattleEventObject(frameFromActIndex(animStartIndex), faces.Cast, 0, source));
+				}
 				
-				builder.addEventObject(new BattleEventObject(frameFromActIndex(animStartIndex), faces.Cast, 0, source));
+				for(BattleAction action : ability.getActions(builder))
+				{
+					int frame = action.getFrame();
+					if (anim != null)
+					{
+						builder.addEventObject(new BattleEventObject(animStartTime + anim.syncToAnimation(frame), action, source, targets));
+					}
+					else
+					{
+						builder.addEventObject(new BattleEventObject(frameFromActIndex(frame), action, source, targets));
+					}
+				}
 				
-				for(BattleAction action : ability.getActions())
-					builder.addEventObject(new BattleEventObject(animStartTime + anim.syncToAnimation(action.getFrame()), action, source, targets));
-				
-				builder.addEventObject(new BattleEventObject(frameFromActIndex(finalIndex), faces.Ready, 0, source));
+				if (anim != null)
+				{
+					builder.addEventObject(new BattleEventObject(frameFromActIndex(finalIndex), faces.Ready, 0, source));
+				}
 				builder.addEventObject(new BattleEventObject(frameFromActIndex(finalIndex+2)));
 			}
 			
