@@ -42,7 +42,7 @@ public class combEmpowerLife extends CombatAction {
 			List<PlayerCharacter> currentTarget = new ArrayList<PlayerCharacter>();
 			currentTarget.add(target);
 			builder.addEventObject(new BattleEventObject(BattleEvent.frameFromActIndex(frame), anim, source, currentTarget));
-			builder.addEventObject(new BattleEventObject(endFrameTime, new bactInflictStatus(frame, true, new seRegen(10,20)), source, currentTarget));
+			builder.addEventObject(new BattleEventObject(endFrameTime, new bactInflictStatus(frame, true, new seRegen(10,20, 3)), source, currentTarget));
 			frame += 4;
 		}
 		builder.addEventObject(new BattleEventObject(BattleEvent.frameFromActIndex(frame), faces.Ready, 0, source));
