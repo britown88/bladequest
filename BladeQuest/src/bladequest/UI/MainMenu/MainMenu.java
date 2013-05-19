@@ -16,7 +16,6 @@ import bladequest.UI.MenuPanel;
 import bladequest.UI.MsgBox;
 import bladequest.UI.NumberPicker;
 import bladequest.UI.ListBox.LBStates;
-import bladequest.UI.MainMenu.MainMenuState.FlingDirections;
 import bladequest.UI.MenuPanel.Anchors;
 import bladequest.UI.MsgBox.YesNo;
 import bladequest.combat.BattleState;
@@ -114,12 +113,711 @@ public class MainMenu
 		
 	}	
 	
+//	return new MainMenuState()
+//	{
+//		@Override
+//		public void changeStateTo(MainMenuState state) {}
+//		@Override
+//		public void changeToRoot() {}
+//		@Override
+//		public void onSwitchedTo(MainMenuState prevState) {}
+//		@Override
+//		public void update() {}
+//		@Override
+//		public void render() {}
+//		@Override
+//		public void handleClosing() {}
+//		@Override
+//		public void onFling(float velocityX, float velocityY) {}
+//		@Override
+//		public void backButtonPressed() {}
+//		@Override
+//		public void touchActionUp(int x, int y) {}
+//		@Override
+//		public void touchActionMove(int x, int y) {}
+//		@Override
+//		public void touchActionDown(int x, int y) {}
+//	};
+	
 	private MainMenuState getRootState()
 	{
 		return new MainMenuState()
 		{
 			@Override
+			public void onSwitchedTo(MainMenuState prevState) {
+				
+				undarken();
+				buildCharPlates();
+				
+				sideBar.pos = new Point(Global.vpWidth, 0);
+				sideBar.anchor = Anchors.TopRight;
+				
+				prevState.changeToRoot();
+			}
+			@Override
+			public void update() {
+				updateRoot();
+			}
+			@Override
+			public void render() {
+				rootCharPlates.render();
+				rootBarPanel.render();
+				rootMenu.render();	
+				
+				if(!sideBar.Closed())
+				{
+					renderDark();
+					sideBar.render();
+				}
+				
+				if(!charStatusGrow.Closed())
+					charStatusGrow.render();
+			}
+			@Override
+			public void handleClosing()
+			{
+				if(Global.screenFader.isDone())
+				{
+					Global.GameState = States.GS_WORLDMOVEMENT;
+					Global.delay();
+					Global.screenFader.fadeIn(4);
+					
+					sideBar.setClosed();
+					
+				}
+			}
+			@Override
+			public void backButtonPressed() {
+				sideBar.setClosed();				
+				close();
+			}
+			@Override
+			public void touchActionUp(int x, int y) {
+				ListBox.LBStates state;
+				MenuPanel selectedPanel;
+				state = rootMenu.touchActionUp(x, y);
+				if(state == LBStates.Selected)
+					handleOption((String)rootMenu.getSelectedEntry().obj);
+				
+				selectedPanel = rootCharPlates.touchActionUp(x, y);				
+				//update party order based on charplates order
+				for(int i = 0; i < 4; ++i) Global.party.partyMembers[i] = (PlayerCharacter)rootCharPlates.panels[i].obj;
+				if(selectedPanel != null)
+				{
+					selectedChar = (PlayerCharacter)selectedPanel.obj;
+					updateCharStatus();					
+					changeState(menuStates.CharStatus);
+				}
+				
+			}
+			@Override
+			public void touchActionMove(int x, int y) {
+				rootMenu.touchActionMove(x, y);
+				rootCharPlates.touchActionMove(x, y);
+			}
+			@Override
+			public void touchActionDown(int x, int y) {
+				rootMenu.touchActionDown(x, y);
+			}
+		};
+	}
+	private MainMenuState getItemSelectState()
+	{
+		return new MainMenuState()
+		{
+			@Override
+			public void changeStateTo(MainMenuState state) {
+				
+			}
+			@Override
+			public void changeToRoot()
+			{
+				sideBar.close();
+				invShowKeys = false;
+			}
+			@Override
+			public void onSwitchedTo(MainMenuState prevState) {
+				if(sideBar.Closed())
+				{
+					buildInventory();
+					sideBar.open();
+				}
+				undarken();	
+				
+				prevState.changeToItemSelect();
+			}
+			@Override
+			public void update() {
+				invInfoBar.update();
+				invList.update();
+				if(charUseScreen != null && !charUseScreen.Closed())
+					charUseScreen.update();
+				if(invSort != null && !invSort.Closed())
+					invSort.update();
+			}
+			@Override
+			public void render() {
+				if(sideBar.Opened())
+				{
+					invInfoBar.render();
+					invList.render();
+					
+					if(charUseScreen != null && !charUseScreen.Closed())
+					{
+						renderDark();				
+						charUseScreen.render();
+					}				
+					
+					if(invSort != null && !invSort.Closed())
+					{
+						renderDark();
+						invSort.render();
+					}
+				}
+				else
+				{
+					rootCharPlates.render();
+					rootBarPanel.render();
+					rootMenu.render();
+					renderDark();
+					sideBar.render();
+				}				
+			}
+			@Override
+			public void handleClosing() {
+				if(invSort.Closed() && charUseScreen.Closed())
+					changeState(menuStates.Root);				
+			}
+
+			@Override
+			public void backButtonPressed() {
+				changeState(menuStates.Root);
+			}
+			@Override
+			public void touchActionUp(int x, int y) {
+				ListBox.LBStates state;
+				state = invInfoBar.touchActionUp(x, y);
+				if(state == LBStates.Selected)
+					handleInvOption((String)invInfoBar.getSelectedEntry().obj);				
+				
+				state = invList.touchActionUp(x, y);
+				if(state == LBStates.Selected)
+				{
+					Item i = (Item)(invList.getSelectedEntry().obj);
+					
+					if(invList.getSelectedEntry().Disabled())
+					{						
+						//if(i.getType() == Type.Usable)
+						showMessage(i.getDescription(), false);
+						
+						//add usable by string
+						if(i.getType() != Type.Usable)
+						{
+							List<String> charNames = new ArrayList<String>();
+							PlayerCharacter c;
+							for(String str : i.getUsableChars())
+							{
+								c = Global.party.getCharacter(str);
+								if(c != null)
+									charNames.add(c.getDisplayName());
+							}							
+							if(charNames.size() > 0)
+							{
+								String usableByString = "Usable by: \n";
+								for(int j = 0; j < charNames.size(); ++j)
+								{
+									usableByString += charNames.get(j);
+									if(j < charNames.size() - 1)
+										usableByString += ", ";
+								}
+								messageBox.addMessage(usableByString);									
+							}	
+						}
+					}
+					else
+					{
+						if(invShowKeys)
+							showMessage(i.getDescription(), false);
+						else
+						{
+							itemToUse = i;
+							changeState(menuStates.ItemUse);
+						}							
+					}
+				}
+			}
+			@Override
+			public void touchActionMove(int x, int y) {
+				invInfoBar.touchActionMove(x, y);
+				invList.touchActionMove(x, y);
+			}
+			@Override
+			public void touchActionDown(int x, int y) {
+				invInfoBar.touchActionDown(x, y);
+				invList.touchActionDown(x, y);	
+			}
+		};
+	}
+	private MainMenuState getItemSortState()
+	{
+		return new MainMenuState()
+		{
+			@Override
+			public void changeToItemSelect()
+			{
+				invSort.close();
+			}
+			@Override
+			public void onSwitchedTo(MainMenuState prevState) {
+				darken();
+				invSort.open();
+			}
+			@Override
+			public void update() {
+				invSort.update();
+			}
+			@Override
+			public void render() {
+				invInfoBar.render();
+				invList.render();
+				renderDark();
+				invSort.render();
+			}
+			@Override
+			public void handleClosing() {
+				changeState(menuStates.ItemSelect);
+			}
+			@Override
+			public void backButtonPressed() {
+				changeState(menuStates.ItemSelect);
+			}
+			@Override
+			public void touchActionUp(int x, int y) {
+				ListBox.LBStates state = invSort.touchActionUp(x, y);
+				
+				switch(state)
+				{
+				case Close:
+					changeState(menuStates.ItemSelect);
+					break;
+				case Selected:
+					handleInvSortOption((String)invSort.getSelectedEntry().obj);
+					break;
+				default:
+					break;
+				}
+			}
+			@Override
+			public void touchActionMove(int x, int y) {
+				invSort.touchActionMove(x, y);
+			}
+			@Override
+			public void touchActionDown(int x, int y) {
+				invSort.touchActionDown(x, y);
+			}
+		};
+	}
+	private MainMenuState getItemUseState()
+	{
+		return new MainMenuState()
+		{
+			@Override
+			public void changeToItemSelect() {
+				charUseScreen.close();
+				fillInventory();
+				itemToUse = null;
+			}
+			@Override
+			public void onSwitchedTo(MainMenuState prevState) {
+				darken();
+				buildCharUseScreen();
+				charUseScreen.open();
+			}
+			@Override
+			public void update() {
+				charUseScreen.update();
+				charUseInfo.update();
+				charUseDesc.update();
+			}
+			@Override
+			public void render() {
+				invInfoBar.render();
+				invList.render();
+				renderDark();
+				charUseScreen.render();
+				if(charUseScreen.Opened())
+				{
+					charUseInfo.render();
+					charUseDesc.render();
+				}
+					
+			}
+			@Override
+			public void handleClosing() {
+				changeState(menuStates.ItemSelect);
+			}
+			@Override
+			public void backButtonPressed() {
+				changeState(menuStates.ItemSelect);
+			}
+			@Override
+			public void touchActionUp(int x, int y) {
+				ListBox.LBStates state = charUseScreen.touchActionUp(x, y);
+				
+				switch(state)
+				{
+				case Close:
+					changeState(menuStates.ItemSelect);
+					break;
+				case Selected:
+					useItem((PlayerCharacter)charUseScreen.getSelectedEntry().obj);					
+					break;
+				default:
+					break;
+				}
+			}
+			@Override
+			public void touchActionMove(int x, int y) {
+				charUseScreen.touchActionMove(x, y);
+			}
+			@Override
+			public void touchActionDown(int x, int y) {
+				charUseScreen.touchActionDown(x, y);
+			}
+		};
+	}
+	private MainMenuState getEquipState()
+	{
+		return new MainMenuState()
+		{
+
+			@Override
+			public void changeToRoot() {
+				sideBar.close();
+				equipItemType = null;
+				selectedEqpItem = null;
+				eqpRemove = false;
+			}
+			@Override
+			public void onSwitchedTo(MainMenuState prevState) {
+				if(sideBar.Closed())
+				{
+					updateEquipScreen();
+					sideBar.open();
+				}
+				undarken();
+			}
+			@Override
+			public void update() {
+				eqpCharPanel.update();
+				eqpEquipSlots.update();
+				eqpInfoBar.update();
+				eqpSelect.update();
+				eqpStats.update();
+				if(nextChar != null && sideBar.Opened())
+				{
+					selectedChar = nextChar;
+					nextChar = null;
+					updateEquipScreen();
+				}
+			}
+			@Override
+			public void render() {
+				if(sideBar.Opened() || nextChar != null)
+				{
+					eqpCharPanel.render();
+					eqpEquipSlots.render();
+					eqpInfoBar.render();				
+					if(equipItemType != null)
+						renderDark();
+					eqpStats.render();
+					eqpSelect.render();
+					if(!sideBar.Opened())
+						sideBar.render();
+				}
+				else
+				{
+					rootCharPlates.render();
+					rootBarPanel.render();
+					rootMenu.render();
+					renderDark();
+					sideBar.render();
+				}
+			}
+			@Override
+			public void handleClosing() {
+				changeState(menuStates.Root);
+			}
+			@Override
+			public void onFling(float velocityX, float velocityY) {
+				fling(velocityX, velocityY);
+			}
+			@Override
+			public void backButtonPressed() {
+				changeState(menuStates.Root);
+			}
+			@Override
+			public void touchActionUp(int x, int y) {
+				ListBox.LBStates state;
+				MenuPanel selectedPanel;
+				selectedEqpItem = null;
+				eqpRemove = false;
+				
+				if(sideBar.Opened())
+				{					
+					if(equipItemType != null)
+					{				
+						selectedEqpItem = null;
+						updateEquipStats();
+						
+						state = eqpSelect.touchActionUp(x, y);
+						switch(state)
+						{
+						case Close:
+							equipItemType = null;
+							fillEqpSelect();
+							undarken();
+							break;
+						case Selected:
+							Item i = (Item)eqpSelect.getSelectedEntry().obj;
+							if(i == null)
+								selectedChar.unequip(equipItemType);
+							else
+								selectedChar.equip(i.getId());
+							
+							undarken();
+							equipItemType = null;
+							updateEquipScreen();
+							break;
+						default:
+							break;
+						}
+					}
+					else
+					{
+						state = eqpInfoBar.touchActionUp(x, y);				
+						if(state == LBStates.Selected)
+						{
+							handleEqpOption((String)eqpInfoBar.getSelectedEntry().obj);
+						}
+						
+						state = eqpEquipSlots.touchActionUp(x, y);
+						if(state == LBStates.Selected)
+						{
+							equipItemType = (Item.Type)eqpEquipSlots.getSelectedEntry().obj;
+							darken();
+							fillEqpSelect();
+							//handleEqpOption((String)eqpInfoBar.getSelectedEntry().obj);
+						}
+					}
+					
+				}
+			}
+			@Override
+			public void touchActionMove(int x, int y) {
+				if(sideBar.Opened())
+				{					
+					if(equipItemType != null)
+					{
+						eqpSelect.touchActionMove(x, y);
+						if(eqpSelect.getCurrentSelectedEntry() != null)
+						{
+							if(!eqpSelect.isScrolling() && (Item)(eqpSelect.getCurrentSelectedEntry().obj) != selectedEqpItem)
+							{
+								selectedEqpItem = (Item)eqpSelect.getCurrentSelectedEntry().obj;
+								if(selectedEqpItem == null)
+									eqpRemove = true;
+								updateEquipStats();
+							}
+						}
+						else
+						{
+							selectedEqpItem = null;
+							updateEquipStats();
+						}
+					}						
+					else
+					{
+						eqpEquipSlots.touchActionMove(x, y);
+						eqpInfoBar.touchActionMove(x, y);
+					}
+				}
+			}
+			@Override
+			public void touchActionDown(int x, int y) {
+				if(sideBar.Opened())
+				{						
+					if(equipItemType != null)
+					{
+						eqpSelect.touchActionDown(x, y);
+						if(eqpSelect.getCurrentSelectedEntry() != null)
+						{
+							selectedEqpItem = (Item)eqpSelect.getCurrentSelectedEntry().obj;
+							if(selectedEqpItem == null)
+								eqpRemove = true;
+							updateEquipStats();
+						}
+						else
+						{
+							selectedEqpItem = null;
+							updateEquipStats();
+						}							
+					}							
+					else
+					{
+						eqpEquipSlots.touchActionDown(x, y);
+						eqpInfoBar.touchActionDown(x, y);
+					}
+				}					
+			}
+		};
+	}
+	private MainMenuState getEquipSelectCharState()
+	{
+		return new MainMenuState()
+		{
+			@Override
+			public void onSwitchedTo(MainMenuState prevState) {
+				darken();
+			}
+			@Override
+			public void update() {
+				rootInfoBar.update();
+				updateRoot();
+			}
+			@Override
+			public void render() {
+				rootBarPanel.render();
+				rootMenu.render();			
+				renderDark();			
+				rootCharPlates.render();
+				rootInfoBar.render();
+				
+				if(!sideBar.Closed())
+					sideBar.render();
+			}
+			@Override
+			public void handleClosing() {
+				changeState(menuStates.Root);
+			}
+			@Override
+			public void backButtonPressed() {
+				changeState(menuStates.Root);
+			}
+			@Override
+			public void touchActionUp(int x, int y) {
+				MenuPanel selectedPanel = rootCharPlates.touchActionUp(x, y);	
+				//update party order based on charplates order
+				for(int i = 0; i < 4; ++i) Global.party.partyMembers[i] = (PlayerCharacter)rootCharPlates.panels[i].obj;
+				//open equip screen with selected character
+				if(selectedPanel != null)
+				{
+					selectedChar = (PlayerCharacter)selectedPanel.obj;
+					changeState(menuStates.Equip );
+				}
+			}
+			@Override
+			public void touchActionMove(int x, int y) {
+				rootCharPlates.touchActionMove(x, y);
+			}
+			@Override
+			public void touchActionDown(int x, int y) {
+				rootCharPlates.touchActionDown(x, y);
+			}
+		};
+	}
+	private MainMenuState getSkillSelectState()
+	{
+		return new MainMenuState()
+		{
+			@Override
+			public void changeStateTo(MainMenuState state) {
+				if(sideBar.Closed())
+				{
+					updateSkillScreen();
+					sideBar.open();
+				}
+				undarken();
+			}
+			@Override
+			public void changeToRoot() {
+				sideBar.close();
+			}
+			@Override
+			public void update() {
+				if(nextChar != null && sideBar.Opened())
+				{
+					selectedChar = nextChar;
+					nextChar = null;
+					updateSkillScreen();
+					
+				}
+				
+				skillsBackButton.update();
+				skillsCharPanel.update();
+				skillsList.update();
+			}
+			@Override
+			public void render() {
+				if(sideBar.Opened() || nextChar != null)
+				{
+					
+					skillsCharPanel.render();
+					skillsList.render();
+					skillsBackButton.render();
+
+					if(!sideBar.Opened())
+						sideBar.render();
+					
+				}
+				else
+				{
+					rootCharPlates.render();
+					rootBarPanel.render();
+					rootMenu.render();
+					renderDark();
+					sideBar.render();
+				}
+			}
+			@Override
+			public void handleClosing() {
+				changeState(menuStates.Root);
+			}
+			@Override
+			public void onFling(float velocityX, float velocityY) {
+				fling(velocityX, velocityY);
+			}
+			@Override
+			public void backButtonPressed() {
+				changeState(menuStates.Root);
+			}
+			@Override
+			public void touchActionUp(int x, int y) {
+				if(skillsBackButton.touchActionUp(x, y) == LBStates.Selected)
+					changeState(menuStates.Root);
+				else
+					skillsList.touchActionUp(x, y);
+			}
+			@Override
+			public void touchActionMove(int x, int y) {
+				skillsBackButton.touchActionMove(x, y);
+				skillsList.touchActionMove(x, y);
+			}
+			@Override
+			public void touchActionDown(int x, int y) {
+				skillsBackButton.touchActionDown(x, y);
+				skillsList.touchActionDown(x, y);
+			}
+		};
+	}
+	private MainMenuState getSkillUseState()
+	{
+		return new MainMenuState()
+		{
+			@Override
 			public void changeStateTo(MainMenuState state) {}
+			@Override
+			public void changeToRoot() {}
 			@Override
 			public void onSwitchedTo(MainMenuState prevState) {}
 			@Override
@@ -127,7 +825,9 @@ public class MainMenu
 			@Override
 			public void render() {}
 			@Override
-			public void onFling(FlingDirections direction) {}
+			public void handleClosing() {}
+			@Override
+			public void onFling(float velocityX, float velocityY) {}
 			@Override
 			public void backButtonPressed() {}
 			@Override
@@ -138,7 +838,94 @@ public class MainMenu
 			public void touchActionDown(int x, int y) {}
 		};
 	}
-	
+	private MainMenuState getSkillSelectCharState()
+	{
+		return new MainMenuState()
+		{
+			@Override
+			public void changeStateTo(MainMenuState state) {}
+			@Override
+			public void changeToRoot() {}
+			@Override
+			public void onSwitchedTo(MainMenuState prevState) {
+				darken();
+			}
+			@Override
+			public void update() {
+				rootInfoBar.update();
+				updateRoot();
+			}
+			@Override
+			public void render() {
+				rootBarPanel.render();
+				rootMenu.render();			
+				renderDark();			
+				rootCharPlates.render();
+				rootInfoBar.render();
+				
+				if(!sideBar.Closed())
+					sideBar.render();
+			}
+			@Override
+			public void handleClosing() {
+				changeState(menuStates.Root);
+			}
+			@Override
+			public void onFling(float velocityX, float velocityY) {}
+			@Override
+			public void backButtonPressed() {
+				changeState(menuStates.Root);
+			}
+			@Override
+			public void touchActionUp(int x, int y) {
+				MenuPanel selectedPanel = rootCharPlates.touchActionUp(x, y);	
+				//update party order based on charplates order
+				for(int i = 0; i < 4; ++i) Global.party.partyMembers[i] = (PlayerCharacter)rootCharPlates.panels[i].obj;
+				//open equip screen with selected character
+				if(selectedPanel != null)
+				{
+					selectedChar = (PlayerCharacter)selectedPanel.obj;
+					changeState(menuStates.SkillSelect);
+				}
+			}
+			@Override
+			public void touchActionMove(int x, int y) {
+				rootCharPlates.touchActionMove(x, y);
+			}
+			@Override
+			public void touchActionDown(int x, int y) {
+				rootCharPlates.touchActionDown(x, y);
+			}
+		};		
+	}
+	private MainMenuState getCharStatusState()
+	{
+		return new MainMenuState()
+		{
+			@Override
+			public void changeStateTo(MainMenuState state) {}
+			@Override
+			public void changeToRoot() {}
+			@Override
+			public void onSwitchedTo(MainMenuState prevState) {}
+			@Override
+			public void update() {}
+			@Override
+			public void render() {}
+			@Override
+			public void handleClosing() {}
+			@Override
+			public void onFling(float velocityX, float velocityY) {}
+			@Override
+			public void backButtonPressed() {}
+			@Override
+			public void touchActionUp(int x, int y) {}
+			@Override
+			public void touchActionMove(int x, int y) {}
+			@Override
+			public void touchActionDown(int x, int y) {}
+		};
+	}
 	
 	private void buildPaints()
 	{		
@@ -846,17 +1633,6 @@ public class MainMenu
 		{
 			switch(currentState)
 			{
-			case Root:
-				if(Global.screenFader.isDone())
-				{
-					Global.GameState = States.GS_WORLDMOVEMENT;
-					Global.delay();
-					Global.screenFader.fadeIn(4);
-					
-					sideBar.setClosed();
-					
-				}
-				break;
 			case Options:
 			case CharStatus:
 			case EquipSelectChar:
@@ -866,12 +1642,11 @@ public class MainMenu
 				changeState(menuStates.Root);
 				break;
 			case ItemSelect:			
-				if(invSort.Closed() && charUseScreen.Closed())
-					changeState(menuStates.Root);
+				
 				break;
 			case ItemSort:			
 			case ItemUse:
-				changeState(menuStates.ItemSelect);
+				
 				break;
 				
 			case OptionFrameColor:
@@ -896,38 +1671,6 @@ public class MainMenu
 		stateMachine.resetToState(prevState);				
 	}
 
-	public void applyDamage(PlayerCharacter c, int dmg, int delay)
-	{
-		switch(currentState)
-		{
-		case ItemUse:
-			
-/*			for(ListBoxEntry lbi : charUseScreen.getEntries())
-			{
-				if(((Character)lbi.obj).getName().equals(c.getName()))
-					markers.add(new DamageMarker(dmg, c, delay, lbi.frameRect.left + lbi.width/2, lbi.frameRect.top + lbi.width/2));
-				
-			}*/
-//			ListBoxEntry lbi = charUseScreen.getSelectedEntry();
-//			markers.add(new DamageMarker(dmg, c, delay, lbi.frameRect.left + lbi.width/2, lbi.frameRect.top + lbi.width/2));
-			break;
-		default:
-			break;
-		}
-		
-	}
-	public void dmgText(PlayerCharacter c, String str, int delay)
-	{
-		switch(currentState)
-		{
-		case ItemUse:
-			//ListBoxEntry lbi = charUseScreen.getSelectedEntry();
-			//markers.add(new DamageMarker(str, c, delay, lbi.frameRect.left + lbi.width/2, lbi.frameRect.top + lbi.width/2));
-			break;
-		default:
-			break;
-		}
-	}
 	private void updateMarkers()
 	{
 		Vector<DamageMarker> toRemove = new Vector<DamageMarker>();
@@ -1100,65 +1843,37 @@ public class MainMenu
 		switch(state)
 		{
 		case SkillSelect:
-			if(sideBar.Closed())
-			{
-				updateSkillScreen();
-				sideBar.open();
-			}
-			undarken();
+			
 			break;
 		case Equip:
-			if(sideBar.Closed())
-			{
-				updateEquipScreen();
-				sideBar.open();
-			}
-			undarken();
+			
 			break;
 		case ItemSelect:
-			if(sideBar.Closed())
-			{
-				buildInventory();
-				sideBar.open();
-			}
-			undarken();
-			
+						
 			switch(currentState)
 			{
 			case ItemSort:
-				invSort.close();
 				break;
 			case ItemUse:
-				charUseScreen.close();
-				fillInventory();
-				itemToUse = null;
+				
 				break;
 			default:
 				break;
 			}
 			break;
 		case Root:
-			undarken();
-			buildCharPlates();
-			
-			sideBar.pos = new Point(Global.vpWidth, 0);
-			sideBar.anchor = Anchors.TopRight;
 			
 			switch(currentState)
 			{
 			case Equip:
-				sideBar.close();
-				equipItemType = null;
-				selectedEqpItem = null;
-				eqpRemove = false;
+
 				break;
 			case Options:
 			case SkillSelect:
 				sideBar.close();
 				break;
 			case ItemSelect:
-				sideBar.close();
-				invShowKeys = false;
+				
 				break;
 			case CharStatus:
 				charStatusGrow.close();
@@ -1221,17 +1936,14 @@ public class MainMenu
 			charStatusGrow.open();
 			break;
 		case ItemSort:
-			darken();
-			invSort.open();
+
 			break;
 		case ItemUse:
-			darken();
-			buildCharUseScreen();
-			charUseScreen.open();
+			
 			break;
 		case SkillSelectChar:
 		case EquipSelectChar:
-			darken();
+			
 			break;
 		default:
 			break;
@@ -1270,6 +1982,20 @@ public class MainMenu
 		
 	}
 	
+	private void updateRoot()
+	{
+		rootMenu.update();
+		rootCharPlates.update();
+		
+		
+		//update timer
+		rootBarPanel.getTextAt(2).x = rootBarPanel.width - (int)smallText.measureText("Time:"+Global.playTimer.playTime()) - 10;
+		rootBarPanel.getTextAt(2).text = "Time:"+Global.playTimer.playTime();
+		
+		if(!charStatusGrow.Closed())
+			charStatusGrow.update();
+	}
+	
 	public void update()
 	{	
 		//update darkness
@@ -1289,47 +2015,17 @@ public class MainMenu
 		{
 		case SkillSelectChar:
 		case EquipSelectChar:
-			rootInfoBar.update();
 		case Root:
-			rootMenu.update();
-			rootCharPlates.update();
-			
-			
-			//update timer
-			rootBarPanel.getTextAt(2).x = rootBarPanel.width - (int)smallText.measureText("Time:"+Global.playTimer.playTime()) - 10;
-			rootBarPanel.getTextAt(2).text = "Time:"+Global.playTimer.playTime();
-			
-			if(!charStatusGrow.Closed())
-				charStatusGrow.update();
+
 			
 			break;
 			
 		case Equip:
-			eqpCharPanel.update();
-			eqpEquipSlots.update();
-			eqpInfoBar.update();
-			eqpSelect.update();
-			eqpStats.update();
-			if(nextChar != null && sideBar.Opened())
-			{
-				selectedChar = nextChar;
-				nextChar = null;
-				updateEquipScreen();
-			}
+			
 			break;
 			
 		case SkillSelect:
-			if(nextChar != null && sideBar.Opened())
-			{
-				selectedChar = nextChar;
-				nextChar = null;
-				updateSkillScreen();
-				
-			}
 			
-			skillsBackButton.update();
-			skillsCharPanel.update();
-			skillsList.update();
 			break;
 			
 		case CharStatus:
@@ -1347,12 +2043,7 @@ public class MainMenu
 			break;
 			
 		case ItemSelect:
-			invInfoBar.update();
-			invList.update();
-			if(charUseScreen != null && !charUseScreen.Closed())
-				charUseScreen.update();
-			if(invSort != null && !invSort.Closed())
-				invSort.update();
+
 
 			break;
 			
@@ -1383,13 +2074,11 @@ public class MainMenu
 			}
 			break;
 		case ItemSort:
-			invSort.update();
+			
 			break;
 			
 		case ItemUse:
-			charUseScreen.update();
-			charUseInfo.update();
-			charUseDesc.update();
+			
 			
 			//if(itemToUse.getCount() == 0 && markers.size() == 0)
 				//changeState(menuStates.ItemSelect);
@@ -1412,18 +2101,7 @@ public class MainMenu
 		switch(currentState)
 		{
 		case Root:			
-			rootCharPlates.render();
-			rootBarPanel.render();
-			rootMenu.render();	
 			
-			if(!sideBar.Closed())
-			{
-				renderDark();
-				sideBar.render();
-			}
-			
-			if(!charStatusGrow.Closed())
-				charStatusGrow.render();
 			break;
 			
 		case CharStatus:
@@ -1450,88 +2128,20 @@ public class MainMenu
 			
 		case SkillSelectChar:	
 		case EquipSelectChar:			
-			rootBarPanel.render();
-			rootMenu.render();			
-			renderDark();			
-			rootCharPlates.render();
-			rootInfoBar.render();
-			
-			if(!sideBar.Closed())
-				sideBar.render();
+
 		
 			break;
 			
 		case Equip:
-			if(sideBar.Opened() || nextChar != null)
-			{
-				eqpCharPanel.render();
-				eqpEquipSlots.render();
-				eqpInfoBar.render();				
-				if(equipItemType != null)
-					renderDark();
-				eqpStats.render();
-				eqpSelect.render();
-				if(!sideBar.Opened())
-					sideBar.render();
-			}
-			else
-			{
-				rootCharPlates.render();
-				rootBarPanel.render();
-				rootMenu.render();
-				renderDark();
-				sideBar.render();
-			}				
+							
 			break;
 			
 		case SkillSelect:
-			if(sideBar.Opened() || nextChar != null)
-			{
-				
-				skillsCharPanel.render();
-				skillsList.render();
-				skillsBackButton.render();
-
-				if(!sideBar.Opened())
-					sideBar.render();
-				
-			}
-			else
-			{
-				rootCharPlates.render();
-				rootBarPanel.render();
-				rootMenu.render();
-				renderDark();
-				sideBar.render();
-			}
+			
 			break;
 			
 		case ItemSelect:			
-			if(sideBar.Opened())
-			{
-				invInfoBar.render();
-				invList.render();
-				
-				if(charUseScreen != null && !charUseScreen.Closed())
-				{
-					renderDark();				
-					charUseScreen.render();
-				}				
-				
-				if(invSort != null && !invSort.Closed())
-				{
-					renderDark();
-					invSort.render();
-				}
-			}
-			else
-			{
-				rootCharPlates.render();
-				rootBarPanel.render();
-				rootMenu.render();
-				renderDark();
-				sideBar.render();
-			}				
+			
 			break;
 			
 		case Options:
@@ -1570,23 +2180,11 @@ public class MainMenu
 			break;
 			
 		case ItemSort:
-			invInfoBar.render();
-			invList.render();
-			renderDark();
-			invSort.render();
+			
 			break;
 			
 		case ItemUse:
-			invInfoBar.render();
-			invList.render();
-			renderDark();
-			charUseScreen.render();
-			if(charUseScreen.Opened())
-			{
-				charUseInfo.render();
-				charUseDesc.render();
-			}
-				
+			
 			break;
 		default:
 			break;			
@@ -1603,6 +2201,50 @@ public class MainMenu
 			if(d.isShown())
 				d.render();
 	}
+	
+	private void fling(float velocityX, float velocityY)
+	{
+		List<PlayerCharacter> charList = Global.party.getPartyList(false);
+		if(charList.size() > 1 && Math.abs(velocityY) < 300 && Math.abs(velocityX) > 300)
+		{
+			undarken();
+			equipItemType = null;
+			
+			//determine current index
+			int i = 0;
+			for(PlayerCharacter c : charList)
+			{
+				if(c.getName().equals(selectedChar.getName()))
+					break;
+				++i;
+			}
+			//swiped right
+			if(velocityX > 0)
+			{
+				if(i+1 >= charList.size())
+					nextChar = charList.get(0);
+				else
+					nextChar = charList.get(i+1);
+				
+				sideBar.setClosed();
+				sideBar.pos = new Point(0, 0);
+				sideBar.anchor = Anchors.TopLeft;
+				sideBar.open();
+			}
+			else //swiped left
+			{
+				if(i == 0)
+					nextChar = charList.get(charList.size()-1);
+				else
+					nextChar = charList.get(i-1);
+				
+				sideBar.setClosed();
+				sideBar.pos = new Point(Global.vpWidth, 0);
+				sideBar.anchor = Anchors.TopRight;
+				sideBar.open();
+			}
+		}
+	}
 		
 	public void onFling(float velocityX, float velocityY)
 	{
@@ -1611,48 +2253,10 @@ public class MainMenu
 		case CharStatus:
 		case SkillSelect:
 		case Equip:
-			List<PlayerCharacter> charList = Global.party.getPartyList(false);
-			if(charList.size() > 1 && Math.abs(velocityY) < 300 && Math.abs(velocityX) > 300)
-			{
-				undarken();
-				equipItemType = null;
-				
-				//determine current index
-				int i = 0;
-				for(PlayerCharacter c : charList)
-				{
-					if(c.getName().equals(selectedChar.getName()))
-						break;
-					++i;
-				}
-				//swiped right
-				if(velocityX > 0)
-				{
-					if(i+1 >= charList.size())
-						nextChar = charList.get(0);
-					else
-						nextChar = charList.get(i+1);
-					
-					sideBar.setClosed();
-					sideBar.pos = new Point(0, 0);
-					sideBar.anchor = Anchors.TopLeft;
-					sideBar.open();
-				}
-				else //swiped left
-				{
-					if(i == 0)
-						nextChar = charList.get(charList.size()-1);
-					else
-						nextChar = charList.get(i-1);
-					
-					sideBar.setClosed();
-					sideBar.pos = new Point(Global.vpWidth, 0);
-					sideBar.anchor = Anchors.TopRight;
-					sideBar.open();
-				}
+			fling(velocityX, velocityY);
 					
 						
-			}
+			
 			break;
 		default:
 			break;
@@ -1672,8 +2276,7 @@ public class MainMenu
 				switch(currentState)
 				{
 				case Root:
-					sideBar.setClosed();				
-					close();
+					
 					break;				
 				
 				case Equip:	
@@ -1692,7 +2295,7 @@ public class MainMenu
 					
 				case ItemUse:				
 				case ItemSort:
-					changeState(menuStates.ItemSelect);
+					
 					break;
 				default:
 					break;
@@ -1716,22 +2319,19 @@ public class MainMenu
 				switch(currentState)
 				{
 				case Root:
-					rootMenu.touchActionMove(x, y);
 				case SkillSelectChar:
 				case EquipSelectChar:
-					rootCharPlates.touchActionMove(x, y);
+					
 					break;
 				case ItemSelect:
-					invInfoBar.touchActionMove(x, y);
-					invList.touchActionMove(x, y);
+					
 					break;
 				case CharStatus:
 					backButton.touchActionMove(x, y);
 					charStatusAbilities.touchActionMove(x, y);
 					break;
 				case SkillSelect:
-					skillsBackButton.touchActionMove(x, y);
-					skillsList.touchActionMove(x, y);
+					
 					break;
 				case Options:
 					opts.touchActionMove(x, y);
@@ -1745,42 +2345,14 @@ public class MainMenu
 					break;				
 					
 				case Equip:
-					if(sideBar.Opened())
-					{					
-						if(equipItemType != null)
-						{
-							eqpSelect.touchActionMove(x, y);
-							if(eqpSelect.getCurrentSelectedEntry() != null)
-							{
-								if(!eqpSelect.isScrolling() && (Item)(eqpSelect.getCurrentSelectedEntry().obj) != selectedEqpItem)
-								{
-									selectedEqpItem = (Item)eqpSelect.getCurrentSelectedEntry().obj;
-									if(selectedEqpItem == null)
-										eqpRemove = true;
-									updateEquipStats();
-								}
-							}
-							else
-							{
-								selectedEqpItem = null;
-								updateEquipStats();
-							}
-							
-							
-						}						
-						else
-						{
-							eqpEquipSlots.touchActionMove(x, y);
-							eqpInfoBar.touchActionMove(x, y);
-						}
-					}
+					
 					
 					break;
 				case ItemSort:
-					invSort.touchActionMove(x, y);
+					
 					break;
 				case ItemUse:
-					charUseScreen.touchActionMove(x, y);
+					
 					break;
 				default:
 					break;
@@ -1794,6 +2366,8 @@ public class MainMenu
 	{
 		ListBox.LBStates state;
 		MenuPanel selectedPanel;
+		
+		
 		
 		if(!close)
 		{
@@ -1822,41 +2396,17 @@ public class MainMenu
 				switch(currentState)
 				{
 				case Root:
-					state = rootMenu.touchActionUp(x, y);
-					if(state == LBStates.Selected)
-						handleOption((String)rootMenu.getSelectedEntry().obj);
-					
-					selectedPanel = rootCharPlates.touchActionUp(x, y);				
-					//update party order based on charplates order
-					for(int i = 0; i < 4; ++i) Global.party.partyMembers[i] = (PlayerCharacter)rootCharPlates.panels[i].obj;
-					if(selectedPanel != null)
-					{
-						selectedChar = (PlayerCharacter)selectedPanel.obj;
-						updateCharStatus();					
-						changeState(menuStates.CharStatus);
-					}
+
 					break;
 					
 				case SkillSelectChar:
 				case EquipSelectChar:
-					selectedPanel = rootCharPlates.touchActionUp(x, y);	
-					//update party order based on charplates order
-					for(int i = 0; i < 4; ++i) Global.party.partyMembers[i] = (PlayerCharacter)rootCharPlates.panels[i].obj;
-					//open equip screen with selected character
-					if(selectedPanel != null)
-					{
-						selectedChar = (PlayerCharacter)selectedPanel.obj;
-						changeState(currentState == menuStates.EquipSelectChar ? menuStates.Equip : menuStates.SkillSelect);
-					}
+					
 					break;	
 					
 				case SkillSelect:
-					if(skillsBackButton.touchActionUp(x, y) == LBStates.Selected)
-						changeState(menuStates.Root);
-					else
-					{
-						skillsList.touchActionUp(x, y);
-					}
+					
+
 					
 					break;
 				case Options:
@@ -1884,153 +2434,19 @@ public class MainMenu
 					
 				case ItemSelect:
 					
-					state = invInfoBar.touchActionUp(x, y);
-					if(state == LBStates.Selected)
-						handleInvOption((String)invInfoBar.getSelectedEntry().obj);
 					
-					
-					state = invList.touchActionUp(x, y);
-					if(state == LBStates.Selected)
-					{
-						Item i = (Item)(invList.getSelectedEntry().obj);
-						
-						if(invList.getSelectedEntry().Disabled())
-						{						
-							//if(i.getType() == Type.Usable)
-							showMessage(i.getDescription(), false);
-							
-							//add usable by string
-							if(i.getType() != Type.Usable)
-							{
-								List<String> charNames = new ArrayList<String>();
-								PlayerCharacter c;
-								for(String str : i.getUsableChars())
-								{
-									c = Global.party.getCharacter(str);
-									if(c != null)
-										charNames.add(c.getDisplayName());
-								}
-								
-								if(charNames.size() > 0)
-								{
-									String usableByString = "Usable by: \n";
-									for(int j = 0; j < charNames.size(); ++j)
-									{
-										usableByString += charNames.get(j);
-										if(j < charNames.size() - 1)
-											usableByString += ", ";
-									}
-									messageBox.addMessage(usableByString);
-										
-								}
-									
-										
-							}
-						}
-						else
-						{
-							if(invShowKeys)
-								showMessage(i.getDescription(), false);
-							else
-							{
-								itemToUse = i;
-								changeState(menuStates.ItemUse);
-							}
-								
-						}
-					}
 					break;
 					
 				case Equip:	
-					selectedEqpItem = null;
-					eqpRemove = false;
 					
-					if(sideBar.Opened())
-					{					
-						if(equipItemType != null)
-						{				
-							selectedEqpItem = null;
-							updateEquipStats();
-							
-							state = eqpSelect.touchActionUp(x, y);
-							switch(state)
-							{
-							case Close:
-								equipItemType = null;
-								fillEqpSelect();
-								undarken();
-								break;
-							case Selected:
-								Item i = (Item)eqpSelect.getSelectedEntry().obj;
-								if(i == null)
-									selectedChar.unequip(equipItemType);
-								else
-									selectedChar.equip(i.getId());
-								
-								undarken();
-								equipItemType = null;
-								updateEquipScreen();
-								break;
-							default:
-								break;
-							}
-						}
-						else
-						{
-							state = eqpInfoBar.touchActionUp(x, y);				
-							if(state == LBStates.Selected)
-							{
-								handleEqpOption((String)eqpInfoBar.getSelectedEntry().obj);
-								break;
-							}
-							
-							state = eqpEquipSlots.touchActionUp(x, y);
-							if(state == LBStates.Selected)
-							{
-								equipItemType = (Item.Type)eqpEquipSlots.getSelectedEntry().obj;
-								darken();
-								fillEqpSelect();
-								//handleEqpOption((String)eqpInfoBar.getSelectedEntry().obj);
-								break;
-							}
-						}
-						
-					}
 					
 					break;
 					
 				case ItemSort:
-					state = invSort.touchActionUp(x, y);
-					
-					switch(state)
-					{
-					case Close:
-						changeState(menuStates.ItemSelect);
-						break;
-					case Selected:
-						handleInvSortOption((String)invSort.getSelectedEntry().obj);
-						break;
-					default:
-						break;
-					}
 					break;
 					
 				case ItemUse:				
-					state = charUseScreen.touchActionUp(x, y);
 					
-					switch(state)
-					{
-					case Close:
-						changeState(menuStates.ItemSelect);
-						break;
-					case Selected:
-						useItem((PlayerCharacter)charUseScreen.getSelectedEntry().obj);
-						
-						
-						break;
-					default:
-						break;
-					}
 					break;
 				default:
 					break;
@@ -2050,15 +2466,12 @@ public class MainMenu
 			{
 				switch(currentState)
 				{
-				case Root:
-					rootMenu.touchActionDown(x, y);
+				case Root:					
 				case SkillSelectChar:
 				case EquipSelectChar:
-					rootCharPlates.touchActionDown(x, y);
 					break;
 				case SkillSelect:
-					skillsBackButton.touchActionDown(x, y);
-					skillsList.touchActionDown(x, y);
+					
 					break;
 				case Options:
 					opts.touchActionDown(x, y);
@@ -2072,45 +2485,19 @@ public class MainMenu
 					break;
 					
 				case ItemSelect:
-					invInfoBar.touchActionDown(x, y);
-					invList.touchActionDown(x, y);					
+									
 					break;
 				case CharStatus:
 					backButton.touchActionDown(x, y);
 					charStatusAbilities.touchActionDown(x, y);
 					break;
 				case Equip:
-					if(sideBar.Opened())
-					{						
-						if(equipItemType != null)
-						{
-							eqpSelect.touchActionDown(x, y);
-							if(eqpSelect.getCurrentSelectedEntry() != null)
-							{
-								selectedEqpItem = (Item)eqpSelect.getCurrentSelectedEntry().obj;
-								if(selectedEqpItem == null)
-									eqpRemove = true;
-								updateEquipStats();
-							}
-							else
-							{
-								selectedEqpItem = null;
-								updateEquipStats();
-							}
-								
-						}							
-						else
-						{
-							eqpEquipSlots.touchActionDown(x, y);
-							eqpInfoBar.touchActionDown(x, y);
-						}
-					}					
+					
 					break;
 				case ItemSort:
-					invSort.touchActionDown(x, y);
+					
 					break;
 				case ItemUse:
-					charUseScreen.touchActionDown(x, y);
 					break;
 				default:
 					break;
@@ -2135,8 +2522,7 @@ public class MainMenu
 		SkillSelectChar,
 		CharStatus,
 		Options,
-		OptionFrameColor,
-		Save
+		OptionFrameColor
 	}
 
 }
