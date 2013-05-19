@@ -68,15 +68,14 @@ public class bactTryEscape  extends BattleAction {
 			BattleAnim runAnim = makeRunAnimation(character);
 			int finishRun = startAnimationTime + runAnim.syncToAnimation(1.0f);
 			eventBuilder.setAnimation(runAnim, getFrame());
-			eventBuilder.addEventObject(new BattleEventObject(startAnimationTime, new bactChangeVisibility(getFrame(), false), character, target));
-			eventBuilder.addEventObject(new BattleEventObject(finishRun, new bactChangeVisibility(getFrame(), true), character, target));			
+			eventBuilder.addEventObject(new BattleEventObject(startAnimationTime, new bactChangeVisibility(getFrame(), false), character, target));			
 			eventBuilder.addEventObject(new BattleEventObject(finishRun, new BattleAction(getFrame())
 			{
 				@Override
 				public void run(PlayerCharacter character, List<PlayerCharacter> target, List<DamageMarker> markers)
 				{
-					//note that all events are ignored after a character has escaped!  set visibility before running! (order added is tie breaker)
 					character.setEscaped(true);
+					character.setVisible(true);
 				}
 			}, character, target));
 			eventBuilder.addEventObject(new BattleEventObject(finishRun));

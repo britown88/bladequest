@@ -1,8 +1,11 @@
 package bladequest.combat;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
+import android.R.bool;
 import bladequest.battleactions.BattleAction;
 import bladequest.battleactions.bactDamage;
 import bladequest.battleactions.bactTryEscape;
@@ -78,6 +81,12 @@ public class BattleEvent
 	{
 		return new BattleEventBuilder()
 		{	 
+			BattleEvent ev;
+			BattleEventBuilder initializer(BattleEvent ev)
+			{
+				this.ev = ev;
+				return this;
+			}
 			@Override				 
 			public List<PlayerCharacter> getTargets()
 			{
@@ -96,7 +105,12 @@ public class BattleEvent
 			public void addEventObject(BattleEventObject eventObj) {
 				objects.add(eventObj);
 			}
-		};	
+			@Override
+			public int getCurrentBattleFrame()
+			{
+				return ev.getCurrentFrame();	
+			}
+		}.initializer(this);	
 	}
 	
 	public void setTargets(List<PlayerCharacter> targets)
@@ -149,7 +163,7 @@ public class BattleEvent
 				{
 					builder.addEventObject(new BattleEventObject(frameFromActIndex(finalIndex), faces.Ready, 0, source));
 				}
-				builder.addEventObject(new BattleEventObject(frameFromActIndex(finalIndex+2)));
+				builder.addEventObject(new BattleEventObject(-2000000000));
 			}
 			
 		}.initialize(ability);
@@ -208,7 +222,11 @@ public class BattleEvent
 		}
 		
 	}
-	
+	private int getCurrentFrame()
+	{
+		if (!running || done) return 0;
+		return (int)(System.currentTimeMillis() - startTime);
+	}
 	public void update(Battle battle, List<DamageMarker> markers)
 	{
 		if (!source.isInBattle())
@@ -226,15 +244,31 @@ public class BattleEvent
 		{
 			long frame = System.currentTimeMillis() - startTime;
 			BattleEventObject rmObj = null;
+			boolean hasPositive = false;
 			//int actIndex = (int)(frame / actTimerLength);
 			for(BattleEventObject obj : objects)
 			{
+				if (obj.Frame() < 0) continue;
+				hasPositive = true;
 				if(obj.Frame() <= frame)
 				{
 					obj.execute(battle, markers);
 					rmObj = obj;
 					break;					
 				}
+			}
+			//raw sorted order.  sort and remove.
+			if (!hasPositive)
+			{
+				Collections.sort(objects, new Comparator<BattleEventObject>(){
+
+					@Override
+					public int compare(BattleEventObject lhs, BattleEventObject rhs) {
+						return rhs.Frame() - lhs.Frame();
+				}});
+				
+				rmObj = objects.get(0);
+				rmObj.execute(battle, markers);			
 			}
 			
 			if(rmObj != null)

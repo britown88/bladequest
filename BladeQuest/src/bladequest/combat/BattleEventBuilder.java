@@ -11,4 +11,5 @@ public interface BattleEventBuilder {
  
  void setAnimation(BattleAnim anim, int frameOffset);
  void addEventObject(BattleEventObject eventObj);
+ int getCurrentBattleFrame();
 }

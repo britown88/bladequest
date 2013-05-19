@@ -16,7 +16,8 @@ import bladequest.world.States;
 public class seRegen extends StatusEffect {
 	int minHeal;
 	int maxHeal;
-	public seRegen(int minHeal, int maxHeal) {
+	int duration;
+	public seRegen(int minHeal, int maxHeal, int duration) {
 		super("Regen", false);
 		icon = "poison"; //deal with it nerds
 		curable = false;
@@ -25,6 +26,7 @@ public class seRegen extends StatusEffect {
 		battleOnly = true;
 		this.minHeal = minHeal;
 		this.maxHeal = maxHeal;
+		this.duration = duration;
 	}
 	
 	@Override
@@ -46,6 +48,11 @@ public class seRegen extends StatusEffect {
 		eventBuilder.addEventObject(new BattleEventObject(startAnimTime, anim, healTarget, healTargetList));
 		eventBuilder.addEventObject(new BattleEventObject(endAnimTime, new bactDamage(endAnimTime, -healAmnt, DamageTypes.Fixed), healTarget, healTargetList));
 		eventBuilder.addEventObject(new BattleEventObject(endAnimTime));
+		
+		if (duration > 0 && --duration == 0)
+		{
+			healTarget.removeStatusEffect(name);
+		}
 	}
 	@Override
 	public void onInflict(PlayerCharacter c) 
