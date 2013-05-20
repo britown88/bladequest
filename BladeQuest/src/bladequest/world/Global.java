@@ -1061,7 +1061,7 @@ public class Global
 		loadBitmaps("drawable/characters");
 		loadBitmaps("drawable/misc");
 		loadBitmaps("drawable/misc/title");
-		loadBitmaps("drawable/tilesets");				
+		loadBitmaps("drawable/tilesets");	
 
 		scenes = new HashMap<String, Scene>();
 		loadScenes("drawable/scenes");		
@@ -1154,18 +1154,18 @@ public class Global
 		party.addCharacter("joy");
 		party.addCharacter("luc");	
 		
-		for(PlayerCharacter pc : party.getPartyMembers(true))
-		{
-			if(pc != null)
-			{
-				pc.modifyLevel(99, false);
-				pc.fullRestore();
-				pc.modifyHP(-85.0f, true);
-			}
-		}
-		
-		for(int i = 0; i < 99; ++i)
-			party.addItem("potion");
+//		for(PlayerCharacter pc : party.getPartyMembers(true))
+//		{
+//			if(pc != null)
+//			{
+//				pc.modifyLevel(99, false);
+//				pc.fullRestore();
+//				pc.modifyHP(-85.0f, true);
+//			}
+//		}
+//		
+//		for(int i = 0; i < 99; ++i)
+//			party.addItem("potion");
 		
 		LoadMap("test");
 			

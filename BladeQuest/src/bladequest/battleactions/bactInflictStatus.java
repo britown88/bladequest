@@ -44,6 +44,23 @@ public class bactInflictStatus extends BattleAction
 	}
 	
 	@Override
+	public void runOutsideOfBattle(PlayerCharacter attacker, List<PlayerCharacter> targets, List<DamageMarker> markers)
+	{
+		for(PlayerCharacter t : targets)
+		{
+			if(t.isInBattle() && !t.hasStatus(se.Name()))
+			{
+				if (!se.isHidden())
+					markers.add(new DamageMarker(se.Name().toUpperCase(Locale.US), t));	
+				
+				t.applyStatusEffect(se);
+			}	
+			else if (!se.isHidden())				
+				markers.add(new DamageMarker("MISS", t));
+		}		
+	}
+	
+	@Override
 	public boolean willAffectTarget(PlayerCharacter target) 
 	{		
 		return target.isInBattle() && !target.hasStatus(se.Name()); 

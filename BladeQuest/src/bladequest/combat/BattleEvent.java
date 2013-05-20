@@ -5,10 +5,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import android.R.bool;
 import bladequest.battleactions.BattleAction;
 import bladequest.battleactions.bactDamage;
 import bladequest.battleactions.bactTryEscape;
+import bladequest.battleactions.bactUseItem;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleSprite.faces;
 import bladequest.statuseffects.StatusEffect;
@@ -200,13 +200,12 @@ public class BattleEvent
 			animStartIndex = 3;			
 			finalIndex = getFinalAnimFrameIndex();
 			
-			//resets item count and removes from inventory
-			source.useItem();
-			
 			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex), faces.Use, 0, source));
 			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex), anim, source, targets));
 			for(BattleAction action : itm.getActions())
 				objects.add(new BattleEventObject(syncToAnimationWithOffset(action.getFrame()), action, source, targets));
+			objects.add(new BattleEventObject(0, new bactUseItem(0), source, targets));
+			
 			objects.add(new BattleEventObject(frameFromActIndex(finalIndex), faces.Ready, 0, source));
 			objects.add(new BattleEventObject(frameFromActIndex(finalIndex+2)));
 			

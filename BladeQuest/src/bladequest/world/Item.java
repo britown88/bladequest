@@ -187,6 +187,12 @@ public class Item
 			actions.get(i).run(attacker, targets, markers);
 	}
 	
+	public void executeOutOfBattle(PlayerCharacter attacker, List<PlayerCharacter> targets, List<DamageMarker> markers)
+	{
+		for(int i = 0; i < actions.size(); ++i)
+			actions.get(i).runOutsideOfBattle(attacker, targets, markers);
+	}
+	
 	public boolean willAffect(PlayerCharacter c)
 	{
 		for(BattleAction ba : actions)

@@ -92,6 +92,7 @@ public class bactTryEscape  extends BattleAction {
 				Global.battle.changeStartBarText("Couldn't run!");
 				eventBuilder.addEventObject(new BattleEventObject(startAnimationTime + BattleEvent.frameFromActIndex(3)));
 			}
+			markers.add(new DamageMarker("FAILED!", character));
 		}
 	}
 }
