@@ -34,12 +34,12 @@ public class Battle
 	private final int statFrameBuffer = 8;
 	private final int charYSpacing = 48;
 	private final int charPanelYSpacing = 48;
-	private final int charXSpacing = 4;
+	private final int charXSpacing = 12;
 	private final int mpWindowHeight = 32;
 	private final int mpWindowWidth = 128;
 	
 	public static final int advanceDistance = 32;
-	public static final Point partyPos = new Point(Global.vpWidth - 128, 32);
+	public static final Point partyPos = new Point(Global.vpWidth - 160, 32);
 	
 	private final String txtStart = "Tap screen to start!";
 	private final String txtTargetSingle = "Select target...";
@@ -474,9 +474,9 @@ public class Battle
 		for(int i = 0; i < 4; ++i)
 		{
 			characterPanes[i] = new MenuPanel(
-					partyPos.x + 64, 
+					partyPos.x + 64 + charXSpacing * i, 
 					partyPos.y + statFrameBuffer + charPanelYSpacing*i,
-					Global.vpWidth - (partyPos.x + 64),
+					61,
 					charPanelYSpacing - statFrameBuffer);
 			characterPanes[i].thickFrame = false;
 		}
@@ -585,8 +585,9 @@ public class Battle
 			c.setPosition(partyPos.x + (charXSpacing * c.Index()), partyPos.y + (charYSpacing * c.Index()));
 		}
 		
-		if(currentChar != null && currentChar.getPositionSpecial() == false)
-			currentChar.setPosition(partyPos.x-selCharX, partyPos.y + (charYSpacing * currentChar.Index()));
+
+		if(currentChar != null && currentChar.getPositionSpecial() == false)	
+			currentChar.setPosition(partyPos.x + (charXSpacing * currentChar.Index()) - selCharX, partyPos.y + (charYSpacing * currentChar.Index()));
 	}
 
 	public void changeStartBarText(String str){startBar.getTextAt(0).text = str;}
