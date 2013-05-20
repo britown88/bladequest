@@ -41,7 +41,6 @@ public class MainMenu
 	
 	private final int menuWidth, barHeight;
 	
-	private menuStates currentState;
 	private Vector<DamageMarker> markers;
 	private Item itemToUse;
 	private PlayerCharacter selectedChar, nextChar;
@@ -70,8 +69,7 @@ public class MainMenu
 	private MenuPanel optsColorWindow;
 	private NumberPicker npRed, npGreen, npBlue;
 	private int optsColorNumber;
-	
-	
+		
 	//skills
 	private ListBox skillsBackButton, skillsList;
 	private MenuPanel skillsCharPanel;
@@ -80,7 +78,6 @@ public class MainMenu
 	private MsgBox messageBox;
 	private ListBox charUseScreen;	
 	private MenuPanel sideBar,charUseInfo, charUseDesc;
-	
 	
 	private final int sideBarOpenSpeed = 30;
 	
@@ -96,7 +93,7 @@ public class MainMenu
 	public MainMenu()
 	{
 		stateMachine = new MainMenuStateMachine();
-		currentState = menuStates.Root;
+		//stateMachine.setState(getRootState());
 		
 		markers= new Vector<DamageMarker>();
 		
@@ -113,32 +110,6 @@ public class MainMenu
 		
 	}	
 	
-//	return new MainMenuState()
-//	{
-//		@Override
-//		public void changeStateTo(MainMenuState state) {}
-//		@Override
-//		public void changeToRoot() {}
-//		@Override
-//		public void onSwitchedTo(MainMenuState prevState) {}
-//		@Override
-//		public void update() {}
-//		@Override
-//		public void render() {}
-//		@Override
-//		public void handleClosing() {}
-//		@Override
-//		public void onFling(float velocityX, float velocityY) {}
-//		@Override
-//		public void backButtonPressed() {}
-//		@Override
-//		public void touchActionUp(int x, int y) {}
-//		@Override
-//		public void touchActionMove(int x, int y) {}
-//		@Override
-//		public void touchActionDown(int x, int y) {}
-//	};
-	
 	private MainMenuState getRootState()
 	{
 		return new MainMenuState()
@@ -152,7 +123,8 @@ public class MainMenu
 				sideBar.pos = new Point(Global.vpWidth, 0);
 				sideBar.anchor = Anchors.TopRight;
 				
-				prevState.changeToRoot();
+				if(prevState != null)				
+					prevState.changeToRoot();
 			}
 			@Override
 			public void update() {
@@ -205,8 +177,9 @@ public class MainMenu
 				if(selectedPanel != null)
 				{
 					selectedChar = (PlayerCharacter)selectedPanel.obj;
-					updateCharStatus();					
-					changeState(menuStates.CharStatus);
+					updateCharStatus();		
+					stateMachine.setState(getCharStatusState());
+
 				}
 				
 			}
@@ -218,6 +191,7 @@ public class MainMenu
 			@Override
 			public void touchActionDown(int x, int y) {
 				rootMenu.touchActionDown(x, y);
+				rootCharPlates.touchActionDown(x, y);
 			}
 		};
 	}
@@ -225,10 +199,6 @@ public class MainMenu
 	{
 		return new MainMenuState()
 		{
-			@Override
-			public void changeStateTo(MainMenuState state) {
-				
-			}
 			@Override
 			public void changeToRoot()
 			{
@@ -244,7 +214,8 @@ public class MainMenu
 				}
 				undarken();	
 				
-				prevState.changeToItemSelect();
+				if(prevState != null)	
+					prevState.changeToItemSelect();
 			}
 			@Override
 			public void update() {
@@ -286,12 +257,12 @@ public class MainMenu
 			@Override
 			public void handleClosing() {
 				if(invSort.Closed() && charUseScreen.Closed())
-					changeState(menuStates.Root);				
+					stateMachine.setState(getRootState());				
 			}
 
 			@Override
 			public void backButtonPressed() {
-				changeState(menuStates.Root);
+				stateMachine.setState(getRootState());	
 			}
 			@Override
 			public void touchActionUp(int x, int y) {
@@ -341,7 +312,7 @@ public class MainMenu
 						else
 						{
 							itemToUse = i;
-							changeState(menuStates.ItemUse);
+							stateMachine.setState(getItemUseState());	
 						}							
 					}
 				}
@@ -385,11 +356,11 @@ public class MainMenu
 			}
 			@Override
 			public void handleClosing() {
-				changeState(menuStates.ItemSelect);
+				stateMachine.setState(getItemSelectState());	
 			}
 			@Override
 			public void backButtonPressed() {
-				changeState(menuStates.ItemSelect);
+				stateMachine.setState(getItemSelectState());	
 			}
 			@Override
 			public void touchActionUp(int x, int y) {
@@ -398,7 +369,7 @@ public class MainMenu
 				switch(state)
 				{
 				case Close:
-					changeState(menuStates.ItemSelect);
+					stateMachine.setState(getItemSelectState());	
 					break;
 				case Selected:
 					handleInvSortOption((String)invSort.getSelectedEntry().obj);
@@ -454,11 +425,11 @@ public class MainMenu
 			}
 			@Override
 			public void handleClosing() {
-				changeState(menuStates.ItemSelect);
+				stateMachine.setState(getItemSelectState());	
 			}
 			@Override
 			public void backButtonPressed() {
-				changeState(menuStates.ItemSelect);
+				stateMachine.setState(getItemSelectState());	
 			}
 			@Override
 			public void touchActionUp(int x, int y) {
@@ -467,7 +438,7 @@ public class MainMenu
 				switch(state)
 				{
 				case Close:
-					changeState(menuStates.ItemSelect);
+					stateMachine.setState(getItemSelectState());	
 					break;
 				case Selected:
 					useItem((PlayerCharacter)charUseScreen.getSelectedEntry().obj);					
@@ -546,7 +517,7 @@ public class MainMenu
 			}
 			@Override
 			public void handleClosing() {
-				changeState(menuStates.Root);
+				stateMachine.setState(getRootState());	
 			}
 			@Override
 			public void onFling(float velocityX, float velocityY) {
@@ -554,7 +525,7 @@ public class MainMenu
 			}
 			@Override
 			public void backButtonPressed() {
-				changeState(menuStates.Root);
+				stateMachine.setState(getRootState());	
 			}
 			@Override
 			public void touchActionUp(int x, int y) {
@@ -698,11 +669,11 @@ public class MainMenu
 			}
 			@Override
 			public void handleClosing() {
-				changeState(menuStates.Root);
+				stateMachine.setState(getRootState());	
 			}
 			@Override
 			public void backButtonPressed() {
-				changeState(menuStates.Root);
+				stateMachine.setState(getRootState());	
 			}
 			@Override
 			public void touchActionUp(int x, int y) {
@@ -713,7 +684,7 @@ public class MainMenu
 				if(selectedPanel != null)
 				{
 					selectedChar = (PlayerCharacter)selectedPanel.obj;
-					changeState(menuStates.Equip );
+					stateMachine.setState(getEquipState());	
 				}
 			}
 			@Override
@@ -731,7 +702,7 @@ public class MainMenu
 		return new MainMenuState()
 		{
 			@Override
-			public void changeStateTo(MainMenuState state) {
+			public void onSwitchedTo(MainMenuState prevState) {
 				if(sideBar.Closed())
 				{
 					updateSkillScreen();
@@ -781,7 +752,7 @@ public class MainMenu
 			}
 			@Override
 			public void handleClosing() {
-				changeState(menuStates.Root);
+				stateMachine.setState(getRootState());	
 			}
 			@Override
 			public void onFling(float velocityX, float velocityY) {
@@ -789,12 +760,12 @@ public class MainMenu
 			}
 			@Override
 			public void backButtonPressed() {
-				changeState(menuStates.Root);
+				stateMachine.setState(getRootState());	
 			}
 			@Override
 			public void touchActionUp(int x, int y) {
 				if(skillsBackButton.touchActionUp(x, y) == LBStates.Selected)
-					changeState(menuStates.Root);
+					stateMachine.setState(getRootState());	
 				else
 					skillsList.touchActionUp(x, y);
 			}
@@ -843,10 +814,6 @@ public class MainMenu
 		return new MainMenuState()
 		{
 			@Override
-			public void changeStateTo(MainMenuState state) {}
-			@Override
-			public void changeToRoot() {}
-			@Override
 			public void onSwitchedTo(MainMenuState prevState) {
 				darken();
 			}
@@ -868,13 +835,11 @@ public class MainMenu
 			}
 			@Override
 			public void handleClosing() {
-				changeState(menuStates.Root);
+				stateMachine.setState(getRootState());	
 			}
 			@Override
-			public void onFling(float velocityX, float velocityY) {}
-			@Override
 			public void backButtonPressed() {
-				changeState(menuStates.Root);
+				stateMachine.setState(getRootState());	
 			}
 			@Override
 			public void touchActionUp(int x, int y) {
@@ -885,7 +850,7 @@ public class MainMenu
 				if(selectedPanel != null)
 				{
 					selectedChar = (PlayerCharacter)selectedPanel.obj;
-					changeState(menuStates.SkillSelect);
+					stateMachine.setState(getSkillSelectState());	
 				}
 			}
 			@Override
@@ -903,27 +868,255 @@ public class MainMenu
 		return new MainMenuState()
 		{
 			@Override
-			public void changeStateTo(MainMenuState state) {}
+			public void changeToRoot() {
+				charStatusGrow.close();
+				sideBar.setClosed();
+			}
 			@Override
-			public void changeToRoot() {}
+			public void onSwitchedTo(MainMenuState prevState) {
+				charStatusGrow.open();
+			}
 			@Override
-			public void onSwitchedTo(MainMenuState prevState) {}
+			public void update() {
+				charStatusGrow.update();
+				charStatus.update();
+				backButton.update();
+				charStatusAbilities.update();
+				charStatusLabel.update();
+				if(nextChar != null && sideBar.Opened())
+				{
+					selectedChar = nextChar;
+					nextChar = null;
+					updateCharStatus();
+				}
+			}
 			@Override
-			public void update() {}
+			public void render() {
+				if(charStatusGrow.Opened() || nextChar != null)
+				{
+					charStatus.render();
+					
+					backButton.render();
+					charStatusAbilities.render();
+					charStatusLabel.render();
+					
+					if(!sideBar.Opened())
+						sideBar.render();
+				}				
+				else
+				{
+					rootCharPlates.render();
+					rootBarPanel.render();
+					rootMenu.render();
+					charStatusGrow.render();
+				}
+				
+			}
 			@Override
-			public void render() {}
+			public void handleClosing() {
+				stateMachine.setState(getRootState());	
+			}
 			@Override
-			public void handleClosing() {}
+			public void onFling(float velocityX, float velocityY) {
+				fling(velocityX, velocityY);
+			}
 			@Override
-			public void onFling(float velocityX, float velocityY) {}
+			public void backButtonPressed() {
+				stateMachine.setState(getRootState());	
+			}
 			@Override
-			public void backButtonPressed() {}
+			public void touchActionUp(int x, int y) {
+				ListBox.LBStates state = backButton.touchActionUp(x, y);
+				if(state == LBStates.Selected)
+					stateMachine.setState(getRootState());	
+				else
+				{
+					charStatusAbilities.touchActionUp(x, y);
+				}
+			}
 			@Override
-			public void touchActionUp(int x, int y) {}
+			public void touchActionMove(int x, int y) {
+				backButton.touchActionMove(x, y);
+				charStatusAbilities.touchActionMove(x, y);
+			}
 			@Override
-			public void touchActionMove(int x, int y) {}
+			public void touchActionDown(int x, int y) {
+				backButton.touchActionDown(x, y);
+				charStatusAbilities.touchActionDown(x, y);
+			}
+		};
+	}
+	private MainMenuState getOptionsState()
+	{
+		return new MainMenuState()
+		{
 			@Override
-			public void touchActionDown(int x, int y) {}
+			public void changeToRoot() {
+				sideBar.close();
+			}
+			@Override
+			public void onSwitchedTo(MainMenuState prevState) {
+				if(sideBar.Closed())				
+					sideBar.open();
+
+				undarken();			
+				updateOptionsScreen();
+				
+				if(prevState != null)	
+					prevState.changeToOptions();
+			}
+			@Override
+			public void update() {
+				opts.update();
+				if(optsColorWindow != null && !optsColorWindow.Closed())
+					optsColorWindow.update();
+			}
+			@Override
+			public void render() {
+				if(sideBar.Opened())
+				{
+					opts.render();
+					if(optsColorWindow != null && !optsColorWindow.Closed())
+					{
+						renderDark();
+						optsColorWindow.render();
+					}	
+				}
+				else
+				{
+					rootCharPlates.render();
+					rootBarPanel.render();
+					rootMenu.render();
+					renderDark();
+					sideBar.render();
+				}
+			}
+			@Override
+			public void handleClosing() {
+				stateMachine.setState(getRootState());	
+			}
+			@Override
+			public void backButtonPressed() {
+				stateMachine.setState(getRootState());	
+			}
+			@Override
+			public void touchActionUp(int x, int y) {
+				if(opts.touchActionUp(x, y) == LBStates.Selected)
+					handleOptOption((String)opts.getSelectedEntry().obj);
+			}
+			@Override
+			public void touchActionMove(int x, int y) {
+				opts.touchActionMove(x, y);
+			}
+			@Override
+			public void touchActionDown(int x, int y) {
+				opts.touchActionDown(x, y);
+			}
+		};
+	}
+	private MainMenuState getOptionFrameColorState()
+	{
+		return new MainMenuState()
+		{
+			@Override
+			public void changeToOptions() {
+				optsColorWindow.close();
+				
+				//stop from changing colors to too bright				
+				int sum = Global.fc1r+Global.fc1g+Global.fc1b+
+							Global.fc2r+Global.fc2g+Global.fc2b;
+				sum /= 6;				
+				if(sum >= 240)
+				{
+					Global.fc1b = Global.fc1g = Global.fc1r = 
+						Global.fc2b = Global.fc2g = Global.fc2r = 0;
+					updateOptionsScreen();
+					showMessage("You made the menus too bright! That was silly of you...", false);
+					showMessage("We at Dapper Hat kindly recommend that you choose a darker setting.", false);
+				}
+			}
+			@Override
+			public void onSwitchedTo(MainMenuState prevState) {
+				darken();
+				optsColorWindow.open();
+				
+				if(optsColorNumber == 1)
+				{
+					npRed.setValue(Global.fc1r);
+					npGreen.setValue(Global.fc1g);
+					npBlue.setValue(Global.fc1b);
+				}
+				else
+				{
+					npRed.setValue(Global.fc2r);
+					npGreen.setValue(Global.fc2g);
+					npBlue.setValue(Global.fc2b);
+				}
+			}
+			@Override
+			public void update() {
+				optsColorWindow.update();
+				npRed.update();
+				npGreen.update();
+				npBlue.update();
+				optsBackButton.update();	
+				
+				if(optsColorNumber == 1)
+				{
+					Global.fc1r = npRed.getValue();
+					Global.fc1g = npGreen.getValue();
+					Global.fc1b = npBlue.getValue();
+				}
+				else
+				{
+					Global.fc2r = npRed.getValue();
+					Global.fc2g = npGreen.getValue();
+					Global.fc2b = npBlue.getValue();
+				}
+			}
+			@Override
+			public void render() {
+				opts.render();
+				renderDark();
+				optsColorWindow.render();
+				if(optsColorWindow.Opened())
+				{
+					npRed.render();
+					npGreen.render();
+					npBlue.render();
+					optsBackButton.render();
+				}
+			}
+			@Override
+			public void handleClosing() {
+				stateMachine.setState(getOptionsState());	
+			}
+			@Override
+			public void backButtonPressed() {
+				stateMachine.setState(getOptionsState());	
+			}
+			@Override
+			public void touchActionUp(int x, int y) {
+				npRed.touchActionUp(x, y);
+				npGreen.touchActionUp(x, y);
+				npBlue.touchActionUp(x, y);
+				if(optsBackButton.touchActionUp(x, y) == LBStates.Selected)
+					stateMachine.setState(getOptionsState());	
+			}
+			@Override
+			public void touchActionMove(int x, int y) {
+				npRed.touchActionMove(x, y);
+				npGreen.touchActionMove(x, y);
+				npBlue.touchActionMove(x, y);
+				optsBackButton.touchActionMove(x, y);
+			}
+			@Override
+			public void touchActionDown(int x, int y) {
+				npRed.touchActionDown(x, y);
+				npGreen.touchActionDown(x, y);
+				npBlue.touchActionDown(x, y);
+				optsBackButton.touchActionDown(x, y);
+			}
 		};
 	}
 	
@@ -1631,41 +1824,18 @@ public class MainMenu
 		}
 		else
 		{
-			switch(currentState)
-			{
-			case Options:
-			case CharStatus:
-			case EquipSelectChar:
-			case SkillSelectChar:
-			case SkillSelect:
-			case Equip:
-				changeState(menuStates.Root);
-				break;
-			case ItemSelect:			
-				
-				break;
-			case ItemSort:			
-			case ItemUse:
-				
-				break;
-				
-			case OptionFrameColor:
-				changeState(menuStates.Options);
-				break;
-			default:
-				break;
-			}
+			stateMachine.getState().handleClosing();
 		}		
 		
 	}
 	public void open()
 	{
 		buildRoot();
-		currentState = menuStates.Root;
+		stateMachine = new MainMenuStateMachine();
+		stateMachine.setState(getRootState());	
 		close = false;
 	}
-	
-	
+		
 	public void cancelToState(MainMenuState prevState)
 	{
 		stateMachine.resetToState(prevState);				
@@ -1699,13 +1869,13 @@ public class MainMenu
 	private void handleOption(String opt)
 	{
 		if(opt.equals("itm"))
-			changeState(menuStates.ItemSelect);
+			stateMachine.setState(getItemSelectState());	
 		else if(opt.equals("eqp"))
-			changeState(menuStates.EquipSelectChar);
+			stateMachine.setState(getEquipSelectCharState());	
 		else if(opt.equals("skl"))
-			changeState(menuStates.SkillSelectChar);
+			stateMachine.setState(getSkillSelectCharState());	
 		else if(opt.equals("opt"))
-			changeState(menuStates.Options);
+			stateMachine.setState(getOptionsState());	
 		else if(opt.equals("sav"))
 		{
 			showMessage("Quit the game and return to the title screen?", true);
@@ -1724,7 +1894,7 @@ public class MainMenu
 				fillInventory();				
 			}
 			else
-				changeState(menuStates.ItemSort);
+				stateMachine.setState(getItemSortState());	
 			
 		}
 		else if(opt.equals("key"))
@@ -1744,7 +1914,7 @@ public class MainMenu
 		}
 		else if(opt.equals("bak"))
 		{
-			changeState(menuStates.Root);
+			stateMachine.setState(getRootState());	
 		}
 
 	}
@@ -1767,7 +1937,7 @@ public class MainMenu
 		}
 		else if(opt.equals("bak"))
 		{
-			changeState(menuStates.Root);
+			stateMachine.setState(getRootState());	
 		}
 
 	}
@@ -1798,7 +1968,7 @@ public class MainMenu
 		}
 		
 		fillInventory();
-		changeState(menuStates.ItemSelect);
+		stateMachine.setState(getItemSelectState());	
 	}
 	private void handleOptOption(String opt)
 	{
@@ -1814,12 +1984,12 @@ public class MainMenu
 		else if(opt.equals("fc1"))
 		{
 			optsColorNumber = 1;
-			changeState(menuStates.OptionFrameColor);
+			stateMachine.setState(getOptionFrameColorState());	
 		}
 		else if(opt.equals("fc2"))
 		{
 			optsColorNumber = 2;
-			changeState(menuStates.OptionFrameColor);
+			stateMachine.setState(getOptionFrameColorState());	
 		}
 		else if(opt.equals("is"))
 		{
@@ -1832,125 +2002,11 @@ public class MainMenu
 		}
 		else if(opt.equals("bak"))
 		{
-			changeState(menuStates.Root);
+			stateMachine.setState(getRootState());	
 		}
 		
 		updateOptionsScreen();
 
-	}
-	private void changeState(menuStates state)
-	{			
-		switch(state)
-		{
-		case SkillSelect:
-			
-			break;
-		case Equip:
-			
-			break;
-		case ItemSelect:
-						
-			switch(currentState)
-			{
-			case ItemSort:
-				break;
-			case ItemUse:
-				
-				break;
-			default:
-				break;
-			}
-			break;
-		case Root:
-			
-			switch(currentState)
-			{
-			case Equip:
-
-				break;
-			case Options:
-			case SkillSelect:
-				sideBar.close();
-				break;
-			case ItemSelect:
-				
-				break;
-			case CharStatus:
-				charStatusGrow.close();
-				sideBar.setClosed();
-				break;
-			default:
-				break;
-			}
-			break;	
-		case Options:
-			if(sideBar.Closed())				
-				sideBar.open();
-
-			undarken();			
-			updateOptionsScreen();
-			
-			switch(currentState)
-			{
-			case OptionFrameColor:
-				optsColorWindow.close();
-				
-				//stop from changing colors to too bright				
-				int sum = Global.fc1r+Global.fc1g+Global.fc1b+
-							Global.fc2r+Global.fc2g+Global.fc2b;
-				sum /= 6;				
-				if(sum >= 240)
-				{
-					Global.fc1b = Global.fc1g = Global.fc1r = 
-						Global.fc2b = Global.fc2g = Global.fc2r = 0;
-					updateOptionsScreen();
-					showMessage("You made the menus too bright! That was silly of you...", false);
-					showMessage("We at Dapper Hat kindly recommend that you choose a darker setting.", false);
-				}
-				
-				break;
-			default:
-				break;			
-			}
-			
-			break;
-		case OptionFrameColor:
-			darken();
-			optsColorWindow.open();
-			
-			if(optsColorNumber == 1)
-			{
-				npRed.setValue(Global.fc1r);
-				npGreen.setValue(Global.fc1g);
-				npBlue.setValue(Global.fc1b);
-			}
-			else
-			{
-				npRed.setValue(Global.fc2r);
-				npGreen.setValue(Global.fc2g);
-				npBlue.setValue(Global.fc2b);
-			}
-			
-			break;			
-		case CharStatus:
-			charStatusGrow.open();
-			break;
-		case ItemSort:
-
-			break;
-		case ItemUse:
-			
-			break;
-		case SkillSelectChar:
-		case EquipSelectChar:
-			
-			break;
-		default:
-			break;
-		
-		}
-		
-		currentState = state;
 	}
 	
 	private void useItem(PlayerCharacter c)
@@ -2005,90 +2061,13 @@ public class MainMenu
 			darkenAlpha = Math.max(darkenAlpha - darkenInc, 0);
 		
 		if(close)
-		handleClosing();
+			handleClosing();
 		
 		messageBox.update();
 		sideBar.update();
 		updateMarkers();
 		
-		switch(currentState)
-		{
-		case SkillSelectChar:
-		case EquipSelectChar:
-		case Root:
-
-			
-			break;
-			
-		case Equip:
-			
-			break;
-			
-		case SkillSelect:
-			
-			break;
-			
-		case CharStatus:
-			charStatusGrow.update();
-			charStatus.update();
-			backButton.update();
-			charStatusAbilities.update();
-			charStatusLabel.update();
-			if(nextChar != null && sideBar.Opened())
-			{
-				selectedChar = nextChar;
-				nextChar = null;
-				updateCharStatus();
-			}
-			break;
-			
-		case ItemSelect:
-
-
-			break;
-			
-		case Options:
-			opts.update();
-			if(optsColorWindow != null && !optsColorWindow.Closed())
-				optsColorWindow.update();
-			break;
-			
-		case OptionFrameColor:
-			optsColorWindow.update();
-			npRed.update();
-			npGreen.update();
-			npBlue.update();
-			optsBackButton.update();	
-			
-			if(optsColorNumber == 1)
-			{
-				Global.fc1r = npRed.getValue();
-				Global.fc1g = npGreen.getValue();
-				Global.fc1b = npBlue.getValue();
-			}
-			else
-			{
-				Global.fc2r = npRed.getValue();
-				Global.fc2g = npGreen.getValue();
-				Global.fc2b = npBlue.getValue();
-			}
-			break;
-		case ItemSort:
-			
-			break;
-			
-		case ItemUse:
-			
-			
-			//if(itemToUse.getCount() == 0 && markers.size() == 0)
-				//changeState(menuStates.ItemSelect);
-			break;
-		default:
-			break;
-			
-			
-			
-		}
+		stateMachine.getState().update();
 
 		
 	}
@@ -2098,98 +2077,7 @@ public class MainMenu
 		
 		rootPanel.render();
 		
-		switch(currentState)
-		{
-		case Root:			
-			
-			break;
-			
-		case CharStatus:
-			if(charStatusGrow.Opened() || nextChar != null)
-			{
-				charStatus.render();
-				
-				backButton.render();
-				charStatusAbilities.render();
-				charStatusLabel.render();
-				
-				if(!sideBar.Opened())
-					sideBar.render();
-			}				
-			else
-			{
-				rootCharPlates.render();
-				rootBarPanel.render();
-				rootMenu.render();
-				charStatusGrow.render();
-			}
-				
-			break;
-			
-		case SkillSelectChar:	
-		case EquipSelectChar:			
-
-		
-			break;
-			
-		case Equip:
-							
-			break;
-			
-		case SkillSelect:
-			
-			break;
-			
-		case ItemSelect:			
-			
-			break;
-			
-		case Options:
-			if(sideBar.Opened())
-			{
-				opts.render();
-				if(optsColorWindow != null && !optsColorWindow.Closed())
-				{
-					renderDark();
-					optsColorWindow.render();
-				}					
-
-			}
-			else
-			{
-				rootCharPlates.render();
-				rootBarPanel.render();
-				rootMenu.render();
-				renderDark();
-				sideBar.render();
-			}
-			break;
-			
-		case OptionFrameColor:
-			opts.render();
-			renderDark();
-			optsColorWindow.render();
-			if(optsColorWindow.Opened())
-			{
-				npRed.render();
-				npGreen.render();
-				npBlue.render();
-				optsBackButton.render();
-			}
-				
-			break;
-			
-		case ItemSort:
-			
-			break;
-			
-		case ItemUse:
-			
-			break;
-		default:
-			break;			
-			
-		}
+		stateMachine.getState().render();
 		
 		if(messageBox.Opened())
 			renderDark();
@@ -2247,20 +2135,8 @@ public class MainMenu
 	}
 		
 	public void onFling(float velocityX, float velocityY)
-	{
-		switch(currentState)
-		{
-		case CharStatus:
-		case SkillSelect:
-		case Equip:
-			fling(velocityX, velocityY);
-					
-						
-			
-			break;
-		default:
-			break;
-		}
+	{			
+		stateMachine.getState().onFling(velocityX, velocityY);
 	}
 	public void backButtonPressed()
 	{
@@ -2272,36 +2148,9 @@ public class MainMenu
 				undarken();
 			}
 			else
-			{
-				switch(currentState)
-				{
-				case Root:
-					
-					break;				
-				
-				case Equip:	
-				case SkillSelect:
-				case CharStatus:
-				case SkillSelectChar:
-				case EquipSelectChar:
-				case Options:
-				case ItemSelect:
-					changeState(menuStates.Root);
-					break;
-					
-				case OptionFrameColor:
-					changeState(menuStates.Options);
-					break;
-					
-				case ItemUse:				
-				case ItemSort:
-					
-					break;
-				default:
-					break;
+				stateMachine.getState().backButtonPressed();
 
-				}
-			}			
+		
 		}
 		
 		
@@ -2309,66 +2158,13 @@ public class MainMenu
 	public void touchActionMove(int x, int y)
 	{
 		if(!close)
-		{
 			if(messageBox.Opened())
-			{
 				messageBox.touchActionMove(x, y);
-			}
 			else
-			{
-				switch(currentState)
-				{
-				case Root:
-				case SkillSelectChar:
-				case EquipSelectChar:
-					
-					break;
-				case ItemSelect:
-					
-					break;
-				case CharStatus:
-					backButton.touchActionMove(x, y);
-					charStatusAbilities.touchActionMove(x, y);
-					break;
-				case SkillSelect:
-					
-					break;
-				case Options:
-					opts.touchActionMove(x, y);
-					break;
-					
-				case OptionFrameColor:
-					npRed.touchActionMove(x, y);
-					npGreen.touchActionMove(x, y);
-					npBlue.touchActionMove(x, y);
-					optsBackButton.touchActionMove(x, y);
-					break;				
-					
-				case Equip:
-					
-					
-					break;
-				case ItemSort:
-					
-					break;
-				case ItemUse:
-					
-					break;
-				default:
-					break;
-				}
-			}
-			
-		}
-		
+				stateMachine.getState().touchActionMove(x, y);		
 	}
 	public void touchActionUp(int x, int y)
-	{
-		ListBox.LBStates state;
-		MenuPanel selectedPanel;
-		
-		
-		
+	{		
 		if(!close)
 		{
 			if(messageBox.Opened())
@@ -2377,152 +2173,32 @@ public class MainMenu
 				
 				if(messageBox.isYesNo() && messageBox.getSelectedOpt() == YesNo.Yes)
 				{
-					//switch states and make a decision
-					switch(currentState)
-					{
-					case Root:
-						Global.restartGame();
-						break;
-					default:
-						break;
-					}
+//					//switch states and make a decision
+//					switch(currentState)
+//					{
+//					case Root:
+//						Global.restartGame();
+//						break;
+//					default:
+//						break;
+//					}
 				}
 				
 				if(!messageBox.Opened())
 					undarken();
 			}
 			else
-			{
-				switch(currentState)
-				{
-				case Root:
+				stateMachine.getState().touchActionUp(x, y);
 
-					break;
-					
-				case SkillSelectChar:
-				case EquipSelectChar:
-					
-					break;	
-					
-				case SkillSelect:
-					
-
-					
-					break;
-				case Options:
-					if(opts.touchActionUp(x, y) == LBStates.Selected)
-						handleOptOption((String)opts.getSelectedEntry().obj);
-					break;
-					
-				case OptionFrameColor:
-					npRed.touchActionUp(x, y);
-					npGreen.touchActionUp(x, y);
-					npBlue.touchActionUp(x, y);
-					if(optsBackButton.touchActionUp(x, y) == LBStates.Selected)
-						changeState(menuStates.Options);
-					break;				
-					
-				case CharStatus:
-					state = backButton.touchActionUp(x, y);
-					if(state == LBStates.Selected)
-						changeState(menuStates.Root);
-					else
-					{
-						charStatusAbilities.touchActionUp(x, y);
-					}				
-					break;
-					
-				case ItemSelect:
-					
-					
-					break;
-					
-				case Equip:	
-					
-					
-					break;
-					
-				case ItemSort:
-					break;
-					
-				case ItemUse:				
-					
-					break;
-				default:
-					break;
-				}
-			}
 		}
 	}
 	public void touchActionDown(int x, int y)
 	{
 		if(!close)
-		{
 			if(messageBox.Opened())
-			{
-				messageBox.touchActionDown(x, y);
-			}				
+				messageBox.touchActionDown(x, y);				
 			else
-			{
-				switch(currentState)
-				{
-				case Root:					
-				case SkillSelectChar:
-				case EquipSelectChar:
-					break;
-				case SkillSelect:
-					
-					break;
-				case Options:
-					opts.touchActionDown(x, y);
-					break;
-					
-				case OptionFrameColor:
-					npRed.touchActionDown(x, y);
-					npGreen.touchActionDown(x, y);
-					npBlue.touchActionDown(x, y);
-					optsBackButton.touchActionDown(x, y);
-					break;
-					
-				case ItemSelect:
-									
-					break;
-				case CharStatus:
-					backButton.touchActionDown(x, y);
-					charStatusAbilities.touchActionDown(x, y);
-					break;
-				case Equip:
-					
-					break;
-				case ItemSort:
-					
-					break;
-				case ItemUse:
-					break;
-				default:
-					break;
-				}
-			}
-
-			
-		}
+				stateMachine.getState().touchActionDown(x, y);
 	}
-	
-	
-	private enum menuStates
-	{
-		Root,
-		ItemSelect,
-		ItemSort,
-		ItemUse,
-		Equip,
-		EquipSelectChar,
-		SkillSelect,
-		SkillUse,
-		SkillSelectChar,
-		CharStatus,
-		Options,
-		OptionFrameColor
-	}
-
+		
 }
