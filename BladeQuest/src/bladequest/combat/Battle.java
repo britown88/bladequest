@@ -31,13 +31,15 @@ public class Battle
 	private final int frameMinHeight = 32;
 	private final int partyFrameBuffer = 32;
 	private final int charMoveSpeed = 7;
-	private final int statFrameBuffer = 16;
-	private final int charYSpacing = 64;
+	private final int statFrameBuffer = 8;
+	private final int charYSpacing = 48;
+	private final int charPanelYSpacing = 48;
+	private final int charXSpacing = 4;
 	private final int mpWindowHeight = 32;
 	private final int mpWindowWidth = 128;
 	
 	public static final int advanceDistance = 32;
-	public static final Point partyPos = new Point(Global.vpWidth - 128, 0);
+	public static final Point partyPos = new Point(Global.vpWidth - 128, 32);
 	
 	private final String txtStart = "Tap screen to start!";
 	private final String txtTargetSingle = "Select target...";
@@ -472,9 +474,9 @@ public class Battle
 		{
 			characterPanes[i] = new MenuPanel(
 					partyPos.x + 64, 
-					charYSpacing*i + statFrameBuffer,
+					partyPos.y + statFrameBuffer + charPanelYSpacing*i,
 					Global.vpWidth - (partyPos.x + 64),
-					charYSpacing - statFrameBuffer);
+					charPanelYSpacing - statFrameBuffer);
 			characterPanes[i].thickFrame = false;
 		}
 	}
@@ -544,9 +546,9 @@ public class Battle
 			
 			characterPanes[i].clear();			
 			
-			characterPanes[i].addTextBox(c.getDisplayName(), 5, (int)((charYSpacing - statFrameBuffer)*0.25f), nameText);
-			characterPanes[i].addTextBox("HP:" + c.getHP(), 7, (int)((charYSpacing - statFrameBuffer)*0.50f), statsText);
-			characterPanes[i].addTextBox("MP:" + c.getMP(), 7, (int)((charYSpacing - statFrameBuffer)*0.75f), statsText);
+			characterPanes[i].addTextBox(c.getDisplayName(), 5, (int)((charPanelYSpacing - statFrameBuffer)*0.25f), nameText);
+			characterPanes[i].addTextBox("HP:" + c.getHP(), 7, (int)((charPanelYSpacing - statFrameBuffer)*0.50f), statsText);
+			characterPanes[i].addTextBox("MP:" + c.getMP(), 7, (int)((charPanelYSpacing - statFrameBuffer)*0.75f), statsText);
 			
 			float iconScale = 1.5f;
 			int j = 0, d = (int)(Global.iconSize*iconScale + 2);
@@ -577,7 +579,7 @@ public class Battle
 	private void updateCharacterPositions()
 	{
 		for(PlayerCharacter c : partyList)
-			c.setPosition(partyPos.x, partyPos.y + (charYSpacing * c.Index()));
+			c.setPosition(partyPos.x + (charXSpacing * c.Index()), partyPos.y + (charYSpacing * c.Index()));
 		
 		if(currentChar != null)
 			currentChar.setPosition(partyPos.x-selCharX, partyPos.y + (charYSpacing * currentChar.Index()));

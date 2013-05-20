@@ -1153,6 +1153,7 @@ public class Global
 			
 		party.addCharacter("joy");
 		party.addCharacter("luc");	
+		party.addCharacter("roland");	
 		
 //		for(PlayerCharacter pc : party.getPartyMembers(true))
 //		{
