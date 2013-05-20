@@ -89,6 +89,8 @@ public class MainMenu
 	
 	private MainMenuStateMachine stateMachine; 
 	
+	private boolean closeItemuseAfterClear;
+	
 	
 	public MainMenu()
 	{
@@ -393,6 +395,10 @@ public class MainMenu
 		return new MainMenuState()
 		{
 			@Override
+			public void changeStateTo(MainMenuState state){
+				markers.clear();
+			}
+			@Override
 			public void changeToItemSelect() {
 				charUseScreen.close();
 				fillInventory();
@@ -402,6 +408,7 @@ public class MainMenu
 			public void onSwitchedTo(MainMenuState prevState) {
 				darken();
 				buildCharUseScreen();
+				updateCharUseScreen();
 				charUseScreen.open();
 			}
 			@Override
@@ -441,7 +448,12 @@ public class MainMenu
 					stateMachine.setState(getItemSelectState());	
 					break;
 				case Selected:
-					useItem((PlayerCharacter)charUseScreen.getSelectedEntry().obj);					
+					if(itemToUse.getCount() > 0)
+						useItem((PlayerCharacter)charUseScreen.getSelectedEntry().obj);
+					
+					if(itemToUse.getCount() <= 0)
+						closeItemuseAfterClear = true;
+					
 					break;
 				default:
 					break;
@@ -1312,7 +1324,7 @@ public class MainMenu
 		
 		updateCharUseScreen();
 	}
-	public void updateCharUseScreen()
+	private void updateCharUseScreen()
 	{
 		List<PlayerCharacter> chars = Global.party.getPartyList(false);
 		charUseScreen.clear();
@@ -1344,6 +1356,9 @@ public class MainMenu
 			lbi.addTextBox("" + c.getHP() + "/" + c.getStat(Stats.MaxHP), width/2, (int)(charUseScreen.getRowHeight() - (charUseScreen.getRowHeight()-width - menuTextCenter.getTextSize()/2)*0.75f), smallTextCenter);
 			lbi.addTextBox("" + c.getMP() + "/" + c.getStat(Stats.MaxMP), width/2, (int)(charUseScreen.getRowHeight() - (charUseScreen.getRowHeight()-width - menuTextCenter.getTextSize()/2)*0.50f), smallTextCenter);
 				
+			lbi.update();
+			c.setPosition(lbi.getPos().x + dest.left, lbi.getPos().y + dest.top );
+			
 			List<StatusEffect> seList = c.getStatusEffects();
 			if(seList.size() > 0)
 			{
@@ -1854,6 +1869,12 @@ public class MainMenu
 		
 		for(DamageMarker d : toRemove)
 			markers.remove(d);
+		
+		if(markers.isEmpty() && closeItemuseAfterClear)
+		{
+			closeItemuseAfterClear = false;
+			stateMachine.setState(getItemSelectState());
+		}
 	}
 	private void darken(){darkening = true;}	
 	private void undarken(){darkening = false;}	
@@ -1864,7 +1885,6 @@ public class MainMenu
 		messageBox.addMessage(msg, yesNoOpt);
 		messageBox.open();
 	}
-
 	
 	private void handleOption(String opt)
 	{
@@ -2011,7 +2031,8 @@ public class MainMenu
 	
 	private void useItem(PlayerCharacter c)
 	{
-		List<PlayerCharacter> charList;
+		List<PlayerCharacter> charList, affectedList = new ArrayList<PlayerCharacter>();
+		updateCharUseScreen();
 		
 		if(itemToUse.getTargetType() == TargetTypes.AllAllies)
 			charList = Global.party.getPartyList(false);
@@ -2020,24 +2041,63 @@ public class MainMenu
 			charList = new ArrayList<PlayerCharacter>();
 			charList.add(c);
 		}	
-		
-		boolean willAffect = false;		
+			
 		for(PlayerCharacter ch : charList)
 			if(itemToUse.willAffect(ch))
-			{
-				willAffect = true;
-				break;
-			}		
+				affectedList.add(ch);
 		
-		if(willAffect)
+		
+		if(affectedList.size() > 0)
 		{
-			itemToUse.execute(c, charList, markers);
+			itemToUse.executeOutOfBattle(c, affectedList, markers);
 			Global.party.removeItem(itemToUse.getId(), 1);
 			updateCharUseScreen();
 		}	
 		
 	}
-	
+	private void fling(float velocityX, float velocityY)
+	{
+		List<PlayerCharacter> charList = Global.party.getPartyList(false);
+		if(charList.size() > 1 && Math.abs(velocityY) < 300 && Math.abs(velocityX) > 300)
+		{
+			undarken();
+			equipItemType = null;
+			
+			//determine current index
+			int i = 0;
+			for(PlayerCharacter c : charList)
+			{
+				if(c.getName().equals(selectedChar.getName()))
+					break;
+				++i;
+			}
+			//swiped right
+			if(velocityX > 0)
+			{
+				if(i+1 >= charList.size())
+					nextChar = charList.get(0);
+				else
+					nextChar = charList.get(i+1);
+				
+				sideBar.setClosed();
+				sideBar.pos = new Point(0, 0);
+				sideBar.anchor = Anchors.TopLeft;
+				sideBar.open();
+			}
+			else //swiped left
+			{
+				if(i == 0)
+					nextChar = charList.get(charList.size()-1);
+				else
+					nextChar = charList.get(i-1);
+				
+				sideBar.setClosed();
+				sideBar.pos = new Point(Global.vpWidth, 0);
+				sideBar.anchor = Anchors.TopRight;
+				sideBar.open();
+			}
+		}
+	}	
 	private void updateRoot()
 	{
 		rootMenu.update();
@@ -2090,49 +2150,7 @@ public class MainMenu
 				d.render();
 	}
 	
-	private void fling(float velocityX, float velocityY)
-	{
-		List<PlayerCharacter> charList = Global.party.getPartyList(false);
-		if(charList.size() > 1 && Math.abs(velocityY) < 300 && Math.abs(velocityX) > 300)
-		{
-			undarken();
-			equipItemType = null;
-			
-			//determine current index
-			int i = 0;
-			for(PlayerCharacter c : charList)
-			{
-				if(c.getName().equals(selectedChar.getName()))
-					break;
-				++i;
-			}
-			//swiped right
-			if(velocityX > 0)
-			{
-				if(i+1 >= charList.size())
-					nextChar = charList.get(0);
-				else
-					nextChar = charList.get(i+1);
-				
-				sideBar.setClosed();
-				sideBar.pos = new Point(0, 0);
-				sideBar.anchor = Anchors.TopLeft;
-				sideBar.open();
-			}
-			else //swiped left
-			{
-				if(i == 0)
-					nextChar = charList.get(charList.size()-1);
-				else
-					nextChar = charList.get(i-1);
-				
-				sideBar.setClosed();
-				sideBar.pos = new Point(Global.vpWidth, 0);
-				sideBar.anchor = Anchors.TopRight;
-				sideBar.open();
-			}
-		}
-	}
+	
 		
 	public void onFling(float velocityX, float velocityY)
 	{			

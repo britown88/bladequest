@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import android.R.bool;
 import bladequest.battleactions.BattleAction;
 import bladequest.battleactions.bactDamage;
 import bladequest.battleactions.bactTryEscape;
