@@ -21,7 +21,7 @@ public class BattleCalc
 	private static DamageReturnType damageReturnType;	
 	public static DamageReturnType getDmgReturnType(){return damageReturnType;}
 	
-	public static int calculatedDamage(PlayerCharacter attacker, PlayerCharacter defender, float power, DamageTypes type)
+	public static int calculatedDamage(PlayerCharacter attacker, PlayerCharacter defender, float power, DamageTypes type, List<DamageComponent> damageComponents)
 	{
 		attacker.updateSecondaryStats();
 		defender.updateSecondaryStats();
@@ -52,7 +52,7 @@ public class BattleCalc
 		{
 		case Fixed:
 			damageReturnType = DamageReturnType.Hit;
-			finalDmg = (int)power;
+			finalDmg = applyAffinities((int)power, attacker, defender, damageComponents);
 			break;
 		case PhysicalIgnoreDef:	
 		case Physical:
@@ -69,18 +69,19 @@ public class BattleCalc
 					damageReturnType = DamageReturnType.Blocked;
 				else
 				{
+					finalDmg = applyAffinities(baseDmg + dmgMod, attacker, defender, damageComponents);
+					
 					roll = Global.rand.nextInt(100);
 					int critChance = (int)((float)attacker.getStat(Stats.Crit)*(maxCrit/255.0f));
+					
 					if(roll < critChance)
 					{
 						damageReturnType = DamageReturnType.Critical;
-						finalDmg = (int)((float)(baseDmg + dmgMod) * 2.0f);
+						finalDmg *= 2.0f;
 					}
 					else
-					{
 						damageReturnType = DamageReturnType.Hit;
-						finalDmg = baseDmg + dmgMod;
-					}					
+				
 				}				
 			}
 			break;
@@ -91,6 +92,60 @@ public class BattleCalc
 		}
 		
 		return finalDmg;
+	}
+	
+	private static int applyAffinities(int damage, PlayerCharacter attacker, PlayerCharacter defender, List<DamageComponent> damageComponents)
+	{
+		float neutralComponent = 1.0f;
+		for(DamageComponent dc : damageComponents)
+		{
+			if(dc.getAffinity() == null)
+			{
+				neutralComponent = dc.getPower();
+				damageComponents.remove(dc);
+				break;
+			}
+			else
+				neutralComponent -= dc.getPower();
+		}
+		
+		List<Float> damageParts = new ArrayList<Float>();
+		if(neutralComponent > 0.0f)
+			damageParts.add(damage * neutralComponent);
+		
+		for(DamageComponent dc : damageComponents)
+		{
+			if(dc != null)
+				damageParts.add(
+						applyAffinityMods(
+								dc.getPower() * damage, 
+								attacker.getStat(dc.getAffinity()), 
+								defender.getStat(dc.getAffinity())));
+			
+		}
+		
+		float finalDamage = 0.0f;
+		for(Float f : damageParts)
+			finalDamage += f;
+		
+		return (int)finalDamage;
+			
+	}
+	
+	private static float applyAffinityMods(float base, float attackerAffinity, float defenderAffinity)
+	{
+		base *= (attackerAffinity/100.0f);
+		
+		//only apply defense on attacks, not heals
+		if(base > 0)
+		{
+			if(defenderAffinity > 200)
+				base = -(base * ((defenderAffinity-200.0f)/100.0f));
+			else
+				base *= (200.0f-defenderAffinity)/100.0f;			
+		}
+		
+		return base;
 	}
 	
 	//returns whether rhs has priority over lhs

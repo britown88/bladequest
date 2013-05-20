@@ -576,6 +576,11 @@ public class PlayerCharacter
 		stats[Stats.Vitality.ordinal()] = (int)(vit * Math.pow(lvl/99.0f, 2.0f));
 		stats[Stats.Intelligence.ordinal()] = (int)(intel * Math.pow(lvl/99.0f, 2.0f));
 		
+		stats[Stats.Fire.ordinal()] = 100;
+		stats[Stats.Wind.ordinal()] = 100;
+		stats[Stats.Water.ordinal()] = 100;
+		stats[Stats.Earth.ordinal()] = 100;
+		
 		updateSecondaryStats();
 	}
 	private int calcBP(float lvl, float str, float w){return (int)(((str * 2.0f) + (w * 2.0f) + ((255.0f / 99.0f) * lvl)) / 5.0f);}

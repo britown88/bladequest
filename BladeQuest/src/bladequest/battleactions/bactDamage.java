@@ -1,24 +1,33 @@
 package bladequest.battleactions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import bladequest.combat.BattleCalc;
+import bladequest.combat.DamageComponent;
 import bladequest.combat.DamageMarker;
-import bladequest.world.PlayerCharacter;
 import bladequest.world.DamageTypes;
 import bladequest.world.Global;
+import bladequest.world.PlayerCharacter;
 import bladequest.world.Stats;
 
 public class bactDamage extends BattleAction
 {
 	float power;
 	DamageTypes type;
+	List<DamageComponent> damageComponents;
 	
 	public bactDamage(int frame, float power, DamageTypes type)
 	{
 		super(frame);
+		this.damageComponents = new ArrayList<DamageComponent>();
 		this.power = power;
 		this.type = type;
+	}
+	
+	public void addDamageComponent(Stats affinity, float power)
+	{
+		damageComponents.add(new DamageComponent(affinity, power));
 	}
 	
 	@Override
@@ -26,7 +35,7 @@ public class bactDamage extends BattleAction
 	{
 		for(PlayerCharacter t : targets)
 		{
-			int dmg = BattleCalc.calculatedDamage(attacker, t, power, type);
+			int dmg = BattleCalc.calculatedDamage(attacker, t, power, type, damageComponents);
 			switch(BattleCalc.getDmgReturnType())
 			{
 			case Blocked:
@@ -53,7 +62,7 @@ public class bactDamage extends BattleAction
 	{
 		for(PlayerCharacter t : targets)
 		{
-			int dmg = BattleCalc.calculatedDamage(attacker, t, power, type);
+			int dmg = BattleCalc.calculatedDamage(attacker, t, power, type, damageComponents);
 			switch(BattleCalc.getDmgReturnType())
 			{
 			case Blocked:
