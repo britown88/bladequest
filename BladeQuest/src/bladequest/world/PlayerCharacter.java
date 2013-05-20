@@ -67,6 +67,7 @@ public class PlayerCharacter
 	private String combatActionText;
 	
 	private boolean visible;
+	private boolean positionSpecial;
 	
 	public PlayerCharacter(String name, String displayNam, String bSpr, String wSpr)
 	{
@@ -90,6 +91,7 @@ public class PlayerCharacter
 		position = new Point(0,0);
 		visible = true;
 		escaped = false;
+		positionSpecial = false;
 	}
 	
 	public PlayerCharacter(PlayerCharacter c)
@@ -136,6 +138,7 @@ public class PlayerCharacter
 		position = new Point(0,0);
 		visible = c.visible;
 		escaped = c.escaped;
+		positionSpecial = c.positionSpecial;
 	}
 
 	
@@ -1096,6 +1099,8 @@ public class PlayerCharacter
 		Point p = new Point(position);
 		if(center && !isEnemy)
 			p.offset(battleSpr.getWidth()/2, battleSpr.getHeight()/2);
+		else if (!center && isEnemy)
+			p.offset(-battleSpr.getWidth()/2, -battleSpr.getHeight()/2);
 		
 		return p; 
 	}	
@@ -1113,6 +1118,9 @@ public class PlayerCharacter
 	{
 		return battleEventBuilderObj;
 	}
+	
+	public boolean getPositionSpecial() { return positionSpecial;}
+	public void setPositionSpecial(boolean positionSpecial) {this.positionSpecial = positionSpecial;}
 	
 	public void setVisible(boolean isVisible) {visible = isVisible;}
 	public boolean getVisible() { return visible;}

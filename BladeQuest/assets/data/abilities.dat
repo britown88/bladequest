@@ -4,9 +4,9 @@ ability poisonjab "Poison Jab" movetest physical single 2 100 False
 action bactInflictStatus -1 True sePoison 10
 endability
 #
-ability assault "Assault" movetest physicalignoredef single 2 100 False
+ability assault "Assault" noanim physicalignoredef single 2 100 False
 startsDisabled
-action bactDamage -1 1.0f physicalignoredef
+action bactAttackClose 0 1.0f physicalignoredef
 endability
 #
 ability zornhau "Zornhau" noanim physicalignoredef allenemies 5 100 False

@@ -1,6 +1,5 @@
 package bladequest.combatactions;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -13,15 +12,16 @@ import bladequest.combat.BattleEventObject;
 import bladequest.combat.DamageMarker;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleAnimObjState;
-import bladequest.graphics.BattleAnimObject;
 import bladequest.graphics.BattleAnimObjState.PosTypes;
+import bladequest.graphics.BattleAnimObject;
 import bladequest.graphics.BattleAnimObject.Types;
 import bladequest.graphics.BattleSprite;
 import bladequest.graphics.BattleSprite.faces;
-import bladequest.world.PlayerCharacter;
+import bladequest.math.PointMath;
 import bladequest.world.DamageTypes;
 import bladequest.world.Enemy;
 import bladequest.world.Global;
+import bladequest.world.PlayerCharacter;
 import bladequest.world.TargetTypes;
 
 
@@ -63,37 +63,6 @@ public class combSteal extends CombatAction
 		}
 	}
 	
-	Point subtract(Point lhs, Point rhs)
-	{
-	  return new Point(lhs.x - rhs.x, lhs.y - rhs.y);
-	}
-	Point add(Point lhs, Point rhs)
-	{
-		  return new Point(lhs.x + rhs.x, lhs.y + rhs.y);
-	}
-	private float stealOffsetAngle(Point vectorTo, float distance)
-	{
-	   float xNormalized = -vectorTo.x / distance;
-	   if (xNormalized > 1.0f) xNormalized = 1.0f; //floating point stupidity
-	   float angle = (float)Math.acos(xNormalized);
-	   //check orientation (ghetto det check)
-	   if (vectorTo.y < 0)
-	   {
-		   angle = (float)(Math.PI * 2  - angle);
-	   }
-	   return angle;
-	}
-	private Point getRotatedPoint(float x, float y, float angle)
-	{
-	   //cos, sin, -sin cos
-	   float cosAngle = (float)Math.cos(angle);
-	   float sinAngle = (float)Math.sin(angle);
-	   
-	   float outX = cosAngle  * x + sinAngle * y;
-	   float outY = -sinAngle * x + cosAngle * y;
-	   
-	   return new Point((int)outX, (int)outY);
-	}
 	public BattleAnim getJumpToAnimation(PlayerCharacter source, PlayerCharacter target)
 	{
 		BattleAnim anim = new BattleAnim(60.0f);
@@ -103,30 +72,12 @@ public class combSteal extends CombatAction
 		BattleAnimObject baObj = new BattleAnimObject(Types.Bitmap, false, playerSprite.getBmpName());
 		Rect srcRect = playerSprite.getFrameRect(faces.Use, 0);
 		
-		Point vectorTo = subtract(target.getPosition(), source.getPosition());
-		Point center = new Point(source.getPosition().x + (int)(vectorTo.x * 0.5f), 
-								 source.getPosition().y + (int)(vectorTo.y * 0.5f));
-		
-	    float distance = (float) Math.sqrt((float)(vectorTo.x*vectorTo.x + vectorTo.y*vectorTo.y));
-		float height = distance / 6;
+		final float height = 1.0f / 6.0f;
 		
 	    final int steps = 10;
 	    final int stepTime = 2;
 	    
-	    final float stepSize = (float)(Math.PI / (steps-1));
-	    
-	    float offsetAngle = stealOffsetAngle(vectorTo, distance);
-	    
-	    List<Point> points = new ArrayList<Point>();
-	    
-	    for (int i = 0; i < steps; ++i)
-	    {
-	    	float angle = stepSize * i;
-	    	float x = (float)Math.cos((double)angle) * (distance/2);
-	    	float y = (float)Math.sin((double)angle) * (-height/2);
-	        Point p = getRotatedPoint(x, y, offsetAngle);
-	        points.add(add(p, center));
-	    }
+	    List<Point> points = PointMath.getArc(source.getPosition(), target.getPosition(), steps, height);
 	    
 	    int step = 0;
 	    

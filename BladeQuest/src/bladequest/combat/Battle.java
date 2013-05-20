@@ -399,6 +399,7 @@ public class Battle
 	{
 		for (PlayerCharacter c : partyList)
 		{
+			c.setPositionSpecial(false);			
 			for (StatusEffect effect: StatusEffect.filterList(c.getStatusEffects(), new StatusEffect.Filter()
 			{
 				public boolean filter(StatusEffect effect) {
@@ -579,9 +580,12 @@ public class Battle
 	private void updateCharacterPositions()
 	{
 		for(PlayerCharacter c : partyList)
+		{
+			if (c.getPositionSpecial()) continue;
 			c.setPosition(partyPos.x + (charXSpacing * c.Index()), partyPos.y + (charYSpacing * c.Index()));
+		}
 		
-		if(currentChar != null)
+		if(currentChar != null && currentChar.getPositionSpecial() == false)
 			currentChar.setPosition(partyPos.x-selCharX, partyPos.y + (charYSpacing * currentChar.Index()));
 	}
 
@@ -773,16 +777,16 @@ public class Battle
 	}
 	private void nextActorInit()
 	{
-			nextActor = true;
-			displayNamePanel.hide();
-			//battleEvents.get(0).getSource().acting = false;
-			PlayerCharacter actor = battleEvents.get(0).getSource();			
-			if(!actor.isEnemy() && actor.getAction() != Action.Guard)
-			{
-				recedeChar();
-				actor.setFace(faces.Idle);
-				actor.setImageIndex(0);
-			}
+		nextActor = true;
+		displayNamePanel.hide();
+		//battleEvents.get(0).getSource().acting = false;
+		PlayerCharacter actor = battleEvents.get(0).getSource();			
+		if(!actor.isEnemy() && actor.getAction() != Action.Guard)
+		{
+			recedeChar();
+			actor.setFace(faces.Idle);
+			actor.setImageIndex(0);
+		}
 	}
 	public boolean isBattleOver()
 	{
