@@ -4,7 +4,7 @@ portrait 0 0
 abilities "Tricks"
 combataction combSteal
 basestats 7 10 4 2
-level 10
+level 5
 equip knife
 equip felthat
 equip cottonshirt
@@ -27,10 +27,10 @@ character luc "Luc" bluc luc
 portrait 1 0
 abilities "Swordplay"
 ability assault
-ability zornhau
+lability zornhau 6
 combataction combStance
 basestats 10 4 7 2
-level 4
+level 5
 equip silversword
 equip felthat
 equip cottonshirt

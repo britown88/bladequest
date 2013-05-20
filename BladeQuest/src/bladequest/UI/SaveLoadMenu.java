@@ -223,6 +223,7 @@ public class SaveLoadMenu
 					else
 					{
 						Global.saveLoader.loadGame((Integer)menu.getSelectedEntry().obj);
+						Global.clearAnimations();
 						showMessage("Game loaded!", false);
 						closeAfterMsg = true;
 					}
