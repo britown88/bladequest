@@ -134,10 +134,10 @@ public class Battle
 			{
 				mainMenu.clearObjects();
 				mainMenu.addItem("Attack", "atk", false);
-				mainMenu.addItem("Item", "itm", false);
+				mainMenu.addItem("Item", "itm", Global.party.getInventory(true).isEmpty());
 				mainMenu.addItem(currentChar.getActionName(), "act", false);
 				mainMenu.addItem("Guard", "grd", false);
-				mainMenu.addItem(currentChar.getAbilitiesName(), "ab", false);
+				mainMenu.addItem(currentChar.getAbilitiesName(), "ab", currentChar.getAbilities().isEmpty());
 				mainMenu.addItem("Run", "run", false);		
 				mainMenu.update();
 			}
@@ -161,6 +161,7 @@ public class Battle
 				switch(mainMenu.touchActionUp(x, y))
 				{
 				case Selected:
+					if (mainMenu.getSelectedEntry().Disabled()) return;
 					handleMenuOption((String)(mainMenu.getSelectedEntry().obj));
 					break;
 				case Close:
@@ -905,8 +906,8 @@ public class Battle
 					//select new enemy
 					aliveTargets.add(aliveEnemies.get(Global.rand.nextInt(aliveEnemies.size())));
 				else
-					//reselect original target
-					aliveTargets.add(targets.get(0));
+					//select new ally... for now, needs to check if dead are targetable.  generalized pass-fail filter later?
+					aliveTargets.add(aliveChars.get(Global.rand.nextInt(aliveChars.size())));
 
 		}
 		
