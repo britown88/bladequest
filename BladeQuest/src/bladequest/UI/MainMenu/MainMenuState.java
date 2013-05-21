@@ -25,6 +25,7 @@ public class MainMenuState
 	
 	public void changeToRoot()	{}
 	public void changeToItemSelect() {}
+	public void changeToSkillSelect() {}
 	public void changeToOptions() {}
 	
 	public void onFling(float velocityX, float velocityY) {}

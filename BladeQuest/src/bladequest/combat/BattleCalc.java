@@ -34,7 +34,7 @@ public class BattleCalc
 		
 		//guarding
 		if(defender.getAction() == Action.Guard) DP *= 1.5f;		
-		if (ignoreDef) DP = 0.0f;
+		if (ignoreDef || power < 0) DP = 0.0f;
 				
 		int BP = (int)(AP*power);
 		float coefficient = attacker == null ? 1.0f : attacker.getCoefficient();

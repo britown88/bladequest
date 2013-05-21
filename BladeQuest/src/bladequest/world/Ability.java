@@ -17,7 +17,7 @@ public class Ability
 	private String animation;
 	private boolean enabled;
 	
-	public String name;
+	public String name, description;
 	
 	private List<BattleAction> actions;
 	
@@ -32,10 +32,17 @@ public class Ability
 		this.animation = animation;
 		this.accuracy = accuracy;
 		this.enabled = true;
+		this.description = "";
 		
 		actions = new ArrayList<BattleAction>();
 	}
+	public void setDescription(String desc)
+	{
+		this.description = desc;
+	}
+	public String getDescription() { return description; }
 	public boolean isUsableOutOfBattle() { return usableOutOfBattle;}
+	public void makeUsableOutOfBattle() { usableOutOfBattle = true;}
 	public void addAction(BattleAction action){actions.add(action);}
 	public List<BattleAction> getActions(BattleEventBuilder builder) 
 	{

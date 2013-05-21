@@ -429,6 +429,14 @@ public class GameDataLoader
 		{
 			ab.setEnabled(false);
 		}
+		else if(dl.item.equals("useoob"))
+		{
+			ab.makeUsableOutOfBattle();
+		}
+		else if(dl.item.equals("desc"))
+		{
+			ab.setDescription(dl.values.get(0));
+		}
 		else if(dl.item.equals("action"))
 		{
 			ab.addAction(loadBattleAction(dl));
