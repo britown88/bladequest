@@ -357,12 +357,13 @@ public class BqMap
 		gameOverObject.setStateFace(0, "down");
 		gameOverObject.addAction(0, new actMessage("Guard: \nHe's over here!"));
 		gameOverObject.addAction(0, new actMessage("Throw him back in his cell!"));
-		gameOverObject.addAction(0, new actTeleportParty(gameOverObject, 15, 5, "prisonb2"));
 		gameOverObject.addAction(0, new actRestoreParty());
 		gameOverObject.addAction(0, new actSwitch("guardasleep", false));
 		gameOverObject.addAction(0, new actSwitch("pdoor4", false));
 		gameOverObject.addAction(0, new actSwitch("pdoor3", false));
 		gameOverObject.addAction(0, new actModifyInventory("prisonkey", 1, true));
+		gameOverObject.addAction(0, new actFadeControl(1, 255, 0, 0, 0, true, true));
+		gameOverObject.addAction(0, new actTeleportParty(gameOverObject, 15, 5, "prisonb2"));
 		gameOverObject.addAction(0, new actFadeControl(1, 255, 0, 0, 0, false, true));
 		
 		objects.add(gameOverObject);

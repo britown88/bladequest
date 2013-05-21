@@ -7,7 +7,6 @@ import java.util.List;
 
 import bladequest.battleactions.BattleAction;
 import bladequest.battleactions.BattleActionPatterns;
-import bladequest.battleactions.bactDamage;
 import bladequest.battleactions.bactTryEscape;
 import bladequest.battleactions.bactUseItem;
 import bladequest.graphics.BattleAnim;

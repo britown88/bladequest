@@ -3,7 +3,6 @@ package bladequest.combatactions;
 import java.util.ArrayList;
 import java.util.List;
 
-import bladequest.battleactions.bactChangeVisibility;
 import bladequest.battleactions.bactInflictStatus;
 import bladequest.combat.BattleEvent;
 import bladequest.combat.BattleEventBuilder;
@@ -12,9 +11,9 @@ import bladequest.combat.DamageMarker;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleSprite.faces;
 import bladequest.statuseffects.seRegen;
+import bladequest.world.DamageTypes;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
-import bladequest.world.DamageTypes;
 import bladequest.world.TargetTypes;
 
 

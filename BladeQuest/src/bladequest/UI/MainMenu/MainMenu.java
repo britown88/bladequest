@@ -540,7 +540,6 @@ public class MainMenu
 			@Override
 			public void touchActionUp(int x, int y) {
 				ListBox.LBStates state;
-				MenuPanel selectedPanel;
 				selectedEqpItem = null;
 				eqpRemove = false;
 				
