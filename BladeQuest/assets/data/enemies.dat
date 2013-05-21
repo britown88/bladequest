@@ -1,11 +1,9 @@
 [enemies]
 enemy rat "Rat" rat
-basestats 1 1 1 1
+basestats 10 1 1 1
 atkanim bite
 level 4
 gold 23
-bossmods 10000.0f
-statmods 0 0 0 0 0 0 0 0 0 0 0 0 0 0 155 100 0 -100
 items potion 25 antidote 85 True
 ai 15
 ability bite 100 0 100

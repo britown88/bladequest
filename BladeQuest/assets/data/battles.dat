@@ -18,6 +18,7 @@ endencounter
 #
 encounter guard inherit
 enemy guard 128 128
+disablerunning
 endencounter
 #
 encounter recruit inherit

@@ -2282,7 +2282,7 @@ public class MainMenu
 //					switch(currentState)
 //					{
 //					case Root:
-//						Global.restartGame();
+						Global.restartGame();
 //						break;
 //					default:
 //						break;

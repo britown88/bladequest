@@ -653,7 +653,7 @@ public class Global
     		{
     			map.playBGM(true);
     			GameState = States.GS_WORLDMOVEMENT; 
-    			screenFader.fadeIn(10);
+    			//screenFader.fadeIn(10);
     				
     			delay();
     		}
@@ -1150,35 +1150,14 @@ public class Global
 		
 		//test params
 		party.teleport(1, 3);		
-		//party.insertCharacter("aramis", 1);	
 		party.addCharacter("aramis");
-		party.getCharacter("aramis").setDisplayName("?????");		
-		
+		party.getCharacter("aramis").setDisplayName("?????");			
 			
 		party.addCharacter("joy");
 		party.addCharacter("luc");	
-		party.addCharacter("roland");	
-		
-//		for(PlayerCharacter pc : party.getPartyMembers(true))
-//		{
-//			if(pc != null)
-//			{
-//				pc.modifyLevel(99, false);
-//				pc.fullRestore();
-//				pc.modifyHP(-85.0f, true);
-//			}
-//		}
-//		
-//		for(int i = 0; i < 99; ++i)
-//			party.addItem("potion");
-		
+		party.addCharacter("roland");			
 		LoadMap("test");
-			
-			
 		
-		//party.addCharacter("joy");				
-		switches.put("guardasleep", true);
-		switches.put("startgame", true);			
 		
 	}
 	
