@@ -129,7 +129,7 @@ public class Party
 		}
 		return 0;
 	}
-	public void addItem(String str)
+	public void addItem(String str, int count)
 	{
 		Item i = Global.items.get(str);
 		if(i != null)
@@ -138,11 +138,13 @@ public class Party
 			{
 				if(j.getId() == i.getId())
 				{
-					j.modifyCount(1);
+					j.modifyCount(count);
 					return;
 				}
 			}
-			inventory.add(new Item(i));
+			Item item = new Item(i);
+			item.modifyCount(count);
+			inventory.add(item);
 		}
 	}
 	public void addItem(Item i)
@@ -155,21 +157,11 @@ public class Party
 		Item i = null;
 		
 		for(Item item : Global.items.values())
-			if(item.getId() == id)
-				i = item;
-		
-		if(i != null)
-		{
-			for(Item j: inventory)
+			if(item.getId() == id)				
 			{
-				if(j.getId() == i.getId())
-				{
-					j.modifyCount(1);
-					return;
-				}
+				addItem(item.idName, 1);
+				return;
 			}
-			inventory.add(new Item(i));
-		}
 	}
 	public void removeItem(String str)	
 	{

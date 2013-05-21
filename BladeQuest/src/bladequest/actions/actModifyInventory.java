@@ -20,17 +20,11 @@ public class actModifyInventory extends Action
 	public void run()
 	{
 		if(remove)
-		{
-			Global.party.removeItem(item);
-		}
+			Global.party.removeItem(Global.items.get(item).getId(), count);
 		else
-		{
-			int j = count;
-			do
-			{
-				Global.party.addItem(item);
-			}while(--j > 0);
-		}
+			Global.party.addItem(item, count);
+
+
 		
 		done = true;
 	}

@@ -50,7 +50,7 @@ public class combSteal extends CombatAction
 			}
 			else
 			{
-				Global.party.addItem(item);
+				Global.party.addItem(item, 1);
 				
 				markers.add(new DamageMarker("STEAL", target));
 				Global.battle.changeStartBarText("Stole a "+ Global.items.get(item).getName() +"!");

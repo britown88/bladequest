@@ -703,7 +703,7 @@ public class Battle
 		
 		if(wonItem != null)
 		{
-			Global.party.addItem(wonItem);	
+			Global.party.addItem(wonItem, 1);	
 			addMessage("Found a " + Global.items.get(wonItem).getName() + "!");
 		}		
 		
