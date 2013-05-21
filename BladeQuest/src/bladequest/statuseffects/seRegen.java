@@ -19,7 +19,7 @@ public class seRegen extends StatusEffect {
 	int duration;
 	public seRegen(int minHeal, int maxHeal, int duration) {
 		super("Regen", false);
-		icon = "poison"; //deal with it nerds
+		icon = "orb"; 
 		curable = false;
 		removeOnDeath = true;
 		hidden = false;

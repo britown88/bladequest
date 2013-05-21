@@ -25,6 +25,7 @@ public class Enemy extends PlayerCharacter
 	private boolean stolen;
 	
 	private boolean bossFight;
+	private float bossHPMod;
 	private BattleAnim playingAnim;
 	
 	private List<EnemyAbility> abilities = new ArrayList<EnemyAbility>();
@@ -37,6 +38,7 @@ public class Enemy extends PlayerCharacter
 		position = new Point();
 		
 		stolen = false;
+		bossHPMod = 1.0f;
 	}
 	
 	public Enemy(Enemy e)
@@ -54,6 +56,7 @@ public class Enemy extends PlayerCharacter
 		abilityChance = e.abilityChance;
 		bossFight = e.bossFight;
 		attackAnim = e.attackAnim;
+		bossHPMod = e.bossHPMod;
 		
 		stolen = false;
 	}
@@ -188,11 +191,12 @@ public class Enemy extends PlayerCharacter
 			playDeathAnimation();		
 	}
 	
-	public void setBossMods(float HP)
+	public void setBossMods(float mod)
 	{
 		bossFight = true;
-		stats[Stats.MaxHP.ordinal()] *= HP;
-		this.HP = stats[Stats.MaxHP.ordinal()];
+		bossHPMod = mod;
+		updateSecondaryStats();
+		fullRestore();
 		exp *=4;
 	}
 	
@@ -323,11 +327,17 @@ public class Enemy extends PlayerCharacter
 		stats[Stats.MaxHP.ordinal()] = (int)((((vit * 2.0f) + (255.0f/99.0f)*lvl) / 3.0f) * 20.0f * getCoefficient());
 		stats[Stats.MaxMP.ordinal()] = (int)(((intel * 2.0f + (255.0f/99.0f)*lvl) / 3.0f) * 7.0f * getCoefficient());
 
+		if(bossFight)
+			stats[Stats.MaxHP.ordinal()] *= bossHPMod;
+		
 		//AP	
 		stats[Stats.BattlePower.ordinal()] = (int)(((str * 2.0f) + ((255.0f / 99.0f) * lvl)) / 3.0f);
 		
 		//Defense
 		stats[Stats.Defense.ordinal()] = (int)(((vit * 4.0f) + ((255.0f / 99.0f) * lvl)) / 5.0f);
+		
+		stats[Stats.MagicPower.ordinal()] = (int)(((intel*3.0f)+(255.0f/99.0f)*lvl)/4.0f);
+		stats[Stats.MagicDefense.ordinal()] = (int)(((intel*3.0f)+(255.0f/99.0f)*lvl)/4.0f);
 		
 		
 	}

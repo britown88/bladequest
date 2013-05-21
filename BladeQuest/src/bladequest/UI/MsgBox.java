@@ -32,6 +32,8 @@ public class MsgBox extends MenuPanel
 	private int rowCount;
 	
 	public boolean alwaysSpeed0;
+	
+	private MsgBoxEndAction yesAction, noAction;
 
 	public MsgBox()
 	{
@@ -71,6 +73,15 @@ public class MsgBox extends MenuPanel
 	{
 		msgQueue.add(msg);
 		this.YesNoOpt = YesNo;
+	}
+	
+	public void showYesNo(String message, MsgBoxEndAction yesAction, MsgBoxEndAction noAction)
+	{
+		this.yesAction = yesAction;
+		this.noAction = noAction;
+		
+		this.YesNoOpt = true;
+		msgQueue.add(message);
 	}
 	
 	private void clear(String str)
@@ -361,6 +372,18 @@ public class MsgBox extends MenuPanel
 				if(state == LBStates.Selected)
 				{
 					selectedOption = (YesNo)yesNoMenu.getSelectedEntry().obj;
+					
+					if(selectedOption == YesNo.Yes && yesAction != null)
+					{
+						yesAction.execute();
+						yesAction = null;						
+					}
+					else if(noAction != null)
+					{
+						noAction.execute();
+						noAction = null;						
+					}
+					
 					yesNoMenu.close();
 					close();
 				}

@@ -21,22 +21,20 @@ public class BattleCalc
 	private static DamageReturnType damageReturnType;	
 	public static DamageReturnType getDmgReturnType(){return damageReturnType;}
 	
-	public static int calculatedDamage(PlayerCharacter attacker, PlayerCharacter defender, float power, DamageTypes type)
+	public static int calculatedDamage(PlayerCharacter attacker, PlayerCharacter defender, float power, DamageTypes type, List<DamageComponent> damageComponents)
 	{
 		attacker.updateSecondaryStats();
 		defender.updateSecondaryStats();
 		
-		int AP = attacker.getStat(Stats.BattlePower);
-		float DP = defender.getStat(Stats.Defense);
+		boolean physical = type == DamageTypes.Physical || type == DamageTypes.PhysicalIgnoreDef; 
+		boolean ignoreDef = type == DamageTypes.MagicalIgnoreDef || type == DamageTypes.PhysicalIgnoreDef;
+				
+		int AP = physical ? attacker.getStat(Stats.BattlePower) : attacker.getStat(Stats.MagicPower);
+		float DP = physical ? defender.getStat(Stats.Defense) : defender.getStat(Stats.MagicDefense);
 		
 		//guarding
-		if(defender.getAction() == Action.Guard)
-			DP *= 1.5f;
-		
-		if (type == DamageTypes.PhysicalIgnoreDef)
-		{
-			DP = 0.0f;
-		}
+		if(defender.getAction() == Action.Guard) DP *= 1.5f;		
+		if (ignoreDef || power < 0) DP = 0.0f;
 				
 		int BP = (int)(AP*power);
 		float coefficient = attacker == null ? 1.0f : attacker.getCoefficient();
@@ -69,28 +67,81 @@ public class BattleCalc
 					damageReturnType = DamageReturnType.Blocked;
 				else
 				{
+					finalDmg = applyAffinities(baseDmg + dmgMod, attacker, defender, damageComponents);
+					
 					roll = Global.rand.nextInt(100);
 					int critChance = (int)((float)attacker.getStat(Stats.Crit)*(maxCrit/255.0f));
+					
 					if(roll < critChance)
 					{
 						damageReturnType = DamageReturnType.Critical;
-						finalDmg = (int)((float)(baseDmg + dmgMod) * 2.0f);
+						finalDmg *= 2.0f;
 					}
 					else
-					{
 						damageReturnType = DamageReturnType.Hit;
-						finalDmg = baseDmg + dmgMod;
-					}					
+				
 				}				
 			}
 			break;
 		case Magic:
 		case MagicalIgnoreDef:
+			finalDmg = applyAffinities(baseDmg + dmgMod, attacker, defender, damageComponents);
+			damageReturnType = DamageReturnType.Hit;			
 			break;
-			//TODO: configure other damage types
 		}
 		
 		return finalDmg;
+	}
+	
+	private static int applyAffinities(int damage, PlayerCharacter attacker, PlayerCharacter defender, List<DamageComponent> damageComponents)
+	{
+		float neutralComponent = 1.0f;
+		for(DamageComponent dc : damageComponents)
+		{
+			if(dc.getAffinity() == null)
+			{
+				neutralComponent = dc.getPower();
+				damageComponents.remove(dc);
+				break;
+			}
+			else
+				neutralComponent -= dc.getPower();
+		}
+		
+		List<Float> damageParts = new ArrayList<Float>();
+		if(neutralComponent > 0.0f)
+			damageParts.add(damage * neutralComponent);
+		
+		for(DamageComponent dc : damageComponents)
+		{
+			if(dc != null)
+				damageParts.add(
+						applyAffinityMods(
+								dc.getPower() * damage, 
+								attacker.getStat(dc.getAffinity()), 
+								defender.getStat(dc.getAffinity())));
+			
+		}
+		
+		float finalDamage = 0.0f;
+		for(Float f : damageParts)
+			finalDamage += f;
+		
+		return (int)finalDamage;
+			
+	}
+	
+	private static float applyAffinityMods(float base, float attackerAffinity, float defenderAffinity)
+	{
+		base *= (attackerAffinity/100.0f);
+		
+		//only apply defense on attacks, not heals
+		if(base > 0)
+			base *= (200.0f-defenderAffinity)/100.0f;	
+		else
+			base *= (defenderAffinity/100.0f);
+		
+		return base;
 	}
 	
 	//returns whether rhs has priority over lhs

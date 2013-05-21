@@ -27,7 +27,7 @@ import bladequest.UI.DebugScreen;
 import bladequest.UI.ListBox;
 import bladequest.UI.MainMenu.MainMenu;
 import bladequest.UI.MenuPanel.Anchors;
-import bladequest.UI.MerchantScreen;
+import bladequest.UI.MerchantScreen.MerchantScreen;
 import bladequest.UI.MsgBox;
 import bladequest.UI.NameSelect;
 import bladequest.UI.SaveLoadMenu;
@@ -61,7 +61,7 @@ public class Global
 	public final static int MAX_FPS = 60;
 	public final static int FRAME_PERIOD = 1000 / MAX_FPS;
 	
-	public final static int iconSize = 8;
+	public final static int iconSize = 10;
 	public final static int portraitSrcSize = 64;
 	//public final static float iconScale = 2.0f;
 	
@@ -653,7 +653,7 @@ public class Global
     		{
     			map.playBGM(true);
     			GameState = States.GS_WORLDMOVEMENT; 
-    			screenFader.fadeIn(10);
+    			//screenFader.fadeIn(10);
     				
     			delay();
     		}
@@ -1021,24 +1021,28 @@ public class Global
 		icons.put("dagger", new Icon(0,0));icons.put("sword", new Icon(1,0));
 		icons.put("whip", new Icon(2,0));icons.put("bow", new Icon(3,0));
 		icons.put("hammer", new Icon(4,0));icons.put("spear", new Icon(5,0));
+		
 		icons.put("gun", new Icon(0,1));icons.put("boomerang", new Icon(1,1));
 		icons.put("claw", new Icon(2,1));icons.put("staff", new Icon(3,1));
 		icons.put("axe", new Icon(4,1));icons.put("book", new Icon(5,1));
+		
 		icons.put("magisword", new Icon(0,2));
+		
 		icons.put("ltorso", new Icon(0,3));icons.put("htorso", new Icon(1,3));
 		icons.put("lshield", new Icon(2,3));icons.put("hshield", new Icon(3,3));
 		icons.put("lhelmet", new Icon(4,3));icons.put("hhelmet", new Icon(5,3));
 		
-		icons.put("ring", new Icon(0,5));icons.put("bracelet", new Icon(1,5));
-		icons.put("crystal", new Icon(2,5));icons.put("boot", new Icon(3,5));
-		icons.put("cape", new Icon(4,5));icons.put("orb", new Icon(5,5));
+		icons.put("ring", new Icon(0,4));icons.put("bracelet", new Icon(1,4));
+		icons.put("crystal", new Icon(2,4));icons.put("boot", new Icon(3,4));
+		icons.put("cape", new Icon(4,4));icons.put("orb", new Icon(5,4));
 		
-		icons.put("poison", new Icon(0,7));icons.put("KO", new Icon(1,7));
-		icons.put("mute", new Icon(2,7));icons.put("frozen", new Icon(3,7));
-		icons.put("blind", new Icon(4,7));icons.put("confuse", new Icon(5,7));
-		icons.put("stun", new Icon(0,8));	
+		icons.put("poison", new Icon(0,5));icons.put("KO", new Icon(1,5));
+		icons.put("mute", new Icon(2,5));icons.put("frozen", new Icon(3,5));
+		icons.put("blind", new Icon(4,5));icons.put("confuse", new Icon(5,5));
 		
-		icons.put("arrow", new Icon(0,10));	
+		icons.put("stun", new Icon(0,6));	
+		
+		icons.put("arrow", new Icon(1, 6));	
 	}
 	
 	private static void genWeaponSwings()
@@ -1055,7 +1059,7 @@ public class Global
 		screenShaker = new ScreenShaker();
 		target = new TargetReticle();
 		textFactory = new TextFactory(Typeface.createFromAsset(activity.getAssets(),"fonts/pressstart.ttf"));
-		playingReactions = new HashMap<String, Map<String,ReactionBubble>>();
+		playingReactions = new HashMap<String,ReactionBubble>();
 		
 		bitmaps = new HashMap<String, Bitmap>();
 		loadBitmaps("drawable/characters");
@@ -1146,35 +1150,14 @@ public class Global
 		
 		//test params
 		party.teleport(1, 3);		
-		//party.insertCharacter("aramis", 1);	
 		party.addCharacter("aramis");
-		party.getCharacter("aramis").setDisplayName("?????");		
-		
+		party.getCharacter("aramis").setDisplayName("?????");			
 			
 		party.addCharacter("joy");
 		party.addCharacter("luc");	
-		party.addCharacter("roland");	
-		
-//		for(PlayerCharacter pc : party.getPartyMembers(true))
-//		{
-//			if(pc != null)
-//			{
-//				pc.modifyLevel(99, false);
-//				pc.fullRestore();
-//				pc.modifyHP(-85.0f, true);
-//			}
-//		}
-//		
-//		for(int i = 0; i < 99; ++i)
-//			party.addItem("potion");
-		
+		party.addCharacter("roland");			
 		LoadMap("test");
-			
-			
 		
-		//party.addCharacter("joy");				
-		switches.put("guardasleep", true);
-		switches.put("startgame", true);			
 		
 	}
 	
@@ -1184,6 +1167,8 @@ public class Global
 	{
 		if(map != null)
 			map.clearObjectAction();
+		
+		playingReactions.clear();
 		
 		playTimer.stop();
 		
@@ -1217,45 +1202,37 @@ public class Global
 	}
 
 
-	private static Map<String, Map<String, ReactionBubble>> playingReactions;
+	private static Map<String, ReactionBubble> playingReactions;
 	
 	public static void openReactionBubble(ReactionBubble bubble, String target, Point drawPos, float duration, boolean loop)
-	{
-		if(!playingReactions.containsKey(map.Name()))
-			playingReactions.put(map.Name(), new HashMap<String, ReactionBubble>());		
-		
+	{		
 		bubble.open(drawPos, duration, loop);		
-		playingReactions.get(map.Name()).put(target, bubble);
+		playingReactions.put(target, bubble);
 	}
 	
 	public static void closeReactionBubble(String target)
 	{
-		if(playingReactions.containsKey(map.Name()))
-			if(playingReactions.get(map.Name()).get(target) != null)
-				playingReactions.get(map.Name()).remove(target);
+			if(playingReactions.get(target) != null)
+				playingReactions.remove(target);
 	}
 	
 	private static void updateReactionBubbles()
 	{
-		if(playingReactions.containsKey(map.Name()))
-		{
+
 			List<String> playingBubbleNames = new ArrayList<String>();
-			for(String name : playingReactions.get(map.Name()).keySet())
-				if(playingReactions.get(map.Name()).get(name).isDone())
+			for(String name : playingReactions.keySet())
+				if(playingReactions.get(name).isDone())
 					playingBubbleNames.add(name);			
 			
 			for(String name : playingBubbleNames)
-				playingReactions.get(map.Name()).remove(name);
-		}
-		
-		
+				playingReactions.remove(name);
+	
 	}
 
 	public static void renderReactionBubbles() 
 	{
-		if(playingReactions.containsKey(map.Name()))
-			for(ReactionBubble bubble : playingReactions.get(map.Name()).values())
-				bubble.render();
+		for(ReactionBubble bubble : playingReactions.values())
+			bubble.render();
 		
 	}
 

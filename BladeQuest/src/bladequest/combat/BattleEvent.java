@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import bladequest.battleactions.BattleAction;
-import bladequest.battleactions.bactDamage;
+import bladequest.battleactions.BattleActionPatterns;
 import bladequest.battleactions.bactTryEscape;
 import bladequest.battleactions.bactUseItem;
 import bladequest.graphics.BattleAnim;
@@ -176,16 +176,9 @@ public class BattleEvent
 		switch(source.getAction())
 		{
 		case Attack:
-			anim = source.getWeaponAnimation();
-			animStartIndex = 3;
-			objects.add(new BattleEventObject(frameFromActIndex(0), faces.Ready, 0, source));
-			objects.add(new BattleEventObject(frameFromActIndex(2), faces.Attack, 0, source));
-			objects.add(new BattleEventObject(frameFromActIndex(3), faces.Attack, 1, source));
-			objects.add(new BattleEventObject(frameFromActIndex(4), faces.Attack, 2, source));	
-			objects.add(new BattleEventObject(frameFromActIndex(5), faces.Ready, 0, source));
-			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex), source.getWeaponAnimation(), source, targets));
-			objects.add(new BattleEventObject(syncToAnimationWithOffset(0.5f), new bactDamage(0, 1.0f, DamageTypes.Physical), source, targets));
-			objects.add(new BattleEventObject(frameFromActIndex(7)));
+			BattleActionPatterns.BuildSwordSlash(
+					makeBattleEventBuilder(), source, targets, 
+					1.0f, DamageTypes.Physical, 0, 1.0f);
 			break;
 		case Ability:
 			Ability ab = source.getAbilityToUse();

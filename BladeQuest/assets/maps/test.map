@@ -651,6 +651,21 @@ t 26 18 1 2 a 0 0 0 0
 t 27 18 1 2 a 0 0 0 0 
 t 28 18 1 2 a 0 0 0 0 
 [objects]
+object start 0 0
+addstate
+opts True False False
+autostart True
+action fade 4 255 0 0 0 False True
+action switch startgame True
+addstate
+collision False False False False
+movement 0 0
+opts False False False
+switchcondition startgame
+sprite ""
+face 3
+endobject
+
 object TESTFIGHT 2 3
 addstate
 collision True True True True

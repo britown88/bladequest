@@ -2,26 +2,32 @@
 #ability name, display name, animation, damage type, target type, MP, accuracy, usable outside battle
 ability poisonjab "Poison Jab" movetest physical single 2 100 False
 action bactInflictStatus -1 True sePoison 10
+desc "Poisons an enemy."
 endability
 #
 ability assault "Assault" noanim physicalignoredef single 2 100 False
 startsDisabled
 action bactAttackClose 0 1.0f physicalignoredef
+desc "Usable only in Berserker stance.  Assault an enemy."
 endability
 #
 ability zornhau "Zornhau" noanim physicalignoredef allenemies 5 100 False
 startsDisabled
 action bactAttackRandomTargets 3 0.5f physicalignoredef 15 5.0f
 action bactBreakStance -1
+desc "Usable only in Berserker stance. Unleash a flurry of attacks. Breaks stance."
 endability
 #
 ability frostwish "Frost Wish" movetest magic allallies 5 100 True
+useoob
 action bactDamage -1 1.0f magic
+desc "Heal allies with a winter's chill."
 endability
 #
 ability dblattack "Dbl Attack" movetest physical single 4 100 False
 action bactDamage -1 0.9f physical
 action bactDamage -1 0.9f physical
+desc "Attack an enemy twice quickly."
 endability
 #
 ability bite "Bite" bite physical single 5 100 False
