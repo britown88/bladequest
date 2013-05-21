@@ -213,6 +213,10 @@ public class GameDataLoader
 			for(int i = 0; i < Stats.NUM_STATS.ordinal(); ++i)
 				itm.addStatMod(i, Integer.parseInt(dl.values.get(i)));
 		}
+		else if(dl.item.equals("damagecomp"))
+		{
+			itm.addDamageComponent(getAffinity(dl.values.get(0)), Float.parseFloat(dl.values.get(1)));
+		}
 		else if(dl.item.equals("swing"))
 		{
 			itm.initSwingData(dl.values.get(0), dl.values.get(1));
@@ -248,6 +252,19 @@ public class GameDataLoader
 	private static void loadMusicLine(DataLine dl)
 	{
 		
+	}
+	
+	private static Stats getAffinity(String affname)
+	{
+		if(affname.equals("fire"))
+			return Stats.Fire;
+		else if(affname.equals("water"))
+			return Stats.Water;
+		else if(affname.equals("wind"))
+			return Stats.Wind;
+		else if(affname.equals("earth"))
+			return Stats.Earth;
+		else return null;
 	}
 	
 	private static BattleAnim ba;
@@ -472,6 +489,11 @@ public class GameDataLoader
 					Integer.parseInt(dl.values.get(1)),
 					Integer.parseInt(dl.values.get(2)),
 					Integer.parseInt(dl.values.get(3)));
+		}
+		else if(dl.item.equals("statmods"))
+		{
+			for(int i = 0; i < Stats.NUM_STATS.ordinal(); ++i)
+				e.setStatMod(i, Integer.parseInt(dl.values.get(i)));
 		}
 		else if(dl.item.equals("level"))
 		{

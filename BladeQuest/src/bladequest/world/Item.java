@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.graphics.Point;
 import bladequest.battleactions.BattleAction;
+import bladequest.combat.DamageComponent;
 import bladequest.combat.DamageMarker;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.WeaponSwing;
@@ -34,6 +35,8 @@ public class Item
 	private List<String> usableBy;
 	private TargetTypes targetType;
 	
+	private List<DamageComponent> damageComponents;
+	
 	public Item(String idName, String name, Type type, String icon, String description)
 	{
 		this.idName = idName;
@@ -45,6 +48,7 @@ public class Item
 		actions = new ArrayList<BattleAction>();
 		usableBy = new ArrayList<String>();
 		statMods = new int[Stats.NUM_STATS.ordinal()];
+		damageComponents = new ArrayList<DamageComponent>();
 		this.type = type;
 		power = 0;
 		equipped = false;
@@ -74,6 +78,7 @@ public class Item
 		this.equipped = i.equipped;
 		
 		this.swingAnim = i.swingAnim;
+		this.damageComponents = new ArrayList<DamageComponent>(i.damageComponents);
 		
 		//copy swing model data
 		if(i.swingModel != null)
@@ -112,6 +117,9 @@ public class Item
 	public Type getType(){return type;}
 	public void addUsableBy(String name){usableBy.add(name);}
 	public List<String> getUsableChars() { return usableBy; }
+	
+	public List<DamageComponent> getDamageComponents(){return damageComponents;}
+	public void addDamageComponent(Stats affinity, float power){damageComponents.add(new DamageComponent(affinity, power));}
 	
 	public String getIcon() { return icon; }
 	

@@ -5,7 +5,7 @@ abilities "Tricks"
 combataction combSteal
 basestats 7 10 4 2
 level 5
-equip knife
+equip fireknife
 equip felthat
 equip cottonshirt
 ability poisonjab
@@ -18,7 +18,7 @@ abilities "Magic"
 combataction combAuras
 basestats 3 3 6 10
 level 6
-equip silverstaff
+equip windstaff
 equip felthat
 equip cottonshirt
 endcharacter
@@ -31,7 +31,7 @@ lability zornhau 6
 combataction combStance
 basestats 10 4 7 2
 level 5
-equip silversword
+equip earthsword
 equip felthat
 equip cottonshirt
 endcharacter
@@ -41,8 +41,8 @@ portrait 0 0
 abilities "Ice Magic"
 combataction combDragonForm
 basestats 3 7 3 10
-level 99
-equip knife
+level 7
+equip icesword
 equip felthat
 equip cottonshirt
 ability frostwish

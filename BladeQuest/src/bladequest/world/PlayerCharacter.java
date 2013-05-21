@@ -625,6 +625,10 @@ public class PlayerCharacter
 		float sh = shieldEquipped() ? shield.Power() : 0.0f;
 		stats[Stats.Defense.ordinal()] = calcDef(lvl, vit, arm, sh);
 		
+		//MagicPower/Defense
+		stats[Stats.MagicPower.ordinal()] = (int)(((intel*3.0f)+(255.0f/99.0f)*lvl)/4.0f);
+		stats[Stats.MagicDefense.ordinal()] = (int)(((intel*3.0f)+(255.0f/99.0f)*lvl)/4.0f);
+		
 		
 	}
 	

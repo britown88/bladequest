@@ -10,6 +10,12 @@ public class DamageComponent
 		this.power = power;
 	}
 	
+	public DamageComponent(DamageComponent other)
+	{
+		this.affinity = other.affinity;
+		this.power = other.power;
+	}
+	
 	public Stats getAffinity() {return affinity;}
 	public float getPower() { return power;}
 	

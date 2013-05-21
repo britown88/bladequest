@@ -26,17 +26,15 @@ public class BattleCalc
 		attacker.updateSecondaryStats();
 		defender.updateSecondaryStats();
 		
-		int AP = attacker.getStat(Stats.BattlePower);
-		float DP = defender.getStat(Stats.Defense);
+		boolean physical = type == DamageTypes.Physical || type == DamageTypes.PhysicalIgnoreDef; 
+		boolean ignoreDef = type == DamageTypes.MagicalIgnoreDef || type == DamageTypes.PhysicalIgnoreDef;
+				
+		int AP = physical ? attacker.getStat(Stats.BattlePower) : attacker.getStat(Stats.MagicPower);
+		float DP = physical ? defender.getStat(Stats.Defense) : defender.getStat(Stats.MagicDefense);
 		
 		//guarding
-		if(defender.getAction() == Action.Guard)
-			DP *= 1.5f;
-		
-		if (type == DamageTypes.PhysicalIgnoreDef)
-		{
-			DP = 0.0f;
-		}
+		if(defender.getAction() == Action.Guard) DP *= 1.5f;		
+		if (ignoreDef) DP = 0.0f;
 				
 		int BP = (int)(AP*power);
 		float coefficient = attacker == null ? 1.0f : attacker.getCoefficient();
@@ -52,7 +50,7 @@ public class BattleCalc
 		{
 		case Fixed:
 			damageReturnType = DamageReturnType.Hit;
-			finalDmg = applyAffinities((int)power, attacker, defender, damageComponents);
+			finalDmg = (int)power;
 			break;
 		case PhysicalIgnoreDef:	
 		case Physical:
@@ -87,8 +85,9 @@ public class BattleCalc
 			break;
 		case Magic:
 		case MagicalIgnoreDef:
+			finalDmg = applyAffinities(baseDmg + dmgMod, attacker, defender, damageComponents);
+			damageReturnType = DamageReturnType.Hit;			
 			break;
-			//TODO: configure other damage types
 		}
 		
 		return finalDmg;
@@ -138,12 +137,9 @@ public class BattleCalc
 		
 		//only apply defense on attacks, not heals
 		if(base > 0)
-		{
-			if(defenderAffinity > 200)
-				base = -(base * ((defenderAffinity-200.0f)/100.0f));
-			else
-				base *= (200.0f-defenderAffinity)/100.0f;			
-		}
+			base *= (200.0f-defenderAffinity)/100.0f;	
+		else
+			base *= (defenderAffinity/100.0f);
 		
 		return base;
 	}
