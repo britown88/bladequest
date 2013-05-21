@@ -1,9 +1,14 @@
-package bladequest.UI;
+package bladequest.UI.MerchantScreen;
 
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
+import bladequest.UI.ListBox;
+import bladequest.UI.ListBoxEntry;
+import bladequest.UI.MenuPanel;
+import bladequest.UI.MsgBox;
 import bladequest.UI.ListBox.LBStates;
+import bladequest.UI.MainMenu.MainMenuState;
 import bladequest.UI.MenuPanel.Anchors;
 import bladequest.world.Global;
 import bladequest.world.Item;
@@ -21,8 +26,6 @@ public class MerchantScreen
 	
 	private final int menuWidth, barHeight;
 	
-	private states currentState;
-	
 	private MsgBox msgBox;
 	private Merchant merchant;
 	//private Item item;
@@ -37,6 +40,8 @@ public class MerchantScreen
 	private int darkenAlpha;
 	private boolean darkening;
 	
+	MerchantScreenStateMachine stateMachine;
+	
 	public MerchantScreen()
 	{
 		msgBox = new MsgBox();
@@ -45,12 +50,249 @@ public class MerchantScreen
 		menuWidth = (int)((float)Global.vpWidth * (menuWidthVpPercent/100.0f));
 		barHeight = (int)((float)Global.vpHeight * (menuHeightVpPercent/100.0f));
 		
+		stateMachine = new MerchantScreenStateMachine();
+		
 		buildPaints();
 		buildPanels();	
 		closed = true;
 		
 	}
 	
+	private MerchantScreenState getRootState()
+	{
+		return new MerchantScreenState(){
+			public void onSwitchedTo(MerchantScreenState prevState) {
+				if(items.Opened())
+					items.close();
+				
+				msgBox.addMessage(merchant.greeting);
+				msgBox.nextMessage();
+			}
+			public void update() {
+				rootMenu.update();
+				goldPanel.update();
+				
+				if(!items.Closed())
+					items.update();
+			}
+			public void render() {
+				if(!rootMenu.Closed())
+					rootMenu.render();
+				goldPanel.render();
+				if(!items.Closed())
+					items.render();
+			}			
+			public void handleClosing(){
+				if(rootMenu.Opened())
+					rootMenu.close();
+				if(msgBox.Opened())
+					msgBox.close();
+				
+				if(rootMenu.Closed() && msgBox.Closed())
+				{
+					Global.showMessage(merchant.farewell, false);
+					Global.GameState = States.GS_WORLDMOVEMENT;
+					Global.delay();
+					closing = false;
+					closed = true;
+				}
+			}	
+			public void backButtonPressed() {
+				close();
+			}
+			public void touchActionUp(int x, int y) {
+				LBStates state = rootMenu.touchActionUp(x, y);
+				if(state == LBStates.Selected)
+					handleOption((String)rootMenu.getSelectedEntry().obj);
+			}
+			public void touchActionMove(int x, int y) {
+				rootMenu.touchActionMove(x, y);
+			}
+			public void touchActionDown(int x, int y) {
+				rootMenu.touchActionDown(x, y);
+			}			
+		};
+	}
+	private MerchantScreenState getBuyingState()
+	{
+		return new MerchantScreenState(){
+			public void onSwitchedTo(MerchantScreenState prevState) {
+				buildBuyingList();
+				
+				items.setClosed();
+				items.open();
+				
+				selling = false;
+				
+				msgBox.addMessage(merchant.buying);
+				msgBox.nextMessage();
+			}
+
+			public void update() {
+				rootMenu.update();
+				items.update();
+				if(!buySellPanel.Closed())
+					buySellPanel.update();
+			}
+			public void render() {
+				rootMenu.render();
+				items.render();
+				goldPanel.render();
+				
+				if(!buySellPanel.Closed())
+				{
+					renderDark();
+					buySellPanel.render();
+				}
+			}
+			
+			public void handleClosing(){
+				stateMachine.setState(getRootState());
+			}	
+
+			public void backButtonPressed() {
+				stateMachine.setState(getRootState());
+			}
+			public void touchActionUp(int x, int y) {
+				LBStates state = rootMenu.touchActionUp(x, y);
+				if(state == LBStates.Selected)
+					handleOption((String)rootMenu.getSelectedEntry().obj);
+				
+				state = items.touchActionUp(x, y);
+				if(state == LBStates.Selected)
+				{
+					//item = (Item)(items.getSelectedEntry().obj);
+					stateMachine.setState(getBuySellConfirmState());
+				}
+			}
+			public void touchActionMove(int x, int y) {
+				rootMenu.touchActionMove(x, y);
+				items.touchActionMove(x, y);
+			}
+			public void touchActionDown(int x, int y) {
+				rootMenu.touchActionDown(x, y);
+				items.touchActionDown(x, y);
+			}			
+		};
+	}
+	private MerchantScreenState getSellingState()
+	{
+		return new MerchantScreenState(){
+			public void onSwitchedTo(MerchantScreenState prevState) {
+				buildSellingList();
+				
+				items.setClosed();
+				items.open();
+				
+				selling = true;
+				
+				msgBox.addMessage(merchant.selling);
+				msgBox.nextMessage();
+			}
+
+			public void update() {
+				rootMenu.update();
+				items.update();
+				if(!buySellPanel.Closed())
+					buySellPanel.update();
+			}
+			public void render() {
+				rootMenu.render();
+				items.render();
+				goldPanel.render();
+				
+				if(!buySellPanel.Closed())
+				{
+					renderDark();
+					buySellPanel.render();
+				}
+			}
+			
+			public void handleClosing(){
+				stateMachine.setState(getRootState());
+			}	
+
+			public void backButtonPressed() {
+				stateMachine.setState(getRootState());
+			}
+			public void touchActionUp(int x, int y) {
+				LBStates state = rootMenu.touchActionUp(x, y);
+				if(state == LBStates.Selected)
+					handleOption((String)rootMenu.getSelectedEntry().obj);
+				
+				state = items.touchActionUp(x, y);
+				if(state == LBStates.Selected)
+				{
+					//item = (Item)(items.getSelectedEntry().obj);
+					stateMachine.setState(getBuySellConfirmState());
+				}
+			}
+			public void touchActionMove(int x, int y) {
+				rootMenu.touchActionMove(x, y);
+				items.touchActionMove(x, y);
+			}
+			public void touchActionDown(int x, int y) {
+				rootMenu.touchActionDown(x, y);
+				items.touchActionDown(x, y);
+			}			
+		};
+	}
+	private MerchantScreenState getBuySellConfirmState()
+	{
+		return new MerchantScreenState(){
+			public void changeStateTo(MerchantScreenState state) {
+				buySellPanel.close();
+				undarken();
+			}
+			public void onSwitchedTo(MerchantScreenState prevState) {
+				updateBuySellPanel();
+				buySellPanel.open();
+				darken();
+			}
+
+			public void update() {
+				buySellPanel.update();
+			}
+			public void render() {
+				rootMenu.render();
+				items.render();
+				goldPanel.render();
+				renderDark();
+				buySellPanel.render();	
+			}
+			
+			public void handleClosing(){
+				stateMachine.setState(selling ? getSellingState() : getBuyingState());
+			}	
+
+			public void backButtonPressed() {
+				stateMachine.setState(selling ? getSellingState() : getBuyingState());
+			}
+			public void touchActionUp(int x, int y) {}
+			public void touchActionMove(int x, int y) {}
+			public void touchActionDown(int x, int y) {}			
+		};
+	}
+	private MerchantScreenState getEquipSelectState()
+	{
+		return new MerchantScreenState(){
+			public void changeStateTo(MerchantScreenState state) {}
+			public void onSwitchedTo(MerchantScreenState prevState) {}
+
+			public void update() {}
+			public void render() {}
+			
+			public void handleClosing(){
+				stateMachine.setState(getRootState());
+			}	
+
+			public void backButtonPressed() {}
+			public void touchActionUp(int x, int y) {}
+			public void touchActionMove(int x, int y) {}
+			public void touchActionDown(int x, int y) {}			
+		};
+	}
+
 	private void buildPaints()
 	{
 		/*smallText = Global.textFactory.getTextPaint(9, Color.WHITE, Align.LEFT);				
@@ -176,6 +418,11 @@ public class MerchantScreen
 		return itemCost - discountedPrice;
 	}
 	
+	public void cancelToState(MerchantScreenState prevState)
+	{
+		stateMachine.resetToState(prevState);				
+	}
+	
 	private void showMessage(String msg, boolean yesNoOpt)
 	{
 		//darken();
@@ -190,7 +437,7 @@ public class MerchantScreen
 		closed = false;
 		closing = false;
 		
-		currentState = states.Root;
+		stateMachine.setState(getRootState());
 		
 		showMessage(merchant.greeting, false);
 		rootMenu.open();
@@ -203,106 +450,22 @@ public class MerchantScreen
 	
 	private void handleClosing()
 	{
-		switch(currentState)
-		{
-		case Root:
-			if(rootMenu.Opened())
-				rootMenu.close();
-			if(msgBox.Opened())
-				msgBox.close();
-			
-			if(rootMenu.Closed() && msgBox.Closed())
-			{
-				Global.showMessage(merchant.farewell, false);
-				Global.GameState = States.GS_WORLDMOVEMENT;
-				Global.delay();
-				closing = false;
-				closed = true;
-			}
-			break;
-		case BuySellConfirm:
-			changeState(selling ? states.Selling : states.Buying);
-			break;
-		default:
-			changeState(states.Root);
-			break;
-		}
+		stateMachine.getState().handleClosing();
 	}
 	private void handleOption(String str)
 	{
 		if(str.equals("buy"))
 		{
-			if(currentState != states.Buying)
-				changeState(states.Buying);
+			stateMachine.setState(getBuyingState());
 		}
 		else if(str.equals("sel"))
 		{
-			if(currentState != states.Selling)
-				changeState(states.Selling);
+			stateMachine.setState(getSellingState());
 		}
 		else if(str.equals("lev"))
 		{
 			close();
 		}
-	}
-
-	
-	private void changeState(states newState)
-	{
-		
-		switch(newState)
-		{
-		case Root:
-			if(items.Opened())
-				items.close();
-			
-			msgBox.addMessage(merchant.greeting);
-			msgBox.nextMessage();
-			
-			break;
-		case Buying:
-			buildBuyingList();
-			
-			items.setClosed();
-			items.open();
-			
-			msgBox.addMessage(merchant.buying);
-			msgBox.nextMessage();
-			
-			if(currentState == states.BuySellConfirm)
-			{
-				buySellPanel.close();
-				undarken();
-			}
-			
-			break;
-		case Selling:
-			buildSellingList();
-			
-			items.setClosed();
-			items.open();
-			
-			msgBox.addMessage(merchant.selling);
-			msgBox.nextMessage();
-			
-			if(currentState == states.BuySellConfirm)
-			{
-				buySellPanel.close();
-				undarken();
-			}
-			
-			break;
-		case BuySellConfirm:
-			updateBuySellPanel();
-			buySellPanel.open();
-			darken();
-			break;
-		case EquipSelect:
-			break;
-		}
-		
-		currentState = newState;
-		
 	}
 	
 	public void update()
@@ -317,66 +480,13 @@ public class MerchantScreen
 		if(closing)
 			handleClosing();
 		
-		switch(currentState)
-		{
-		case Root:
-			rootMenu.update();
-			goldPanel.update();
-			
-			if(!items.Closed())
-				items.update();
-			break;
-		case Buying:
-		case Selling:
-			rootMenu.update();
-			items.update();
-			if(!buySellPanel.Closed())
-				buySellPanel.update();
-
-			break;
-		case BuySellConfirm:			
-			buySellPanel.update();
-			break;
-		case EquipSelect:
-			break;
-		}
+		stateMachine.getState().update();
 		
 	}
 	
 	public void render()
 	{
-		switch(currentState)
-		{
-		case Root:
-			if(!rootMenu.Closed())
-				rootMenu.render();
-			goldPanel.render();
-			if(!items.Closed())
-				items.render();
-			break;
-		case Buying:
-		case Selling:
-			rootMenu.render();
-			items.render();
-			goldPanel.render();
-			
-			if(!buySellPanel.Closed())
-			{
-				renderDark();
-				buySellPanel.render();
-			}
-			
-			break;
-		case BuySellConfirm:
-			rootMenu.render();
-			items.render();
-			goldPanel.render();
-			renderDark();
-			buySellPanel.render();			
-			break;
-		case EquipSelect:
-			break;
-		}
+		stateMachine.getState().render();
 		
 		if(!msgBox.Closed())
 			msgBox.render();
@@ -384,113 +494,25 @@ public class MerchantScreen
 	
 	public void backButtonPressed()
 	{
-		switch(currentState)
-		{
-		case Root:
-			close();
-			break;
-		case Buying:
-		case Selling:
-			changeState(states.Root);
-			break;
-		case BuySellConfirm:
-			changeState(selling ? states.Selling : states.Buying);
-			break;
-		case EquipSelect:
-			break;
-		}
-		
+		stateMachine.getState().backButtonPressed();		
 	}
 	
 	public void touchActionMove(int x, int y)
 	{
 		if(!closing)
-		{
-			switch(currentState)
-			{
-			case Root:
-				rootMenu.touchActionMove(x, y);
-				break;
-			case Buying:
-			case Selling:
-				rootMenu.touchActionMove(x, y);
-				items.touchActionMove(x, y);
-				break;
-			case BuySellConfirm:
-				break;
-			case EquipSelect:
-				break;
-			}
-		}
-		
+			stateMachine.getState().touchActionMove(x, y);		
 		
 	}
 	public void touchActionUp(int x, int y)
 	{
 		if(!closing)
-		{
-			ListBox.LBStates state;
-			switch(currentState)
-			{
-			case Root:
-				state = rootMenu.touchActionUp(x, y);
-				if(state == LBStates.Selected)
-					handleOption((String)rootMenu.getSelectedEntry().obj);
-				break;
-			case Selling:
-			case Buying:
-				state = rootMenu.touchActionUp(x, y);
-				if(state == LBStates.Selected)
-					handleOption((String)rootMenu.getSelectedEntry().obj);
-				
-				state = items.touchActionUp(x, y);
-				if(state == LBStates.Selected)
-				{
-					//item = (Item)(items.getSelectedEntry().obj);
-					selling = currentState == states.Selling;
-					changeState(states.BuySellConfirm);
-				}
-				break;
-			case BuySellConfirm:
-				break;
-			case EquipSelect:
-				break;
-			}
-		}
-		
-		
+			stateMachine.getState().touchActionUp(x, y);		
 	}
 	public void touchActionDown(int x, int y)
 	{
 		if(!closing)
-		{
-			switch(currentState)
-			{
-			case Root:
-				rootMenu.touchActionDown(x, y);
-				break;
-			case Buying:
-			case Selling:
-				rootMenu.touchActionDown(x, y);
-				items.touchActionDown(x, y);
-				break;
-			case BuySellConfirm:
-				break;
-			case EquipSelect:
-				break;
-			}
-		}	
-		
+			stateMachine.getState().touchActionDown(x, y);		
 	}
-	
-	private enum states
-	{
-		Root,
-		Buying,
-		Selling,
-		BuySellConfirm,
-		EquipSelect
-		
-	}
+
 
 }

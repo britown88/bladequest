@@ -27,7 +27,7 @@ import bladequest.UI.DebugScreen;
 import bladequest.UI.ListBox;
 import bladequest.UI.MainMenu.MainMenu;
 import bladequest.UI.MenuPanel.Anchors;
-import bladequest.UI.MerchantScreen;
+import bladequest.UI.MerchantScreen.MerchantScreen;
 import bladequest.UI.MsgBox;
 import bladequest.UI.NameSelect;
 import bladequest.UI.SaveLoadMenu;
@@ -1140,23 +1140,23 @@ public class Global
 		
 		loading = false;
 
-		//demo start info, do not fuck with!
-		screenFader.setFadeColor(255, 0, 0, 0);
-		screenFader.setFaded();
-		party.teleport(16, 5);		
-		party.insertCharacter("aramis", 1);	
-		party.getCharacter("aramis").setDisplayName("?????");	
-		LoadMap("prisonb2");
+//		//demo start info, do not fuck with!
+//		screenFader.setFadeColor(255, 0, 0, 0);
+//		screenFader.setFaded();
+//		party.teleport(16, 5);		
+//		party.insertCharacter("aramis", 1);	
+//		party.getCharacter("aramis").setDisplayName("?????");	
+//		LoadMap("prisonb2");
 		
-//		//test params
-//		party.teleport(1, 3);		
-//		party.addCharacter("aramis");
-//		party.getCharacter("aramis").setDisplayName("?????");			
-//			
-//		party.addCharacter("joy");
-//		party.addCharacter("luc");	
-//		party.addCharacter("roland");			
-//		LoadMap("test");
+		//test params
+		party.teleport(1, 3);		
+		party.addCharacter("aramis");
+		party.getCharacter("aramis").setDisplayName("?????");			
+			
+		party.addCharacter("joy");
+		party.addCharacter("luc");	
+		party.addCharacter("roland");			
+		LoadMap("test");
 		
 		
 	}
