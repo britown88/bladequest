@@ -1,0 +1,14 @@
+#a stupid way to output "hello world"
+
+myFunc a b 0
+  b
+
+myFunc a b int countdown
+  myFunc a b (subtract countdown 1)
+
+\test <- 42
+main list argList
+   \x <- 0
+   \partialCurry <- myFunc "no hello"
+   \first <- ([a b c d] a) # lambda functions, yarly
+   first (partialCurry "hello world" 5) x true test

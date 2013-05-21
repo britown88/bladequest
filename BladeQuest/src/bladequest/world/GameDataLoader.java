@@ -1,8 +1,11 @@
 package bladequest.world;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.graphics.Color;
 import android.graphics.Point;
@@ -27,6 +30,14 @@ import bladequest.graphics.BattleAnimObjState;
 import bladequest.graphics.BattleAnimObjState.PosTypes;
 import bladequest.graphics.BattleAnimObject;
 import bladequest.graphics.BattleAnimObject.Types;
+import bladequest.scripting.FileTokenizer;
+import bladequest.scripting.FunctionSpecializer;
+import bladequest.scripting.InvokeFunction;
+import bladequest.scripting.Parser;
+import bladequest.scripting.Parser.TypeSpecializer;
+import bladequest.scripting.Script;
+import bladequest.scripting.ScriptVar;
+import bladequest.scripting.ScriptVar.BadTypeException;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.statuseffects.seKO;
 import bladequest.statuseffects.sePoison;
@@ -39,6 +50,31 @@ public class GameDataLoader
 	private static FileSections section;
 	private static final String TAG = GameDataLoader.class.getSimpleName();
 	
+	public static Map<String, ScriptVar> getStandardLibrary()
+	{
+		Map<String, ScriptVar> out = new HashMap<String, ScriptVar>();
+	
+		List<FunctionSpecializer> specializerList =  new ArrayList<FunctionSpecializer>();
+		specializerList.add(new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isInteger();}});
+		try {
+			out.put("subtract", Script.createFunction(new InvokeFunction(new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isInteger();}})
+			{
+
+				@Override
+				public ScriptVar invoke(List<ScriptVar> values)
+						throws BadTypeException {
+					return ScriptVar.toScriptVar(values.get(0).getInteger() - values.get(1).getInteger());
+				}
+
+				@Override
+				public ScriptVar clone() {
+					return this;
+				}
+			}, specializerList));
+		} catch (BadTypeException e) {
+		}
+		return out;
+	}
 	public static void load(BqActivity activity)
 	{
 		loadFile(activity, "data/sprites.dat");
@@ -50,6 +86,26 @@ public class GameDataLoader
 		loadFile(activity, "data/enemies.dat");
 		loadFile(activity, "data/battles.dat");
 		loadFile(activity, "data/merchants.dat");
+		
+		Script script = new Script(getStandardLibrary()); //empty standard library!
+		
+		Parser p = null;
+		try {
+			p = new Parser(new FileTokenizer(activity.getAssets().open("data/testScript.dat")), script);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+		}
+		p.run(); //populates script!
+		
+		try {
+			ScriptVar helloWorld = script.getVariable("main").apply(new ScriptVar.EmptyList());
+			if (!helloWorld.getString().equals("hello world"))
+			{
+				//Crash, trolllololo
+				new ArrayList<String>().get(42);
+			}
+		} catch (BadTypeException e) {
+		}
 		
 		Log.d(TAG, "Loading maps.");Global.loadMaps("maps");
 		//loadFile(activity, "data/gamedata.dat");
