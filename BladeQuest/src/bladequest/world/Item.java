@@ -53,8 +53,7 @@ public class Item
 		power = 0;
 		equipped = false;
 		useCount = 0;
-		
-		
+		sellable = true;		
 		
 	}
 	

@@ -40,6 +40,8 @@ public class MerchantScreen
 	private int darkenAlpha;
 	private boolean darkening;
 	
+	int itemListPosition;
+	
 	MerchantScreenStateMachine stateMachine;
 	
 	public MerchantScreen()
@@ -58,6 +60,10 @@ public class MerchantScreen
 		
 	}
 	
+	public void cancelToState(MerchantScreenState prevState)
+	{
+		stateMachine.resetToState(prevState);				
+	}
 	private MerchantScreenState getRootState()
 	{
 		return new MerchantScreenState(){
@@ -121,6 +127,7 @@ public class MerchantScreen
 				
 				items.setClosed();
 				items.open();
+				items.setItemPosition(itemListPosition);
 				
 				selling = false;
 				
@@ -162,6 +169,7 @@ public class MerchantScreen
 				if(state == LBStates.Selected)
 				{
 					//item = (Item)(items.getSelectedEntry().obj);
+					
 					stateMachine.setState(getBuySellConfirmState());
 				}
 			}
@@ -183,6 +191,7 @@ public class MerchantScreen
 				
 				items.setClosed();
 				items.open();
+				items.setItemPosition(itemListPosition);
 				
 				selling = true;
 				
@@ -241,10 +250,12 @@ public class MerchantScreen
 	{
 		return new MerchantScreenState(){
 			public void changeStateTo(MerchantScreenState state) {
+				
 				buySellPanel.close();
 				undarken();
 			}
 			public void onSwitchedTo(MerchantScreenState prevState) {
+				itemListPosition = items.getItemPosition();
 				updateBuySellPanel();
 				buySellPanel.open();
 				darken();
@@ -331,10 +342,10 @@ public class MerchantScreen
 		items.setOpenSize(Global.vpWidth - menuWidth, Global.vpHeight - MsgBox.msgBoxHeight);
 		items.setDisabledPaint(grayText);
 		
-		buySellPanel = new MenuPanel(Global.vpWidth/2, Global.vpHeight/2, 0,0);
-		buySellPanel.anchor = Anchors.TrueCenter;
+		buySellPanel = new MenuPanel(Global.vpWidth/2,  barHeight, 0,0);
+		buySellPanel.anchor = Anchors.TopCenter;
 		buySellPanel.openSpeed = 30;
-		buySellPanel.setOpenSize((int)(menuWidth*2.5), barHeight*4);
+		buySellPanel.setOpenSize((int)(menuWidth*2.5), barHeight*3);
 	}
 	private void updateGoldPanel()
 	{
@@ -344,6 +355,7 @@ public class MerchantScreen
 	{
 		
 	}
+	
 	private void buildBuyingList()
 	{
 		ListBoxEntry entry;
@@ -375,42 +387,28 @@ public class MerchantScreen
 		}
 		items.update();
 	}
-	
 	private void buildSellingList()
 	{
-		ListBoxEntry entry;
-		boolean disabled;
-		
+		ListBoxEntry entry;		
 		items.clearObjects();
 
 		float iconScale = 2.0f;
 		int d = (int)((float)Global.iconSize*iconScale/2.0f);
-		for(Item i : merchant.getItems())
+		
+		for(Item i : Global.party.getInventory(false))
 		{		
-			int itemCount = -1;
-			if(merchant.itemIsLimited(i.idName))
-				itemCount = merchant.getCount(i.idName);				
+			if(i.isSellable() && i.getType() != Item.Type.Key)
+			{
+				entry = items.addItem(i.getName(), i, false);			
+				entry.getTextAt(0).x += d*2 + 4;					
+				//add item count
+				entry.addTextBox(""+i.getValue()+"G", items.getColumnWidth() - d, items.getRowHeight()/2, menuTextRight);
+				entry.addPicBox(Global.createIcon(i.getIcon(), d + 6, items.getRowHeight()/2, iconScale));
+			}
 			
-			disabled = Global.party.getGold() < i.getValue() || itemCount == 0;
-			
-			entry = items.addItem(i.getName(), i, disabled);
-			
-			entry.getTextAt(0).x += d*2 + 4;					
-			//add item count
-			entry.addTextBox(""+i.getValue(), items.getColumnWidth() - 32, items.getRowHeight()/2, disabled ? grayText : menuText);
-			entry.addPicBox(Global.createIcon(i.getIcon(), d + 6, items.getRowHeight()/2, iconScale));
-
-
-
 		}
 		items.update();
 	}
-	
-	public boolean closed() { return closed; }
-	
-	private void darken(){darkening = true;}	
-	private void undarken(){darkening = false;}	
-	private void renderDark(){Global.renderer.drawColor(Color.argb(darkenAlpha, 0, 0, 0));}
 	
 	private int getCost(int itemCost)
 	{
@@ -418,18 +416,16 @@ public class MerchantScreen
 		return itemCost - discountedPrice;
 	}
 	
-	public void cancelToState(MerchantScreenState prevState)
-	{
-		stateMachine.resetToState(prevState);				
-	}
-	
+	private void darken(){darkening = true;}	
+	private void undarken(){darkening = false;}	
+	private void renderDark(){Global.renderer.drawColor(Color.argb(darkenAlpha, 0, 0, 0));}
+		
 	private void showMessage(String msg, boolean yesNoOpt)
 	{
 		//darken();
 		msgBox.addMessage(msg, yesNoOpt);
 		msgBox.open();
-	}
-	
+	}	
 	public void open(Merchant merchant, float discount)
 	{
 		this.merchant = merchant;
@@ -441,12 +437,9 @@ public class MerchantScreen
 		
 		showMessage(merchant.greeting, false);
 		rootMenu.open();
-	}
-	
-	private void close()
-	{
-		closing = true;
-	}
+	}	
+	private void close() { closing = true;}
+	public boolean closed() { return closed; }
 	
 	private void handleClosing()
 	{
@@ -454,6 +447,7 @@ public class MerchantScreen
 	}
 	private void handleOption(String str)
 	{
+		itemListPosition = 0;
 		if(str.equals("buy"))
 		{
 			stateMachine.setState(getBuyingState());
@@ -483,7 +477,6 @@ public class MerchantScreen
 		stateMachine.getState().update();
 		
 	}
-	
 	public void render()
 	{
 		stateMachine.getState().render();
@@ -496,7 +489,6 @@ public class MerchantScreen
 	{
 		stateMachine.getState().backButtonPressed();		
 	}
-	
 	public void touchActionMove(int x, int y)
 	{
 		if(!closing)

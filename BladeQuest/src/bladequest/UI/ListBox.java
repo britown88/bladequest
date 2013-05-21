@@ -13,7 +13,7 @@ import bladequest.world.Global;
 //by the parent object
 public class ListBox extends MenuPanel
 {
-	private int numRows, numColumns, rowHeight, columnWidth, startY, /*startX, */itemBuffer, scrollDelta, selectedIndex;
+	private int numRows, numColumns, rowHeight, columnWidth, startY, currentY, itemBuffer, scrollDelta, selectedIndex;
 	//private List<String> itemNames;
 	//private List<Object> items;
 	//private List<Integer> disabledIndices;
@@ -72,6 +72,9 @@ public class ListBox extends MenuPanel
 		}
 		
 	}
+	
+	public int getItemPosition(){return itemBuffer;}
+	public void setItemPosition(int pos){itemBuffer = pos; update();}
 	
 	//returns the created item
 	public ListBoxEntry addItem(String str, Object o, boolean disabled)
@@ -198,9 +201,15 @@ public class ListBox extends MenuPanel
 				for(int x = 0; x < numColumns; ++x)
 				{
 					if(i >= entries.size())
-						break;
+						break;	
 					
-					if(draw)
+					boolean hideRow = 
+							y == numRows - 1 && 
+							(scrolling || scrollDelta != 0) && 
+							currentY > startY && 
+							itemBuffer > 0;					
+					
+					if(draw && !hideRow)
 						entries.get(i).render();
 
 					
@@ -258,28 +267,33 @@ public class ListBox extends MenuPanel
 	{
 		if(mouseDown)
 		{
+			currentY = y;
 			if(!scrolling)
 			{
 				//dragged out of starting row
 				if( ((y > startY && itemBuffer >= numColumns) || 
-						(y < startY && itemBuffer + (numColumns*numRows) < entries.size())) && 
-						(int)(y / numRows) != (int)(startY / numRows))
+					(y < startY && itemBuffer + (numColumns*numRows) < entries.size())) && 
+					(int)(y / numRows) != (int)(startY / numRows))//dragged to different row
 				{
 					//start scrolling
 					scrolling = true;
 					selectedItem = null;
 				}
 				else	
-					//dragged to left or right
-					if(frameRect.contains(x, y))
+				{
+					//only reeval if in frame and the bos cant scroll
+					int newIndex = getSelectedIndex(x,y);
+					if(frameRect.contains(x, y) && newIndex != selectedIndex)
 					{
 						//reevaluate which item is selected
-						selectedIndex = getSelectedIndex(x,y);
-						if(selectedIndex < entries.size())
+						selectedIndex = newIndex;
+						if(selectedIndex < entries.size() && entries.size() <= numColumns*numRows)
 							selectedItem = entries.get(selectedIndex);							
 						else
 							selectedItem = null;
-					}			
+					}					
+				}
+								
 			}
 			else
 			{
