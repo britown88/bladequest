@@ -556,7 +556,7 @@ public class Battle
 			int j = 0, d = (int)(Global.iconSize*iconScale + 2);
 			for(StatusEffect se : c.getStatusEffects())
 				if(j < 4 && !se.isHidden() && se.icon().length() > 0)
-					characterPanes[i].addPicBox(Global.createIcon(se.icon(),(d/2) +  d*j++,-(d/2),iconScale));
+					characterPanes[i].addPicBox(Global.createIcon(se.icon(),(d/2) +  d*j++, 0,iconScale));
 			
 			
 			characterPanes[i].update();

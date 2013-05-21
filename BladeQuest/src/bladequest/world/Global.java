@@ -61,7 +61,7 @@ public class Global
 	public final static int MAX_FPS = 60;
 	public final static int FRAME_PERIOD = 1000 / MAX_FPS;
 	
-	public final static int iconSize = 8;
+	public final static int iconSize = 10;
 	public final static int portraitSrcSize = 64;
 	//public final static float iconScale = 2.0f;
 	
@@ -1021,24 +1021,28 @@ public class Global
 		icons.put("dagger", new Icon(0,0));icons.put("sword", new Icon(1,0));
 		icons.put("whip", new Icon(2,0));icons.put("bow", new Icon(3,0));
 		icons.put("hammer", new Icon(4,0));icons.put("spear", new Icon(5,0));
+		
 		icons.put("gun", new Icon(0,1));icons.put("boomerang", new Icon(1,1));
 		icons.put("claw", new Icon(2,1));icons.put("staff", new Icon(3,1));
 		icons.put("axe", new Icon(4,1));icons.put("book", new Icon(5,1));
+		
 		icons.put("magisword", new Icon(0,2));
+		
 		icons.put("ltorso", new Icon(0,3));icons.put("htorso", new Icon(1,3));
 		icons.put("lshield", new Icon(2,3));icons.put("hshield", new Icon(3,3));
 		icons.put("lhelmet", new Icon(4,3));icons.put("hhelmet", new Icon(5,3));
 		
-		icons.put("ring", new Icon(0,5));icons.put("bracelet", new Icon(1,5));
-		icons.put("crystal", new Icon(2,5));icons.put("boot", new Icon(3,5));
-		icons.put("cape", new Icon(4,5));icons.put("orb", new Icon(5,5));
+		icons.put("ring", new Icon(0,4));icons.put("bracelet", new Icon(1,4));
+		icons.put("crystal", new Icon(2,4));icons.put("boot", new Icon(3,4));
+		icons.put("cape", new Icon(4,4));icons.put("orb", new Icon(5,4));
 		
-		icons.put("poison", new Icon(0,7));icons.put("KO", new Icon(1,7));
-		icons.put("mute", new Icon(2,7));icons.put("frozen", new Icon(3,7));
-		icons.put("blind", new Icon(4,7));icons.put("confuse", new Icon(5,7));
-		icons.put("stun", new Icon(0,8));	
+		icons.put("poison", new Icon(0,5));icons.put("KO", new Icon(1,5));
+		icons.put("mute", new Icon(2,5));icons.put("frozen", new Icon(3,5));
+		icons.put("blind", new Icon(4,5));icons.put("confuse", new Icon(5,5));
 		
-		icons.put("arrow", new Icon(0,10));	
+		icons.put("stun", new Icon(0,6));	
+		
+		icons.put("arrow", new Icon(1, 6));	
 	}
 	
 	private static void genWeaponSwings()
