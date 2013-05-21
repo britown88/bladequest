@@ -142,6 +142,8 @@ public class MenuPanel
 	public void addPicBox(Bitmap bmp, Rect src, Rect dest){ picBoxes.add(new PicBox(bmp, src, dest));}	
 	public void addPicBox(Icon ico){ picBoxes.add(new PicBox(ico));}
 	
+	public void changePicBox(int index, Icon ico){ picBoxes.set(index, new PicBox(ico));}	
+		
 	public void addChildPanel(MenuPanel child){ child.parent = this; children.add(child);}	
 	
 	

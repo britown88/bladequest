@@ -7,7 +7,9 @@ import bladequest.UI.ListBox;
 import bladequest.UI.ListBoxEntry;
 import bladequest.UI.MenuPanel;
 import bladequest.UI.MsgBox;
+import bladequest.UI.MsgBoxEndAction;
 import bladequest.UI.ListBox.LBStates;
+import bladequest.UI.NumberPicker;
 import bladequest.UI.MainMenu.MainMenuState;
 import bladequest.UI.MenuPanel.Anchors;
 import bladequest.world.Global;
@@ -18,7 +20,7 @@ import bladequest.world.States;
 public class MerchantScreen 
 {
 	private Paint menuText, menuTextRight, menuTextCenter, grayText, 
-	grayTextCenter, grayTextRight/*, redMenuText, blueMenuText, redMenuTextCenter, 
+	grayTextCenter, grayTextRight, blueMenuText, smallBluetext, smallText/*, redMenuText, blueMenuText, redMenuTextCenter, 
 	blueMenuTextCenter, smallText, smallTextCenter, smallTextRight*/;
 	
 	private final float menuWidthVpPercent = 28.0f; 
@@ -33,6 +35,8 @@ public class MerchantScreen
 	
 	private ListBox rootMenu, items;
 	private MenuPanel goldPanel, buySellPanel;
+	private ListBox confirmBox;
+	private NumberPicker countPicker;
 	
 	private boolean closing, closed, selling;
 	
@@ -41,6 +45,7 @@ public class MerchantScreen
 	private boolean darkening;
 	
 	int itemListPosition;
+	Item itemtoBuySell;
 	
 	MerchantScreenStateMachine stateMachine;
 	
@@ -168,9 +173,16 @@ public class MerchantScreen
 				state = items.touchActionUp(x, y);
 				if(state == LBStates.Selected)
 				{
-					//item = (Item)(items.getSelectedEntry().obj);
-					
-					stateMachine.setState(getBuySellConfirmState());
+					if(items.getSelectedEntry().Disabled())
+					{
+						msgBox.addMessage(merchant.insufficientFunds);
+						msgBox.nextMessage();
+					} 						
+					else
+					{
+						itemtoBuySell = (Item)(items.getSelectedEntry().obj);					
+						stateMachine.setState(getBuySellConfirmState());
+					}					
 				}
 			}
 			public void touchActionMove(int x, int y) {
@@ -232,7 +244,10 @@ public class MerchantScreen
 				state = items.touchActionUp(x, y);
 				if(state == LBStates.Selected)
 				{
-					//item = (Item)(items.getSelectedEntry().obj);
+					msgBox.addMessage(merchant.sell);
+					msgBox.nextMessage();
+					itemtoBuySell = (Item)(items.getSelectedEntry().obj);
+					
 					stateMachine.setState(getBuySellConfirmState());
 				}
 			}
@@ -255,21 +270,31 @@ public class MerchantScreen
 				undarken();
 			}
 			public void onSwitchedTo(MerchantScreenState prevState) {
-				itemListPosition = items.getItemPosition();
-				updateBuySellPanel();
+				itemListPosition = items.getItemPosition();				
 				buySellPanel.open();
+				countPicker.setValue(1);
+				updateBuySellPanel();
 				darken();
 			}
 
 			public void update() {
 				buySellPanel.update();
+				countPicker.update();
+				confirmBox.update();
+				updateBuySellPanel();
 			}
 			public void render() {
 				rootMenu.render();
 				items.render();
 				goldPanel.render();
 				renderDark();
-				buySellPanel.render();	
+				buySellPanel.render();
+				if(buySellPanel.Opened())
+				{
+					countPicker.render();
+					confirmBox.render();
+					
+				}
 			}
 			
 			public void handleClosing(){
@@ -279,9 +304,41 @@ public class MerchantScreen
 			public void backButtonPressed() {
 				stateMachine.setState(selling ? getSellingState() : getBuyingState());
 			}
-			public void touchActionUp(int x, int y) {}
-			public void touchActionMove(int x, int y) {}
-			public void touchActionDown(int x, int y) {}			
+			public void touchActionUp(int x, int y) {
+				countPicker.touchActionUp(x, y);
+				if(confirmBox.touchActionUp(x, y) == LBStates.Selected)
+				{
+					if(((String)confirmBox.getSelectedEntry().obj).equals("buy"))
+					{
+						int unitPrice = selling ? itemtoBuySell.getValue() : getCost(itemtoBuySell.getValue());
+						int count = countPicker.getValue();
+						int cost = unitPrice*count;
+						
+						if(selling)
+						{
+							Global.party.addGold(cost);
+							Global.party.removeItem(itemtoBuySell.getId(), count);
+						}
+						else
+						{
+							Global.party.addGold(-cost);
+							itemtoBuySell.setCount(count);
+							Global.party.addItem(itemtoBuySell);
+						}
+					}
+					
+					stateMachine.setState(selling ? getSellingState() : getBuyingState());
+					
+				}
+			}
+			public void touchActionMove(int x, int y) {
+				countPicker.touchActionMove(x, y);
+				confirmBox.touchActionMove(x, y);
+			}
+			public void touchActionDown(int x, int y) {
+				countPicker.touchActionDown(x, y);
+				confirmBox.touchActionDown(x, y);
+			}			
 		};
 	}
 	private MerchantScreenState getEquipSelectState()
@@ -306,10 +363,10 @@ public class MerchantScreen
 
 	private void buildPaints()
 	{
-		/*smallText = Global.textFactory.getTextPaint(9, Color.WHITE, Align.LEFT);				
-		smallTextCenter = Global.textFactory.getTextPaint(9, Color.WHITE, Align.CENTER);		
-		smallTextRight = Global.textFactory.getTextPaint(9, Color.WHITE, Align.RIGHT);	
-		*/
+		smallText = Global.textFactory.getTextPaint(9, Color.WHITE, Align.LEFT);				
+		//smallTextCenter = Global.textFactory.getTextPaint(9, Color.WHITE, Align.CENTER);		
+		//smallTextRight = Global.textFactory.getTextPaint(9, Color.WHITE, Align.RIGHT);	
+		
 		menuText = Global.textFactory.getTextPaint(13, Color.WHITE, Align.LEFT);	
 		menuTextCenter = Global.textFactory.getTextPaint(13, Color.WHITE, Align.CENTER);	
 		menuTextRight = Global.textFactory.getTextPaint(13, Color.WHITE, Align.RIGHT);
@@ -318,11 +375,12 @@ public class MerchantScreen
 		grayTextCenter = Global.textFactory.getTextPaint(13, Color.GRAY, Align.CENTER);		
 		grayTextRight = Global.textFactory.getTextPaint(13, Color.GRAY, Align.RIGHT);	
 		
-		/*redMenuText = Global.textFactory.getTextPaint(13, Color.RED, Align.LEFT);
+//		redMenuText = Global.textFactory.getTextPaint(13, Color.RED, Align.LEFT);
 		blueMenuText = Global.textFactory.getTextPaint(13, Color.CYAN, Align.LEFT);
-		redMenuTextCenter = Global.textFactory.getTextPaint(13, Color.RED, Align.CENTER);
-		blueMenuTextCenter = Global.textFactory.getTextPaint(13, Color.CYAN, Align.CENTER);
-	*/}
+		smallBluetext = Global.textFactory.getTextPaint(9, Color.CYAN, Align.LEFT);
+//		redMenuTextCenter = Global.textFactory.getTextPaint(13, Color.RED, Align.CENTER);
+//		blueMenuTextCenter = Global.textFactory.getTextPaint(13, Color.CYAN, Align.CENTER);
+	}
 	private void buildPanels()
 	{
 		goldPanel = new MenuPanel(0, Global.vpHeight - MsgBox.msgBoxHeight, menuWidth, barHeight);
@@ -342,17 +400,71 @@ public class MerchantScreen
 		items.setOpenSize(Global.vpWidth - menuWidth, Global.vpHeight - MsgBox.msgBoxHeight);
 		items.setDisabledPaint(grayText);
 		
+		
+		buildBuySellPanel();
+		
+	}
+	private void buildBuySellPanel()
+	{
+		
+		
+		float iconScale = 2.0f;
+		int d = (int)((float)Global.iconSize*iconScale/2.0f);
+		
 		buySellPanel = new MenuPanel(Global.vpWidth/2,  barHeight, 0,0);
 		buySellPanel.anchor = Anchors.TopCenter;
 		buySellPanel.openSpeed = 30;
-		buySellPanel.setOpenSize((int)(menuWidth*2.5), barHeight*3);
+		buySellPanel.setOpenSize((int)(Global.vpWidth*0.75f), barHeight*3);
+		
+		buySellPanel.clear();
+/*0*/	buySellPanel.addTextBox("", barHeight/2, barHeight/2, blueMenuText);
+/*0*/	buySellPanel.addPicBox(Global.createIcon("orb", buySellPanel.openSize.x / 2 - d, barHeight/2, iconScale));
+/*1*/	buySellPanel.addTextBox("", buySellPanel.openSize.x / 2 + d, barHeight/2, menuText);
+	
+/*2*/	buySellPanel.addTextBox("Owned:", barHeight/2, (buySellPanel.openSize.y / 6 * 2), smallBluetext);
+/*3*/	buySellPanel.addTextBox("Price:", barHeight/2, (buySellPanel.openSize.y / 6 * 3), smallBluetext);
+/*4*/	buySellPanel.addTextBox("Count:", barHeight/2, (buySellPanel.openSize.y / 6 * 4), smallBluetext);
+/*5*/	buySellPanel.addTextBox("Total:", barHeight/2, (buySellPanel.openSize.y / 6 * 5), smallBluetext);
+		
+		int col2x = 70;		
+/*6*/	buySellPanel.addTextBox("", col2x, (buySellPanel.openSize.y / 6 * 2), smallText);
+/*7*/	buySellPanel.addTextBox("", col2x, (buySellPanel.openSize.y / 6 * 3), smallText);
+/*8*/	buySellPanel.addTextBox("", col2x, (buySellPanel.openSize.y / 6 * 4), smallText);
+/*9*/	buySellPanel.addTextBox("", col2x, (buySellPanel.openSize.y / 6 * 5), smallText);
+
+		countPicker = new NumberPicker(Global.vpWidth/2 - d*2, barHeight*2, buySellPanel.openSize.x / 2 + d*2, barHeight);
+		countPicker.anchor = Anchors.TopLeft;
+		
+		confirmBox = new ListBox(Global.vpWidth/2 - d*2, barHeight*3, buySellPanel.openSize.x / 2 + d*2, barHeight, 1, 2, menuTextCenter);
+		confirmBox.addItem("", "buy", false);
+		confirmBox.addItem("Back", "bak", false);
+		
 	}
+
 	private void updateGoldPanel()
 	{
 		goldPanel.getTextAt(0).text = Global.party.getGold() + "G";
 	}
 	private void updateBuySellPanel()
 	{
+		float iconScale = 2.0f;
+		int d = (int)((float)Global.iconSize*iconScale/2.0f);
+		
+		buySellPanel.getTextAt(0).text = selling ? "Selling" : "Buying";
+		buySellPanel.changePicBox(0, Global.createIcon(itemtoBuySell.getIcon(), buySellPanel.openSize.x / 2 - d, barHeight/2, iconScale));
+		buySellPanel.getTextAt(1).text = itemtoBuySell.getName();
+		
+		int owned = Global.party.getItemCount(itemtoBuySell.idName);
+		int unitPrice = selling ? itemtoBuySell.getValue() : getCost(itemtoBuySell.getValue());
+		int count = countPicker.getValue();
+		int cost = unitPrice*count;
+		buySellPanel.getTextAt(6).text = ""+owned;
+		buySellPanel.getTextAt(7).text = ""+unitPrice+"G";
+		buySellPanel.getTextAt(8).text = ""+count;
+		buySellPanel.getTextAt(9).text = ""+cost+"G";	
+		
+		countPicker.setMinMax(0, selling ? owned : Math.min(99 - owned, Global.party.getGold() / unitPrice));
+		confirmBox.getEntryAt(0).getTextAt(0).text = selling ? "Sell!" : "Buy!";
 		
 	}
 	
@@ -426,6 +538,12 @@ public class MerchantScreen
 		msgBox.addMessage(msg, yesNoOpt);
 		msgBox.open();
 	}	
+	private void showMessageYesNo(String msg, MsgBoxEndAction yesAction, MsgBoxEndAction noAction)
+	{
+		//darken();
+		msgBox.showYesNo(msg, yesAction, noAction);
+		msgBox.open();
+	}
 	public void open(Merchant merchant, float discount)
 	{
 		this.merchant = merchant;

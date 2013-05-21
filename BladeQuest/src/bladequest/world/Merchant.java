@@ -17,15 +17,17 @@ public class Merchant
 	private static final String defGreeting = "Hello! Welcome! Have a look around!";
 	private static final String defBuying = "See something you like?";
 	private static final String defSelling = "Have something to sell?";
+	private static final String defInsufficentFunds = "You don't have enough for that!";
 	private static final String defEquipConfirm = "Do you want to equip it now?";
 	private static final String defEquipSellOld = "Do you want to sell the old equipment?";
+	private static final String defSell = "This looks interesting.";
 	private static final String defFarewell = "Come again!";
 	
 	private List<Item> items;
 	private Map<String, Integer> limitedQtyItems;
 	
 	private String name;
-	public String greeting, buying, selling, equipConfirm, equipSellOld, farewell;
+	public String greeting, buying, selling, sell, insufficientFunds, equipConfirm, equipSellOld, farewell;
 	private boolean limQtyChanged;
 	
 	public Merchant(String name)
@@ -36,9 +38,11 @@ public class Merchant
 		greeting = defGreeting;
 		buying = defBuying;
 		selling = defSelling;
+		sell = defSell;
 		equipConfirm = defEquipConfirm;
 		equipSellOld = defEquipSellOld;
 		farewell = defFarewell;
+		insufficientFunds = defInsufficentFunds;
 		
 		limQtyChanged = false;
 		

@@ -16,7 +16,7 @@ import bladequest.UI.ListBoxEntry;
 import bladequest.UI.MenuPanel;
 import bladequest.UI.MenuPanel.Anchors;
 import bladequest.UI.MsgBox;
-import bladequest.UI.MsgBox.YesNo;
+import bladequest.UI.MsgBoxEndAction;
 import bladequest.UI.NumberPicker;
 import bladequest.combat.DamageMarker;
 import bladequest.statuseffects.StatusEffect;
@@ -1965,6 +1965,12 @@ public class MainMenu
 		messageBox.addMessage(msg, yesNoOpt);
 		messageBox.open();
 	}
+	private void showMessageYesNo(String msg, MsgBoxEndAction yesAction, MsgBoxEndAction noAction)
+	{
+		darken();
+		messageBox.showYesNo(msg, yesAction, noAction);
+		messageBox.open();
+	}
 	
 	private void handleOption(String opt)
 	{
@@ -1978,7 +1984,15 @@ public class MainMenu
 			stateMachine.setState(getOptionsState());	
 		else if(opt.equals("sav"))
 		{
-			showMessage("Quit the game and return to the title screen?", true);
+			showMessageYesNo(
+					"Quit the game and return to the title screen?", 
+					new MsgBoxEndAction(){
+						public void execute()
+						{
+							Global.restartGame();
+						}
+					}, null);
+
 		}
 			//
 		else if(opt.equals("clo"))
@@ -2235,9 +2249,7 @@ public class MainMenu
 			if(d.isShown())
 				d.render();
 	}
-	
-	
-		
+			
 	public void onFling(float velocityX, float velocityY)
 	{			
 		stateMachine.getState().onFling(velocityX, velocityY);
@@ -2274,19 +2286,6 @@ public class MainMenu
 			if(messageBox.Opened())
 			{
 				messageBox.touchActionUp(x, y);
-				
-				if(messageBox.isYesNo() && messageBox.getSelectedOpt() == YesNo.Yes)
-				{
-//					//switch states and make a decision
-//					switch(currentState)
-//					{
-//					case Root:
-						Global.restartGame();
-//						break;
-//					default:
-//						break;
-//					}
-				}
 				
 				if(!messageBox.Opened())
 					undarken();
