@@ -143,7 +143,7 @@ public class Party
 				}
 			}
 			Item item = new Item(i);
-			item.modifyCount(count);
+			item.modifyCount(count-1);
 			inventory.add(item);
 		}
 	}

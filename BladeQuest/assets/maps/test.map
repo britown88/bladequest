@@ -653,8 +653,12 @@ t 28 18 1 2 a 0 0 0 0
 [objects]
 object start 0 0
 addstate
+collision False False False False
+movement 0 0
 opts True False False
 autostart True
+sprite ""
+face 3
 action fade 4 255 0 0 0 False True
 action switch startgame True
 addstate
@@ -665,7 +669,42 @@ switchcondition startgame
 sprite ""
 face 3
 endobject
-
+object rolandtest 10 3
+addstate
+collision True True True True
+movement 0 0
+opts False False False
+sprite ""
+face 3
+addstate
+collision False False False False
+movement 0 0
+opts False False False
+switchcondition rdflying
+layer above
+sprite "rdflying"
+face 3
+addstate
+collision False False False False
+movement 0 0
+opts False False False
+switchcondition rdlanding
+layer above
+sprite "rdlanding"
+face 0
+imageindex 0
+animated False
+addstate
+collision False False False False
+movement 0 0
+opts False False False
+switchcondition rdroaring
+layer above
+sprite "rdroaring"
+face 0
+imageindex 0
+animated False
+endobject
 object TESTFIGHT 2 3
 addstate
 collision True True True True
@@ -682,12 +721,6 @@ movement 0 0
 opts False False False
 sprite "tile 7 5"
 face 3
-action openbubble sleep party 2 True True
-action openbubble qmark party 2 False True
-action openbubble angry party 2 True True
-action openbubble dots party 2 True True
-action openbubble exclam party 2 False True
-action openbubble sweat party 2 False True
 endobject
 object Heals 2 5
 addstate
@@ -749,6 +782,47 @@ opts False False False
 sprite "tile 7 5"
 face 3
 action message "This tests the merchant screen!"
-action merchant itemshop 7.5f
+action merchant itemshop 7.5
+endobject
+object dragontest 10 12
+addstate
+collision True True True True
+movement 0 0
+opts True False False
+sprite "tile 7 5"
+face 3
+action switch rdflying True
+action pan 0 -4 1 False
+action path rolandtest True
+wait
+decreasemovespeed
+decreasemovespeed
+decreasemovespeed
+decreasemovespeed
+decreasemovespeed
+movedown
+movedown
+movedown
+movedown
+movedown
+wait
+endpath
+action switch rdlanding True
+action path rolandtest True
+wait
+faceup
+wait
+faceright
+wait
+facedown
+wait
+wait
+endpath
+action switch rdroaring True
+action path rolandtest True
+faceup
+wait
+faceright
+endpath
 endobject
 [encounters]
