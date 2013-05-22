@@ -310,7 +310,7 @@ public class MerchantScreen
 				{
 					if(((String)confirmBox.getSelectedEntry().obj).equals("buy"))
 					{
-						int unitPrice = selling ? itemtoBuySell.getValue() : getCost(itemtoBuySell.getValue());
+						int unitPrice = getCost(itemtoBuySell.getValue());
 						int count = countPicker.getValue();
 						int cost = unitPrice*count;
 						
@@ -323,7 +323,7 @@ public class MerchantScreen
 						{
 							Global.party.addGold(-cost);
 							itemtoBuySell.setCount(count);
-							Global.party.addItem(itemtoBuySell);
+							Global.party.addItem(itemtoBuySell.idName, count);
 						}
 					}
 					
@@ -455,7 +455,7 @@ public class MerchantScreen
 		buySellPanel.getTextAt(1).text = itemtoBuySell.getName();
 		
 		int owned = Global.party.getItemCount(itemtoBuySell.idName);
-		int unitPrice = selling ? itemtoBuySell.getValue() : getCost(itemtoBuySell.getValue());
+		int unitPrice = getCost(itemtoBuySell.getValue());
 		int count = countPicker.getValue();
 		int cost = unitPrice*count;
 		buySellPanel.getTextAt(6).text = ""+owned;

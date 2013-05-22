@@ -1127,6 +1127,29 @@ public class Global
 		//load game data
 		GameDataLoader.load(activity);	
 		
+		spr = new Sprite("rdflying", "rolanddragon", 280, 144);
+		spr.addFrame("down", 0, 0, 140, 72);
+		spr.addFrame("down", 140, 0, 280, 72);
+		spr.addFrame("down", 280, 0, 420, 72);
+		spr.addFrame("down", 420, 0, 560, 72);
+		spr.changeFace("down");
+		sprites.put("rdflying", spr);	
+		
+		spr = new Sprite("rdlanding", "rolanddragon", 280, 144);
+		spr.addFrame("left", 0, 72, 140, 144);
+		spr.addFrame("up", 140, 72, 280, 144);
+		spr.addFrame("right", 280, 72, 420, 144);
+		spr.addFrame("down", 420, 72, 560, 144);
+		spr.changeFace("left");
+		sprites.put("rdlanding", spr);
+		
+		spr = new Sprite("rdroaring", "rolanddragon", 280, 144);
+		spr.addFrame("left", 0, 144, 140, 216);
+		spr.addFrame("up", 140, 144, 280, 216);
+		spr.addFrame("right", 280, 144, 420, 216);
+		spr.changeFace("left");
+		sprites.put("rdroaring", spr);
+		
 		
 		return true;		
 	}
