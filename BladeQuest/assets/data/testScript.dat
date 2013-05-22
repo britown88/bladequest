@@ -10,5 +10,5 @@ myFunc a b int countdown
 main list argList
    \x <- 0
    \partialCurry <- myFunc "no hello"
-   \first <- ([a b c d] a) # lambda functions, yarly
+   \first <- ([a b c d] (|d| equals 42 : a)) # lambda functions, yarly
    first (partialCurry "hello world" 5) x true test

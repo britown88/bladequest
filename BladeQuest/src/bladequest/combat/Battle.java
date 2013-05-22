@@ -1309,6 +1309,11 @@ public class Battle
 		stateMachine.resetToState(prevState);				
 	}
 	
+	public List<PlayerCharacter> getParty()
+	{
+		return partyList;
+	}
+	
 	public Encounter getEncounter()
 	{
 		return encounter;

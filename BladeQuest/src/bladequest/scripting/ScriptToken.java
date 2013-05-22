@@ -17,7 +17,9 @@ public abstract class ScriptToken {
 		LocalDef,
 		ListSeparator,
 		beginLambdaFunction,
-		endLambdaFunction
+		endLambdaFunction,
+		patternMatch,
+		caseMarker
 	}
 	private Type type;
 	public Type getType()

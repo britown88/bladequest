@@ -3,7 +3,6 @@ package bladequest.world;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +18,7 @@ import bladequest.battleactions.bactDelayedDamageAll;
 import bladequest.battleactions.bactInflictStatus;
 import bladequest.battleactions.bactMessage;
 import bladequest.battleactions.bactRemoveStatus;
+import bladequest.combat.BattleLibrary;
 import bladequest.combatactions.CombatAction;
 import bladequest.combatactions.combAuras;
 import bladequest.combatactions.combDragonForm;
@@ -31,11 +31,10 @@ import bladequest.graphics.BattleAnimObjState.PosTypes;
 import bladequest.graphics.BattleAnimObject;
 import bladequest.graphics.BattleAnimObject.Types;
 import bladequest.scripting.FileTokenizer;
-import bladequest.scripting.FunctionSpecializer;
-import bladequest.scripting.InvokeFunction;
+import bladequest.scripting.LibraryWriter;
 import bladequest.scripting.Parser;
-import bladequest.scripting.Parser.TypeSpecializer;
 import bladequest.scripting.Script;
+import bladequest.scripting.Script.BadSpecialization;
 import bladequest.scripting.ScriptVar;
 import bladequest.scripting.ScriptVar.BadTypeException;
 import bladequest.statuseffects.StatusEffect;
@@ -45,35 +44,34 @@ import bladequest.system.BqActivity;
 import bladequest.system.DataLine;
 import bladequest.system.FileReader;
 
+
 public class GameDataLoader 
 {
 	private static FileSections section;
 	private static final String TAG = GameDataLoader.class.getSimpleName();
-	
+	public static int subtractScriptFn(int x, int y)
+	{
+		return x-y;
+	}
+	public static boolean equalsScriptFn(int x, int y)
+	{
+		return x == y;
+	}	
 	public static Map<String, ScriptVar> getStandardLibrary()
 	{
-		Map<String, ScriptVar> out = new HashMap<String, ScriptVar>();
+		LibraryWriter library = new LibraryWriter();
 	
-		List<FunctionSpecializer> specializerList =  new ArrayList<FunctionSpecializer>();
-		specializerList.add(new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isInteger();}});
 		try {
-			out.put("subtract", Script.createFunction(new InvokeFunction(new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isInteger();}})
-			{
-
-				@Override
-				public ScriptVar invoke(List<ScriptVar> values)
-						throws BadTypeException {
-					return ScriptVar.toScriptVar(values.get(0).getInteger() - values.get(1).getInteger());
-				}
-
-				@Override
-				public ScriptVar clone() {
-					return this;
-				}
-			}, specializerList));
+			library.add("subtract", GameDataLoader.class.getMethod("subtractScriptFn", int.class, int.class));
+			library.add("equals", GameDataLoader.class.getMethod("equalsScriptFn", int.class, int.class));
+		} catch (SecurityException e) {
+		} catch (NoSuchMethodException e) {
 		} catch (BadTypeException e) {
+		} catch (BadSpecialization e) {
 		}
-		return out;
+		
+		BattleLibrary.publishLibrary(library);
+		return library.getLibrary();
 	}
 	public static void load(BqActivity activity)
 	{

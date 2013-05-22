@@ -71,6 +71,63 @@ public abstract class ScriptVar {
 	public boolean isFunction()  { return false; }
 	public boolean isEmptyList()  { return false; }
 	
+	
+	public static ScriptVar genericScriptToVar(List<?> list)
+	{
+		ScriptVar out = new EmptyList();
+		for (Object obj : list)
+		{
+			out = new ListNode(toScriptVar(obj), out);
+		}
+		return out;
+	}
+	public static ScriptVar toScriptVar(Object obj)
+	{
+		if (obj.getClass() == Integer.class)
+		{
+			return toScriptVar(((Integer)obj).intValue());
+		}
+		else if (obj.getClass() == Float.class)
+		{
+			return toScriptVar(((Float)obj).floatValue());			
+		}
+		else if (obj.getClass() == Boolean.class)
+		{
+			return toScriptVar(((Boolean)obj).booleanValue());			
+		}		
+		else if (obj.getClass() == String.class)
+		{
+			return toScriptVar(((String)obj));			
+		}		
+		else if (obj instanceof List<?>)
+		{
+			return genericScriptToVar((List<?>)obj);
+		}
+
+		return new ScriptVar()
+		{
+			Object obj;
+			ScriptVar initialize(Object obj)
+			{
+				this.obj = obj;
+				return this;
+			}
+			@Override
+			public ScriptVar clone() {
+				return this;
+			}
+			@Override
+			public boolean isOpaque() 
+			{
+				return true; 
+			}
+			@Override
+			public Object getOpaque() 
+			{
+				return obj;
+			}
+		}.initialize(obj);		
+	}
 	public static ScriptVar toScriptVar(String string)
 	{
 		return new ScriptVar()
@@ -97,6 +154,32 @@ public abstract class ScriptVar {
 			}
 		}.initialize(string);
 	}
+	public static ScriptVar toScriptVar(boolean boolVar)
+	{
+		return new ScriptVar()
+		{
+			boolean boolVar;
+			ScriptVar initialize(boolean boolVar)
+			{
+				this.boolVar = boolVar;
+				return this;
+			}
+			@Override
+			public ScriptVar clone() {
+				return this;
+			}
+			@Override
+			public boolean isBoolean() 
+			{
+				return true; 
+			}
+			@Override
+			public boolean getBoolean() 
+			{
+				return boolVar;
+			}
+		}.initialize(boolVar);
+	}		
 	public static ScriptVar toScriptVar(int intVar)
 	{
 		return new ScriptVar()
@@ -142,6 +225,43 @@ public abstract class ScriptVar {
 		return out;
 	}
 	
+	public void appendToList(List<Object> objList)
+	{
+		if (isList())
+		{
+			if (isEmptyList()) return;
+			try {			
+				objList.add(head());
+				tail().appendToList(objList);
+			} catch (BadTypeException e) {
+
+			}
+		}
+		else
+		{
+			objList.add(getAsObject());
+		}
+	}
+	public Object getAsObject()
+	{
+		try {		
+			if (isInteger()) return getInteger();
+			if (isFloat())   return getFloat();
+			if (isBoolean()) return getBoolean();
+			if (isString())  return getString();
+			if (isOpaque())  return getOpaque();
+			
+			if (isList())
+			{
+				List<Object> objList = new ArrayList<Object>();
+				appendToList(objList);
+				return objList;
+			}
+		} catch (BadTypeException e) {
+
+		}		
+		return null;
+	}
 	public abstract ScriptVar clone();
 	
 	//int controls

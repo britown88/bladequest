@@ -52,12 +52,6 @@ public class BattleEvent
 	  return anim.syncToAnimation(frame) + frameFromActIndex(animStartIndex);
 	}
 	
-	private int syncToAnimationWithOffset(float framePercent)
-	{
-	  return anim.syncToAnimation(framePercent) + frameFromActIndex(animStartIndex);
-	}
-	
-	
 	//get the frameIndex that falls aftr the end of the animation
 	private int getFinalAnimFrameIndex()
 	{

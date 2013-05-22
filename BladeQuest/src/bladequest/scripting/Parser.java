@@ -47,6 +47,8 @@ public class Parser {
 		public void readBool(boolean bool) throws ParserException {throw new ParserException("Not implemented!");}
 		public void lambdaFunction() throws ParserException {throw new ParserException("Not implemented!");}
 		public void endLambdaFunction() throws ParserException {throw new ParserException("Not implemented!");}
+		public void patternMatch() throws ParserException {throw new ParserException("Not implemented!");}
+		public void caseMarker() throws ParserException {throw new ParserException("Not implemented!");}		
 		public void addChildStatement(Statement statement) throws ParserException, BadTypeException {throw new ParserException("Not implemented!");}
 	}
 	
@@ -542,6 +544,126 @@ public class Parser {
 			}			
 		};
 	}
+
+	Statement getPatternMatchStatement(Statement matchingStatement, List<Statement> conditionalStatements, List<Statement> outputStatements)
+	{
+		return new Statement()
+		{
+			Statement matchingStatement; List<Statement> conditionalStatements; List<Statement> outputStatements;
+			
+			Statement initialize(Statement matchingStatement, List<Statement> conditionalStatements, List<Statement> outputStatements)
+			{
+				this.matchingStatement = matchingStatement; 
+				this.conditionalStatements = conditionalStatements; 
+				this.outputStatements = outputStatements;
+				return this;
+			}
+			@Override
+			public ScriptVar invoke(ExecutionState state) throws BadTypeException {
+
+				ScriptVar var = matchingStatement.invoke(state);
+				
+				int num = 0;
+				for (Statement s : conditionalStatements)
+				{
+					//function that takes var and returns bool
+					if (s.invoke(state).apply(var).getBoolean() == true)
+					{
+						return outputStatements.get(num).invoke(state);
+					}
+					++num;
+				}
+				return null;
+			}
+		}.initialize(matchingStatement, conditionalStatements, outputStatements);
+	}
+	
+	ParserState getPatternOutputState(List<String> argNames, List<String> locals, Statement matchingStatement, List<Statement> conditionalStatements, List<Statement> outputStatements)
+	{
+		return new StatementParser(stateStack, argNames, locals)
+		{
+			Statement matchingStatement;
+			List<Statement> conditionalStatements;
+			List<Statement> outputStatements;
+			
+			StatementParser initialize(Statement matchingStatement, List<Statement> conditionalStatements, List<Statement> outputStatements)
+			{
+				this.matchingStatement = matchingStatement;
+				this.conditionalStatements = conditionalStatements;
+				this.outputStatements = outputStatements;
+				return this;
+			}
+			
+			@Override
+			public void patternMatch() throws ParserException 
+			{
+				outputStatements.add(compileSubstatements());
+				popState();
+				pushState(getPatternConditionalState(argNames, locals, matchingStatement, conditionalStatements, outputStatements));
+			}
+			
+			@Override
+			public void endParen() throws ParserException 
+			{
+				outputStatements.add(compileSubstatements());
+				publishStatement(getPatternMatchStatement(matchingStatement, conditionalStatements, outputStatements));
+				popState();
+			}			
+			
+			@Override
+			public void endLine() throws ParserException
+			{
+				//ignore end lines.  It's common form for the pattern match to be on the other side.
+			}			
+		}.initialize(matchingStatement, conditionalStatements, outputStatements);		
+	}
+	
+	ParserState getPatternConditionalState(List<String> argNames, List<String> locals, Statement matchingStatement, List<Statement> conditionalStatements, List<Statement> outputStatements)
+	{
+		return new StatementParser(stateStack, argNames, locals)
+		{
+			Statement matchingStatement;
+			List<Statement> conditionalStatements;
+			List<Statement> outputStatements;
+			
+			StatementParser initialize(Statement matchingStatement, List<Statement> conditionalStatements, List<Statement> outputStatements)
+			{
+				this.matchingStatement = matchingStatement;
+				this.conditionalStatements = conditionalStatements;
+				this.outputStatements = outputStatements;
+				return this;
+			}
+			
+			@Override
+			public void caseMarker() throws ParserException 
+			{
+				conditionalStatements.add(compileSubstatements());
+				popState();
+				pushState(getPatternOutputState(argNames, locals, matchingStatement, conditionalStatements, outputStatements));
+			}
+		}.initialize(matchingStatement, conditionalStatements, outputStatements);		
+	}
+	ParserState getPatternMatchInitState(List<String> argNames, List<String> locals)
+	{
+		return new StatementParser(stateStack, argNames, locals)
+		{
+			@Override
+			public void patternMatch() throws ParserException 
+			{
+				Statement matchingStatement = compileSubstatements();
+				List<Statement> conditionalStatements =  new ArrayList<Statement>();
+				List<Statement> outputStatements =  new ArrayList<Statement>();
+				
+				popState();
+				pushState(getPatternConditionalState(argNames, locals, matchingStatement, conditionalStatements, outputStatements));
+			}
+			@Override
+			public void endLine() throws ParserException
+			{
+				//ignore end lines.  It's common form for the pattern match to be on the other side.
+			}
+		};
+	}
 	ParserState getParenthesisParserState(List<String> argNames, List<String> locals)
 	{
 		return new StatementParser(stateStack, argNames, locals)
@@ -564,6 +686,16 @@ public class Parser {
 				popState();
 				pushState(getLambdaFunctionState(argNames, locals));
 			}					
+			@Override
+			public void patternMatch() throws ParserException 
+			{
+				if (!substatements.isEmpty())
+				{
+					throw new ParserException("bad pattern matching placement, requires no previous statements.");
+				}
+				popState();
+				pushState(getPatternMatchInitState(argNames, locals));
+			}								
 		};
 	}
 		
@@ -772,7 +904,6 @@ public class Parser {
 
 			@Override
 			public ScriptVar clone() {
-				// TODO Auto-generated method stub
 				return this;
 			}
 		}.initialize(statements);
@@ -879,29 +1010,51 @@ public class Parser {
 		}
 		
 	}
-
-	private void populateTypeSpecializers()
+	
+	public static TypeSpecializer getIntSpecializer()
 	{
-		typeSpecializers.put("int", new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isInteger();}});
-		typeSpecializers.put("float", new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isFloat();}});
-		typeSpecializers.put("string", new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isString();}});
-		typeSpecializers.put("bool", new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isBoolean();}});
-		typeSpecializers.put("list", new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isList();}});
-		typeSpecializers.put("opaque", new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isOpaque();}});
-		typeSpecializers.put("func", new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isFunction();}});		
+		return new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isInteger();}};
 	}
 	
-	public Parser(Tokenizer tokenizer, Script script)
+	public static TypeSpecializer getFloatSpecializer()
 	{
-		this.script = script;
-		typeSpecializers = new HashMap<String, FunctionSpecializer>();
-		populateTypeSpecializers();
-		genericSpecializer = new FunctionSpecializer()
+		return new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isFloat();}};
+	}	
+	
+	public static TypeSpecializer getStringSpecializer()
+	{
+		return new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isString();}};
+	}
+	
+	public static TypeSpecializer getBoolSpecializer()
+	{
+		return new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isBoolean();}};
+	}		
+	
+	public static TypeSpecializer getListSpecializer()
+	{
+		return new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isList();}};
+	}		
+	
+	public static TypeSpecializer getOpaqueSpecializer()
+	{
+		return new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isOpaque();}};
+	}			
+	
+	public static TypeSpecializer getFunctionSpecializer()
+	{
+		return new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isFunction();}};
+	}				
+		
+	
+	public static FunctionSpecializer getGenericSpecializer()
+	{
+		return new FunctionSpecializer()
 		{
 
 			@Override
 			public boolean Equals(FunctionSpecializer rhs) {
-				return rhs == genericSpecializer;
+				return rhs.getClass() == this.getClass();
 			}
 
 			@Override
@@ -909,6 +1062,25 @@ public class Parser {
 				return SpecializationLevel.Generic;
 			}
 		};
+	}
+
+	private void populateTypeSpecializers()
+	{
+		typeSpecializers.put("int", getIntSpecializer());
+		typeSpecializers.put("float", getFloatSpecializer());
+		typeSpecializers.put("string", getStringSpecializer());
+		typeSpecializers.put("bool", getBoolSpecializer());
+		typeSpecializers.put("list", getListSpecializer());
+		typeSpecializers.put("opaque", getOpaqueSpecializer());
+		typeSpecializers.put("func", getFunctionSpecializer());		
+	}
+	
+	public Parser(Tokenizer tokenizer, Script script)
+	{
+		this.script = script;
+		typeSpecializers = new HashMap<String, FunctionSpecializer>();
+		populateTypeSpecializers();
+		genericSpecializer = getGenericSpecializer();
 		stateStack = new ArrayList<ParserState>();
 		this.tokenizer = tokenizer;
 	}
@@ -970,7 +1142,13 @@ public class Parser {
 					break;
 				case endLambdaFunction:
 					state.endLambdaFunction();
-					break;									
+					break;	
+				case patternMatch:
+					state.patternMatch();
+					break;
+				case caseMarker:
+					state.caseMarker();
+					break;
 				default:
 					break; 
 				}

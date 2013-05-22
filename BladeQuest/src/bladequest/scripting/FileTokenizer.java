@@ -141,6 +141,14 @@ public class FileTokenizer implements Tokenizer {
 		{
 			return new ScriptToken(ScriptToken.Type.endLambdaFunction){};
 		}
+		if (temp.equals("|"))
+		{
+			return new ScriptToken(ScriptToken.Type.patternMatch){};
+		}
+		if (temp.equals(":"))
+		{
+			return new ScriptToken(ScriptToken.Type.caseMarker){};
+		}		
 		//if everything else fails, it's a name of something.
 		return new ScriptToken(ScriptToken.Type.Name)
 		{
@@ -162,7 +170,7 @@ public class FileTokenizer implements Tokenizer {
 		boolean bufferEmpty = buffer.equals(""); 
 		switch (character)
 		{
-		case ' ':	if (commented || stringBuffer) break; return sendBuffer(); 
+		case ' ': case '\t':	if (commented || stringBuffer) break; return sendBuffer(); 
 		case '\r': case '\n':
 		{
 			commented = false;
@@ -177,7 +185,7 @@ public class FileTokenizer implements Tokenizer {
 			}
 			saveChar(character); return sendBuffer();			
 		}
-		case '(': case ')': case '{': case '}': case '\\': case ',': case '[': case ']': if (commented) break;
+		case '(': case ')': case '{': case '}': case '\\': case ',': case '[': case ']':  case '|': case ':' : if (commented) break;
 			if (!stringBuffer)
 			{
 				if (bufferEmpty) {buffer += character; return sendBuffer();}
