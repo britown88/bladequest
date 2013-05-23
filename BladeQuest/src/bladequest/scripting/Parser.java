@@ -398,6 +398,8 @@ public class Parser {
 			}
 			public ScriptVar invoke(ExecutionState state) throws BadTypeException {
 				ScriptVar out = null;
+				//apply the binder before the bindee!!!
+				ScriptVar bound = binderStatement.invoke(state);
 				for (Statement statement : statements)
 				{
 					ScriptVar currentVar = statement.invoke(state);
@@ -405,7 +407,7 @@ public class Parser {
 					{
 						out = currentVar;
 						//apply binder after first statement.
-						out = out.apply(binderStatement.invoke(state));
+						out = out.apply(bound);
 					}
 					else
 					{
@@ -1229,8 +1231,7 @@ public class Parser {
 		{
 			//YOU DUN GOOFED			
 			e.printStackTrace();
-			@SuppressWarnings("unused")
-			String errorInfo = "Error on line: " + lineNumber + e.what();
+			System.err.println("Error on line: " + lineNumber + e.what());
 		}	
 	}
 	

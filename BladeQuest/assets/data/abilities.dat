@@ -51,12 +51,9 @@ staggerDamage ability damage damageType offset
   ability > add (waitAction offset) > 
             addDep (damageAction damage damageType)
 
-recruit4sub ability offset 
-  staggerDamage ability 0.1 "Physical" offset
-
 \recruit4 <- (addAbility "recruit4" "DynamoSupernova" "Single" 0 >
 add (animAction "movetest") > 
-recruit4sub  300 >
+(\recruit4sub <- ([ability offset] staggerDamage ability 0.1 "Physical" offset)) 300 >
 recruit4sub  450 >
 recruit4sub  600 >
 recruit4sub  750 >
