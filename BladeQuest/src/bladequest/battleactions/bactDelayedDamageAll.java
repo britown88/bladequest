@@ -1,19 +1,14 @@
 package bladequest.battleactions;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import bladequest.combat.BattleEvent;
 import bladequest.combat.BattleEventBuilder;
-import bladequest.combat.BattleEventObject;
-import bladequest.combat.DamageMarker;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleSprite.faces;
 import bladequest.world.DamageTypes;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
 
-public class bactDelayedDamageAll extends BattleAction {
+public class bactDelayedDamageAll extends DelegatingAction {
 	
 	String animation; 
 	int frameDelay;
@@ -21,36 +16,38 @@ public class bactDelayedDamageAll extends BattleAction {
 	float power;
 	DamageTypes type;
 	
-	public bactDelayedDamageAll(int frame, float power, DamageTypes type, String animation, int frameDelay) {
-		super(frame);
+	public bactDelayedDamageAll(float power, DamageTypes type, String animation, int frameDelay) {
 		this.animation = animation;
 		this.frameDelay = frameDelay;
 		this.power = power;
 		this.type = type;
 	}
-	public void run(PlayerCharacter attacker, List<PlayerCharacter> targets, List<DamageMarker> markers)
-	{
-		int frameNum = getFrame();
+	@Override
+	protected void buildEvents(BattleEventBuilder builder) {
 		BattleAnim anim = Global.battleAnims.get(animation);
-		int endFrameTime = BattleEvent.frameFromActIndex(frameNum);
-		builder.addEventObject(new BattleEventObject(endFrameTime, faces.Cast, 0, attacker));
-		for(PlayerCharacter t : targets)
+		
+		BattleAction prevWait = null;
+		builder.addEventObject(new bactSetFace(faces.Cast, 0));
+		for(PlayerCharacter t : builder.getTargets())
 		{
-			List<PlayerCharacter> target = new ArrayList<PlayerCharacter>();
-			target.add(t);
+			builder.addEventObject(new TargetedAction(t)
+			{
+				BattleAnim anim;
+				TargetedAction initialize(BattleAnim anim)
+				{
+					this.anim = anim;
+					return this;
+				}
+				@Override
+				protected void buildEvents(BattleEventBuilder builder) {
+					builder.addEventObject(new bactRunAnimation(anim));
+				}
+
+			}.initialize(anim).addDependency(builder.getLast()));
 			
-			int frameTime = BattleEvent.frameFromActIndex(frameNum);
-			endFrameTime = anim.syncToAnimation(1.0f) + frameTime;
-			//add animation and damage calls.
-			builder.addEventObject(new BattleEventObject(frameTime, anim, attacker, target));
-			builder.addEventObject(new BattleEventObject(endFrameTime, new bactDamage(endFrameTime, power, type), attacker, target));
-			
-			frameNum += frameDelay;
+			builder.addEventObject(new bactWait(BattleEvent.frameFromActIndex(frameDelay)).addDependency(prevWait));
+			prevWait = builder.getLast();
 		}
-		builder.addEventObject(new BattleEventObject(endFrameTime, faces.Ready, 0, attacker));
-	}
-	public void setBuilder(BattleEventBuilder builder) 
-	{
-		this.builder = builder;
+		builder.addEventObject(new bactSetFace(faces.Ready, 0).addDependency(prevWait));
 	}
 }

@@ -3,10 +3,10 @@ package bladequest.statuseffects;
 import java.util.ArrayList;
 import java.util.List;
 
+import bladequest.battleactions.TargetedAction;
 import bladequest.battleactions.bactDamage;
-import bladequest.combat.BattleEvent;
+import bladequest.battleactions.bactRunAnimation;
 import bladequest.combat.BattleEventBuilder;
-import bladequest.combat.BattleEventObject;
 import bladequest.graphics.BattleAnim;
 import bladequest.world.DamageTypes;
 import bladequest.world.Global;
@@ -30,24 +30,34 @@ public class seRegen extends StatusEffect {
 	}
 	
 	@Override
-	public void onTurn(BattleEventBuilder eventBuilder) 
+	public void onTurn(BattleEventBuilder builder) 
 	{
-		PlayerCharacter healTarget =  eventBuilder.getSource();
+		PlayerCharacter healTarget =  builder.getSource();
 		Global.battle.changeStartBarText(healTarget.getDisplayName() + " is regaining HP!");
 		
 		List<PlayerCharacter> healTargetList = new ArrayList<PlayerCharacter>();
 		healTargetList.add(healTarget);
 		
-		int animFrameIndex = 3;
 		BattleAnim anim = Global.battleAnims.get("poison");  //TODO: regeneration animation
 		
 		int healAmnt = Global.rand.nextInt(maxHeal-minHeal) + minHeal;
 		
-		int startAnimTime = BattleEvent.frameFromActIndex(animFrameIndex);
-		int endAnimTime = anim.syncToAnimation(1.0f) + startAnimTime; 		
-		eventBuilder.addEventObject(new BattleEventObject(startAnimTime, anim, healTarget, healTargetList));
-		eventBuilder.addEventObject(new BattleEventObject(endAnimTime, new bactDamage(endAnimTime, -healAmnt, DamageTypes.Fixed), healTarget, healTargetList));
-		eventBuilder.addEventObject(new BattleEventObject(endAnimTime));
+		builder.addEventObject(new TargetedAction(healTarget)
+		{
+			int healAmnt;
+			TargetedAction initialize(int healAmnt)
+			{
+				this.healAmnt = healAmnt;
+				return this;
+			}
+			@Override
+			protected void buildEvents(BattleEventBuilder builder) {
+				builder.addEventObject(new bactDamage(-healAmnt, DamageTypes.Fixed));	
+			}
+		}.initialize(healAmnt));
+				
+		builder.addEventObject(new bactRunAnimation(anim));
+		
 		
 		if (duration > 0 && --duration == 0)
 		{

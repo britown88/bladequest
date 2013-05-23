@@ -2,9 +2,11 @@ package bladequest.combatactions;
 
 import bladequest.battleactions.bactInflictStatus;
 import bladequest.battleactions.bactLeaveStance;
+import bladequest.battleactions.bactRunAnimation;
+import bladequest.battleactions.bactSetFace;
+import bladequest.battleactions.bactWait;
 import bladequest.combat.BattleEvent;
 import bladequest.combat.BattleEventBuilder;
-import bladequest.combat.BattleEventObject;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleSprite.faces;
 import bladequest.statuseffects.StatusEffect;
@@ -95,26 +97,23 @@ public class combBeserkerStance extends Stance {
 	@Override
 	public void buildEvents(BattleEventBuilder builder)
 	{
-		int animStartIndex = 3;
-		PlayerCharacter source = builder.getSource();
-		builder.addEventObject(new BattleEventObject(BattleEvent.frameFromActIndex(0), faces.Ready, 0, source));
+		int castTime = BattleEvent.frameFromActIndex(3);
+		
+		builder.addEventObject(new bactSetFace(faces.Cast, 0));
+		builder.addEventObject(new bactWait(castTime));
 		
 		BattleAnim anim = Global.battleAnims.get("movetest");
 		
-		int frame = animStartIndex;		
-		int startFrameTime = BattleEvent.frameFromActIndex(frame);
-		int endFrameTime =  startFrameTime + anim.syncToAnimation(1.0f);
-		
-		builder.addEventObject(new BattleEventObject(startFrameTime, faces.Cast, 0, source));
-		builder.addEventObject(new BattleEventObject(startFrameTime, anim, source, builder.getTargets()));
+		builder.addEventObject(new bactRunAnimation(anim).addDependency(builder.getLast()));
 		
 		//actual implementation of the beserk
-		builder.addEventObject(new BattleEventObject(endFrameTime, new bactLeaveStance(endFrameTime), source, builder.getTargets()));
-		builder.addEventObject(new BattleEventObject(endFrameTime, new bactInflictStatus(endFrameTime, false, getBeserkStatus()), source, builder.getTargets()));
+		builder.addEventObject(new bactLeaveStance().addDependency(builder.getLast()));
+		builder.addEventObject(new bactInflictStatus(getBeserkStatus()).addDependency(builder.getLast()));
 		
+		builder.addEventObject(new bactSetFace(faces.Cast, 0).addDependency(builder.getLast()));
 		
-		builder.addEventObject(new BattleEventObject(endFrameTime, faces.Ready, 0, source));
-		builder.addEventObject(new BattleEventObject(endFrameTime+BattleEvent.frameFromActIndex(2)));
+		//wait a bit
+		builder.addEventObject(new bactWait(BattleEvent.frameFromActIndex(2)).addDependency(builder.getLast()));
 	}
 
 	@Override

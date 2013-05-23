@@ -1,48 +1,71 @@
 package bladequest.battleactions;
 
-import java.util.List;
-
 import bladequest.combat.BattleEvent;
 import bladequest.combat.BattleEventBuilder;
-import bladequest.combat.BattleEventObject;
 import bladequest.combat.DamageComponent;
+import bladequest.combat.SyncronizableAction;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleSprite.faces;
 import bladequest.world.DamageTypes;
+import bladequest.world.Item;
 import bladequest.world.PlayerCharacter;
 
 public class BattleActionPatterns {
-	//returns length of animation.
-	public static int BuildSwordSlash(BattleEventBuilder builder, PlayerCharacter attacker, List<PlayerCharacter> target, float power, DamageTypes type, int frameTime, float speedFactor)
+	
+	public static BattleAction BuildItemUse(BattleEventBuilder builder)
 	{
-		BattleAnim anim = attacker.getWeaponAnimation();
+		Item itm = builder.getSource().getItemToUse();
 		
-		builder.addEventObject(new BattleEventObject(frameTime+(int)(BattleEvent.frameFromActIndex(0)*speedFactor), faces.Ready, 0, attacker));
-		builder.addEventObject(new BattleEventObject(frameTime+(int)(BattleEvent.frameFromActIndex(2)*speedFactor), faces.Attack, 0, attacker));
-		builder.addEventObject(new BattleEventObject(frameTime+(int)(BattleEvent.frameFromActIndex(3)*speedFactor), faces.Attack, 1, attacker));
-		builder.addEventObject(new BattleEventObject(frameTime+(int)(BattleEvent.frameFromActIndex(4)*speedFactor), faces.Attack, 2, attacker));	
-		builder.addEventObject(new BattleEventObject(frameTime+(int)(BattleEvent.frameFromActIndex(5)*speedFactor), faces.Ready, 0, attacker));			
-		
-		bactDamage damageAction;
-		if(attacker.getWeaponAnimation() != null)
+		for (BattleAction action : itm.getActions())
 		{
-			int midFrame = anim.syncToAnimation(0.5f) + frameTime+(int)(BattleEvent.frameFromActIndex(3)*speedFactor);
-			
-			damageAction = new bactDamage(midFrame, power, type);
-			
-			builder.addEventObject(new BattleEventObject(frameTime+(int)(BattleEvent.frameFromActIndex(3)*speedFactor), anim, attacker, target));
-			builder.addEventObject(new BattleEventObject(midFrame, damageAction, attacker, target));
+			builder.addEventObject(action);
 		}
-		else
+		
+		return builder.getLast();
+	}
+	
+	public static BattleAction BuildSwordSlash(BattleEventBuilder builder, float power, DamageTypes type, float speedFactor)
+	{
+		return BuildSwordSlash(builder, power, type, speedFactor, null);
+	}
+	public static BattleAction BuildSwordSlash(BattleEventBuilder builder, float power, DamageTypes type, float speedFactor, BattleAction prev)
+	{
+		PlayerCharacter attacker = builder.getSource();
+
+		BattleAnim anim = attacker.getWeaponAnimation();
+		builder.addEventObject(new bactSetFace(faces.Ready, 0).addDependency(prev));
+		//wait two frames...
+		int frameLen = (int)(BattleEvent.frameFromActIndex(1) * speedFactor);
+		builder.addEventObject(new bactWait(frameLen*2).addDependency(builder.getLast()));
+		builder.addEventObject(new bactSetFace(faces.Attack, 0).addDependency(builder.getLast()));
+		builder.addEventObject(new bactWait(frameLen*1).addDependency(builder.getLast()));
+		BattleAction animStartAction = builder.getLast();
+		
+		bactDamage damageAction = new bactDamage(power, type);
+		if (anim != null)
 		{
-			damageAction = new bactDamage(0, power, type);
-			builder.addEventObject(new BattleEventObject((int)(BattleEvent.frameFromActIndex(5)*speedFactor), damageAction, attacker, target));
+			SyncronizableAction animationAction = new bactRunAnimation(anim);
+			builder.addEventObject(animationAction.addDependency(animStartAction));	
+			builder.addEventObject(new bactWait(animationAction.syncronizeTime(0.5f)).addDependency(animStartAction));
+			builder.addEventObject(damageAction.addDependency(builder.getLast()));
+		}
+		
+		
+		builder.addEventObject(new bactSetFace(faces.Attack, 1).addDependency(animStartAction));
+		builder.addEventObject(new bactWait(frameLen*1).addDependency(builder.getLast()));
+		builder.addEventObject(new bactSetFace(faces.Attack, 2).addDependency(builder.getLast()));
+		builder.addEventObject(new bactWait(frameLen*1).addDependency(builder.getLast()));
+		builder.addEventObject(new bactSetFace(faces.Ready, 0).addDependency(builder.getLast()));			
+		
+		if(anim == null)
+		{
+			builder.addEventObject(damageAction.addDependency(builder.getLast()));
 		}
 		
 		if(attacker.weapEquipped())
 			for(DamageComponent dc : attacker.weapon().getDamageComponents())
 				damageAction.addDamageComponent(dc.getAffinity(), dc.getPower());
 		
-		return (int)(BattleEvent.frameFromActIndex(5)*speedFactor);
+		return builder.getLast();
 	}
 }

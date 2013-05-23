@@ -1,21 +1,16 @@
 package bladequest.combat;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import bladequest.battleactions.BattleAction;
+import bladequest.battleactions.BattleAction.State;
 import bladequest.battleactions.BattleActionPatterns;
+import bladequest.battleactions.BattleActionRunner;
 import bladequest.battleactions.bactTryEscape;
-import bladequest.battleactions.bactUseItem;
-import bladequest.graphics.BattleAnim;
-import bladequest.graphics.BattleSprite.faces;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.world.Ability;
 import bladequest.world.DamageTypes;
-import bladequest.world.Global;
-import bladequest.world.Item;
 import bladequest.world.PlayerCharacter;
 
 public class BattleEvent 
@@ -25,51 +20,25 @@ public class BattleEvent
 	
 	private PlayerCharacter source;
 	private List<PlayerCharacter> targets;
-	private List<BattleEventObject> objects;
+	
+	private BattleActionRunner actionRunner;
 	
 	private boolean running, done;
 	private long startTime;
 	
-	private BattleAnim anim;	
-	private int animStartIndex;
-	
 	private List<StatusEffect> endTurnStatuses;
+	private List<DamageMarker> markers;
 	
-	public BattleEvent(PlayerCharacter source, List<PlayerCharacter> targets)
+	public BattleEvent(PlayerCharacter source, List<PlayerCharacter> targets, List<DamageMarker> markers)
 	{
 		this.source = source;
-		this.targets = new ArrayList<PlayerCharacter>(targets);	
-		
-		objects = new ArrayList<BattleEventObject>();
+		this.targets = new ArrayList<PlayerCharacter>(targets);
+		this.markers = markers;
 	}
 	
 	public PlayerCharacter getSource() { return source; }
 	public List<PlayerCharacter> getTargets() { return targets;}	
 	public boolean isDone(){ return done;}	
-	
-	private int syncToAnimationWithOffset(int frame)
-	{
-	  return anim.syncToAnimation(frame) + frameFromActIndex(animStartIndex);
-	}
-	
-	//get the frameIndex that falls aftr the end of the animation
-	private int getFinalAnimFrameIndex()
-	{
-		int finalFrame = syncToAnimationWithOffset(-1);
-		int index = (int)(finalFrame / actTimerLength)+1;
-		
-		return index;
-	}
-	
-	private void setBattleAnimation(BattleAnim newAnim, int animOffset)
-	{
-	  anim = newAnim;
-	  animStartIndex = animOffset;
-	  if (anim != null)
-	  {
-		  objects.add(new BattleEventObject(frameFromActIndex(animStartIndex), anim, source, targets));
-	  }
-	}
 	
 	private BattleEventBuilder makeBattleEventBuilder()
 	{
@@ -92,17 +61,21 @@ public class BattleEvent
 				return source;
 			}
 			@Override
-			public void setAnimation(BattleAnim anim, int frameOffset) {
-				setBattleAnimation(anim, frameOffset);
-			}
-			@Override
-			public void addEventObject(BattleEventObject eventObj) {
-				objects.add(eventObj);
-			}
-			@Override
 			public int getCurrentBattleFrame()
 			{
 				return ev.getCurrentFrame();	
+			}
+			@Override
+			public BattleAction getLast() {
+				return ev.actionRunner.getLast();
+			}
+			@Override
+			public void addEventObject(BattleAction eventObj) {
+				ev.actionRunner.addAction(eventObj);
+			}
+			@Override
+			public void addMarker(DamageMarker marker) {
+				markers.add(marker);
 			}
 		}.initializer(this);	
 	}
@@ -110,7 +83,6 @@ public class BattleEvent
 	public void setTargets(List<PlayerCharacter> targets)
 	{
 		this.targets = targets;
-		objects.clear();
 		init();
 	}
 	public static BattleEventBuilderObject abilityToBattleEventBuilder(Ability ability)
@@ -125,100 +97,60 @@ public class BattleEvent
 			}
 			@Override
 			public void buildEvents(BattleEventBuilder builder) {
-				PlayerCharacter source = builder.getSource();
-				List<PlayerCharacter> targets = builder.getTargets();
-				BattleAnim anim = ability.getAnimation();
-				int animStartIndex = 3;
-				
-				int animStartTime = frameFromActIndex(animStartIndex);
-				int finalIndex = animStartIndex;
-				
-				if (anim != null)
+				for (BattleAction action : ability.getActions())
 				{
-					builder.setAnimation(anim, animStartIndex);
-					finalIndex = (int)((frameFromActIndex(finalIndex) + anim.syncToAnimation(1.0f))/actTimerLength)+1;
-					builder.addEventObject(new BattleEventObject(frameFromActIndex(animStartIndex), faces.Cast, 0, source));
+					builder.addEventObject(action);
 				}
-				
-				for(BattleAction action : ability.getActions(builder))
-				{
-					int frame = action.getFrame();
-					if (anim != null)
-					{
-						builder.addEventObject(new BattleEventObject(animStartTime + anim.syncToAnimation(frame), action, source, targets));
-					}
-					else
-					{
-						builder.addEventObject(new BattleEventObject(frameFromActIndex(frame), action, source, targets));
-					}
-				}
-				
-				if (anim != null)
-				{
-					builder.addEventObject(new BattleEventObject(frameFromActIndex(finalIndex), faces.Ready, 0, source));
-				}
-				builder.addEventObject(new BattleEventObject(-2000000000));
 			}
 			
 		}.initialize(ability);
 	}
 	public void init()
 	{
-		int finalIndex;
+		if (actionRunner != null)
+		{
+			actionRunner.reset();
+		}
+		actionRunner = new BattleActionRunner();
+		BattleEventBuilder builder = makeBattleEventBuilder();
 		done = running = false;
 		
 		switch(source.getAction())
 		{
 		case Attack:
-			BattleActionPatterns.BuildSwordSlash(
-					makeBattleEventBuilder(), source, targets, 
-					1.0f, DamageTypes.Physical, 0, 1.0f);
+			BattleActionPatterns.BuildSwordSlash(builder, 1.0f, DamageTypes.Physical, 1.0f);
 			break;
 		case Ability:
 			Ability ab = source.getAbilityToUse();
-			abilityToBattleEventBuilder(ab).buildEvents(makeBattleEventBuilder());
+			abilityToBattleEventBuilder(ab).buildEvents(builder);
 			break;
 		case CombatAction:
-			source.getEventBuilder().buildEvents(makeBattleEventBuilder());
+			source.getEventBuilder().buildEvents(builder);
 			break;
 		case Item:
-			Item itm = source.getItemToUse();
-			anim = new BattleAnim(Global.battleAnims.get(itm.getAnimName()));
-			animStartIndex = 3;			
-			finalIndex = getFinalAnimFrameIndex();
-			
-			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex), faces.Use, 0, source));
-			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex), anim, source, targets));
-			for(BattleAction action : itm.getActions())
-				objects.add(new BattleEventObject(syncToAnimationWithOffset(action.getFrame()), action, source, targets));
-			objects.add(new BattleEventObject(0, new bactUseItem(0), source, targets));
-			
-			objects.add(new BattleEventObject(frameFromActIndex(finalIndex), faces.Ready, 0, source));
-			objects.add(new BattleEventObject(frameFromActIndex(finalIndex+2)));
-			
+			BattleActionPatterns.BuildItemUse(builder);
 			break;
 		case Run:
-			animStartIndex = 3;
-			objects.add(new BattleEventObject(frameFromActIndex(animStartIndex), new bactTryEscape(animStartIndex, makeBattleEventBuilder()), source, targets));
+			builder.addEventObject(new bactTryEscape());
 			break;
 		case Guard:
-			objects.add(new BattleEventObject(0));  //insta-fail.
+//insta-fail
 		default:
 			break;
 		}
-		
 	}
 	private int getCurrentFrame()
 	{
 		if (!running || done) return 0;
 		return (int)(System.currentTimeMillis() - startTime);
 	}
-	public void update(Battle battle, List<DamageMarker> markers)
+	public void update(Battle battle)
 	{
 		if (!source.isInBattle() || battle.isBattleOver())
 		{
 			running = false;
 			done = true;
+			actionRunner.reset();
 			return;
 		}
 		if(!running)
@@ -228,65 +160,34 @@ public class BattleEvent
 		}
 		else
 		{
-			long frame = System.currentTimeMillis() - startTime;
-			BattleEventObject rmObj = null;
-			boolean hasPositive = false;
-
-			for(BattleEventObject obj : objects)
-			{
-				if (obj.Frame() < 0) continue;
-				hasPositive = true;
-				if(obj.Frame() <= frame)
-				{
-					obj.execute(battle, markers);
-					rmObj = obj;
-					break;					
-				}
-			}
-			//raw sorted order.  sort and remove.
-			if (!hasPositive)
-			{
-				Collections.sort(objects, new Comparator<BattleEventObject>(){
-
-					@Override
-					public int compare(BattleEventObject lhs, BattleEventObject rhs) {
-						return rhs.Frame() - lhs.Frame();
-				}});
-				
-				rmObj = objects.get(0);
-				rmObj.execute(battle, markers);			
-			}
+			BattleEventBuilder builder = makeBattleEventBuilder();
 			
-			if(rmObj != null)
+			State state = actionRunner.run(builder);
+			if (state  == State.Finished)
 			{
-				objects.remove(rmObj);			
-				if(objects.size() == 0)
+				if (endTurnStatuses == null) //haven't resolved end turn statuses yet.
 				{
-					running = false;					
-					if (endTurnStatuses == null) //haven't resolved end turn statuses yet.
-					{
-						//player turn over, apply status.
-						//clone the list, apply all, but don't apply newly added statuses.
-						//e.g. double buffer.						
-						endTurnStatuses = new ArrayList<StatusEffect>(source.getStatusEffects());
-					}
-					while (objects.isEmpty())
-					{
-						if (endTurnStatuses.isEmpty())
-						{
-							endTurnStatuses = null; //nothing more to do, we can end the turn.
-							done  = true;
-							return;
-						}
-						else  //try and apply a status effect.
-						{
-							StatusEffect firstStatus = endTurnStatuses.get(0);
-							endTurnStatuses.remove(0);
-							firstStatus.onTurn(makeBattleEventBuilder());
-						}						
-					}
+					//player turn over, apply status.
+					//clone the list, apply all, but don't apply newly added statuses.
+					//e.g. double buffer.						
+					endTurnStatuses = new ArrayList<StatusEffect>(source.getStatusEffects());
 				}
-			}			
+				while (actionRunner.getActions().isEmpty())
+				{
+					if (endTurnStatuses.isEmpty())
+					{
+						endTurnStatuses = null; //nothing more to do, we can end the turn.
+						done  = true;
+						return;
+					}
+					else  //try and apply a status effect.
+					{
+						StatusEffect firstStatus = endTurnStatuses.get(0);
+						endTurnStatuses.remove(0);
+						firstStatus.onTurn(builder);
+					}						
+				}				
+			}
 		}
 	}
 }

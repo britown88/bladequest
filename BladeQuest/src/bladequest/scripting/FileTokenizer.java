@@ -34,7 +34,8 @@ public class FileTokenizer implements Tokenizer {
 				if (c == '.')
 				{
 					if (foundDot) return false;
-					foundDot = true;					
+					foundDot = true;		
+					continue;
 				}
 				return false;
 			}
@@ -148,6 +149,10 @@ public class FileTokenizer implements Tokenizer {
 		if (temp.equals(":"))
 		{
 			return new ScriptToken(ScriptToken.Type.caseMarker){};
+		}
+		if (temp.equals(">"))
+		{
+			return new ScriptToken(ScriptToken.Type.infixBinder){};
 		}		
 		//if everything else fails, it's a name of something.
 		return new ScriptToken(ScriptToken.Type.Name)
@@ -185,7 +190,7 @@ public class FileTokenizer implements Tokenizer {
 			}
 			saveChar(character); return sendBuffer();			
 		}
-		case '(': case ')': case '{': case '}': case '\\': case ',': case '[': case ']':  case '|': case ':' : if (commented) break;
+		case '>': case '(': case ')': case '{': case '}': case '\\': case ',': case '[': case ']':  case '|': case ':' : if (commented) break;
 			if (!stringBuffer)
 			{
 				if (bufferEmpty) {buffer += character; return sendBuffer();}

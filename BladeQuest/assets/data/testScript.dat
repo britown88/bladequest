@@ -11,4 +11,6 @@ main list argList
    \x <- 0
    \partialCurry <- myFunc "no hello"
    \first <- ([a b c d] (|d| equals 42 : a)) # lambda functions, yarly
-   first (partialCurry "hello world" 5) x true test
+   (partialCurry "hello world" 5) > #parens to start should work, comment here should work
+	   first x true test
+

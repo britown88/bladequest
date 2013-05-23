@@ -19,7 +19,8 @@ public abstract class ScriptToken {
 		beginLambdaFunction,
 		endLambdaFunction,
 		patternMatch,
-		caseMarker
+		caseMarker,
+		infixBinder
 	}
 	private Type type;
 	public Type getType()

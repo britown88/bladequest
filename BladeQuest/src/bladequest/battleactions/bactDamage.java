@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bladequest.combat.BattleCalc;
+import bladequest.combat.BattleEventBuilder;
 import bladequest.combat.DamageComponent;
 import bladequest.combat.DamageMarker;
 import bladequest.world.DamageTypes;
@@ -17,9 +18,8 @@ public class bactDamage extends BattleAction
 	DamageTypes type;
 	List<DamageComponent> damageComponents;
 	
-	public bactDamage(int frame, float power, DamageTypes type)
+	public bactDamage(float power, DamageTypes type)
 	{
-		super(frame);
 		this.damageComponents = new ArrayList<DamageComponent>();
 		this.power = power;
 		this.type = type;
@@ -31,15 +31,16 @@ public class bactDamage extends BattleAction
 	}
 	
 	@Override
-	public void run(PlayerCharacter attacker, List<PlayerCharacter> targets, List<DamageMarker> markers)
+	public State run(BattleEventBuilder builder)
 	{
-		for(PlayerCharacter t : targets)
+		PlayerCharacter attacker = builder.getSource();
+		for(PlayerCharacter t : builder.getTargets())
 		{
 			int dmg = BattleCalc.calculatedDamage(attacker, t, power, type, damageComponents);
 			switch(BattleCalc.getDmgReturnType())
 			{
 			case Blocked:
-				markers.add(new DamageMarker("BLOCK", t));	
+				builder.addMarker(new DamageMarker("BLOCK", t));	
 				break;
 			case Critical:
 				Global.screenFader.setFadeColor(255, 255, 255, 255);
@@ -48,13 +49,14 @@ public class bactDamage extends BattleAction
 				if(dmg >= 0 && !t.isEnemy())
 					t.showDamaged();
 				t.modifyHP(-dmg, false);
-				markers.add(new DamageMarker(-dmg, t));	
+				builder.addMarker(new DamageMarker(-dmg, t));	
 				break;
 			case Miss:
-				markers.add(new DamageMarker("MISS", t));	
+				builder.addMarker(new DamageMarker("MISS", t));	
 				break;
 			}	
 		}
+		return State.Finished;
 	}
 	
 	@Override

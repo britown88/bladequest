@@ -5,10 +5,13 @@ import java.util.List;
 
 import android.graphics.Point;
 import android.graphics.Rect;
+import bladequest.battleactions.BattleAction;
 import bladequest.battleactions.bactChangeVisibility;
+import bladequest.battleactions.bactRunAnimation;
+import bladequest.battleactions.bactSetFace;
+import bladequest.battleactions.bactWait;
 import bladequest.combat.BattleEvent;
 import bladequest.combat.BattleEventBuilder;
-import bladequest.combat.BattleEventObject;
 import bladequest.combat.DamageMarker;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleAnimObjState;
@@ -35,33 +38,6 @@ public class combSteal extends CombatAction
 		actionText = " tries to steal!";
 	}
 	
-	@Override
-	public void execute(List<PlayerCharacter> targets, List<DamageMarker> markers)
-	{
-		Enemy target = (Enemy)targets.get(0);
-		
-		if(target.hasItems())
-		{
-			String item = target.getItem(true);
-			if(item == null)
-			{
-				markers.add(new DamageMarker("MISS", target));	
-				Global.battle.changeStartBarText("Failed to steal!");
-			}
-			else
-			{
-				Global.party.addItem(item, 1);
-				
-				markers.add(new DamageMarker("STEAL", target));
-				Global.battle.changeStartBarText("Stole a "+ Global.items.get(item).getName() +"!");
-			}
-		}
-		else
-		{
-			markers.add(new DamageMarker("FAIL", target));
-			Global.battle.changeStartBarText("Doesn't have anything!");
-		}
-	}
 	
 	public BattleAnim getJumpToAnimation(PlayerCharacter source, PlayerCharacter target)
 	{
@@ -113,23 +89,53 @@ public class combSteal extends CombatAction
 	@Override
 	public void buildEvents(BattleEventBuilder builder)
 	{
-		int animStartIndex = 3;
-		
 		List<PlayerCharacter> targets = builder.getTargets();
 		
 		PlayerCharacter source = builder.getSource();
 		PlayerCharacter target = targets.get(0);
 		
 		BattleAnim jumpAnim = getJumpToAnimation(source, target);
-		builder.setAnimation(jumpAnim, animStartIndex);
 		
-		int anmiationStartFrame =BattleEvent.frameFromActIndex(animStartIndex); 
-		int lastFrame =  anmiationStartFrame + jumpAnim.syncToAnimation(1.0f);
-		builder.addEventObject(new BattleEventObject(BattleEvent.frameFromActIndex(0), faces.Ready, 0, source));
-		builder.addEventObject(new BattleEventObject(BattleEvent.frameFromActIndex(animStartIndex), new bactChangeVisibility(animStartIndex, false), source, targets));
-		builder.addEventObject(new BattleEventObject(lastFrame, new bactChangeVisibility(animStartIndex, true), source, targets));
-		builder.addEventObject(new BattleEventObject(lastFrame, this, source, targets));
-		builder.addEventObject(new BattleEventObject(lastFrame+BattleEvent.frameFromActIndex(10)));
+		builder.addEventObject(new bactSetFace(faces.Ready, 0));
+		builder.addEventObject(new bactWait(BattleEvent.frameFromActIndex(3)).addDependency(builder.getLast()));
+		BattleAction startSteal = builder.getLast();
+		builder.addEventObject(new bactChangeVisibility(false).addDependency(startSteal));		
+		builder.addEventObject(new bactRunAnimation(jumpAnim).addDependency(startSteal));
+		builder.addEventObject(new bactChangeVisibility(true).addDependency(builder.getLast()));
+		
+		builder.addEventObject(new BattleAction()
+		{
+			public State run(BattleEventBuilder builder)
+			{
+				Enemy target = (Enemy)builder.getTargets().get(0);
+				
+				if(target.hasItems())
+				{
+					String item = target.getItem(true);
+					if(item == null)
+					{
+						builder.addMarker(new DamageMarker("MISS", target));	
+						Global.battle.changeStartBarText("Failed to steal!");
+					}
+					else
+					{
+						Global.party.addItem(item, 1);
+						
+						builder.addMarker(new DamageMarker("STEAL", target));
+						Global.battle.changeStartBarText("Stole a "+ Global.items.get(item).getName() +"!");
+					}
+				}
+				else
+				{
+					builder.addMarker(new DamageMarker("FAIL", target));
+					Global.battle.changeStartBarText("Doesn't have anything!");
+				}
+				return State.Finished;
+			}
+		}.addDependency(builder.getLast()));
+		
+		
+		builder.addEventObject(new bactWait(BattleEvent.frameFromActIndex(3)).addDependency(builder.getLast()));
 	}
 
 }

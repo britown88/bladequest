@@ -1,20 +1,17 @@
 package bladequest.battleactions;
 
-import java.util.List;
-
-import bladequest.combat.DamageMarker;
-import bladequest.world.PlayerCharacter;
+import bladequest.combat.BattleEventBuilder;
 
 public class bactChangeVisibility extends BattleAction {
 
 	boolean visiblity;
-	public bactChangeVisibility(int frame, boolean isVisible) {
-		super(frame);
+	public bactChangeVisibility(boolean isVisible) {
 		visiblity = isVisible;
 	}
 	@Override
-	public void run(PlayerCharacter attacker, List<PlayerCharacter> target, List<DamageMarker> markers)
+	public State run(BattleEventBuilder builder)
 	{
-		attacker.setVisible(visiblity);
+		builder.getSource().setVisible(visiblity);
+		return State.Finished;
 	}
 }

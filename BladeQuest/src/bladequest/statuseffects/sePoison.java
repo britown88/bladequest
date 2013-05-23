@@ -1,12 +1,9 @@
 package bladequest.statuseffects;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import bladequest.battleactions.TargetedAction;
 import bladequest.battleactions.bactDamage;
-import bladequest.combat.BattleEvent;
+import bladequest.battleactions.bactRunAnimation;
 import bladequest.combat.BattleEventBuilder;
-import bladequest.combat.BattleEventObject;
 import bladequest.graphics.BattleAnim;
 import bladequest.world.DamageTypes;
 import bladequest.world.Global;
@@ -37,25 +34,30 @@ public class sePoison extends StatusEffect
 	}
 	
 	@Override
-	public void onTurn(BattleEventBuilder eventBuilder) 
+	public void onTurn(BattleEventBuilder builder) 
 	{
 		//set text, play animation damage, return.
-		PlayerCharacter damageTarget =  eventBuilder.getSource();
+		PlayerCharacter damageTarget =  builder.getSource();
 		Global.battle.changeStartBarText(damageTarget.getDisplayName() + " is damaged by poison!");
-		
-		List<PlayerCharacter> damageTargetList = new ArrayList<PlayerCharacter>();
-		damageTargetList.add(damageTarget);
-		
-		int animFrameIndex = 3;
 		BattleAnim anim = Global.battleAnims.get("poison");
 		
 		int damage = Math.max(1, (int)((float)damageTarget.getStat(Stats.MaxHP)*(power/100.0f)));
 		
-		int startAnimTime = BattleEvent.frameFromActIndex(animFrameIndex);
-		int endAnimTime = anim.syncToAnimation(1.0f) + startAnimTime; 		
-		eventBuilder.addEventObject(new BattleEventObject(startAnimTime, anim, damageTarget, damageTargetList));
-		eventBuilder.addEventObject(new BattleEventObject(endAnimTime, new bactDamage(endAnimTime, damage, DamageTypes.Fixed), damageTarget, damageTargetList));
-		eventBuilder.addEventObject(new BattleEventObject(endAnimTime));
+		builder.addEventObject(new TargetedAction(damageTarget)
+		{
+			int damage;
+			TargetedAction initialize(int damage)
+			{
+				this.damage = damage;
+				return this;
+			}
+			@Override
+			protected void buildEvents(BattleEventBuilder builder) {
+				builder.addEventObject(new bactDamage(damage, DamageTypes.Fixed));	
+			}
+		}.initialize(damage));
+				
+		builder.addEventObject(new bactRunAnimation(anim));
 	}
 	
 	@Override

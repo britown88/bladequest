@@ -1,18 +1,13 @@
 package bladequest.battleactions;
 
-import java.util.List;
-
-import bladequest.combat.DamageMarker;
+import bladequest.combat.BattleEventBuilder;
 import bladequest.combatactions.Stance;
-import bladequest.world.PlayerCharacter;
 
 public class bactLeaveStance  extends BattleAction {
-	public bactLeaveStance(int frame) {
-		super(frame);
-	}
 	@Override
-	public void run(PlayerCharacter attacker, List<PlayerCharacter> targets, List<DamageMarker> markers)
+	public State run(BattleEventBuilder builder)
 	{
-		Stance.leaveStance(attacker);
+		Stance.leaveStance(builder.getSource());
+		return State.Finished;
 	}
 }

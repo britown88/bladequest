@@ -1,16 +1,11 @@
 package bladequest.battleactions;
 
-import java.util.List;
-
 import bladequest.combat.BattleEvent;
 import bladequest.combat.BattleEventBuilder;
-import bladequest.combat.BattleEventObject;
-import bladequest.combat.DamageMarker;
 import bladequest.graphics.BattleSprite.faces;
 import bladequest.world.DamageTypes;
-import bladequest.world.PlayerCharacter;
 
-public class bactAttackRandomTargets extends BattleAction {
+public class bactAttackRandomTargets extends DelegatingAction {
 
 	BattleEventBuilder builder;
 	float power;
@@ -18,28 +13,23 @@ public class bactAttackRandomTargets extends BattleAction {
 	int attacks;
 	float speedFactor;
 	
-	public bactAttackRandomTargets(int frame, float power, DamageTypes type, int attacks, float speedFactor) {
-		super(frame);
+	public bactAttackRandomTargets(float power, DamageTypes type, int attacks, float speedFactor) {
 		this.power = power;
 		this.type = type;
 		this.attacks = attacks;
 		this.speedFactor = speedFactor;
 	}
-	public void run(PlayerCharacter attacker, List<PlayerCharacter> targets, List<DamageMarker> markers)
-	{
-		int frameNum = getFrame();
-		int frameTime = BattleEvent.frameFromActIndex(frameNum);
-		builder.addEventObject(new BattleEventObject(frameTime, faces.Cast, 0, attacker));
+
+	@Override
+	protected void buildEvents(BattleEventBuilder builder) {
+		
+		builder.addEventObject(new bactSetFace(faces.Cast, 0));
+		builder.addEventObject(new bactWait(BattleEvent.frameFromActIndex(1)).addDependency(builder.getLast()));
 		for (int i = 0; i < attacks; ++i)
 		{
-			builder.addEventObject(new BattleEventObject(frameTime, new bactAttackRandomTarget(frameTime, power, type, speedFactor, builder), attacker, targets));
-			
-			frameTime += BattleEvent.frameFromActIndex(6)/speedFactor;
+			builder.addEventObject(new bactAttackRandomTarget(power, type, speedFactor).addDependency(builder.getLast()));
 		}
-		builder.addEventObject(new BattleEventObject(frameTime, faces.Ready, 0, attacker));
+		builder.addEventObject(new bactSetFace(faces.Ready, 0).addDependency(builder.getLast()));		
 	}
-	public void setBuilder(BattleEventBuilder builder) 
-	{
-		this.builder = builder;
-	}
+
 }

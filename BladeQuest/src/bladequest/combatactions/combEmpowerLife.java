@@ -1,12 +1,13 @@
 package bladequest.combatactions;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import bladequest.battleactions.BattleAction;
+import bladequest.battleactions.TargetedAction;
 import bladequest.battleactions.bactInflictStatus;
+import bladequest.battleactions.bactRunAnimation;
+import bladequest.battleactions.bactSetFace;
+import bladequest.battleactions.bactWait;
 import bladequest.combat.BattleEvent;
 import bladequest.combat.BattleEventBuilder;
-import bladequest.combat.BattleEventObject;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleSprite.faces;
 import bladequest.statuseffects.seRegen;
@@ -28,24 +29,33 @@ public class combEmpowerLife extends CombatAction {
 	@Override
 	public void buildEvents(BattleEventBuilder builder)
 	{
-		int animStartIndex = 3;
-		PlayerCharacter source = builder.getSource();
-		builder.addEventObject(new BattleEventObject(BattleEvent.frameFromActIndex(0), faces.Ready, 0, source));
-		builder.addEventObject(new BattleEventObject(BattleEvent.frameFromActIndex(animStartIndex), faces.Cast, 0, source));
+		builder.addEventObject(new bactSetFace(faces.Cast, 0));
 		
-		int frame = animStartIndex;		
-		int endFrameTime =  BattleEvent.frameFromActIndex(frame);
+		BattleAction prevWait = null;
+		BattleAnim anim = Global.battleAnims.get("movetest");
+		
 		for (PlayerCharacter target : builder.getTargets())
 		{
-			BattleAnim anim = Global.battleAnims.get("movetest");
-			endFrameTime = anim.syncToAnimation(1.0f) + BattleEvent.frameFromActIndex(frame);
-			List<PlayerCharacter> currentTarget = new ArrayList<PlayerCharacter>();
-			currentTarget.add(target);
-			builder.addEventObject(new BattleEventObject(BattleEvent.frameFromActIndex(frame), anim, source, currentTarget));
-			builder.addEventObject(new BattleEventObject(endFrameTime, new bactInflictStatus(frame, true, new seRegen(10,20, 3)), source, currentTarget));
-			frame += 4;
+			builder.addEventObject(new TargetedAction(target)
+			{
+				BattleAnim anim;
+				TargetedAction initialize(BattleAnim anim)
+				{
+					this.anim = anim;
+					return this;
+				}
+				@Override
+				protected void buildEvents(BattleEventBuilder builder) {
+					builder.addEventObject(new bactRunAnimation(anim));
+					builder.addEventObject(new bactInflictStatus(new seRegen(10, 20, 3)).addDependency(builder.getLast()));
+				}
+
+			}.initialize(anim).addDependency(builder.getLast()));
+			
+			builder.addEventObject(new bactWait(BattleEvent.frameFromActIndex(4)).addDependency(prevWait));
+			prevWait = builder.getLast();			
 		}
-		builder.addEventObject(new BattleEventObject(BattleEvent.frameFromActIndex(frame), faces.Ready, 0, source));
-		builder.addEventObject(new BattleEventObject(endFrameTime+BattleEvent.frameFromActIndex(2)));
+		builder.addEventObject(new bactSetFace(faces.Ready, 0).addDependency(builder.getLast()));
+		builder.addEventObject(new bactWait(BattleEvent.frameFromActIndex(2)).addDependency(prevWait));
 	}
 }

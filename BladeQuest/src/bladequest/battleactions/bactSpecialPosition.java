@@ -1,20 +1,17 @@
 package bladequest.battleactions;
 
-import java.util.List;
-
-import bladequest.combat.DamageMarker;
-import bladequest.world.PlayerCharacter;
+import bladequest.combat.BattleEventBuilder;
 
 public class bactSpecialPosition extends BattleAction {
 
 	boolean specialPosition;
-	public bactSpecialPosition(int frame, boolean specialPosition) {
-		super(frame);
+	public bactSpecialPosition(boolean specialPosition) {
 		this.specialPosition = specialPosition;
 	}
 	@Override
-	public void run(PlayerCharacter attacker, List<PlayerCharacter> target, List<DamageMarker> markers)
+	public State run(BattleEventBuilder builder)
 	{
-		attacker.setPositionSpecial(specialPosition);
+		builder.getSource().setPositionSpecial(specialPosition);
+		return State.Finished;
 	}
 }

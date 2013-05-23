@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import bladequest.scripting.ScriptVar.BadTypeException;
+import bladequest.scripting.ScriptVar.SpecializationLevel;
 
 public class Script {
 
@@ -28,6 +29,36 @@ public class Script {
 		this.standardLibrary = standardLibrary;
 		globals = new HashMap<String, ScriptVar>();
 	}
+	
+	private static class OpaqueSpecializer implements FunctionSpecializer
+	{
+		public Class<?> classType;
+		OpaqueSpecializer(Class<?> classType)
+		{
+			this.classType = classType;
+		}
+		@Override
+		public boolean Equals(FunctionSpecializer rhs) {
+			
+			OpaqueSpecializer rhsSpecializer = (OpaqueSpecializer)rhs;
+			if (rhsSpecializer == null) return false;
+			return classType.equals(rhsSpecializer.classType);
+		}
+		@Override
+		public SpecializationLevel getSpecializationLevelFor(ScriptVar var)
+				throws BadTypeException {
+			if (!var.isOpaque()) return SpecializationLevel.NotSpecialized;
+			//otherwise....  we do actually know this type.  #note to self - doable in C++ *statically* with counting template for future use
+			//though you can't do conversions in C++.  This should automatically handle bactDamage -> battleAction, but it breaks some overloading.
+			if (classType.isAssignableFrom(var.getOpaque().getClass()))
+			{
+				return SpecializationLevel.TypeSpecialized;
+			}
+			return SpecializationLevel.NotSpecialized;
+		}
+	}
+	
+	
 	public static FunctionSpecializer getSpecializerForReflectedType(Class<?> classType)
 	{
 		if (classType.equals(int.class))
@@ -47,7 +78,8 @@ public class Script {
 			return Parser.getStringSpecializer();
 		}
 		
-		return Parser.getGenericSpecializer();
+		//holy shitballs assfuck, I guess this works!
+		return new OpaqueSpecializer(classType);
 	}
 	public static InvokeFunction reflectedMethodToFunction(Method method, List<FunctionSpecializer> specializations)
 	{

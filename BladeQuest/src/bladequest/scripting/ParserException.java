@@ -2,10 +2,14 @@ package bladequest.scripting;
 
 public class ParserException extends Exception {
 
-	public String what;
-	ParserException(String what)
+	public String whatStr;
+	ParserException(String whatStr)
 	{
-		this.what = what;
+		this.whatStr = whatStr;
+	}
+	public String what()
+	{
+		return this.whatStr;
 	}
 	/**
 	 * 

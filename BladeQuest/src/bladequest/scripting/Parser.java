@@ -48,7 +48,8 @@ public class Parser {
 		public void lambdaFunction() throws ParserException {throw new ParserException("Not implemented!");}
 		public void endLambdaFunction() throws ParserException {throw new ParserException("Not implemented!");}
 		public void patternMatch() throws ParserException {throw new ParserException("Not implemented!");}
-		public void caseMarker() throws ParserException {throw new ParserException("Not implemented!");}		
+		public void caseMarker() throws ParserException {throw new ParserException("Not implemented!");}
+		public void infixBinder() throws ParserException {throw new ParserException("Not implemented!");}
 		public void addChildStatement(Statement statement) throws ParserException, BadTypeException {throw new ParserException("Not implemented!");}
 	}
 	
@@ -378,6 +379,43 @@ public class Parser {
 			}
 		}.initialize(statements);
 	}
+	Statement compileStatementList(List<Statement> statements, Statement binderStatement)
+	{
+		
+		if (binderStatement == null) return compileStatementList(statements);
+
+		//
+		return new Statement()
+		{
+			List<Statement> statements;
+			Statement binderStatement;
+			
+			Statement initialize(List<Statement> statements, Statement binderStatement)
+			{
+				this.statements = statements;
+				this.binderStatement = binderStatement;
+				return this;
+			}
+			public ScriptVar invoke(ExecutionState state) throws BadTypeException {
+				ScriptVar out = null;
+				for (Statement statement : statements)
+				{
+					ScriptVar currentVar = statement.invoke(state);
+					if (out == null)
+					{
+						out = currentVar;
+						//apply binder after first statement.
+						out = out.apply(binderStatement.invoke(state));
+					}
+					else
+					{
+						out = out.apply(currentVar);
+					}
+				}
+				return out;
+			}
+		}.initialize(statements, binderStatement);
+	}	
 	
 	
 	
@@ -429,7 +467,6 @@ public class Parser {
 					//even more lambda capture.  move arguments -> locals.
 					lambdaState.locals.put(argNames.get(argNum++), var);
 				}
-				state.functionArgs = values;
 				return body.invoke(lambdaState);
 			}
 
@@ -675,6 +712,12 @@ public class Parser {
 				popState();
 			}
 			@Override
+			public void endLine() throws ParserException
+			{
+				if (substatements.isEmpty()) return;  //doesn't die on infix line end (e.g. a > b syntax)
+				super.endLine();
+			}			
+			@Override
 			public void lambdaFunction() throws ParserException 
 			{
 				if (!substatements.isEmpty())
@@ -789,6 +832,7 @@ public class Parser {
 		List<String> locals;
 		List<Statement> substatements;
 		Statement localCreateStatement;
+		Statement binderStatement;
 		public StatementParser(List<ParserState> stateStack, List<String> argNames, List<String> locals)
 		{
 			super(stateStack);
@@ -806,17 +850,18 @@ public class Parser {
 			Statement out = null;
 			if (localCreateStatement == null)
 			{
-				out = compileStatementList(substatements);
+				out = compileStatementList(substatements, binderStatement);
 			}
 			else
 			{
-				out = compileStatementList(substatements);
+				out = compileStatementList(substatements, binderStatement);
 				substatements = new ArrayList<Statement>();
 				
 				//add the local variable.
 				substatements.add(localCreateStatement);
 				substatements.add(out);
 				out = compileStatementList(substatements);
+				localCreateStatement = null;
 			}
 			return out;
 		}
@@ -864,6 +909,19 @@ public class Parser {
 		{
 			pushState(getLocalDefClass(locals, this));	
 		}
+	
+		public void infixBinder()
+		{
+			//parser another statement, write it FIRST.
+			//statement1 > statement2 statment3
+			//statement2 statement1 statment3
+			
+			//we do this by compile the current statements into a binder statement.
+			//from there, after the first statement, we then apply then run the statement and apply.
+			binderStatement = compileSubstatements();
+			this.substatements = new ArrayList<Statement>();
+		}
+	
 	}
 	
 	ParserState getStatementState(List<String> argNames, List<String> locals)
@@ -873,8 +931,15 @@ public class Parser {
 			@Override
 			public void endLine() throws ParserException 
 			{
-				publishStatement(compileSubstatements());
-				popState();
+				//if the substatements are empty and we're at the end of a line in this state, it means that there was just
+				//an infix binder used, e.g.
+				//makeAbility "foo" >
+				//   setDesc "example" > #... 
+				if (!substatements.isEmpty())
+				{
+					publishStatement(compileSubstatements());
+					popState();
+				}
 			}			
 		};
 	}	
@@ -931,21 +996,21 @@ public class Parser {
 			{
 				pushState(getStatementState(argNames, locals));
 			}
-			void moveToListState()
-			{
-				pushState(getListParserState(argNames, locals));
-			}
-			void moveToParenthesisState()
-			{
-				pushState(getParenthesisParserState(argNames, locals));
-			}
 			@Override
 			public void addChildStatement(Statement statement) 
 			{
 				statements.add(statement);
 			} 
-			public void beginList() {moveToListState();}
-			public void beginParen() throws ParserException {moveToParenthesisState();}
+			public void beginList() throws ParserException
+			{
+				moveToStatementState();
+				stateStack.get(stateStack.size()-1).beginList();				
+			}
+			public void beginParen() throws ParserException 
+			{
+				moveToStatementState();
+				stateStack.get(stateStack.size()-1).beginParen();
+			}
 			public void readName(String name) throws ParserException
 			{
 				moveToStatementState();
@@ -1087,6 +1152,7 @@ public class Parser {
 	
 	public void run()
 	{
+		int lineNumber = 0;
 		stateStack.add(getFunctionLevelParserState());
 		try
 		{
@@ -1112,6 +1178,7 @@ public class Parser {
 					break;
 				case EndLine:
 					state.endLine();
+					++lineNumber;
 					break;
 				case EndList:
 					state.endList();
@@ -1149,6 +1216,9 @@ public class Parser {
 				case caseMarker:
 					state.caseMarker();
 					break;
+				case infixBinder:
+					state.infixBinder();
+					break;					
 				default:
 					break; 
 				}
@@ -1157,7 +1227,10 @@ public class Parser {
 		}	
 		catch(ParserException e)
 		{
-			//YOU DUN GOOFED
+			//YOU DUN GOOFED			
+			e.printStackTrace();
+			@SuppressWarnings("unused")
+			String errorInfo = "Error on line: " + lineNumber + e.what();
 		}	
 	}
 	

@@ -1,13 +1,10 @@
 package bladequest.battleactions;
 
-import java.util.List;
-
 import android.graphics.Point;
 import android.graphics.Rect;
 import bladequest.combat.Battle;
 import bladequest.combat.BattleEvent;
 import bladequest.combat.BattleEventBuilder;
-import bladequest.combat.BattleEventObject;
 import bladequest.combat.DamageMarker;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleAnimObjState;
@@ -19,12 +16,8 @@ import bladequest.graphics.BattleSprite.faces;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
 
-public class bactTryEscape  extends BattleAction {
-	BattleEventBuilder eventBuilder;
-	public bactTryEscape(int frame, BattleEventBuilder eventBuilder) {
-		super(frame);
-		this.eventBuilder = eventBuilder;
-	}
+public class bactTryEscape  extends DelegatingAction {
+	
 	private BattleAnim makeRunAnimation(PlayerCharacter character)
 	{
 		BattleAnim anim = new BattleAnim(60.0f);
@@ -56,43 +49,41 @@ public class bactTryEscape  extends BattleAction {
 		
 		return anim;
 	}
-	public void run(PlayerCharacter character, List<PlayerCharacter> target, List<DamageMarker> markers)
-	{
+	@Override
+	protected void buildEvents(BattleEventBuilder builder) {
 		boolean disableRunning = Global.battle.getEncounter().disableRunning;
-		
-		int startAnimationTime = BattleEvent.frameFromActIndex(getFrame());
 		
 		if (!disableRunning && Global.rand.nextInt(100) < 90)
 		{
 			Global.battle.changeStartBarText("Got away safely!");
-			BattleAnim runAnim = makeRunAnimation(character);
-			int finishRun = startAnimationTime + runAnim.syncToAnimation(1.0f);
-			eventBuilder.setAnimation(runAnim, getFrame());
-			eventBuilder.addEventObject(new BattleEventObject(startAnimationTime, new bactChangeVisibility(getFrame(), false), character, target));			
-			eventBuilder.addEventObject(new BattleEventObject(finishRun, new BattleAction(getFrame())
+			BattleAnim runAnim = makeRunAnimation(builder.getSource());
+			
+			builder.addEventObject(new bactChangeVisibility(false));
+			builder.addEventObject(new bactRunAnimation(runAnim));			
+			builder.addEventObject(new BattleAction()
 			{
 				@Override
-				public void run(PlayerCharacter character, List<PlayerCharacter> target, List<DamageMarker> markers)
+				public State run(BattleEventBuilder builder)
 				{
+					PlayerCharacter character = builder.getSource();
 					character.setEscaped(true);
 					character.setVisible(true);
+					return State.Finished;
 				}
-			}, character, target));
-			eventBuilder.addEventObject(new BattleEventObject(finishRun));
+			}.addDependency(builder.getLast()));
 		}
 		else
 		{
 			if (disableRunning)
 			{
 				Global.battle.changeStartBarText("There is no escape!");
-				eventBuilder.addEventObject(new BattleEventObject(startAnimationTime + BattleEvent.frameFromActIndex(3)));
 			}
 			else
 			{
 				Global.battle.changeStartBarText("Couldn't run!");
-				eventBuilder.addEventObject(new BattleEventObject(startAnimationTime + BattleEvent.frameFromActIndex(3)));
 			}
-			markers.add(new DamageMarker("FAILED!", character));
+			builder.addEventObject(new bactWait(BattleEvent.frameFromActIndex(3)));
+			builder.addMarker(new DamageMarker("FAILED!", builder.getSource()));
 		}
 	}
 }

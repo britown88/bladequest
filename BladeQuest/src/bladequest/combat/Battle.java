@@ -769,7 +769,7 @@ public class Battle
 			
 			if(actor.isEnemy() || selCharOpened || actor.getAction() == Action.Guard)
 			{
-				currentEvent.update(this, markers);
+				currentEvent.update(this);
 				if(currentEvent.isDone())
 				{
 					nextActorInit();
@@ -1051,7 +1051,7 @@ public class Battle
 				break;
 			}
 	}
-	private void addBattleEvent(PlayerCharacter source, List<PlayerCharacter> targets){battleEvents.add(new BattleEvent(source, targets));}
+	private void addBattleEvent(PlayerCharacter source, List<PlayerCharacter> targets){battleEvents.add(new BattleEvent(source, targets, markers));}
 	public void addMessage(String str)
 	{
 		messageQueue.add(str);
@@ -1318,4 +1318,9 @@ public class Battle
 	{
 		return encounter;
 	}
+	
+	 public List<DamageMarker> getMarkers()
+	 {
+		 return markers;
+	 }
 }

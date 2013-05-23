@@ -9,15 +9,6 @@ import java.util.Map;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.util.Log;
-import bladequest.battleactions.BattleAction;
-import bladequest.battleactions.bactAttackClose;
-import bladequest.battleactions.bactAttackRandomTargets;
-import bladequest.battleactions.bactBreakStance;
-import bladequest.battleactions.bactDamage;
-import bladequest.battleactions.bactDelayedDamageAll;
-import bladequest.battleactions.bactInflictStatus;
-import bladequest.battleactions.bactMessage;
-import bladequest.battleactions.bactRemoveStatus;
 import bladequest.combat.BattleLibrary;
 import bladequest.combatactions.CombatAction;
 import bladequest.combatactions.combAuras;
@@ -37,9 +28,6 @@ import bladequest.scripting.Script;
 import bladequest.scripting.Script.BadSpecialization;
 import bladequest.scripting.ScriptVar;
 import bladequest.scripting.ScriptVar.BadTypeException;
-import bladequest.statuseffects.StatusEffect;
-import bladequest.statuseffects.seKO;
-import bladequest.statuseffects.sePoison;
 import bladequest.system.BqActivity;
 import bladequest.system.DataLine;
 import bladequest.system.FileReader;
@@ -73,11 +61,26 @@ public class GameDataLoader
 		BattleLibrary.publishLibrary(library);
 		return library.getLibrary();
 	}
+	private static Script compileScript(BqActivity activity, String file, Map<String, ScriptVar> standardLibrary)
+	{
+			Script script = new Script(standardLibrary);
+		
+		Parser p = null;
+		try {
+			p = new Parser(new FileTokenizer(activity.getAssets().open(file)), script);
+		} catch (IOException e) {
+			// ?
+		}
+		p.run(); //populates script!
+		return script;
+	}
 	public static void load(BqActivity activity)
 	{
+		Map<String, ScriptVar> standardLibrary = getStandardLibrary();
+		
 		loadFile(activity, "data/sprites.dat");
 		loadFile(activity, "data/battleanims.dat");
-		loadFile(activity, "data/abilities.dat");
+		compileScript(activity, "data/abilities.dat", standardLibrary);
 		loadFile(activity, "data/music.dat");
 		loadFile(activity, "data/items.dat");
 		loadFile(activity, "data/characters.dat");
@@ -85,15 +88,7 @@ public class GameDataLoader
 		loadFile(activity, "data/battles.dat");
 		loadFile(activity, "data/merchants.dat");
 		
-		Script script = new Script(getStandardLibrary()); //empty standard library!
-		
-		Parser p = null;
-		try {
-			p = new Parser(new FileTokenizer(activity.getAssets().open("data/testScript.dat")), script);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-		}
-		p.run(); //populates script!
+		Script script = compileScript(activity, "data/testScript.dat", standardLibrary);
 		
 		try {
 			ScriptVar helloWorld = script.getVariable("main").apply(new ScriptVar.EmptyList());
@@ -160,9 +155,7 @@ public class GameDataLoader
 			else if(dl.item.equals("[sprites]"))
 				section = FileSections.Sprites;
 			else if(dl.item.equals("[characters]"))
-				section = FileSections.Characters;
-			else if(dl.item.equals("[abilities]"))
-				section = FileSections.Abilities;	
+				section = FileSections.Characters;	
 			else if(dl.item.equals("[enemies]"))
 				section = FileSections.Enemies;
 			else if(dl.item.equals("[encounters]"))
@@ -189,9 +182,6 @@ public class GameDataLoader
 				break;
 			case Characters:
 				loadCharacterLine(dl);
-				break;
-			case Abilities:
-				loadAbilityLine(dl);
 				break;
 			case Enemies:
 				loadEnemyLine(dl);
@@ -257,10 +247,6 @@ public class GameDataLoader
 		else if(dl.item.equals("value"))
 		{
 			itm.setValue(Integer.parseInt(dl.values.get(0)));
-		}
-		else if(dl.item.equals("action"))
-		{
-			itm.addAction(loadBattleAction(dl));
 		}
 		else if(dl.item.equals("statmods"))
 		{
@@ -461,46 +447,7 @@ public class GameDataLoader
 		}
 	}
 	
-	private static Ability ab;
-	private static String abName;	
-	private static void loadAbilityLine(DataLine dl)
-	{
-		if(dl.item.equals("ability"))
-		{
-			abName = dl.values.get(0);
-			ab = new Ability(
-					abName,
-					dl.values.get(1), 
-					dl.values.get(2), 
-					getDamageType(dl.values.get(3)), 
-					getTargetType(dl.values.get(4)), 
-					Integer.parseInt(dl.values.get(5)), 
-					Integer.parseInt(dl.values.get(6)),
-					Boolean.parseBoolean(dl.values.get(7)));
-			
-		}
-		else if(dl.item.equals("startsDisabled"))
-		{
-			ab.setEnabled(false);
-		}
-		else if(dl.item.equals("useoob"))
-		{
-			ab.makeUsableOutOfBattle();
-		}
-		else if(dl.item.equals("desc"))
-		{
-			ab.setDescription(dl.values.get(0));
-		}
-		else if(dl.item.equals("action"))
-		{
-			ab.addAction(loadBattleAction(dl));
-		}
-		else if(dl.item.equals("endability"))
-		{
-			Global.abilities.put(abName, ab);
-		}
-		
-	}
+	
 	
 	private static Merchant me;
 	private static String meName;	
@@ -627,93 +574,6 @@ public class GameDataLoader
 		}
 	}
 	
-	private static BattleAction loadBattleAction(DataLine dl)
-	{
-		if(dl.values.get(0).equals("bactDamage"))
-		{
-			return new bactDamage(
-					Integer.parseInt(dl.values.get(1)),
-					Float.parseFloat(dl.values.get(2)), 
-					getDamageType(dl.values.get(3)));
-		}
-		else if(dl.values.get(0).equals("bactDelayedDamageAll"))
-		{
-			return new bactDelayedDamageAll(
-					Integer.parseInt(dl.values.get(1)),
-					Float.parseFloat(dl.values.get(2)), 
-					getDamageType(dl.values.get(3)),
-					dl.values.get(4),
-					Integer.parseInt(dl.values.get(5)));
-		}
-		else if(dl.values.get(0).equals("bactAttackRandomTargets"))
-		{
-			return new bactAttackRandomTargets(
-					Integer.parseInt(dl.values.get(1)),
-					Float.parseFloat(dl.values.get(2)), 
-					getDamageType(dl.values.get(3)),
-					Integer.parseInt(dl.values.get(4)),
-					Float.parseFloat(dl.values.get(5)));
-		}		
-		else if(dl.values.get(0).equals("bactAttackClose"))
-		{
-			return new bactAttackClose(
-					Integer.parseInt(dl.values.get(1)),
-					Float.parseFloat(dl.values.get(2)), 
-					getDamageType(dl.values.get(3)));
-		}				
-		else if(dl.values.get(0).equals("bactBreakStance"))
-		{
-			return new bactBreakStance(
-					Integer.parseInt(dl.values.get(1)));
-		}		
-		else if(dl.values.get(0).equals("bactInflictStatus"))
-		{
-			return new bactInflictStatus(
-					Integer.parseInt(dl.values.get(1)),
-					Boolean.parseBoolean(dl.values.get(2)),
-					loadStatusEffect(dl, 3));
-		}
-		else if(dl.values.get(0).equals("bactMessage"))
-		{
-			return new bactMessage(Integer.parseInt(dl.values.get(1)),dl.values.get(2));
-		}
-		else if(dl.values.get(0).equals("bactRemoveStatus"))
-		{
-			return new bactRemoveStatus(Integer.parseInt(dl.values.get(1)),dl.values.get(2));
-		}
-		else
-			return null;
-	}
-	private static StatusEffect loadStatusEffect(DataLine dl, int startIndex)
-	{
-		if(dl.values.get(startIndex).equals("sePoison"))
-		{
-			return new sePoison(Float.parseFloat(dl.values.get(startIndex+1)));
-		}
-		else if(dl.values.get(startIndex).equals("seKO"))
-		{
-			return new seKO();
-		}
-		else
-			return null;
-	}
-	
-	private static DamageTypes getDamageType(String str)
-	{
-		if(str.equals("physical"))
-			return DamageTypes.Physical;
-		else if(str.equals("magic"))
-			return DamageTypes.Magic;
-		else if(str.equals("fixed"))
-			return DamageTypes.Fixed;
-		else if(str.equals("physicalignoredef"))
-			return DamageTypes.PhysicalIgnoreDef;
-		else if(str.equals("magicalignoredef"))
-			return DamageTypes.MagicalIgnoreDef;
-		else
-			return null;
-	}
-	
 	private static TargetTypes getTargetType(String str)
 	{
 		if(str.equals("single"))
@@ -801,7 +661,6 @@ public class GameDataLoader
 		Music,
 		Sprites,
 		Characters,
-		Abilities,
 		Enemies,
 		Encounters,
 		Merchants,

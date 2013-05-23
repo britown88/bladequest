@@ -1,13 +1,10 @@
 package bladequest.battleactions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.graphics.Point;
 import bladequest.combat.BattleEvent;
 import bladequest.combat.BattleEventBuilder;
-import bladequest.combat.BattleEventObject;
-import bladequest.combat.DamageMarker;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleAnimObject;
 import bladequest.graphics.BattleAnimObject.Types;
@@ -15,19 +12,14 @@ import bladequest.graphics.BattleSprite;
 import bladequest.graphics.BattleSprite.faces;
 import bladequest.math.PointMath;
 import bladequest.world.DamageTypes;
-import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
 
-public class bactAttackClose  extends BattleAction {
+public class bactAttackClose  extends DelegatingAction {
 
-	BattleEventBuilder builder;
 	float power;
 	DamageTypes type;
-	int attacks;
-	float speedFactor;
 	
-	public bactAttackClose(int frame, float power, DamageTypes type) {
-		super(frame);
+	public bactAttackClose(float power, DamageTypes type) {
 		this.power = power;
 		this.type = type;
 	}
@@ -50,23 +42,21 @@ public class bactAttackClose  extends BattleAction {
 		
 		return anim;
 	}
-	public void run(PlayerCharacter attacker, List<PlayerCharacter> targets, List<DamageMarker> markers)
+	@Override
+	protected void buildEvents(BattleEventBuilder builder) 
 	{
-		int frameTime = getFrame();
+		PlayerCharacter attacker = builder.getSource();
+		PlayerCharacter target = getTarget(builder);
 		
-		targets = Global.battle.getTargetable(attacker, targets);
-		if (!targets.isEmpty())
+		if (target != null)
 		{
-			List<PlayerCharacter> target = new ArrayList<PlayerCharacter>();
-			target.add(targets.get(0));
-			
 			int attackerHeight = attacker.getBattleSprite().getHeight();
-			int defenderHeight = target.get(0).getBattleSprite().getHeight(); 
+			int defenderHeight = target.getBattleSprite().getHeight(); 
 			
 			Point startPos = attacker.getPosition(false);
 			Point offset = PointMath.subtract(attacker.getPosition(true), startPos); 
-			Point pointOff = target.get(0).getPosition(false);
-			pointOff.x += 8 + target.get(0).getBattleSprite().getWidth();
+			Point pointOff = target.getPosition(false);
+			pointOff.x += 8 + target.getBattleSprite().getWidth();
 			pointOff.y +=  defenderHeight - attackerHeight;
 			
 			final float attackArcFactor = 1.0f/3.0f;  //hardcoded for now.
@@ -77,32 +67,26 @@ public class bactAttackClose  extends BattleAction {
 			//Jump anim.  get arc
 			
 			
-			builder.addEventObject(new BattleEventObject(frameTime, new bactChangeVisibility(frameTime, false), attacker, target));
+			builder.addEventObject(new bactChangeVisibility(false));
 			currentAnim = buildJumpAnimation(attacker, PointMath.add(offset, attacker.getPosition()), PointMath.add(offset, pointOff), attackArcFactor, attackSpeed);
-			builder.addEventObject(new BattleEventObject(frameTime, currentAnim, attacker, target));
-			frameTime += currentAnim.syncToAnimation(1.0f); //at end of this animation...
-			builder.addEventObject(new BattleEventObject(frameTime, new bactSpecialPosition(frameTime, true), attacker, target));
-			builder.addEventObject(new BattleEventObject(frameTime, new bactChangePosition(frameTime, pointOff), attacker, target));
-			builder.addEventObject(new BattleEventObject(frameTime, new bactChangeVisibility(frameTime, true), attacker, target));
+			builder.addEventObject(new bactRunAnimation(currentAnim).addDependency(builder.getLast()));
+			builder.addEventObject(new bactSpecialPosition(true).addDependency(builder.getLast()));
+			builder.addEventObject(new bactChangePosition(pointOff).addDependency(builder.getLast()));
+			builder.addEventObject(new bactChangeVisibility(true).addDependency(builder.getLast()));
 			//now visible in this new place, start attacking!
 			//attack at double speed.
-			frameTime += BattleActionPatterns.BuildSwordSlash(builder, attacker, target, power, type, frameTime, 0.5f);
+			BattleAction slashEnd = BattleActionPatterns.BuildSwordSlash(builder, power, type, 0.5f, builder.getLast());
 			
 			//jump back to starting location.
-			builder.addEventObject(new BattleEventObject(frameTime, new bactChangeVisibility(frameTime, false), attacker, target));
+			builder.addEventObject(new bactChangeVisibility(false).addDependency(slashEnd));
 			currentAnim = buildJumpAnimation(attacker, PointMath.add(offset, pointOff), PointMath.add(offset, startPos), returnArcFactor, returnSpeed);
-			builder.addEventObject(new BattleEventObject(frameTime, currentAnim, attacker, target));
-			frameTime += currentAnim.syncToAnimation(1.0f);
-			builder.addEventObject(new BattleEventObject(frameTime, new bactChangePosition(frameTime, startPos), attacker, target));
-			builder.addEventObject(new BattleEventObject(frameTime, new bactSpecialPosition(frameTime, false), attacker, target));
-			builder.addEventObject(new BattleEventObject(frameTime, new bactChangeVisibility(frameTime, true), attacker, target));
+			builder.addEventObject(new bactRunAnimation(currentAnim).addDependency(builder.getLast()));
+			builder.addEventObject(new bactChangePosition(startPos).addDependency(builder.getLast()));
+			builder.addEventObject(new bactSpecialPosition(false).addDependency(builder.getLast()));
+			builder.addEventObject(new bactChangeVisibility(true).addDependency(builder.getLast()));
 			
 			//add in some chillaxing time.
-			builder.addEventObject(new BattleEventObject(frameTime + BattleEvent.frameFromActIndex(3)));	
+			builder.addEventObject(new bactWait(BattleEvent.frameFromActIndex(3)).addDependency(builder.getLast()));	
 		}
-	}
-	public void setBuilder(BattleEventBuilder builder) 
-	{
-		this.builder = builder;
-	}
+	}	
 }

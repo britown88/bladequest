@@ -1,62 +1,63 @@
-[abilities]
-#ability name, display name, animation, damage type, target type, MP, accuracy, usable outside battle
-ability poisonjab "Poison Jab" movetest physical single 2 100 False
-action bactInflictStatus -1 True sePoison 10
-desc "Poisons an enemy."
-endability
-#
-ability assault "Assault" noanim physicalignoredef single 2 100 False
-startsDisabled
-action bactAttackClose 0 1.0f physicalignoredef
-desc "Usable only in Berserker stance.  Assault an enemy."
-endability
-#
-ability zornhau "Zornhau" noanim physicalignoredef allenemies 5 100 False
-startsDisabled
-action bactAttackRandomTargets 3 0.5f physicalignoredef 15 5.0f
-action bactBreakStance -1
-desc "Usable only in Berserker stance. Unleash a flurry of attacks. Breaks stance."
-endability
-#
-ability frostwish "Frost Wish" movetest magic allallies 5 100 True
-useoob
-action bactDamage -1 1.0f magic
-desc "Heal allies with a winter's chill."
-endability
-#
-ability dblattack "Dbl Attack" movetest physical single 4 100 False
-action bactDamage -1 0.9f physical
-action bactDamage -1 0.9f physical
-desc "Attack an enemy twice quickly."
-endability
-#
-ability bite "Bite" bite physical single 5 100 False
-action bactDamage 15 1.5f physical
-action bactInflictStatus -1 True sePoison 5
-endability
-#
-ability recruit1 "Clashing Super Hit" movetest physical single 0 100 False
-action bactMessage -1 "Chew on this!!!"
-action bactDamage -1 0.5f physical
-endability
-#
-ability recruit2 "Special Mega Kick" movetest physical single 0 75 False
-action bactMessage -1 "Bet you won't see THIS coming!"
-action bactDamage -1 0.75f physical
-endability
-#
-ability recruit3 "Climactic Finisher" movetest physical single 0 75 False
-action bactMessage -1 "This'll teach ya! Huzzah!"
-action bactDamage -1 1.0f physical
-endability
-#
-ability recruit4 "Dynamo Supernova" movetest physical single 0 75 False
-action bactMessage -1 "RRRRAAAAAAAAAAAAAA!!!!!"
-action bactDamage -1 0.1f physical
-action bactDamage -1 0.1f physical
-action bactDamage -1 0.1f physical
-action bactDamage -1 0.1f physical
-action bactDamage -1 0.1f physical
-action bactDamage -1 0.1f physical
-endability
+#abilities file
 
+\poisonjab <- (addAbility "poisonjab" "Poison Jab" "Single" 2 >
+setDesc "Poisons an enemy." >
+add (animAction "movetest") >
+addDep (inflictStatusAction (poisonStatus 10.0)))
+
+\assault <- (addAbility "assault" "Assault" "Single" 2 >
+setDisabled >
+setDesc "Usable only in Berserker stance.  Assault an enemy." >
+add (attackCloseAction 1.0 "PhysicalIgnoreDef"))
+
+\zornhau <- (addAbility "zornhau" "Zornhau" "AllEnemies" 5 >
+setDisabled >
+setDesc "Usable only in Berserker stance.  Unleash a flurry of attacks.  Breaks stance." >
+add (waitAction 450) >
+addDep (attackRandomlyAction 0.5 "PhysicalIgnoreDef" 15 5.0) >
+addDep (breakStanceAction 0))
+
+\frostwish <- (addAbility "frostwish" "Frost Wish" "AllAllies" 5 >
+useOutsideBattle >
+setDesc "Heal allies with a winter's chill." >
+add (damageAction 1.0 "Magic"))
+
+#todo: make these actual attacks, instead of just showing a damage number
+\dblattack <- (addAbility "dblattack" "Double Attack" "Single" 4 >
+setDesc "Attack twice quickly." >
+add (damageAction 0.9 "Physical") >
+add (waitAction 150) > #hack for attack -> addDep another attack
+addDep (damageAction 0.9 "Physical"))
+
+
+\bite <- (addAbility "bite" "Bite" "Single" 5 >
+add (animAction "bite") >
+addDep (damageAction 1.5 "Physical") >
+addDep (inflictStatusAction (poisonStatus 1.5)))
+
+\recruit1 <- (addAbility "recruit1" "Clashing Super Hit" "Single" 0 >
+add (animAction "movetest") >
+addDep (damageAction 0.5 "Physical"))
+
+\recruit2 <- (addAbility "recruit2" "Special Mega Kick" "Single" 0 >
+add (animAction "movetest") >
+addDep (damageAction 0.75 "Physical"))
+
+\recruit3 <- (addAbility "recruit3" "Climactic Finisher" "Single" 0 >
+add (animAction "movetest") >
+addDep (damageAction 1.0 "Physical"))
+
+staggerDamage ability damage damageType offset
+  ability > add (waitAction offset) > 
+            addDep (damageAction damage damageType)
+
+recruit4sub ability offset 
+  staggerDamage ability 0.1 "Physical" offset
+
+\recruit4 <- (addAbility "recruit4" "DynamoSupernova" "Single" 0 >
+add (animAction "movetest") > 
+recruit4sub  300 >
+recruit4sub  450 >
+recruit4sub  600 >
+recruit4sub  750 >
+recruit4sub  900)

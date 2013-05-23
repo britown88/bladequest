@@ -1,39 +1,28 @@
 package bladequest.battleactions;
 
-import java.util.List;
-
-import bladequest.combat.DamageMarker;
+import bladequest.combat.BattleEventBuilder;
 import bladequest.combatactions.Stance;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.world.PlayerCharacter;
 
 public class bactBreakStance extends BattleAction {
-	public bactBreakStance(int frame) {
-		super(frame);
-		// TODO Auto-generated constructor stub
-	}
-	private Stance getPlayerStance(PlayerCharacter character)
-	{
-		for (StatusEffect effect : character.getStatusEffects())
-		{
-			Stance getStance = effect.getStance();
-			if (getStance != null) return getStance;
-		}
-		return null;
-	}
 	@Override
-	public void run(PlayerCharacter attacker, List<PlayerCharacter> targets, List<DamageMarker> markers)
+	public State run(BattleEventBuilder builder)
 	{
-		Stance stance = getPlayerStance(attacker);
+		PlayerCharacter attacker = builder.getSource();
+		Stance stance = Stance.getStance(attacker);
 		if (stance == null)
 		{
 			//nothing to do...
-			return;
+			return State.Finished;
 		}
+		
 		stance.setBroken(true);
 		//remove status.
 		attacker.removeStatusEffect(stance.getStatusName());
 		//add a recovery status.
+		
+		//TODO: rework to be a trigger!		
 		attacker.applyStatusEffect(new StatusEffect(stance.getStatusName() + "Recovery", false)
 		{
 			Stance stance;
@@ -54,5 +43,7 @@ public class bactBreakStance extends BattleAction {
 				stance.setBroken(false); //removes at end of battle!
 			}  
 		}.initialize(stance));
+		
+		return State.Finished;
 	}
 }

@@ -188,12 +188,6 @@ public class Item
 			c.modStat(j, -statMods[j]);
 	}
 	
-	public void execute(PlayerCharacter attacker, List<PlayerCharacter> targets, List<DamageMarker> markers)
-	{
-		for(int i = 0; i < actions.size(); ++i)
-			actions.get(i).run(attacker, targets, markers);
-	}
-	
 	public void executeOutOfBattle(PlayerCharacter attacker, List<PlayerCharacter> targets, List<DamageMarker> markers)
 	{
 		for(int i = 0; i < actions.size(); ++i)

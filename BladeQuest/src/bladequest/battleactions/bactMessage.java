@@ -1,29 +1,18 @@
 package bladequest.battleactions;
 
-import java.util.List;
-
-import bladequest.combat.DamageMarker;
-import bladequest.world.PlayerCharacter;
+import bladequest.combat.BattleEventBuilder;
 
 public class bactMessage extends BattleAction
-{
+{	
 	String message;
-	
-	public bactMessage(int frame, String message)
+	public bactMessage(String message)
 	{
-		super(frame);
 		this.message = message;
 	}
 	
 	@Override
-	public void run(PlayerCharacter attacker, List<PlayerCharacter> targets, List<DamageMarker> markers)
+	public State run(BattleEventBuilder builder)
 	{
-		//Global.battle.addMessage(message);
-			
-		
+		return State.Finished;	
 	}
-	
-	@Override
-	public boolean isDone() {return true;/*Global.battle.messageQueue.size() == 0;*/ }
-
 }
