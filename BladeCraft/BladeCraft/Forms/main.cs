@@ -25,9 +25,7 @@ namespace BladeCraft
             //mapForm = new MapForm();
             //map = new BQMap("newmap", 30, 20, "New Map", "", false);
 
-            gameData = new BQGameData();
-
-            
+            gameData = new BQGameData();   
             
         }
 

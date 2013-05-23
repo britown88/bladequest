@@ -218,6 +218,11 @@ namespace BladeCraft.Classes
                 loadState.setAnimated(Convert.ToBoolean(values[0]));
                 return;
             }
+            if (item == "bubble")
+            {
+               loadState.setBubbleName(values[0]);
+               return;
+            }
             if (item == "face")
             {
                 loadState.setFace(Convert.ToInt32(values[0]));
@@ -418,9 +423,22 @@ namespace BladeCraft.Classes
             }
             else if (action == "merchant")
             {
-                loadState.addAction(
-                        new actMerchant(values[1],
-                            (float)Convert.ToDouble(values[2])));
+               loadState.addAction(
+                       new actMerchant(values[1],
+                           (float)Convert.ToDouble(values[2])));
+                
+            }
+            else if (action == "openbubble")
+            {
+               loadState.addAction(
+                        new actReactionBubble(values[1], values[2],
+                            (float)Convert.ToDouble(values[3]),
+                              Convert.ToBoolean(values[4]),
+                           Convert.ToBoolean(values[5])));
+            }
+            else if (action == "closebubble")
+            {
+               loadState.addAction(new actReactionBubble(values[1]));
             }
             else if (action == "nameselect")
             {

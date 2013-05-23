@@ -63,6 +63,7 @@
     <Compile Include="Classes\Objects\Actions\actModifyParty.cs" />
     <Compile Include="Classes\Objects\Actions\actPanControl.cs" />
     <Compile Include="Classes\Objects\Actions\actPath.cs" />
+    <Compile Include="Classes\Objects\Actions\actReactionBubble.cs" />
     <Compile Include="Classes\Objects\Actions\actRestoreParty.cs" />
     <Compile Include="Classes\Objects\Actions\actShake.cs" />
     <Compile Include="Classes\Objects\Actions\actStartBattle.cs" />
@@ -141,6 +142,12 @@
     </Compile>
     <Compile Include="Forms\ActionForms\formPlayMusic.Designer.cs">
       <DependentUpon>formPlayMusic.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ActionForms\formReactionBubble.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ActionForms\formReactionBubble.Designer.cs">
+      <DependentUpon>formReactionBubble.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ActionForms\formShake.cs">
       <SubType>Form</SubType>
@@ -264,6 +271,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ActionForms\formPlayMusic.resx">
       <DependentUpon>formPlayMusic.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ActionForms\formReactionBubble.resx">
+      <DependentUpon>formReactionBubble.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ActionForms\formShake.resx">
       <DependentUpon>formShake.cs</DependentUpon>

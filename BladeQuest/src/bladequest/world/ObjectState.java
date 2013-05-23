@@ -406,7 +406,7 @@ public class ObjectState {
 	
 	public void face(String face)
 	{
-		if(faceOnMove && tileSprite == null)
+		if(tileSprite == null)
 			spr.changeFace(face);
 	}
 	

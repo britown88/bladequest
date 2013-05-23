@@ -16,7 +16,7 @@ namespace BladeCraft.Classes.Objects
         private List<string> itemReqs, switchReqs;
         private List<Action> actions;
 
-        private string spriteName;
+        private string spriteName, bubbleName;
         private bool faceOnMove, faceOnActivate;
 
         private int index, imageIndex, moveRange, moveFrequency, face;
@@ -27,6 +27,8 @@ namespace BladeCraft.Classes.Objects
             collSides = new bool[4];
             animated = true;
             face = 3;
+
+            bubbleName = "";
 
             switchReqs = new List<string>();
             itemReqs = new List<string>();
@@ -44,6 +46,8 @@ namespace BladeCraft.Classes.Objects
             waitOnActivate = other.waitOnActivate;
             animated = other.animated;
             foreground = other.foreground;
+
+            bubbleName = other.bubbleName;
 
             for(int i = 0; i < 4; ++i)
                 collSides[i] = other.collSides[i];
@@ -81,6 +85,9 @@ namespace BladeCraft.Classes.Objects
         public void insertAction(Action action, int index) { actions.Insert(index, action); }
         public List<Action> getActions() { return actions; }
         public void deleteAction(Action action) { actions.Remove(action); }
+
+        public string getBubbleName() { return bubbleName; }
+        public void setBubbleName(string bubble) { bubbleName = bubble; }
 
         public bool getAutoStart() { return autoStart; }
         public bool getWaitOnActivate() { return waitOnActivate; }
@@ -124,6 +131,9 @@ namespace BladeCraft.Classes.Objects
             writer.WriteLine("movement " + moveRange + " " + moveFrequency);
             writer.WriteLine("opts " + waitOnActivate.ToString() + " " +
                 faceOnMove.ToString() + " " + faceOnActivate.ToString());
+
+           if(bubbleName.Length > 0)
+              writer.WriteLine("bubble " + bubbleName);
             
 
             foreach (string str in switchReqs)
@@ -188,6 +198,10 @@ namespace BladeCraft.Classes.Objects
                     return new actTeleportParty((actTeleportParty)other);
                 case Action.type.Wait:
                     return new actWait((actWait)other);
+                case Action.type.ReactionBubble:
+                    return new actReactionBubble((actReactionBubble)other);
+                case Action.type.Merchant:
+                    return new actMerchant((actMerchant)other);
                 default:
                     return null;
             }

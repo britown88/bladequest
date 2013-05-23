@@ -20,7 +20,18 @@ namespace BladeCraft.Forms
         private static int sideTop = 1;
         private static int sideRight = 2;        
         private static int sideBottom = 3;
-        
+       
+       private enum corners
+       {
+          TopRight =   1 << 0,
+          Top =        1 << 1,
+          TopLeft =    1 << 2,
+          Left =       1 << 3,
+          BottomLeft = 1 << 4,
+          Bottom =     1 << 5,
+          BottomRight =1 << 6,
+          Right =      1 << 7
+       };
 
         private main parent;
         private BQMap map;
@@ -39,6 +50,10 @@ namespace BladeCraft.Forms
         private Point zoneStart, zoneEnd;
         private bool drawingzone;
         private EncounterZone selectedZone;
+
+        private  Point[] materialPoints;
+
+        private bool[] materialTiles;
 
         public MapForm(BQMap map)
         {
@@ -60,6 +75,72 @@ namespace BladeCraft.Forms
 
             E = new Bitmap("misc\\E.png");
             ERect = new Rectangle(0, 0, 16, 16);
+
+            buildMaterialLocations();
+            
+        }
+
+        private void buildMaterialLocations()
+        {
+           materialPoints = new Point[1<<8];
+
+
+           materialPoints[(char)corners.Bottom | (char)corners.Right | (char)corners.BottomRight] = new Point(0, 0);
+           materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.BottomRight | (char)corners.BottomLeft] = new Point(1, 0);
+           materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.BottomLeft] = new Point(2, 0);
+           materialPoints[(char)corners.Bottom | (char)corners.Right] = new Point(3, 0);
+           materialPoints[(char)corners.Left | (char)corners.Right] = new Point(4, 0);
+           materialPoints[(char)corners.Bottom | (char)corners.Left] = new Point(5, 0);
+           materialPoints[(char)corners.Right] = new Point(6, 0);
+           materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right] = new Point(7, 0);
+           materialPoints[(char)corners.Bottom] = new Point(8, 0);
+
+           materialPoints[(char)corners.Bottom | (char)corners.Right | (char)corners.Top | (char)corners.TopRight | (char)corners.BottomRight] = new Point(0, 1);
+           materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopLeft | (char)corners.TopRight | (char)corners.BottomRight | (char)corners.BottomLeft] = new Point(1, 1);
+           materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Top | (char)corners.TopLeft | (char)corners.BottomLeft] = new Point(2, 1);
+           materialPoints[(char)corners.Bottom | (char)corners.Top] = new Point(3, 1);
+           materialPoints[0] = new Point(4, 1);
+           materialPoints[(char)corners.Bottom | (char)corners.Top] = new Point(5, 1);
+           materialPoints[(char)corners.Bottom | (char)corners.Right | (char)corners.Top] = new Point(6, 1);
+           materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top] = new Point(7, 1);
+           materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Top] = new Point(8, 1);
+
+           materialPoints[(char)corners.Right | (char)corners.Top | (char)corners.TopRight] = new Point(0, 2);
+           materialPoints[(char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopLeft | (char)corners.TopRight] = new Point(1, 2);
+           materialPoints[(char)corners.Left | (char)corners.Top | (char)corners.TopLeft] = new Point(2, 2);
+           materialPoints[(char)corners.Right | (char)corners.Top] = new Point(3, 2);
+           materialPoints[(char)corners.Left | (char)corners.Right] = new Point(4, 2);
+           materialPoints[(char)corners.Left | (char)corners.Top] = new Point(5, 2);
+           materialPoints[(char)corners.Top] = new Point(6, 2);
+           materialPoints[(char)corners.Left | (char)corners.Right | (char)corners.Top] = new Point(7, 2);
+           materialPoints[(char)corners.Left] = new Point(8, 2);
+
+           materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopRight | (char)corners.BottomRight | (char)corners.BottomLeft] = new Point(0, 3);
+           materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.BottomRight | (char)corners.BottomLeft] = new Point(1, 3);
+           materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopLeft | (char)corners.BottomRight | (char)corners.BottomLeft] = new Point(2, 3);
+           materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopRight | (char)corners.BottomLeft] = new Point(3, 3);
+           materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopLeft | (char)corners.BottomRight] = new Point(4, 3);
+           materialPoints[(char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopRight] = new Point(5, 3);
+           materialPoints[(char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopLeft] = new Point(6, 3);
+           materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.BottomRight] = new Point(7, 3);
+           materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.BottomLeft] = new Point(8, 3);
+
+           materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopRight | (char)corners.BottomRight] = new Point(0, 4);
+           //materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top] = new Point(1, 4);
+           materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopLeft | (char)corners.BottomLeft] = new Point(2, 4);
+           materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.BottomRight] = new Point(3, 4);
+           materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.BottomLeft] = new Point(4, 4);
+           materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Top | (char)corners.BottomLeft] = new Point(5, 4);
+           materialPoints[(char)corners.Bottom | (char)corners.Right | (char)corners.Top | (char)corners.BottomRight] = new Point(6, 4);
+           materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Top | (char)corners.TopLeft] = new Point(7, 4);
+           materialPoints[(char)corners.Bottom | (char)corners.Right | (char)corners.Top | (char)corners.TopRight] = new Point(8, 4);
+
+           materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopLeft | (char)corners.TopRight | (char)corners.BottomRight] = new Point(0, 5);
+           materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopLeft | (char)corners.TopRight] = new Point(1, 5);
+           materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopLeft | (char)corners.TopRight | (char)corners.BottomLeft] = new Point(2, 5);
+           materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopRight] = new Point(3, 5);
+           materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopLeft] = new Point(4, 5);
+
         }
 
         private void MapForm_Load(object sender, EventArgs e)
@@ -80,18 +161,18 @@ namespace BladeCraft.Forms
                 mapPanel.Width = (int)(map.width() * tileSize * mapScale);
                 mapPanel.Height = (int)(map.height() * tileSize * mapScale);
                 mapPanel.Invalidate();
+
+                materialTiles = new bool[map.width() * map.height()];
             }
             
         }
-
-
+       
         private void tsbBelow_Click(object sender, EventArgs e)
         {
             tsbForeground.Checked = !tsbBackground.Checked;
             mapPanel.Invalidate();
         }
-
-
+       
         private void tsbAbove_Click(object sender, EventArgs e)
         {
             if (tsbForeground.Checked)
@@ -105,6 +186,7 @@ namespace BladeCraft.Forms
 
         private void tscbTilesetName_SelectedIndexChanged(object sender, EventArgs e)
         {
+           materialTiles = new bool[map.width() * map.height()];
             string filename = "assets\\drawable\\tilesets\\" + tscbTilesetName.SelectedItem.ToString().ToLower() + ".png";
             try
             {
@@ -137,17 +219,20 @@ namespace BladeCraft.Forms
             Pen selPen = new Pen(Color.White);
             selPen.Width = 4;
 
+            Point selectSize = tsbMaterial.Checked ? new Point(9, 6) : new Point(1, 1);
+
             if (tileset != null)
             {
                 g.DrawImage(tileset, 0, 0, tsPanel.Width, tsPanel.Height);
                 g.DrawRectangle(selPen, selectedPoint.X * tileSize * tsScale,
-                    selectedPoint.Y * tileSize * tsScale, tileSize * tsScale, tileSize * tsScale);
+                    selectedPoint.Y * tileSize * tsScale, tileSize * tsScale * selectSize.X, tileSize * tsScale * selectSize.Y);
             }
                 
         }
 
         private void tsPanel_MouseClick(object sender, MouseEventArgs e)
         {
+           materialTiles = new bool[map.width() * map.height()];
             erase = false;
             tilesetPanel.Focus();
             selectedPoint.X = (int)(e.X / (tileSize * tsScale));
@@ -322,9 +407,7 @@ namespace BladeCraft.Forms
         {
             mapPanel.Invalidate();
         }
-
-        
-
+               
         private void addtile(int x, int y)
         {
             if (map != null)
@@ -343,6 +426,61 @@ namespace BladeCraft.Forms
                 lastPointAdded = new Point(x, y);
                 mapPanel.Invalidate();
             }
+        }
+
+        private void addMaterial(int x, int y)
+        {
+           int index = y * map.width() + x;
+
+           materialTiles[index] = true;
+
+           updateMaterialTile(x - 1, y - 1);
+           updateMaterialTile(x    , y - 1);
+           updateMaterialTile(x + 1, y - 1);
+           updateMaterialTile(x - 1, y    );
+           updateMaterialTile(x    , y    );
+           updateMaterialTile(x + 1, y    );
+           updateMaterialTile(x - 1, y + 1);
+           updateMaterialTile(x    , y + 1);
+           updateMaterialTile(x + 1, y + 1);
+
+           lastPointAdded = new Point(x, y);
+           mapPanel.Invalidate();           
+        }
+
+        private void updateMaterialTile(int x, int y)
+        {
+           int index = y * map.width() + x;
+
+           if (x < 0 || y < 0 || x >= map.width() || y >= map.height() || !materialTiles[index])
+              return;
+
+           bool top = y > 0 ? materialTiles[index - map.width()] : false;
+           bool left = x > 0 ? materialTiles[index - 1] : false;
+           bool right = x < map.width() - 1 ? materialTiles[index + 1]  : false;
+           bool bottom = y < map.height() - 1 ? materialTiles[index + map.width()] : false;
+
+           bool topLeft = top && left && materialTiles[index - map.width() - 1];
+           bool bottomLeft = bottom && left && materialTiles[index + map.width() - 1];
+           bool bottomRight = bottom && right && materialTiles[index + map.width() + 1];
+           bool topRight = top && right && materialTiles[index - map.width() + 1];
+
+           char flags = (char)((top ? (char)corners.Top : (char)0) | (bottom ? (char)corners.Bottom : (char)0) |
+                        (right ? (char)corners.Right : (char)0) | (left ? (char)corners.Left : (char)0) |
+                        (topRight ? (char)corners.TopRight : (char)0) | (bottomRight ? (char)corners.BottomRight : (char)0) |
+                        (topLeft ? (char)corners.TopLeft : (char)0) | (bottomLeft ? (char)corners.BottomLeft : (char)0));
+
+
+           Point p = materialPoints[flags];
+
+           p.X += selectedPoint.X;
+           p.Y += selectedPoint.Y;
+
+           if (tsbFrameTwo.Checked)
+              map.animateTile(x, y, p.X, p.Y, tsbForeground.Checked);
+           else
+              map.addTile(new Tile(x, y, p.X, p.Y, ""), tsbForeground.Checked);
+
         }
 
         private void setCollision(int x, int y)
@@ -374,9 +512,12 @@ namespace BladeCraft.Forms
             {
                 if (e.Button == System.Windows.Forms.MouseButtons.Left && btnDraw.Checked)
                 {
-                    if (tsbCollision.Checked)
-                        setCollision(gridPoint.X, gridPoint.Y);
-                    else
+                   if (tsbCollision.Checked)
+                      setCollision(gridPoint.X, gridPoint.Y);
+                   else
+                      if (tsbMaterial.Checked)
+                         addMaterial(gridPoint.X, gridPoint.Y);
+                      else
                         addtile(gridPoint.X, gridPoint.Y);
                     mouseDown = true;
                 }
@@ -408,7 +549,10 @@ namespace BladeCraft.Forms
                             if (tsbCollision.Checked)
                                 setCollision(gridPoint.X, gridPoint.Y);
                             else
-                                addtile(gridPoint.X, gridPoint.Y);
+                               if (tsbMaterial.Checked)
+                                  addMaterial(gridPoint.X, gridPoint.Y);
+                               else
+                                  addtile(gridPoint.X, gridPoint.Y);
                         }
                             
                     }
@@ -739,8 +883,18 @@ namespace BladeCraft.Forms
 
         }
 
-        
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+           map.write();
+           parent.readMaps();
+           MessageBox.Show("Map saved!");
+        }
 
+        private void tsbMaterial_Click(object sender, EventArgs e)
+        {
+           materialTiles = new bool[map.width() * map.height()];
+           tsPanel.Invalidate();
+        }
 
 
         
