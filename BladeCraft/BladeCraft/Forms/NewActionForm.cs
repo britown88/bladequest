@@ -164,5 +164,12 @@ namespace BladeCraft.Forms
             actionChosen = true;
             Close();
         }
+
+        private void button22_Click(object sender, EventArgs e)
+        {
+           selectedType = Action.type.ReactionBubble;
+           actionChosen = true;
+           Close();
+        }
     }
 }

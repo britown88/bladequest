@@ -82,6 +82,8 @@ namespace BladeCraft.Forms
             state.setMoveRange((int)numMoveRange.Value);
             state.setMoveFrequency((int)numMoveSpeed.Value);
 
+            state.setBubbleName((string)cmbBubble.SelectedItem);
+
             if (radDown.Checked)
                 state.setFace(3);
             else if (radUp.Checked)
@@ -113,6 +115,8 @@ namespace BladeCraft.Forms
             chkFaceOnActivate.Checked = state.getFaceOnActivate();
 
             bool[] collSides = state.getCollision();
+
+            cmbBubble.SelectedItem = state.getBubbleName();
 
             chkCollLeft.Checked = collSides[0];
             chkCollTop.Checked = collSides[1];
@@ -436,6 +440,11 @@ namespace BladeCraft.Forms
                         form.ShowDialog();
                         action = ((formMerchant)form).action;
                         break;
+                    case Action.type.ReactionBubble:
+                        form = new ActionForms.formReactionBubble();
+                        form.ShowDialog();
+                        action = ((formReactionBubble)form).action;
+                        break;
                     case Action.type.NameSelect:
                         form = new ActionForms.formNameSelect();
                         form.ShowDialog();
@@ -536,6 +545,10 @@ namespace BladeCraft.Forms
                 case Action.type.Merchant:
                     ActionForms.formMerchant merchForm = new ActionForms.formMerchant((actMerchant)action);
                     merchForm.ShowDialog();
+                    break;
+                case Action.type.ReactionBubble:
+                    ActionForms.formReactionBubble reactForm = new ActionForms.formReactionBubble((actReactionBubble)action);
+                    reactForm.ShowDialog();
                     break;
             }
         }

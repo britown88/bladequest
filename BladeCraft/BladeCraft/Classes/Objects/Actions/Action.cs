@@ -38,6 +38,7 @@ namespace BladeCraft.Classes.Objects.Actions
             TeleportParty,
             Wait,
             Merchant,
+           ReactionBubble,
             NameSelect,
             SaveMenu,
             YesFork,
