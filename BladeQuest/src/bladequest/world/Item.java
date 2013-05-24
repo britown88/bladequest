@@ -138,7 +138,6 @@ public class Item
 	public void addStatMod(int stat, int amt){ statMods[stat] = amt;}
 	public int getStatMod(int stat){return statMods[stat]; }
 	
-	public void setAnim(String anim){this.swingAnim = anim;}
 	public String getAnimName(){return swingAnim;}
 	
 	public void initSwingData(String swingModel, String swingAnim)

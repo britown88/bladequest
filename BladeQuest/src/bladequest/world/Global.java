@@ -1154,6 +1154,8 @@ public class Global
 		party.addCharacter("joy");
 		party.addCharacter("luc");	
 		party.addCharacter("roland");			
+		
+		party.addItem("potion", 27);
 		LoadMap("test");
 		
 		

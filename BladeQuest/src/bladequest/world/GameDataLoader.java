@@ -61,6 +61,9 @@ public class GameDataLoader
 		
 		BattleLibrary.publishLibrary(library);
 		SoundLibrary.publishLibrary(library);
+		ItemLibrary.publishLibrary(library);
+		HigherOrderLibrary.publishLibrary(library);
+		
 		return library.getLibrary();
 	}
 	
@@ -72,7 +75,8 @@ public class GameDataLoader
 		try {
 			p = new Parser(new FileTokenizer(activity.getAssets().open(file)), script);
 		} catch (IOException e) {
-			// ?
+			e.printStackTrace();
+			return null;
 		}
 		p.run(); //populates script!
 		return script;
@@ -87,23 +91,12 @@ public class GameDataLoader
 		
 		compileScript(activity, "data/music.dat", standardLibrary);
 		compileScript(activity, "data/abilities.dat", standardLibrary);
-		loadFile(activity, "data/items.dat");
+		compileScript(activity, "data/items.dat", standardLibrary);
+		
 		loadFile(activity, "data/characters.dat");
 		loadFile(activity, "data/enemies.dat");
 		loadFile(activity, "data/battles.dat");
 		loadFile(activity, "data/merchants.dat");
-		
-		Script script = compileScript(activity, "data/testScript.dat", standardLibrary);
-		
-		try {
-			ScriptVar helloWorld = script.getVariable("main").apply(new ScriptVar.EmptyList());
-			if (!helloWorld.getString().equals("hello world"))
-			{
-				//Crash, trolllololo
-				new ArrayList<String>().get(42);
-			}
-		} catch (BadTypeException e) {
-		}
 		
 		Log.d(TAG, "Loading maps.");Global.loadMaps("maps");
 		//loadFile(activity, "data/gamedata.dat");
@@ -240,10 +233,6 @@ public class GameDataLoader
 		else if(dl.item.equals("targettype"))
 		{
 			itm.setTargetType(getTargetType(dl.values.get(0)));
-		}
-		else if(dl.item.equals("anim"))
-		{
-			itm.setAnim(dl.values.get(0));
 		}
 		else if(dl.item.equals("sellable"))
 		{

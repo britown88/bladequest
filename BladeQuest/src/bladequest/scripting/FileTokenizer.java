@@ -30,9 +30,15 @@ public class FileTokenizer implements Tokenizer {
 		int num = 0;
 		for (char c : str.toCharArray())
 		{
-			if (c == '-' && num == 0) 
+			++num; 
+			if (c == '-' && num == 1) 
 			{
-				++num; continue;
+				continue;
+			}
+			if (c == 'f' && num == str.length())
+			{
+				foundDot = true;
+				continue;
 			}
 			if (c > '9' || c < '0')
 			{

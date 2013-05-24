@@ -1,163 +1,162 @@
-[items]
-item knife "Knife" weapon dagger "A small and simple dagger."
-power 7
-value 10
-usableby aramis
-statmods 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-swing dagger slice1
-swingbase 0 186 186 186
-swingbase 1 255 255 255
-swingbase 2 138 68 0
-swingslash 0 128 128 128
-swingslash 1 186 186 186
-swingslash 2 255 255 255
-enditem
-item qknife "Quick Knife" weapon dagger "A small and simple dagger."
-power 7
-value 10
-usableby aramis
-statmods 0 200 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-swing dagger slice1
-swingbase 0 186 186 186
-swingbase 1 255 255 255
-swingbase 2 138 68 0
-swingslash 0 128 128 128
-swingslash 1 186 186 186
-swingslash 2 255 255 255
-enditem
-#
-item silversword "Silver Sword" weapon sword "Some believe the silver inlay wards off the undead."
-power 20
-value 123
-usableby aramis luc joy roland
-swing sword slice1
-swingbase 0 186 186 186
-swingbase 1 255 255 255
-swingslash 0 128 128 128
-swingslash 1 186 186 186
-swingslash 2 255 255 255
-enditem
-#
-item silverstaff "Silver Staff" weapon staff "A magical staff."
-power 5
-value 500
-usableby joy roland
-swing staff slice1
-swingbase 0 186 186 186
-swingbase 1 255 255 255
-swingbase 2 0 0 186
-swingbase 3 0 0 255
-swingslash 0 128 128 128
-swingslash 1 186 186 186
-swingslash 2 255 255 255
-swingslash 3 0 0 128
-swingslash 4 0 0 186
-swingslash 5 0 0 255
-enditem
+usableByAll item
+ mapBound item setUsableBy {"aramis", "luc", "joy", "roland"}
+ 
+usableByMagicPeople item
+  mapBound item setUsableBy {"joy", "roland"}
 
-item fireknife "Fire Knife" weapon dagger "Knife endowed with the fire element."
-power 7
-value 10
-usableby aramis
-statmods 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-damagecomp fire 1.0f
-swing dagger slice1
-swingbase 0 186 0 0
-swingbase 1 255 0 0
-swingbase 2 138 68 0
-swingslash 0 128 0 0
-swingslash 1 186 0 0
-swingslash 2 255 0 0
-enditem
+\knife <- (addItem "knife" "Knife" "Weapon" "dagger" "A small and simple dagger." >
+setPower 7 >
+setValue 10 >
+setUsableBy "aramis" >
+swing "dagger" "slice1" >
+swingBase 0 186 186 186 >
+swingBase 1 255 255 255 >
+swingBase 2 138 68 0 >
+swingSlash 0 128 128 128 >
+swingSlash 1 186 186 186 >
+swingSlash 2 255 255 255)
 
-item windstaff "Wind Staff" weapon staff "Staff endowed with the wind element.
-power 5
-value 500
-usableby joy roland
-statmods 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-damagecomp wind 1.0f
-swing staff slice1
-swingbase 0 0 186 186
-swingbase 1 0 255 255
-swingbase 2 0 0 186
-swingbase 3 0 0 255
-swingslash 0 0 128 128
-swingslash 1 0 186 186
-swingslash 2 0 255 255
-swingslash 3 0 0 128
-swingslash 4 0 0 186
-swingslash 5 0 0 255
-enditem
-
-item earthsword "Earth Sword" weapon sword "Sword endowed with the earth element."
-power 10
-value 123
-usableby aramis luc joy roland
-statmods 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-damagecomp earth 1.0f
-swing sword slice1
-swingbase 0 186 186 136
-swingbase 1 255 255 205
-swingslash 0 128 128 78
-swingslash 1 186 186 136
-swingslash 2 255 255 205
-enditem
-
-item icesword "Ice Sword" weapon sword "Sword endowed with the ice element."
-power 10
-value 123
-usableby aramis luc joy roland
-statmods 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-damagecomp water 1.0f
-swing sword slice1
-swingbase 0 0 0 186
-swingbase 1 0 0 255
-swingslash 0 0 0 128
-swingslash 1 0 0 186
-swingslash 2 0 0 255
-enditem
+\quickknife <- (addItem "qknife" "Quick Knife" "Weapon" "dagger" "A small and simple dagger." >
+setPower 7 >
+setValue 10 >
+setUsableBy "aramis" >
+swing "dagger" "slice1" >
+swingBase 0 186 186 186 >
+swingBase 1 255 255 255 >
+swingBase 2 138 68 0 >
+swingSlash 0 128 128 128 >
+swingSlash 1 186 186 186 >
+swingSlash 2 255 255 255 >
+modStat "Agility" 200)
 
 
-#
-item felthat "Felt Hat" helmet lhelmet "Most basic of headwear."
-power 3
-value 45
-usableby aramis luc joy roland
-enditem
-#
-item cottonshirt "Cotton Shirt" torso ltorso "A simple shirt."
-power 4
-value 100
-usableby aramis luc joy roland
-enditem
-#
-item potion "Potion" usable orb "Restores 50 HP."
-value 50
-anim movetest
-targettype single
-action bactDamage -1 -50.0f fixed 0
-enditem
-#
-item megalixer "MegaLicksr" usable orb "Fully heals all allies."
-value 9999
-anim movetest
-targettype allallies
-action bactDamage -1 -9999.0f fixed 0
-enditem
-#
-item bomb "Bomb" usable orb "Devastating damage to all enemies."
-value 500
-anim movetest
-targettype allenemies
-action bactDamage -1 9999.0f fixed 0
-enditem
-#
-item antidote "Antidote" usable orb "Cures Poison."
-value 50
-anim movetest
-targettype single
-action bactRemoveStatus -1 poison 0
-enditem
-#
-item prisonkey "Prison Key" key orb "Key to the castle prison cells."
-enditem
+\silversword <- (addItem "silversword" "Silver Sword" "Weapon" "sword" "Some believe the silver inlay wards off the undead." >
+setPower 20 >
+setValue 123 >
+usableByAll >
+swing "sword" "slice1" >
+swingBase 0 186 186 186 >
+swingBase 1 255 255 255 >
+swingSlash 0 128 128 128 >
+swingSlash 1 186 186 186 >
+swingSlash 2 255 255 255)     
+
+\silverstaff <- (addItem "silverstaff" "Silver Staff" "Weapon" "staff" "A magical staff." >
+setPower 5 >
+setValue 500 >
+usableByMagicPeople >
+swing "staff" "slice1" >
+swingBase 0 186 186 186 >
+swingBase 1 255 255 255 >
+swingBase 2 0 0 186 >
+swingBase 3 0 0 255 >
+swingSlash 0 128 128 128 >
+swingSlash 1 186 186 186 >
+swingSlash 2 255 255 255 >
+swingSlash 3 0 0 128 >
+swingSlash 4 0 0 186 >
+swingSlash 5 0 0 255)
+
+
+\fireknife <- (addItem "fireknife" "Fire Knife" "Weapon" "dagger" "Knife endowed with the fire element." >
+setPower 7 >
+setValue 10 >
+setUsableBy "aramis" >
+addDamageComp "Fire" 1.0 >
+swing "dagger" "slice1" >
+swingBase 0 186 0 0 >
+swingBase 1 255 0 0 >
+swingBase 2 138 68 0 >
+swingSlash 0 128 0 0 >
+swingSlash 1 186 0 0 >
+swingSlash 2 255 0 0)
+
+\windstaff <- (addItem "windstaff" "Wind Staff" "Weapon" "staff" "Staff endowed with the wind element." >
+setPower 5 >
+setValue 500 >
+usableByMagicPeople >
+addDamageComp "Wind" 1.0 >
+swing "staff" "slice1" >
+swingBase 0 0 186 186 >
+swingBase 1 0 255 255 >
+swingBase 2 0 0 186 >
+swingBase 3 0 0 255 >
+swingSlash 0 0 128 128 >
+swingSlash 1 0 186 186 >
+swingSlash 2 0 255 255 >
+swingSlash 3 0 0 128 >
+swingSlash 4 0 0 186 >
+swingSlash 5 0 0 255)
+
+\earthsword <- (addItem "earthsword" "Earth sword" "Weapon" "sword" "sword endowed with the earth element." >
+setPower 10 >
+setValue 123 >
+usableByAll >
+addDamageComp "Earth" 1.0 >
+swing "sword" "slice1" >
+swingBase 0 186 186 136 >
+swingBase 1 255 255 205 >
+swingSlash 0 128 128 78 >
+swingSlash 1 186 186 136 >
+swingSlash 2 255 255 205)
+
+\icesword <- (addItem "icesword" "Ice sword" "Weapon" "sword" "sword endowed with the ice element." >
+setPower 10 >
+setValue 123 >
+usableByAll >
+addDamageComp "Water" 1.0 >
+swing "sword" "slice1" >
+swingBase 0 0 0 186 >
+swingBase 1 0 0 255 >
+swingSlash 0 0 0 128 >
+swingSlash 1 0 0 186 >
+swingSlash 2 0 0 255)
+
+\felthat <- (addItem "felthat" "Felt Hat" "Helmet" "lhelmet" "Most basic of headwear." >
+setPower 3 >
+setValue 45 >
+usableByAll)
+
+
+\cottonshirt <- (addItem "cottonshirt" "Cotton Shirt" "Torso" "ltorso" "A simple shirt." >
+setPower 4 >
+setValue 100 >
+usableByAll)
+
+addDefaultWait item
+  add item (waitAction 450)
+ 
+ addDefaultAnimation item
+  addDep item (animAction "movetest")
+
+\potion <- (addItem "potion" "Potion" "Usable" "orb" "Restores 50 HP." >
+setValue 50 >
+setTargetType "Single" >
+addDefaultWait >
+addDefaultAnimation >
+addDep (damageAction -50.0 "Fixed"))
+
+\megalixer <- (addItem "megalixer" "MegaLicksr" "Usable" "orb" "Fully heals all allies." >
+setValue 9999 >
+setTargetType "AllAllies" >
+addDefaultWait >
+addDefaultAnimation >
+addDep (damageAction -9999.0 "Fixed"))
+
+\bomb <- (addItem "bomb" "Bomb" "Usable" "orb" "Devastating damage to all enemies." >
+setValue 500 >
+setTargetType "AllEnemies" >
+addDefaultWait >
+addDefaultAnimation >
+addDep (damageAction 9999.0 "Fixed"))
+
+ 
+\antidote <- (addItem "antidote" "Antidote" "Usable" "orb" "Cures Poison." >
+setValue 50 >
+setTargetType "Single" >
+addDefaultWait >
+addDefaultAnimation >
+addDep (removeStatusAction "poison"))
+
+\prisonkey <- (addItem "prisonkey" "Prison Key" "Key" "orb" "Key to the castle prison cells.")
+

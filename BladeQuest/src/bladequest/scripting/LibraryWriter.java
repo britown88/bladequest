@@ -29,6 +29,17 @@ public class LibraryWriter {
 		addInvokeFunction(name, func, specializations);
 	}
 	
+	public void addAllIn(Class<?> c) throws BadTypeException, BadSpecialization
+	{
+		for (Method m : c.getDeclaredMethods())
+		{
+			if (!m.getReturnType().equals(void.class) && !m.isSynthetic() && m.getParameterTypes().length > 0)
+			{
+				add(m.getName(), m);
+			}
+		}
+	}
+	
 	private void addInvokeFunction(String name, InvokeFunction function, List<FunctionSpecializer> specializations) throws BadTypeException, BadSpecialization
 	{
 		ScriptVar parentFunc = library.get(name);

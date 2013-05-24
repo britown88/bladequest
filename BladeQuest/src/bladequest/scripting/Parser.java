@@ -16,10 +16,12 @@ public class Parser {
 	private abstract class ParserState
 	{
 		protected List<ParserState> stateStack;
+		String stateName; 
 		
-		public ParserState(List<ParserState> stateStack)
+		public ParserState(List<ParserState> stateStack, String stateName)
 		{
 			this.stateStack = stateStack;
+			this.stateName = stateName;
 		}
 		protected void popState()
 		{
@@ -33,24 +35,28 @@ public class Parser {
 		{
 			stateStack.get(stateStack.size()-2).addChildStatement(statement);
 		}
-		public void beginList() throws ParserException {throw new ParserException("Not implemented!");}
-		public void endList() throws ParserException {throw new ParserException("Not implemented!");}
-		public void beginParen() throws ParserException {throw new ParserException("Not implemented!");}
-		public void endParen() throws ParserException {throw new ParserException("Not implemented!");}
-		public void endLine() throws ParserException, BadTypeException, BadSpecialization {throw new ParserException("Not implemented!");}
-		public void localDef() throws ParserException {throw new ParserException("Not implemented!");}
-		public void listSeparator() throws ParserException {throw new ParserException("Not implemented!");}
-		public void readName(String name) throws ParserException {throw new ParserException("Not implemented!");}
-		public void readNumber(int number) throws ParserException {throw new ParserException("Not implemented!");}
-		public void readString(String string) throws ParserException {throw new ParserException("Not implemented!");}
-		public void readFloat(float number) throws ParserException {throw new ParserException("Not implemented!");}
-		public void readBool(boolean bool) throws ParserException {throw new ParserException("Not implemented!");}
-		public void lambdaFunction() throws ParserException {throw new ParserException("Not implemented!");}
-		public void endLambdaFunction() throws ParserException {throw new ParserException("Not implemented!");}
-		public void patternMatch() throws ParserException {throw new ParserException("Not implemented!");}
-		public void caseMarker() throws ParserException {throw new ParserException("Not implemented!");}
-		public void infixBinder() throws ParserException {throw new ParserException("Not implemented!");}
-		public void addChildStatement(Statement statement) throws ParserException, BadTypeException {throw new ParserException("Not implemented!");}
+		private void throwBadState(String tokenType) throws ParserException 
+		{
+			throw new ParserException("Parser state: " + stateName + " hit unhandable token: " + tokenType); 
+		}
+		public void beginList() throws ParserException {throwBadState("beginList");}
+		public void endList() throws ParserException {throwBadState("endList");}
+		public void beginParen() throws ParserException {throwBadState("beginParenthesis");}
+		public void endParen() throws ParserException  {throwBadState("endParenthesis");}
+		public void endLine() throws ParserException, BadTypeException, BadSpecialization  {throwBadState("endLine");}
+		public void localDef() throws ParserException  {throwBadState("local definition");}
+		public void listSeparator() throws ParserException  {throwBadState("list separator");}
+		public void readName(String name) throws ParserException  {throwBadState("readName");}
+		public void readNumber(int number) throws ParserException  {throwBadState("readNumber");}
+		public void readString(String string) throws ParserException  {throwBadState("readString");}
+		public void readFloat(float number) throws ParserException  {throwBadState("readFloat");}
+		public void readBool(boolean bool) throws ParserException  {throwBadState("readBool");}
+		public void lambdaFunction() throws ParserException  {throwBadState("lambdaFunction");}
+		public void endLambdaFunction() throws ParserException  {throwBadState("endLambdaFunction");}
+		public void patternMatch() throws ParserException  {throwBadState("patternMatch");}
+		public void caseMarker() throws ParserException  {throwBadState("patternMatchCase");}
+		public void infixBinder() throws ParserException  {throwBadState("bindInfix");}
+		public void addChildStatement(Statement statement) throws ParserException, BadTypeException  {throwBadState("addChildStatement");}
 	}
 	
 	
@@ -59,7 +65,7 @@ public class Parser {
 	
 	ParserState getFunctionLevelParserState()
 	{
-		return new ParserState(stateStack)
+		return new ParserState(stateStack, "Top Level Parser")
 		{
 			@Override
 			public void readName(String name)
@@ -95,7 +101,7 @@ public class Parser {
 	
 	ParserState getFunctionSpecializationState(String functionName)
 	{
-		return new ParserState(stateStack)
+		return new ParserState(stateStack, "Function Specializer")
 		{
 			String fnName;
 			List<FunctionSpecializer> specializers;
@@ -262,7 +268,7 @@ public class Parser {
 			return getStatementFromGlobal(global);
 		}
 		//don't know what this is, guess it's an error.
-		throw new ParserException("Undefined variable!");
+		throw new ParserException("Undefined variable " + name + " encountered!");
 	}
 	
 	private Statement getIntegerStatement(int arg)
@@ -517,7 +523,7 @@ public class Parser {
 			locals.add(argName); //arguments are inside the closure!!
 		}
 		//lambda args is the argument names now.
-		return new StatementParser(stateStack, lambdaArgs, locals)
+		return new StatementParser(stateStack, lambdaArgs, locals, "Lambda function body")
 		{
 			@Override
 			public void endParen() throws ParserException
@@ -529,7 +535,7 @@ public class Parser {
 	}
 	ParserState getLambdaFunctionState(List<String> argNames, List<String> locals)
 	{
-		return new ParserState(stateStack)
+		return new ParserState(stateStack, "Lambda Function Builder")
 		{
 			List<String> argNames;
 			List<String> locals;
@@ -563,16 +569,22 @@ public class Parser {
 	}
 	ParserState getListParserState(List<String> argNames, List<String> locals)
 	{
-		return new StatementParser(stateStack, argNames, locals)
+		return new StatementParser(stateStack, argNames, locals, "List Parser")
 		{
 			List<Statement> listStatements;
 			{
 				listStatements = new ArrayList<Statement>(); 
 			}
 			@Override
+			public void endLine()
+			{
+				//ignored in lists.
+			}
+			@Override
 			public void listSeparator() 
 			{
-				listStatements.add(compileSubstatements());				
+				listStatements.add(compileSubstatements());		
+				this.substatements = new ArrayList<Statement>();
 			}
 			@Override
 			public void endList() throws ParserException 
@@ -619,7 +631,7 @@ public class Parser {
 	
 	ParserState getPatternOutputState(List<String> argNames, List<String> locals, Statement matchingStatement, List<Statement> conditionalStatements, List<Statement> outputStatements)
 	{
-		return new StatementParser(stateStack, argNames, locals)
+		return new StatementParser(stateStack, argNames, locals, "Pattern Matcher")
 		{
 			Statement matchingStatement;
 			List<Statement> conditionalStatements;
@@ -659,7 +671,7 @@ public class Parser {
 	
 	ParserState getPatternConditionalState(List<String> argNames, List<String> locals, Statement matchingStatement, List<Statement> conditionalStatements, List<Statement> outputStatements)
 	{
-		return new StatementParser(stateStack, argNames, locals)
+		return new StatementParser(stateStack, argNames, locals, "Pattern Conditional Parser")
 		{
 			Statement matchingStatement;
 			List<Statement> conditionalStatements;
@@ -684,7 +696,7 @@ public class Parser {
 	}
 	ParserState getPatternMatchInitState(List<String> argNames, List<String> locals)
 	{
-		return new StatementParser(stateStack, argNames, locals)
+		return new StatementParser(stateStack, argNames, locals, "Pattern Match Comparator Builder")
 		{
 			@Override
 			public void patternMatch() throws ParserException 
@@ -705,7 +717,7 @@ public class Parser {
 	}
 	ParserState getParenthesisParserState(List<String> argNames, List<String> locals)
 	{
-		return new StatementParser(stateStack, argNames, locals)
+		return new StatementParser(stateStack, argNames, locals, "Statement in Parenthesis Parser")
 		{
 			@Override
 			public void endParen() throws ParserException
@@ -795,7 +807,7 @@ public class Parser {
 	}
 	ParserState getLocalDefClass(List<String> locals, StatementParser parser)
 	{
-		return new ParserState(stateStack)
+		return new ParserState(stateStack, "Local Definition Builder")
 		{
 			List<String> locals;
 			StatementParser parser;
@@ -835,9 +847,9 @@ public class Parser {
 		List<Statement> substatements;
 		Statement localCreateStatement;
 		Statement binderStatement;
-		public StatementParser(List<ParserState> stateStack, List<String> argNames, List<String> locals)
+		public StatementParser(List<ParserState> stateStack, List<String> argNames, List<String> locals, String stateName)
 		{
-			super(stateStack);
+			super(stateStack, stateName);
 			this.argNames = argNames;
 			this.locals = locals;
 			this.substatements = new ArrayList<Statement>();
@@ -928,7 +940,7 @@ public class Parser {
 	
 	ParserState getStatementState(List<String> argNames, List<String> locals)
 	{
-		return new StatementParser(stateStack, argNames, locals)
+		return new StatementParser(stateStack, argNames, locals, "Top-level statement Parser")
 		{
 			@Override
 			public void endLine() throws ParserException 
@@ -978,7 +990,7 @@ public class Parser {
 	
 	ParserState getFunctionDefinitionState(String functionName, List<FunctionSpecializer> specializers, List<String> argNames)
 	{
-		return new ParserState(stateStack)
+		return new ParserState(stateStack, "Function Starter")
 		{
 			String fnName;
 			List<FunctionSpecializer> specializers;

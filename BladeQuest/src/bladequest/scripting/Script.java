@@ -77,6 +77,10 @@ public class Script {
 		{
 			return Parser.getStringSpecializer();
 		}
+		else if (classType.equals(ScriptVar.class))
+		{
+			return Parser.getGenericSpecializer();
+		}		
 		
 		//holy shitballs assfuck, I guess this works!
 		return new OpaqueSpecializer(classType);
@@ -105,9 +109,11 @@ public class Script {
 
 				Object[] objects = new Object[values.size()];
 				int argNum = 0;
+				Class<?> paramTypes[] = method.getParameterTypes();
 				for (ScriptVar var : values)
 				{
-					objects[argNum++] = var.getAsObject();
+					objects[argNum] = paramTypes[argNum].equals(ScriptVar.class) ? var : var.getAsObject();
+					++argNum;
 				}
 				
 				try {

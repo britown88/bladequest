@@ -8,11 +8,10 @@ import bladequest.battleactions.bactAttackRandomTargets;
 import bladequest.battleactions.bactBreakStance;
 import bladequest.battleactions.bactDamage;
 import bladequest.battleactions.bactInflictStatus;
+import bladequest.battleactions.bactRemoveStatus;
 import bladequest.battleactions.bactRunAnimation;
 import bladequest.battleactions.bactWait;
 import bladequest.scripting.LibraryWriter;
-import bladequest.scripting.Script.BadSpecialization;
-import bladequest.scripting.ScriptVar.BadTypeException;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.statuseffects.sePoison;
 import bladequest.world.Ability;
@@ -36,19 +35,7 @@ public class BattleLibrary {
 	{
 		return p.isInBattle();
 	}	
-	public static void publishLibrary(LibraryWriter library) 
-	{
-		try {
-			library.add("getEnemies", BattleLibrary.class.getMethod("getEnemies", Battle.class));
-			library.add("getPlayer", BattleLibrary.class.getMethod("getParty", Battle.class));
-			library.add("getIsInBattle", BattleLibrary.class.getMethod("getIsInBattle", PlayerCharacter.class));
-		} catch (SecurityException e) {
-		} catch (NoSuchMethodException e) {
-		} catch (BadTypeException e) {
-		} catch (BadSpecialization e) {
-		}
-		publishActions(library);
-	}
+
 	
 	public static Ability addAbility(String name, String displayName, String targetType, int mpcost)
 	{
@@ -58,7 +45,7 @@ public class BattleLibrary {
 		return newAbility;
 	}
 	
-	public static Ability setDescription(Ability ability, String description)
+	public static Ability setDesc(Ability ability, String description)
 	{
 		ability.setDescription(description);
 		return ability;
@@ -82,7 +69,7 @@ public class BattleLibrary {
 	}
 	
 	
-	public static Ability addAction(Ability ability, BattleAction action)
+	public static Ability add(Ability ability, BattleAction action)
 	{
 		ability.addAction(action);
 		return ability;
@@ -92,6 +79,10 @@ public class BattleLibrary {
 	public static BattleAction inflictStatusAction(StatusEffect effect)
 	{
 		return new bactInflictStatus(effect);
+	}	
+	public static BattleAction removeStatusAction(String statusName)
+	{
+		return new bactRemoveStatus(statusName);
 	}	
 
 	
@@ -130,7 +121,7 @@ public class BattleLibrary {
 		return child.addDependency(parent);
 	}
 	
-	public static Ability addDepAction(Ability ability, BattleAction action)
+	public static Ability addDep(Ability ability, BattleAction action)
 	{
 		BattleAction prev = ability.lastAction();
 		ability.addAction(action);
@@ -138,37 +129,12 @@ public class BattleLibrary {
 		return ability; 
 	}
 	
-	public static void publishActions(LibraryWriter library)
+	
+	public static void publishLibrary(LibraryWriter library) 
 	{
 		try {
-			//basic create
-			library.add("addAbility", BattleLibrary.class.getMethod("addAbility", String.class, String.class, String.class, int.class));
-			library.add("setDesc", BattleLibrary.class.getMethod("setDescription", Ability.class, String.class));
-			library.add("setDisabled", BattleLibrary.class.getMethod("setDisabled", Ability.class));
-			library.add("useOutsideBattle", BattleLibrary.class.getMethod("useOutsideBattle", Ability.class));
-			
-			//action add
-			library.add("add", BattleLibrary.class.getMethod("addAction", Ability.class, BattleAction.class));
-			library.add("addDep", BattleLibrary.class.getMethod("addDepAction", Ability.class, BattleAction.class));
-			
-			//statuses
-			library.add("poisonStatus", BattleLibrary.class.getMethod("poisonStatus", float.class));
-			
-			//actions
-			library.add("damageAction", BattleLibrary.class.getMethod("damageAction", float.class, String.class));
-			library.add("attackCloseAction", BattleLibrary.class.getMethod("attackCloseAction", float.class, String.class));
-			library.add("attackRandomlyAction", BattleLibrary.class.getMethod("attackRandomlyAction", float.class, String.class, int.class, float.class));
-			library.add("waitAction", BattleLibrary.class.getMethod("waitAction", int.class));
-			library.add("animAction", BattleLibrary.class.getMethod("animAction", String.class));
-			library.add("inflictStatusAction",  BattleLibrary.class.getMethod("inflictStatusAction", StatusEffect.class));
-			library.add("breakStanceAction",  BattleLibrary.class.getMethod("breakStanceAction", int.class));
-			
-			//dependency
-			library.add("addDependency", BattleLibrary.class.getMethod("addDependency", BattleAction.class, BattleAction.class));
-		} catch (SecurityException e) {
-		} catch (NoSuchMethodException e) {
-		} catch (BadTypeException e) {
-		} catch (BadSpecialization e) {
-		}		
+			library.addAllIn(BattleLibrary.class);
+		} catch (Exception e) {
+		}
 	}
 }

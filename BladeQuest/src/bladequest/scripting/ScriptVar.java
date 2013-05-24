@@ -99,6 +99,11 @@ public abstract class ScriptVar {
 		{
 			return toScriptVar(((String)obj));			
 		}		
+		else if (ScriptVar.class.isAssignableFrom(obj.getClass()) )
+		{
+			//a type of scriptVar!  just return it.
+			return (ScriptVar)obj;
+		}
 		else if (obj instanceof List<?>)
 		{
 			return genericScriptToVar((List<?>)obj);
