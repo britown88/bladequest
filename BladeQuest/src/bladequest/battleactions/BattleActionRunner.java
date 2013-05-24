@@ -54,23 +54,28 @@ public class BattleActionRunner extends BattleAction {
 	
 	@Override
 	public State run(BattleEventBuilder builder)
-	{
-		if (remainingActions.isEmpty()) return State.Finished;
-		
+	{		
+		List<BattleAction> rootActions = new ArrayList<BattleAction>();
+
 		for (BattleAction action : remainingActions)
 		{
 			if (action.isRoot())
 			{
-				State outState = action.run(builder);
-				if (outState == State.Finished)
-				{
-					remainingActions.remove(action);
-					if (remainingActions.isEmpty()) return State.Finished;
-				}
-				return State.Continue;
+				rootActions.add(action);
 			}
 		}
-		//nothing is root?  deadlock?
+		
+		for (BattleAction action : rootActions)
+		{
+			State outState = action.run(builder);
+			if (outState == State.Finished)
+			{
+				remainingActions.remove(action);
+				action.removeReferences();
+			}
+		}
+		
+		if (remainingActions.isEmpty()) return State.Finished;
 		return State.Continue;
 	}
 }

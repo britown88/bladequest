@@ -27,6 +27,7 @@ public abstract class DelegatingAction extends BattleAction {
 		{
 			runner = new BattleActionRunner();
 			buildEvents(changeRunner(builder, runner));
+			runner.initialize();
 		}
 		return runner.run(getAdaptedBuilder(builder));
 	}

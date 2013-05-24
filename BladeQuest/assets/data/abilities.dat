@@ -32,6 +32,7 @@ addDep (damageAction 0.9 "Physical"))
 
 \bite <- (addAbility "bite" "Bite" "Single" 5 >
 add (animAction "bite") >
+add (waitAction 2250) >
 addDep (damageAction 1.5 "Physical") >
 addDep (inflictStatusAction (poisonStatus 1.5)))
 

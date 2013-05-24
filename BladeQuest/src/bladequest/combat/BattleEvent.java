@@ -138,6 +138,7 @@ public class BattleEvent
 		default:
 			break;
 		}
+		actionRunner.initialize();
 	}
 	private int getCurrentFrame()
 	{
