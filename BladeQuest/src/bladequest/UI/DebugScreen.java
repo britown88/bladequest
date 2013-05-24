@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import bladequest.UI.ListBox.LBStates;
+import bladequest.UI.MenuPanel.Anchors;
 import bladequest.world.Global;
 import bladequest.world.Item;
 import bladequest.world.States;
@@ -23,7 +24,9 @@ public class DebugScreen
 	
 	private boolean closing, closed;
 	
-	private ListBox rootMenu, switchList, itemList;
+	private ListBox rootMenu, switchList, itemList, goButton;
+	private NumberPicker X, Y;
+	private String map = "";
 	
 	public DebugScreen()
 	{		
@@ -54,6 +57,13 @@ public class DebugScreen
 		
 		switchList = new ListBox(menuWidth, 0, menuWidth*2, Global.vpHeight, 10, 1, menuText);
 		itemList = new ListBox(menuWidth, 0, menuWidth*2, Global.vpHeight, 10, 1, menuText);
+		
+		X = new NumberPicker(Global.vpWidth, 0, menuWidth/2, barHeight);
+		Y = new NumberPicker(Global.vpWidth, barHeight, menuWidth/2, barHeight);
+		goButton = new ListBox(Global.vpWidth, barHeight*2, menuWidth/2, barHeight, 1, 1, menuText);
+		goButton.addItem("Go!", null, false);
+		
+		X.anchor = Y.anchor = goButton.anchor = Anchors.TopRight;
 	}
 	
 	private void updateSwitchList()
@@ -87,7 +97,20 @@ public class DebugScreen
 		
 		itemList.update();
 	}
+	
+	private void updateMapList()
+	{
+		itemList.clear();	
+		
+		for(String item : Global.maps.keySet())
+			itemList.addItem(item, item, false);
 
+		itemList.update();
+		
+		X.setValue(Global.party.getGridPos().x);
+		Y.setValue(Global.party.getGridPos().y);
+		
+	}
 	
 	public boolean closed() { return closed; }
 	
@@ -142,7 +165,12 @@ public class DebugScreen
 		case Items:
 			updateItemList();
 			break;
+		case Location:
+			map = "";
+			updateMapList();
+			break;
 		default:
+			
 			break;
 
 		}
@@ -166,6 +194,12 @@ public class DebugScreen
 		case Items:
 			itemList.update();
 			break;
+		case Location:
+			itemList.update();
+			goButton.update();
+			X.update();
+			Y.update();
+			break;
 		default:
 			break;
 
@@ -185,6 +219,12 @@ public class DebugScreen
 			break;
 		case Items:
 			itemList.render();
+			break;
+		case Location:
+			itemList.render();
+			goButton.render();
+			X.render();
+			Y.render();
 			break;
 		default:
 			break;
@@ -213,6 +253,12 @@ public class DebugScreen
 			case Items:
 				itemList.touchActionMove(x, y);
 				break;
+			case Location:
+				itemList.touchActionMove(x, y);
+				goButton.touchActionMove(x, y);
+				X.touchActionMove(x, y);
+				Y.touchActionMove(x, y);
+				break;
 			default:
 				break;
 
@@ -221,6 +267,8 @@ public class DebugScreen
 		
 		
 	}
+	
+	
 	public void touchActionUp(int x, int y)
 	{
 		if(!closing)
@@ -276,6 +324,22 @@ public class DebugScreen
 					
 				}
 				break;
+				
+			case Location:
+				if(itemList.touchActionUp(x, y) == LBStates.Selected)
+					map = itemList.getSelectedEntry().getTextAt(0).text;
+				
+				X.touchActionUp(x, y);
+				Y.touchActionUp(x, y);				
+				
+				if(goButton.touchActionUp(x, y) == LBStates.Selected)
+				{
+					if(map.length() > 0 && !Global.map.Name().equals(map))
+						Global.LoadMap(map);
+
+					Global.party.teleport(X.getValue(), Y.getValue());
+				}
+				break;
 			default:
 				break;
 
@@ -298,6 +362,12 @@ public class DebugScreen
 				break;
 			case Items:
 				itemList.touchActionDown(x, y);
+				break;
+			case Location:
+				itemList.touchActionDown(x, y);
+				goButton.touchActionDown(x, y);
+				X.touchActionDown(x, y);
+				Y.touchActionDown(x, y);
 				break;
 			default:
 				break;

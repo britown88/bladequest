@@ -1138,13 +1138,12 @@ public class Global
 		loading = false;
 
 		//demo start info, do not fuck with!
-		/*
-		screenFader.setFadeColor(255, 0, 0, 0);
-		screenFader.setFaded();
-		party.teleport(16, 5);		
-		party.insertCharacter("aramis", 1);	
-		party.getCharacter("aramis").setDisplayName("?????");	
-		LoadMap("prisonb2");*/
+//		screenFader.setFadeColor(255, 0, 0, 0);
+//		screenFader.setFaded();
+//		party.teleport(16, 5);		
+//		party.insertCharacter("aramis", 1);	
+//		party.getCharacter("aramis").setDisplayName("?????");	
+//		LoadMap("prisonb2");
 		
 		//test params
 		party.teleport(1, 3);		
