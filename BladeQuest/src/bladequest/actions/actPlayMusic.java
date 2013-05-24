@@ -21,7 +21,7 @@ public class actPlayMusic extends Action
 	@Override
 	public void run()
 	{
-		Global.musicBox.play(song, playIntro, repeatCount);
+		Global.musicBox.play(song, playIntro, repeatCount, 0);
 	}
 	
 	@Override

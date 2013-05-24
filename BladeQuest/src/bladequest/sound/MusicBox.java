@@ -11,6 +11,9 @@ public class MusicBox
 	private String playingSong, lastSong;
 	private boolean paused, done, nonInfinite;
 	private MediaPlayer mPlayer;
+	private float fadeTime;
+	private long startTime;
+	private boolean fadingIn, fadingOut;
 	//private JetPlayer.OnJetEventListener listener;
 	
 	public MusicBox()
@@ -38,10 +41,38 @@ public class MusicBox
 	public boolean isDone() { return done; }
 	public String getPlayingSong() { return playingSong; }
 	
-	public void play(String songName, boolean playIntro, int repeatCount)
+	public void update()
+	{
+		if(fadingIn || fadingOut)
+		{
+			long time = System.currentTimeMillis() - startTime;
+			float seconds = time / 1000.0f;					
+			
+			if(seconds < fadeTime)
+			{
+				float percent = seconds/fadeTime;
+				if(fadingOut)
+					percent = 1.0f - percent;
+				
+				mPlayer.setVolume(percent, percent);			
+			}			
+		}
+
+	}
+	
+	public void play(String songName, boolean playIntro, int repeatCount, float fadeTime)
 	{		
 		if(playingSong.equals(songName) || songName.equals("inherit"))
 			return;
+		
+		this.fadeTime = fadeTime;
+		startTime = System.currentTimeMillis();
+		fadingIn = true;
+		fadingOut = false;
+		if(fadeTime > 0)
+			mPlayer.setVolume(0, 0);
+		else
+			mPlayer.setVolume(1, 1);
 		
 		//non-infinite-loop
 		if(repeatCount != -1)
@@ -87,7 +118,7 @@ public class MusicBox
 	
 	public void resumeLastSong()
 	{
-		play(lastSong, false, -1);
+		play(lastSong, false, -1, 0);
 	}
 	
 	public void saveSong()

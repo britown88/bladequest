@@ -140,7 +140,7 @@ public class BqMap
 	public void setBGM(String bgm){defaultBGM = bgm;}	
 	public void playBGM(boolean playIntro)
 	{
-		Global.musicBox.play(defaultBGM, playIntro, -1);
+		Global.musicBox.play(defaultBGM, playIntro, -1, 0);
 	}	
 	
 	private void initTilePlates()

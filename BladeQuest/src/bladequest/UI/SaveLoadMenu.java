@@ -126,10 +126,10 @@ public class SaveLoadMenu
 				if(saveLoad == LOADING && Global.saveLoader.save != null)
 				{
 					Global.screenFader.clear();
-					Global.musicBox.play("", false, -1);
+					Global.musicBox.play("", false, -1, 0);
 					Global.LoadMap(Global.saveLoader.save.mapName);
 					if(Global.saveLoader.save.playingSong != null)
-						Global.musicBox.play(Global.saveLoader.save.playingSong, false, -1);
+						Global.musicBox.play(Global.saveLoader.save.playingSong, false, -1, 0);
 				}
 				
 				closed = true;
