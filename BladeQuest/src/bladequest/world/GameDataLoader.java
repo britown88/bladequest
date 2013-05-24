@@ -28,6 +28,7 @@ import bladequest.scripting.Script;
 import bladequest.scripting.Script.BadSpecialization;
 import bladequest.scripting.ScriptVar;
 import bladequest.scripting.ScriptVar.BadTypeException;
+import bladequest.sound.SoundLibrary;
 import bladequest.system.BqActivity;
 import bladequest.system.DataLine;
 import bladequest.system.FileReader;
@@ -59,8 +60,10 @@ public class GameDataLoader
 		}
 		
 		BattleLibrary.publishLibrary(library);
+		SoundLibrary.publishLibrary(library);
 		return library.getLibrary();
 	}
+	
 	private static Script compileScript(BqActivity activity, String file, Map<String, ScriptVar> standardLibrary)
 	{
 			Script script = new Script(standardLibrary);
@@ -74,14 +77,16 @@ public class GameDataLoader
 		p.run(); //populates script!
 		return script;
 	}
+	
 	public static void load(BqActivity activity)
 	{
 		Map<String, ScriptVar> standardLibrary = getStandardLibrary();
 		
 		loadFile(activity, "data/sprites.dat");
 		loadFile(activity, "data/battleanims.dat");
+		
+		compileScript(activity, "data/music.dat", standardLibrary);
 		compileScript(activity, "data/abilities.dat", standardLibrary);
-		loadFile(activity, "data/music.dat");
 		loadFile(activity, "data/items.dat");
 		loadFile(activity, "data/characters.dat");
 		loadFile(activity, "data/enemies.dat");

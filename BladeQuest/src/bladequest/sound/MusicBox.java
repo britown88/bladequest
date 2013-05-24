@@ -1,29 +1,37 @@
 package bladequest.sound;
 
 import android.content.res.AssetFileDescriptor;
-import android.media.JetPlayer;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import bladequest.world.Global;
 
-
-public class MusicBox implements JetPlayer.OnJetEventListener
+public class MusicBox
 {
-	private JetPlayer jet;
 	private String playingSong, lastSong;
 	private boolean paused, done, nonInfinite;
+	private MediaPlayer mPlayer;
 	//private JetPlayer.OnJetEventListener listener;
 	
-	public MusicBox(AssetFileDescriptor afd)
+	public MusicBox()
 	{
-		
-		try {
-			jet = JetPlayer.getJetPlayer();
-			jet.setEventListener(this);
-			} catch (Exception e) {}
-		
-		jet.loadJetFile(afd);
+		mPlayer = new MediaPlayer();
+		mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);	
+		mPlayer.setOnCompletionListener(new OnCompletionListener() {public void onCompletion(MediaPlayer mp) {OnCompletion(mp);}});
+
 		playingSong = "";
 		paused = true;
 		nonInfinite = false;
+		
+	}
+	
+	public void OnCompletion(MediaPlayer mp)
+	{
+		Song song = Global.music.get(playingSong);
+		
+		mPlayer.seekTo(song.LoopToMS());
+		
+		mPlayer.start();
 		
 	}
 	
@@ -41,14 +49,12 @@ public class MusicBox implements JetPlayer.OnJetEventListener
 			//saveSong();
 			nonInfinite = true;
 			done = false;
-		}
-			
+		}			
 		
 		playingSong = songName;
 		Song song = Global.music.get(songName);
 		if(song != null)
 		{
-
 			playSong(song, playIntro, repeatCount);
 			paused = false;
 		}
@@ -60,24 +66,28 @@ public class MusicBox implements JetPlayer.OnJetEventListener
 	
 	private void playSong(Song song, boolean playIntro, int repeatCount)
 	{
-		jet.clearQueue();
-		byte ssegmentid = 0;
-		if(!song.HasIntro())
-			jet.queueJetSegment(song.ID(), -1, repeatCount, 0, 0, ssegmentid);
-		else
-		{
-			if(playIntro)
-				jet.queueJetSegment(song.ID(), -1, 0, 0, 0, ssegmentid);			
-			jet.queueJetSegment(song.ID()+1, -1, repeatCount, 0, 0, ssegmentid);	
-		}		
+		AssetFileDescriptor afd;
+		mPlayer.reset();	
 		
-		try {jet.play();} catch (Exception e) {}
+		try {
+			afd = Global.activity.getAssets().openFd(song.Path());
+			mPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+			mPlayer.prepare();
+			afd.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		if(!playIntro)
+			mPlayer.seekTo(song.LoopToMS());
+		
+		mPlayer.start();		
+		
 	}
 	
 	public void resumeLastSong()
 	{
 		play(lastSong, false, -1);
-
 	}
 	
 	public void saveSong()
@@ -89,59 +99,25 @@ public class MusicBox implements JetPlayer.OnJetEventListener
 	{
 		if(!paused)
 		{
-			try {jet.pause();} catch (Exception e) {}	
+			mPlayer.pause();
+			
 			if(setPaused)
 				paused = true;
-		}
-
-		
+		}		
 	}
 	
 	public void stop()
 	{
-		jet.release();		
-		jet = null;
+		mPlayer.release();
 	}
 	
 	public void resume()
 	{
 		if(!paused)
 		{
-			try {jet.play();} catch (Exception e) {}
+			mPlayer.start();
 			paused = false;
-		}
-		
-	}
-
-	@Override
-	public void onJetEvent(JetPlayer player, short segment, byte track,
-			byte channel, byte controller, byte value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onJetNumQueuedSegmentUpdate(JetPlayer player, int nbSegments) {
-		if(nonInfinite && nbSegments == 0)
-		{
-			done = true;
-			nonInfinite = false;
-			//resumeLastSong();
-		}
-		
-	}
-
-	@Override
-	public void onJetPauseUpdate(JetPlayer player, int paused) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onJetUserIdUpdate(JetPlayer player, int userId, int repeatCount) {
-		// TODO Auto-generated method stub
-		
-	}
-		
+		}		
+	}	
 
 }

@@ -1,1 +1,27 @@
-[music]
+addsongs 0
+addsong "ancients" "sound/music/ancients.mid" 0
+addsong "annihilation" "sound/music/annihilation.mid" 91467
+addsong "aramis" "sound/music/aramis.mid" 0
+addsong "baligant" "sound/music/baligant.mid" 24000
+addsong "battle" "sound/music/battle.mid" 19333
+addsong "backinblack" "sound/music/blah.ogg" 0
+addsong "boss" "sound/music/boss.mid" 93333
+addsong "carle" "sound/music/carle.mid" 14000
+addsong "desert" "sound/music/desert.mid" 26666
+addsong "fanfare" "sound/music/fanfare.mid" 0
+addsong "finalbattle" "sound/music/finalbattle.mid" 48000
+addsong "goofy" "sound/music/goofy.mid" 0
+addsong "joy" "sound/music/joy.mid" 37333
+addsong "luc" "sound/music/luc.mid" 46900
+addsong "mystery" "sound/music/mystery.mid" 0
+addsong "pacman" "sound/music/pacman.mid" 54666
+addsong "rabbits" "sound/music/rabbits.mid" 11333
+addsong "reine" "sound/music/reine.mid" 168666
+addsong "roland" "sound/music/roland.mid" 19200
+addsong "sleep" "sound/music/sleep.mid" 0
+addsong "smalltown" "sound/music/smalltown.mid" 57000
+addsong "sneak" "sound/music/sneak.mid" 0
+addsong "ursos" "sound/music/ursos.mid" 14000
+addsong "victory" "sound/music/victory.mid" 19500
+
+\done <- addsongs 0

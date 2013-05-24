@@ -25,12 +25,12 @@ import android.media.SoundPool;
 import android.util.Log;
 import bladequest.UI.DebugScreen;
 import bladequest.UI.ListBox;
-import bladequest.UI.MainMenu.MainMenu;
 import bladequest.UI.MenuPanel.Anchors;
-import bladequest.UI.MerchantScreen.MerchantScreen;
 import bladequest.UI.MsgBox;
 import bladequest.UI.NameSelect;
 import bladequest.UI.SaveLoadMenu;
+import bladequest.UI.MainMenu.MainMenu;
+import bladequest.UI.MerchantScreen.MerchantScreen;
 import bladequest.combat.Battle;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleSprite;
@@ -961,38 +961,12 @@ public class Global
 
 	private static void loadSound(String path)
 	{
+		AssetFileDescriptor afd = null;
 		String[] files = null;
 		String sfxName;	
 		
-		//load jet file
-		AssetFileDescriptor afd = null;		
-		try {afd = activity.getAssets().openFd(path+"/bladequest.jet");} catch (Exception e) {
-			Log.d(TAG, "Unable to open file "+path+"/bladequest.jet");
-			closeGame();}
-		
 		if(musicBox == null)
-			musicBox = new MusicBox(afd);
-		
-		//assign musical tracks to strings here
-		music.put("aramis", new Song(0, true));	
-		music.put("battle", new Song(2, true));		
-		music.put("boss", new Song(4, true));	
-		music.put("mystery", new Song(6, true));
-		music.put("sneak", new Song(8, false));
-		music.put("victory", new Song(9, true));
-		music.put("joy", new Song(11, true));
-		music.put("sleep", new Song(13, false));
-		music.put("fanfare", new Song(14, false));
-		music.put("annihilation", new Song(15, true));
-		music.put("baligant", new Song(17, true));
-		music.put("desert", new Song(19, true));
-		music.put("goofy", new Song(21, true));
-		music.put("pacman", new Song(23, true));
-		music.put("rabbitcity", new Song(25, true));
-		music.put("reine", new Song(27, true));
-		music.put("town", new Song(29, true));
-		music.put("ursos", new Song(31, true));
-		
+			musicBox = new MusicBox();		
 		
 		path += "/effects";
 		try{ files = activity.getAssets().list(path); } catch (Exception e) {
@@ -1163,23 +1137,23 @@ public class Global
 		
 		loading = false;
 
-//		//demo start info, do not fuck with!
-//		screenFader.setFadeColor(255, 0, 0, 0);
-//		screenFader.setFaded();
-//		party.teleport(16, 5);		
-//		party.insertCharacter("aramis", 1);	
-//		party.getCharacter("aramis").setDisplayName("?????");	
-//		LoadMap("prisonb2");
+		//demo start info, do not fuck with!
+		screenFader.setFadeColor(255, 0, 0, 0);
+		screenFader.setFaded();
+		party.teleport(16, 5);		
+		party.insertCharacter("aramis", 1);	
+		party.getCharacter("aramis").setDisplayName("?????");	
+		LoadMap("prisonb2");
 		
-		//test params
-		party.teleport(1, 3);		
-		party.addCharacter("aramis");
-		party.getCharacter("aramis").setDisplayName("?????");			
-			
-		party.addCharacter("joy");
-		party.addCharacter("luc");	
-		party.addCharacter("roland");			
-		LoadMap("test");
+//		//test params
+//		party.teleport(1, 3);		
+//		party.addCharacter("aramis");
+//		party.getCharacter("aramis").setDisplayName("?????");			
+//			
+//		party.addCharacter("joy");
+//		party.addCharacter("luc");	
+//		party.addCharacter("roland");			
+//		LoadMap("test");
 		
 		
 	}

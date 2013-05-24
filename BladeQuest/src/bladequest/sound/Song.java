@@ -1,18 +1,21 @@
 package bladequest.sound;
 
+
 public class Song 
 {
-	private int id;
-	private boolean hasIntro;
+	private int loopToMS;
+	private String path;
 	
-	public Song(int id, boolean hasIntro)
+	public Song(String path, int loopToMS)
 	{
-		this.id = id;
-		this.hasIntro = hasIntro;
+
+		this.loopToMS = loopToMS;
+		this.path = path;
 	}
 	
-	public boolean HasIntro(){return hasIntro;}	
-	public int ID() { return id; }
+	public String Path(){ return path; }
+	public int LoopToMS(){return loopToMS;}	
+
 
 
 }

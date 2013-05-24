@@ -26,7 +26,7 @@ public class TitleScreen
 	private long startTime;
 	private final float logoViewTime = 7.0f;
 	private final int openspeed = 15;
-	private final String openingSong = "aramis";
+	private final String openingSong = "luc";
 	
 	private boolean skippedIntro;
 	
