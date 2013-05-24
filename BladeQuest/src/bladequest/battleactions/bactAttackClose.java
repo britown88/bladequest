@@ -69,7 +69,7 @@ public class bactAttackClose  extends DelegatingAction {
 			
 			builder.addEventObject(new bactChangeVisibility(false));
 			currentAnim = buildJumpAnimation(attacker, PointMath.add(offset, attacker.getPosition()), PointMath.add(offset, pointOff), attackArcFactor, attackSpeed);
-			builder.addEventObject(new bactRunAnimation(currentAnim).addDependency(builder.getLast()));
+			builder.addEventObject(new bactRunAnimation(currentAnim));
 			builder.addEventObject(new bactSpecialPosition(true).addDependency(builder.getLast()));
 			builder.addEventObject(new bactChangePosition(pointOff).addDependency(builder.getLast()));
 			builder.addEventObject(new bactChangeVisibility(true).addDependency(builder.getLast()));
@@ -78,12 +78,15 @@ public class bactAttackClose  extends DelegatingAction {
 			BattleAction slashEnd = BattleActionPatterns.BuildSwordSlash(builder, power, type, 0.5f, builder.getLast());
 			
 			//jump back to starting location.
-			builder.addEventObject(new bactChangeVisibility(false).addDependency(slashEnd));
 			currentAnim = buildJumpAnimation(attacker, PointMath.add(offset, pointOff), PointMath.add(offset, startPos), returnArcFactor, returnSpeed);
-			builder.addEventObject(new bactRunAnimation(currentAnim).addDependency(builder.getLast()));
-			builder.addEventObject(new bactChangePosition(startPos).addDependency(builder.getLast()));
-			builder.addEventObject(new bactSpecialPosition(false).addDependency(builder.getLast()));
-			builder.addEventObject(new bactChangeVisibility(true).addDependency(builder.getLast()));
+			
+			builder.addEventObject(new bactChangeVisibility(false).addDependency(slashEnd));
+			
+			BattleAction jumpEnd = new bactRunAnimation(currentAnim).addDependency(slashEnd);
+			builder.addEventObject(jumpEnd);
+			builder.addEventObject(new bactChangePosition(startPos).addDependency(jumpEnd));
+			builder.addEventObject(new bactSpecialPosition(false).addDependency(jumpEnd));
+			builder.addEventObject(new bactChangeVisibility(true).addDependency(jumpEnd));
 			
 			//add in some chillaxing time.
 			builder.addEventObject(new bactWait(BattleEvent.frameFromActIndex(3)).addDependency(builder.getLast()));	

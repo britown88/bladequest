@@ -27,8 +27,13 @@ public class FileTokenizer implements Tokenizer {
 	public boolean isFloat(String str)
 	{
 		boolean foundDot = false;
+		int num = 0;
 		for (char c : str.toCharArray())
 		{
+			if (c == '-' && num == 0) 
+			{
+				++num; continue;
+			}
 			if (c > '9' || c < '0')
 			{
 				if (c == '.')
@@ -45,16 +50,18 @@ public class FileTokenizer implements Tokenizer {
 	
 	public boolean isInt(String str)
 	{
+		int num = 0;
 		for (char c : str.toCharArray())
 		{
+			if (c == '-' && num == 0) {++num; continue;}
 			if (c > '9' || c < '0')
 			{
 				return false;
 			}
+			++num;
 		}		
 		return true;
 	}
-	
 	public ScriptToken getBoolToken(boolean value)
 	{
 		return new ScriptToken(ScriptToken.Type.Boolean)
