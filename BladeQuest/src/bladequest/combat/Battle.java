@@ -717,7 +717,9 @@ public class Battle
 		
 		Rect displayNameRect = new Rect();
 		nameDisplayPaint.getTextBounds(str, 0, str.length()-1, displayNameRect);
+		
 		displayNameRect = Global.screenToVP(displayNameRect);
+		displayNameRect.inset(-10, 0);
 		
 		
 		displayNamePanel.pos.x = (Global.vpWidth - displayNameRect.width())/2;
@@ -975,7 +977,11 @@ public class Battle
 					//reset targets
 					currentEvent.setTargets(getTargetable(actor, targets));
 					
-					if(actor.getAction() == Action.Ability)
+					if(actor.getAction() == Action.CombatAction)
+					{
+						showDisplayName(actor.getAbilityToUse().getDisplayName());
+					}						
+					else if(actor.getAction() == Action.Ability)
 					{
 						showDisplayName(actor.getAbilityToUse().getDisplayName());
 						actor.useAbility();

@@ -20,12 +20,12 @@ public interface AnimatedBitmap {
 			//hard-code to repeat last....
 			for(int i = 0; i < frames.length+1; ++i)
 			{
-				int idx = Math.max(i, frames.length-1);
+				int idx = Math.min(i, frames.length-1);
 				BattleAnimObjState state = new BattleAnimObjState(i*timeDelay, PosTypes.Target);
 				state.size = new Point(frames[idx].srcRect.width()*2, frames[idx].srcRect.height()*2);
 				state.pos1 = new Point(0,0);
 				state.argb(255, 255, 255, 255);
-				if (i == frames.length-1) state.a = 0; //fade out.
+				if (idx == frames.length) state.a = 0; //fade out.
 				Rect r = frames[idx].srcRect;
 				state.setBmpSrcRect(r.left, r.top, r.right, r.bottom);
 				baobj.addState(state);
