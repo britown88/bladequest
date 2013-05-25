@@ -1679,132 +1679,13 @@ public class MainMenu
 	{
 		charStatus.clear();
 		
+		buildCharMainBox();
+		buildCharStatsBox();
+		buildCharNameBox();
+		buildCharEquipBox();
 		
-		
-		
-		MenuPanel nameBox = new MenuPanel(Global.vpWidth / 2, 0, Global.vpWidth - menuWidth*2, barHeight);
-		nameBox.anchor = Anchors.TopCenter;
-		MenuPanel mainBox = new MenuPanel(0, barHeight, Global.vpWidth - menuWidth, Global.vpHeight - barHeight*3);
-		MenuPanel statsBox = new MenuPanel(Global.vpWidth, barHeight, menuWidth, Global.vpHeight - barHeight);
-		MenuPanel equipBox = new MenuPanel(0, Global.vpHeight, Global.vpWidth - menuWidth, barHeight * 3);
-		
-		statsBox.anchor = Anchors.TopRight;
-		equipBox.anchor = Anchors.BottomLeft;
-		
-		charStatus.addChildPanel(nameBox);
-		charStatus.addChildPanel(mainBox);
-		charStatus.addChildPanel(statsBox);
-		charStatus.addChildPanel(equipBox);	
-		
-		
-		
-		Paint blueRight = buildPaint(10, Color.CYAN, Align.RIGHT);
-		Paint whiteRight = buildPaint(10, Color.WHITE, Align.RIGHT);
-		Paint largeWhiteCenter = buildPaint(18, Color.WHITE, Align.CENTER);
-		
-		float widths[] = new float[1];
-		blueRight.getTextWidths("5", widths);
-		int charWidth = (int)widths[0];
-		
-		int statsBuffer = charWidth * 5;
-		
-		int statCols[] = new int[2];		
-		statCols[0] = menuWidth - statsBuffer - charWidth;	
-		
-		int numStatRows = 12;
-		int statRows[] = new int[numStatRows];		
-		statRows[0] = 6;
-		for(int i = 0; i < numStatRows; ++i)
-			statRows[i] = statsBox.height / (numStatRows+1) * (i+1);
-		
-		
-		//Name
-		nameBox.addTextBox(selectedChar.getDisplayName(), nameBox.width/2, nameBox.height / 2, largeWhiteCenter);
-				
-		//Portrait
-		Rect src = selectedChar.getPortraitSrcRect();
-		Rect dest = new Rect(0, -12, menuWidth,  menuWidth-12);
-		dest.inset(24, 24);
-		mainBox.addPicBox(Global.bitmaps.get("portraits"), src, dest);
-			
-		//HP/MP
-//		charStatus.addTextBox("HP:", (int)(menuWidth*1.35), (int)(barHeight*1.5), blueMenuText);
-//		charStatus.addTextBox("MP:", (int)(menuWidth*1.55), (int)(barHeight*2.0), blueMenuText);
-//		charStatus.addTextBox(selectedChar.getHP()+"/"+selectedChar.getStat(Stats.MaxHP), (int)(menuWidth*1.65), (int)(barHeight*1.5), menuText);
-//		charStatus.addTextBox(selectedChar.getMP()+"/"+selectedChar.getStat(Stats.MaxMP), (int)(menuWidth*1.85), (int)(barHeight*2.0), menuText);
-//			
-		//level and experience	
-//		charStatus.addTextBox("Level:", (int)(menuWidth*0.75), i, blueMenuText);
-//		charStatus.addTextBox(""+selectedChar.getLevel(), 12, i, menuTextRight);
-//		charStatus.addTextBox("Experience:", (int)(menuWidth*0.75), i, blueMenuText);
-//		charStatus.addTextBox(""+selectedChar.getExp(), 12, i, menuTextRight);
-//		charStatus.addTextBox("For Level Up:", (int)(menuWidth*0.75), i, blueMenuText);
-//		charStatus.addTextBox(""+selectedChar.getRemainingExp(), 12, i, menuTextRight);
-//		
-		selectedChar.updateSecondaryStats();
-		
-		
-
-		statsBox.addTextBox("Power:", statCols[0], statRows[0], blueRight);
-		statsBox.addTextBox(""+selectedChar.getStat(Stats.BattlePower), 
-				statCols[0] + statsBuffer, statRows[0], whiteRight);
-		
-		statsBox.addTextBox("Defend:", statCols[0], statRows[1], blueRight);
-		statsBox.addTextBox(""+selectedChar.getStat(Stats.Defense), 
-				statCols[0] + statsBuffer, statRows[1], whiteRight);
-		
-		statsBox.addTextBox("M.Pow:", statCols[0], statRows[2], blueRight);
-		statsBox.addTextBox(""+selectedChar.getStat(Stats.MagicPower), 
-				statCols[0] + statsBuffer, statRows[2], whiteRight);
-		
-		statsBox.addTextBox("M.Def:", statCols[0], statRows[3], blueRight);
-		statsBox.addTextBox(""+selectedChar.getStat(Stats.MagicDefense), 
-				statCols[0] + statsBuffer, statRows[3], whiteRight);
-		
-
-		statsBox.addTextBox("Stren:", statCols[0], statRows[4], blueRight);
-		statsBox.addTextBox(""+selectedChar.getStat(Stats.Strength), 
-				statCols[0] + statsBuffer, statRows[4], whiteRight);
-		
-		statsBox.addTextBox("Agil:", statCols[0], statRows[5], blueRight);
-		statsBox.addTextBox(""+selectedChar.getStat(Stats.Agility), 
-				statCols[0] + statsBuffer, statRows[5], whiteRight);
-		
-		statsBox.addTextBox("Vital:", statCols[0], statRows[6], blueRight);
-		statsBox.addTextBox(""+selectedChar.getStat(Stats.Vitality), 
-				statCols[0] + statsBuffer, statRows[6], whiteRight);
-		
-		statsBox.addTextBox("Intel:", statCols[0], statRows[7], blueRight);
-		statsBox.addTextBox(""+selectedChar.getStat(Stats.Intelligence), 
-				statCols[0] + statsBuffer, statRows[7], whiteRight);
-				
-
-		statsBox.addTextBox("Speed:", statCols[0], statRows[8], blueRight);
-		statsBox.addTextBox(""+selectedChar.getStat(Stats.Speed), 
-				statCols[0] + statsBuffer, statRows[8], whiteRight);
-		
-		statsBox.addTextBox("Evade:", statCols[0], statRows[9], blueRight);
-		statsBox.addTextBox(""+selectedChar.getStat(Stats.Evade), 
-				 statCols[0] + statsBuffer, statRows[9], whiteRight);
-		
-		statsBox.addTextBox("Block:", statCols[0], statRows[10], blueRight);
-		statsBox.addTextBox(""+selectedChar.getStat(Stats.Block), 
-				statCols[0] + statsBuffer, statRows[10], whiteRight);
-		
-		statsBox.addTextBox("Crit:", statCols[0], statRows[11], blueRight);
-		statsBox.addTextBox(""+selectedChar.getStat(Stats.Crit), 
-				statCols[0] + statsBuffer, statRows[11], whiteRight);
-		
-//		charStatus.addTextBox("FIRE:", statCols[3], statRows[0], blueMenuTextRight);
-//		charStatus.addTextBox("EARTH:", statCols[3], statRows[1], blueMenuTextRight);
-//		charStatus.addTextBox("WIND:", statCols[3], statRows[2], blueMenuTextRight);
-//		charStatus.addTextBox("WATER:", statCols[3], statRows[3], blueMenuTextRight);
-//		
-//		charStatus.addTextBox(""+selectedChar.getStat(Stats.Fire), statCols[3] + charWidth * 3, statRows[0], menuTextRight);
-//		charStatus.addTextBox(""+selectedChar.getStat(Stats.Earth), statCols[3] + charWidth * 3, statRows[1], menuTextRight);
-//		charStatus.addTextBox(""+selectedChar.getStat(Stats.Wind), statCols[3] + charWidth * 3, statRows[2], menuTextRight);
-//		charStatus.addTextBox(""+selectedChar.getStat(Stats.Water), statCols[3] + charWidth * 3, statRows[3], menuTextRight);
-//		
+		charStatus.update();
+	
 	}
 	private void buildSkillScreen()
 	{
@@ -1950,6 +1831,230 @@ public class MainMenu
 		
 		//Control Scheme
 		opts.getEntryAt(i++).getTextAt(1).text = "Touch Screen";
+	}
+	
+	private void buildCharMainBox()
+	{
+		MenuPanel mainBox = new MenuPanel(0, barHeight, Global.vpWidth - menuWidth, Global.vpHeight - barHeight*3);
+		Paint blue = buildPaint(12, Color.CYAN, Align.LEFT);
+		Paint white = buildPaint(12, Color.WHITE, Align.RIGHT);
+		
+		//Portrait
+		Rect src = selectedChar.getPortraitSrcRect();
+		
+		
+		Rect dest = new Rect(0, (mainBox.height - menuWidth) / 2 - 12, menuWidth,  (mainBox.height - menuWidth) / 2 + menuWidth - 12);
+		dest.inset(16, 16);
+		mainBox.addPicBox(Global.bitmaps.get("portraits"), src, dest);
+		
+		int numInfoRows = 8;
+		int infoRows[] = new int[numInfoRows];		
+		for(int i = 0; i < numInfoRows; ++i)
+			infoRows[i] = mainBox.height / (numInfoRows+1) * (i+1);
+		
+		int infoCols[] = new int[2];
+		infoCols[0] = menuWidth;
+		infoCols[1] = mainBox.width - 10;
+		
+		//HP/MP
+		mainBox.addTextBox("HP:", infoCols[0], infoRows[0],  blue);
+		mainBox.addTextBox(selectedChar.getHP()+"/"+selectedChar.getStat(Stats.MaxHP), infoCols[1], infoRows[0],  white);
+		mainBox.addTextBox("MP:", infoCols[0], infoRows[1],  blue);
+		mainBox.addTextBox(selectedChar.getMP()+"/"+selectedChar.getStat(Stats.MaxMP), infoCols[1], infoRows[1],  white);
+		
+		mainBox.addTextBox("Level:", infoCols[0], infoRows[3],  blue);
+		mainBox.addTextBox(""+selectedChar.getLevel(), infoCols[1], infoRows[3],  white);
+		mainBox.addTextBox("Experience:", infoCols[0], infoRows[4],  blue);
+		mainBox.addTextBox(""+selectedChar.getExp(), infoCols[1], infoRows[5],  white);
+		mainBox.addTextBox("For Level Up", infoCols[0], infoRows[6],  blue);
+		mainBox.addTextBox(""+selectedChar.getRemainingExp(), infoCols[1], infoRows[7],  white);
+		
+		List<StatusEffect> seList = selectedChar.getStatusEffects();
+		if(seList.size() > 0)
+		{
+			float iconScale = 1.5f;
+			int j = 0, d = (int)(Global.iconSize*iconScale + 2);				
+			
+			int seCount = 0;				
+			for(StatusEffect se : seList)
+				if(se.icon().length() > 0)
+					seCount++;
+			
+			int seWidth = d*Math.min(6, seCount);
+			
+			for(StatusEffect se : seList)
+				if(j < 6 && se.icon().length() > 0)
+					mainBox.addPicBox(
+						Global.createIcon(se.icon(), 
+								(int)((menuWidth - seWidth)/2.0f) + d/2 + d*j++, 
+								mainBox.height - barHeight / 2,
+								iconScale));
+		}
+		
+		charStatus.addChildPanel(mainBox);
+	}
+	private void buildCharNameBox()
+	{
+		Paint largeWhiteCenter = buildPaint(18, Color.WHITE, Align.CENTER);
+		MenuPanel nameBox = new MenuPanel(Global.vpWidth / 2, 0, Global.vpWidth - menuWidth*2, barHeight);
+		nameBox.anchor = Anchors.TopCenter;
+		
+		nameBox.addTextBox(selectedChar.getDisplayName(), nameBox.width/2, nameBox.height / 2, largeWhiteCenter);
+		
+		charStatus.addChildPanel(nameBox);
+	}
+	private void buildCharStatsBox()
+	{
+		MenuPanel statsBox = new MenuPanel(Global.vpWidth, barHeight, menuWidth, Global.vpHeight - barHeight);
+		statsBox.anchor = Anchors.TopRight;
+		
+		Paint blueRight = buildPaint(10, Color.CYAN, Align.RIGHT);
+		Paint whiteRight = buildPaint(10, Color.WHITE, Align.RIGHT);
+		Paint redRight = buildPaint(10, Color.RED, Align.RIGHT);				
+		
+		float widths[] = new float[1];
+		blueRight.getTextWidths("5", widths);
+		int charWidth = (int)widths[0];
+		
+		int statsBuffer = charWidth * 5;
+		
+		int statCols[] = new int[1];		
+		statCols[0] = menuWidth - statsBuffer - charWidth;	
+		
+		int numStatRows = 12;
+		int statRows[] = new int[numStatRows];		
+		for(int i = 0; i < numStatRows; ++i)
+			statRows[i] = statsBox.height / (numStatRows+1) * (i+1);		
+			
+
+		selectedChar.updateSecondaryStats();			
+
+		statsBox.addTextBox("Power:", statCols[0], statRows[0], blueRight);
+		statsBox.addTextBox(""+selectedChar.getStat(Stats.BattlePower), 
+				statCols[0] + statsBuffer, statRows[0], genStatPaint(selectedChar, Stats.BattlePower, blueRight, redRight, whiteRight));
+		
+		statsBox.addTextBox("Defend:", statCols[0], statRows[1], blueRight);
+		statsBox.addTextBox(""+selectedChar.getStat(Stats.Defense), 
+				statCols[0] + statsBuffer, statRows[1], genStatPaint(selectedChar, Stats.Defense, blueRight, redRight, whiteRight));
+		
+		statsBox.addTextBox("M.Pow:", statCols[0], statRows[2], blueRight);
+		statsBox.addTextBox(""+selectedChar.getStat(Stats.MagicPower), 
+				statCols[0] + statsBuffer, statRows[2], genStatPaint(selectedChar, Stats.MagicPower, blueRight, redRight, whiteRight));
+		
+		statsBox.addTextBox("M.Def:", statCols[0], statRows[3], blueRight);
+		statsBox.addTextBox(""+selectedChar.getStat(Stats.MagicDefense), 
+				statCols[0] + statsBuffer, statRows[3], genStatPaint(selectedChar, Stats.MagicDefense, blueRight, redRight, whiteRight));
+		
+
+		statsBox.addTextBox("Stren:", statCols[0], statRows[4], blueRight);
+		statsBox.addTextBox(""+selectedChar.getStat(Stats.Strength), 
+				statCols[0] + statsBuffer, statRows[4], genStatPaint(selectedChar, Stats.Strength, blueRight, redRight, whiteRight));
+		
+		statsBox.addTextBox("Agil:", statCols[0], statRows[5], blueRight);
+		statsBox.addTextBox(""+selectedChar.getStat(Stats.Agility), 
+				statCols[0] + statsBuffer, statRows[5], genStatPaint(selectedChar, Stats.Agility, blueRight, redRight, whiteRight));
+		
+		statsBox.addTextBox("Vital:", statCols[0], statRows[6], blueRight);
+		statsBox.addTextBox(""+selectedChar.getStat(Stats.Vitality), 
+				statCols[0] + statsBuffer, statRows[6], genStatPaint(selectedChar, Stats.Vitality, blueRight, redRight, whiteRight));
+		
+		statsBox.addTextBox("Intel:", statCols[0], statRows[7], blueRight);
+		statsBox.addTextBox(""+selectedChar.getStat(Stats.Intelligence), 
+				statCols[0] + statsBuffer, statRows[7], genStatPaint(selectedChar, Stats.Intelligence, blueRight, redRight, whiteRight));				
+
+		statsBox.addTextBox("Speed:", statCols[0], statRows[8], blueRight);
+		statsBox.addTextBox(""+selectedChar.getStat(Stats.Speed), 
+				statCols[0] + statsBuffer, statRows[8], genStatPaint(selectedChar, Stats.Speed, blueRight, redRight, whiteRight));
+		
+		statsBox.addTextBox("Evade:", statCols[0], statRows[9], blueRight);
+		statsBox.addTextBox(""+selectedChar.getStat(Stats.Evade), 
+				 statCols[0] + statsBuffer, statRows[9], genStatPaint(selectedChar, Stats.Evade, blueRight, redRight, whiteRight));
+		
+		statsBox.addTextBox("Block:", statCols[0], statRows[10], blueRight);
+		statsBox.addTextBox(""+selectedChar.getStat(Stats.Block), 
+				statCols[0] + statsBuffer, statRows[10], genStatPaint(selectedChar, Stats.Block, blueRight, redRight, whiteRight));
+		
+		statsBox.addTextBox("Crit:", statCols[0], statRows[11], blueRight);
+		statsBox.addTextBox(""+selectedChar.getStat(Stats.Crit), 
+				statCols[0] + statsBuffer, statRows[11], genStatPaint(selectedChar, Stats.Crit, blueRight, redRight, whiteRight));
+		
+		charStatus.addChildPanel(statsBox);
+	}
+	private Paint genStatPaint(PlayerCharacter c, Stats stat, Paint good, Paint bad, Paint neutral)
+	{
+		int mod = c.getStatMod(stat);
+		return mod > 0 ? good : mod < 0 ? bad : neutral; 
+	}
+	private void buildCharEquipBox()
+	{
+		MenuPanel equipBox = new MenuPanel(0, Global.vpHeight, Global.vpWidth - menuWidth, barHeight * 2);
+		equipBox.anchor = Anchors.BottomLeft;
+		
+		Paint blue = buildPaint(10, Color.CYAN, Align.LEFT);
+		Paint blueRight = buildPaint(10, Color.CYAN, Align.RIGHT);
+		Paint whiteLeft = buildPaint(10, Color.WHITE, Align.LEFT);
+		Paint grayLeft = buildPaint(10, Color.GRAY, Align.LEFT);
+		
+		Paint redRight = buildPaint(10, Color.RED, Align.RIGHT);
+		Paint whiteRight = buildPaint(10, Color.WHITE, Align.RIGHT);
+		
+		Paint fire = buildPaint(10, Color.rgb(255, 128, 42), Align.RIGHT);
+		Paint earth = buildPaint(10, Color.rgb(165, 138, 56), Align.RIGHT);
+		Paint wind = buildPaint(10, Color.rgb(180, 210, 210), Align.RIGHT);
+		Paint water = buildPaint(10, Color.rgb(80, 160, 215), Align.RIGHT);
+		
+		
+		int numEqpStats = 5;
+		int eqpRows[] = new int[numEqpStats];		
+		for(int i = 0; i < numEqpStats; ++i)
+			eqpRows[i] = equipBox.height / (numEqpStats+1) * (i+1);	
+		
+		float iconScale = 1.5f;
+		int d = (int)((float)Global.iconSize*iconScale/2.0f);
+		
+		float widths[] = new float[1];
+		blue.getTextWidths("5", widths);
+		int charWidth = (int)widths[0];
+		
+		int eqpCols[] = new int[4];
+		int iconBuffer = 10;
+		eqpCols[0] = d*2 + iconBuffer*2;
+		eqpCols[1] = equipBox.width/2 + charWidth * 2;
+		eqpCols[2] = equipBox.width - charWidth * 6;
+		eqpCols[3] = equipBox.width - charWidth;
+		
+		int iconYBuff = 2;
+		
+		//equipment
+		equipBox.addPicBox(Global.createIcon(selectedChar.weapEquipped() ? selectedChar.weapon().getIcon() : "sword", d + iconBuffer, eqpRows[0] + iconYBuff, iconScale));
+		equipBox.addTextBox(selectedChar.weapEquipped() ? selectedChar.weapon().getName() : "Weapon", eqpCols[0], eqpRows[0], selectedChar.weapEquipped() ? whiteLeft : grayLeft);
+		
+		equipBox.addPicBox(Global.createIcon(selectedChar.shieldEquipped() ? selectedChar.shield().getIcon() : "hshield", d + iconBuffer, eqpRows[1] + iconYBuff, iconScale));
+		equipBox.addTextBox(selectedChar.shieldEquipped() ? selectedChar.shield().getName() : "Shield", eqpCols[0], eqpRows[1], selectedChar.shieldEquipped() ? whiteLeft : grayLeft);
+		
+		equipBox.addPicBox(Global.createIcon(selectedChar.helmEquipped() ? selectedChar.helmet().getIcon() : "hhelmet", d + iconBuffer, eqpRows[2] + iconYBuff, iconScale));
+		equipBox.addTextBox(selectedChar.helmEquipped() ? selectedChar.helmet().getName() : "Helmet", eqpCols[0], eqpRows[2], selectedChar.helmEquipped() ? whiteLeft : grayLeft);
+		
+		equipBox.addPicBox(Global.createIcon(selectedChar.torsoEquipped() ? selectedChar.torso().getIcon() : "htorso", d + iconBuffer, eqpRows[3] + iconYBuff, iconScale));
+		equipBox.addTextBox(selectedChar.torsoEquipped() ? selectedChar.torso().getName() : "Torso", eqpCols[0], eqpRows[3], selectedChar.torsoEquipped() ? whiteLeft : grayLeft);
+		
+		equipBox.addPicBox(Global.createIcon(selectedChar.accessEquipped() ? selectedChar.accessory().getIcon() : "ring", d + iconBuffer, eqpRows[4] + iconYBuff, iconScale));
+		equipBox.addTextBox(selectedChar.accessEquipped() ? selectedChar.accessory().getName() : "Accessory", eqpCols[0], eqpRows[4], selectedChar.accessEquipped() ? whiteLeft : grayLeft);
+		
+		//Affinity
+		equipBox.addTextBox("Affinity", eqpCols[1], eqpRows[0], blue);
+		equipBox.addTextBox("Fire:", eqpCols[2], eqpRows[1], fire);
+		equipBox.addTextBox("Earth:", eqpCols[2], eqpRows[2], earth);
+		equipBox.addTextBox("Wind:", eqpCols[2], eqpRows[3], wind);
+		equipBox.addTextBox("Water:", eqpCols[2], eqpRows[4], water);
+		
+		equipBox.addTextBox(""+selectedChar.getStat(Stats.Fire), eqpCols[3], eqpRows[1], genStatPaint(selectedChar, Stats.Fire, blueRight, redRight, whiteRight));
+		equipBox.addTextBox(""+selectedChar.getStat(Stats.Earth), eqpCols[3], eqpRows[2], genStatPaint(selectedChar, Stats.Earth, blueRight, redRight, whiteRight));
+		equipBox.addTextBox(""+selectedChar.getStat(Stats.Wind), eqpCols[3], eqpRows[3], genStatPaint(selectedChar, Stats.Wind, blueRight, redRight, whiteRight));
+		equipBox.addTextBox(""+selectedChar.getStat(Stats.Water), eqpCols[3], eqpRows[4], genStatPaint(selectedChar, Stats.Water, blueRight, redRight, whiteRight));
+		
+		
+		charStatus.addChildPanel(equipBox);	
 	}
 	
 	public void close()
