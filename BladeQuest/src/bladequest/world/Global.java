@@ -1132,39 +1132,13 @@ public class Global
 	
 	//called when new game is selected from the title screen	
 	public static void NewGame()
-	{
-		
+	{		
 		playTimer = new PlayTimer(0);
 		party = new Party(0, 0);
 		
-		loading = false;
-
-		//demo start info, do not fuck with!
-//		screenFader.setFadeColor(255, 0, 0, 0);
-//		screenFader.setFaded();
-		party.teleport(16, 5);		
-		party.insertCharacter("aramis", 1);	
-		party.getCharacter("aramis").setDisplayName("?????");	
-		LoadMap("prisonb2");
+		loading = false;	
 		
-//		//test params
-//		party.teleport(1, 3);		
-//		party.addCharacter("aramis");
-//		party.getCharacter("aramis").setDisplayName("?????");			
-//			
-//		party.addCharacter("joy");
-//		party.addCharacter("luc");	
-//		party.addCharacter("roland");			
-//		
-//		party.addItem("potion", 27);
-//		
-//		for(PlayerCharacter pc : party.getPartyList(false))
-//		{
-//			pc.modifyLevel(99, false);
-//		}
-//		LoadMap("test");
-		
-		
+		GameDataLoader.loadNewGame(activity);
 	}
 	
 	private static MapLoadThread mapLoadThread;

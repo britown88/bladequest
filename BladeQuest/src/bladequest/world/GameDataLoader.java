@@ -19,6 +19,7 @@ import bladequest.bladescript.ScriptVar.BadTypeException;
 import bladequest.bladescript.libraries.BattleLibrary;
 import bladequest.bladescript.libraries.CharacterLibrary;
 import bladequest.bladescript.libraries.EnemyLibrary;
+import bladequest.bladescript.libraries.GameStartLibrary;
 import bladequest.bladescript.libraries.GraphicsLibrary;
 import bladequest.bladescript.libraries.HigherOrderLibrary;
 import bladequest.bladescript.libraries.ItemLibrary;
@@ -41,8 +42,14 @@ import bladequest.system.FileReader;
 
 public class GameDataLoader 
 {
+	//private static final String NewGameFile = "data/startgame.dat"; 
+	private static final String NewGameFile = "data/starttest.dat"; 
+	
 	private static FileSections section;
 	private static final String TAG = GameDataLoader.class.getSimpleName();
+	
+	private static Map<String, ScriptVar> standardLibrary;
+	
 	public static int subtractScriptFn(int x, int y)
 	{
 		return x-y;
@@ -71,6 +78,7 @@ public class GameDataLoader
 		CharacterLibrary.publishLibrary(library);
 		HigherOrderLibrary.publishLibrary(library);
 		EnemyLibrary.publishLibrary(library);
+		GameStartLibrary.publishLibrary(library);
 		
 		return library.getLibrary();
 	}
@@ -93,7 +101,7 @@ public class GameDataLoader
 	
 	public static void load(BqActivity activity)
 	{
-		Map<String, ScriptVar> standardLibrary = getStandardLibrary();
+		standardLibrary = getStandardLibrary();
 		
 		compileScript(activity, "data/sprites.dat", standardLibrary);
 		loadFile(activity, "data/battleanims.dat");
@@ -108,13 +116,12 @@ public class GameDataLoader
 		loadFile(activity, "data/merchants.dat");
 		
 		Log.d(TAG, "Loading maps.");Global.loadMaps("maps");
-		//loadFile(activity, "data/gamedata.dat");
 		
 	}
 	
 	public static void loadNewGame(BqActivity activity)
 	{
-		loadFile(activity, "data/gamedata.dat");		
+		compileScript(activity, NewGameFile, standardLibrary);		
 	}
 	
 	private static void loadFile(BqActivity activity, String path)

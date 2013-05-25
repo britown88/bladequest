@@ -71,6 +71,12 @@ public class CharacterLibrary
 		return pc;
 	}
 	
+	public static PlayerCharacter setDisplayName(PlayerCharacter pc, String name)
+	{
+		pc.setDisplayName(name);
+		return pc;
+	}
+	
 	public static PlayerCharacter addAbility(PlayerCharacter pc, String name)
 	{
 		pc.addAbility(name);
