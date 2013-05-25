@@ -683,6 +683,23 @@ public class Global
 		}
 	}
 
+	public static Point inputToScreen(float x, float y)
+	{
+		
+		//scale x and y coords to screen scale:		
+		if(x > Global.screenWidth / 2)
+			x = (int)((float)(x-Global.screenWidth/2.0F)/(Global.imageScale+Global.baseScale))+(int)(Global.screenWidth/2.0F);
+		if(x < Global.screenWidth / 2)
+			x = (int)(Global.screenWidth / 2.0F) - (int)(((Global.screenWidth/2.0F) - (float)x)/(Global.imageScale+Global.baseScale));
+		if(y > Global.screenHeight / 2)
+			y = (int)((float)(y-Global.screenHeight/2.0F)/(Global.imageScale+Global.baseScale))+(int)(Global.screenHeight/2.0F);
+		if(y < Global.screenHeight / 2)
+			y = (int)(Global.screenHeight / 2.0F) - (int)(((Global.screenHeight/2.0F) - (float)y)/(Global.imageScale+Global.baseScale));
+		
+		
+		return new Point((int)x, (int)y);
+	}
+	
 	public static Point vpToScreen(Point p)
 	{
 		return new Point(p.x + ((screenWidth-vpWidth) / 2), p.y + ((screenHeight-vpHeight) / 2));

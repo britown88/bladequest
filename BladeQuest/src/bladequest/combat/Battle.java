@@ -160,7 +160,52 @@ public class Battle
 			{
 				previousCharacter();
 			}
-			@Override
+			
+			@Override		
+			public void onLongPress(int x, int y)
+			{
+				if(mainMenu.getCurrentSelectedEntry() != null)
+				{
+					String opt = ((String)mainMenu.getCurrentSelectedEntry().obj);
+					boolean disabled = mainMenu.getCurrentSelectedEntry().Disabled();
+					mainMenu.touchActionUp(x, y);
+
+					if(opt.equals("atk"))
+					{
+						showMessage("Attack with currentl equipped weapon.");
+					}
+					else if(opt.equals("itm"))
+					{
+						if(disabled)
+							showMessage("You have no items!");
+						else
+							showMessage("Choose an item from your inventory to use.");
+					}
+					else if(opt.equals("act"))
+					{
+						showMessage(currentChar.getCombatAction().getDescription());
+					}
+					else if(opt.equals("grd"))
+					{
+						showMessage("Increase your defense by 50% for one turn.");
+					}
+					else if(opt.equals("ab"))
+					{
+						if(disabled)
+							showMessage("You don;t know any abilities!");
+						else
+							showMessage("Choose an ability you know to use.");
+					}
+					else if(opt.equals("run"))
+					{
+						showMessage("Attempt to run from battle.");
+						showMessage("Everyone must successfully run in order to escape!");
+					}					
+				}
+					
+			}
+			
+			@Override			
 			public void touchActionUp(int x, int y) 
 			{
 				switch(mainMenu.touchActionUp(x, y))
@@ -206,6 +251,19 @@ public class Battle
 				stateMachine.setState(getTargetState(itm.getTargetType()));
 			}
 
+			@Override		
+			public void onLongPress(int x, int y)
+			{
+				if(mainMenu.getCurrentSelectedEntry() != null)
+				{
+					String desc = ((Item)mainMenu.getCurrentSelectedEntry().obj).getDescription();
+					mainMenu.touchActionUp(x, y);
+					showMessage(desc);
+					
+				}
+					
+			}
+			
 			@Override
 			public void addMenuItems() {
 				for(Item i : Global.party.getInventory(true))
@@ -231,6 +289,18 @@ public class Battle
 				stateMachine.setState(getTargetState(ab.TargetType()));
 			}
 
+			@Override		
+			public void onLongPress(int x, int y)
+			{
+				if(mainMenu.getCurrentSelectedEntry() != null)
+				{
+					String desc = ((Ability)mainMenu.getCurrentSelectedEntry().obj).getDescription();
+					mainMenu.touchActionUp(x, y);
+					showMessage(desc);					
+				}
+					
+			}
+			
 			@Override
 			public void addMenuItems() {
 				for(Ability a : currentChar.getAbilities())
@@ -1224,6 +1294,11 @@ public class Battle
 	public void backButtonPressed()
 	{
 		stateMachine.getState().backButtonPressed();
+	}
+	public void onLongPress(int x, int y)
+	{
+		if(msgBox.Closed() && messageQueue.size() == 0)
+			stateMachine.getState().onLongPress(x, y);
 	}
 	public void touchActionUp(int x, int y)
 	{

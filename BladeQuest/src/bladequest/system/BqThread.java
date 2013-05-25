@@ -1,5 +1,6 @@
 package bladequest.system;
 
+import android.graphics.Point;
 import android.media.AudioManager;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -159,18 +160,7 @@ public class BqThread extends Thread
     {
 		if(event != null)
 		{			
-			int x = (int)event.getX();
-			int y =	(int)event.getY();
-			
-			//scale x and y coords to screen scale:		
-			if(x > Global.screenWidth / 2)
-				x = (int)((float)(x-Global.screenWidth/2.0F)/(Global.imageScale+Global.baseScale))+(int)(Global.screenWidth/2.0F);
-			if(x < Global.screenWidth / 2)
-				x = (int)(Global.screenWidth / 2.0F) - (int)(((Global.screenWidth/2.0F) - (float)x)/(Global.imageScale+Global.baseScale));
-			if(y > Global.screenHeight / 2)
-				y = (int)((float)(y-Global.screenHeight/2.0F)/(Global.imageScale+Global.baseScale))+(int)(Global.screenHeight/2.0F);
-			if(y < Global.screenHeight / 2)
-				y = (int)(Global.screenHeight / 2.0F) - (int)(((Global.screenHeight/2.0F) - (float)y)/(Global.imageScale+Global.baseScale));
+			Point p = Global.inputToScreen(event.getX(), event.getY());
 			
 	    	switch(Global.GameState)
 	    	{
@@ -179,13 +169,13 @@ public class BqThread extends Thread
 	    		switch (event.getAction())
 	        	{
 	        	case MotionEvent.ACTION_DOWN:
-	        		Global.title.touchActionDown(x, y);
+	        		Global.title.touchActionDown(p.x, p.y);
 	        		break;
 	        	case MotionEvent.ACTION_UP:
-	        		Global.title.touchActionUp(x, y);    		
+	        		Global.title.touchActionUp(p.x, p.y);    		
 	        		break;
 	        	case MotionEvent.ACTION_MOVE:
-	        		Global.title.touchActionMove(x, y);
+	        		Global.title.touchActionMove(p.x, p.y);
 	        		break;
 	        	}
 	    		break;
@@ -194,18 +184,18 @@ public class BqThread extends Thread
 	        	{
 	        	case MotionEvent.ACTION_DOWN:        		
 	        		if(Global.worldMsgBox != null) 
-	        			Global.worldMsgBox.touchActionDown(x, y);
+	        			Global.worldMsgBox.touchActionDown(p.x, p.y);
 
 	    			if(Global.debugButton != null)
 	    			{
-	    				Global.debugButton.touchActionDown(x, y);
+	    				Global.debugButton.touchActionDown(p.x, p.y);
 	    				Global.debugButton.clearSelectedEntry();
 	    			}
 	    			
 	    			if(Global.party.allowMovement() && Global.menuButton.Opened())
-	    				Global.menuButton.touchActionDown(x, y);	    				
+	    				Global.menuButton.touchActionDown(p.x, p.y);	    				
 
-	            	Global.updateMousePosition(x, y, true);
+	            	Global.updateMousePosition(p.x, p.y, true);
 
 	    			
 	        		//Global.playTestSound();
@@ -213,15 +203,15 @@ public class BqThread extends Thread
 	        		break;
 	        	case MotionEvent.ACTION_MOVE:
 	        		if(Global.worldMsgBox != null) 
-	        			Global.worldMsgBox.touchActionMove(x, y);
+	        			Global.worldMsgBox.touchActionMove(p.x, p.y);
 
 	    			if(Global.debugButton != null)
-	    				Global.debugButton.touchActionMove(x, y);
+	    				Global.debugButton.touchActionMove(p.x, p.y);
 
 	    			if(Global.party.allowMovement() && Global.menuButton.Opened())
-	    				Global.menuButton.touchActionDown(x, y);	
+	    				Global.menuButton.touchActionDown(p.x, p.y);	
 	    			
-	    			Global.updateMousePosition(x, y, false);
+	    			Global.updateMousePosition(p.x, p.y, false);
 	    			
 	        		//Global.playTestSound();
 	        		
@@ -229,17 +219,17 @@ public class BqThread extends Thread
 	        	case MotionEvent.ACTION_UP:
 	        		if(Global.worldMsgBox != null) 
 	        		{
-	        			Global.worldMsgBox.touchActionUp(x, y);
+	        			Global.worldMsgBox.touchActionUp(p.x, p.y);
 	        			if(Global.worldMsgBox.Closing() && Global.party.allowMovement())
 	        				Global.menuButton.open();
 	        		}
 	        			
 	        		
-	        		if(Global.debugButton != null && Global.debugButton.contains(x, y) && Global.debugButton.touchActionUp(x, y) == LBStates.Selected)
+	        		if(Global.debugButton != null && Global.debugButton.contains(p.x, p.y) && Global.debugButton.touchActionUp(p.x, p.y) == LBStates.Selected)
 	        			Global.openDebugMenu();
 	        		
-	        		if(Global.party.allowMovement() && Global.menuButton.contains(x, y) 
-	        				&& Global.menuButton.touchActionUp(x, y) == LBStates.Selected
+	        		if(Global.party.allowMovement() && Global.menuButton.contains(p.x, p.y) 
+	        				&& Global.menuButton.touchActionUp(p.x, p.y) == LBStates.Selected
 	        				&& Global.menuButton.Opened())
 	    				Global.openMainMenu();
 	        		break;
@@ -250,15 +240,15 @@ public class BqThread extends Thread
 	    		switch (event.getAction())
 	        	{
 	        	case MotionEvent.ACTION_DOWN:
-	        		Global.battle.touchActionDown(x, y);
+	        		Global.battle.touchActionDown(p.x, p.y);
 	        		break;
 	        		
 	        	case MotionEvent.ACTION_UP:
-	        		Global.battle.touchActionUp(x, y);
+	        		Global.battle.touchActionUp(p.x, p.y);
 	        		break;
 	        		
 	        	case MotionEvent.ACTION_MOVE:
-	        		Global.battle.touchActionMove(x, y);
+	        		Global.battle.touchActionMove(p.x, p.y);
 	        		break;
 	        	}
 	    		break;
@@ -266,15 +256,15 @@ public class BqThread extends Thread
 	    		switch (event.getAction())
 	        	{
 	        	case MotionEvent.ACTION_DOWN:
-	        		Global.menu.touchActionDown(x, y);
+	        		Global.menu.touchActionDown(p.x, p.y);
 	        		break;
 	        		
 	        	case MotionEvent.ACTION_UP:
-	        		Global.menu.touchActionUp(x, y);
+	        		Global.menu.touchActionUp(p.x, p.y);
 	        		break;
 	        		
 	        	case MotionEvent.ACTION_MOVE:
-	        		Global.menu.touchActionMove(x, y);
+	        		Global.menu.touchActionMove(p.x, p.y);
 	        		break;
 	        	}
 	    		break;
@@ -283,15 +273,15 @@ public class BqThread extends Thread
 	    		switch (event.getAction())
 	        	{
 	        	case MotionEvent.ACTION_DOWN:
-	        		Global.saveLoadMenu.touchActionDown(x, y);
+	        		Global.saveLoadMenu.touchActionDown(p.x, p.y);
 	        		break;
 	        		
 	        	case MotionEvent.ACTION_UP:
-	        		Global.saveLoadMenu.touchActionUp(x, y);
+	        		Global.saveLoadMenu.touchActionUp(p.x, p.y);
 	        		break;
 	        		
 	        	case MotionEvent.ACTION_MOVE:
-	        		Global.saveLoadMenu.touchActionMove(x, y);
+	        		Global.saveLoadMenu.touchActionMove(p.x, p.y);
 	        		break;
 	        	}
 	    		break;
@@ -299,15 +289,15 @@ public class BqThread extends Thread
 	    		switch (event.getAction())
 	        	{
 	        	case MotionEvent.ACTION_DOWN:
-	        		Global.merchantScreen.touchActionDown(x, y);
+	        		Global.merchantScreen.touchActionDown(p.x, p.y);
 	        		break;
 	        		
 	        	case MotionEvent.ACTION_UP:
-	        		Global.merchantScreen.touchActionUp(x, y);
+	        		Global.merchantScreen.touchActionUp(p.x, p.y);
 	        		break;
 	        		
 	        	case MotionEvent.ACTION_MOVE:
-	        		Global.merchantScreen.touchActionMove(x, y);
+	        		Global.merchantScreen.touchActionMove(p.x, p.y);
 	        		break;
 	        	}
 	    		break;
@@ -315,15 +305,15 @@ public class BqThread extends Thread
 	    		switch (event.getAction())
 	        	{
 	        	case MotionEvent.ACTION_DOWN:
-	        		Global.debugScreen.touchActionDown(x, y);
+	        		Global.debugScreen.touchActionDown(p.x, p.y);
 	        		break;
 	        		
 	        	case MotionEvent.ACTION_UP:
-	        		Global.debugScreen.touchActionUp(x, y);
+	        		Global.debugScreen.touchActionUp(p.x, p.y);
 	        		break;
 	        		
 	        	case MotionEvent.ACTION_MOVE:
-	        		Global.debugScreen.touchActionMove(x, y);
+	        		Global.debugScreen.touchActionMove(p.x, p.y);
 	        		break;
 	        	}
 	    		break;
@@ -331,15 +321,15 @@ public class BqThread extends Thread
 	    		switch (event.getAction())
 	        	{
 	        	case MotionEvent.ACTION_DOWN:
-	        		Global.nameSelect.touchActionDown(x, y);
+	        		Global.nameSelect.touchActionDown(p.x, p.y);
 	        		break;
 	        		
 	        	case MotionEvent.ACTION_UP:
-	        		Global.nameSelect.touchActionUp(x, y);
+	        		Global.nameSelect.touchActionUp(p.x, p.y);
 	        		break;
 	        		
 	        	case MotionEvent.ACTION_MOVE:
-	        		Global.nameSelect.touchActionMove(x, y);
+	        		Global.nameSelect.touchActionMove(p.x, p.y);
 	        		break;
 	        	}
 	    		break;

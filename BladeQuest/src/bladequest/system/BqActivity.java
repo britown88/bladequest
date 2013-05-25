@@ -6,6 +6,7 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Point;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -148,10 +149,14 @@ implements OnGestureListener, AudioManager.OnAudioFocusChangeListener
     public void onLongPress(MotionEvent e)
     {
     	//Global.logMessage("LongPress");
+    	Point p = Global.inputToScreen(e.getX(), e.getY());
     	switch(Global.GameState)
     	{
     	case GS_TITLE:
     		Global.title.onLongPress();
+    		break;
+    	case GS_BATTLE:
+    		Global.battle.onLongPress(p.x, p.y);
     		break;
 		default:
 			break;

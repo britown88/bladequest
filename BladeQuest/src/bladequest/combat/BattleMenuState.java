@@ -21,6 +21,8 @@ public abstract class BattleMenuState extends BattleState {
 	public abstract void onSelected(Object obj);
 	public abstract void addMenuItems();
 	
+	public void onLongPress(Object obj){}
+	
 	@Override
 	public void menuUpdate()
 	{
@@ -51,6 +53,20 @@ public abstract class BattleMenuState extends BattleState {
 	{
 		cancelToPrevState();
 	}
+	
+	@Override
+	public void onLongPress(int x, int y)
+	{
+		if(mainMenu.getCurrentSelectedEntry() != null)
+		{
+			Object obj = mainMenu.getCurrentSelectedEntry().obj;
+			mainMenu.touchActionUp(0, 0);
+			onLongPress(obj);
+		}
+			
+
+	}
+	
 	@Override			
 	public void touchActionUp(int x, int y)
 	{
