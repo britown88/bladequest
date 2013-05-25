@@ -156,6 +156,9 @@ implements SurfaceHolder.Callback
     	case GS_PAUSE:
     		if(Global.map != null)
     			drawWorld();
+    		
+    		if(Global.party.allowMovement)
+    			Global.menuButton.render();
 
     		if(Global.debugButton != null)
     			Global.debugButton.render();

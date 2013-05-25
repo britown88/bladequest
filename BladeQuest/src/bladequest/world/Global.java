@@ -168,7 +168,7 @@ public class Global
 	public static DebugScreen debugScreen;
 	public static boolean openMenuFlag, openDebugFlag;
 	
-	public static ListBox debugButton;
+	public static ListBox debugButton, menuButton;
 	
 	public static BqActivity activity;
 	public static BqPanel panel;
@@ -274,7 +274,13 @@ public class Global
 	}
 
 	public static void updateMousePosition(int x, int y, boolean autoNewTarget)
-	{	
+	{
+		if(party.allowMovement && menuButton.contains(x, y))
+			return;
+		
+		if(debugButton != null && debugButton.contains(x, y))
+			return;
+		
 		if(worldMsgBox == null || worldMsgBox.Closed())
 		{
 			if(inputDelay)
@@ -307,10 +313,6 @@ public class Global
 				newTarget = true;
 				
 				playSound("dlg");
-				
-				//playAnimation("poison", null, new Point(screenToVPX(x), screenToVPY(y)));
-				
-				//TestAnimation(screenToVPX(x), screenToVPY(y));
 			}
 		}
 
@@ -618,6 +620,9 @@ public class Global
     			else
     				mapChangeCallingState = null;
     		
+    		if(party.allowMovement)
+    			menuButton.update();
+    		
     		if(debugButton != null)
     			debugButton.update();
 
@@ -767,10 +772,17 @@ public class Global
         	musicBox.play("", false, true, 0);
         	
         	
+        	Paint paint = textFactory.getTextPaint(13, Color.WHITE, Align.CENTER);
+        	menuButton = new ListBox(vpWidth, vpHeight, 80, 40, 1, 1, paint);
+        	menuButton.anchor = Anchors.BottomRight;
+        	menuButton.addItem("Menu", null, false);
+        	menuButton.drawAllFrames = true;
+        	
+        	
         	//create debug button
         	
         	//TODO: REMOVE THIS PART FOR RELEASE
-        	debugButton = new ListBox(vpWidth,vpHeight, 40, 40, 1, 1, textFactory.getTextPaint(13, Color.WHITE, Align.CENTER));
+        	debugButton = new ListBox(vpWidth - 80, vpHeight, 40, 40, 1, 1, paint);
         	debugButton.anchor = Anchors.BottomRight;
         	debugButton.addItem("!", null, false);
         	//TODO: REMOVE THIS PART FOR RELEASE
@@ -1196,8 +1208,7 @@ public class Global
 	}
 
 	public static boolean noRunningAnims() 
-	{
-		
+	{		
 		return playingAnims.isEmpty();
 	}
 

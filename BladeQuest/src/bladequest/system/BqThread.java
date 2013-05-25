@@ -199,12 +199,13 @@ public class BqThread extends Thread
 	    			{
 	    				Global.debugButton.touchActionDown(x, y);
 	    				Global.debugButton.clearSelectedEntry();
-	    				
-	    				//if(Global.debugButton.getSelectedEntry() == null)
-	            		Global.updateMousePosition(x, y, true);
 	    			}
-	    			else
-	    				Global.updateMousePosition(x, y, true);
+	    			
+	    			if(Global.party.allowMovement)
+	    				Global.menuButton.touchActionDown(x, y);	    				
+
+	            	Global.updateMousePosition(x, y, true);
+
 	    			
 	        		//Global.playTestSound();
 	        		
@@ -214,13 +215,12 @@ public class BqThread extends Thread
 	        			Global.worldMsgBox.touchActionMove(x, y);
 
 	    			if(Global.debugButton != null)
-	    			{
 	    				Global.debugButton.touchActionMove(x, y);
-	    				if(Global.debugButton.getSelectedEntry() == null)
-	            			Global.updateMousePosition(x, y, false);
-	    			}
-	    			else
-	    				Global.updateMousePosition(x, y, false);
+
+	    			if(Global.party.allowMovement)
+	    				Global.menuButton.touchActionDown(x, y);	
+	    			
+	    			Global.updateMousePosition(x, y, false);
 	    			
 	        		//Global.playTestSound();
 	        		
@@ -229,8 +229,11 @@ public class BqThread extends Thread
 	        		if(Global.worldMsgBox != null) 
 	        			Global.worldMsgBox.touchActionUp(x, y);
 	        		
-	        		if(Global.debugButton != null && Global.debugButton.touchActionUp(x, y) == LBStates.Selected)
+	        		if(Global.debugButton != null && Global.debugButton.contains(x, y) && Global.debugButton.touchActionUp(x, y) == LBStates.Selected)
 	        			Global.openDebugMenu();
+	        		
+	        		if(Global.party.allowMovement && Global.menuButton.contains(x, y) && Global.menuButton.touchActionUp(x, y) == LBStates.Selected)
+	    				Global.openMainMenu();
 	        		break;
 	        	}
 	    		break;
