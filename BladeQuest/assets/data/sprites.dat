@@ -1,32 +1,63 @@
-[sprites]
-worldsprite heroworld aramis 0 0
-worldsprite heroworld roland 1 0
-worldsprite heroworld sanson 2 0
-worldsprite heroworld reine 3 0
-worldsprite heroworld ursos 4 0
-worldsprite heroworld joy 5 0
-worldsprite heroworld curtana 0 1
-worldsprite heroworld luc 1 1
-worldsprite heroworld luc2 2 1
-worldsprite heroworld marie 3 1
-worldsprite heroworld carl 4 1
-#
-worldsprite npcsprites robe 0 0
-worldsprite npcsprites guard 1 0
-worldsprite npcsprites bandit 2 0
-#
-worldsprite switches switches 0 0
-worldsprite switches sword 1 0
-#
-enemysprite rat newenemies 96 64 0 0
-enemysprite bat enemies32 48 32 0 1
-enemysprite hawk enemies48 72 48 0 0
-enemysprite gnome enemies48 72 48 0 1
-enemysprite zombie enemies48 72 48 0 2
-enemysprite guard enemies48 72 48 1 0
-#
-battlesprite broland 0 0
-battlesprite baramis 1 0
-battlesprite bluc 2 0
-battlesprite bluc2 3 0
-battlesprite bjoy 0 1
+#Sprites
+addHeroWorldSprites 0
+createWorldSprite "heroworld" "aramis" 0 0
+createWorldSprite "heroworld" "roland" 1 0
+createWorldSprite "heroworld" "sanson" 2 0
+createWorldSprite "heroworld" "reine" 3 0
+createWorldSprite "heroworld" "ursos" 4 0
+createWorldSprite "heroworld" "joy" 5 0
+createWorldSprite "heroworld" "curtana" 0 1
+createWorldSprite "heroworld" "luc" 1 1
+createWorldSprite "heroworld" "luc2" 2 1
+createWorldSprite "heroworld" "marie" 3 1
+createWorldSprite "heroworld" "carl" 4 1
+
+addNPCSprites 0
+createWorldSprite "npcsprites" "robe" 0 0
+createWorldSprite "npcsprites" "guard" 1 0
+createWorldSprite "npcsprites" "bandit" 2 0
+
+addMiscSprites 0
+createWorldSprite "switches" "switches" 0 0
+createWorldSprite "switches" "sword" 1 0
+
+addEnemySprites 0
+createEnemySprite "rat" "newenemies" 96 64 0 0
+createEnemySprite "bat" "enemies32" 48 32 0 1
+createEnemySprite "hawk" "enemies48" 72 48 0 0
+createEnemySprite "gnome" "enemies48" 72 48 0 1
+createEnemySprite "zombie" "enemies48" 72 48 0 2
+createEnemySprite "guard" "enemies48" 72 48 1 0
+
+addBattleSprites 0
+createBattleSprite "broland" 0 0
+createBattleSprite "baramis" 1 0
+createBattleSprite "bluc" 2 0
+createBattleSprite "bluc2" 3 0
+createBattleSprite "bjoy" 0 1
+
+\hero <- addHeroWorldSprites 0
+\npc <- addNPCSprites 0
+\misc <- addMiscSprites 0
+\enemy <- addEnemySprites 0
+\battle <- addBattleSprites 0
+
+\rdflying <- (createSprite "rdflying" "rolanddragon" 280 144 >
+addSpriteFrame "down" 0 0 140 72 >
+addSpriteFrame "down" 140 0 280 72 >
+addSpriteFrame "down" 280 0 420 72 >
+addSpriteFrame "down" 420 0 560 72 >
+setFace "down")
+
+\rdlanding <- (createSprite "rdlanding" "rolanddragon" 280 144 >
+addSpriteFrame "left" 0 72 140 144 >
+addSpriteFrame "up" 140 72 280 144 >
+addSpriteFrame "right" 280 72 420 144 >
+addSpriteFrame "down" 420 72 560 144 >
+setFace "left")
+
+\rdroaring <- (createSprite "rdroaring" "rolanddragon" 280 144 >
+addSpriteFrame "left" 0 144 140 216 >
+addSpriteFrame "up" 140 144 280 216 >
+addSpriteFrame "right" 280 144 420 216 >
+setFace "left")

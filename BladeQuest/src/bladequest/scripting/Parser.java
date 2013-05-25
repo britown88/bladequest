@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.util.Log;
 import bladequest.scripting.Script.BadSpecialization;
 import bladequest.scripting.ScriptVar.BadTypeException;
 import bladequest.scripting.ScriptVar.EmptyList;
@@ -1243,7 +1244,7 @@ public class Parser {
 		{
 			//YOU DUN GOOFED			
 			e.printStackTrace();
-			System.err.println("Error on line: " + lineNumber + e.what());
+			Log.d("Parser", "Error on line: " + lineNumber + e.what());
 		}	
 	}
 	
