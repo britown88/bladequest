@@ -1684,9 +1684,9 @@ public class MainMenu
 		
 		MenuPanel nameBox = new MenuPanel(Global.vpWidth / 2, 0, Global.vpWidth - menuWidth*2, barHeight);
 		nameBox.anchor = Anchors.TopCenter;
-		MenuPanel mainBox = new MenuPanel(0, barHeight, Global.vpWidth - menuWidth, Global.vpHeight - barHeight*2);
+		MenuPanel mainBox = new MenuPanel(0, barHeight, Global.vpWidth - menuWidth, Global.vpHeight - barHeight*3);
 		MenuPanel statsBox = new MenuPanel(Global.vpWidth, barHeight, menuWidth, Global.vpHeight - barHeight);
-		MenuPanel equipBox = new MenuPanel(0, Global.vpHeight, Global.vpWidth - menuWidth, barHeight * 2);
+		MenuPanel equipBox = new MenuPanel(0, Global.vpHeight, Global.vpWidth - menuWidth, barHeight * 3);
 		
 		statsBox.anchor = Anchors.TopRight;
 		equipBox.anchor = Anchors.BottomLeft;
@@ -1700,7 +1700,7 @@ public class MainMenu
 		
 		Paint blueRight = buildPaint(10, Color.CYAN, Align.RIGHT);
 		Paint whiteRight = buildPaint(10, Color.WHITE, Align.RIGHT);
-		Paint largeWhiteCenter = buildPaint(15, Color.WHITE, Align.CENTER);
+		Paint largeWhiteCenter = buildPaint(18, Color.WHITE, Align.CENTER);
 		
 		float widths[] = new float[1];
 		blueRight.getTextWidths("5", widths);
@@ -1719,11 +1719,11 @@ public class MainMenu
 		
 		
 		//Name
-		nameBox.addTextBox(selectedChar.getDisplayName(), Global.vpWidth / 2, barHeight / 2, menuTextCenter);
+		nameBox.addTextBox(selectedChar.getDisplayName(), nameBox.width/2, nameBox.height / 2, largeWhiteCenter);
 				
 		//Portrait
 		Rect src = selectedChar.getPortraitSrcRect();
-		Rect dest = new Rect(0, 0, menuWidth,  menuWidth);
+		Rect dest = new Rect(0, -12, menuWidth,  menuWidth-12);
 		dest.inset(24, 24);
 		mainBox.addPicBox(Global.bitmaps.get("portraits"), src, dest);
 			

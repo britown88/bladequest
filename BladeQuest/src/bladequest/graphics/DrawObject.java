@@ -122,7 +122,7 @@ public class DrawObject
 		    int height = Math.abs(bounds.bottom - bounds.top);
 		    
 		    Paint p2 = Global.textFactory.getTextPaint((int)p.getTextSize(), Color.BLACK, p.getTextAlign());
-		    int offset = (int)(p.getTextSize()/10) + 1;
+		    int offset = 2;
 		    
 		    for(int i = 1; i <= offset; ++i)		    
 		    	canvas.drawText(str, f1 - bounds.left + i, f2 + height/2.0f + 2 + i, p2);			

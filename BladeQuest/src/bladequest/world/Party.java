@@ -84,7 +84,14 @@ public class Party
 	public boolean allowMovement(){return allowMovement;}
 	public void setAllowMovement(boolean am)
 	{
-		if(am) Global.menuButton.open(); else Global.menuButton.close();
+		if(am) 
+		{
+			if(!Global.menuButton.Opened())
+				Global.menuButton.open();
+		}
+		else 
+			Global.menuButton.close();
+		
 		allowMovement = am; 
 	}
 	
