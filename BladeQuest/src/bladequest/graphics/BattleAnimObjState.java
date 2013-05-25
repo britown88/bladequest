@@ -41,12 +41,18 @@ public class BattleAnimObjState
 		switch(posType)
 		{
 		case Source:
-			pos1.offset(parent.source.x, parent.source.y);
-			pos2.offset(parent.source.x, parent.source.y);
+			if(parent.source != null)
+			{
+				pos1.offset(parent.source.x, parent.source.y);
+				pos2.offset(parent.source.x, parent.source.y);				
+			}			
 			break;
 		case Target:
-			pos1.offset(parent.target.x, parent.target.y);
-			pos2.offset(parent.target.x, parent.target.y);
+			if(parent.target != null)
+			{
+				pos1.offset(parent.target.x, parent.target.y);
+				pos2.offset(parent.target.x, parent.target.y);
+			}			
 			break;
 		default:
 			break;

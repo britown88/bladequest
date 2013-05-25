@@ -3,7 +3,9 @@ package bladequest.world;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -13,6 +15,7 @@ import bladequest.graphics.Tile;
 import bladequest.pathfinding.AStarObstacle;
 import bladequest.pathfinding.AStarPath;
 import bladequest.statuseffects.StatusEffect;
+import bladequest.system.Lambda;
 import bladequest.world.Item.Type;
 
 public class Party 
@@ -50,10 +53,14 @@ public class Party
 	private boolean faceLocked = false;
 	private boolean hide = false;
 	
+	private long stepcount;
+	
 	
 	public Party(int x, int y) 
 	{
 		allowMovement = true;
+		
+		stepcount = 0;
 		
 		worldPos = new Point(x*32, y*32);
 		gridPos = new Point(x, y);
@@ -549,15 +556,30 @@ public class Party
 		return false;
 	}
 	
+	public long getStepCount() { return stepcount; }
+	
+	
+	
 	private void step()
 	{
+		stepcount++;
 		gridaligned = true;
 		gridPos = movePath.get(0);
+		
+		List<String> SERan = new ArrayList<String>();;		
 		
 		for(PlayerCharacter c : partyMembers)
 			if(c != null)
 			for(StatusEffect se : c.getStatusEffects())
+			{
+				if(SERan.indexOf(se.Name()) == -1)
+				{
+					SERan.add(se.Name());
+					se.worldEffect();
+				}
 				se.onStep(c);
+			}
+				
 		
 		//check for encounters, if not, continue movement
 		if(objPath != null)

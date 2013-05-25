@@ -39,6 +39,8 @@ public class StatusEffect
 	public void onRemove(PlayerCharacter c) {}
 	public void onStep(PlayerCharacter c) {}	
 	
+	public void worldEffect(){}
+	
 	public String saveLine() { return ""; }
 	
 	public interface Filter

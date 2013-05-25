@@ -14,7 +14,6 @@ import bladequest.world.Stats;
 public class sePoison extends StatusEffect
 {
 	float power;
-	int stepCount;
 	
 	public sePoison(float power)
 	{
@@ -25,7 +24,6 @@ public class sePoison extends StatusEffect
 		removeOnDeath = true;
 		battleOnly = false;
 		hidden = false;
-		stepCount = 0;
 	}
 	@Override
 	public String saveLine() 
@@ -71,26 +69,31 @@ public class sePoison extends StatusEffect
 	public void onRemove(PlayerCharacter c) {}
 	
 	@Override
+	public void worldEffect()
+	{
+		if(Global.party.getStepCount() % 3 == 0)
+		{
+			Global.screenShaker.shake(3, 0.1f, true);
+			Global.screenFader.setFadeColor(64, 34, 177, 76);
+			Global.screenFader.flash(5);
+		}
+		
+	}
+	
+	@Override
 	public void onStep(PlayerCharacter c) 
 	{
-		stepCount++;
 		
-		if(stepCount % 3 == 0)
+		if(Global.party.getStepCount() % 3 == 0)
 		{
 			if(!c.isDead())
-			{
-				c.modifyHP(-power/10.0f, true);
-				Global.screenShaker.shake(3, 0.1f, true);
-				Global.screenFader.setFadeColor(64, 34, 177, 76);
-				Global.screenFader.flash(5);
+				c.modifyHP(-power/10.0f, true);				
 				
-				if(c.isDead())
-				{
-					Global.showMessage(c.getDisplayName() + " succumbed to poison and fell unconscious.", false);
-					Global.party.clearMovementPath();
-				}
-			}
-			
+			if(c.isDead())
+			{
+				Global.showMessage(c.getDisplayName() + " succumbed to poison and fell unconscious.", false);
+				Global.party.clearMovementPath();
+			}			
 		}
 			
 	}	
