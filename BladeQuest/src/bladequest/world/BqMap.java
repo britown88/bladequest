@@ -13,6 +13,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Point;
 import android.graphics.Rect;
+import bladequest.UI.MenuPanel;
 import bladequest.actions.actFadeControl;
 import bladequest.actions.actMerchant;
 import bladequest.actions.actMessage;
@@ -72,6 +73,8 @@ public class BqMap
 	private actMessage forkMessage;
 	private boolean yesFork, noFork;
 	
+	private MenuPanel displayNamePanel;
+	
 	
 	public BqMap(String mapname, InputStream file)
 	{	
@@ -101,24 +104,39 @@ public class BqMap
 		for(GameObject go : objects)
 			if(go.AutoStarts())
 				go.execute();
+		
+		nameDisplayPaint = Global.textFactory.getTextPaint(13, Color.WHITE, Align.CENTER);
+		
+		
+		displayNamePanel = new MenuPanel();
+		displayNamePanel.thickFrame = false;
+		displayNamePanel.setInset(-10, -7);
+		displayNamePanel.addTextBox("", 0, 0, nameDisplayPaint);	
+		displayNamePanel.hide(); 
 
 		
 		if(displayName != null)
 		{
+			displayNamePanel.show();
 			nameDisplayCounter = 0;
 			showDisplayName = true;
 			
-			nameDisplayPaint = Global.textFactory.getTextPaint(13, Color.WHITE, Align.CENTER);
 			
-			displayNameRect = new Rect();
+			Rect displayNameRect = new Rect();
 			nameDisplayPaint.getTextBounds(displayName, 0, displayName.length()-1, displayNameRect);
-			displayNameRect.inset(-12, -9);
-			displayNameRect = new Rect(
-					Global.vpToScreenX((Global.vpWidth - displayNameRect.width())/2), 
-					Global.vpToScreenY(0), 
-					Global.vpToScreenX((Global.vpWidth - displayNameRect.width())/2 + displayNameRect.width()), 
-					Global.vpToScreenY(displayNameRect.height()));
-			displayNameRect.offset(0, 4);
+			
+			displayNameRect = Global.screenToVP(displayNameRect);
+			displayNameRect.inset(-10, 0);			
+			
+			displayNamePanel.pos.x = (Global.vpWidth - displayNameRect.width())/2;
+			displayNamePanel.pos.y = 0;
+			displayNamePanel.width = displayNameRect.width();
+			displayNamePanel.height = displayNameRect.height();
+			displayNamePanel.update();
+			
+			displayNamePanel.getTextAt(0).text = displayName;
+			displayNamePanel.getTextAt(0).x = displayNamePanel.insetWidth()/2;
+			displayNamePanel.getTextAt(0).y = displayNamePanel.insetHeight()/2;
 		}
 		
 		
@@ -217,9 +235,15 @@ public class BqMap
 	
 	public void update()
 	{
+		displayNamePanel.update();
+		
 		if(showDisplayName)
 			if(nameDisplayCounter++ >= nameDisplayLength)
+			{
+				displayNamePanel.hide();
 				showDisplayName = false;
+			}
+				
 			
 		for(GameObject b : objects) 
 			b.update();   
@@ -227,11 +251,7 @@ public class BqMap
 	
 	public void renderDisplayName()
 	{
-		if(showDisplayName)
-		{
-			Global.drawFrame(displayNameRect, true);
-			Global.renderer.drawText(displayName, displayNameRect.centerX(), displayNameRect.centerY(), nameDisplayPaint);
-		}
+		displayNamePanel.render();
 	}
 	
 	private void renderTiles(TilePlate[] plates, List<TilePlate> loadList)
