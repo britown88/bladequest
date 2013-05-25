@@ -27,7 +27,8 @@ character luc "Luc" bluc luc
 portrait 1 0
 abilities "Swordplay"
 ability assault
-lability zornhau 6
+ability zornhau
+#lability zornhau 6
 combataction combStance
 basestats 10 4 7 2
 level 5

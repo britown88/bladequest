@@ -44,18 +44,19 @@ public class sePoison extends StatusEffect
 		builder.addEventObject(new TargetedAction(damageTarget)
 		{
 			int damage;
-			TargetedAction initialize(int damage)
+			BattleAnim anim;
+			TargetedAction initialize(int damage, BattleAnim anim)
 			{
+				this.anim = anim;
 				this.damage = damage;
 				return this;
 			}
 			@Override
 			protected void buildEvents(BattleEventBuilder builder) {
+				builder.addEventObject(new bactRunAnimation(anim));
 				builder.addEventObject(new bactDamage(damage, DamageTypes.Fixed));	
 			}
-		}.initialize(damage));
-				
-		builder.addEventObject(new bactRunAnimation(anim));
+		}.initialize(damage, anim));
 	}
 	
 	@Override

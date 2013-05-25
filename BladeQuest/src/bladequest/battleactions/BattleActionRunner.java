@@ -72,6 +72,16 @@ public class BattleActionRunner extends BattleAction {
 			{
 				remainingActions.remove(action);
 				action.removeReferences();
+				
+				rootActions = new ArrayList<BattleAction>();
+
+				for (BattleAction subActions : remainingActions)
+				{
+					if (subActions.isRoot())
+					{
+						rootActions.add(subActions);
+					}
+				}				
 			}
 		}
 		
