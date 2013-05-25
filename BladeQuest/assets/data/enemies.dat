@@ -23,6 +23,9 @@ addDefaultStaffHit enemy
    
 addAttackOnlyState enemy
 	enemy > setEnemyAI (createAI "default" (createAIState ([e] "")))
+	
+addBiteOnlyState enemy
+	enemy > setEnemyAI (createAI "biteMe" (createAIState ([e] "bite")))	
 
 
 ###########################ENEMIES###################################################
@@ -33,7 +36,7 @@ addColoredStaffHit (RGBA 255 0 0 255) (RGBA 0 0 0 255) >
 setELevel 4 >
 setGold 23 >
 setItems "potion" 25 "antidote" 85 true >
-addAttackOnlyState >
+addBiteOnlyState >
 addEAbility "bite")
 
 #
