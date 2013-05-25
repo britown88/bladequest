@@ -24,61 +24,62 @@ addDefaultStaffHit enemy
 ###########################ENEMIES###################################################
 #
 \rat <- (addEnemy "rat" "Rat" "rat" >
-setBaseStats 10 1 1000 1 >
+setEBaseStats 10 1 1000 1 >
 addColoredStaffHit (RGBA 255 0 0 255) (RGBA 0 0 0 255) >
-setLevel 4 >
+setELevel 4 >
 setGold 23 >
 setItems "potion" 25 "antidote" 85 true >
 setAIAbilityRate 15 >
-addAbility "bite" 100 0 100)
+addEAbility "bite" 100 0 100)
 
 #
 \guard <- (addEnemy "guard" "Guard" "guard" >
 addDefaultSwordHit >
-setBaseStats 10 10 10 10 >
-setLevel 25 >
+setEBaseStats 10 10 10 10 >
+setELevel 25 >
 setGold 1200)
 
 #
 \zombie <- (addEnemy "zombie" "Zombie" "zombie" >
 addDefaultSwordHit >
-setBaseStats 7 3 1 3 >
-setLevel 8 >
+setEBaseStats 7 3 1 3 >
+setELevel 8 >
 setGold 487)
 
 #
 \hawk <- (addEnemy "hawk" "Hawk" "hawk" >
 addDefaultDaggerHit >
-setBaseStats 3 3 3 3 >
-setLevel 20 >
+setEBaseStats 3 3 3 3 >
+setELevel 20 >
 setGold 52)
 
 #
 \gnome <- (addEnemy "gnome" "Gnome" "gnome" >
 addDefaultSwordHit >
-setBaseStats 3 3 3 3 >
-setLevel 13 >
+setEBaseStats 3 3 3 3 >
+setELevel 13 >
 setGold 123)
 
 #
 \bat <- (addEnemy "bat" "Bat" "bat" >
 addDefaultDaggerHit >
-setBaseStats 7 10 8 0 >
-setLevel 6 >
+setEBaseStats 7 10 8 0 >
+setELevel 6 >
 setGold 42  >
 setItems "potion" 50 " " 0 true)
 
 #
 \recruit <- (addEnemy "recruit" "Recruit" "guard" >
 addDefaultSwordHit >
-setLevel 7 >
+setEBaseStats 10 0 0 0 >
+setELevel 7 >
 setGold 250 >
 setBoss >
 setItems "potion" 100 "silversword" 100 true >
 setAIAbilityRate 100 >
-addAbility "recruit1" 100 1 100 >
-addAbility "recruit2" 75 50 100 >
-addAbility "recruit3" 50 50 100 >
-addAbility "recruit4" 100 1 50)
+addEAbility "recruit1" 100 1 100 >
+addEAbility "recruit2" 75 50 100 >
+addEAbility "recruit3" 50 50 100 >
+addEAbility "recruit4" 100 1 50)
 
 

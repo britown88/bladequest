@@ -56,7 +56,7 @@ public class EnemyLibrary {
 		Global.enemies.put(name, enemy);
 		return enemy;
 	}
-	public static Enemy setBaseStats(Enemy enemy, int str, int agi, int vit, int intel)
+	public static Enemy setEBaseStats(Enemy enemy, int str, int agi, int vit, int intel)
 	{
 		enemy.setBaseStats(str, agi, vit, intel);
 		return enemy;
@@ -66,7 +66,7 @@ public class EnemyLibrary {
 		enemy.setStatMod(Stats.valueOf(stat).ordinal(), mod);
 		return enemy;
 	}
-	public static Enemy setLevel(Enemy enemy, int level)
+	public static Enemy setELevel(Enemy enemy, int level)
 	{
 		enemy.modifyLevel(level);
 		return enemy;
@@ -123,7 +123,7 @@ public class EnemyLibrary {
 		enemy.setAI(rate);
 		return enemy;
 	}
-	public static Enemy addAbility(Enemy enemy, String abilityName, int chanceToCast, int healthAbove, int healthBelow)
+	public static Enemy addEAbility(Enemy enemy, String abilityName, int chanceToCast, int healthAbove, int healthBelow)
 	{
 		enemy.addAbility(abilityName, chanceToCast, healthAbove, healthBelow);
 		return enemy;
