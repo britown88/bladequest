@@ -205,6 +205,11 @@ public class MenuPanel
 		drawContent = false;
 	}
 	
+	public boolean Closing()
+	{
+		return !opened && !closed && !opening;
+	}
+	
 	public void close()
 	{
 		opened = false;

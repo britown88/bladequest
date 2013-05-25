@@ -324,6 +324,8 @@ public class Global
 		if(worldMsgBox == null)
 			worldMsgBox = new MsgBox();
 		
+		menuButton.close();
+		
 		worldMsgBox.addMessage(str, yesNoOpt);
 		if(worldMsgBox.Closed())
 			worldMsgBox.open();

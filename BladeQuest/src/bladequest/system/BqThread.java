@@ -129,7 +129,8 @@ public class BqThread extends Thread
 			switch(Global.GameState)
 			{
 			case GS_WORLDMOVEMENT:
-				Global.openMainMenu();
+				if(Global.menuButton.Opened())
+					Global.openMainMenu();
 				break;
 			case GS_MAINMENU:
 				Global.closeMainMenu();
@@ -201,7 +202,7 @@ public class BqThread extends Thread
 	    				Global.debugButton.clearSelectedEntry();
 	    			}
 	    			
-	    			if(Global.party.allowMovement())
+	    			if(Global.party.allowMovement() && Global.menuButton.Opened())
 	    				Global.menuButton.touchActionDown(x, y);	    				
 
 	            	Global.updateMousePosition(x, y, true);
@@ -217,7 +218,7 @@ public class BqThread extends Thread
 	    			if(Global.debugButton != null)
 	    				Global.debugButton.touchActionMove(x, y);
 
-	    			if(Global.party.allowMovement())
+	    			if(Global.party.allowMovement() && Global.menuButton.Opened())
 	    				Global.menuButton.touchActionDown(x, y);	
 	    			
 	    			Global.updateMousePosition(x, y, false);
@@ -227,12 +228,19 @@ public class BqThread extends Thread
 	        		break;
 	        	case MotionEvent.ACTION_UP:
 	        		if(Global.worldMsgBox != null) 
+	        		{
 	        			Global.worldMsgBox.touchActionUp(x, y);
+	        			if(Global.worldMsgBox.Closing() && Global.party.allowMovement())
+	        				Global.menuButton.open();
+	        		}
+	        			
 	        		
 	        		if(Global.debugButton != null && Global.debugButton.contains(x, y) && Global.debugButton.touchActionUp(x, y) == LBStates.Selected)
 	        			Global.openDebugMenu();
 	        		
-	        		if(Global.party.allowMovement() && Global.menuButton.contains(x, y) && Global.menuButton.touchActionUp(x, y) == LBStates.Selected)
+	        		if(Global.party.allowMovement() && Global.menuButton.contains(x, y) 
+	        				&& Global.menuButton.touchActionUp(x, y) == LBStates.Selected
+	        				&& Global.menuButton.Opened())
 	    				Global.openMainMenu();
 	        		break;
 	        	}
