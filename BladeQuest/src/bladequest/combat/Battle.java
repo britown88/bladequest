@@ -721,7 +721,7 @@ public class Battle
 		if(Global.BattleStartObject != null)
 			Global.BattleStartObject.clearActions();
 		
-		Global.party.allowMovement = true;
+		Global.party.setAllowMovement(true);
 		Global.setPanned(0, 0);				
 		Global.map.gameOverObject.execute();
 	}

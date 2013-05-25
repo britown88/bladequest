@@ -17,7 +17,7 @@ import bladequest.world.Item.Type;
 
 public class Party 
 {
-	public boolean allowMovement;
+	private boolean allowMovement;
 	private ObjectPath objPath;
 	private long objPathWaitStart;
 	private boolean objPathWaiting;
@@ -76,6 +76,14 @@ public class Party
 	public int getY() {return worldPos.y;}
 	public void setY(int y) {worldPos.y = y;}
 	public boolean isGridAligned() { return gridaligned; }
+	
+	public boolean allowMovement(){return allowMovement;}
+	public void setAllowMovement(boolean am)
+	{
+		if(am) Global.menuButton.open(); else Global.menuButton.close();
+		allowMovement = am; 
+	}
+	
 
 	
 	public PlayerCharacter[] getPartyMembers(boolean includeAll)

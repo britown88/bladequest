@@ -157,7 +157,7 @@ implements SurfaceHolder.Callback
     		if(Global.map != null)
     			drawWorld();
     		
-    		if(Global.party.allowMovement)
+    		if(!Global.menuButton.Closed())
     			Global.menuButton.render();
 
     		if(Global.debugButton != null)

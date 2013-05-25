@@ -295,7 +295,7 @@ public class DebugScreen
 						
 						Global.screenFader.clear();
 						Global.setPanned(0, 0);
-						Global.party.allowMovement = true;
+						Global.party.setAllowMovement(true);
 					}
 					
 				}

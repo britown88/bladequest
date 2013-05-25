@@ -275,7 +275,7 @@ public class Global
 
 	public static void updateMousePosition(int x, int y, boolean autoNewTarget)
 	{
-		if(party.allowMovement && menuButton.contains(x, y))
+		if(party.allowMovement() && menuButton.contains(x, y))
 			return;
 		
 		if(debugButton != null && debugButton.contains(x, y))
@@ -286,7 +286,7 @@ public class Global
 			if(inputDelay)
 				return;
 			
-			if(party.allowMovement)
+			if(party.allowMovement())
 				target.show();
 			
 			//newTarget = false;
@@ -307,7 +307,7 @@ public class Global
 			
 			Point newGridPos = new Point(mousePos.x/32, mousePos.y/32);
 		
-			if((!mouseGridPos.equals(newGridPos) || autoNewTarget) && party.allowMovement)
+			if((!mouseGridPos.equals(newGridPos) || autoNewTarget) && party.allowMovement())
 			{
 				mouseGridPos = newGridPos;
 				newTarget = true;
@@ -336,7 +336,7 @@ public class Global
 	
 	public static void openMainMenu()
 	{
-		if(party.allowMovement)
+		if(party.allowMovement())
 		{
 			if(party.isGridAligned())
 				openMainMenuSafe();
@@ -620,8 +620,7 @@ public class Global
     			else
     				mapChangeCallingState = null;
     		
-    		if(party.allowMovement)
-    			menuButton.update();
+    		menuButton.update();
     		
     		if(debugButton != null)
     			debugButton.update();
@@ -773,18 +772,20 @@ public class Global
         	
         	
         	Paint paint = textFactory.getTextPaint(13, Color.WHITE, Align.CENTER);
-        	menuButton = new ListBox(vpWidth, vpHeight, 80, 40, 1, 1, paint);
+        	menuButton = new ListBox(vpWidth, vpHeight, 0, 40, 1, 1, paint);
+        	menuButton.setOpenSize(80,  40);
         	menuButton.anchor = Anchors.BottomRight;
         	menuButton.addItem("Menu", null, false);
-        	menuButton.drawAllFrames = true;
+        	menuButton.update();
         	
         	
         	//create debug button
         	
         	//TODO: REMOVE THIS PART FOR RELEASE
-        	debugButton = new ListBox(vpWidth - 80, vpHeight, 40, 40, 1, 1, paint);
-        	debugButton.anchor = Anchors.BottomRight;
+        	debugButton = new ListBox(0, vpHeight, 40, 40, 1, 1, paint);
+        	debugButton.anchor = Anchors.BottomLeft;
         	debugButton.addItem("!", null, false);
+        	debugButton.update();
         	//TODO: REMOVE THIS PART FOR RELEASE
         }
 	}
@@ -1151,24 +1152,24 @@ public class Global
 		loading = false;
 
 		//demo start info, do not fuck with!
-//		screenFader.setFadeColor(255, 0, 0, 0);
-//		screenFader.setFaded();
-//		party.teleport(16, 5);		
-//		party.insertCharacter("aramis", 1);	
-//		party.getCharacter("aramis").setDisplayName("?????");	
-//		LoadMap("prisonb2");
+		screenFader.setFadeColor(255, 0, 0, 0);
+		screenFader.setFaded();
+		party.teleport(16, 5);		
+		party.insertCharacter("aramis", 1);	
+		party.getCharacter("aramis").setDisplayName("?????");	
+		LoadMap("prisonb2");
 		
 		//test params
-		party.teleport(1, 3);		
-		party.addCharacter("aramis");
-		party.getCharacter("aramis").setDisplayName("?????");			
-			
-		party.addCharacter("joy");
-		party.addCharacter("luc");	
-		party.addCharacter("roland");			
-		
-		party.addItem("potion", 27);
-		LoadMap("test");
+//		party.teleport(1, 3);		
+//		party.addCharacter("aramis");
+//		party.getCharacter("aramis").setDisplayName("?????");			
+//			
+//		party.addCharacter("joy");
+//		party.addCharacter("luc");	
+//		party.addCharacter("roland");			
+//		
+//		party.addItem("potion", 27);
+//		LoadMap("test");
 		
 		
 	}

@@ -149,12 +149,12 @@ public class ObjectState {
 	
 	public boolean execute()
 	{
-		if(Global.party.allowMovement && actionList.size() > 0)
+		if(Global.party.allowMovement() && actionList.size() > 0)
 		{
 			if(waitOnActivate)
 				Global.party.clearMovementPath();
 			FaceOnActivate();
-			Global.party.allowMovement = !waitOnActivate;
+			Global.party.setAllowMovement(!waitOnActivate);
 			isRunning = true;
 			actionList.get(currentAction).run();
 
@@ -301,9 +301,9 @@ public class ObjectState {
 	public void update()
 	{			
 		if(isRunning && waitOnActivate)
-			Global.party.allowMovement = false;
+			Global.party.setAllowMovement(false);
 		
-		if(!isRunning && Global.party.allowMovement && autoStart)
+		if(!isRunning && Global.party.allowMovement() && autoStart)
 			execute();
 			
 		//handle path waiting
@@ -374,7 +374,7 @@ public class ObjectState {
 					currentAction = 0;
 					isRunning = false;
 					if(waitOnActivate)
-						Global.party.allowMovement = true;
+						Global.party.setAllowMovement(true);
 				}
 				else
 				{
