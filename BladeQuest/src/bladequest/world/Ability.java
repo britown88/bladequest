@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bladequest.battleactions.BattleAction;
+import bladequest.combat.DamageMarker;
 
 public class Ability 
 {
@@ -47,4 +48,20 @@ public class Ability
 	public int MPCost() { return mpcost;}
 	public boolean isEnabled() { return enabled;}
 	public void setEnabled(boolean enabled) {this.enabled = enabled;}
+	
+	public boolean willAffect(PlayerCharacter c)
+	{
+		for(BattleAction ba : actions)
+			if(!ba.willAffectTarget(c))
+				return false;
+		
+		return true;
+	}
+	
+	public void executeOutOfBattle(PlayerCharacter attacker, List<PlayerCharacter> targets, List<DamageMarker> markers)
+	{
+		for(int i = 0; i < actions.size(); ++i)
+			actions.get(i).runOutsideOfBattle(attacker, targets, markers);
+	}
+	
 }

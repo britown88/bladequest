@@ -1169,6 +1169,11 @@ public class Global
 		party.addCharacter("roland");			
 		
 		party.addItem("potion", 27);
+		
+		for(PlayerCharacter pc : party.getPartyList(false))
+		{
+			pc.modifyLevel(99, false);
+		}
 		LoadMap("test");
 		
 		

@@ -791,10 +791,13 @@ public class MainMenu
 					if(skillsList.touchActionUp(x, y) == LBStates.Selected)
 					{
 						Ability ab = (Ability)skillsList.getSelectedEntry().obj;
-						if(ab.isEnabled() && ab.isUsableOutOfBattle() || ab.MPCost() > selectedChar.getMP())
+						if(ab.isEnabled() && ab.isUsableOutOfBattle())
 						{
-							abilityToUse = ab;
-							stateMachine.setState(getSkillUseState());
+							if(!skillsList.getSelectedEntry().Disabled())
+							{
+								abilityToUse = ab;
+								stateMachine.setState(getSkillUseState());
+							}							
 						}
 						else if(ab.getDescription().length() > 0)
 							showMessage(ab.getDescription(), false);
@@ -1793,6 +1796,7 @@ public class MainMenu
 			entry.getTextAt(0).x += d*2 + 4;					
 			//add item count
 			boolean disabled = !ab.isUsableOutOfBattle() || ab.MPCost() > selectedChar.getMP() || !ab.isEnabled();
+			if(disabled) entry.disable(grayMenuText);
 			entry.addTextBox(""+ab.MPCost(), skillsList.getColumnWidth() - 32, skillsList.getRowHeight()/2, disabled ? grayMenuText : menuText);
 			entry.addPicBox(Global.createIcon("orb", d + 6, skillsList.getRowHeight()/2, iconScale));
 		}
@@ -1953,7 +1957,7 @@ public class MainMenu
 		if(markers.isEmpty() && closeUseAfterClear)
 		{
 			closeUseAfterClear = false;
-			stateMachine.setState(getItemSelectState());
+			stateMachine.setState(itemToUse != null ? getItemSelectState() : getSkillSelectState());
 		}
 	}
 	private void darken(){darkening = true;}	
@@ -2125,7 +2129,27 @@ public class MainMenu
 	
 	private void useAbility(PlayerCharacter c)
 	{
-
+		List<PlayerCharacter> charList, affectedList = new ArrayList<PlayerCharacter>();
+		updateCharUseScreen();
+		
+		if(abilityToUse.TargetType() == TargetTypes.AllAllies)
+			charList = Global.party.getPartyList(false);
+		else
+		{
+			charList = new ArrayList<PlayerCharacter>();
+			charList.add(c);
+		}	
+			
+		for(PlayerCharacter ch : charList)
+			if(abilityToUse.willAffect(ch))
+				affectedList.add(ch);		
+		
+		if(affectedList.size() > 0)
+		{
+			abilityToUse.executeOutOfBattle(c, affectedList, markers);
+			selectedChar.modifyMP(-abilityToUse.MPCost());
+			updateCharUseScreen();
+		}
 		
 	}
 	
