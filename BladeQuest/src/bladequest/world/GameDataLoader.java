@@ -77,7 +77,8 @@ public class GameDataLoader
 	
 	private static Script compileScript(BqActivity activity, String file, Map<String, ScriptVar> standardLibrary)
 	{
-			Script script = new Script(standardLibrary);
+		Log.d(TAG, "Loading " + file);
+		Script script = new Script(standardLibrary);
 		
 		Parser p = null;
 		try {

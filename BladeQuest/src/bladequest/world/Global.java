@@ -1142,27 +1142,27 @@ public class Global
 		//demo start info, do not fuck with!
 //		screenFader.setFadeColor(255, 0, 0, 0);
 //		screenFader.setFaded();
-//		party.teleport(16, 5);		
-//		party.insertCharacter("aramis", 1);	
-//		party.getCharacter("aramis").setDisplayName("?????");	
-//		LoadMap("prisonb2");
+		party.teleport(16, 5);		
+		party.insertCharacter("aramis", 1);	
+		party.getCharacter("aramis").setDisplayName("?????");	
+		LoadMap("prisonb2");
 		
-		//test params
-		party.teleport(1, 3);		
-		party.addCharacter("aramis");
-		party.getCharacter("aramis").setDisplayName("?????");			
-			
-		party.addCharacter("joy");
-		party.addCharacter("luc");	
-		party.addCharacter("roland");			
-		
-		party.addItem("potion", 27);
-		
-		for(PlayerCharacter pc : party.getPartyList(false))
-		{
-			pc.modifyLevel(99, false);
-		}
-		LoadMap("test");
+//		//test params
+//		party.teleport(1, 3);		
+//		party.addCharacter("aramis");
+//		party.getCharacter("aramis").setDisplayName("?????");			
+//			
+//		party.addCharacter("joy");
+//		party.addCharacter("luc");	
+//		party.addCharacter("roland");			
+//		
+//		party.addItem("potion", 27);
+//		
+//		for(PlayerCharacter pc : party.getPartyList(false))
+//		{
+//			pc.modifyLevel(99, false);
+//		}
+//		LoadMap("test");
 		
 		
 	}
