@@ -187,7 +187,7 @@ public class Battle
 
 					if(opt.equals("atk"))
 					{
-						showMessage("Attack with currentl equipped weapon.");
+						showMessage("Attack with currently equipped weapon.");
 					}
 					else if(opt.equals("itm"))
 					{
@@ -207,7 +207,7 @@ public class Battle
 					else if(opt.equals("ab"))
 					{
 						if(disabled)
-							showMessage("You don;t know any abilities!");
+							showMessage("You don't know any abilities!");
 						else
 							showMessage("Choose an ability you know to use.");
 					}
@@ -979,7 +979,7 @@ public class Battle
 					
 					if(actor.getAction() == Action.CombatAction)
 					{
-						showDisplayName(actor.getAbilityToUse().getDisplayName());
+						showDisplayName(actor.combatActionName);
 					}						
 					else if(actor.getAction() == Action.Ability)
 					{

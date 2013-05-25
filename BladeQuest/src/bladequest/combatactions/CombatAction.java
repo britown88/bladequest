@@ -22,6 +22,7 @@ public class CombatAction
 	public void buildEvents(BattleEventBuilder builder){}
 	public void onSelected(CombatActionBuilder actionBuilder) 
 	{
+		useNameText(actionBuilder);
 		useDefaultActionText(actionBuilder);
 		useDefaultEventBuilder(actionBuilder);
 		switchToTargeting(actionBuilder);
@@ -73,6 +74,11 @@ public class CombatAction
 	protected void useDefaultActionText(CombatActionBuilder actionBuilder)
 	{
 		useCustomActionText(actionBuilder, getActionText());
+	}
+	//Uses this action text when running the combat action.
+	protected void useNameText(CombatActionBuilder actionBuilder)
+	{
+		actionBuilder.getUser().combatActionName = name;
 	}
 	//Use the arbitrary text when running the custom action.
 	protected void useCustomActionText(CombatActionBuilder actionBuilder, String text)
