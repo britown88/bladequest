@@ -1,12 +1,14 @@
 package bladequest.UI;
 
-import android.graphics.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import bladequest.UI.ListBox.LBStates;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
-
-import java.util.*;
 
 public class MsgBox extends MenuPanel
 {
@@ -62,9 +64,7 @@ public class MsgBox extends MenuPanel
 		alwaysSpeed0 = false;
 		//clear(msg);		
 	}
-	
-	
-	
+		
 	public void addMessage(String msg)
 	{
 		addMessage(msg, false);

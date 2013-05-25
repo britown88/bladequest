@@ -3,9 +3,7 @@ package bladequest.world;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -15,7 +13,6 @@ import bladequest.graphics.Tile;
 import bladequest.pathfinding.AStarObstacle;
 import bladequest.pathfinding.AStarPath;
 import bladequest.statuseffects.StatusEffect;
-import bladequest.system.Lambda;
 import bladequest.world.Item.Type;
 
 public class Party 
@@ -168,9 +165,7 @@ public class Party
 
 	}
 	public void addItem(int id)
-	{
-		Item i = null;
-		
+	{		
 		for(Item item : Global.items.values())
 			if(item.getId() == id)				
 			{

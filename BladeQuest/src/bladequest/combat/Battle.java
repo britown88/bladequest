@@ -12,6 +12,7 @@ import android.graphics.Rect;
 import bladequest.UI.ListBox;
 import bladequest.UI.MenuPanel;
 import bladequest.UI.MenuPanel.Anchors;
+import bladequest.UI.MsgBox;
 import bladequest.combatactions.CombatActionBuilder;
 import bladequest.graphics.BattleSprite.faces;
 import bladequest.statuseffects.StatusEffect;
@@ -83,6 +84,8 @@ public class Battle
 	
 	private BattleStateMachine stateMachine;
 	
+	public MsgBox msgBox;
+	
 	public Battle()
 	{
 		stateMachine = new BattleStateMachine();
@@ -91,6 +94,8 @@ public class Battle
 		battleEvents = new ArrayList<BattleEvent>();
 		markers = new ArrayList<DamageMarker>();
 		messageQueue = new ArrayList<String>();
+		
+		msgBox = new MsgBox();
 	}
 	
 	private BattleState getStartState()
@@ -425,7 +430,7 @@ public class Battle
 	}
 	
 	public void startBattle(String encounter)
-	{
+	{		
 		stateMachine.setState(getStartState());
 		this.encounter = new Encounter(Global.encounters.get(encounter));
 		
@@ -1059,6 +1064,12 @@ public class Battle
 		updatePanels();
 	}
 	
+	public void showMessage(String msg)
+	{
+		msgBox.addMessage(msg, false);
+		msgBox.open();
+	}
+	
 	private void nextCharacter()
 	{
 		//mainMenu.close();		
@@ -1175,14 +1186,23 @@ public class Battle
 	{
 		updatePanels();
 		updateCharacterPanes();
+		msgBox.update();
 		
-		handleCharAdvancing();
-		updateCharacterPositions();
-		updateDamageMarkers();
+		if(msgBox.Closed())
+		{
+			
+			
+			handleCharAdvancing();
+			updateCharacterPositions();
+			updateDamageMarkers();
+			
+			handleNextPrev();
+			
+			
+			stateMachine.getState().update();
+			
+		}
 		
-		handleNextPrev();
-		
-		stateMachine.getState().update();
 	}	
 	public void render()
 	{
@@ -1194,6 +1214,9 @@ public class Battle
 		Global.renderAnimations();
 		drawDamageMarkers();
 		
+		if(!msgBox.Closed())
+			msgBox.render();
+		
 		Global.screenFader.render();
 		
 	}
@@ -1204,25 +1227,28 @@ public class Battle
 	}
 	public void touchActionUp(int x, int y)
 	{
-		if(messageQueue.size() > 0)
-		{
+		if(!msgBox.Closed())
+			msgBox.touchActionUp(x, y);
+		else if(messageQueue.size() > 0)
 			messageQueue.remove(0);
-		}
 		else
-		{
 			stateMachine.getState().touchActionUp(x, y);
-		}		
+		
 	}
 	public void touchActionDown(int x, int y)
 	{
-		if(messageQueue.size() == 0)
+		if(!msgBox.Closed())
+			msgBox.touchActionDown(x, y);
+		else if(messageQueue.size() == 0)
 		{
 			stateMachine.getState().touchActionDown(x, y);
 		}		
 	}
 	public void touchActionMove(int x, int y)
 	{
-		if(messageQueue.size() == 0)
+		if(!msgBox.Closed())
+			msgBox.touchActionMove(x, y);
+		else if(messageQueue.size() == 0)
 		{
 			stateMachine.getState().touchActionMove(x, y);
 		}
