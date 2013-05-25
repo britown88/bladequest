@@ -9,6 +9,7 @@ import bladequest.UI.ListBox.LBStates;
 import bladequest.UI.MenuPanel.Anchors;
 import bladequest.world.Global;
 import bladequest.world.Item;
+import bladequest.world.PlayerCharacter;
 import bladequest.world.States;
 
 public class DebugScreen 
@@ -50,7 +51,7 @@ public class DebugScreen
 	{
 		rootMenu = new ListBox(0, 0, menuWidth, barHeight*4, 5, 1, menuText);
 		rootMenu.addItem("Switches", states.Switches, false);
-		rootMenu.addItem("Characters", states.Characters, false);
+		rootMenu.addItem("Full Heal", states.Characters, false);
 		rootMenu.addItem("Items", states.Items, false);
 		rootMenu.addItem("Location", states.Location, false);
 		rootMenu.addItem("Close", null, false);
@@ -159,6 +160,11 @@ public class DebugScreen
 		case Root:
 
 			break;
+		case Characters:
+			for(PlayerCharacter c : Global.party.getPartyMembers(true))
+				if(c != null)
+					c.fullRestore();
+
 		case Switches:
 			updateSwitchList();
 			break;
