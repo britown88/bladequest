@@ -1,13 +1,16 @@
-package bladequest.world;
+package bladequest.bladescript.libraries;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import android.graphics.Color;
-import bladequest.scripting.LibraryWriter;
-import bladequest.scripting.Script.BadSpecialization;
-import bladequest.scripting.ScriptVar;
-import bladequest.scripting.ScriptVar.BadTypeException;
+import bladequest.bladescript.LibraryWriter;
+import bladequest.bladescript.ScriptVar;
+import bladequest.bladescript.Script.BadSpecialization;
+import bladequest.bladescript.ScriptVar.BadTypeException;
+import bladequest.world.Enemy;
+import bladequest.world.Global;
+import bladequest.world.Stats;
 
 public class EnemyLibrary {
 

@@ -1,4 +1,4 @@
-package bladequest.scripting;
+package bladequest.bladescript;
 
 import java.io.InputStream;
 

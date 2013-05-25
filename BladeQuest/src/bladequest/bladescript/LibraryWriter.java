@@ -1,4 +1,4 @@
-package bladequest.scripting;
+package bladequest.bladescript;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import bladequest.scripting.Script.BadSpecialization;
-import bladequest.scripting.ScriptVar.BadTypeException;
+import bladequest.bladescript.Script.BadSpecialization;
+import bladequest.bladescript.ScriptVar.BadTypeException;
 
 public class LibraryWriter {
 	

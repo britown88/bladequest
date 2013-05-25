@@ -1,4 +1,4 @@
-package bladequest.combat;
+package bladequest.bladescript.libraries;
 
 import java.util.List;
 
@@ -13,8 +13,9 @@ import bladequest.battleactions.bactRemoveStatus;
 import bladequest.battleactions.bactRunAnimation;
 import bladequest.battleactions.bactSetFace;
 import bladequest.battleactions.bactWait;
+import bladequest.bladescript.LibraryWriter;
+import bladequest.combat.Battle;
 import bladequest.graphics.BattleSprite.faces;
-import bladequest.scripting.LibraryWriter;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.statuseffects.sePoison;
 import bladequest.world.Ability;

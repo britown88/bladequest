@@ -1,6 +1,7 @@
-package bladequest.sound;
+package bladequest.bladescript.libraries;
 
-import bladequest.scripting.LibraryWriter;
+import bladequest.bladescript.LibraryWriter;
+import bladequest.sound.Song;
 import bladequest.world.Global;
 
 public class SoundLibrary 

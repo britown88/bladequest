@@ -1,4 +1,4 @@
-package bladequest.scripting;
+package bladequest.bladescript;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import android.util.Log;
-import bladequest.scripting.Script.BadSpecialization;
-import bladequest.scripting.ScriptVar.BadTypeException;
-import bladequest.scripting.ScriptVar.EmptyList;
-import bladequest.scripting.ScriptVar.ListNode;
-import bladequest.scripting.ScriptVar.SpecializationLevel;
+import bladequest.bladescript.Script.BadSpecialization;
+import bladequest.bladescript.ScriptVar.BadTypeException;
+import bladequest.bladescript.ScriptVar.EmptyList;
+import bladequest.bladescript.ScriptVar.ListNode;
+import bladequest.bladescript.ScriptVar.SpecializationLevel;
 
 public class Parser {
 		

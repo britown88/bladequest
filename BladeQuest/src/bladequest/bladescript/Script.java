@@ -1,4 +1,4 @@
-package bladequest.scripting;
+package bladequest.bladescript;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import bladequest.scripting.ScriptVar.BadTypeException;
-import bladequest.scripting.ScriptVar.SpecializationLevel;
+import bladequest.bladescript.ScriptVar.BadTypeException;
+import bladequest.bladescript.ScriptVar.SpecializationLevel;
 
 public class Script {
 

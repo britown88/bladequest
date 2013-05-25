@@ -1,4 +1,4 @@
-package bladequest.scripting;
+package bladequest.bladescript;
 
 public abstract class ScriptToken {
 	public enum Type

@@ -1,7 +1,7 @@
-package bladequest.scripting;
+package bladequest.bladescript;
 
-import bladequest.scripting.ScriptVar.BadTypeException;
-import bladequest.scripting.ScriptVar.SpecializationLevel;
+import bladequest.bladescript.ScriptVar.BadTypeException;
+import bladequest.bladescript.ScriptVar.SpecializationLevel;
 
 public interface FunctionSpecializer {
 	

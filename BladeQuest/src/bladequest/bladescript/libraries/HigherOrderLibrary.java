@@ -1,8 +1,8 @@
-package bladequest.world;
+package bladequest.bladescript.libraries;
 
-import bladequest.scripting.LibraryWriter;
-import bladequest.scripting.ScriptVar;
-import bladequest.scripting.ScriptVar.BadTypeException;
+import bladequest.bladescript.LibraryWriter;
+import bladequest.bladescript.ScriptVar;
+import bladequest.bladescript.ScriptVar.BadTypeException;
 
 public class HigherOrderLibrary {
 

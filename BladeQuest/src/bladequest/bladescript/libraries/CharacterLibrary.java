@@ -1,9 +1,11 @@
-package bladequest.world;
+package bladequest.bladescript.libraries;
 
+import bladequest.bladescript.LibraryWriter;
 import bladequest.combatactions.*;
 
 import bladequest.combatactions.CombatAction;
-import bladequest.scripting.LibraryWriter;
+import bladequest.world.Global;
+import bladequest.world.PlayerCharacter;
 
 public class CharacterLibrary 
 {	
