@@ -32,6 +32,7 @@ import bladequest.UI.SaveLoadMenu;
 import bladequest.UI.MainMenu.MainMenu;
 import bladequest.UI.MerchantScreen.MerchantScreen;
 import bladequest.combat.Battle;
+import bladequest.enemy.Enemy;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleSprite;
 import bladequest.graphics.Icon;

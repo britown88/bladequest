@@ -61,7 +61,7 @@ public class Function extends ScriptVar {
 		}
 		if (nextFunc == null)
 		{
-			throw new BadTypeException();
+			throw new BadTypeException("validArgType", var.typeName());
 		}
 		return nextFunc.clone().curryValues(curriedValues);
 	}

@@ -81,7 +81,10 @@ public class FileTokenizer implements Tokenizer {
 	public ScriptToken sendBuffer()
 	{
 		if (buffer.equals("")) return null;
-		
+		return forceSendBuffer();
+	}
+	public ScriptToken forceSendBuffer()
+	{
 		String temp = buffer;
 		buffer = "";
 		if (stringBuffer)
@@ -213,7 +216,9 @@ public class FileTokenizer implements Tokenizer {
 		case '\"': if (commented) break;
 			if (stringBuffer)
 			{
-				ScriptToken out = sendBuffer();
+				//We use force here, because we have to support empty strings.   e.g. 
+				//  runWith ""
+				ScriptToken out = forceSendBuffer();
 				stringBuffer = false;
 				return out;
 			}

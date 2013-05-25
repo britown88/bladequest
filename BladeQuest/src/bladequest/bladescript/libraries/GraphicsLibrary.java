@@ -3,7 +3,6 @@ package bladequest.bladescript.libraries;
 import bladequest.bladescript.LibraryWriter;
 import bladequest.graphics.BattleSprite;
 import bladequest.graphics.Sprite;
-import bladequest.graphics.BattleSprite.faces;
 import bladequest.world.Global;
 
 public class GraphicsLibrary 

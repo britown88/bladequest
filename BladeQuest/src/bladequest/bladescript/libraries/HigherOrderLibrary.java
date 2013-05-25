@@ -22,11 +22,11 @@ public class HigherOrderLibrary {
 	
 	public static ScriptVar mapBound(ScriptVar bound, ScriptVar fn, ScriptVar list)
 	{
-		while (!list.isEmptyList())
+		if (!list.isEmptyList())
 		{
 			try {
+				mapBound(bound, fn, list.tail());				
 				fn.apply(bound).apply(list.head());
-				list = list.tail();
 			} catch (BadTypeException e) {
 				e.printStackTrace();
 			}			
@@ -36,17 +36,14 @@ public class HigherOrderLibrary {
 	
 	public static ScriptVar map(ScriptVar fn, ScriptVar list)
 	{
-		ScriptVar out = new ScriptVar.EmptyList();
-		while (!list.isEmptyList())
-		{
-			try {
-				out = new ScriptVar.ListNode(fn.apply(list.head()), out);
-				list = list.tail();
-			} catch (BadTypeException e) {
-				e.printStackTrace();
-			}			
-		}
-		return out;
+		if (list.isEmptyList()) return new ScriptVar.EmptyList();
+		try {
+			ScriptVar tail = map(fn, list.tail());
+			return new ScriptVar.ListNode(fn.apply(list.head()), tail);
+		} catch (BadTypeException e) {
+			e.printStackTrace();
+		}			
+		return null;
 	}	
 	
 	public static void publishLibrary(LibraryWriter library) 

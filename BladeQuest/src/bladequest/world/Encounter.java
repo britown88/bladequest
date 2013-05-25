@@ -2,6 +2,8 @@ package bladequest.world;
 
 import java.util.*;
 
+import bladequest.enemy.Enemy;
+
 public class Encounter 
 {
 	private List<Enemy> enemies;

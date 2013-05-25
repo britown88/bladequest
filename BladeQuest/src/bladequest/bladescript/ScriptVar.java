@@ -55,13 +55,30 @@ public abstract class ScriptVar {
 	
 	public class BadTypeException extends ParserException
 	{
-		BadTypeException()
+		BadTypeException(String expectedType, String myType)
 		{
-			super("Accessing invalid type!");
+			super("Accessing invalid type! Got a " + myType + " but expected a " + expectedType);
 		}
 		private static final long serialVersionUID = 4234017580208305725L;	
 	}
 	
+	public String typeName()
+	{
+		if (isInteger()) return "int";
+		if (isFloat()) return "float";
+		if (isString()) return "string";
+		if (isBoolean()) return "bool";
+		if (isList()) return "list";
+		if (isFunction()) return "function";
+		//otherwise... opaque!
+		
+		try {
+			return getOpaque().getClass().getName();
+		} catch (BadTypeException e) {
+			e.printStackTrace();
+		}
+		return "Error";
+	}
 	public boolean isInteger() { return false; }
 	public boolean isFloat()  { return false; }
 	public boolean isString()  { return false; }
@@ -270,23 +287,23 @@ public abstract class ScriptVar {
 	public abstract ScriptVar clone();
 	
 	//int controls
-	public int getInteger() throws BadTypeException {throw new BadTypeException();}
+	public int getInteger() throws BadTypeException {throw new BadTypeException("int", typeName());}
 	
 	//float controls
-	public float getFloat()  throws BadTypeException {throw new BadTypeException();}
+	public float getFloat()  throws BadTypeException {throw new BadTypeException("float", typeName());}
 	
 	//string controls
-	public String getString()  throws BadTypeException {throw new BadTypeException();}
+	public String getString()  throws BadTypeException {throw new BadTypeException("string", typeName());}
 	
 	//boolean controls
-	public boolean getBoolean() throws BadTypeException {throw new BadTypeException();}
+	public boolean getBoolean() throws BadTypeException {throw new BadTypeException("bool", typeName());}
 	
 	//Opaque controls
-	public Object getOpaque()  throws BadTypeException {throw new BadTypeException();}
+	public Object getOpaque()  throws BadTypeException {throw new BadTypeException("javaType", typeName());}
 	
 	//List controls
-	public ScriptVar head()  throws BadTypeException {throw new BadTypeException();}
-	public ScriptVar tail()  throws BadTypeException {throw new BadTypeException();}
+	public ScriptVar head()  throws BadTypeException {throw new BadTypeException("list", typeName());}
+	public ScriptVar tail()  throws BadTypeException {throw new BadTypeException("function", typeName());}
 	
 	//Function controls
 	public enum SpecializationLevel 
@@ -296,9 +313,9 @@ public abstract class ScriptVar {
 		TypeSpecialized,
 		ValueSpecialized
 	}
-	public ScriptVar getSpecializedChild(FunctionSpecializer specialization) throws BadTypeException {throw new BadTypeException();}
-	public void addChildFunction(ScriptVar child)  throws BadTypeException {throw new BadTypeException();}
-	public ScriptVar curryValues(List<ScriptVar> var)   throws BadTypeException {throw new BadTypeException();}
-	public FunctionSpecializer getSpecializer()  throws BadTypeException {throw new BadTypeException();}
-	public ScriptVar apply(ScriptVar var)  throws BadTypeException {throw new BadTypeException();}
+	public ScriptVar getSpecializedChild(FunctionSpecializer specialization) throws BadTypeException {throw new BadTypeException("function", typeName());}
+	public void addChildFunction(ScriptVar child)  throws BadTypeException {throw new BadTypeException("function", typeName());}
+	public ScriptVar curryValues(List<ScriptVar> var)   throws BadTypeException {throw new BadTypeException("function", typeName());}
+	public FunctionSpecializer getSpecializer()  throws BadTypeException {throw new BadTypeException("function", typeName());}
+	public ScriptVar apply(ScriptVar var)  throws BadTypeException {throw new BadTypeException("function", typeName());}
 }

@@ -30,6 +30,7 @@ import bladequest.combatactions.combDragonForm;
 import bladequest.combatactions.combStance;
 import bladequest.combatactions.combSteal;
 import bladequest.combatactions.combWish;
+import bladequest.enemy.Enemy;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleAnimObjState;
 import bladequest.graphics.BattleAnimObjState.PosTypes;
@@ -491,70 +492,8 @@ public class GameDataLoader
 			me.farewell = dl.values.get(0);		
 	}
 	
-	
-	private static Enemy e;
-	private static String eName;
 	private static void loadEnemyLine(DataLine dl)
-	{		
-		if(dl.item.equals("enemy"))
-		{
-			eName = dl.values.get(0);			
-			e = new Enemy(dl.values.get(1),dl.values.get(2));
-		}
-		else if(dl.item.equals("basestats"))
-		{
-			e.setBaseStats(
-					Integer.parseInt(dl.values.get(0)),
-					Integer.parseInt(dl.values.get(1)),
-					Integer.parseInt(dl.values.get(2)),
-					Integer.parseInt(dl.values.get(3)));
-		}
-		else if(dl.item.equals("statmods"))
-		{
-			for(int i = 0; i < Stats.NUM_STATS.ordinal(); ++i)
-				e.setStatMod(i, Integer.parseInt(dl.values.get(i)));
-		}
-		else if(dl.item.equals("level"))
-		{
-			e.modifyLevel(Integer.parseInt(dl.values.get(0)));
-		}
-		else if(dl.item.equals("atkanim"))
-		{
-			e.setAttackAnimation(dl.values.get(0));
-		}
-		else if(dl.item.equals("gold"))
-		{
-			e.setGold(Integer.parseInt(dl.values.get(0)));
-		}
-		else if(dl.item.equals("items"))
-		{
-			e.setItems(
-					dl.values.get(0), 
-					Integer.parseInt(dl.values.get(1)), 
-					dl.values.get(2), 
-					Integer.parseInt(dl.values.get(3)), 
-					Boolean.parseBoolean(dl.values.get(4)));
-		}
-		else if(dl.item.equals("ai"))
-		{
-			e.setAI(Integer.parseInt(dl.values.get(0)));
-		}
-		else if(dl.item.equals("bossmods"))
-		{
-			//e.setBossMods(Float.parseFloat(dl.values.get(0)));
-		}
-		else if(dl.item.equals("ability"))
-		{
-			e.addAbility(
-					dl.values.get(0), 
-					Integer.parseInt(dl.values.get(1)), 
-					Integer.parseInt(dl.values.get(2)), 
-					Integer.parseInt(dl.values.get(3)));
-		}
-		else if(dl.item.equals("endenemy"))
-		{
-			Global.enemies.put(eName, e);
-		}
+	{		 
 	}
 	
 	private static String encName;

@@ -5,10 +5,13 @@ import java.util.List;
 
 import android.graphics.Color;
 import bladequest.bladescript.LibraryWriter;
-import bladequest.bladescript.ScriptVar;
 import bladequest.bladescript.Script.BadSpecialization;
+import bladequest.bladescript.ScriptVar;
 import bladequest.bladescript.ScriptVar.BadTypeException;
-import bladequest.world.Enemy;
+import bladequest.enemy.AI;
+import bladequest.enemy.AIState;
+import bladequest.enemy.Enemy;
+import bladequest.enemy.ScriptedAIState;
 import bladequest.world.Global;
 import bladequest.world.Stats;
 
@@ -50,6 +53,33 @@ public class EnemyLibrary {
 		
 		return out;
 	}
+	public static AI createAI(String defaultStateName, AIState defaultState)
+	{
+		AI ai = new AI();
+		ai.add(defaultStateName, defaultState);
+		ai.switchToState(defaultStateName);
+		return ai;
+	}
+	public static AI addAIState(AI ai, String stateName, AIState state)
+	{
+		ai.add(stateName, state);
+		return ai;
+	}
+	public static Enemy setEnemyAI(Enemy enemy, AI ai)
+	{
+		enemy.setAI(ai);
+		return enemy;
+	}
+	public static Enemy switchEnemyState(Enemy enemy, String newState)
+	{
+		enemy.getAI().switchToState(newState);
+		return enemy;
+	}
+	public static AIState createAIState(ScriptVar stateFn)
+	{
+		return new ScriptedAIState(stateFn);
+	}
+	
 	public static Enemy addEnemy(String name, String displayName, String displaySprite)
 	{
 		Enemy enemy = new Enemy(displayName, displaySprite);
@@ -118,14 +148,9 @@ public class EnemyLibrary {
 		enemy.setBoss();
 		return enemy;
 	}
-	public static Enemy setAIAbilityRate(Enemy enemy, int rate)
+	public static Enemy addEAbility(Enemy enemy, String abilityName)
 	{
-		enemy.setAI(rate);
-		return enemy;
-	}
-	public static Enemy addEAbility(Enemy enemy, String abilityName, int chanceToCast, int healthAbove, int healthBelow)
-	{
-		enemy.addAbility(abilityName, chanceToCast, healthAbove, healthBelow);
+		enemy.addAbility(abilityName);
 		return enemy;
 	}
 	

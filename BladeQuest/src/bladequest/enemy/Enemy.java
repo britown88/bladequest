@@ -1,4 +1,4 @@
-package bladequest.world;
+package bladequest.enemy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +17,10 @@ import bladequest.graphics.BattleSprite;
 import bladequest.graphics.BattleSprite.faces;
 import bladequest.graphics.ColorizedAnimation;
 import bladequest.system.Recyclable;
+import bladequest.world.Ability;
+import bladequest.world.Global;
+import bladequest.world.PlayerCharacter;
+import bladequest.world.Stats;
 
 
 public class Enemy extends PlayerCharacter
@@ -31,10 +35,12 @@ public class Enemy extends PlayerCharacter
 	
 	private boolean bossFight;
 	
+	AI ai;
+	
 	Recyclable AnimRecycleData;
 	BattleAnim builtAnim;
 	
-	private List<EnemyAbility> abilities = new ArrayList<EnemyAbility>();
+	private List<Ability> abilities;
 	
 	public Enemy(String name, String spr)
 	{
@@ -44,6 +50,8 @@ public class Enemy extends PlayerCharacter
 		position = new Point();
 		
 		stolen = false;
+		
+		abilities = new ArrayList<Ability>();
 	}
 	
 	public Enemy(Enemy e)
@@ -62,6 +70,11 @@ public class Enemy extends PlayerCharacter
 		bossFight = e.bossFight;
 		attackAnim = e.attackAnim;
 		colorIndices = e.colorIndices;
+		
+		if (e.ai != null)
+		{
+			ai = new AI(e.ai);
+		}
 		
 		stolen = false;
 	}
@@ -87,35 +100,38 @@ public class Enemy extends PlayerCharacter
 	@Override
 	public BattleAnim getWeaponAnimation(){return builtAnim;}
 	
-	public void setAI(int abilityChance){this.abilityChance = abilityChance;}
-	
-	public void addAbility(String abilityName, int chanceToCast, int healthAbove, int healthBelow)
+	public void addAbility(String abilityName)
 	{
-		abilities.add(new EnemyAbility(abilityName, chanceToCast, healthAbove, healthBelow));
+		abilities.add(Global.abilities.get(abilityName));
 	}
-	
+	public Ability getAbility(String abilityName)
+	{
+		for (Ability a : abilities)
+		{
+			if (a.name.equals(abilityName)) return a;
+		}
+		return null;
+	}
+	public AI getAI()
+	{
+		return ai;
+	}
 	public void Act()
 	{
-		if(Global.rand.nextInt(100) < abilityChance)
+		abilityToUse = ai.getState().pickAbility(this);
+		if (abilityToUse == null)  //default attack.
 		{
-			List<Ability> possibleAbilities = new ArrayList<Ability>();
-			Ability a;
-			for(EnemyAbility ea : abilities)
-			{
-				a = ea.cast((int)(((float)getHP()/(float)stats[Stats.MaxHP.ordinal()])*100.0f));
-				if(a != null) possibleAbilities.add(a);
-			}
-			
-			if(possibleAbilities.size() > 0)
-			{
-				action = Action.Ability;
-				abilityToUse = possibleAbilities.get(Global.rand.nextInt(possibleAbilities.size()));
-				return;				
-			}
+			action = Action.Attack;
 		}
-		
-		action = Action.Attack;
-		return;
+		else
+		{
+			action = Action.Ability;
+		}
+	}
+	
+	public void setAI(AI ai)
+	{
+		this.ai = ai;
 	}
 	
 	public BattleEvent genBattleEvent(List<PlayerCharacter> chars, List<Enemy> enemies)

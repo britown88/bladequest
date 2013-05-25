@@ -3,6 +3,8 @@ package bladequest.bladescript;
 import java.util.ArrayList;
 import java.util.List;
 
+import bladequest.bladescript.ScriptVar.BadTypeException;
+
 public class FunctionBase extends ScriptVar {
 	List<ScriptVar> children;
 	FunctionBase()
@@ -51,7 +53,7 @@ public class FunctionBase extends ScriptVar {
 		}
 		if (nextFunc == null)
 		{
-			throw new BadTypeException();
+			throw new BadTypeException("validArgType", var.typeName());
 		}
 		return nextFunc.clone().curryValues(curriedValues);
 	}

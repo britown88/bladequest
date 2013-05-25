@@ -7,7 +7,6 @@ import bladequest.world.Global;
 import bladequest.world.Item;
 import bladequest.world.Stats;
 import bladequest.world.TargetTypes;
-import bladequest.world.Item.Type;
 
 public class ItemLibrary {
 
