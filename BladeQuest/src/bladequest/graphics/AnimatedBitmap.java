@@ -16,14 +16,17 @@ public interface AnimatedBitmap {
 			BitmapFrame[] frames = animBitmap.getFrames();
 			BattleAnimObject baobj = new BattleAnimObject(Types.Bitmap, false, frames[0].bitmap);
 			
-			for(int i = 0; i < frames.length; ++i)
+			
+			//hard-code to repeat last....
+			for(int i = 0; i < frames.length+1; ++i)
 			{
+				int idx = Math.max(i, frames.length-1);
 				BattleAnimObjState state = new BattleAnimObjState(i*timeDelay, PosTypes.Target);
-				state.size = new Point(frames[i].srcRect.width()*2, frames[i].srcRect.height()*2);
+				state.size = new Point(frames[idx].srcRect.width()*2, frames[idx].srcRect.height()*2);
 				state.pos1 = new Point(0,0);
 				state.argb(255, 255, 255, 255);
 				if (i == frames.length-1) state.a = 0; //fade out.
-				Rect r = frames[i].srcRect;
+				Rect r = frames[idx].srcRect;
 				state.setBmpSrcRect(r.left, r.top, r.right, r.bottom);
 				baobj.addState(state);
 			}
