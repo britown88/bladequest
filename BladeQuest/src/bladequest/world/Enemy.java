@@ -68,7 +68,6 @@ public class Enemy extends PlayerCharacter
 	
 	public void startBattle()
 	{
-
 	    AnimatedBitmap bmp = new ColorizedAnimation(Global.weaponSwingModels.get(attackAnim).toAnimatedBitmap(), colorIndices);
 	    AnimRecycleData = (Recyclable)bmp;
 		builtAnim = AnimatedBitmap.Extensions.genAnim(bmp, 180.0f, 15);

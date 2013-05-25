@@ -13,8 +13,13 @@ import bladequest.UI.ListBox;
 import bladequest.UI.MenuPanel;
 import bladequest.UI.MenuPanel.Anchors;
 import bladequest.UI.MsgBox;
+import bladequest.combat.triggers.Condition;
+import bladequest.combat.triggers.Event;
+import bladequest.combat.triggers.HitCounterCondition;
+import bladequest.combat.triggers.Trigger;
 import bladequest.combatactions.CombatActionBuilder;
 import bladequest.graphics.BattleSprite.faces;
+import bladequest.observer.ObserverUpdatePool;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.world.Ability;
 import bladequest.world.Encounter;
@@ -86,6 +91,12 @@ public class Battle
 	
 	public MsgBox msgBox;
 	
+	
+	
+	//envent stuff
+	public ObserverUpdatePool<Condition> updatePool;
+	private Event startTurn;	
+	
 	public Battle()
 	{
 		stateMachine = new BattleStateMachine();
@@ -96,6 +107,10 @@ public class Battle
 		messageQueue = new ArrayList<String>();
 		
 		msgBox = new MsgBox();
+		
+		updatePool = new ObserverUpdatePool<Condition>();		
+		
+
 	}
 	
 	private BattleState getStartState()
@@ -508,6 +523,20 @@ public class Battle
 	
 	public void startBattle(String encounter)
 	{		
+		
+		startTurn = new Event();
+		
+		HitCounterCondition condition = new HitCounterCondition(4);
+		startTurn.register(condition);
+		new Trigger(condition)
+		{
+			@Override
+			public void trigger() {
+				showMessage("Holy shit, it's turn 4!");
+			}
+			
+		};
+		
 		stateMachine.setState(getStartState());
 		this.encounter = new Encounter(Global.encounters.get(encounter));
 		
@@ -542,6 +571,9 @@ public class Battle
 			//GFX
 			Global.map.getBackdrop().load();
 			buildPaints();
+			
+			//initial triggering
+			startTurn.trigger();
 			
 			//UI
 			initUI();		
@@ -823,6 +855,7 @@ public class Battle
 	//act state functions
 	private void initActState()
 	{	
+		
 		battleEvents.clear();
 		
 		//add enemy actions to event queue
@@ -916,6 +949,7 @@ public class Battle
 			if(battleEvents.size() == 0)
 			{
 				selectFirstChar();
+				startTurn.trigger();
 				stateMachine.setState(getWaitingForInputState());
 			}
 			else
