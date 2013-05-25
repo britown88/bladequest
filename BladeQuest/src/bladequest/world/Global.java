@@ -1139,6 +1139,12 @@ public class Global
 		loading = false;	
 		
 		GameDataLoader.loadNewGame(activity);
+		
+		for(PlayerCharacter pc : party.getPartyList(false))
+		{
+			pc.modifyLevel(99, false);
+			pc.fullRestore();
+		}
 	}
 	
 	private static MapLoadThread mapLoadThread;

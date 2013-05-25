@@ -1,7 +1,9 @@
 package bladequest.graphics;
 
+import bladequest.world.Global;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -118,7 +120,10 @@ public class DrawObject
 			
 			//int width = Math.abs(bounds.right - bounds.left);
 		    int height = Math.abs(bounds.bottom - bounds.top);
-			
+		    
+		    Paint p2 = Global.textFactory.getTextPaint((int)p.getTextSize(), Color.BLACK, p.getTextAlign());
+		   
+		    canvas.drawText(str, f1 - bounds.left+2, f2 + height/2.0f + 4, p2);			
 			canvas.drawText(str, f1 - bounds.left, f2 + height/2.0f + 2, p);
 			break;
 		case Color:
