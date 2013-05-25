@@ -504,6 +504,9 @@ public class PlayerCharacter
 	public void setCombatActionText(String text) {combatActionText = text; }
 	public CombatAction getCombatAction() { return combAction; }
 	
+	public String combatActionName;
+
+	
 	public void setUseCombatAction()
 	{
 		action = Action.CombatAction;
