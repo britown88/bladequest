@@ -122,9 +122,12 @@ public class DrawObject
 		    int height = Math.abs(bounds.bottom - bounds.top);
 		    
 		    Paint p2 = Global.textFactory.getTextPaint((int)p.getTextSize(), Color.BLACK, p.getTextAlign());
-		   
-		    canvas.drawText(str, f1 - bounds.left+2, f2 + height/2.0f + 4, p2);			
-			canvas.drawText(str, f1 - bounds.left, f2 + height/2.0f + 2, p);
+		    int offset = (int)(p.getTextSize()/10) + 1;
+		    
+		    for(int i = 1; i <= offset; ++i)		    
+		    	canvas.drawText(str, f1 - bounds.left + i, f2 + height/2.0f + 2 + i, p2);			
+			
+		    canvas.drawText(str, f1 - bounds.left, f2 + height/2.0f + 2, p);
 			break;
 		case Color:
 			canvas.drawColor(i);
