@@ -34,15 +34,19 @@ public class BattleCalc
 		
 		//guarding
 		if(defender.getAction() == Action.Guard) DP *= 1.5f;		
-		if (ignoreDef || power < 0) DP = 0.0f;
+		if (ignoreDef) DP = 0.0f;
 				
 		int BP = (int)(AP*power);
 		float coefficient = attacker == null ? 1.0f : attacker.getCoefficient();
 		float defenderTypeMod = defender.isEnemy() ? 10.0f : 4.0f;
-		int baseDmg = (int)((Math.max(1.0f, (BP * 2.0f) - DP) * defenderTypeMod * coefficient));		
+		
+		float defendedDmg = power < 0 ? BP * 2.0f : Math.max(0.0f, (BP * 2.0f) - DP);
+		int baseDmg = (int)(defendedDmg * defenderTypeMod * coefficient);		
 		
 		int variance = Global.rand.nextInt(20);		
 		int dmgMod = (int)((float)baseDmg*(float)((variance-10)/100.0F));
+		
+		
 		
 		int finalDmg = 0;
 		
@@ -62,7 +66,7 @@ public class BattleCalc
 			else
 			{
 				roll = Global.rand.nextInt(100);
-				int blockChance = (int)((float)defender.getStat(Stats.Block)*(255.0f/90.0f));				
+				int blockChance = (int)((float)defender.getStat(Stats.Block)*(90.0f/255.0f));				
 				if(roll < blockChance)
 					damageReturnType = DamageReturnType.Blocked;
 				else
@@ -78,8 +82,7 @@ public class BattleCalc
 						finalDmg *= 2.0f;
 					}
 					else
-						damageReturnType = DamageReturnType.Hit;
-				
+						damageReturnType = DamageReturnType.Hit;				
 				}				
 			}
 			break;
@@ -89,6 +92,8 @@ public class BattleCalc
 			damageReturnType = DamageReturnType.Hit;			
 			break;
 		}
+		
+		finalDmg = Math.max(-9999, Math.min(9999, finalDmg));
 		
 		return finalDmg;
 	}
