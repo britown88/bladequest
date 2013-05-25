@@ -738,9 +738,9 @@ public class Global
 		GameState = States.GS_BATTLETRANSITION;
 		musicBox.saveSong();
 		if(encounters.get(en).isBossFight)
-			musicBox.play("boss", true, -1, 0);
+			musicBox.play("boss", true, true, 0);
 		else
-			musicBox.play("battle", true, -1, 0);
+			musicBox.play("battle", true, true, 0);
 		
 		if(battle == null)
 			battle = new Battle();
@@ -764,7 +764,7 @@ public class Global
         	playingAnims = new ArrayList<BattleAnim>();
         	GameState = States.GS_TITLE;
         	title.titleStart();
-        	musicBox.play("", false, -1, 0);
+        	musicBox.play("", false, true, 0);
         	
         	
         	//create debug button
@@ -784,7 +784,7 @@ public class Global
 		title= new TitleScreen();
     	GameState = States.GS_TITLE;
     	title.titleStart();
-    	musicBox.play("", false, -1, 0);
+    	musicBox.play("", false, true, 0);
 
 	}
 	

@@ -9,12 +9,11 @@ import bladequest.world.Global;
 public class MusicBox
 {
 	private String playingSong, lastSong;
-	private boolean paused, done, nonInfinite;
+	private boolean paused, done, looping, playingIntro;
 	private MediaPlayer mPlayer;
 	private float fadeTime;
 	private long startTime;
 	private boolean fadingIn, fadingOut;
-	//private JetPlayer.OnJetEventListener listener;
 	
 	public MusicBox()
 	{
@@ -24,7 +23,7 @@ public class MusicBox
 
 		playingSong = "";
 		paused = true;
-		nonInfinite = false;
+		looping = false;
 		
 	}
 	
@@ -32,9 +31,8 @@ public class MusicBox
 	{
 		Song song = Global.music.get(playingSong);
 		
-		mPlayer.seekTo(song.LoopToMS());
-		
-		mPlayer.start();
+		if(playingIntro)
+			playSong(song, false, looping);			
 		
 	}
 	
@@ -60,11 +58,11 @@ public class MusicBox
 
 	}
 	
-	public void play(String songName, boolean playIntro, int repeatCount, float fadeTime)
+	public void play(String songName, boolean playIntro, boolean loop, float fadeTime)
 	{		
 		if(playingSong.equals(songName) || songName.equals("inherit"))
 			return;
-		
+
 		this.fadeTime = fadeTime;
 		startTime = System.currentTimeMillis();
 		fadingIn = true;
@@ -75,18 +73,17 @@ public class MusicBox
 			mPlayer.setVolume(1, 1);
 		
 		//non-infinite-loop
-		if(repeatCount != -1)
-		{
-			//saveSong();
-			nonInfinite = true;
+		if(!loop)
 			done = false;
-		}			
+		
+		
 		
 		playingSong = songName;
 		Song song = Global.music.get(songName);
+		
 		if(song != null)
 		{
-			playSong(song, playIntro, repeatCount);
+			playSong(song, playIntro, loop);
 			paused = false;
 		}
 		else
@@ -95,22 +92,25 @@ public class MusicBox
 		}
 	}
 	
-	private void playSong(Song song, boolean playIntro, int repeatCount)
+	private void playSong(Song song, boolean playIntro, boolean loop)
 	{
 		AssetFileDescriptor afd;
-		mPlayer.reset();	
+		mPlayer.reset();
 		
-		try {
-			afd = Global.activity.getAssets().openFd(song.Path());
+		looping = loop;
+		playingIntro = playIntro && song.HasIntro();
+		
+		String songPath = playingIntro ? song.IntroPath() : song.Path(); 
+		
+		try {			
+			afd = Global.activity.getAssets().openFd(songPath);
 			mPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+			mPlayer.setLooping(!playIntro && loop);
 			mPlayer.prepare();
 			afd.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		if(!playIntro)
-			mPlayer.seekTo(song.LoopToMS());
 		
 		mPlayer.start();		
 		
@@ -118,7 +118,7 @@ public class MusicBox
 	
 	public void resumeLastSong()
 	{
-		play(lastSong, false, -1, 0);
+		play(lastSong, false, true, 0);
 	}
 	
 	public void saveSong()

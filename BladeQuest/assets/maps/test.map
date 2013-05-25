@@ -767,7 +767,7 @@ movement 0 0
 opts False False False
 sprite "tile 1 2"
 face 3
-action playmusic mystery True -1
+action playmusic mystery True True 5
 action message "$aramis$: \nWhat was my name again?"
 action nameselect aramis
 action message "$aramis$: \nOh, right. It's $aramis$!!"

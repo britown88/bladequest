@@ -17,7 +17,7 @@ namespace BladeCraft.Forms.ActionForms
         public formPlayMusic()
         {
             InitializeComponent();
-            action = new actPlayMusic("", false, -1);
+            action = new actPlayMusic("", false, true, 0.0f);
         }
 
         public formPlayMusic(actPlayMusic action)
@@ -30,7 +30,8 @@ namespace BladeCraft.Forms.ActionForms
         {
             songName.Text = action.song;
             playintro.Checked = action.playIntro;
-            repeatCount.Value = action.repeatCount;
+            chkLoop.Checked = action.loop;
+            numFade.Value = (Decimal)action.fade;
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -42,7 +43,8 @@ namespace BladeCraft.Forms.ActionForms
         {
             action.song = songName.Text;
             action.playIntro = playintro.Checked;
-            action.repeatCount = (int)repeatCount.Value;
+            action.loop = chkLoop.Checked;
+            action.fade = (float)numFade.Value;
             Close();
         }
     }

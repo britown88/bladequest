@@ -903,7 +903,7 @@ moveup
 moveup
 wait
 endpath
-action playmusic mystery True -1
+action playmusic mystery True True 0
 action fade 5 255 255 0 0 True True
 action fade 5 255 255 0 0 False True
 action message "?????:\nWoah, what the hell??"

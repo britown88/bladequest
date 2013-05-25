@@ -381,7 +381,8 @@ namespace BladeCraft.Classes
                         new actPlayMusic(
                             values[1], 
                             Convert.ToBoolean(values[2]),
-                            Convert.ToInt32(values[3])));
+                            Convert.ToBoolean(values[3]),
+                            (float)Convert.ToDecimal(values[4])));
             }
             else if (action == "pausemusic")
             {

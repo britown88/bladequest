@@ -7,27 +7,29 @@ import bladequest.world.*;
 public class actPlayMusic extends Action 
 {
 	private String song;
-	private boolean playIntro;
-	private int repeatCount;
+	private boolean playIntro, loop;
+
+	private float fadeTime;
 	
-	public actPlayMusic(String song, boolean playIntro, int repeatCount)
+	public actPlayMusic(String song, boolean playIntro, boolean loop, float fadeTime)
 	{
 		super();
 		this.song = song;
 		this.playIntro = playIntro;
-		this.repeatCount = repeatCount;
+		this.loop = loop;
+		this.fadeTime = fadeTime;
 	}
 	
 	@Override
 	public void run()
 	{
-		Global.musicBox.play(song, playIntro, repeatCount, 0);
+		Global.musicBox.play(song, playIntro, loop, fadeTime);
 	}
 	
 	@Override
 	public boolean isDone()
 	{
-		return repeatCount == -1 || Global.musicBox.isDone();
+		return loop || Global.musicBox.isDone();
 	}
 
 }

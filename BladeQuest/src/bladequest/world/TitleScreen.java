@@ -84,7 +84,7 @@ public class TitleScreen
 		case Company:
 			break;
 		case GameLogo:	
-			Global.musicBox.play(openingSong, true, -1, 0);
+			Global.musicBox.play(openingSong, true, true, 0);
 			playingAnim = Global.playAnimation("title", null, null);
 			break;
 		case CompanyTransition:
@@ -141,7 +141,7 @@ public class TitleScreen
 	private void close()
 	{
 		Global.screenFader.setFadeColor(255, 0, 0, 0);
-		Global.musicBox.play("", false, -1, 0);
+		Global.musicBox.play("", false, true, 0);
 		whitescene.unload();
 		Global.clearAnimations();
 	}
@@ -324,8 +324,8 @@ public class TitleScreen
 		case GameLogo:	
 			if(!skippedIntro)
 			{
-				Global.musicBox.play("", false, -1, 0);
-				Global.musicBox.play(openingSong, false, -1, 0);
+				Global.musicBox.play("", false, true, 0);
+				Global.musicBox.play(openingSong, false, true, 0);
 				
 			}
 			changeState(TitleStates.Menu);	

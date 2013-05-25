@@ -140,7 +140,7 @@ public class BqMap
 	public void setBGM(String bgm){defaultBGM = bgm;}	
 	public void playBGM(boolean playIntro)
 	{
-		Global.musicBox.play(defaultBGM, playIntro, -1, 0);
+		Global.musicBox.play(defaultBGM, playIntro, true, 0);
 	}	
 	
 	private void initTilePlates()
@@ -611,7 +611,8 @@ public class BqMap
 			new actPlayMusic(
 					dl.values.get(1), 
 					Boolean.parseBoolean(dl.values.get(2)),
-					Integer.parseInt(dl.values.get(3))));}
+					Boolean.parseBoolean(dl.values.get(3)),
+					Float.parseFloat(dl.values.get(4))));}
 	private void actpausemusic(DataLine dl){
 		loadedObject.addAction(loadedStateIndex, 
 			new actPauseMusic());}

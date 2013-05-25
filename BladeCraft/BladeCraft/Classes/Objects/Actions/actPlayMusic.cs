@@ -9,21 +9,24 @@ namespace BladeCraft.Classes.Objects.Actions
     {
         public string song;
         public bool playIntro;
-        public int repeatCount;
+        public bool loop;
+        public float fade;
 
-        public actPlayMusic(string song, bool playIntro, int repeatCount)
+        public actPlayMusic(string song, bool playIntro, bool loop, float fade)
         {
             this.song = song;
             this.playIntro = playIntro;
-            this.repeatCount = repeatCount;
+            this.loop = loop;
             actionType = type.PlayMusic;
+            this.fade = fade;
         }
 
         public actPlayMusic(actPlayMusic other)
         {
             this.song = other.song;
             this.playIntro = other.playIntro;
-            this.repeatCount = other.repeatCount;
+            this.loop = other.loop;
+            this.fade = other.fade;
             actionType = type.PlayMusic;
         }
 
@@ -32,8 +35,9 @@ namespace BladeCraft.Classes.Objects.Actions
             writer.WriteLine(
                 "action playmusic " + 
                 song + " " + 
-                playIntro.ToString() + " " + 
-                repeatCount.ToString());
+                playIntro.ToString() + " " +
+                loop.ToString() + " " +
+                fade.ToString());
             actionType = type.Wait;
         }
     }

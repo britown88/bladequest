@@ -864,7 +864,7 @@ endpath
 action wait 0.5
 action message "Guard:\nHey, you.  You got a message from the warden."
 action message "It says 'Tap the screen to move around,' whatever that means."
-action playmusic sneak False -1
+action playmusic sneak False True 0
 action pan 0 0 1 True
 action path sleepguard False
 facedown

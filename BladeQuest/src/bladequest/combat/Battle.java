@@ -630,7 +630,7 @@ public class Battle
 	private void initVictory()
 	{
 		//play victory music
-		Global.musicBox.play("victory", true, -1, 0);
+		Global.musicBox.play("victory", true, true, 0);
 		
 		//get characters still in the battle 
 		List<PlayerCharacter> aliveChars = new ArrayList<PlayerCharacter>();
