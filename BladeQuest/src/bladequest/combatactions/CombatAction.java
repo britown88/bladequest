@@ -33,6 +33,7 @@ public class CombatAction
 	public DamageTypes getType() { return type; }
 	public TargetTypes getTargetType() { return targetType; }
 	public String getName() { return name; }
+	public String getDescription() { return "";}
 	
 	//when executed in the battle event, call this -> buildEvents
 	protected void useDefaultEventBuilder(CombatActionBuilder actionBuilder)

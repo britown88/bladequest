@@ -12,6 +12,7 @@ import android.graphics.Rect;
 import bladequest.UI.ListBox;
 import bladequest.UI.MenuPanel;
 import bladequest.UI.MenuPanel.Anchors;
+import bladequest.UI.MsgBox;
 import bladequest.combatactions.CombatActionBuilder;
 import bladequest.graphics.BattleSprite.faces;
 import bladequest.statuseffects.StatusEffect;
@@ -83,6 +84,8 @@ public class Battle
 	
 	private BattleStateMachine stateMachine;
 	
+	public MsgBox msgBox;
+	
 	public Battle()
 	{
 		stateMachine = new BattleStateMachine();
@@ -91,6 +94,8 @@ public class Battle
 		battleEvents = new ArrayList<BattleEvent>();
 		markers = new ArrayList<DamageMarker>();
 		messageQueue = new ArrayList<String>();
+		
+		msgBox = new MsgBox();
 	}
 	
 	private BattleState getStartState()
@@ -155,7 +160,52 @@ public class Battle
 			{
 				previousCharacter();
 			}
-			@Override
+			
+			@Override		
+			public void onLongPress(int x, int y)
+			{
+				if(mainMenu.getCurrentSelectedEntry() != null)
+				{
+					String opt = ((String)mainMenu.getCurrentSelectedEntry().obj);
+					boolean disabled = mainMenu.getCurrentSelectedEntry().Disabled();
+					mainMenu.touchActionUp(x, y);
+
+					if(opt.equals("atk"))
+					{
+						showMessage("Attack with currentl equipped weapon.");
+					}
+					else if(opt.equals("itm"))
+					{
+						if(disabled)
+							showMessage("You have no items!");
+						else
+							showMessage("Choose an item from your inventory to use.");
+					}
+					else if(opt.equals("act"))
+					{
+						showMessage(currentChar.getCombatAction().getDescription());
+					}
+					else if(opt.equals("grd"))
+					{
+						showMessage("Increase your defense by 50% for one turn.");
+					}
+					else if(opt.equals("ab"))
+					{
+						if(disabled)
+							showMessage("You don;t know any abilities!");
+						else
+							showMessage("Choose an ability you know to use.");
+					}
+					else if(opt.equals("run"))
+					{
+						showMessage("Attempt to run from battle.");
+						showMessage("Everyone must successfully run in order to escape!");
+					}					
+				}
+					
+			}
+			
+			@Override			
 			public void touchActionUp(int x, int y) 
 			{
 				switch(mainMenu.touchActionUp(x, y))
@@ -201,6 +251,19 @@ public class Battle
 				stateMachine.setState(getTargetState(itm.getTargetType()));
 			}
 
+			@Override		
+			public void onLongPress(int x, int y)
+			{
+				if(mainMenu.getCurrentSelectedEntry() != null)
+				{
+					String desc = ((Item)mainMenu.getCurrentSelectedEntry().obj).getDescription();
+					mainMenu.touchActionUp(x, y);
+					showMessage(desc);
+					
+				}
+					
+			}
+			
 			@Override
 			public void addMenuItems() {
 				for(Item i : Global.party.getInventory(true))
@@ -226,6 +289,18 @@ public class Battle
 				stateMachine.setState(getTargetState(ab.TargetType()));
 			}
 
+			@Override		
+			public void onLongPress(int x, int y)
+			{
+				if(mainMenu.getCurrentSelectedEntry() != null)
+				{
+					String desc = ((Ability)mainMenu.getCurrentSelectedEntry().obj).getDescription();
+					mainMenu.touchActionUp(x, y);
+					showMessage(desc);					
+				}
+					
+			}
+			
 			@Override
 			public void addMenuItems() {
 				for(Ability a : currentChar.getAbilities())
@@ -432,7 +507,7 @@ public class Battle
 	}
 	
 	public void startBattle(String encounter)
-	{
+	{		
 		stateMachine.setState(getStartState());
 		this.encounter = new Encounter(Global.encounters.get(encounter));
 		
@@ -1071,6 +1146,12 @@ public class Battle
 		updatePanels();
 	}
 	
+	public void showMessage(String msg)
+	{
+		msgBox.addMessage(msg, false);
+		msgBox.open();
+	}
+	
 	private void nextCharacter()
 	{
 		//mainMenu.close();		
@@ -1187,14 +1268,23 @@ public class Battle
 	{
 		updatePanels();
 		updateCharacterPanes();
+		msgBox.update();
 		
-		handleCharAdvancing();
-		updateCharacterPositions();
-		updateDamageMarkers();
+		if(msgBox.Closed())
+		{
+			
+			
+			handleCharAdvancing();
+			updateCharacterPositions();
+			updateDamageMarkers();
+			
+			handleNextPrev();
+			
+			
+			stateMachine.getState().update();
+			
+		}
 		
-		handleNextPrev();
-		
-		stateMachine.getState().update();
 	}	
 	public void render()
 	{
@@ -1206,6 +1296,9 @@ public class Battle
 		Global.renderAnimations();
 		drawDamageMarkers();
 		
+		if(!msgBox.Closed())
+			msgBox.render();
+		
 		Global.screenFader.render();
 		
 	}
@@ -1214,27 +1307,35 @@ public class Battle
 	{
 		stateMachine.getState().backButtonPressed();
 	}
+	public void onLongPress(int x, int y)
+	{
+		if(msgBox.Closed() && messageQueue.size() == 0)
+			stateMachine.getState().onLongPress(x, y);
+	}
 	public void touchActionUp(int x, int y)
 	{
-		if(messageQueue.size() > 0)
-		{
+		if(!msgBox.Closed())
+			msgBox.touchActionUp(x, y);
+		else if(messageQueue.size() > 0)
 			messageQueue.remove(0);
-		}
 		else
-		{
 			stateMachine.getState().touchActionUp(x, y);
-		}		
+		
 	}
 	public void touchActionDown(int x, int y)
 	{
-		if(messageQueue.size() == 0)
+		if(!msgBox.Closed())
+			msgBox.touchActionDown(x, y);
+		else if(messageQueue.size() == 0)
 		{
 			stateMachine.getState().touchActionDown(x, y);
 		}		
 	}
 	public void touchActionMove(int x, int y)
 	{
-		if(messageQueue.size() == 0)
+		if(!msgBox.Closed())
+			msgBox.touchActionMove(x, y);
+		else if(messageQueue.size() == 0)
 		{
 			stateMachine.getState().touchActionMove(x, y);
 		}

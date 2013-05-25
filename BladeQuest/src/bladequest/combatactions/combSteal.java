@@ -38,6 +38,9 @@ public class combSteal extends CombatAction
 		actionText = " tries to steal!";
 	}
 	
+	@Override
+	public String getDescription() { return "Attempt to steal from an enemy.";}
+	
 	
 	public BattleAnim getJumpToAnimation(PlayerCharacter source, PlayerCharacter target)
 	{

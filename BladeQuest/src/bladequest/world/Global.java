@@ -324,6 +324,8 @@ public class Global
 		if(worldMsgBox == null)
 			worldMsgBox = new MsgBox();
 		
+		menuButton.close();
+		
 		worldMsgBox.addMessage(str, yesNoOpt);
 		if(worldMsgBox.Closed())
 			worldMsgBox.open();
@@ -681,6 +683,23 @@ public class Global
 		}
 	}
 
+	public static Point inputToScreen(float x, float y)
+	{
+		
+		//scale x and y coords to screen scale:		
+		if(x > Global.screenWidth / 2)
+			x = (int)((float)(x-Global.screenWidth/2.0F)/(Global.imageScale+Global.baseScale))+(int)(Global.screenWidth/2.0F);
+		if(x < Global.screenWidth / 2)
+			x = (int)(Global.screenWidth / 2.0F) - (int)(((Global.screenWidth/2.0F) - (float)x)/(Global.imageScale+Global.baseScale));
+		if(y > Global.screenHeight / 2)
+			y = (int)((float)(y-Global.screenHeight/2.0F)/(Global.imageScale+Global.baseScale))+(int)(Global.screenHeight/2.0F);
+		if(y < Global.screenHeight / 2)
+			y = (int)(Global.screenHeight / 2.0F) - (int)(((Global.screenHeight/2.0F) - (float)y)/(Global.imageScale+Global.baseScale));
+		
+		
+		return new Point((int)x, (int)y);
+	}
+	
 	public static Point vpToScreen(Point p)
 	{
 		return new Point(p.x + ((screenWidth-vpWidth) / 2), p.y + ((screenHeight-vpHeight) / 2));
@@ -1100,44 +1119,13 @@ public class Global
 		//if(reactionBubbles== null)reactionBubbles = new HashMap<String, ReactionBubble>(); else reactionBubbles.clear(); 
 		
 		//reset pan
-		setPanned(0, 0);
-			
-		//add target reticle sprite
-		
-		Sprite spr = new Sprite("target", "target", 32, 32);
-		spr.addFrame("down", 16, 0, 0);
-		spr.changeFace("down");
-		sprites.put("target", spr);		
+		setPanned(0, 0);	
 		
 		//create party
 		party = new Party(0, 0);	
 		
 		//load game data
-		GameDataLoader.load(activity);	
-		
-		spr = new Sprite("rdflying", "rolanddragon", 280, 144);
-		spr.addFrame("down", 0, 0, 140, 72);
-		spr.addFrame("down", 140, 0, 280, 72);
-		spr.addFrame("down", 280, 0, 420, 72);
-		spr.addFrame("down", 420, 0, 560, 72);
-		spr.changeFace("down");
-		sprites.put("rdflying", spr);	
-		
-		spr = new Sprite("rdlanding", "rolanddragon", 280, 144);
-		spr.addFrame("left", 0, 72, 140, 144);
-		spr.addFrame("up", 140, 72, 280, 144);
-		spr.addFrame("right", 280, 72, 420, 144);
-		spr.addFrame("down", 420, 72, 560, 144);
-		spr.changeFace("left");
-		sprites.put("rdlanding", spr);
-		
-		spr = new Sprite("rdroaring", "rolanddragon", 280, 144);
-		spr.addFrame("left", 0, 144, 140, 216);
-		spr.addFrame("up", 140, 144, 280, 216);
-		spr.addFrame("right", 280, 144, 420, 216);
-		spr.changeFace("left");
-		sprites.put("rdroaring", spr);
-		
+		GameDataLoader.load(activity);			
 		
 		return true;		
 	}
@@ -1169,6 +1157,11 @@ public class Global
 		party.addCharacter("roland");			
 		
 		party.addItem("potion", 27);
+		
+		for(PlayerCharacter pc : party.getPartyList(false))
+		{
+			pc.modifyLevel(99, false);
+		}
 		LoadMap("test");
 		
 		

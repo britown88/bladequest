@@ -23,6 +23,7 @@ public class BattleState {
 	public void drawPanels() {}
 	public void update() {}
 	public void backButtonPressed() {}
+	public void onLongPress(int x, int y) {}
 	public void touchActionUp(int x, int y) {}
 	public void touchActionMove(int x, int y) {}
 	public void touchActionDown(int x, int y) {}

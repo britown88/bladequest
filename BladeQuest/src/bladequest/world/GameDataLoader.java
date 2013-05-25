@@ -21,6 +21,7 @@ import bladequest.graphics.BattleAnimObjState;
 import bladequest.graphics.BattleAnimObjState.PosTypes;
 import bladequest.graphics.BattleAnimObject;
 import bladequest.graphics.BattleAnimObject.Types;
+import bladequest.graphics.GraphicsLibrary;
 import bladequest.scripting.FileTokenizer;
 import bladequest.scripting.LibraryWriter;
 import bladequest.scripting.Parser;
@@ -62,6 +63,8 @@ public class GameDataLoader
 		BattleLibrary.publishLibrary(library);
 		SoundLibrary.publishLibrary(library);
 		ItemLibrary.publishLibrary(library);
+		GraphicsLibrary.publishLibrary(library);
+		CharacterLibrary.publishLibrary(library);
 		HigherOrderLibrary.publishLibrary(library);
 		EnemyLibrary.publishLibrary(library);
 		
@@ -87,15 +90,15 @@ public class GameDataLoader
 	{
 		Map<String, ScriptVar> standardLibrary = getStandardLibrary();
 		
-		loadFile(activity, "data/sprites.dat");
+		compileScript(activity, "data/sprites.dat", standardLibrary);
 		loadFile(activity, "data/battleanims.dat");
-		
+
 		compileScript(activity, "data/music.dat", standardLibrary);
 		compileScript(activity, "data/abilities.dat", standardLibrary);
 		compileScript(activity, "data/items.dat", standardLibrary);
 		compileScript(activity, "data/enemies.dat", standardLibrary);
+		compileScript(activity, "data/characters.dat", standardLibrary);
 		
-		loadFile(activity, "data/characters.dat");
 		loadFile(activity, "data/battles.dat");
 		loadFile(activity, "data/merchants.dat");
 		

@@ -35,6 +35,9 @@ public class combBeserkerStance extends Stance {
 		return (combBeserkerStance)(rhs) != null;
 	}
 	@Override
+	public String getDescription() { return "Attack furiously, increasing your attack damage but decreasing your defense.";}
+	
+	@Override
 	public String getStatusName()
 	{
 		return "Beserker";	

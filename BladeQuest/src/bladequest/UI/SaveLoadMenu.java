@@ -211,7 +211,7 @@ public class SaveLoadMenu
 				{
 					if(deleting)
 					{
-						Global.saveLoader.deleteSave((Integer)menu.getSelectedEntry().obj);
+						Global.saveLoader.deleteSave((Integer)menu.getCurrentSelectedEntry().obj);
 						Global.saveLoader.writeSaves(Global.activity);
 						Global.saveLoader.readSaves(Global.activity);
 						buildPanels();
@@ -240,7 +240,7 @@ public class SaveLoadMenu
 	
 	public void onLongPress()
 	{
-		if(!close && menu.getSelectedEntry() != null)
+		if(!close && menu.getCurrentSelectedEntry() != null)
 		{
 			showMessage("Delete this save?", true);
 			deleting = true;

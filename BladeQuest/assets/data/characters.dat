@@ -1,50 +1,39 @@
-[characters]
-character aramis "Aramis" baramis aramis
-portrait 0 0
-abilities "Tricks"
-combataction combSteal
-basestats 7 10 4 2
-level 5
-equip knife
-equip felthat
-equip cottonshirt
-ability poisonjab
-lability dblattack 6
-endcharacter
-#
-character joy "Joy" bjoy joy
-portrait 2 0
-abilities "Magic"
-combataction combAuras
-basestats 3 3 6 10
-level 6
-equip windstaff
-equip felthat
-equip cottonshirt
-endcharacter
-#
-character luc "Luc" bluc luc
-portrait 1 0
-abilities "Swordplay"
-ability assault
-ability zornhau
-#lability zornhau 6
-combataction combStance
-basestats 10 4 7 2
-level 5
-equip earthsword
-equip felthat
-equip cottonshirt
-endcharacter
-#
-character roland "Roland" broland roland
-portrait 0 0
-abilities "Ice Magic"
-combataction combDragonForm
-basestats 3 7 3 10
-level 7
-equip icesword
-equip felthat
-equip cottonshirt
-ability frostwish
-endcharacter
+#Characters
+
+\aramis <- (createCharacter "aramis" "Aramis" "baramis" "aramis" >
+setPortrait 0 0 >
+setAbilityName "Tricks" >
+setCombatAction "combSteal" >
+setBaseStats 7 10 4 2 >
+setLevel 5 >
+mapBound equip {"knife", "felthat", "cottonshirt"} >
+mapBound addAbility {"poisonjab"} >
+addLearnableAbility "dblattack" 6)
+
+\joy <- (createCharacter "joy" "Joy" "bjoy" "joy" >
+setPortrait 2 0 >
+setAbilityName "Magic" >
+setCombatAction "combAuras" >
+setBaseStats 3 3 6 10 >
+setLevel 6 >
+mapBound equip {"windstaff", "felthat", "cottonshirt"})
+
+\luc <- (createCharacter "luc" "Luc" "bluc" "luc" >
+setPortrait 1 0 >
+setAbilityName "Swordplay" >
+setCombatAction "combStance" >
+setBaseStats 10 4 7 2 >
+setLevel 5 >
+mapBound equip {"earthsword", "felthat", "cottonshirt"} >
+mapBound addAbility {"assault", "zornhau"} >
+addLearnableAbility "zornhau" 6)
+
+\roland <- (createCharacter "roland" "Roland" "broland" "roland" >
+setPortrait 0 0 >
+setAbilityName "Ice Magic" >
+setCombatAction "combDragonForm" >
+setBaseStats 3 7 3 10 >
+setLevel 7 >
+mapBound equip {"icesword", "felthat", "cottonshirt"} >
+mapBound addAbility {"frostwish"})
+

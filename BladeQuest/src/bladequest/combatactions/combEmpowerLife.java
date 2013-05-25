@@ -27,6 +27,9 @@ public class combEmpowerLife extends CombatAction {
 	}
 	
 	@Override
+	public String getDescription() { return "Cause your party to regenerate health over a few turns.";}
+	
+	@Override
 	public void buildEvents(BattleEventBuilder builder)
 	{
 		builder.addEventObject(new bactSetFace(faces.Cast, 0));

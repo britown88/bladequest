@@ -8,9 +8,12 @@ import bladequest.battleactions.bactAttackRandomTargets;
 import bladequest.battleactions.bactBreakStance;
 import bladequest.battleactions.bactDamage;
 import bladequest.battleactions.bactInflictStatus;
+import bladequest.battleactions.bactMessage;
 import bladequest.battleactions.bactRemoveStatus;
 import bladequest.battleactions.bactRunAnimation;
+import bladequest.battleactions.bactSetFace;
 import bladequest.battleactions.bactWait;
+import bladequest.graphics.BattleSprite.faces;
 import bladequest.scripting.LibraryWriter;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.statuseffects.sePoison;
@@ -84,6 +87,16 @@ public class BattleLibrary {
 	{
 		return new bactRemoveStatus(statusName);
 	}	
+	
+	public static BattleAction messageAction(String message)
+	{
+		return new bactMessage(message);
+	}
+	
+	public static BattleAction setFaceAction(String face, int index)
+	{
+		return new bactSetFace(faces.valueOf(face), index);
+	}
 
 	
 	public static BattleAction attackCloseAction(float power, String damageType)

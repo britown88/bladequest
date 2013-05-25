@@ -13,11 +13,14 @@ public class combDragonForm extends CombatAction
 {
 	public combDragonForm()
 	{
-		name = "Dragon Form";
+		name = "DragonForm";
 		type = DamageTypes.Magic;
 		targetType = TargetTypes.Self;
 		actionText = " assumes the form of a dragon!";
 	}
+	
+	@Override
+	public String getDescription() { return "Assume the form of a ferocious ice dragon.";}
 	
 	@Override
 	public void execute(List<PlayerCharacter> targets, List<DamageMarker> markers)

@@ -687,7 +687,7 @@ face 3
 addstate
 collision False False False False
 movement 0 0
-opts False False False
+opts False True False
 switchcondition rdlanding
 layer above
 sprite "rdlanding"
@@ -697,7 +697,7 @@ animated False
 addstate
 collision False False False False
 movement 0 0
-opts False False False
+opts False True False
 switchcondition rdroaring
 layer above
 sprite "rdroaring"

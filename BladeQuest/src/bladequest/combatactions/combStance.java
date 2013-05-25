@@ -6,6 +6,7 @@ import java.util.List;
 import bladequest.combat.BattleMenuState;
 import bladequest.combat.BattleState;
 import bladequest.world.DamageTypes;
+import bladequest.world.Global;
 import bladequest.world.TargetTypes;
 
 
@@ -21,6 +22,10 @@ public class combStance extends CombatAction
 		stances = new ArrayList<Stance>();
 		stances.add(new combBeserkerStance());		
 	}
+	
+	@Override
+	public String getDescription() { return "Assume a stance, altering your attacks and abilities.";}
+	
 	private List<Stance> stances;
 	private BattleState getSelectStanceState(CombatActionBuilder actionBuilder)
 	{
@@ -30,6 +35,12 @@ public class combStance extends CombatAction
 			public void onSelected(Object obj) {
 				Stance subAction = (Stance)(obj);
 				subAction.onSelected(actionBuilder);
+			}
+			
+			@Override
+			public void onLongPress(Object obj)
+			{
+				Global.battle.showMessage(((CombatAction)obj).getDescription());
 			}
 
 			@Override

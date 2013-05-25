@@ -528,6 +528,11 @@ public class PlayerCharacter
 		MP = Math.max(0,  MP-abilityToUse.MPCost());			
 	}
 	
+	public void modifyMP(int MP)
+	{
+		this.MP = Math.max(0,  Math.min(getStat(Stats.MaxMP), this.MP + MP));
+	}
+	
 	public void setAbilityToUse(Ability ability)
 	{
 		

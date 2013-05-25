@@ -6,6 +6,7 @@ import java.util.List;
 import bladequest.combat.BattleMenuState;
 import bladequest.combat.BattleState;
 import bladequest.world.DamageTypes;
+import bladequest.world.Global;
 import bladequest.world.TargetTypes;
 
 public class combAuras extends CombatAction  {
@@ -18,6 +19,10 @@ public class combAuras extends CombatAction  {
 		
 		actionText = " has use bugged out, contact the dev team!";
 	}
+	
+	@Override
+	public String getDescription() { return "Empower your party with a magical aura.";}
+	
 	private List<CombatAction> getAuras()
 	{
 		List<CombatAction> out = new ArrayList<CombatAction>();
@@ -33,6 +38,12 @@ public class combAuras extends CombatAction  {
 				CombatAction subAction = (CombatAction)(obj);
 				//pass along the builder to the next object down the chain.
 				subAction.onSelected(actionBuilder);
+			}
+			
+			@Override
+			public void onLongPress(Object obj)
+			{
+				Global.battle.showMessage(((CombatAction)obj).getDescription());
 			}
 
 			@Override
