@@ -14,7 +14,7 @@ add (attackCloseAction 1.0 "PhysicalIgnoreDef"))
 setDisabled >
 setDesc "Usable only in Berserker stance.  Unleash a flurry of attacks.  Breaks stance." >
 add (waitAction 450) >
-addDep (attackRandomlyAction 0.5 "PhysicalIgnoreDef" 15 5.0) >
+addDep (attackRandomlyAction 0.5 "PhysicalIgnoreDef" 15 0.1) >
 addDep (breakStanceAction 0))
 
 \frostwish <- (addAbility "frostwish" "Frost Wish" "AllAllies" 5 >
@@ -29,12 +29,11 @@ add (damageAction 0.9 "Physical") >
 add (waitAction 150) > #hack for attack -> addDep another attack
 addDep (damageAction 0.9 "Physical"))
 
-
 \bite <- (addAbility "bite" "Bite" "Single" 5 >
 add (animAction "bite") >
-add (waitAction 2150) >
+add (waitAction 250) >
 addDep (damageAction 1.5 "Physical") >
-addDep (inflictStatusAction (poisonStatus 1.5)))
+addDep (inflictStatusAction (poisonStatus 1.5))) 
 
 \recruit1 <- (addAbility "recruit1" "Clashing Super Hit" "Single" 0 >
 add (animAction "movetest") >

@@ -44,19 +44,21 @@ public class seRegen extends StatusEffect {
 		
 		builder.addEventObject(new TargetedAction(healTarget)
 		{
+			BattleAnim anim;
 			int healAmnt;
-			TargetedAction initialize(int healAmnt)
+			TargetedAction initialize(int healAmnt, BattleAnim anim)
 			{
 				this.healAmnt = healAmnt;
+				this.anim = anim;
 				return this;
 			}
 			@Override
 			protected void buildEvents(BattleEventBuilder builder) {
+				builder.addEventObject(new bactRunAnimation(anim));
 				builder.addEventObject(new bactDamage(-healAmnt, DamageTypes.Fixed));	
 			}
-		}.initialize(healAmnt));
+		}.initialize(healAmnt, anim));
 				
-		builder.addEventObject(new bactRunAnimation(anim));
 		
 		
 		if (duration > 0 && --duration == 0)

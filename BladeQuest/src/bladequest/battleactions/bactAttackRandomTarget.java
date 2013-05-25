@@ -30,7 +30,8 @@ public class bactAttackRandomTarget extends DelegatingAction {
 			target = new ArrayList<PlayerCharacter>();
 			target.add(targets.get(Global.rand.nextInt(targets.size())));
 			
-			BattleActionPatterns.BuildSwordSlash(builder, power, type, 1.0f/speedFactor);			
+			BattleActionPatterns.BuildSwordSlash(builder, power, type, speedFactor);
+			builder.addEventObject(new bactRunChildren(this).addDependency(builder.getLast()));
 		}
 	}
 	public BattleEventBuilder getAdaptedBuilder(BattleEventBuilder builder) 

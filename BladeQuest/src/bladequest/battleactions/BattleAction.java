@@ -52,10 +52,13 @@ public class BattleAction
 	}
 	public void removeReferences()
 	{
-		finished = true;		
-		for (BattleAction action : children)
+		if (!finished)
 		{
-			action.decref();
+			finished = true;		
+			for (BattleAction action : children)
+			{
+				action.decref();
+			}
 		}
 	}
 	public boolean isFinished()

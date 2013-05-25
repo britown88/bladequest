@@ -40,6 +40,17 @@ public class BattleAnim
 		
 		playing = false;		
 	}
+	
+	public BattleAnim(BattleAnim other, float speedModifer)
+	{
+		this.objects = new ArrayList<BattleAnimObject>();
+		this.framePeriod = other.framePeriod * speedModifer;
+		this.loops = other.loops;
+		for(BattleAnimObject obj : other.objects)
+			addObject(new BattleAnimObject(obj));		
+		
+		playing = false;		
+	}	
 	//take the frame number from an animation and convert it to the frame time of the event
 	public int syncToAnimation(int frame)
 	{
