@@ -7,13 +7,16 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import bladequest.combat.BattleCalc;
 import bladequest.combat.BattleEvent;
+import bladequest.graphics.AnimatedBitmap;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleAnimObjState;
 import bladequest.graphics.BattleAnimObjState.PosTypes;
 import bladequest.graphics.BattleAnimObject;
 import bladequest.graphics.BattleAnimObject.Types;
-import bladequest.graphics.BattleSprite.faces;
 import bladequest.graphics.BattleSprite;
+import bladequest.graphics.BattleSprite.faces;
+import bladequest.graphics.ColorizedAnimation;
+import bladequest.system.Recyclable;
 
 
 public class Enemy extends PlayerCharacter
@@ -24,9 +27,12 @@ public class Enemy extends PlayerCharacter
 	private boolean rareStealOnly;
 	private boolean stolen;
 	
+	private int colorIndices[];
+	
 	private boolean bossFight;
-	private float bossHPMod;
-	private BattleAnim playingAnim;
+	
+	Recyclable AnimRecycleData;
+	BattleAnim builtAnim;
 	
 	private List<EnemyAbility> abilities = new ArrayList<EnemyAbility>();
 	
@@ -38,7 +44,6 @@ public class Enemy extends PlayerCharacter
 		position = new Point();
 		
 		stolen = false;
-		bossHPMod = 1.0f;
 	}
 	
 	public Enemy(Enemy e)
@@ -56,23 +61,33 @@ public class Enemy extends PlayerCharacter
 		abilityChance = e.abilityChance;
 		bossFight = e.bossFight;
 		attackAnim = e.attackAnim;
-		bossHPMod = e.bossHPMod;
+		colorIndices = e.colorIndices;
 		
 		stolen = false;
 	}
 	
+	public void startBattle()
+	{
+
+	    AnimatedBitmap bmp = new ColorizedAnimation(Global.weaponSwingModels.get(attackAnim).toAnimatedBitmap(), colorIndices);
+	    AnimRecycleData = (Recyclable)bmp;
+		builtAnim = AnimatedBitmap.Extensions.genAnim(bmp, 180.0f, 15);
+	}
+	
+	public void endBattle()
+	{
+		if (AnimRecycleData != null)
+		{
+			AnimRecycleData.recycle();
+		}
+	}
+	
 	public void setAttackAnimation(String attackAnim) {this.attackAnim = attackAnim;}
+	public void setColorIndicies(int[] colorIndices) {this.colorIndices = colorIndices;}
 	
 	@Override
-	public BattleAnim getWeaponAnimation(){return new BattleAnim(Global.battleAnims.get(attackAnim));}
+	public BattleAnim getWeaponAnimation(){return builtAnim;}
 	
-	
-	public void playAttackAnimation(Point src, Point tar)
-	{
-		if(playingAnim == null || playingAnim.Done())
-			playingAnim = Global.playAnimation(attackAnim, src, tar);
-
-	}
 	public void setAI(int abilityChance){this.abilityChance = abilityChance;}
 	
 	public void addAbility(String abilityName, int chanceToCast, int healthAbove, int healthBelow)
@@ -191,12 +206,9 @@ public class Enemy extends PlayerCharacter
 			playDeathAnimation();		
 	}
 	
-	public void setBossMods(float mod)
+	public void setBoss()
 	{
 		bossFight = true;
-		bossHPMod = mod;
-		updateSecondaryStats();
-		fullRestore();
 		exp *=4;
 	}
 	
@@ -326,9 +338,6 @@ public class Enemy extends PlayerCharacter
 		//hp/mp based on vit and int	
 		stats[Stats.MaxHP.ordinal()] = (int)((((vit * 2.0f) + (255.0f/99.0f)*lvl) / 3.0f) * 20.0f * getCoefficient());
 		stats[Stats.MaxMP.ordinal()] = (int)(((intel * 2.0f + (255.0f/99.0f)*lvl) / 3.0f) * 7.0f * getCoefficient());
-
-		if(bossFight)
-			stats[Stats.MaxHP.ordinal()] *= bossHPMod;
 		
 		//AP	
 		stats[Stats.BattlePower.ordinal()] = (int)(((str * 2.0f) + ((255.0f / 99.0f) * lvl)) / 3.0f);

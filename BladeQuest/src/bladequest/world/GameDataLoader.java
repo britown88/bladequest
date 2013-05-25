@@ -63,6 +63,7 @@ public class GameDataLoader
 		SoundLibrary.publishLibrary(library);
 		ItemLibrary.publishLibrary(library);
 		HigherOrderLibrary.publishLibrary(library);
+		EnemyLibrary.publishLibrary(library);
 		
 		return library.getLibrary();
 	}
@@ -92,9 +93,9 @@ public class GameDataLoader
 		compileScript(activity, "data/music.dat", standardLibrary);
 		compileScript(activity, "data/abilities.dat", standardLibrary);
 		compileScript(activity, "data/items.dat", standardLibrary);
+		compileScript(activity, "data/enemies.dat", standardLibrary);
 		
 		loadFile(activity, "data/characters.dat");
-		loadFile(activity, "data/enemies.dat");
 		loadFile(activity, "data/battles.dat");
 		loadFile(activity, "data/merchants.dat");
 		
@@ -525,7 +526,7 @@ public class GameDataLoader
 		}
 		else if(dl.item.equals("bossmods"))
 		{
-			e.setBossMods(Float.parseFloat(dl.values.get(0)));
+			//e.setBossMods(Float.parseFloat(dl.values.get(0)));
 		}
 		else if(dl.item.equals("ability"))
 		{

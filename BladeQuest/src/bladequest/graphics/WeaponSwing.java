@@ -14,9 +14,12 @@ public class WeaponSwing
 	//private String id;
 	
 	private Rect srcRect, animSrcRect;
+	private int fileX, fileY;
 	
 	public WeaponSwing(String id, int fileX, int fileY)
 	{
+		this.fileX = fileX;
+		this.fileY = fileY;
 		//this.id = id;
 		srcRect = new Rect(
 				fileX * (frameSize.x * 3), 
@@ -32,6 +35,31 @@ public class WeaponSwing
 		
 	}
 	
+	//gets the "anim" anim.
+	public AnimatedBitmap toAnimatedBitmap()
+	{
+		return new AnimatedBitmap()
+		{
+			@Override
+			public BitmapFrame[] getFrames() {
+				Bitmap animBmp = Global.bitmaps.get("animsprites");
+				BitmapFrame[] frames = new BitmapFrame[3];
+				
+				for (int i = 0; i < 3; ++i)
+				{
+					frames[i] = new BitmapFrame(
+							animBmp,
+							new Rect(
+							(fileX * 3 + i) * (animFrameSize.x), 
+							fileY * animFrameSize.y,
+							(fileX * 3 + 1 + i) * (animFrameSize.x),
+							fileY * animFrameSize.y + animFrameSize.y)
+							);
+				}
+				return frames;
+			}
+		};
+	}
 	//private int[] baseColors, swingColors;
 	
 	public WeaponSwingDrawable genSwingDrawable(int[] base, int[] swing)

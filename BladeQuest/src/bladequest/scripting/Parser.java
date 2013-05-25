@@ -385,9 +385,12 @@ public class Parser {
 			}
 		}.initialize(statements);
 	}
-	Statement compileStatementList(List<Statement> statements, Statement binderStatement)
+	Statement compileStatementList(List<Statement> statements, Statement binderStatement) throws ParserException
 	{
-		
+		if (statements.size() == 0)
+		{
+			throw new ParserException("Trying to compile a null statement list.  Did you put two infix ops in a row?");
+		}
 		if (binderStatement == null) return compileStatementList(statements);
 
 		//
@@ -581,7 +584,7 @@ public class Parser {
 				//ignored in lists.
 			}
 			@Override
-			public void listSeparator() 
+			public void listSeparator() throws ParserException
 			{
 				listStatements.add(compileSubstatements());		
 				this.substatements = new ArrayList<Statement>();
@@ -859,7 +862,7 @@ public class Parser {
 		{
 			this.localCreateStatement = localCreateStatement;  
 		}
-		public Statement compileSubstatements()
+		public Statement compileSubstatements() throws ParserException
 		{
 			Statement out = null;
 			if (localCreateStatement == null)
@@ -924,7 +927,7 @@ public class Parser {
 			pushState(getLocalDefClass(locals, this));	
 		}
 	
-		public void infixBinder()
+		public void infixBinder() throws ParserException
 		{
 			//parser another statement, write it FIRST.
 			//statement1 > statement2 statment3

@@ -1,60 +1,84 @@
-[enemies]
-enemy rat "Rat" rat
-basestats 10 1 1000 1
-atkanim bite
-level 4
-gold 23
-items potion 25 antidote 85 True
-ai 15
-ability bite 100 0 100
-endenemy
+#Handy funcs
+addColoredDaggerHit enemy color1 color2
+   enemy > setAttackAnimation "dagger" > 
+         setAttackColors (interpolateColorsToList color1 color2 3)
+         
+addDefaultDaggerHit enemy
+   addColoredDaggerHit enemy (RGBA 255 255 255 255) (RGBA 128 128 128 255)
+
+addColoredSwordHit enemy color1 color2
+   enemy > setAttackAnimation "sword" > 
+           setAttackColors (interpolateColorsToList color1 color2 3)
+         
+addDefaultSwordHit enemy
+   addColoredSwordHit enemy (RGBA 255 255 255 255) (RGBA 128 128 128 255)
+
+addColoredStaffHit enemy color1 color2   
+   enemy > setAttackAnimation "staff" >
+   	       setAttackColors (interpolateColorsToList color1 color2 6)
+   	        
+addDefaultStaffHit enemy
+   addColoredStaffHit enemy (RGBA 255 255 255 255) (RGBA 128 128 128 255)
+
+
+###########################ENEMIES###################################################
 #
-enemy guard "Guard" guard
-atkanim slice1
-basestats 10 10 10 10
-level 25
-gold 1200
-endenemy
+\rat <- (addEnemy "rat" "Rat" "rat" >
+setBaseStats 10 1 1000 1 >
+addColoredStaffHit (RGBA 255 0 0 255) (RGBA 0 0 0 255) >
+setLevel 4 >
+setGold 23 >
+setItems "potion" 25 "antidote" 85 true >
+setAIAbilityRate 15 >
+addAbility "bite" 100 0 100)
+
 #
-enemy zombie "Zombie" zombie
-atkanim slice1
-basestats 7 3 1 3
-level 8
-gold 487
-endenemy
+\guard <- (addEnemy "guard" "Guard" "guard" >
+addDefaultSwordHit >
+setBaseStats 10 10 10 10 >
+setLevel 25 >
+setGold 1200)
+
 #
-enemy hawk "Hawk" hawk
-atkanim slice1
-basestats 3 3 3 3
-level 20
-gold 52
-endenemy
+\zombie <- (addEnemy "zombie" "Zombie" "zombie" >
+addDefaultSwordHit >
+setBaseStats 7 3 1 3 >
+setLevel 8 >
+setGold 487)
+
 #
-enemy gnome "Gnome" gnome
-atkanim slice1
-basestate 3 3 3 3
-level 13
-gold 123
-endenemy
+\hawk <- (addEnemy "hawk" "Hawk" "hawk" >
+addDefaultDaggerHit >
+setBaseStats 3 3 3 3 >
+setLevel 20 >
+setGold 52)
+
 #
-enemy bat "Bat" bat
-atkanim slice1
-basestats 7 10 8 0
-level 6
-gold 42
-items potion 50 " " 0 True
-endenemy
+\gnome <- (addEnemy "gnome" "Gnome" "gnome" >
+addDefaultSwordHit >
+setBaseStats 3 3 3 3 >
+setLevel 13 >
+setGold 123)
+
 #
-enemy recruit "Recruit" guard
-atkanim slice1
-basestats 10 0 0 0
-level 7
-gold 250
-bossmods 4.0f
-items potion 100 silversword 100 True
-ai 100
-ability recruit1 100 1 100
-ability recruit2 75 50 100
-ability recruit3 50 50 100
-ability recruit4 100 1 50
-endenemy
+\bat <- (addEnemy "bat" "Bat" "bat" >
+addDefaultDaggerHit >
+setBaseStats 7 10 8 0 >
+setLevel 6 >
+setGold 42  >
+setItems "potion" 50 " " 0 true)
+
+#
+\recruit <- (addEnemy "recruit" "Recruit" "guard" >
+addDefaultSwordHit >
+setLevel 7 >
+setGold 250 >
+setBoss >
+setItems "potion" 100 "silversword" 100 true >
+setAIAbilityRate 100 >
+addAbility "recruit1" 100 1 100 >
+addAbility "recruit2" 75 50 100 >
+addAbility "recruit3" 50 50 100 >
+addAbility "recruit4" 100 1 50)
+
+

@@ -390,6 +390,13 @@ public class Battle
 				clearBattleOnlyEffects();
 				resetEscapeState();
 				Global.map.getBackdrop().unload();
+
+				for (Enemy e : this.encounter.Enemies())
+				{
+					e.endBattle();
+				}
+				
+				
 				Global.musicBox.resumeLastSong();
 				Global.screenFader.fadeIn(2);
 				Global.GameState = States.GS_WORLDMOVEMENT;				
@@ -428,6 +435,11 @@ public class Battle
 	{
 		stateMachine.setState(getStartState());
 		this.encounter = new Encounter(Global.encounters.get(encounter));
+		
+		for (Enemy e : this.encounter.Enemies())
+		{
+			e.startBattle();
+		}
 		
 		partyList = Global.party.getPartyList(false);
 		

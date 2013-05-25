@@ -3,7 +3,6 @@ package bladequest.graphics;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.graphics.Color;
 import android.graphics.Point;
 
 public class BattleAnim 
@@ -82,22 +81,6 @@ public class BattleAnim
 				state.frame += frameOffset;
 			addObject(obj);
 		}
-	}
-	
-	public void setFirstObjectColors(int state, int c)
-	{
-		BattleAnimObject obj = objects.get(0);
-		
-		if(obj.states.size() > state)
-		{
-			obj.states.get(state).a = Color.alpha(c);
-			obj.states.get(state).r = Color.red(c);
-			obj.states.get(state).g = Color.green(c);
-			obj.states.get(state).b = Color.blue(c);
-		}
-			
-		
-		
 	}
 	
 	public void play(Point source, Point target)
