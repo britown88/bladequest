@@ -23,6 +23,7 @@ import bladequest.world.DamageTypes;
 import bladequest.world.Enemy;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
+import bladequest.world.Stats;
 import bladequest.world.TargetTypes;
 
 public class BattleLibrary {
@@ -133,6 +134,13 @@ public class BattleLibrary {
 	public static BattleAction addDependency(BattleAction child, BattleAction parent)
 	{
 		return child.addDependency(parent);
+	}
+	
+	public static BattleAction addDamageComponent(BattleAction child, String affinity, float factor)
+	{
+		((bactDamage)child).addDamageComponent(Stats.valueOf(affinity), factor);
+
+		return child;
 	}
 	
 	public static Ability addDep(Ability ability, BattleAction action)
