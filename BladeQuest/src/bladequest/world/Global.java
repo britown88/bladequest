@@ -1119,14 +1119,7 @@ public class Global
 		//if(reactionBubbles== null)reactionBubbles = new HashMap<String, ReactionBubble>(); else reactionBubbles.clear(); 
 		
 		//reset pan
-		setPanned(0, 0);
-			
-		//add target reticle sprite
-		
-		Sprite spr = new Sprite("target", "target", 32, 32);
-		spr.addFrame("down", 16, 0, 0);
-		spr.changeFace("down");
-		sprites.put("target", spr);		
+		setPanned(0, 0);	
 		
 		//create party
 		party = new Party(0, 0);	

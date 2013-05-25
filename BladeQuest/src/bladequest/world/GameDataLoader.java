@@ -64,6 +64,7 @@ public class GameDataLoader
 		SoundLibrary.publishLibrary(library);
 		ItemLibrary.publishLibrary(library);
 		GraphicsLibrary.publishLibrary(library);
+		CharacterLibrary.publishLibrary(library);
 		HigherOrderLibrary.publishLibrary(library);
 		
 		return library.getLibrary();
@@ -94,8 +95,8 @@ public class GameDataLoader
 		compileScript(activity, "data/music.dat", standardLibrary);
 		compileScript(activity, "data/abilities.dat", standardLibrary);
 		compileScript(activity, "data/items.dat", standardLibrary);
+		compileScript(activity, "data/characters.dat", standardLibrary);
 		
-		loadFile(activity, "data/characters.dat");
 		loadFile(activity, "data/enemies.dat");
 		loadFile(activity, "data/battles.dat");
 		loadFile(activity, "data/merchants.dat");

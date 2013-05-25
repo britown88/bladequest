@@ -42,6 +42,10 @@ createBattleSprite "bjoy" 0 1
 \enemy <- addEnemySprites 0
 \battle <- addBattleSprites 0
 
+\target <- (createSprite "target" "target" 32 32 >
+addSpriteFrame2 "down" 16 0 0 >
+setFace "down")
+
 \rdflying <- (createSprite "rdflying" "rolanddragon" 280 144 >
 addSpriteFrame "down" 0 0 140 72 >
 addSpriteFrame "down" 140 0 280 72 >
