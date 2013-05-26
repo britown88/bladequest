@@ -71,7 +71,6 @@
     <Compile Include="Classes\Objects\Actions\actTeleportParty.cs" />
     <Compile Include="Classes\Objects\Actions\actWait.cs" />
     <Compile Include="Classes\Objects\Actions\actPlayMusic.cs" />
-    <Compile Include="Classes\Objects\Actions\actPauseMusic.cs" />
     <Compile Include="Classes\Objects\Actions\actShowScene.cs" />
     <Compile Include="Classes\Objects\Actions\actResetGame.cs" />
     <Compile Include="Classes\Objects\Actions\actMerchant.cs" />

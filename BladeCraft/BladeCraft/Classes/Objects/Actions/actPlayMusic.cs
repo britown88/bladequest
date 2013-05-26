@@ -9,7 +9,7 @@ namespace BladeCraft.Classes.Objects.Actions
     {
         public string song;
         public bool playIntro;
-        public bool loop;
+        public bool loop, pause;
         public float fade;
 
         public actPlayMusic(string song, bool playIntro, bool loop, float fade)
@@ -19,6 +19,14 @@ namespace BladeCraft.Classes.Objects.Actions
             this.loop = loop;
             actionType = type.PlayMusic;
             this.fade = fade;
+            this.pause = false;
+        }
+
+        public actPlayMusic(float fade)
+        {
+           actionType = type.PlayMusic;
+           this.fade = fade;
+           this.pause = true;
         }
 
         public actPlayMusic(actPlayMusic other)
@@ -27,18 +35,21 @@ namespace BladeCraft.Classes.Objects.Actions
             this.playIntro = other.playIntro;
             this.loop = other.loop;
             this.fade = other.fade;
+            this.pause = other.pause;
             actionType = type.PlayMusic;
         }
 
         public override void write(StreamWriter writer) 
         {
+           if (pause)
+              writer.WriteLine("action pausemusic " + fade.ToString());
+           else
             writer.WriteLine(
                 "action playmusic " + 
                 song + " " + 
                 playIntro.ToString() + " " +
                 loop.ToString() + " " +
                 fade.ToString());
-            actionType = type.Wait;
         }
     }
 }

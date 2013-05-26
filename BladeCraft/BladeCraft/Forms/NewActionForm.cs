@@ -123,13 +123,6 @@ namespace BladeCraft.Forms
             Close();
         }
 
-        private void button16_Click(object sender, EventArgs e)
-        {
-            selectedType = Action.type.PauseMusic;
-            actionChosen = true;
-            Close();
-        }
-
         private void button17_Click(object sender, EventArgs e)
         {
             selectedType = Action.type.RestartGame;

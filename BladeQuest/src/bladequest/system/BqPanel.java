@@ -106,7 +106,7 @@ implements SurfaceHolder.Callback
     
     public void pause()
     {
-    	Global.musicBox.pause(false);
+    	Global.musicBox.pause(false, 0);
     	renderThread.setRunning(false);
     	updateThread.setRunning(false);
     	

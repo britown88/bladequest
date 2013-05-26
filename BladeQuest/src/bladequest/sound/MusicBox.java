@@ -53,7 +53,14 @@ public class MusicBox
 					percent = 1.0f - percent;
 				
 				mPlayer.setVolume(percent, percent);			
-			}			
+			}	
+			else
+				if(fadingOut && !paused)
+				{
+					playingSong = "";
+					pause(true, 0);
+				}
+					
 		}
 
 	}
@@ -74,9 +81,7 @@ public class MusicBox
 		
 		//non-infinite-loop
 		if(!loop)
-			done = false;
-		
-		
+			done = false;		
 		
 		playingSong = songName;
 		Song song = Global.music.get(songName);
@@ -88,7 +93,7 @@ public class MusicBox
 		}
 		else
 		{
-			pause(true);
+			pause(true, 0);
 		}
 	}
 	
@@ -97,15 +102,16 @@ public class MusicBox
 		AssetFileDescriptor afd;
 		mPlayer.reset();
 		
-		looping = loop;
+		
 		playingIntro = playIntro && song.HasIntro();
+		looping = !playingIntro && loop;
 		
 		String songPath = playingIntro ? song.IntroPath() : song.Path(); 
 		
 		try {			
 			afd = Global.activity.getAssets().openFd(songPath);
 			mPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
-			mPlayer.setLooping(!playIntro && loop);
+			mPlayer.setLooping(looping);
 			mPlayer.prepare();
 			afd.close();
 		} catch (Exception e) {
@@ -126,14 +132,26 @@ public class MusicBox
 		lastSong = playingSong;
 	}
 	
-	public void pause(boolean setPaused)
+	public void pause(boolean setPaused, float fadeTime)
 	{
 		if(!paused)
 		{
-			mPlayer.pause();
-			
-			if(setPaused)
-				paused = true;
+			if(fadeTime == 0)
+			{
+				fadingOut = false;
+				fadingIn = false;
+				mPlayer.pause();
+				
+				if(setPaused)
+					paused = true;
+			}			
+			else
+			{
+				this.fadeTime = fadeTime;
+				startTime = System.currentTimeMillis();
+				fadingIn = false;
+				fadingOut = true;
+			}
 		}		
 	}
 	

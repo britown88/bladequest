@@ -387,7 +387,7 @@ namespace BladeCraft.Classes
             else if (action == "pausemusic")
             {
                 loadState.addAction(
-                        new actPauseMusic());
+                        new actPlayMusic((float)Convert.ToDecimal(values[1])));
             }
             else if (action=="shake")
             {
