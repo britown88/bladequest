@@ -1059,6 +1059,7 @@ public class PlayerCharacter
 		{
 			BattleSprite.faces oldFace = battleSpr.getFace();
 			boolean weak = HP <= (float)stats[Stats.MaxHP.ordinal()]*0.25F || hasNegativeStatus();
+			imageIndex = 0;			
 			
 			switch(newFace)
 			{

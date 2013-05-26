@@ -403,6 +403,8 @@ public class Battle
 				if(infoPanelContains(x, y))
 				{
 					cancelToPrevState();
+					targets.clear();
+					currentChar.setFace(faces.Idle);
 				}
 				else
 				{
@@ -416,6 +418,8 @@ public class Battle
 					else
 					{
 						cancelToPrevState();
+						targets.clear();
+						currentChar.setFace(faces.Idle);
 					}
 				}		
 			}
