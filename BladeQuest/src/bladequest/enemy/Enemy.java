@@ -5,10 +5,15 @@ import java.util.List;
 
 import android.graphics.Point;
 import android.graphics.Rect;
+import bladequest.battleactions.BattleAction;
+import bladequest.battleactions.bactFlash;
+import bladequest.battleactions.bactShake;
+import bladequest.battleactions.bactWait;
 import bladequest.bladescript.ScriptVar;
 import bladequest.bladescript.ScriptVar.BadTypeException;
 import bladequest.combat.BattleCalc;
 import bladequest.combat.BattleEvent;
+import bladequest.combat.BattleEventBuilder;
 import bladequest.graphics.AnimatedBitmap;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleAnimObjState;
@@ -220,6 +225,92 @@ public class Enemy extends PlayerCharacter
 		
 	}
 	
+
+	private void playBossDeathAnimation()
+	{
+		float fps = 60.0f;
+		BattleAnim anim = new BattleAnim(fps);
+		
+		float msConvert = fps/1000.0f;
+		
+		BattleAnimObject baObj = new BattleAnimObject(Types.Bitmap, false, battleSpr.getBmpName());
+		Rect srcRect = battleSpr.getFrameRect(faces.Idle, 0);
+		
+		BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Source);
+		state.setBmpSrcRect(srcRect.left, srcRect.top, srcRect.right, srcRect.bottom);
+		state.argb(255, 255, 255, 255);
+		state.pos1 = new Point(0,0);
+		state.size = new Point(battleSpr.getWidth(), battleSpr.getHeight());
+		baObj.addState(state);
+		
+		state = new BattleAnimObjState((int)(300*msConvert), PosTypes.Source);
+		state.setBmpSrcRect(srcRect.left, srcRect.top, srcRect.right, srcRect.bottom);
+		state.argb(255, 255, 255, 255);
+		state.pos1 = new Point(0,0);
+		state.size = new Point(battleSpr.getWidth(), battleSpr.getHeight());
+		baObj.addState(state);
+		
+		state = new BattleAnimObjState((int)(700*msConvert), PosTypes.Source);
+		state.setBmpSrcRect(srcRect.left, srcRect.top, srcRect.right, srcRect.bottom);
+		state.argb(255, 255, 255, 255);
+		state.colorize = 1.0f;
+		state.pos1 = new Point(0,0);
+		state.size = new Point(battleSpr.getWidth(), battleSpr.getHeight());
+		baObj.addState(state);
+		
+		state = new BattleAnimObjState((int)(1100*msConvert), PosTypes.Source);
+		state.setBmpSrcRect(srcRect.left, srcRect.top, srcRect.right, srcRect.bottom);
+		state.argb(255, 255, 255, 255);
+		state.colorize = 0.0f;
+		state.pos1 = new Point(0,0);
+		state.size = new Point(battleSpr.getWidth(), battleSpr.getHeight());
+		baObj.addState(state);				
+		
+		state = new BattleAnimObjState((int)(2500*msConvert), PosTypes.Source);
+		state.setBmpSrcRect(srcRect.left, srcRect.top, srcRect.right, srcRect.bottom);
+		state.argb(255, 255, 255, 255);
+		state.pos1 = new Point(0,0);
+		state.size = new Point(battleSpr.getWidth(), battleSpr.getHeight());
+		baObj.addState(state);
+		
+		state = new BattleAnimObjState((int)(6500*msConvert), PosTypes.Source);
+		state.setBmpSrcRect(srcRect.left, srcRect.top, srcRect.right, srcRect.bottom);
+		state.argb(0, 255, 0, 0);
+		state.colorize = 1.0f;
+		state.pos1 = new Point(0,0);
+		state.size = new Point(battleSpr.getWidth(), battleSpr.getHeight());
+		baObj.addState(state);
+		
+		anim.addObject(baObj);
+		
+		Global.playAnimation(anim, position, null, true);
+	
+		BattleEventBuilder builder = Global.battle.makeGraphicalBattleEventBuilder();
+	
+		BattleAction waitAction = new bactWait(350); 
+		builder.addEventObject(waitAction);
+		builder.addEventObject(new bactFlash(8).addDependency(builder.getLast()));
+		waitAction.setReferences();
+		
+		waitAction = new bactWait(1800);
+		builder.addEventObject(waitAction);
+		builder.addEventObject(new bactFlash(20).addDependency(builder.getLast()));
+		waitAction.setReferences();
+		
+		waitAction = new bactWait(2100);
+		builder.addEventObject(waitAction);
+		builder.addEventObject(new bactFlash(20).addDependency(builder.getLast()));
+		waitAction.setReferences();
+		
+		waitAction = new bactWait(2500);
+		builder.addEventObject(waitAction);
+		builder.addEventObject(new bactShake(2, 4, true).addDependency(builder.getLast()));
+		waitAction.setReferences();
+		
+		waitAction = new bactWait(8000); //prevent battle from ending too quickly!
+		builder.addEventObject(waitAction);
+	}
+	
 	private void playDeathAnimation()
 	{
 		BattleAnim anim = new BattleAnim(60.0f);
@@ -260,7 +351,16 @@ public class Enemy extends PlayerCharacter
 		super.modifyHP(HP, percentage);
 		
 		if(dead)
-			playDeathAnimation();		
+		{
+			if (bossFight)
+			{
+				playBossDeathAnimation();
+			}
+			else
+			{
+				playDeathAnimation();
+			}
+		}
 	}
 	
 	public void setBoss()

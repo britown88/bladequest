@@ -6,10 +6,12 @@ import java.util.List;
 import bladequest.battleactions.BattleAction;
 import bladequest.battleactions.bactAttackClose;
 import bladequest.battleactions.bactAttackRandomTargets;
+import bladequest.battleactions.bactBasicAttack;
 import bladequest.battleactions.bactBreakStance;
 import bladequest.battleactions.bactDamage;
 import bladequest.battleactions.bactInflictStatus;
 import bladequest.battleactions.bactMessage;
+import bladequest.battleactions.bactMirror;
 import bladequest.battleactions.bactRemoveStatus;
 import bladequest.battleactions.bactRunAnimation;
 import bladequest.battleactions.bactSetFace;
@@ -120,6 +122,15 @@ public class BattleLibrary {
 	{
 		return new bactDamage(power, DamageTypes.valueOf(damageType));
 	}
+	public static BattleAction basicAttackAction(float power, String damageType, float speedFactor)
+	{
+		return new bactBasicAttack(power, DamageTypes.valueOf(damageType), speedFactor);
+	}
+	
+	public static BattleAction mirrorAction(boolean mirrored)
+	{
+		return new bactMirror(mirrored);
+	}	
 	
 	public static BattleAction waitAction(int milliseconds)
 	{

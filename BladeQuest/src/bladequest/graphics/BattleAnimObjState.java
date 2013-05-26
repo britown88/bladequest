@@ -14,7 +14,7 @@ public class BattleAnimObjState
 	
 	public int frame;
 	
-	public boolean show, randomized;
+	public boolean show, randomized, mirrored;
 	
 	public PosTypes posType;
 	
@@ -65,6 +65,8 @@ public class BattleAnimObjState
 	{
 		show = true;
 		random = false;
+		mirrored = false;
+		rotation = 0.0f;
 		
 		this.frame = frame;
 		this.posType = posType;
@@ -85,6 +87,7 @@ public class BattleAnimObjState
 	
 	public BattleAnimObjState(BattleAnimObjState other)
 	{
+		this.mirrored = other.mirrored;
 		this.rotation = other.rotation;
 		this.size = new Point(other.size);
 		this.strokeWidth = other.strokeWidth;

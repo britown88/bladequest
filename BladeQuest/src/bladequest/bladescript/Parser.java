@@ -837,7 +837,7 @@ public class Parser {
 				{
 					if (!name.equals("<-"))
 					{
-						throw new ParserException("Not implemented!");
+						throw new ParserException("Missing arrow after local variable definition.  Got " + name + " instead of <-");
 					}
 					
 					locals.add(this.name);

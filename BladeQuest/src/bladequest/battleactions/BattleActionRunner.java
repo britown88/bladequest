@@ -21,7 +21,10 @@ public class BattleActionRunner extends BattleAction {
 		actions.add(action);
 		remainingActions.add(action);
 	}
-	
+	public boolean hasRemaining()
+	{
+		return !remainingActions.isEmpty();
+	}
 	public BattleAction getLast()
 	{
 		return actions.get(actions.size()-1);

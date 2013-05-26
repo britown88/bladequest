@@ -10,11 +10,13 @@ import android.graphics.Paint.Cap;
 import android.graphics.Point;
 import android.graphics.Rect;
 import bladequest.UI.ListBox;
-import bladequest.UI.MenuPanel;
 import bladequest.UI.ListBox.LBStates;
+import bladequest.UI.MenuPanel;
 import bladequest.UI.MenuPanel.Anchors;
 import bladequest.UI.MsgBox;
 import bladequest.UI.MainMenu.MainMenu;
+import bladequest.battleactions.BattleAction;
+import bladequest.battleactions.BattleActionRunner;
 import bladequest.combat.BattleEvent.ActionType;
 import bladequest.combat.triggers.Condition;
 import bladequest.combat.triggers.Event;
@@ -94,11 +96,20 @@ public class Battle
 	
 	public MsgBox msgBox;
 	
-	
+	private BattleActionRunner graphicalBattleActionRunner;
 	
 	//envent stuff
 	public ObserverUpdatePool<Condition> updatePool;
 	private Event startTurn;	
+	
+	private long startTime;
+	private int currentFrame; 
+	
+	
+	void updateCurrentFrame()
+	{
+		currentFrame = (int)(System.currentTimeMillis()-startTime);
+	}
 	
 	public Battle()
 	{
@@ -113,7 +124,10 @@ public class Battle
 		
 		updatePool = new ObserverUpdatePool<Condition>();		
 		
-
+		graphicalBattleActionRunner = new BattleActionRunner();
+		
+		startTime = System.currentTimeMillis();
+		updateCurrentFrame();
 	}
 	
 	private BattleState getStartState()
@@ -1044,22 +1058,25 @@ public class Battle
 	{
 		return isVictory() || isDefeated() || isEscaped();
 	}
+	public boolean graphicsCleared()
+	{
+		return Global.noRunningAnims() && markers.isEmpty() && !graphicalBattleActionRunner.hasRemaining();
+	}
 	private void applyBattleOver()
 	{
+		if (!graphicsCleared()) return;
+		
 		if(isVictory())
 		{
-			if(Global.noRunningAnims() && markers.isEmpty())
-				stateMachine.setState(getVictoryState());
+			stateMachine.setState(getVictoryState());
 		}			
 		else if(isDefeated())
 		{
-			if(Global.noRunningAnims() && markers.isEmpty())
-				stateMachine.setState(getDefeatState());
+			stateMachine.setState(getDefeatState());
 		}
 		else if (isEscaped())
 		{
-			if(Global.noRunningAnims() && markers.isEmpty())
-				stateMachine.setState(getEscapedState());
+			stateMachine.setState(getEscapedState());
 		}		
 	}
 	private void nextActor(boolean firstActor)
@@ -1474,12 +1491,46 @@ public class Battle
 			dm.render();
 	}
 	
+	public BattleEventBuilder makeGraphicalBattleEventBuilder()
+	{
+		return new BattleEventBuilder(){
+			 public List<PlayerCharacter> getTargets()
+			 {
+				 return null;
+			 }
+			 public PlayerCharacter getSource()
+			 {
+				 return null;
+			 }
+			 
+			 public BattleAction getLast()
+			 {
+				 return graphicalBattleActionRunner.getLast();
+			 }
+			 
+			 public void addEventObject(BattleAction eventObj)
+			 {
+				 graphicalBattleActionRunner.addAction(eventObj);
+			 }
+			 public void addMarker(DamageMarker marker)
+			 {
+				 markers.add(marker);
+			 }
+			 public int getCurrentBattleFrame()
+			 {
+				 return currentFrame;
+			 }
+			};
+	}
+	
 	public void update()
 	{
 		updatePanels();
 		updateCharacterPanes();
 		charStatusPanel.update();
 		msgBox.update();
+		updateCurrentFrame();
+		graphicalBattleActionRunner.run(makeGraphicalBattleEventBuilder()); 
 		
 		if(msgBox.Closed())
 		{
