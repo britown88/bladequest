@@ -16,6 +16,11 @@ public class actPath extends Action
 		this.wait = wait;
 	}
 	
+	public ObjectPath getPath()
+	{
+		return path;
+	}
+	
 	@Override
 	public void run()
 	{

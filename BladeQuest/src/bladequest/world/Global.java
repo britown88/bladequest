@@ -1,5 +1,6 @@
 package bladequest.world;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +43,10 @@ import bladequest.actions.actWait;
 import bladequest.actions.actShowScene.InputTriggers;
 import bladequest.actions.actSwitch;
 import bladequest.actions.actTeleportParty;
+import bladequest.bladescript.FileTokenizer;
+import bladequest.bladescript.Parser;
+import bladequest.bladescript.Script;
+import bladequest.bladescript.ScriptVar;
 import bladequest.combat.Battle;
 import bladequest.enemy.Enemy;
 import bladequest.graphics.BattleAnim;
@@ -210,6 +215,21 @@ public class Global
 		gameLog.add(str);
 	}
 	
+	public static Script compileScript(String file, Map<String, ScriptVar> standardLibrary)
+	{
+		Log.d(TAG, "Loading " + file);
+		Script script = new Script(standardLibrary);
+		
+		Parser p = null;
+		try {
+			p = new Parser(new FileTokenizer(activity.getAssets().open(file)), script);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+		p.run(); //populates script!
+		return script;
+	}
 	
 	
 	public static void genValidPathArea(List<Point> nodes)
@@ -775,11 +795,8 @@ public class Global
 		return y - ((screenHeight-vpHeight) / 2) + vpWorldPos.y;
 	}
 	
-	public static GameObject BattleStartObject;
-	
-	public static void beginBattle(GameObject go, String en)
+	public static void beginBattle(String en)
 	{
-		BattleStartObject = go;
 		encounter = en;
 		GameState = States.GS_BATTLETRANSITION;
 		musicBox.saveSong();
@@ -1157,7 +1174,7 @@ public class Global
 		party = new Party(0, 0);	
 		
 		//load game data
-		GameDataLoader.load(activity);			
+		GameDataLoader.load();			
 		
 		return true;		
 	}
@@ -1197,7 +1214,8 @@ public class Global
 			Log.d(TAG, "Unable to open file " + maps.get(name));
 			closeGame();}
 		
-		mapLoadThread = new MapLoadThread(name, is);
+		map = new BqMap(name, is);		
+		mapLoadThread = new MapLoadThread(map);
 		
 		GameState = States.GS_LOADING;
 		mapLoadThread.start();
@@ -1261,14 +1279,14 @@ public class Global
 	private static void createGameOverObject()
 	{
 		gameOverObject = new GameObject("gameover", 0, 0);
-		gameOverObject.addState();
+		gameOverObject.addState(new ObjectState(gameOverObject));
 		gameOverObject.setStateCollision(0, false, false, false, false);
 		gameOverObject.setStateMovement(0, 0, 0);
 		gameOverObject.setStateOpts(0, true, false, false);
 		gameOverObject.setStateFace(0, "down");
 		gameOverObject.addAction(0, new actFadeControl(100, 255, 0, 0, 0, true, true));
 		gameOverObject.addAction(0, new actPlayMusic("annihilation", true, true, 2.0f));
-		gameOverObject.addAction(0, new actShowScene("gameover", InputTriggers.Timer, 12.0f, 0, 0, 0, 0, false));
+		gameOverObject.addAction(0, new actShowScene("gameover"));
 		gameOverObject.addAction(0, new actFadeControl(1, 255, 255, 255, 255, false, false));
 		gameOverObject.addAction(0, new actWait(9.5f));
 		gameOverObject.addAction(0, new actFadeControl(1, 255, 255, 255, 255, true, true));

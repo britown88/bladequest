@@ -1,7 +1,9 @@
 package bladequest.world;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -14,27 +16,12 @@ import android.graphics.Paint.Align;
 import android.graphics.Point;
 import android.graphics.Rect;
 import bladequest.UI.MenuPanel;
-import bladequest.actions.actFadeControl;
-import bladequest.actions.actMerchant;
-import bladequest.actions.actMessage;
-import bladequest.actions.actModifyGold;
-import bladequest.actions.actModifyInventory;
-import bladequest.actions.actModifyParty;
-import bladequest.actions.actNameSelect;
-import bladequest.actions.actPanControl;
-import bladequest.actions.actPath;
-import bladequest.actions.actPauseMusic;
-import bladequest.actions.actPlayMusic;
-import bladequest.actions.actReactionBubble;
-import bladequest.actions.actResetGame;
-import bladequest.actions.actRestoreParty;
-import bladequest.actions.actSaveMenu;
-import bladequest.actions.actShake;
-import bladequest.actions.actShowScene;
-import bladequest.actions.actStartBattle;
-import bladequest.actions.actSwitch;
-import bladequest.actions.actTeleportParty;
-import bladequest.actions.actWait;
+import bladequest.bladescript.LibraryWriter;
+import bladequest.bladescript.Script.BadSpecialization;
+import bladequest.bladescript.ScriptVar;
+import bladequest.bladescript.ScriptVar.BadTypeException;
+import bladequest.bladescript.libraries.GameObjectLibrary;
+import bladequest.bladescript.libraries.HigherOrderLibrary;
 import bladequest.graphics.Scene;
 import bladequest.graphics.Tile;
 import bladequest.graphics.TilePlate;
@@ -57,23 +44,15 @@ public class BqMap
 	private int nameDisplayLength = 150, nameDisplayCounter = 0;
 	private boolean showDisplayName = false;
 	private Paint nameDisplayPaint;
-	private Rect displayNameRect;
 	
 	private Scene backdrop;
 	
-	private Map<String, CommandLine> commands;
-	
+	private Map<String, CommandLine> commands;	
 	//file-loading temporaries
-	
-	private ObjectPath loadedPath;
-	private boolean loadedPathWait;
-	private EncounterZone loadedEncounterZone;
-	private GameObject loadedObject;
-	private int loadedStateIndex;
-	private actMessage forkMessage;
-	private boolean yesFork, noFork;
-	
+	private EncounterZone loadedEncounterZone;	
 	private MenuPanel displayNamePanel;
+	
+	InputStream mapFile;
 	
 	
 	public BqMap(String mapname, InputStream file)
@@ -84,9 +63,16 @@ public class BqMap
 		objects = new ArrayList<GameObject>();	
 		encounterZones = new ArrayList<EncounterZone>();
 		
-		FileReader fr = new FileReader(file);
 		defaultBGM = "";
 		
+		mapFile = file;
+		buildDisplayName();
+		
+	}
+	
+	public void  load()
+	{
+		FileReader fr = new FileReader(mapFile);		
 		String s = "";
 		List<DataLine> lines = new ArrayList<DataLine>();
 		
@@ -98,28 +84,30 @@ public class BqMap
 		} while(s.length() > 0);
 		
 		for(DataLine dl : lines)
-			LoadDataLine(dl);				
+			LoadDataLine(dl);
+		
+		loadGameObjects();
 
 		for(GameObject go : objects)
 			if(go.AutoStarts())
 				go.execute();
-		
+	}
+	
+	private void buildDisplayName()
+	{
 		nameDisplayPaint = Global.textFactory.getTextPaint(13, Color.WHITE, Align.CENTER);
-		
-		
+				
 		displayNamePanel = new MenuPanel();
 		displayNamePanel.thickFrame = false;
 		displayNamePanel.setInset(-10, -7);
 		displayNamePanel.addTextBox("", 0, 0, nameDisplayPaint);	
 		displayNamePanel.hide(); 
-
 		
 		if(displayName != null)
 		{
 			displayNamePanel.show();
 			nameDisplayCounter = 0;
-			showDisplayName = true;
-			
+			showDisplayName = true;			
 			
 			Rect displayNameRect = new Rect();
 			nameDisplayPaint.getTextBounds(displayName, 0, displayName.length()-1, displayNameRect);
@@ -137,8 +125,59 @@ public class BqMap
 			displayNamePanel.getTextAt(0).x = displayNamePanel.insetWidth()/2;
 			displayNamePanel.getTextAt(0).y = displayNamePanel.insetHeight()/2;
 		}
+	}
+	
+	
+	private Map<String, ScriptVar> standardLibrary;
+	private void loadGameObjects()
+	{
+		String objFilename = name+".omap";
+		String objPath = "maps/omaps/"+objFilename;
+		List<String> fileList = new ArrayList<String>();
+		try {
+			fileList = Arrays.asList(Global.activity.getAssets().list("maps/omaps"));
+		} catch (IOException e) {
+			Global.logMessage("LOADING FILES FAILED");
+			e.printStackTrace();
+		}
 		
+		if(fileList.contains(objFilename))
+		{
+			standardLibrary = getStandardLibrary();		
+			Global.compileScript(objPath, standardLibrary);
+			
+			//add objs to necessary tileplates
+			for(GameObject go : objects)
+			{
+				int index = ((go.getGridPos().y/10)*plateCount.x)+(go.getGridPos().x/10);			
+				if(go.getLayer() == Layer.Above)
+					foreground[index].addObject(go);
+				else
+					background[index].addObject(go);
+
+			}
+			
+			
+		}
+	}
+	
+	public static Map<String, ScriptVar> getStandardLibrary()
+	{
+		LibraryWriter library = new LibraryWriter();
+	
+		try {
+			library.add("subtract", GameDataLoader.class.getMethod("subtractScriptFn", int.class, int.class));
+			library.add("equals", GameDataLoader.class.getMethod("equalsScriptFn", int.class, int.class));
+		} catch (SecurityException e) {
+		} catch (NoSuchMethodException e) {
+		} catch (BadTypeException e) {
+		} catch (BadSpecialization e) {
+		}
+
+		HigherOrderLibrary.publishLibrary(library);
+		GameObjectLibrary.publishLibrary(library);
 		
+		return library.getLibrary();
 	}
 	
 	public String Name() { return name;}	
@@ -186,34 +225,6 @@ public class BqMap
 		{
 			plate.renderObjects();
 		}
-		
-		/*
-		int plateX = Global.vpGridPos.x / 10;
-		int plateY = Global.vpGridPos.y / 10;
-		
-		boolean drawR2 = Global.vpGridPos.y - ((int)(Global.vpGridPos.y/10)*10) > 0;
-		boolean drawC3 = Global.vpGridPos.x - ((int)(Global.vpGridPos.x/10)*10) > 5;
-		
-		//always
-		plates[plateIndexFromVP(0,0)].renderObjects();
-		plates[plateIndexFromVP(1,0)].renderObjects();
-		
-		//row2
-		if(drawR2 && plateY + 1 < plateCount.y)
-		{
-			plates[plateIndexFromVP(0,1)].renderObjects();
-			plates[plateIndexFromVP(1,1)].renderObjects();
-			
-		}		
-		//column3
-		if(drawC3 && plateX + 2 < plateCount.x)
-			plates[plateIndexFromVP(2,0)].renderObjects();
-		
-		//row2 and column3
-		if(drawR2 && drawC3 && plateY + 1 < plateCount.y && plateX + 2 < plateCount.x)
-			plates[plateIndexFromVP(2,1)].renderObjects();		
-
-*/
 	}
 	
 	public void clearObjectAction()
@@ -350,17 +361,7 @@ public class BqMap
 	
 	public void addObject(GameObject go)
 	{
-		int index = ((go.getGridPos().y/10)*plateCount.x)+(go.getGridPos().x/10);
 		
-		switch(go.getLayer())
-		{
-		case Above:			
-			foreground[index].addObject(go);
-			break;
-		default:			
-			background[index].addObject(go);
-			break;
-		}
 		
 		objects.add(go);
 		
@@ -381,6 +382,8 @@ public class BqMap
 	{
 		commands = new HashMap<String, CommandLine>();
 		
+		commands.put("t", new CommandLine(){public void execute(DataLine dl) {tile(dl);};});
+				
 		commands.put("size", new CommandLine(){public void execute(DataLine dl) {size(dl);};});
 		commands.put("tileset", new CommandLine(){public void execute(DataLine dl) {tileset(dl);};});
 		commands.put("displayname", new CommandLine(){public void execute(DataLine dl) {displayname(dl);};});
@@ -389,69 +392,6 @@ public class BqMap
 		commands.put("zone", new CommandLine(){public void execute(DataLine dl) {zone(dl);};});
 		commands.put("encounter", new CommandLine(){public void execute(DataLine dl) {encounter(dl);};});
 		commands.put("endzone", new CommandLine(){public void execute(DataLine dl) {endzone(dl);};});
-		
-		commands.put("t", new CommandLine(){public void execute(DataLine dl) {tile(dl);};});
-		
-		commands.put("object", new CommandLine(){public void execute(DataLine dl) {object(dl);};});
-		commands.put("endobject", new CommandLine(){public void execute(DataLine dl) {endobject(dl);};});
-		commands.put("collision", new CommandLine(){public void execute(DataLine dl) {collision(dl);};});
-		commands.put("movement", new CommandLine(){public void execute(DataLine dl) {movement(dl);};});
-		commands.put("opts", new CommandLine(){public void execute(DataLine dl) {opts(dl);};});
-		commands.put("imageindex", new CommandLine(){public void execute(DataLine dl) {imageindex(dl);};});
-		commands.put("animated", new CommandLine(){public void execute(DataLine dl) {animated(dl);};});
-		commands.put("face", new CommandLine(){public void execute(DataLine dl) {face(dl);};});
-		commands.put("layer", new CommandLine(){public void execute(DataLine dl) {layer(dl);};});
-		commands.put("autostart", new CommandLine(){public void execute(DataLine dl) {autostart(dl);};});
-		commands.put("sprite", new CommandLine(){public void execute(DataLine dl) {sprite(dl);};});
-		commands.put("bubble", new CommandLine(){public void execute(DataLine dl) {bubble(dl);};});
-		commands.put("action", new CommandLine(){public void execute(DataLine dl) {action(dl);};});
-		commands.put("switchcondition", new CommandLine(){public void execute(DataLine dl) {switchcondition(dl);};});
-		commands.put("itemcondition", new CommandLine(){public void execute(DataLine dl) {itemcondition(dl);};});
-		commands.put("addstate", new CommandLine(){public void execute(DataLine dl) {addstate(dl);};});
-		
-		commands.put("actfade", new CommandLine(){public void execute(DataLine dl) {actfade(dl);};});
-		commands.put("actmessage", new CommandLine(){public void execute(DataLine dl) {actmessage(dl);};});
-		commands.put("actyesfork", new CommandLine(){public void execute(DataLine dl) {actyesfork(dl);};});
-		commands.put("actnofork", new CommandLine(){public void execute(DataLine dl) {actnofork(dl);};});
-		commands.put("actendfork", new CommandLine(){public void execute(DataLine dl) {actendfork(dl);};});
-		commands.put("actgold", new CommandLine(){public void execute(DataLine dl) {actgold(dl);};});
-		commands.put("actinventory", new CommandLine(){public void execute(DataLine dl) {actinventory(dl);};});
-		commands.put("actparty", new CommandLine(){public void execute(DataLine dl) {actparty(dl);};});
-		commands.put("actshowscene", new CommandLine(){public void execute(DataLine dl) {actshowscene(dl);};});
-		commands.put("actmerchant", new CommandLine(){public void execute(DataLine dl) {actmerchant(dl);};});
-		commands.put("actnameselect", new CommandLine(){public void execute(DataLine dl) {actnameselect(dl);};});
-		commands.put("actresetgame", new CommandLine(){public void execute(DataLine dl) {actresetgame(dl);};});
-		commands.put("actplaymusic", new CommandLine(){public void execute(DataLine dl) {actplaymusic(dl);};});
-		commands.put("actpausemusic", new CommandLine(){public void execute(DataLine dl) {actpausemusic(dl);};});
-		commands.put("actpan", new CommandLine(){public void execute(DataLine dl) {actpan(dl);};});
-		commands.put("actpath", new CommandLine(){public void execute(DataLine dl) {actpath(dl);};});
-		commands.put("actrestore", new CommandLine(){public void execute(DataLine dl) {actrestore(dl);};});
-		commands.put("actshake", new CommandLine(){public void execute(DataLine dl) {actshake(dl);};});
-		commands.put("actbattle", new CommandLine(){public void execute(DataLine dl) {actbattle(dl);};});
-		commands.put("actswitch", new CommandLine(){public void execute(DataLine dl) {actswitch(dl);};});
-		commands.put("actsavemenu", new CommandLine(){public void execute(DataLine dl) {actsavemenu(dl);};});
-		commands.put("actteleport", new CommandLine(){public void execute(DataLine dl) {actteleport(dl);};});
-		commands.put("actwait", new CommandLine(){public void execute(DataLine dl) {actwait(dl);};});
-		commands.put("actopenbubble", new CommandLine(){public void execute(DataLine dl) {actOpenBubble(dl);};});
-		commands.put("actclosebubble", new CommandLine(){public void execute(DataLine dl) {actCloseBubble(dl);};});
-		
-		commands.put("moveleft", new CommandLine(){public void execute(DataLine dl) {patmoveleft(dl);};});
-		commands.put("moveup", new CommandLine(){public void execute(DataLine dl) {patmoveup(dl);};});
-		commands.put("moveright", new CommandLine(){public void execute(DataLine dl) {patmoveright(dl);};});
-		commands.put("movedown", new CommandLine(){public void execute(DataLine dl) {patmovedown(dl);};});
-		commands.put("faceleft", new CommandLine(){public void execute(DataLine dl) {patfaceleft(dl);};});
-		commands.put("faceup", new CommandLine(){public void execute(DataLine dl) {patfaceup(dl);};});
-		commands.put("faceright", new CommandLine(){public void execute(DataLine dl) {patfaceright(dl);};});
-		commands.put("facedown", new CommandLine(){public void execute(DataLine dl) {patfacedown(dl);};});
-		commands.put("lockfacing", new CommandLine(){public void execute(DataLine dl) {patlockfacing(dl);};});
-		commands.put("unlockfacing", new CommandLine(){public void execute(DataLine dl) {patunlockfacing(dl);};});
-		commands.put("increasemovespeed", new CommandLine(){public void execute(DataLine dl) {patincreasemovespeed(dl);};});
-		commands.put("decreasemovespeed", new CommandLine(){public void execute(DataLine dl) {patdecreasemovespeed(dl);};});
-		commands.put("hide", new CommandLine(){public void execute(DataLine dl) {pathide(dl);};});
-		commands.put("show", new CommandLine(){public void execute(DataLine dl) {patshow(dl);};});
-		commands.put("wait", new CommandLine(){public void execute(DataLine dl) {patwait(dl);};});
-		commands.put("endpath", new CommandLine(){public void execute(DataLine dl) {endpath(dl);};});
-		
 	}	
 	
 	private void size(DataLine dl){mapSize = new Point(Integer.parseInt(dl.values.get(0)), Integer.parseInt(dl.values.get(1)));}
@@ -463,65 +403,6 @@ public class BqMap
 	private void encounter(DataLine dl){loadedEncounterZone.addEncounter(dl.values.get(0));}
 	private void endzone(DataLine dl){encounterZones.add(loadedEncounterZone);}
 	
-	private void object(DataLine dl){
-		loadedObject = new GameObject(
-				dl.values.get(0),
-				Integer.parseInt(dl.values.get(1)),
-				Integer.parseInt(dl.values.get(2)));
-		loadedStateIndex = -1;}
-	private void endobject(DataLine dl){addObject(loadedObject);}
-	private void collision(DataLine dl){
-		loadedObject.setStateCollision(loadedStateIndex,
-				Boolean.parseBoolean(dl.values.get(0)),
-				Boolean.parseBoolean(dl.values.get(1)),
-				Boolean.parseBoolean(dl.values.get(2)),
-				Boolean.parseBoolean(dl.values.get(3)));}
-	private void movement(DataLine dl){
-		loadedObject.setStateMovement(loadedStateIndex,
-				Integer.parseInt(dl.values.get(0)),
-				Integer.parseInt(dl.values.get(1)));}
-	private void opts(DataLine dl){
-		loadedObject.setStateOpts(loadedStateIndex, 
-			Boolean.parseBoolean(dl.values.get(0)), 
-			Boolean.parseBoolean(dl.values.get(1)), 
-			Boolean.parseBoolean(dl.values.get(2)));}
-	private void imageindex(DataLine dl){
-		loadedObject.setStateImageIndex(loadedStateIndex, 
-				Integer.parseInt(dl.values.get(0)));}
-	private void animated(DataLine dl){
-		loadedObject.setStateAnimated(loadedStateIndex, 
-				Boolean.parseBoolean(dl.values.get(0)));}
-	private void face(DataLine dl){
-		int face = Integer.parseInt(dl.values.get(0));
-		switch(face)
-		{case 0:loadedObject.setStateFace(loadedStateIndex, "left");break;
-		case 1:loadedObject.setStateFace(loadedStateIndex, "up");break;
-		case 2:loadedObject.setStateFace(loadedStateIndex, "right");break;
-		case 3:loadedObject.setStateFace(loadedStateIndex, "down");	break;}}
-	private void layer(DataLine dl){
-		String layer = dl.values.get(0);
-		if(layer.equals("above")) loadedObject.setStateLayer(loadedStateIndex, Layer.Above);
-		else loadedObject.setStateLayer(loadedStateIndex, Layer.Under);	}
-	private void autostart(DataLine dl){
-		loadedObject.setStateAutoStart(loadedStateIndex, 
-			Boolean.parseBoolean(dl.values.get(0)));}
-	private void sprite(DataLine dl){
-		if(dl.values.get(0).length() > 0)
-			loadedObject.setStateSprite(loadedStateIndex, 
-				dl.values.get(0));}
-	private void bubble(DataLine dl){
-		loadedObject.setStateBubble(loadedStateIndex, dl.values.get(0));}
-	private void action(DataLine dl){loadActionLine(dl);}
-	private void switchcondition(DataLine dl){
-		loadedObject.addSwitchCondition(
-				loadedStateIndex, dl.values.get(0));}
-	private void itemcondition(DataLine dl){
-		loadedObject.addItemCondition(
-				loadedStateIndex, dl.values.get(0));}
-	private void addstate(DataLine dl){
-		loadedObject.addState();
-		loadedStateIndex++;	}
-		
 	private void tile(DataLine dl)
 	{
 		int x = Integer.parseInt(dl.values.get(0));
@@ -543,164 +424,7 @@ public class BqMap
 
 		addTile(t);	
 	}
-		
-	private void actfade(DataLine dl){
-		loadedObject.addAction(loadedStateIndex, 
-				new actFadeControl(
-						Integer.parseInt(dl.values.get(1)),
-						Integer.parseInt(dl.values.get(2)),
-						Integer.parseInt(dl.values.get(3)),
-						Integer.parseInt(dl.values.get(4)),
-						Integer.parseInt(dl.values.get(5)),
-						Boolean.parseBoolean(dl.values.get(6)),
-						Boolean.parseBoolean(dl.values.get(7))));}
-	private void actmessage(DataLine dl){
-		String text = dl.values.get(1);
-		text = text.replace("\\n", " \n");
-		
-		if(dl.values.size() > 2 && dl.values.get(2).length() > 0)
-		{
-			forkMessage = new actMessage(text, Boolean.parseBoolean(dl.values.get(2)));
-			loadedObject.addAction(loadedStateIndex, forkMessage);	
-			yesFork = noFork = false;
-		}				
-		else
-			loadedObject.addAction(loadedStateIndex, 
-					new actMessage(text));}
-	private void actyesfork(DataLine dl){
-		yesFork = true;}
-	private void actnofork(DataLine dl){
-		forkMessage.yesDelta--;		
-		forkMessage.skipTo = loadedObject.getAction(loadedStateIndex, loadedObject.numActions(loadedStateIndex)-1);
-		yesFork = false;
-		noFork = true;}
-	private void actendfork(DataLine dl){
-		forkMessage.noDelta--;
-		noFork = false;}
-	private void actgold(DataLine dl){
-		loadedObject.addAction(loadedStateIndex, 
-				new actModifyGold(Integer.parseInt(dl.values.get(1))));}
-	private void actinventory(DataLine dl){
-		loadedObject.addAction(loadedStateIndex, 
-			new actModifyInventory(
-					dl.values.get(1), 
-					Integer.parseInt(dl.values.get(2)), 
-					Boolean.parseBoolean(dl.values.get(3))));}
-	private void actparty(DataLine dl){
-		loadedObject.addAction(loadedStateIndex, 
-			new actModifyParty(
-					dl.values.get(1), 
-					Boolean.parseBoolean(dl.values.get(2))));}
-	private void actshowscene(DataLine dl){
-		loadedObject.addAction(loadedStateIndex, 
-			new actShowScene(
-					dl.values.get(1),
-					actShowScene.InputTriggers.valueOf(dl.values.get(2)),
-					Float.parseFloat(dl.values.get(3)),
-					Integer.parseInt(dl.values.get(4)),
-					Integer.parseInt(dl.values.get(5)),
-					Integer.parseInt(dl.values.get(6)),
-					Integer.parseInt(dl.values.get(7)),
-					Boolean.parseBoolean(dl.values.get(8))));}
-	private void actmerchant(DataLine dl){
-		loadedObject.addAction(loadedStateIndex, 
-			new actMerchant(dl.values.get(1), Float.parseFloat(dl.values.get(2))));}
-	private void actnameselect(DataLine dl){
-		loadedObject.addAction(loadedStateIndex, 
-			new actNameSelect(dl.values.get(1)));}
-	private void actresetgame(DataLine dl){
-		loadedObject.addAction(loadedStateIndex, 
-			new actResetGame());}
-	private void actplaymusic(DataLine dl){
-		loadedObject.addAction(loadedStateIndex, 
-			new actPlayMusic(
-					dl.values.get(1), 
-					Boolean.parseBoolean(dl.values.get(2)),
-					Boolean.parseBoolean(dl.values.get(3)),
-					Float.parseFloat(dl.values.get(4))));}
-	private void actpausemusic(DataLine dl){
-		loadedObject.addAction(loadedStateIndex, 
-			new actPauseMusic(Float.parseFloat(dl.values.get(1))));}
-	
-	private void actOpenBubble(DataLine dl){
-		loadedObject.addAction(loadedStateIndex, 
-				new actReactionBubble(
-						dl.values.get(1), 
-						dl.values.get(2), 
-						Float.parseFloat(dl.values.get(3)), 
-						Boolean.parseBoolean(dl.values.get(4)),
-						Boolean.parseBoolean(dl.values.get(5))));
-	}
-	private void actCloseBubble(DataLine dl){
-		loadedObject.addAction(loadedStateIndex, 
-				new actReactionBubble(dl.values.get(1)));
-	}
-	
-	private void actpan(DataLine dl){
-		loadedObject.addAction(loadedStateIndex, 
-			new actPanControl(
-					Integer.parseInt(dl.values.get(1)), 
-					Integer.parseInt(dl.values.get(2)), 
-					Integer.parseInt(dl.values.get(3)), 
-					Boolean.parseBoolean(dl.values.get(4))));}
-	private void actpath(DataLine dl){
-		loadedPath = new ObjectPath(dl.values.get(1));
-		loadedPathWait = Boolean.parseBoolean(dl.values.get(2));}
-	private void actrestore(DataLine dl){
-		loadedObject.addAction(loadedStateIndex, 
-			new actRestoreParty());}
-	private void actshake(DataLine dl){loadedObject.addAction(
-			loadedStateIndex, 
-			new actShake(
-					Float.parseFloat(dl.values.get(1)), 
-					Integer.parseInt(dl.values.get(2)), 
-					Boolean.parseBoolean(dl.values.get(3))));}
-	private void actbattle(DataLine dl){
-		loadedObject.addAction(loadedStateIndex, 
-			new actStartBattle(loadedObject, dl.values.get(1)));}
-	private void actswitch(DataLine dl){loadedObject.addAction(
-			loadedStateIndex, 
-			new actSwitch(
-					dl.values.get(1), 
-					Boolean.parseBoolean(dl.values.get(2))));}
-	private void actsavemenu(DataLine dl){
-		loadedObject.addAction(loadedStateIndex, new actSaveMenu());}
-	private void actteleport(DataLine dl){loadedObject.addAction(
-			loadedStateIndex, 
-			new actTeleportParty(
-					loadedObject, 
-					Integer.parseInt(dl.values.get(1)), 
-					Integer.parseInt(dl.values.get(2)), 
-					dl.values.get(3)));}
-	private void actwait(DataLine dl){
-		loadedObject.addAction(loadedStateIndex, 
-			new actWait(Float.parseFloat(dl.values.get(1))));}
-	
-	private void patmoveleft(DataLine dl){loadedPath.addAction(ObjectPath.Actions.MoveLeft);}
-	private void patmoveup(DataLine dl){loadedPath.addAction(ObjectPath.Actions.MoveUp);}
-	private void patmoveright(DataLine dl){loadedPath.addAction(ObjectPath.Actions.MoveRight);}
-	private void patmovedown(DataLine dl){loadedPath.addAction(ObjectPath.Actions.MoveDown);}
-	private void patfaceleft(DataLine dl){loadedPath.addAction(ObjectPath.Actions.FaceLeft);}
-	private void patfaceup(DataLine dl){loadedPath.addAction(ObjectPath.Actions.FaceUp);}
-	private void patfaceright(DataLine dl){loadedPath.addAction(ObjectPath.Actions.FaceRight);}
-	private void patfacedown(DataLine dl){loadedPath.addAction(ObjectPath.Actions.FaceDown);}
-	private void patlockfacing(DataLine dl){loadedPath.addAction(ObjectPath.Actions.LockFacing);}
-	private void patunlockfacing(DataLine dl){loadedPath.addAction(ObjectPath.Actions.UnlockFacing);}
-	private void patincreasemovespeed(DataLine dl){loadedPath.addAction(ObjectPath.Actions.IncreaseMoveSpeed);}
-	private void patdecreasemovespeed(DataLine dl){loadedPath.addAction(ObjectPath.Actions.DecreaseMoveSpeed);}
-	private void pathide(DataLine dl){loadedPath.addAction(ObjectPath.Actions.Hide);}
-	private void patshow(DataLine dl){loadedPath.addAction(ObjectPath.Actions.Show);}
-	private void patwait(DataLine dl){loadedPath.addAction(ObjectPath.Actions.Wait);}
-	private void endpath(DataLine dl){loadedObject.addAction(loadedStateIndex, new actPath(loadedPath, loadedPathWait));}
-	
-	private void loadActionLine(DataLine dl)
-	{
-		String action = "act" + dl.values.get(0);		
-		if(yesFork)forkMessage.yesDelta++;else if(noFork)forkMessage.noDelta++;
-		
-		if(commands.containsKey(action))
-			commands.get(action).execute(dl);		
-	}
+
 
 	
 

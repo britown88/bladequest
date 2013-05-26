@@ -1,0 +1,32 @@
+#!HEAD
+
+#!OBJ 0 0
+\name$0x0$ <- newObject "start" 0 0
+
+state1$0x0$ 0
+name$0x0$ > createState >
+setOptions true false false > 
+setAutoStart true >
+addAction (fadeControl 4 255 0 0 0 false true) >
+addAction (switchControl "startgame" true)
+
+\runstate1$0x0$ <- state1$0x0$ 0
+
+state2$0x0$ 0
+name$0x0$ > createState >
+addSwitchCondition "startgame"
+
+
+\runstate2$0x0$ <- state2$0x0$ 0
+
+#!OBJ 2 3
+\name$2x3$ <- newObject "name" 2 3
+
+state1$2x3$ 0
+name$2x3$ > createState >
+setCollisionData true true true true >
+addAction (startBattle "2rats")
+
+
+
+\runstate1$2x3$ <- state1$2x3$ 0

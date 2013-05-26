@@ -18,17 +18,10 @@ public class actShowScene extends Action
 		Timer
 	}
 	
-	public actShowScene(String sceneName, InputTriggers inputTrigger, float timer, int r, int g, int b, int fadeTime, boolean wait)
+	public actShowScene(String sceneName)
 	{
 		super();
 		this.sceneName = sceneName;	
-		this.inputTrigger = inputTrigger;
-		this.timer = timer;
-		this.r = r;
-		this.g = g;
-		this.b = b;
-		this.fadeSpeed = fadeTime;
-		this.wait = wait;
 		
 	}
 	

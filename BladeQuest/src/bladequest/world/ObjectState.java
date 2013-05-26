@@ -348,24 +348,6 @@ public class ObjectState {
 			if(actionList.get(currentAction).isDone())
 			{
 				actionList.get(currentAction).reset();
-				
-				//handle messageboxes and the yes and no forks
-				if(actionList.get(currentAction).name.equals("actMessage"))
-				{
-					actMessage act = ((actMessage)actionList.get(currentAction));
-					if(act.yesNo())
-					{
-						switch(Global.worldMsgBox.getSelectedOpt())
-						{
-						case Yes:
-							act.skipTo.skip = act.noDelta;
-							break;
-						case No:
-							currentAction += act.yesDelta;
-							break;
-						}
-					}			
-				}
 					
 				currentAction++;
 				
@@ -385,10 +367,7 @@ public class ObjectState {
 					
 		
 			}
-			else if(currentAction+1 < actionList.size() && 
-					actionList.get(currentAction).name.equals("actMessage") &&
-					actionList.get(currentAction+1).name.equals("actMessage") &&
-					!((actMessage)actionList.get(currentAction)).yesNo() )
+			else if(currentAction+1 < actionList.size())
 			{				
 				actionList.get(currentAction).reset();
 				currentAction++;

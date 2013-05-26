@@ -1,6 +1,8 @@
 package bladequest.actions;
 
+import bladequest.UI.MsgBox.YesNo;
 import bladequest.actions.Action;
+import bladequest.actions.Action.YesNoResult;
 import bladequest.world.*;
 
 
@@ -40,7 +42,18 @@ public class actMessage extends Action
 	@Override
 	public boolean isDone()
 	{
-		return Global.worldMsgBox.Closed();
+		if(!runningBranch)
+		{
+			if(Global.worldMsgBox.Closed())
+			{
+				startBranch(Global.worldMsgBox.getSelectedOpt() == YesNo.Yes ? 0 : 1);
+				return !runningBranch;
+			}
+			else
+				return false;
+		}
+		else
+			return branchIsDone();
 	}
 
 }

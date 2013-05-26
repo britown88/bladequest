@@ -71,6 +71,7 @@
          this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.mapPanel = new BladeCraft.Classes.DBPanel();
          this.tsPanel = new BladeCraft.Classes.DBPanel();
+         this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
          this.toolStrip1.SuspendLayout();
          this.tilesetPanel.SuspendLayout();
          this.mapFrame.SuspendLayout();
@@ -97,12 +98,13 @@
             this.toolStripDropDownButton1,
             this.toolStripSeparator4,
             this.tsbObjectLayer,
+            this.toolStripButton2,
             this.tsbEncounters,
             this.tsbOptions,
             this.toolStripButton1});
          this.toolStrip1.Location = new System.Drawing.Point(0, 0);
          this.toolStrip1.Name = "toolStrip1";
-         this.toolStrip1.Size = new System.Drawing.Size(684, 25);
+         this.toolStrip1.Size = new System.Drawing.Size(692, 25);
          this.toolStrip1.TabIndex = 0;
          this.toolStrip1.Text = "toolStrip1";
          // 
@@ -365,7 +367,7 @@
          this.mapFrame.Controls.Add(this.mapPanel);
          this.mapFrame.Location = new System.Drawing.Point(302, 29);
          this.mapFrame.Name = "mapFrame";
-         this.mapFrame.Size = new System.Drawing.Size(370, 286);
+         this.mapFrame.Size = new System.Drawing.Size(378, 286);
          this.mapFrame.TabIndex = 2;
          this.mapFrame.Scroll += new System.Windows.Forms.ScrollEventHandler(this.mapFrame_Scroll);
          this.mapFrame.Resize += new System.EventHandler(this.mapFrame_Resize);
@@ -378,7 +380,7 @@
             0,
             0,
             0});
-         this.numMapZoom.Location = new System.Drawing.Point(625, 321);
+         this.numMapZoom.Location = new System.Drawing.Point(633, 321);
          this.numMapZoom.Maximum = new decimal(new int[] {
             300,
             0,
@@ -405,7 +407,7 @@
          // 
          this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
          this.label1.AutoSize = true;
-         this.label1.Location = new System.Drawing.Point(585, 323);
+         this.label1.Location = new System.Drawing.Point(593, 323);
          this.label1.Name = "label1";
          this.label1.Size = new System.Drawing.Size(34, 13);
          this.label1.TabIndex = 4;
@@ -492,11 +494,21 @@
          this.tsPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.tsPanel_Paint);
          this.tsPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tsPanel_MouseClick);
          // 
+         // toolStripButton2
+         // 
+         this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+         this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
+         this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+         this.toolStripButton2.Name = "toolStripButton2";
+         this.toolStripButton2.Size = new System.Drawing.Size(23, 22);
+         this.toolStripButton2.Text = "Object Header";
+         this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
+         // 
          // MapForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(684, 353);
+         this.ClientSize = new System.Drawing.Size(692, 353);
          this.Controls.Add(this.label1);
          this.Controls.Add(this.numMapZoom);
          this.Controls.Add(this.mapFrame);
@@ -508,7 +520,6 @@
          this.ShowInTaskbar = false;
          this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
          this.Text = "Map Editor";
-         this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MapForm_FormClosing);
          this.Load += new System.EventHandler(this.MapForm_Load);
          this.toolStrip1.ResumeLayout(false);
          this.toolStrip1.PerformLayout();
@@ -564,5 +575,6 @@
         private System.Windows.Forms.ToolStripButton tsbOptions;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.ToolStripButton tsbMaterial;
+        private System.Windows.Forms.ToolStripButton toolStripButton2;
     }
 }

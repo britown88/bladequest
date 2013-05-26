@@ -84,37 +84,23 @@ public class GameDataLoader
 		return library.getLibrary();
 	}
 	
-	private static Script compileScript(BqActivity activity, String file, Map<String, ScriptVar> standardLibrary)
-	{
-		Log.d(TAG, "Loading " + file);
-		Script script = new Script(standardLibrary);
-		
-		Parser p = null;
-		try {
-			p = new Parser(new FileTokenizer(activity.getAssets().open(file)), script);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-		p.run(); //populates script!
-		return script;
-	}
 	
-	public static void load(BqActivity activity)
+	
+	public static void load()
 	{
 		standardLibrary = getStandardLibrary();
 		
-		compileScript(activity, "data/sprites.dat", standardLibrary);
-		loadFile(activity, "data/battleanims.dat");
+		Global.compileScript("data/sprites.dat", standardLibrary);
+		loadFile(Global.activity, "data/battleanims.dat");
 
-		compileScript(activity, "data/music.dat", standardLibrary);
-		compileScript(activity, "data/abilities.dat", standardLibrary);
-		compileScript(activity, "data/items.dat", standardLibrary);
-		compileScript(activity, "data/enemies.dat", standardLibrary);
-		compileScript(activity, "data/characters.dat", standardLibrary);
+		Global.compileScript("data/music.dat", standardLibrary);
+		Global.compileScript("data/abilities.dat", standardLibrary);
+		Global.compileScript("data/items.dat", standardLibrary);
+		Global.compileScript("data/enemies.dat", standardLibrary);
+		Global.compileScript("data/characters.dat", standardLibrary);
 		
-		loadFile(activity, "data/battles.dat");
-		loadFile(activity, "data/merchants.dat");
+		loadFile(Global.activity, "data/battles.dat");
+		loadFile(Global.activity, "data/merchants.dat");
 		
 		Log.d(TAG, "Loading maps.");Global.loadMaps("maps");
 		
@@ -122,7 +108,7 @@ public class GameDataLoader
 	
 	public static void loadNewGame(BqActivity activity)
 	{
-		compileScript(activity, NewGameFile, standardLibrary);		
+		Global.compileScript(NewGameFile, standardLibrary);		
 	}
 	
 	private static void loadFile(BqActivity activity, String path)

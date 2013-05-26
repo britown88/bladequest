@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BladeCraft</RootNamespace>
     <AssemblyName>BladeCraft</AssemblyName>
-    <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -24,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -33,14 +34,19 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>bq.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ScintillaNET, Version=2.5.2.0, Culture=neutral, PublicKeyToken=948d6c9751444115, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\scintillaNET\ScintillaNET.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
+    <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -52,161 +58,12 @@
     </Compile>
     <Compile Include="Classes\EncounterZone.cs" />
     <Compile Include="Classes\FileLineReader.cs" />
-    <Compile Include="Classes\GameData\BQGameData.cs" />
-    <Compile Include="Classes\GameData\Sprite.cs" />
-    <Compile Include="Classes\ListViewItemComparer.cs" />
-    <Compile Include="Classes\Objects\Actions\actFade.cs" />
-    <Compile Include="Classes\Objects\Actions\Action.cs" />
-    <Compile Include="Classes\Objects\Actions\actMessage.cs" />
-    <Compile Include="Classes\Objects\Actions\actModifyGold.cs" />
-    <Compile Include="Classes\Objects\Actions\actModifyInventory.cs" />
-    <Compile Include="Classes\Objects\Actions\actModifyParty.cs" />
-    <Compile Include="Classes\Objects\Actions\actPanControl.cs" />
-    <Compile Include="Classes\Objects\Actions\actPath.cs" />
-    <Compile Include="Classes\Objects\Actions\actReactionBubble.cs" />
-    <Compile Include="Classes\Objects\Actions\actRestoreParty.cs" />
-    <Compile Include="Classes\Objects\Actions\actShake.cs" />
-    <Compile Include="Classes\Objects\Actions\actStartBattle.cs" />
-    <Compile Include="Classes\Objects\Actions\actSwitch.cs" />
-    <Compile Include="Classes\Objects\Actions\actTeleportParty.cs" />
-    <Compile Include="Classes\Objects\Actions\actWait.cs" />
-    <Compile Include="Classes\Objects\Actions\actPlayMusic.cs" />
-    <Compile Include="Classes\Objects\Actions\actShowScene.cs" />
-    <Compile Include="Classes\Objects\Actions\actResetGame.cs" />
-    <Compile Include="Classes\Objects\Actions\actMerchant.cs" />
-    <Compile Include="Classes\Objects\Actions\actNameSelect.cs" />
-    <Compile Include="Classes\Objects\Actions\actSaveMenu.cs" />
-    <Compile Include="Classes\Objects\Actions\actForkYes.cs" />
-    <Compile Include="Classes\Objects\Actions\actForkNo.cs" />
-    <Compile Include="Classes\Objects\Actions\actForkEnd.cs" />
-    <Compile Include="Classes\Objects\GameObject.cs" />
-    <Compile Include="Classes\Objects\ObjectState.cs" />
-    <Compile Include="Classes\Objects\Path.cs" />
-    <Compile Include="Forms\ActionForms\formFade.cs">
+    <Compile Include="Classes\GameObject.cs" />
+    <Compile Include="Forms\ObjectForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\ActionForms\formFade.Designer.cs">
-      <DependentUpon>formFade.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formMerchant.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formMerchant.Designer.cs">
-      <DependentUpon>formMerchant.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formMessage.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formMessage.Designer.cs">
-      <DependentUpon>formMessage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formModifyGold.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formModifyGold.Designer.cs">
-      <DependentUpon>formModifyGold.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formModifyInventory.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formModifyInventory.Designer.cs">
-      <DependentUpon>formModifyInventory.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formModifyParty.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formModifyParty.Designer.cs">
-      <DependentUpon>formModifyParty.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formNameSelect.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formNameSelect.Designer.cs">
-      <DependentUpon>formNameSelect.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formPanControl.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formPanControl.Designer.cs">
-      <DependentUpon>formPanControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formPath.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formPath.Designer.cs">
-      <DependentUpon>formPath.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formPlayMusic.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formPlayMusic.Designer.cs">
-      <DependentUpon>formPlayMusic.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formReactionBubble.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formReactionBubble.Designer.cs">
-      <DependentUpon>formReactionBubble.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formShake.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formShake.Designer.cs">
-      <DependentUpon>formShake.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formShowScene.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formShowScene.Designer.cs">
-      <DependentUpon>formShowScene.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formStartBattle.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formStartBattle.Designer.cs">
-      <DependentUpon>formStartBattle.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formSwitch.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formSwitch.Designer.cs">
-      <DependentUpon>formSwitch.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formTeleportParty.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formTeleportParty.Designer.cs">
-      <DependentUpon>formTeleportParty.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formWait.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ActionForms\formWait.Designer.cs">
-      <DependentUpon>formWait.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\BitmapSelect.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\BitmapSelect.Designer.cs">
-      <DependentUpon>BitmapSelect.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\NewActionForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\NewActionForm.Designer.cs">
-      <DependentUpon>NewActionForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\StringForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\StringForm.Designer.cs">
-      <DependentUpon>StringForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\GameObjectForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\GameObjectForm.Designer.cs">
-      <DependentUpon>GameObjectForm.cs</DependentUpon>
+    <Compile Include="Forms\ObjectForm.Designer.cs">
+      <DependentUpon>ObjectForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\main.cs">
       <SubType>Form</SubType>
@@ -226,86 +83,23 @@
     <Compile Include="Forms\MapInfoForm.Designer.cs">
       <DependentUpon>MapInfoForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ObjectHeader.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ObjectHeader.Designer.cs">
+      <DependentUpon>ObjectHeader.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ZoneForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\ZoneForm.Designer.cs">
       <DependentUpon>ZoneForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\GameDataForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\GameDataForm.Designer.cs">
-      <DependentUpon>GameDataForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Classes\Tile.cs" />
-    <EmbeddedResource Include="Forms\ActionForms\formFade.resx">
-      <DependentUpon>formFade.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ActionForms\formMerchant.resx">
-      <DependentUpon>formMerchant.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ActionForms\formMessage.resx">
-      <DependentUpon>formMessage.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ActionForms\formModifyGold.resx">
-      <DependentUpon>formModifyGold.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ActionForms\formModifyInventory.resx">
-      <DependentUpon>formModifyInventory.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ActionForms\formModifyParty.resx">
-      <DependentUpon>formModifyParty.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ActionForms\formNameSelect.resx">
-      <DependentUpon>formNameSelect.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ActionForms\formPanControl.resx">
-      <DependentUpon>formPanControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ActionForms\formPath.resx">
-      <DependentUpon>formPath.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ActionForms\formPlayMusic.resx">
-      <DependentUpon>formPlayMusic.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ActionForms\formReactionBubble.resx">
-      <DependentUpon>formReactionBubble.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ActionForms\formShake.resx">
-      <DependentUpon>formShake.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ActionForms\formShowScene.resx">
-      <DependentUpon>formShowScene.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ActionForms\formStartBattle.resx">
-      <DependentUpon>formStartBattle.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ActionForms\formSwitch.resx">
-      <DependentUpon>formSwitch.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ActionForms\formTeleportParty.resx">
-      <DependentUpon>formTeleportParty.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ActionForms\formWait.resx">
-      <DependentUpon>formWait.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\BitmapSelect.resx">
-      <DependentUpon>BitmapSelect.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\GameDataForm.resx">
-      <DependentUpon>GameDataForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\NewActionForm.resx">
-      <DependentUpon>NewActionForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\StringForm.resx">
-      <DependentUpon>StringForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\GameObjectForm.resx">
-      <DependentUpon>GameObjectForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\ObjectForm.resx">
+      <DependentUpon>ObjectForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\main.resx">
       <DependentUpon>main.cs</DependentUpon>
@@ -315,6 +109,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MapInfoForm.resx">
       <DependentUpon>MapInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ObjectHeader.resx">
+      <DependentUpon>ObjectHeader.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ZoneForm.resx">
       <DependentUpon>ZoneForm.cs</DependentUpon>

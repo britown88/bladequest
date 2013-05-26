@@ -442,7 +442,7 @@ public class Party
 				if(battle != null)
 				{
 					noEncounterTimer = 0;			
-					Global.beginBattle(null, battle);
+					Global.beginBattle(battle);
 					return true;
 				}
 				

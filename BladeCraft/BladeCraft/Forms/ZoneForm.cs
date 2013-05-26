@@ -54,9 +54,6 @@ namespace BladeCraft.Forms
 
         private void button1_Click(object sender, EventArgs e)
         {
-            StringForm sf = new StringForm();
-            sf.ShowDialog();
-            lvwEncounters.Items.Add(sf.textString);
         }
 
         private void button2_Click(object sender, EventArgs e)

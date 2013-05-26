@@ -943,8 +943,8 @@ public class Battle
 		setInfoBarText(txtDefeat);
 		
 		//clear further actions of the calling object
-		if(Global.BattleStartObject != null)
-			Global.BattleStartObject.clearActions();
+//		if(Global.BattleStartObject != null)
+//			Global.BattleStartObject.clearActions();
 		
 		Global.party.setAllowMovement(true);
 		Global.setPanned(0, 0);				

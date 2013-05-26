@@ -7,19 +7,17 @@ import bladequest.world.*;
 public class actStartBattle extends Action 
 {
 	String encounter;
-	GameObject go;
 	
-	public actStartBattle(GameObject go, String encounter)
+	public actStartBattle(String encounter)
 	{
 		super();
 		this.encounter = encounter;
-		this.go =go;
 	}
 	
 	@Override
 	public void run()
 	{
-		Global.beginBattle(go, encounter);
+		Global.beginBattle(encounter);
 		done = true;
 	}
 	

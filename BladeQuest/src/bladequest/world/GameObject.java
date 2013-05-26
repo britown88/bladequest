@@ -52,7 +52,8 @@ public class GameObject {
 	public void setStateLayer(int index, Layer layer){states.get(index).setLayer(layer);}
 	public void setStateAutoStart(int index, boolean autoStart){states.get(index).setAutoStart(autoStart);}	
 	public Layer getLayer(){return states.get(currentState).getLayer();}
-	public void addState(){states.add(new ObjectState(this));}
+	public void addState(ObjectState state){states.add(state);}
+	
 	
 	public void openReactionBubble(ReactionBubble bubble, float duration, boolean loop)
 	{

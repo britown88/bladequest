@@ -15,9 +15,6 @@ namespace BladeCraft
     {
         //private BQMap map;
         private MapInfoForm infoForm;
-        private GameDataForm dataForm;
-
-        private BQGameData gameData;
 
         public main()
         {
@@ -25,7 +22,6 @@ namespace BladeCraft
             //mapForm = new MapForm();
             //map = new BQMap("newmap", 30, 20, "New Map", "", false);
 
-            gameData = new BQGameData();   
             
         }
 
@@ -33,7 +29,6 @@ namespace BladeCraft
         {
 
             readMaps();
-            gameData.load();
 
             //bitmapselect selectform = new bitmapselect(gamedata.bitmaps);
             //var result = selectform.showdialog();
@@ -150,13 +145,7 @@ namespace BladeCraft
 
         private void gameDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (dataForm == null || dataForm.IsDisposed)
-            {
-                dataForm = new GameDataForm(gameData);
-                dataForm.MdiParent = this;
-            }
-            dataForm.Show();
-            dataForm.Focus();
+
         }
 
 
