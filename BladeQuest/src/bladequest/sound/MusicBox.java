@@ -56,7 +56,11 @@ public class MusicBox
 			}	
 			else
 				if(fadingOut && !paused)
+				{
+					playingSong = "";
 					pause(true, 0);
+				}
+					
 		}
 
 	}
@@ -77,9 +81,7 @@ public class MusicBox
 		
 		//non-infinite-loop
 		if(!loop)
-			done = false;
-		
-		
+			done = false;		
 		
 		playingSong = songName;
 		Song song = Global.music.get(songName);
@@ -135,6 +137,8 @@ public class MusicBox
 		{
 			if(fadeTime == 0)
 			{
+				fadingOut = false;
+				fadingIn = false;
 				mPlayer.pause();
 				
 				if(setPaused)
