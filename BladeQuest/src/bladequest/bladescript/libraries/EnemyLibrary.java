@@ -13,6 +13,7 @@ import bladequest.enemy.AI;
 import bladequest.enemy.AIState;
 import bladequest.enemy.Enemy;
 import bladequest.enemy.ScriptedAIState;
+import bladequest.world.Ability;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
 import bladequest.world.Stats;
@@ -96,6 +97,10 @@ public class EnemyLibrary {
 		return new ScriptedAIState(stateFn);
 	}
 	
+	public static Ability getEnemyAbility(Enemy enemy, String abilityName)
+	{
+		return enemy.getAbility(abilityName);
+	}
 	public static Enemy addEnemy(String name, String displayName, String displaySprite)
 	{
 		Enemy enemy = new Enemy(displayName, displaySprite);

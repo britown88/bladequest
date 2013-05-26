@@ -15,6 +15,7 @@ import bladequest.UI.ListBox.LBStates;
 import bladequest.UI.MenuPanel.Anchors;
 import bladequest.UI.MsgBox;
 import bladequest.UI.MainMenu.MainMenu;
+import bladequest.combat.BattleEvent.ActionType;
 import bladequest.combat.triggers.Condition;
 import bladequest.combat.triggers.Event;
 import bladequest.combat.triggers.HitCounterCondition;
@@ -984,15 +985,40 @@ public class Battle
 			PlayerCharacter actor = currentEvent.getSource();
 			
 			
-			if(actor.isEnemy() || selCharOpened || actor.getAction() == Action.Guard)
+			if(actor.isEnemy() || 
+			   selCharOpened || 
+			   actor.getAction() == Action.Guard ||
+			   currentEvent.runningStatus() ||
+			   currentEvent.isDone())
 			{
 				currentEvent.update(this);
-				if(currentEvent.isDone())
+				//check if we've been interrupted mid-event.
+				if(currentEvent == battleEvents.get(0) &&currentEvent.isDone())
 				{
 					nextActorInit();
 				}
 			}					
 		}			
+	}
+	public void interruptEvent()
+	{
+		battleEvents.get(0).interrupt();
+	}
+	public void forceAddAbilityEvent(PlayerCharacter source, List<PlayerCharacter> targets, Ability ability)
+	{
+		nextActorInit();
+		battleEvents.add(0,new BattleEvent(Action.Ability,ability, source, targets, markers, ActionType.Special));
+		battleEvents.get(0).init();
+		battleEvents.add(0, null); //add event to be deleted in place of the interrupted event.		
+
+	}
+	public void forceNextAbilityEvent(PlayerCharacter source, List<PlayerCharacter> targets, Ability ability)
+	{
+		battleEvents.add(1,new BattleEvent(Action.Ability,ability, source, targets, markers));
+	}	
+	public PlayerCharacter getCurrentActor()
+	{
+		return battleEvents.get(0).getSource();
 	}
 	private void nextActorInit()
 	{
@@ -1000,7 +1026,7 @@ public class Battle
 		displayNamePanel.hide();
 		//battleEvents.get(0).getSource().acting = false;
 		PlayerCharacter actor = battleEvents.get(0).getSource();			
-		if(!actor.isEnemy() && actor.getAction() != Action.Guard)
+		if(!actor.isEnemy() && battleEvents.get(0).getAction() != Action.Guard)
 		{
 			recedeChar();
 			actor.setFace(faces.Idle);
@@ -1039,9 +1065,16 @@ public class Battle
 		}
 		else
 		{
+			boolean prevSpecial = false;
 			nextActor = false;
 			if(!firstActor)
+			{
+				if (battleEvents.get(0) != null)
+				{
+					prevSpecial = battleEvents.get(0).getType() == ActionType.Special;
+				}
 				battleEvents.remove(0);
+			}
 			
 			if(battleEvents.size() == 0)
 			{
@@ -1054,12 +1087,14 @@ public class Battle
 				BattleEvent currentEvent = battleEvents.get(0);
 				PlayerCharacter actor = battleEvents.get(0).getSource();
 				List<PlayerCharacter> targets = currentEvent.getTargets();
+				Action action = currentEvent.getAction();
+				Ability ability = currentEvent.getAbility();
 				
 				//set frame text
-				switch(actor.getAction())
+				switch(action)
 				{case Attack:setInfoBarText(actor.getDisplayName()+" attacks!");break;
 				case Item:setInfoBarText(actor.getDisplayName()+" uses "+actor.getItemToUse().getName()+"!");break;
-				case Ability:setInfoBarText(actor.getDisplayName()+" casts "+actor.getAbilityToUse().getDisplayName()+"!");break;
+				case Ability:setInfoBarText(actor.getDisplayName()+" casts "+ability.getDisplayName()+"!");break;
 				case CombatAction:setInfoBarText(actor.getDisplayName()+actor.getCombatActionText());break;
 				default: break;}
 				
@@ -1068,7 +1103,10 @@ public class Battle
 				else 
 				{					
 					//reset targets
-					currentEvent.setTargets(getTargetable(actor, targets));
+					if (!prevSpecial) //can't reset on special!
+					{
+						currentEvent.setTargets(getTargetable(actor, targets));
+					}
 					
 					if(actor.getAction() == Action.CombatAction)
 					{
@@ -1076,7 +1114,7 @@ public class Battle
 					}						
 					else if(actor.getAction() == Action.Ability)
 					{
-						showDisplayName(actor.getAbilityToUse().getDisplayName());
+						showDisplayName(ability.getDisplayName());
 						actor.useAbility();
 					}						
 					else if(actor.getAction() == Action.Item)
@@ -1091,7 +1129,7 @@ public class Battle
 					if(!actor.isEnemy())
 					{
 						currentChar = actor;
-						if (actor.getAction() != Action.Guard)
+						if (action != Action.Guard || prevSpecial)
 							advanceChar();
 					}
 					else
@@ -1271,7 +1309,10 @@ public class Battle
 				break;
 			}
 	}
-	private void addBattleEvent(PlayerCharacter source, List<PlayerCharacter> targets){battleEvents.add(new BattleEvent(source, targets, markers));}
+	private void addBattleEvent(PlayerCharacter source, List<PlayerCharacter> targets)
+	{
+		battleEvents.add(new BattleEvent(source.getAction(), source.getAbilityToUse(), source, targets, markers));
+	}
 	
 	public void setInfoBarText(String str)
 	{

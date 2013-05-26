@@ -32,9 +32,16 @@ retaliateState enemy
      switchEnemyState enemy "default"
      "bite"
      
+switchToRetaliate enemy     
+     interruptCurrent 0 #ignored arg
+     addInterruptingAbility enemy (getCurrentBattleActor 0) (getEnemyAbility enemy "bite")
+     
+createSwitchToRetaliateTrigger enemy     
+     createTrigger (getOnPhysicalHitEvent enemy) ([trigger] switchToRetaliate enemy)
+     
 makeRatAI enemy
    enemy > setEnemyAI (createAI "default" (createAIState ([e] "")) > addAIState "retaliate" (createAIState retaliateState)) >
-           onBattleStartRun ([e] createTrigger (getOnPhysicalHitEvent e) ([trigger] switchEnemyState e "retaliate"))
+           onBattleStartRun createSwitchToRetaliateTrigger 
    
 
 

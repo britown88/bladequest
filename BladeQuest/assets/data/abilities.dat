@@ -35,7 +35,8 @@ addDefaultWait ability
   add ability (waitAction 450)
 
 \bite <- (addAbility "bite" "Bite" "Single" 5 >
-add (\defWait <- waitAction 450) >
+add (messageAction "FUCK YOU I'M A RAAAAAAAAAAAAAAAAAAAAAAAAAAT") >
+addDep (\defWait <- waitAction 450) >
 addDep (animAction "bite") >
 addDep (inflictStatusAction (poisonStatus 1.5)) >
 add (addDependency (waitAction 250)  defWait) >

@@ -216,7 +216,7 @@ public class Enemy extends PlayerCharacter
 			break;
 		}
 		
-		return new BattleEvent(this, targets, Global.battle.getMarkers());
+		return new BattleEvent(this.action, abilityToUse, this, targets, Global.battle.getMarkers());
 		
 	}
 	
