@@ -1,11 +1,13 @@
 package bladequest.graphics;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
+import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.graphics.Rect;
+import android.util.Log;
 import bladequest.world.Global;
-
-import android.graphics.*;
-import android.util.*;
 
 
 public class BattleSprite {
@@ -14,15 +16,17 @@ public class BattleSprite {
 	private int width;
 	private int height;
 	private faces face;
+	private boolean mirrored;
 	
 	public String name;
 	
-	private Vector<Vector<Rect>> frameLists;
+	private List<List<Rect>> frameLists;
 	
 	public int getWidth() { return width; }
 	public int getHeight() { return height; }
 	public int getNumFrames() { return frameLists.get(face.ordinal()).size(); }
 	public String getBmpName() { return bmpName; }
+	public boolean getMirrored() {return mirrored; }
 	
 	public enum faces
 	{
@@ -77,10 +81,10 @@ public class BattleSprite {
 	
 	private void createFrameList()
 	{
-		frameLists = new Vector<Vector<Rect>>();
+		frameLists = new ArrayList<List<Rect>>();
 		
 		for(int j = 0; j < 10; j++)
-			frameLists.add(new Vector<Rect>());
+			frameLists.add(new ArrayList<Rect>());
 		
 	}
 	
@@ -92,6 +96,11 @@ public class BattleSprite {
 	public void changeFace(faces face)
 	{
 		this.face = face;
+	}
+	
+	public void setMirrored(boolean isMirrored)
+	{
+		this.mirrored = isMirrored;
 	}
 	
 	
@@ -107,8 +116,17 @@ public class BattleSprite {
 			Log.d("BATTLE RENDER", "Rendering index " + index + " of face " + face.name());
 		else
 		{
-			Global.renderer.drawBitmap(bitmap, frameLists.get(face.ordinal()).get(index), 
-						new Rect(p.x, p.y,p.x+width, p.y+height), null);
+			if (mirrored)
+			{
+				Global.renderer.drawMirroredBitmap(bitmap, 0.0f, frameLists.get(face.ordinal()).get(index), 
+						new Rect(p.x, p.y,p.x+width, p.y+height), null);				
+			}
+			else
+			{
+				Global.renderer.drawBitmap(bitmap, frameLists.get(face.ordinal()).get(index), 
+						new Rect(p.x, p.y,p.x+width, p.y+height), null);				
+			}
+
 		}
 	}	
 	

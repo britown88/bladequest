@@ -28,6 +28,11 @@ addBiteOnlyState enemy
 	enemy > setEnemyAI (createAI "biteMe" (createAIState ([e] "bite")))	
 
 
+DynamoSupernovaState enemy
+	enemy > setEnemyAI (createAI "RAAAAAAAAAAAAAAAH" (createAIState ([e] "recruit4")))	
+
+
+
 retaliateState enemy
      switchEnemyState enemy "default"
      "bite"
@@ -108,7 +113,7 @@ setELevel 7 >
 setGold 250 >
 setBoss >
 setItems "potion" 100 "silversword" 100 true >
-addAttackOnlyState >
+DynamoSupernovaState >
 addEAbility "recruit1" >
 addEAbility "recruit2" >
 addEAbility "recruit3" >

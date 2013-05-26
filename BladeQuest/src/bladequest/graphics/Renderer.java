@@ -5,12 +5,14 @@ import java.util.List;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import bladequest.graphics.drawobjects.DrawColorARGB;
 import bladequest.graphics.drawobjects.DrawColorPacked;
 import bladequest.graphics.drawobjects.DrawEllipse;
 import bladequest.graphics.drawobjects.DrawLine;
+import bladequest.graphics.drawobjects.DrawMatrixScaledBmp;
 import bladequest.graphics.drawobjects.DrawRect;
 import bladequest.graphics.drawobjects.DrawRectF;
 import bladequest.graphics.drawobjects.DrawScaledBmp;
@@ -67,6 +69,46 @@ public class Renderer
 		updateBuffer.add(dro);	
 		return dro;
 	}
+	
+
+	//3x3 mtx
+	private float[] mirror()
+	{
+		return new float[] {
+			   -1.0f, 0.0f, 0.0f,
+				0.0f, 1.0f, 0.0f,
+				0.0f, 0.0f, 1.0f, 
+		};
+	}
+	public DrawObject drawMirroredBitmap(Bitmap bitmap, float rotation, Rect src, Rect dest, Paint paint)
+	{
+		dest.offset(Global.screenShaker.drawDelta.x, 0);
+		
+		Matrix m = new Matrix();
+		Matrix mirrorMat = new Matrix();
+		mirrorMat.setValues(mirror());
+		m.setTranslate(-dest.exactCenterX(), -dest.exactCenterY());		
+		m.postConcat(mirrorMat);
+		m.postRotate(rotation);  //rotate, then mirror!		
+		m.postTranslate(dest.exactCenterX(), dest.exactCenterY());
+		
+		DrawObject dro = new DrawMatrixScaledBmp(bitmap, m, src, dest, paint);		
+		updateBuffer.add(dro);		
+		return dro;		
+	}
+	public DrawObject drawBitmap(Bitmap bitmap, float rotation, Rect src, Rect dest, Paint paint)
+	{
+		dest.offset(Global.screenShaker.drawDelta.x, 0);
+		
+		Matrix m = new Matrix();
+		m.setTranslate(-dest.exactCenterX(), -dest.exactCenterY());
+		m.postRotate(rotation);
+		m.postTranslate(dest.exactCenterX(), dest.exactCenterY());
+		
+		DrawObject dro = new DrawMatrixScaledBmp(bitmap, m, src, dest, paint);		
+		updateBuffer.add(dro);		
+		return dro;
+	}	
 	public DrawObject drawBitmap(Bitmap bitmap, Rect src, Rect dest, Paint paint)
 	{
 		dest.offset(Global.screenShaker.drawDelta.x, 0);

@@ -35,12 +35,20 @@ addDefaultWait ability
   add ability (waitAction 450)
 
 \bite <- (addAbility "bite" "Bite" "Single" 5 >
-add (messageAction "FUCK YOU I'M A RAAAAAAAAAAAAAAAAAAAAAAAAAAT") >
-addDep (\defWait <- waitAction 450) >
+add (\defWait <- waitAction 450) >
 addDep (animAction "bite") >
 addDep (inflictStatusAction (poisonStatus 1.5)) >
 add (addDependency (waitAction 250)  defWait) >
 addDep (damageAction 1.5 "Physical"))
+
+
+recruitBroKick ability power damageType offset
+   ability > add (\firstWait <- waitAction offset) >
+             addDep (basicAttackAction power damageType 0.35f) >  #should have a little tiny downtime between slashes
+	     add (waitAction 135 > addDependency firstWait) >
+             addDep (mirrorAction true) >
+	     addDep (waitAction 135) >  #.35 * 5 * 150 = 262.  fudge it a bit
+             addDep (mirrorAction false)
 
 
 \recruit1 <- (addAbility "recruit1" "Clashing Super Hit" "Single" 0 >
@@ -55,14 +63,10 @@ addDep (damageAction 0.75 "Physical"))
 add (animAction "movetest") >
 addDep (damageAction 1.0 "Physical"))
 
-staggerDamage ability damage damageType offset
-  ability > add (waitAction offset) > 
-            addDep (damageAction damage damageType)
 
 \recruit4 <- (addAbility "recruit4" "DynamoSupernova" "Single" 0 >
-add (animAction "movetest") > 
-(\recruit4sub <- ([ability offset] staggerDamage ability 0.1 "Physical" offset)) 300 >
-recruit4sub  450 >
-recruit4sub  600 >
-recruit4sub  750 >
-recruit4sub  900)
+(\recruit4sub <- ([ability offset] recruitBroKick ability 0.1 "Physical" offset)) 270 >
+recruit4sub  540 >
+recruit4sub  810 >
+recruit4sub  1080 >
+recruit4sub  1350)

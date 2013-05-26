@@ -268,7 +268,9 @@ public class BattleAnimObject
 					
 				updatePaint();
 				
-				//---rotation
+				//---rotation (lerp rotation)
+				
+				workingState.rotation = linearInterpolation(currentState.rotation, nextState.rotation, progress);
 				
 				//---position (including lines)
 
@@ -328,7 +330,14 @@ public class BattleAnimObject
 				Global.renderer.drawElipse(drawRect, new Paint(objPaint));
 				break;
 			case Bitmap:
-				Global.renderer.drawBitmap(customBmp == null ? Global.bitmaps.get(bmpName) : customBmp, workingState.bmpSrcRect, drawRect, new Paint(objPaint));
+				if (currentState.mirrored)
+				{
+					Global.renderer.drawMirroredBitmap(customBmp == null ? Global.bitmaps.get(bmpName) : customBmp, workingState.rotation, workingState.bmpSrcRect, drawRect, new Paint(objPaint));					
+				}
+				else
+				{
+					Global.renderer.drawBitmap(customBmp == null ? Global.bitmaps.get(bmpName) : customBmp, workingState.rotation, workingState.bmpSrcRect, drawRect, new Paint(objPaint));
+				}
 				break;
 			case Line:
 				Global.renderer.drawLine(

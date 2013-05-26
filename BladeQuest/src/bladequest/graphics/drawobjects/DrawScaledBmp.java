@@ -25,6 +25,7 @@ public class DrawScaledBmp implements DrawObject {
 
 	@Override
 	public void render(Canvas canvas) {
+		
 		drawn = true;
 		if(!bitmap.isRecycled())
 			canvas.drawBitmap(bitmap, src, dest, paint);

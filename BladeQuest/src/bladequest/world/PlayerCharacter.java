@@ -1163,6 +1163,9 @@ public class PlayerCharacter
 	public void setVisible(boolean isVisible) {visible = isVisible;}
 	public boolean getVisible() { return visible;}
 	
+	public void setMirrored(boolean isMirrored) {battleSpr.setMirrored(isMirrored);}
+	public boolean getMirrored() { return battleSpr.getMirrored();}	
+	
 	public void setEscaped(boolean escape) {escaped = escape;}
 	public boolean getEscaped() {return escaped;}
 	
