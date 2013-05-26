@@ -398,9 +398,6 @@ namespace BladeCraft.Forms
                         form.ShowDialog();
                         action = ((formShowScene)form).action;
                         break;
-                    case Action.type.PauseMusic:
-                        action = new actPauseMusic();
-                        break;
                     case Action.type.RestoreParty:
                         action = new actRestoreParty();
                         break;

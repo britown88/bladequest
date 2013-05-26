@@ -27,7 +27,6 @@ namespace BladeCraft.Classes.Objects.Actions
             ModifyParty,
             PanControl,
             Path,
-            PauseMusic,
             PlayMusic,
             RestartGame,
             RestoreParty,

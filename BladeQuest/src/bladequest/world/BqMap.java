@@ -635,7 +635,7 @@ public class BqMap
 					Float.parseFloat(dl.values.get(4))));}
 	private void actpausemusic(DataLine dl){
 		loadedObject.addAction(loadedStateIndex, 
-			new actPauseMusic());}
+			new actPauseMusic(Float.parseFloat(dl.values.get(1))));}
 	
 	private void actOpenBubble(DataLine dl){
 		loadedObject.addAction(loadedStateIndex, 

@@ -892,7 +892,7 @@ opts True False False
 autostart True
 sprite ""
 face 3
-action pausemusic
+action pausemusic 0
 action wait 1
 action message "?????:\nLessee...\nHow do you get out of this place?"
 action path party True
@@ -1049,7 +1049,7 @@ action fade 1 255 255 0 0 False True
 action wait 1
 action message "Robed Man:\nIt has appeared! Joyeuse!"
 action message "I must have it!  Get it from that man now!"
-action pausemusic
+action pausemusic 0
 action wait 1
 action message "Woman's Voice:\nCome with me. I need your strength."
 action fade 5 255 255 0 0 True True

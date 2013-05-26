@@ -53,7 +53,10 @@ public class MusicBox
 					percent = 1.0f - percent;
 				
 				mPlayer.setVolume(percent, percent);			
-			}			
+			}	
+			else
+				if(fadingOut && !paused)
+					pause(true, 0);
 		}
 
 	}
@@ -88,7 +91,7 @@ public class MusicBox
 		}
 		else
 		{
-			pause(true);
+			pause(true, 0);
 		}
 	}
 	
@@ -126,14 +129,24 @@ public class MusicBox
 		lastSong = playingSong;
 	}
 	
-	public void pause(boolean setPaused)
+	public void pause(boolean setPaused, float fadeTime)
 	{
 		if(!paused)
 		{
-			mPlayer.pause();
-			
-			if(setPaused)
-				paused = true;
+			if(fadeTime == 0)
+			{
+				mPlayer.pause();
+				
+				if(setPaused)
+					paused = true;
+			}			
+			else
+			{
+				this.fadeTime = fadeTime;
+				startTime = System.currentTimeMillis();
+				fadingIn = false;
+				fadingOut = true;
+			}
 		}		
 	}
 	

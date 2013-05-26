@@ -36,6 +36,7 @@
          this.chkLoop = new System.Windows.Forms.CheckBox();
          this.numFade = new System.Windows.Forms.NumericUpDown();
          this.label2 = new System.Windows.Forms.Label();
+         this.chkPause = new System.Windows.Forms.CheckBox();
          ((System.ComponentModel.ISupportInitialize)(this.numFade)).BeginInit();
          this.SuspendLayout();
          // 
@@ -58,7 +59,7 @@
          // playintro
          // 
          this.playintro.AutoSize = true;
-         this.playintro.Location = new System.Drawing.Point(12, 82);
+         this.playintro.Location = new System.Drawing.Point(13, 80);
          this.playintro.Name = "playintro";
          this.playintro.Size = new System.Drawing.Size(76, 17);
          this.playintro.TabIndex = 2;
@@ -67,7 +68,7 @@
          // 
          // button1
          // 
-         this.button1.Location = new System.Drawing.Point(12, 105);
+         this.button1.Location = new System.Drawing.Point(12, 126);
          this.button1.Name = "button1";
          this.button1.Size = new System.Drawing.Size(75, 23);
          this.button1.TabIndex = 3;
@@ -77,7 +78,7 @@
          // 
          // button2
          // 
-         this.button2.Location = new System.Drawing.Point(109, 105);
+         this.button2.Location = new System.Drawing.Point(101, 126);
          this.button2.Name = "button2";
          this.button2.Size = new System.Drawing.Size(75, 23);
          this.button2.TabIndex = 4;
@@ -112,12 +113,24 @@
          this.label2.TabIndex = 7;
          this.label2.Text = "Fade Time";
          // 
+         // chkPause
+         // 
+         this.chkPause.AutoSize = true;
+         this.chkPause.Location = new System.Drawing.Point(13, 103);
+         this.chkPause.Name = "chkPause";
+         this.chkPause.Size = new System.Drawing.Size(56, 17);
+         this.chkPause.TabIndex = 8;
+         this.chkPause.Text = "Pause";
+         this.chkPause.UseVisualStyleBackColor = true;
+         this.chkPause.CheckedChanged += new System.EventHandler(this.chkPause_CheckedChanged);
+         // 
          // formPlayMusic
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(188, 137);
+         this.ClientSize = new System.Drawing.Size(188, 158);
          this.ControlBox = false;
+         this.Controls.Add(this.chkPause);
          this.Controls.Add(this.label2);
          this.Controls.Add(this.numFade);
          this.Controls.Add(this.chkLoop);
@@ -146,5 +159,6 @@
         private System.Windows.Forms.CheckBox chkLoop;
         private System.Windows.Forms.NumericUpDown numFade;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.CheckBox chkPause;
     }
 }

@@ -182,8 +182,6 @@ namespace BladeCraft.Classes.Objects
                     return new actResetGame((actResetGame)other);
                 case Action.type.ShowScene:
                     return new actShowScene((actShowScene)other);
-                case Action.type.PauseMusic:
-                    return new actPauseMusic((actPauseMusic)other);
                 case Action.type.PlayMusic:
                     return new actPlayMusic((actPlayMusic)other);
                 case Action.type.RestoreParty:

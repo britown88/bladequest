@@ -32,6 +32,7 @@ namespace BladeCraft.Forms.ActionForms
             playintro.Checked = action.playIntro;
             chkLoop.Checked = action.loop;
             numFade.Value = (Decimal)action.fade;
+            chkPause.Checked = action.pause;
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -45,7 +46,14 @@ namespace BladeCraft.Forms.ActionForms
             action.playIntro = playintro.Checked;
             action.loop = chkLoop.Checked;
             action.fade = (float)numFade.Value;
+            action.pause = chkPause.Checked;
             Close();
+        }
+
+        private void chkPause_CheckedChanged(object sender, EventArgs e)
+        {
+           songName.Enabled = !chkPause.Checked;
+           chkLoop.Enabled = !chkPause.Checked;
         }
     }
 }

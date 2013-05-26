@@ -6,16 +6,17 @@ import bladequest.world.*;
 
 public class actPauseMusic extends Action 
 {
-	
-	public actPauseMusic()
+	float fadeTime;
+	public actPauseMusic(float fadeTime)
 	{
 		super();
+		this.fadeTime = fadeTime;
 	}
 	
 	@Override
 	public void run()
 	{
-		Global.musicBox.pause(true);
+		Global.musicBox.pause(true, fadeTime);
 	}
 	
 	@Override
