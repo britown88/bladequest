@@ -1323,13 +1323,29 @@ public class Battle
 			{
 				if(currentChar.getAction() == Action.Item)
 					currentChar.unuseItem();
+			
+				for (;;)
+				{
+					if(currentCharIndex == 0)
+					{	
+						stateMachine.setState(getWaitingForInputState());
+						nextChar = prevChar = false;
+						return;
+					}
+					--currentCharIndex;
+					
+					currentChar = partyList.get(currentCharIndex);
+					
+					if (!currentChar.isInBattle()) continue;
+					
+					if(currentChar.getAction() == Action.Item)
+						currentChar.unuseItem();
+					
+					break;
+				}
 				
-				currentChar = partyList.get(--currentCharIndex);
-				stateMachine.setState(getSelectState());
-				
-				if(currentChar.getAction() == Action.Item)
-					currentChar.unuseItem();
 
+				stateMachine.setState(getSelectState());
 			}
 			else 
 			{
