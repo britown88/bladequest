@@ -580,15 +580,24 @@ public class MainMenu
 						{
 							handleEqpOption((String)eqpInfoBar.getSelectedEntry().obj);
 						}
-						
-						state = eqpEquipSlots.touchActionUp(x, y);
-						if(state == LBStates.Selected)
+						else
 						{
-							equipItemType = (Item.Type)eqpEquipSlots.getSelectedEntry().obj;
-							darken();
-							fillEqpSelect();
-							//handleEqpOption((String)eqpInfoBar.getSelectedEntry().obj);
+							state = eqpEquipSlots.touchActionUp(x, y);
+							if(state == LBStates.Selected)
+							{
+								Item.Type type = (Item.Type)eqpEquipSlots.getSelectedEntry().obj;
+								
+								if(selectedChar.hasTypeEquipped(type)|| hasItemToEquip(selectedChar, type))
+								{
+									equipItemType = type;
+									darken();
+									fillEqpSelect();
+								}
+							}
+							
 						}
+						
+						
 					}
 					
 				}
@@ -1823,6 +1832,18 @@ public class MainMenu
 		
 		//Control Scheme
 		opts.getEntryAt(i++).getTextAt(1).text = "Touch Screen";
+	}
+	
+	private boolean hasItemToEquip(PlayerCharacter pc, Item.Type type)
+	{
+		List<Item> usableItems = new ArrayList<Item>();
+
+		for(Item i : Global.party.getInventory(false))
+			if(i.getType() == type && i.getUsableChars().contains(pc.getName()))
+				usableItems.add(i);	
+		
+		return !usableItems.isEmpty();
+
 	}
 	
 	private static void buildCharMainBox(MenuPanel panel, PlayerCharacter pc)
