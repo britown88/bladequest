@@ -32,9 +32,10 @@ retaliateState enemy
      switchEnemyState enemy "default"
      "bite"
      
-switchToRetaliate enemy     
-     interruptCurrent 0 #ignored arg
-     addInterruptingAbility enemy (getCurrentBattleActor 0) (getEnemyAbility enemy "bite")
+switchToRetaliate enemy
+	switchEnemyState enemy "retaliate"     
+     #interruptCurrent 0 #ignored arg
+    # addInterruptingAbility enemy (getCurrentBattleActor 0) (getEnemyAbility enemy "bite")
      
 createSwitchToRetaliateTrigger enemy     
      createTrigger (getOnPhysicalHitEvent enemy) ([trigger] switchToRetaliate enemy)
@@ -51,9 +52,10 @@ makeRatAI enemy
 \rat <- (addEnemy "rat" "Rat" "rat" >
 setEBaseStats 10 1 1 1 >
 addColoredStaffHit (RGBA 255 0 0 255) (RGBA 0 0 0 255) >
-setELevel 99 >
+setELevel 4 >
 setGold 23 >
 setItems "potion" 25 "antidote" 85 true >
+setBoss >
 makeRatAI >
 addEAbility "bite")
 
