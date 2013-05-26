@@ -184,7 +184,12 @@ public class GameObject {
 		
 		if(collision)
 			target = gridPos;
-	}	
+	}
+	
+	public boolean isRunning()
+	{
+		return runningState != null;
+	}
 	
 	public void update()
 	{

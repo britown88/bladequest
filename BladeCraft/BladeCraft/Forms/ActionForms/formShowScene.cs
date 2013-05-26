@@ -17,7 +17,7 @@ namespace BladeCraft.Forms.ActionForms
         public formShowScene()
         {
             InitializeComponent();
-            action = new actShowScene("");
+            action = new actShowScene("", "", 0, 0, 0, 0, 0, false);
         }
 
         public formShowScene(actShowScene action)
@@ -28,7 +28,19 @@ namespace BladeCraft.Forms.ActionForms
 
         private void formShowScene_Load(object sender, EventArgs e)
         {
-            sceneName.Text = action.sceneName;
+           sceneName.Text = action.sceneName;
+           numR.Value = action.r;
+           numG.Value = action.g;
+           numB.Value = action.b;
+           numTime.Value = (Decimal)action.endTimer;
+           numFade.Value = action.fadeSpeed;
+
+           if (action.endTrigger.Equals("Input"))
+              radInput.Checked = true;
+           else
+              radTimer.Checked = true;
+
+           chkWait.Checked = action.wait;
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -39,7 +51,26 @@ namespace BladeCraft.Forms.ActionForms
         private void button1_Click(object sender, EventArgs e)
         {
             action.sceneName = sceneName.Text;
+            action.r = (int)numR.Value;
+            action.g = (int)numG.Value;
+            action.b = (int)numB.Value;
+            action.endTimer = (float)numTime.Value;
+            action.fadeSpeed = (int)numFade.Value;
+            action.endTrigger = radInput.Checked ? "Input" : "Timer";
+            action.wait = chkWait.Checked;
             Close();
+        }
+
+        private void radInput_CheckedChanged(object sender, EventArgs e)
+        {
+           radTimer.Checked = !radInput.Checked;
+           numTime.Enabled = radTimer.Checked;
+        }
+
+        private void radTimer_CheckedChanged(object sender, EventArgs e)
+        {
+           radInput.Checked = !radTimer.Checked;
+           numTime.Enabled = radTimer.Checked;
         }
     }
 }

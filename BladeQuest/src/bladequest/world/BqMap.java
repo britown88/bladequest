@@ -64,7 +64,7 @@ public class BqMap
 	private Map<String, CommandLine> commands;
 	
 	//file-loading temporaries
-	public GameObject gameOverObject;
+	
 	private ObjectPath loadedPath;
 	private boolean loadedPathWait;
 	private EncounterZone loadedEncounterZone;
@@ -99,8 +99,7 @@ public class BqMap
 		
 		for(DataLine dl : lines)
 			LoadDataLine(dl);				
-		
-		loadObjects();
+
 		for(GameObject go : objects)
 			if(go.AutoStarts())
 				go.execute();
@@ -367,29 +366,7 @@ public class BqMap
 		
 	}
 	
-	private void loadObjects()
-	{
-		gameOverObject = new GameObject("gameover", 0, 0);
-		gameOverObject.addState();
-		gameOverObject.setStateCollision(0, false, false, false, false);
-		gameOverObject.setStateMovement(0, 0, 0);
-		gameOverObject.setStateOpts(0, true, false, false);
-		gameOverObject.setStateFace(0, "down");
-		gameOverObject.addAction(0, new actMessage("Guard: \nHe's over here!"));
-		gameOverObject.addAction(0, new actMessage("Throw him back in his cell!"));
-		gameOverObject.addAction(0, new actRestoreParty());
-		gameOverObject.addAction(0, new actSwitch("guardasleep", false));
-		gameOverObject.addAction(0, new actSwitch("pdoor4", false));
-		gameOverObject.addAction(0, new actSwitch("pdoor3", false));
-		gameOverObject.addAction(0, new actModifyInventory("prisonkey", 1, true));
-		gameOverObject.addAction(0, new actFadeControl(1, 255, 0, 0, 0, true, true));
-		gameOverObject.addAction(0, new actTeleportParty(gameOverObject, 15, 5, "prisonb2"));
-		gameOverObject.addAction(0, new actFadeControl(1, 255, 0, 0, 0, false, true));
-		
-		objects.add(gameOverObject);
-		
 
-	}
 	
 	private void LoadDataLine(DataLine dl)
 	{
@@ -616,7 +593,15 @@ public class BqMap
 					Boolean.parseBoolean(dl.values.get(2))));}
 	private void actshowscene(DataLine dl){
 		loadedObject.addAction(loadedStateIndex, 
-			new actShowScene(dl.values.get(1)));}
+			new actShowScene(
+					dl.values.get(1),
+					actShowScene.InputTriggers.valueOf(dl.values.get(2)),
+					Float.parseFloat(dl.values.get(3)),
+					Integer.parseInt(dl.values.get(4)),
+					Integer.parseInt(dl.values.get(5)),
+					Integer.parseInt(dl.values.get(6)),
+					Integer.parseInt(dl.values.get(7)),
+					Boolean.parseBoolean(dl.values.get(8))));}
 	private void actmerchant(DataLine dl){
 		loadedObject.addAction(loadedStateIndex, 
 			new actMerchant(dl.values.get(1), Float.parseFloat(dl.values.get(2))));}

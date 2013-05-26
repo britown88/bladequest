@@ -146,10 +146,6 @@ implements SurfaceHolder.Callback
     		
     		Global.screenFader.render();
     		break;
-    	case GS_SHOWSCENE:
-    		Global.showScene.render();
-        	Global.screenFader.render();
-    		break;
     	case GS_MENUTRANSITION:
     	case GS_WORLDMOVEMENT:
     	case GS_BATTLETRANSITION:
@@ -238,7 +234,11 @@ implements SurfaceHolder.Callback
     	Global.map.renderForegroundObjs();
     	Global.renderReactionBubbles();
     	Global.renderAnimations();
-    	Global.map.renderDisplayName();    	
+    	Global.map.renderDisplayName(); 
+    	
+    	if(Global.showScene != null)
+    		Global.showScene.render();
+    	
     	Global.screenFader.render();
     	
     	//test elipses

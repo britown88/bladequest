@@ -332,7 +332,16 @@ namespace BladeCraft.Classes
             }
             else if (action == "showscene")
             {
-                loadState.addAction(new actShowScene(values[1]));
+                loadState.addAction(new actShowScene(
+                   values[1],
+                   values[2],
+                   (float)Convert.ToDecimal(values[3]),
+                   Convert.ToInt32(values[4]),
+                   Convert.ToInt32(values[5]),
+                   Convert.ToInt32(values[6]),
+                   Convert.ToInt32(values[7]),
+                   Convert.ToBoolean(values[8])
+                   ));
             }
             else if (action=="inventory")
             {

@@ -417,6 +417,8 @@ public class Battle
 				if(infoPanelContains(x, y))
 				{
 					cancelToPrevState();
+					targets.clear();
+					currentChar.setFace(faces.Idle);
 				}
 				else
 				{
@@ -430,6 +432,8 @@ public class Battle
 					else
 					{
 						cancelToPrevState();
+						targets.clear();
+						currentChar.setFace(faces.Idle);
 					}
 				}		
 			}
@@ -587,9 +591,12 @@ public class Battle
 					p.endBattle();
 				}
 				
+				if(!isDefeated())
+				{
+					Global.musicBox.resumeLastSong();
+					Global.screenFader.fadeIn(2);
+				}
 				
-				Global.musicBox.resumeLastSong();
-				Global.screenFader.fadeIn(2);
 				Global.GameState = States.GS_WORLDMOVEMENT;				
 			}
 	}
@@ -955,7 +962,7 @@ public class Battle
 		
 		Global.party.setAllowMovement(true);
 		Global.setPanned(0, 0);				
-		Global.map.gameOverObject.execute();
+		Global.executeGameOver();
 	}
 	private void triggerEndBattle()
 	{

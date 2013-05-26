@@ -1063,7 +1063,9 @@ action wait 2
 action fade 0 255 0 0 0 True True
 action wait 1
 action fade 1 255 0 0 0 False False
-action showscene demoscreen
+action showscene demoscreen Timer 10 255 255 255 5 False
+action wait 9
+action fade 5 255 255 255 255 True True
 action switch scenedone True
 action resetgame
 addstate
