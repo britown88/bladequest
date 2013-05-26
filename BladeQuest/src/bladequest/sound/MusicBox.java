@@ -102,15 +102,16 @@ public class MusicBox
 		AssetFileDescriptor afd;
 		mPlayer.reset();
 		
-		looping = loop;
+		
 		playingIntro = playIntro && song.HasIntro();
+		looping = !playingIntro && loop;
 		
 		String songPath = playingIntro ? song.IntroPath() : song.Path(); 
 		
 		try {			
 			afd = Global.activity.getAssets().openFd(songPath);
 			mPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
-			mPlayer.setLooping(!playIntro && loop);
+			mPlayer.setLooping(looping);
 			mPlayer.prepare();
 			afd.close();
 		} catch (Exception e) {
