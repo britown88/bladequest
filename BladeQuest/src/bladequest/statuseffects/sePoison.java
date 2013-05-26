@@ -36,7 +36,7 @@ public class sePoison extends StatusEffect
 	{
 		//set text, play animation damage, return.
 		PlayerCharacter damageTarget =  builder.getSource();
-		Global.battle.changeStartBarText(damageTarget.getDisplayName() + " is damaged by poison!");
+		Global.battle.setInfoBarText(damageTarget.getDisplayName() + " is damaged by poison!");
 		BattleAnim anim = Global.battleAnims.get("poison");
 		
 		int damage = Math.max(1, (int)((float)damageTarget.getStat(Stats.MaxHP)*(power/100.0f)));

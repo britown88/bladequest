@@ -83,7 +83,7 @@ public class Battle
 	private Paint statsText, nameText, battleText, grayBattleText, enemyBattleText,nameDisplayPaint;
 	
 	//menu panels
-	private MenuPanel startBar, infoPanel, displayNamePanel, mpWindow;
+	private MenuPanel infoPanel, displayNamePanel, mpWindow;
 	private MenuPanel characterPanes[];
 	private ListBox mainMenu;
 	
@@ -139,7 +139,7 @@ public class Battle
 			{
 				recedeChar();
 				mainMenu.close();
-				changeStartBarText(txtStart);
+				setInfoBarText(txtStart);
 				for(PlayerCharacter c : partyList)
 					c.setFace(faces.Idle);
 			}
@@ -338,28 +338,28 @@ public class Battle
 				switch(targetType)
 				{
 				case AllAllies:
-					changeStartBarText(txtTargetAllies);
+					setInfoBarText(txtTargetAllies);
 					getTouchTargets(-1, -1, targetType);
 					break;
 				case AllEnemies:
-					changeStartBarText(txtTargetEnemies);
+					setInfoBarText(txtTargetEnemies);
 					getTouchTargets(-1, -1, targetType);
 					break;
 				case Self:
-					changeStartBarText(txtTargetSelf);
+					setInfoBarText(txtTargetSelf);
 					getTouchTargets(-1, -1, targetType);
 					break;
 				case Single:
-					changeStartBarText(txtTargetSingle);
+					setInfoBarText(txtTargetSingle);
 					break;
 				case SingleAlly:
-					changeStartBarText(txtTargetSingleAlly);
+					setInfoBarText(txtTargetSingleAlly);
 					break;
 				case SingleEnemy:
-					changeStartBarText(txtTargetSingleEnemy);
+					setInfoBarText(txtTargetSingleEnemy);
 					break;
 				case Everybody:
-					changeStartBarText(txtTargetEverybody);
+					setInfoBarText(txtTargetEverybody);
 					getTouchTargets(-1, -1, targetType);
 					break;
 				}
@@ -374,7 +374,7 @@ public class Battle
 			@Override
 			public void touchActionUp(int x, int y)
 			{
-				if(startBar.contains(x, y))
+				if(infoPanelContains(x, y))
 				{
 					cancelToPrevState();
 				}
@@ -447,6 +447,16 @@ public class Battle
 				initVictory();
 			}
 			@Override
+			public void touchActionUp(int x, int y)
+			{
+				if(messageQueue.size() > 0)
+				{
+					messageQueue.remove(0);
+					if(messageQueue.isEmpty())
+						infoPanel.close();
+				}
+			}
+			@Override
 			public void update()
 			{
 				endOfBattleUpdate();
@@ -469,10 +479,16 @@ public class Battle
 		};
 	}
 	
+	private boolean infoPanelContains(int x, int y)
+	{
+		Rect r = new Rect(0, Global.vpHeight - frameMinHeight,Global.vpWidth, Global.vpHeight);
+		
+		return Global.vpToScreen(r).contains(x, y);
+	}
 	
 	private void endOfBattleUpdate()
 	{
-		if(messageQueue.size() == 0 && Global.screenFader.isFadedIn())
+		if(messageQueue.size() == 1 && Global.screenFader.isFadedIn())
 			triggerEndBattle();
 		else				
 			if(Global.screenFader.isFadedOut())
@@ -523,6 +539,7 @@ public class Battle
 	
 	public void startBattle(String encounter)
 	{		
+		
 		
 		startTurn = new Event();
 		
@@ -578,6 +595,8 @@ public class Battle
 			//UI
 			initUI();		
 			update();
+			
+			setInfoBarText(txtStart);
 		}		
 	}
 	
@@ -603,16 +622,15 @@ public class Battle
 	}
 	private void buildPanels()
 	{		
-		startBar = new MenuPanel(0, Global.vpHeight, partyPos.x - partyFrameBuffer, frameMinHeight);
-		startBar.addTextBox(txtStart, 5, frameMinHeight/2, battleText);
-		startBar.anchor = Anchors.BottomLeft;
-		startBar.thickFrame = false;
+		infoPanel = new MenuPanel(0, Global.vpHeight, Global.vpWidth, 0);
+		infoPanel.setOpenSize(Global.vpWidth, frameMinHeight);
 		
-		infoPanel = new MenuPanel(0, Global.vpHeight, Global.vpWidth, frameMinHeight);
-		infoPanel.addTextBox("", 5, frameMinHeight/2, battleText);
+		infoPanel.addTextBox(txtStart, 5, infoPanel.openSize.y/2, battleText);
+
+		infoPanel.setOpened();
 		infoPanel.anchor = Anchors.BottomLeft;
 		infoPanel.thickFrame = false;
-		infoPanel.hide();
+		infoPanel.update();
 		
 		displayNamePanel = new MenuPanel();
 		displayNamePanel.thickFrame = false;
@@ -627,7 +645,7 @@ public class Battle
 	}
 	private void buildMainMenu()
 	{
-		mainMenu = new ListBox(0, Global.vpHeight, partyPos.x - partyFrameBuffer, frameMinHeight, 3, 2, battleText);
+		mainMenu = new ListBox(0, Global.vpHeight, partyPos.x - partyFrameBuffer, 0, 3, 2, battleText);
 		mainMenu.setOpenSize(mainMenu.width, frameMaxHeight);
 		mainMenu.setDisabledPaint(grayBattleText);
 		mainMenu.anchor = Anchors.BottomLeft;
@@ -683,19 +701,17 @@ public class Battle
 		}
 	}
 	private void updatePanels()
-	{
-		startBar.update();		
+	{	
 		displayNamePanel.update();
 		mpWindow.update();
 		mainMenu.update();
 		
-		if(messageQueue.size() == 0 && infoPanel.isShown())
-			infoPanel.hide();
-		else
-			if(messageQueue.size() > 0)
-				infoPanel.getTextAt(0).text = messageQueue.get(0);
+		if(!(mainMenu.Closing() || mainMenu.Closed()) && infoPanel.Opened())
+			infoPanel.close();
 		
 		infoPanel.update();
+		if(messageQueue.size() > 0)
+			infoPanel.getTextAt(0).text = messageQueue.get(0);
 	}
 	private void updateCharacterPositions()
 	{
@@ -710,7 +726,6 @@ public class Battle
 			currentChar.setPosition(partyPos.x + (charXSpacing * currentChar.Index()) - selCharX, partyPos.y + (charYSpacing * currentChar.Index()));
 	}
 
-	public void changeStartBarText(String str){startBar.getTextAt(0).text = str;}
 	private void showDisplayName(String str)
 	{
 		displayNamePanel.show();		
@@ -750,6 +765,7 @@ public class Battle
 	
 	private void initVictory()
 	{
+		messageQueue.clear();
 		//play victory music
 		Global.musicBox.play("victory", true, true, 0);
 		
@@ -771,7 +787,7 @@ public class Battle
 		}
 		avgLevel = levelTotal / aliveChars.size();
 		
-		addMessage("You are victorious!");
+		addMsgToInfobar("You are victorious!");
 
 		int gold = 0;
 		int exp = 0;
@@ -797,8 +813,8 @@ public class Battle
 		
 		Global.party.addGold(gold);
 		
-		addMessage("Obtained " + gold + "G!");
-		addMessage("Earned " + exp + " experience!");
+		addMsgToInfobar("Obtained " + gold + "G!");
+		addMsgToInfobar("Earned " + exp + " experience!");
 
 		
 		String newAbilities = "";
@@ -808,13 +824,13 @@ public class Battle
 			int leftover = c.awardExperience(exp);
 			while(leftover > 0)
 			{
-				addMessage(c.getDisplayName() + " grew to level " + c.getLevel() + "!");
+				addMsgToInfobar(c.getDisplayName() + " grew to level " + c.getLevel() + "!");
 				
 				do
 				{
 					newAbilities = c.checkForAbilities();
 					if(newAbilities != "")
-						addMessage(c.getDisplayName() + " learned " + newAbilities + "!");
+						addMsgToInfobar(c.getDisplayName() + " learned " + newAbilities + "!");
 					
 				}while(newAbilities != "");
 				
@@ -825,18 +841,18 @@ public class Battle
 		if(wonItem != null)
 		{
 			Global.party.addItem(wonItem, 1);	
-			addMessage("Found a " + Global.items.get(wonItem).getName() + "!");
+			addMsgToInfobar("Found a " + Global.items.get(wonItem).getName() + "!");
 		}		
 		
 	}
 	private void initEscaped()
 	{
-		addMessage("You have escaped!");		
+		setInfoBarText("You have escaped!");		
 	}
 
 	private void initDefeat()
 	{
-		changeStartBarText(txtDefeat);
+		setInfoBarText(txtDefeat);
 		
 		//clear further actions of the calling object
 		if(Global.BattleStartObject != null)
@@ -850,7 +866,6 @@ public class Battle
 	{
 		Global.screenFader.setFadeColor(255, 0, 0, 0);
 		Global.screenFader.fadeOut(2);
-		changeStartBarText("");
 
 	}
 	
@@ -962,12 +977,10 @@ public class Battle
 				
 				//set frame text
 				switch(actor.getAction())
-				{case Attack:changeStartBarText(actor.getDisplayName()+" attacks!");break;
-				case Item:changeStartBarText(actor.getDisplayName()+" uses "+actor.getItemToUse().getName()+"!");break;
-				case Ability:changeStartBarText(actor.getDisplayName()+" casts "+actor.getAbilityToUse().getDisplayName()+"!");break;
-				case CombatAction:changeStartBarText(actor.getDisplayName()+actor.getCombatActionText());break;
-				case Run:changeStartBarText(actor.getDisplayName()+" tries to run!");break;
-				case Guard:changeStartBarText(actor.getDisplayName()+" is guarding!");break;
+				{case Attack:setInfoBarText(actor.getDisplayName()+" attacks!");break;
+				case Item:setInfoBarText(actor.getDisplayName()+" uses "+actor.getItemToUse().getName()+"!");break;
+				case Ability:setInfoBarText(actor.getDisplayName()+" casts "+actor.getAbilityToUse().getDisplayName()+"!");break;
+				case CombatAction:setInfoBarText(actor.getDisplayName()+actor.getCombatActionText());break;
 				default: break;}
 				
 				if(!actor.isInBattle())
@@ -1048,7 +1061,7 @@ public class Battle
 		
 		return true;
 	}
-	private boolean isEscaped()
+	public boolean isEscaped()
 	{
 		for(PlayerCharacter c : partyList)
 			if(c.isInBattle())
@@ -1179,10 +1192,17 @@ public class Battle
 			}
 	}
 	private void addBattleEvent(PlayerCharacter source, List<PlayerCharacter> targets){battleEvents.add(new BattleEvent(source, targets, markers));}
-	public void addMessage(String str)
+	
+	public void setInfoBarText(String str)
+	{
+		messageQueue.clear();
+		addMsgToInfobar(str);
+	}
+	
+	public void addMsgToInfobar(String str)
 	{
 		messageQueue.add(str);
-		infoPanel.show();
+		infoPanel.open();
 		updatePanels();
 	}
 	
@@ -1264,13 +1284,10 @@ public class Battle
 			
 	}
 	private void drawPanels()
-	{		
-		mainMenu.render();
-		if(mainMenu.Closed())
-			startBar.render();
-		
-		infoPanel.render();
-		
+	{	
+		if(!mainMenu.Closed())
+			mainMenu.render();
+				
 		stateMachine.getState().drawPanels();
 		
 		displayNamePanel.render();
@@ -1339,6 +1356,9 @@ public class Battle
 		if(!msgBox.Closed())
 			msgBox.render();
 		
+		if(msgBox.Closed() && !infoPanel.Closed())		
+			infoPanel.render();
+		
 		Global.screenFader.render();
 		
 	}
@@ -1349,36 +1369,36 @@ public class Battle
 	}
 	public void onLongPress(int x, int y)
 	{
-		if(msgBox.Closed() && messageQueue.size() == 0)
+		if(msgBox.Closed())
 			stateMachine.getState().onLongPress(x, y);
 	}
 	public void touchActionUp(int x, int y)
 	{
 		if(!msgBox.Closed())
 			msgBox.touchActionUp(x, y);
-		else if(messageQueue.size() > 0)
-			messageQueue.remove(0);
-		else
+		else 
+		{	
+			
 			stateMachine.getState().touchActionUp(x, y);
+		}
+			
 		
 	}
 	public void touchActionDown(int x, int y)
 	{
 		if(!msgBox.Closed())
 			msgBox.touchActionDown(x, y);
-		else if(messageQueue.size() == 0)
-		{
-			stateMachine.getState().touchActionDown(x, y);
-		}		
+
+		stateMachine.getState().touchActionDown(x, y);
+	
 	}
 	public void touchActionMove(int x, int y)
 	{
 		if(!msgBox.Closed())
 			msgBox.touchActionMove(x, y);
-		else if(messageQueue.size() == 0)
-		{
+		else
 			stateMachine.getState().touchActionMove(x, y);
-		}
+
 		
 	}
 	private void getTouchTargets(int x, int y, TargetTypes targetType)

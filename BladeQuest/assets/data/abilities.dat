@@ -31,11 +31,16 @@ add (damageAction 0.9 "Physical") >
 add (waitAction 150) > #hack for attack -> addDep another attack
 addDep (damageAction 0.9 "Physical"))
 
+addDefaultWait ability
+  add ability (waitAction 450)
+
 \bite <- (addAbility "bite" "Bite" "Single" 5 >
-add (animAction "bite") >
-add (waitAction 250) >
-addDep (damageAction 1.5 "Physical") >
-addDep (inflictStatusAction (poisonStatus 1.5))) 
+add (\defWait <- waitAction 450) >
+addDep (animAction "bite") >
+addDep (inflictStatusAction (poisonStatus 1.5)) >
+add (addDependency (waitAction 250)  defWait) >
+addDep (damageAction 1.5 "Physical"))
+
 
 \recruit1 <- (addAbility "recruit1" "Clashing Super Hit" "Single" 0 >
 add (animAction "movetest") >

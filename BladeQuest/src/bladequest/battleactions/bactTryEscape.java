@@ -56,7 +56,7 @@ public class bactTryEscape  extends DelegatingAction {
 		builder.addEventObject(new bactWait(BattleEvent.frameFromActIndex(3)));
 		if (!disableRunning && Global.rand.nextInt(100) < 90)
 		{
-			Global.battle.changeStartBarText("Got away safely!");
+			Global.battle.setInfoBarText("Got away safely!");
 			BattleAnim runAnim = makeRunAnimation(builder.getSource());
 			
 			builder.addEventObject(new bactChangeVisibility(false).addDependency(builder.getLast()));
@@ -77,11 +77,11 @@ public class bactTryEscape  extends DelegatingAction {
 		{
 			if (disableRunning)
 			{
-				Global.battle.changeStartBarText("There is no escape!");
+				Global.battle.setInfoBarText("There is no escape!");
 			}
 			else
 			{
-				Global.battle.changeStartBarText("Couldn't run!");
+				Global.battle.setInfoBarText("Couldn't run!");
 			}
 			builder.addMarker(new DamageMarker("FAILED!", builder.getSource()));
 		}

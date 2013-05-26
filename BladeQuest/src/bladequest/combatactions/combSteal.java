@@ -118,20 +118,20 @@ public class combSteal extends CombatAction
 					if(item == null)
 					{
 						builder.addMarker(new DamageMarker("MISS", target));	
-						Global.battle.changeStartBarText("Failed to steal!");
+						Global.battle.setInfoBarText("Failed to steal!");
 					}
 					else
 					{
 						Global.party.addItem(item, 1);
 						
 						builder.addMarker(new DamageMarker("STEAL", target));
-						Global.battle.changeStartBarText("Stole a "+ Global.items.get(item).getName() +"!");
+						Global.battle.setInfoBarText("Stole a "+ Global.items.get(item).getName() +"!");
 					}
 				}
 				else
 				{
 					builder.addMarker(new DamageMarker("FAIL", target));
-					Global.battle.changeStartBarText("Doesn't have anything!");
+					Global.battle.setInfoBarText("Doesn't have anything!");
 				}
 				return State.Finished;
 			}
