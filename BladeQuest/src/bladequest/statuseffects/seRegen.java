@@ -33,7 +33,7 @@ public class seRegen extends StatusEffect {
 	public void onTurn(BattleEventBuilder builder) 
 	{
 		PlayerCharacter healTarget =  builder.getSource();
-		Global.battle.changeStartBarText(healTarget.getDisplayName() + " is regaining HP!");
+		Global.battle.setInfoBarText(healTarget.getDisplayName() + " is regaining HP!");
 		
 		List<PlayerCharacter> healTargetList = new ArrayList<PlayerCharacter>();
 		healTargetList.add(healTarget);

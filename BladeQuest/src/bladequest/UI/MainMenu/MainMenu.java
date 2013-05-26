@@ -37,7 +37,7 @@ public class MainMenu
 	private final float menuWidthVpPercent = 28.0f; 
 	private final float menuHeightVpPercent = 16.0f;
 	
-	private final int menuWidth, barHeight;
+	private static int menuWidth, barHeight;
 	
 	private Vector<DamageMarker> markers;
 	private Item itemToUse;
@@ -580,15 +580,24 @@ public class MainMenu
 						{
 							handleEqpOption((String)eqpInfoBar.getSelectedEntry().obj);
 						}
-						
-						state = eqpEquipSlots.touchActionUp(x, y);
-						if(state == LBStates.Selected)
+						else
 						{
-							equipItemType = (Item.Type)eqpEquipSlots.getSelectedEntry().obj;
-							darken();
-							fillEqpSelect();
-							//handleEqpOption((String)eqpInfoBar.getSelectedEntry().obj);
+							state = eqpEquipSlots.touchActionUp(x, y);
+							if(state == LBStates.Selected)
+							{
+								Item.Type type = (Item.Type)eqpEquipSlots.getSelectedEntry().obj;
+								
+								if(selectedChar.hasTypeEquipped(type)|| hasItemToEquip(selectedChar, type))
+								{
+									equipItemType = type;
+									darken();
+									fillEqpSelect();
+								}
+							}
+							
 						}
+						
+						
 					}
 					
 				}
@@ -1223,7 +1232,7 @@ public class MainMenu
 		blueMenuTextRight = Global.textFactory.getTextPaint(13, Color.CYAN, Align.RIGHT);
 		
 	}
-	private Paint buildPaint(int size, int c, Align align)
+	private static Paint buildPaint(int size, int c, Align align)
 	{
 		return Global.textFactory.getTextPaint(size, c, align);
 	}
@@ -1676,16 +1685,8 @@ public class MainMenu
 
 	}
 	private void updateCharStatus()
-	{
-		charStatus.clear();
-		
-		buildCharMainBox();
-		buildCharStatsBox();
-		buildCharNameBox();
-		buildCharEquipBox();
-		
-		charStatus.update();
-	
+	{		
+		populateCharStatusPanel(charStatus, selectedChar);	
 	}
 	private void buildSkillScreen()
 	{
@@ -1833,14 +1834,26 @@ public class MainMenu
 		opts.getEntryAt(i++).getTextAt(1).text = "Touch Screen";
 	}
 	
-	private void buildCharMainBox()
+	private boolean hasItemToEquip(PlayerCharacter pc, Item.Type type)
+	{
+		List<Item> usableItems = new ArrayList<Item>();
+
+		for(Item i : Global.party.getInventory(false))
+			if(i.getType() == type && i.getUsableChars().contains(pc.getName()))
+				usableItems.add(i);	
+		
+		return !usableItems.isEmpty();
+
+	}
+	
+	private static void buildCharMainBox(MenuPanel panel, PlayerCharacter pc)
 	{
 		MenuPanel mainBox = new MenuPanel(0, barHeight, Global.vpWidth - menuWidth, Global.vpHeight - barHeight*3);
 		Paint blue = buildPaint(12, Color.CYAN, Align.LEFT);
 		Paint white = buildPaint(12, Color.WHITE, Align.RIGHT);
 		
 		//Portrait
-		Rect src = selectedChar.getPortraitSrcRect();
+		Rect src = pc.getPortraitSrcRect();
 		
 		
 		Rect dest = new Rect(0, (mainBox.height - menuWidth) / 2 - 12, menuWidth,  (mainBox.height - menuWidth) / 2 + menuWidth - 12);
@@ -1858,18 +1871,18 @@ public class MainMenu
 		
 		//HP/MP
 		mainBox.addTextBox("HP:", infoCols[0], infoRows[0],  blue);
-		mainBox.addTextBox(selectedChar.getHP()+"/"+selectedChar.getStat(Stats.MaxHP), infoCols[1], infoRows[0],  white);
+		mainBox.addTextBox(pc.getHP()+"/"+pc.getStat(Stats.MaxHP), infoCols[1], infoRows[0],  white);
 		mainBox.addTextBox("MP:", infoCols[0], infoRows[1],  blue);
-		mainBox.addTextBox(selectedChar.getMP()+"/"+selectedChar.getStat(Stats.MaxMP), infoCols[1], infoRows[1],  white);
+		mainBox.addTextBox(pc.getMP()+"/"+pc.getStat(Stats.MaxMP), infoCols[1], infoRows[1],  white);
 		
 		mainBox.addTextBox("Level:", infoCols[0], infoRows[3],  blue);
-		mainBox.addTextBox(""+selectedChar.getLevel(), infoCols[1], infoRows[3],  white);
+		mainBox.addTextBox(""+pc.getLevel(), infoCols[1], infoRows[3],  white);
 		mainBox.addTextBox("Experience:", infoCols[0], infoRows[4],  blue);
-		mainBox.addTextBox(""+selectedChar.getExp(), infoCols[1], infoRows[5],  white);
+		mainBox.addTextBox(""+pc.getExp(), infoCols[1], infoRows[5],  white);
 		mainBox.addTextBox("For Level Up", infoCols[0], infoRows[6],  blue);
-		mainBox.addTextBox(""+selectedChar.getRemainingExp(), infoCols[1], infoRows[7],  white);
+		mainBox.addTextBox(""+pc.getRemainingExp(), infoCols[1], infoRows[7],  white);
 		
-		List<StatusEffect> seList = selectedChar.getStatusEffects();
+		List<StatusEffect> seList = pc.getStatusEffects();
 		if(seList.size() > 0)
 		{
 			float iconScale = 1.5f;
@@ -1891,19 +1904,19 @@ public class MainMenu
 								iconScale));
 		}
 		
-		charStatus.addChildPanel(mainBox);
+		panel.addChildPanel(mainBox);
 	}
-	private void buildCharNameBox()
+	private static void buildCharNameBox(MenuPanel panel, PlayerCharacter pc)
 	{
 		Paint largeWhiteCenter = buildPaint(18, Color.WHITE, Align.CENTER);
 		MenuPanel nameBox = new MenuPanel(Global.vpWidth / 2, 0, Global.vpWidth - menuWidth*2, barHeight);
 		nameBox.anchor = Anchors.TopCenter;
 		
-		nameBox.addTextBox(selectedChar.getDisplayName(), nameBox.width/2, nameBox.height / 2, largeWhiteCenter);
+		nameBox.addTextBox(pc.getDisplayName(), nameBox.width/2, nameBox.height / 2, largeWhiteCenter);
 		
-		charStatus.addChildPanel(nameBox);
+		panel.addChildPanel(nameBox);
 	}
-	private void buildCharStatsBox()
+	private static void buildCharStatsBox(MenuPanel panel, PlayerCharacter pc)
 	{
 		MenuPanel statsBox = new MenuPanel(Global.vpWidth, barHeight, menuWidth, Global.vpHeight - barHeight);
 		statsBox.anchor = Anchors.TopRight;
@@ -1927,65 +1940,65 @@ public class MainMenu
 			statRows[i] = statsBox.height / (numStatRows+1) * (i+1);		
 			
 
-		selectedChar.updateSecondaryStats();			
+		pc.updateSecondaryStats();			
 
 		statsBox.addTextBox("Power:", statCols[0], statRows[0], blueRight);
-		statsBox.addTextBox(""+selectedChar.getStat(Stats.BattlePower), 
-				statCols[0] + statsBuffer, statRows[0], genStatPaint(selectedChar, Stats.BattlePower, blueRight, redRight, whiteRight));
+		statsBox.addTextBox(""+pc.getStat(Stats.BattlePower), 
+				statCols[0] + statsBuffer, statRows[0], genStatPaint(pc, Stats.BattlePower, blueRight, redRight, whiteRight));
 		
 		statsBox.addTextBox("Defend:", statCols[0], statRows[1], blueRight);
-		statsBox.addTextBox(""+selectedChar.getStat(Stats.Defense), 
-				statCols[0] + statsBuffer, statRows[1], genStatPaint(selectedChar, Stats.Defense, blueRight, redRight, whiteRight));
+		statsBox.addTextBox(""+pc.getStat(Stats.Defense), 
+				statCols[0] + statsBuffer, statRows[1], genStatPaint(pc, Stats.Defense, blueRight, redRight, whiteRight));
 		
 		statsBox.addTextBox("M.Pow:", statCols[0], statRows[2], blueRight);
-		statsBox.addTextBox(""+selectedChar.getStat(Stats.MagicPower), 
-				statCols[0] + statsBuffer, statRows[2], genStatPaint(selectedChar, Stats.MagicPower, blueRight, redRight, whiteRight));
+		statsBox.addTextBox(""+pc.getStat(Stats.MagicPower), 
+				statCols[0] + statsBuffer, statRows[2], genStatPaint(pc, Stats.MagicPower, blueRight, redRight, whiteRight));
 		
 		statsBox.addTextBox("M.Def:", statCols[0], statRows[3], blueRight);
-		statsBox.addTextBox(""+selectedChar.getStat(Stats.MagicDefense), 
-				statCols[0] + statsBuffer, statRows[3], genStatPaint(selectedChar, Stats.MagicDefense, blueRight, redRight, whiteRight));
+		statsBox.addTextBox(""+pc.getStat(Stats.MagicDefense), 
+				statCols[0] + statsBuffer, statRows[3], genStatPaint(pc, Stats.MagicDefense, blueRight, redRight, whiteRight));
 		
 
 		statsBox.addTextBox("Stren:", statCols[0], statRows[4], blueRight);
-		statsBox.addTextBox(""+selectedChar.getStat(Stats.Strength), 
-				statCols[0] + statsBuffer, statRows[4], genStatPaint(selectedChar, Stats.Strength, blueRight, redRight, whiteRight));
+		statsBox.addTextBox(""+pc.getStat(Stats.Strength), 
+				statCols[0] + statsBuffer, statRows[4], genStatPaint(pc, Stats.Strength, blueRight, redRight, whiteRight));
 		
 		statsBox.addTextBox("Agil:", statCols[0], statRows[5], blueRight);
-		statsBox.addTextBox(""+selectedChar.getStat(Stats.Agility), 
-				statCols[0] + statsBuffer, statRows[5], genStatPaint(selectedChar, Stats.Agility, blueRight, redRight, whiteRight));
+		statsBox.addTextBox(""+pc.getStat(Stats.Agility), 
+				statCols[0] + statsBuffer, statRows[5], genStatPaint(pc, Stats.Agility, blueRight, redRight, whiteRight));
 		
 		statsBox.addTextBox("Vital:", statCols[0], statRows[6], blueRight);
-		statsBox.addTextBox(""+selectedChar.getStat(Stats.Vitality), 
-				statCols[0] + statsBuffer, statRows[6], genStatPaint(selectedChar, Stats.Vitality, blueRight, redRight, whiteRight));
+		statsBox.addTextBox(""+pc.getStat(Stats.Vitality), 
+				statCols[0] + statsBuffer, statRows[6], genStatPaint(pc, Stats.Vitality, blueRight, redRight, whiteRight));
 		
 		statsBox.addTextBox("Intel:", statCols[0], statRows[7], blueRight);
-		statsBox.addTextBox(""+selectedChar.getStat(Stats.Intelligence), 
-				statCols[0] + statsBuffer, statRows[7], genStatPaint(selectedChar, Stats.Intelligence, blueRight, redRight, whiteRight));				
+		statsBox.addTextBox(""+pc.getStat(Stats.Intelligence), 
+				statCols[0] + statsBuffer, statRows[7], genStatPaint(pc, Stats.Intelligence, blueRight, redRight, whiteRight));				
 
 		statsBox.addTextBox("Speed:", statCols[0], statRows[8], blueRight);
-		statsBox.addTextBox(""+selectedChar.getStat(Stats.Speed), 
-				statCols[0] + statsBuffer, statRows[8], genStatPaint(selectedChar, Stats.Speed, blueRight, redRight, whiteRight));
+		statsBox.addTextBox(""+pc.getStat(Stats.Speed), 
+				statCols[0] + statsBuffer, statRows[8], genStatPaint(pc, Stats.Speed, blueRight, redRight, whiteRight));
 		
 		statsBox.addTextBox("Evade:", statCols[0], statRows[9], blueRight);
-		statsBox.addTextBox(""+selectedChar.getStat(Stats.Evade), 
-				 statCols[0] + statsBuffer, statRows[9], genStatPaint(selectedChar, Stats.Evade, blueRight, redRight, whiteRight));
+		statsBox.addTextBox(""+pc.getStat(Stats.Evade), 
+				 statCols[0] + statsBuffer, statRows[9], genStatPaint(pc, Stats.Evade, blueRight, redRight, whiteRight));
 		
 		statsBox.addTextBox("Block:", statCols[0], statRows[10], blueRight);
-		statsBox.addTextBox(""+selectedChar.getStat(Stats.Block), 
-				statCols[0] + statsBuffer, statRows[10], genStatPaint(selectedChar, Stats.Block, blueRight, redRight, whiteRight));
+		statsBox.addTextBox(""+pc.getStat(Stats.Block), 
+				statCols[0] + statsBuffer, statRows[10], genStatPaint(pc, Stats.Block, blueRight, redRight, whiteRight));
 		
 		statsBox.addTextBox("Crit:", statCols[0], statRows[11], blueRight);
-		statsBox.addTextBox(""+selectedChar.getStat(Stats.Crit), 
-				statCols[0] + statsBuffer, statRows[11], genStatPaint(selectedChar, Stats.Crit, blueRight, redRight, whiteRight));
+		statsBox.addTextBox(""+pc.getStat(Stats.Crit), 
+				statCols[0] + statsBuffer, statRows[11], genStatPaint(pc, Stats.Crit, blueRight, redRight, whiteRight));
 		
-		charStatus.addChildPanel(statsBox);
+		panel.addChildPanel(statsBox);
 	}
-	private Paint genStatPaint(PlayerCharacter c, Stats stat, Paint good, Paint bad, Paint neutral)
+	private static Paint genStatPaint(PlayerCharacter c, Stats stat, Paint good, Paint bad, Paint neutral)
 	{
 		int mod = c.getStatMod(stat);
 		return mod > 0 ? good : mod < 0 ? bad : neutral; 
 	}
-	private void buildCharEquipBox()
+	private static void buildCharEquipBox(MenuPanel panel, PlayerCharacter pc)
 	{
 		MenuPanel equipBox = new MenuPanel(0, Global.vpHeight, Global.vpWidth - menuWidth, barHeight * 2);
 		equipBox.anchor = Anchors.BottomLeft;
@@ -2026,20 +2039,20 @@ public class MainMenu
 		int iconYBuff = 2;
 		
 		//equipment
-		equipBox.addPicBox(Global.createIcon(selectedChar.weapEquipped() ? selectedChar.weapon().getIcon() : "sword", d + iconBuffer, eqpRows[0] + iconYBuff, iconScale));
-		equipBox.addTextBox(selectedChar.weapEquipped() ? selectedChar.weapon().getName() : "Weapon", eqpCols[0], eqpRows[0], selectedChar.weapEquipped() ? whiteLeft : grayLeft);
+		equipBox.addPicBox(Global.createIcon(pc.weapEquipped() ? pc.weapon().getIcon() : "sword", d + iconBuffer, eqpRows[0] + iconYBuff, iconScale));
+		equipBox.addTextBox(pc.weapEquipped() ? pc.weapon().getName() : "Weapon", eqpCols[0], eqpRows[0], pc.weapEquipped() ? whiteLeft : grayLeft);
 		
-		equipBox.addPicBox(Global.createIcon(selectedChar.shieldEquipped() ? selectedChar.shield().getIcon() : "hshield", d + iconBuffer, eqpRows[1] + iconYBuff, iconScale));
-		equipBox.addTextBox(selectedChar.shieldEquipped() ? selectedChar.shield().getName() : "Shield", eqpCols[0], eqpRows[1], selectedChar.shieldEquipped() ? whiteLeft : grayLeft);
+		equipBox.addPicBox(Global.createIcon(pc.shieldEquipped() ? pc.shield().getIcon() : "hshield", d + iconBuffer, eqpRows[1] + iconYBuff, iconScale));
+		equipBox.addTextBox(pc.shieldEquipped() ? pc.shield().getName() : "Shield", eqpCols[0], eqpRows[1], pc.shieldEquipped() ? whiteLeft : grayLeft);
 		
-		equipBox.addPicBox(Global.createIcon(selectedChar.helmEquipped() ? selectedChar.helmet().getIcon() : "hhelmet", d + iconBuffer, eqpRows[2] + iconYBuff, iconScale));
-		equipBox.addTextBox(selectedChar.helmEquipped() ? selectedChar.helmet().getName() : "Helmet", eqpCols[0], eqpRows[2], selectedChar.helmEquipped() ? whiteLeft : grayLeft);
+		equipBox.addPicBox(Global.createIcon(pc.helmEquipped() ? pc.helmet().getIcon() : "hhelmet", d + iconBuffer, eqpRows[2] + iconYBuff, iconScale));
+		equipBox.addTextBox(pc.helmEquipped() ? pc.helmet().getName() : "Helmet", eqpCols[0], eqpRows[2], pc.helmEquipped() ? whiteLeft : grayLeft);
 		
-		equipBox.addPicBox(Global.createIcon(selectedChar.torsoEquipped() ? selectedChar.torso().getIcon() : "htorso", d + iconBuffer, eqpRows[3] + iconYBuff, iconScale));
-		equipBox.addTextBox(selectedChar.torsoEquipped() ? selectedChar.torso().getName() : "Torso", eqpCols[0], eqpRows[3], selectedChar.torsoEquipped() ? whiteLeft : grayLeft);
+		equipBox.addPicBox(Global.createIcon(pc.torsoEquipped() ? pc.torso().getIcon() : "htorso", d + iconBuffer, eqpRows[3] + iconYBuff, iconScale));
+		equipBox.addTextBox(pc.torsoEquipped() ? pc.torso().getName() : "Torso", eqpCols[0], eqpRows[3], pc.torsoEquipped() ? whiteLeft : grayLeft);
 		
-		equipBox.addPicBox(Global.createIcon(selectedChar.accessEquipped() ? selectedChar.accessory().getIcon() : "ring", d + iconBuffer, eqpRows[4] + iconYBuff, iconScale));
-		equipBox.addTextBox(selectedChar.accessEquipped() ? selectedChar.accessory().getName() : "Accessory", eqpCols[0], eqpRows[4], selectedChar.accessEquipped() ? whiteLeft : grayLeft);
+		equipBox.addPicBox(Global.createIcon(pc.accessEquipped() ? pc.accessory().getIcon() : "ring", d + iconBuffer, eqpRows[4] + iconYBuff, iconScale));
+		equipBox.addTextBox(pc.accessEquipped() ? pc.accessory().getName() : "Accessory", eqpCols[0], eqpRows[4], pc.accessEquipped() ? whiteLeft : grayLeft);
 		
 		//Affinity
 		equipBox.addTextBox("Affinity", eqpCols[1], eqpRows[0], blue);
@@ -2048,16 +2061,28 @@ public class MainMenu
 		equipBox.addTextBox("Wind:", eqpCols[2], eqpRows[3], wind);
 		equipBox.addTextBox("Water:", eqpCols[2], eqpRows[4], water);
 		
-		equipBox.addTextBox(""+selectedChar.getStat(Stats.Fire), eqpCols[3], eqpRows[1], genStatPaint(selectedChar, Stats.Fire, blueRight, redRight, whiteRight));
-		equipBox.addTextBox(""+selectedChar.getStat(Stats.Earth), eqpCols[3], eqpRows[2], genStatPaint(selectedChar, Stats.Earth, blueRight, redRight, whiteRight));
-		equipBox.addTextBox(""+selectedChar.getStat(Stats.Wind), eqpCols[3], eqpRows[3], genStatPaint(selectedChar, Stats.Wind, blueRight, redRight, whiteRight));
-		equipBox.addTextBox(""+selectedChar.getStat(Stats.Water), eqpCols[3], eqpRows[4], genStatPaint(selectedChar, Stats.Water, blueRight, redRight, whiteRight));
+		equipBox.addTextBox(""+pc.getStat(Stats.Fire), eqpCols[3], eqpRows[1], genStatPaint(pc, Stats.Fire, blueRight, redRight, whiteRight));
+		equipBox.addTextBox(""+pc.getStat(Stats.Earth), eqpCols[3], eqpRows[2], genStatPaint(pc, Stats.Earth, blueRight, redRight, whiteRight));
+		equipBox.addTextBox(""+pc.getStat(Stats.Wind), eqpCols[3], eqpRows[3], genStatPaint(pc, Stats.Wind, blueRight, redRight, whiteRight));
+		equipBox.addTextBox(""+pc.getStat(Stats.Water), eqpCols[3], eqpRows[4], genStatPaint(pc, Stats.Water, blueRight, redRight, whiteRight));
 		
 		
-		charStatus.addChildPanel(equipBox);	
+		panel.addChildPanel(equipBox);	
+	}
+
+	public static void populateCharStatusPanel(MenuPanel panel, PlayerCharacter pc)
+	{
+		panel.clear();
+		
+		buildCharMainBox(panel, pc);
+		buildCharStatsBox(panel, pc);
+		buildCharNameBox(panel, pc);
+		buildCharEquipBox(panel, pc);
+		
+		panel.update();
 	}
 	
-	public void close()
+ 	public void close()
 	{
 		if(!close)
 		{
