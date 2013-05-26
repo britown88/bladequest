@@ -1060,24 +1060,23 @@ public class Battle
 	}
 	public boolean graphicsCleared()
 	{
-		return Global.noRunningAnims() && markers.isEmpty() && graphicalBattleActionRunner.hasRemaining();
+		return Global.noRunningAnims() && markers.isEmpty() && !graphicalBattleActionRunner.hasRemaining();
 	}
 	private void applyBattleOver()
 	{
+		if (!graphicsCleared()) return;
+		
 		if(isVictory())
 		{
-			if(Global.noRunningAnims() && markers.isEmpty())
-				stateMachine.setState(getVictoryState());
+			stateMachine.setState(getVictoryState());
 		}			
 		else if(isDefeated())
 		{
-			if(Global.noRunningAnims() && markers.isEmpty())
-				stateMachine.setState(getDefeatState());
+			stateMachine.setState(getDefeatState());
 		}
 		else if (isEscaped())
 		{
-			if(Global.noRunningAnims() && markers.isEmpty())
-				stateMachine.setState(getEscapedState());
+			stateMachine.setState(getEscapedState());
 		}		
 	}
 	private void nextActor(boolean firstActor)
@@ -1519,7 +1518,7 @@ public class Battle
 			 }
 			 public int getCurrentBattleFrame()
 			 {
-				 return 0;
+				 return currentFrame;
 			 }
 			};
 	}

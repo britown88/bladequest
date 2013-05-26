@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.graphics.Point;
 import android.graphics.Rect;
+import bladequest.battleactions.BattleAction;
 import bladequest.battleactions.bactFlash;
 import bladequest.battleactions.bactShake;
 import bladequest.battleactions.bactWait;
@@ -249,7 +250,7 @@ public class Enemy extends PlayerCharacter
 		state.size = new Point(battleSpr.getWidth(), battleSpr.getHeight());
 		baObj.addState(state);
 		
-		state = new BattleAnimObjState((int)(4500*msConvert), PosTypes.Source);
+		state = new BattleAnimObjState((int)(6500*msConvert), PosTypes.Source);
 		state.setBmpSrcRect(srcRect.left, srcRect.top, srcRect.right, srcRect.bottom);
 		state.argb(0, 255, 0, 0);
 		state.colorize = 1.0f;
@@ -263,17 +264,28 @@ public class Enemy extends PlayerCharacter
 	
 		BattleEventBuilder builder = Global.battle.makeGraphicalBattleEventBuilder();
 	
-		builder.addEventObject(new bactWait(350));
-		builder.addEventObject(new bactFlash(5).addDependency(builder.getLast()));
+		BattleAction waitAction = new bactWait(350); 
+		builder.addEventObject(waitAction);
+		builder.addEventObject(new bactFlash(8).addDependency(builder.getLast()));
+		waitAction.setReferences();
 		
-		builder.addEventObject(new bactWait(1800));
-		builder.addEventObject(new bactFlash(25).addDependency(builder.getLast()));
+		waitAction = new bactWait(1800);
+		builder.addEventObject(waitAction);
+		builder.addEventObject(new bactFlash(20).addDependency(builder.getLast()));
+		waitAction.setReferences();
 		
-		builder.addEventObject(new bactWait(2100));
-		builder.addEventObject(new bactFlash(25).addDependency(builder.getLast()));
+		waitAction = new bactWait(2100);
+		builder.addEventObject(waitAction);
+		builder.addEventObject(new bactFlash(20).addDependency(builder.getLast()));
+		waitAction.setReferences();
 		
-		builder.addEventObject(new bactWait(2500));
-		builder.addEventObject(new bactShake(2, 2, true).addDependency(builder.getLast()));
+		waitAction = new bactWait(2500);
+		builder.addEventObject(waitAction);
+		builder.addEventObject(new bactShake(2, 4, true).addDependency(builder.getLast()));
+		waitAction.setReferences();
+		
+		waitAction = new bactWait(8000); //prevent battle from ending too quickly!
+		builder.addEventObject(waitAction);
 	}
 	
 	private void playDeathAnimation()
