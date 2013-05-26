@@ -118,7 +118,16 @@ public class BattleEvent
 		switch(source.getAction())
 		{
 		case Attack:
-			BattleActionPatterns.BuildSwordSlash(builder, 1.0f, DamageTypes.Physical, 1.0f);
+			builder.addEventObject(new BattleAction()
+			{
+				public State run(BattleEventBuilder builder)
+				{
+					for (PlayerCharacter target : builder.getTargets()) {target.getOnPhysicalHitEvent().trigger();}
+					return State.Finished;
+				}
+			}.addDependency(
+			BattleActionPatterns.BuildSwordSlash(builder, 1.0f, DamageTypes.Physical, 1.0f)));
+			
 			break;
 		case Ability:
 			Ability ab = source.getAbilityToUse();

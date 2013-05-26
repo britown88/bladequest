@@ -12,7 +12,7 @@ addColoredSwordHit enemy color1 color2
          
 addDefaultSwordHit enemy
    addColoredSwordHit enemy (RGBA 255 255 255 255) (RGBA 128 128 128 255)
-
+ 
 addColoredStaffHit enemy color1 color2   
    enemy > setAttackAnimation "staff" >
    	       setAttackColors (interpolateColorsToList color1 color2 6)
@@ -28,15 +28,26 @@ addBiteOnlyState enemy
 	enemy > setEnemyAI (createAI "biteMe" (createAIState ([e] "bite")))	
 
 
+retaliateState enemy
+     switchEnemyState enemy "default"
+     "bite"
+     
+makeRatAI enemy
+   enemy > setEnemyAI (createAI "default" (createAIState ([e] "")) > addAIState "retaliate" (createAIState retaliateState)) >
+           onBattleStartRun ([e] createTrigger (getOnPhysicalHitEvent e) ([trigger] switchEnemyState e "retaliate"))
+   
+
+
 ###########################ENEMIES###################################################
+
 #
 \rat <- (addEnemy "rat" "Rat" "rat" >
-setEBaseStats 10 1 1000 1 >
+setEBaseStats 10 1 1 1 >
 addColoredStaffHit (RGBA 255 0 0 255) (RGBA 0 0 0 255) >
-setELevel 4 >
+setELevel 99 >
 setGold 23 >
 setItems "potion" 25 "antidote" 85 true >
-addBiteOnlyState >
+makeRatAI >
 addEAbility "bite")
 
 #

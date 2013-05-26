@@ -61,7 +61,16 @@ public class Function extends ScriptVar {
 		}
 		if (nextFunc == null)
 		{
-			throw new BadTypeException("validArgType", var.typeName());
+			String types = "";
+			for (int i = 0; i < children.size(); ++i)
+			{
+				types += children.get(i).getSpecializer().getSpecializationName();
+				if (i != children.size() - 1)
+				{
+					types += " OR ";
+				}
+			}
+			throw new BadTypeException(types, var.typeName());
 		}
 		return nextFunc.clone().curryValues(curriedValues);
 	}

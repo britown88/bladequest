@@ -56,6 +56,10 @@ public class Script {
 			}
 			return SpecializationLevel.NotSpecialized;
 		}
+		@Override
+		public String getSpecializationName() {
+			return classType.getName();
+		}
 	}
 	
 	
@@ -82,7 +86,6 @@ public class Script {
 			return Parser.getGenericSpecializer();
 		}		
 		
-		//holy shitballs assfuck, I guess this works!
 		return new OpaqueSpecializer(classType);
 	}
 	public static InvokeFunction reflectedMethodToFunction(Method method, List<FunctionSpecializer> specializations)
