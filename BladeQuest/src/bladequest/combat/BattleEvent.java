@@ -26,19 +26,46 @@ public class BattleEvent
 	private boolean running, done;
 	private long startTime;
 	
+	PlayerCharacter.Action action;
+	Ability ability;
+	
 	private List<StatusEffect> endTurnStatuses;
 	private List<DamageMarker> markers;
 	
-	public BattleEvent(PlayerCharacter source, List<PlayerCharacter> targets, List<DamageMarker> markers)
+	enum ActionType
 	{
+		Chosen,
+		Special
+	}
+	
+	ActionType type;
+	
+	public BattleEvent(PlayerCharacter.Action action, Ability ability, PlayerCharacter source, List<PlayerCharacter> targets, List<DamageMarker> markers)
+	{
+		this.action = action;
+		this.ability = ability;
 		this.source = source;
 		this.targets = new ArrayList<PlayerCharacter>(targets);
 		this.markers = markers;
+		type = ActionType.Chosen;
 	}
 	
+	public BattleEvent(PlayerCharacter.Action action, Ability ability, PlayerCharacter source, List<PlayerCharacter> targets, List<DamageMarker> markers, ActionType type)
+	{
+		this.action = action;
+		this.ability = ability;
+		this.source = source;
+		this.targets = new ArrayList<PlayerCharacter>(targets);
+		this.markers = markers;
+		this.type = type;
+	}	
+	public Ability getAbility() {return ability;}
+	PlayerCharacter.Action getAction() {return action;}
+	public ActionType getType(){return type;}
 	public PlayerCharacter getSource() { return source; }
 	public List<PlayerCharacter> getTargets() { return targets;}	
-	public boolean isDone(){ return done;}	
+	public boolean isDone(){ return done;}
+	public boolean runningStatus() { return endTurnStatuses != null;}
 	
 	private BattleEventBuilder makeBattleEventBuilder()
 	{
@@ -115,7 +142,7 @@ public class BattleEvent
 		BattleEventBuilder builder = makeBattleEventBuilder();
 		done = running = false;
 		
-		switch(source.getAction())
+		switch(action)
 		{
 		case Attack:
 			builder.addEventObject(new BattleAction()
@@ -125,13 +152,12 @@ public class BattleEvent
 					for (PlayerCharacter target : builder.getTargets()) {target.getOnPhysicalHitEvent().trigger();}
 					return State.Finished;
 				}
-			}.addDependency(
-			BattleActionPatterns.BuildSwordSlash(builder, 1.0f, DamageTypes.Physical, 1.0f)));
+			});
+			BattleActionPatterns.BuildSwordSlash(builder, 1.0f, DamageTypes.Physical, 1.0f, builder.getLast());
 			
 			break;
 		case Ability:
-			Ability ab = source.getAbilityToUse();
-			abilityToBattleEventBuilder(ab).buildEvents(builder);
+			abilityToBattleEventBuilder(ability).buildEvents(builder);
 			break;
 		case CombatAction:
 			source.getEventBuilder().buildEvents(builder);
@@ -154,8 +180,13 @@ public class BattleEvent
 		if (!running || done) return 0;
 		return (int)(System.currentTimeMillis() - startTime);
 	}
+	public void interrupt()
+	{
+		actionRunner.interrupt();
+	}
 	public void update(Battle battle)
 	{
+		if (done) return;
 		if (!source.isInBattle() || battle.isBattleOver())
 		{
 			running = false;

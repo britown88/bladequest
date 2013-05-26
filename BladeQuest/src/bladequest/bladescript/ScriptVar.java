@@ -3,6 +3,9 @@ package bladequest.bladescript;
 import java.util.ArrayList;
 import java.util.List;
 
+import bladequest.combat.triggers.Condition;
+import bladequest.world.PlayerCharacter;
+
 public abstract class ScriptVar {
 	
 	public static class ListNode extends ScriptVar 
@@ -52,6 +55,27 @@ public abstract class ScriptVar {
 		}
 		
 	}	
+	
+	@SuppressWarnings("unchecked")
+	public static <T> void listFromSingleOrList(List<T> list, ScriptVar var)
+	{
+		try {		
+			if (var.isOpaque()) //single condition...
+			{
+				list.add((T)var.getOpaque());
+			}
+			else
+			{
+				if (!var.isEmptyList())
+				{
+					listFromSingleOrList(list, var.tail());  //recursively add from back.
+					list.add((T)var.head().getOpaque());
+				}
+			}
+		} catch (BadTypeException e) {
+			e.printStackTrace();
+		}	
+	}
 	
 	public class BadTypeException extends ParserException
 	{

@@ -38,6 +38,12 @@ public class BattleActionRunner extends BattleAction {
 		}
 	}
 	
+	public void interrupt()
+	{
+		clearState();
+		this.remainingActions = new ArrayList<BattleAction>();
+	}
+	
 	public List<BattleAction> getActions()
 	{
 		return remainingActions;

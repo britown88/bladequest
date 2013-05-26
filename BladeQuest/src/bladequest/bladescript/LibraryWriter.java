@@ -1,6 +1,7 @@
 package bladequest.bladescript;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,12 +29,11 @@ public class LibraryWriter {
 		populateFunction(name, specializations);
 		addInvokeFunction(name, func, specializations);
 	}
-	
 	public void addAllIn(Class<?> c) throws BadTypeException, BadSpecialization
 	{
 		for (Method m : c.getDeclaredMethods())
 		{
-			if (!m.getReturnType().equals(void.class) && !m.isSynthetic() && m.getParameterTypes().length > 0)
+			if (!m.getReturnType().equals(void.class) && !m.isSynthetic() && m.getParameterTypes().length > 0 && Modifier.isStatic(m.getModifiers()))
 			{
 				add(m.getName(), m);
 			}

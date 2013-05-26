@@ -156,6 +156,28 @@ public class BattleLibrary {
 		return ability; 
 	}
 	
+	//null output
+	public static int interruptCurrent(ScriptVar ignored)
+	{
+		Global.battle.interruptEvent();
+		return 0;
+	}
+	//null output.
+	//targets can be either a single target or a list.
+	public static int addInterruptingAbility(PlayerCharacter source, ScriptVar targets, Ability ability)
+	{
+		List<PlayerCharacter> characters = new ArrayList<PlayerCharacter>();
+		ScriptVar.listFromSingleOrList(characters, targets); 
+		
+		Global.battle.forceAddAbilityEvent(source, characters, ability);
+		return 0;
+	}
+	
+	public static PlayerCharacter getCurrentBattleActor(ScriptVar ignored)
+	{
+		return Global.battle.getCurrentActor();
+	}
+	
 	//conditionList is a list of conditions/events OR a single condition/event.
 	public static Trigger createTrigger(ScriptVar conditionList, ScriptVar onTrigger)
 	{
