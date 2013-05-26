@@ -3,9 +3,6 @@ package bladequest.bladescript;
 import java.util.ArrayList;
 import java.util.List;
 
-import bladequest.combat.triggers.Condition;
-import bladequest.world.PlayerCharacter;
-
 public abstract class ScriptVar {
 	
 	public static class ListNode extends ScriptVar 

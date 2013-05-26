@@ -20,24 +20,42 @@ public class bactInflictStatus extends BattleAction
 		this.se = se;
 	}
 	
+	boolean tryApplyStatus(PlayerCharacter character)
+	{
+		if (se.isNegative() && !character.hasStatus(se.Name()) || 
+				   (!se.isNegative()))
+		{
+			if (character.hasStatus(se.Name()))
+			{
+				character.removeStatusEffect(se.Name());
+			}			
+			return true;
+		}
+		return false;
+	}
+	
 	@Override
 	public State run(BattleEventBuilder builder)
 	{
 		for(PlayerCharacter t : builder.getTargets())
 		{
-			if(t.isInBattle() && !t.hasStatus(se.Name()))
+			if(t.isInBattle())
 			{
-				if (!se.isHidden())
+				if (tryApplyStatus(t))
 				{
-					builder.addMarker(new DamageMarker(se.Name().toUpperCase(Locale.US), t));	
-				}	
-				
-				t.applyStatusEffect(se);
+					if (!se.isHidden())
+					{
+						builder.addMarker(new DamageMarker(se.Name().toUpperCase(Locale.US), t));	
+					}	
+					
+					t.applyStatusEffect(se);
+				}
+				else if (!se.isHidden())
+				{
+					builder.addMarker(new DamageMarker("MISS", t));
+				}				
 			}	
-			else if (!se.isHidden())
-			{
-				builder.addMarker(new DamageMarker("MISS", t));
-			}
+			
 		}	
 		return State.Finished;
 	}
@@ -47,7 +65,7 @@ public class bactInflictStatus extends BattleAction
 	{
 		for(PlayerCharacter t : targets)
 		{
-			if(t.isInBattle() && !t.hasStatus(se.Name()))
+			if(tryApplyStatus(t))
 			{
 				if (!se.isHidden())
 					markers.add(new DamageMarker(se.Name().toUpperCase(Locale.US), t));	
@@ -62,7 +80,8 @@ public class bactInflictStatus extends BattleAction
 	@Override
 	public boolean willAffectTarget(PlayerCharacter target) 
 	{		
-		return target.isInBattle() && !target.hasStatus(se.Name()); 
+		if (se.isNegative() &&  target.hasStatus(se.Name())) return false;
+		return target.isInBattle(); 
 	}
 
 }

@@ -3,9 +3,13 @@ package bladequest.graphics;
 //scenes are viewport-sized images that can be shown and unshown dynamically
 //so the memory isn;t always being taken
 
-import bladequest.world.Global;
-import android.graphics.*;
 import java.io.InputStream;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Rect;
+import bladequest.graphics.drawobjects.DrawScaledBmp;
+import bladequest.world.Global;
 
 public class Scene 
 {
@@ -13,7 +17,7 @@ public class Scene
 	private Bitmap bmp;
 	private InputStream stream;
 	private Rect src, dest;
-	private DrawObject dro;
+	private DrawScaledBmp dro;
 	
 	public boolean done;
 	public long startTime;
@@ -58,7 +62,7 @@ public class Scene
 					Global.vpToScreenY(0),
 					Global.vpToScreenX(Global.vpWidth),
 					Global.vpToScreenY(Global.vpHeight));
-			dro = Global.renderer.drawBitmap(bmp, src, dest, null);
+			dro = (DrawScaledBmp)Global.renderer.drawBitmap(bmp, src, dest, null);
 		}
 	}
 	
