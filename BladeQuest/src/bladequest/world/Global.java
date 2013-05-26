@@ -969,6 +969,59 @@ public class Global
 		
 	}
 	
+	
+	
+	//TODO: Script this.
+	
+	public static AnimatedBitmap getBeserkerBase()
+	{
+		return new AnimatedBitmap()	
+		{
+			
+			BitmapFrame[] frames;
+			{
+				final int height = 51;
+				final int width = 49;
+				
+				frames = new BitmapFrame[4];
+				for (int i = 0; i < 4; ++i)
+				{
+					frames[i] = new BitmapFrame(bitmaps.get("beserkstance"),new Rect(i*width, 0, (i+1)*width, height));
+				}
+			}
+			@Override
+			public BitmapFrame[] getFrames() {
+				return frames;
+			}
+			
+		};
+	}
+	
+	public static AnimatedBitmap getBeserkerSwords()
+	{
+		return new AnimatedBitmap()	
+		{
+			
+			BitmapFrame[] frames;
+			{
+				final int top = 50;
+				final int height = 14;
+				final int width = 15;
+				
+				frames = new BitmapFrame[5];
+				for (int i = 0; i < 5; ++i)
+				{
+					frames[i] = new BitmapFrame(bitmaps.get("beserkstance"),new Rect(i*width, top, (i+1)*width, top + height));
+				}
+			}
+			@Override
+			public BitmapFrame[] getFrames() {
+				return frames;
+			}
+			
+		};
+	}
+	
 	public static AnimatedBitmap getSparkleParticle()
 	{
 		return new AnimatedBitmap()	
