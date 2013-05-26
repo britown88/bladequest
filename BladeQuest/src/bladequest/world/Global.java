@@ -32,20 +32,17 @@ import bladequest.UI.SaveLoadMenu;
 import bladequest.UI.MainMenu.MainMenu;
 import bladequest.UI.MerchantScreen.MerchantScreen;
 import bladequest.actions.actFadeControl;
-import bladequest.actions.actMessage;
-import bladequest.actions.actModifyInventory;
 import bladequest.actions.actPlayMusic;
 import bladequest.actions.actResetGame;
-import bladequest.actions.actRestoreParty;
 import bladequest.actions.actShowScene;
-import bladequest.actions.actWait;
 import bladequest.actions.actShowScene.InputTriggers;
-import bladequest.actions.actSwitch;
-import bladequest.actions.actTeleportParty;
+import bladequest.actions.actWait;
 import bladequest.combat.Battle;
 import bladequest.enemy.Enemy;
+import bladequest.graphics.AnimatedBitmap;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleSprite;
+import bladequest.graphics.BitmapFrame;
 import bladequest.graphics.Icon;
 import bladequest.graphics.ReactionBubble;
 import bladequest.graphics.Renderer;
@@ -970,6 +967,29 @@ public class Global
 			
 		}
 		
+	}
+	
+	public static AnimatedBitmap getSparkleParticle()
+	{
+		return new AnimatedBitmap()	
+		{
+
+			BitmapFrame[] frames;
+			{
+				frames = new BitmapFrame[5];
+				for (int i = 0; i < 5; ++i)
+				{
+					int idx = i;
+					if (i > 2) idx = 4-i;
+					frames[i] = new BitmapFrame(bitmaps.get("particles"),new Rect(idx*8, 0, (idx+1)*8, 8));
+				}
+			}
+			@Override
+			public BitmapFrame[] getFrames() {
+				return frames;
+			}
+			
+		};
 	}
 	private static void loadScenes(String path)
 	{

@@ -4,9 +4,9 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 
 public class BitmapFrame {
-	Bitmap bitmap;
-	Rect srcRect;
-	BitmapFrame(Bitmap bitmap, Rect srcRect)
+	public Bitmap bitmap;
+	public Rect srcRect;
+	public BitmapFrame(Bitmap bitmap, Rect srcRect)
 	{
 		this.bitmap = bitmap;
 		this.srcRect = srcRect;

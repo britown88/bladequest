@@ -243,6 +243,29 @@ public class Enemy extends PlayerCharacter
 		state.size = new Point(battleSpr.getWidth(), battleSpr.getHeight());
 		baObj.addState(state);
 		
+		state = new BattleAnimObjState((int)(300*msConvert), PosTypes.Source);
+		state.setBmpSrcRect(srcRect.left, srcRect.top, srcRect.right, srcRect.bottom);
+		state.argb(255, 255, 255, 255);
+		state.pos1 = new Point(0,0);
+		state.size = new Point(battleSpr.getWidth(), battleSpr.getHeight());
+		baObj.addState(state);
+		
+		state = new BattleAnimObjState((int)(700*msConvert), PosTypes.Source);
+		state.setBmpSrcRect(srcRect.left, srcRect.top, srcRect.right, srcRect.bottom);
+		state.argb(255, 255, 255, 255);
+		state.colorize = 1.0f;
+		state.pos1 = new Point(0,0);
+		state.size = new Point(battleSpr.getWidth(), battleSpr.getHeight());
+		baObj.addState(state);
+		
+		state = new BattleAnimObjState((int)(1100*msConvert), PosTypes.Source);
+		state.setBmpSrcRect(srcRect.left, srcRect.top, srcRect.right, srcRect.bottom);
+		state.argb(255, 255, 255, 255);
+		state.colorize = 0.0f;
+		state.pos1 = new Point(0,0);
+		state.size = new Point(battleSpr.getWidth(), battleSpr.getHeight());
+		baObj.addState(state);				
+		
 		state = new BattleAnimObjState((int)(2500*msConvert), PosTypes.Source);
 		state.setBmpSrcRect(srcRect.left, srcRect.top, srcRect.right, srcRect.bottom);
 		state.argb(255, 255, 255, 255);
