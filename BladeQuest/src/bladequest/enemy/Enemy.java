@@ -5,6 +5,8 @@ import java.util.List;
 
 import android.graphics.Point;
 import android.graphics.Rect;
+import bladequest.bladescript.ScriptVar;
+import bladequest.bladescript.ScriptVar.BadTypeException;
 import bladequest.combat.BattleCalc;
 import bladequest.combat.BattleEvent;
 import bladequest.graphics.AnimatedBitmap;
@@ -25,6 +27,27 @@ import bladequest.world.Stats;
 
 public class Enemy extends PlayerCharacter
 {	
+	public interface BattleStartAction
+	{
+		void run(Enemy e);
+	}
+	public static class ScriptedBattleStartAction implements BattleStartAction
+	{
+		ScriptVar scriptFn;
+		public ScriptedBattleStartAction(ScriptVar scriptFn)
+		{
+			this.scriptFn = scriptFn;
+		}
+		public void run(Enemy e)
+		{
+			try {
+				scriptFn.apply(ScriptVar.toScriptVar(e));
+			} catch (BadTypeException e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
+	
 	private int gold;
 	private String commonItem, rareItem, attackAnim;
 	private int commonDropRate, rareDropRate, abilityChance;
@@ -35,13 +58,15 @@ public class Enemy extends PlayerCharacter
 	
 	private boolean bossFight;
 	
+	List<BattleStartAction> battleStartActions;
+	
 	AI ai;
 	
 	Recyclable AnimRecycleData;
 	BattleAnim builtAnim;
 	
 	private List<Ability> abilities;
-	
+		
 	public Enemy(String name, String spr)
 	{
 		super("", name, spr, "");
@@ -52,6 +77,7 @@ public class Enemy extends PlayerCharacter
 		stolen = false;
 		
 		abilities = new ArrayList<Ability>();
+		battleStartActions = new ArrayList<BattleStartAction>(); 
 	}
 	
 	public Enemy(Enemy e)
@@ -75,25 +101,41 @@ public class Enemy extends PlayerCharacter
 		{
 			ai = new AI(e.ai);
 		}
+				
+		battleStartActions = e.battleStartActions;
 		
 		stolen = false;
 	}
 	
+	@Override
 	public void startBattle()
 	{
-	    AnimatedBitmap bmp = new ColorizedAnimation(Global.weaponSwingModels.get(attackAnim).toAnimatedBitmap(), colorIndices);
+		super.startBattle();
+	    AnimatedBitmap bmp= new ColorizedAnimation(Global.weaponSwingModels.get(attackAnim).toAnimatedBitmap(), colorIndices);
 	    AnimRecycleData = (Recyclable)bmp;
 		builtAnim = AnimatedBitmap.Extensions.genAnim(bmp, 180.0f, 15);
+		
+		for (BattleStartAction action : battleStartActions)
+		{
+			action.run(this);
+		}
 	}
 	
+	@Override
 	public void endBattle()
 	{
+		super.endBattle();
 		if (AnimRecycleData != null)
 		{
 			AnimRecycleData.recycle();
 		}
 	}
 	
+	
+	public void addBattleStartAction(BattleStartAction action)
+	{
+		battleStartActions.add(action);
+	}
 	public void setAttackAnimation(String attackAnim) {this.attackAnim = attackAnim;}
 	public void setColorIndicies(int[] colorIndices) {this.colorIndices = colorIndices;}
 	

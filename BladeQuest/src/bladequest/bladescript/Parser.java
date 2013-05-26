@@ -163,6 +163,10 @@ public class Parser {
 						}
 						return SpecializationLevel.NotSpecialized;
 					}
+					@Override
+					public String getSpecializationName() {
+						return "Value: " + val;
+					}
 				}.initialize(number));
 			}
 			@Override
@@ -520,7 +524,7 @@ public class Parser {
 	
 	ParserState getLambdaFunctionBodyState(List<String> argNames, List<String> locals, List<String> lambdaArgs)
 	{
-		//locals are the same, which is nifty.
+		locals = new ArrayList<String>(locals); //create a new buffer for internal lambda locals
 		//argNames are added to locals, for bonus effect...
 		for (String argName : argNames)
 		{
@@ -550,7 +554,7 @@ public class Parser {
 			ParserState initialize(List<String> argNames, List<String> locals)
 			{
 				this.argNames = argNames;
-				this.locals = argNames;
+				this.locals = locals;
 				return this;
 			}
 			//child statement here is the lambda function!
@@ -1096,37 +1100,37 @@ public class Parser {
 	
 	public static TypeSpecializer getIntSpecializer()
 	{
-		return new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isInteger();}};
+		return new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isInteger();} public String getSpecializationName() {return "int";}};
 	}
 	
 	public static TypeSpecializer getFloatSpecializer()
 	{
-		return new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isFloat();}};
+		return new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isFloat();} public String getSpecializationName() {return "float";}};
 	}	
 	
 	public static TypeSpecializer getStringSpecializer()
 	{
-		return new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isString();}};
+		return new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isString();} public String getSpecializationName() {return "string";}};
 	}
 	
 	public static TypeSpecializer getBoolSpecializer()
 	{
-		return new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isBoolean();}};
+		return new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isBoolean();} public String getSpecializationName() {return "bool";}};
 	}		
 	
 	public static TypeSpecializer getListSpecializer()
 	{
-		return new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isList();}};
+		return new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isList();} public String getSpecializationName() {return "list";}};
 	}		
 	
 	public static TypeSpecializer getOpaqueSpecializer()
 	{
-		return new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isOpaque();}};
+		return new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isOpaque();} public String getSpecializationName() {return "anyOpaque";}};
 	}			
 	
 	public static TypeSpecializer getFunctionSpecializer()
 	{
-		return new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isFunction();}};
+		return new TypeSpecializer(){public boolean specializes(ScriptVar var) {return var.isFunction();} public String getSpecializationName() {return "function";}};
 	}				
 		
 	
@@ -1139,10 +1143,17 @@ public class Parser {
 			public boolean Equals(FunctionSpecializer rhs) {
 				return rhs.getClass() == this.getClass();
 			}
+			
 
 			@Override
 			public SpecializationLevel getSpecializationLevelFor(ScriptVar var) {
 				return SpecializationLevel.Generic;
+			}
+
+
+			@Override
+			public String getSpecializationName() {
+				return "any";
 			}
 		};
 	}

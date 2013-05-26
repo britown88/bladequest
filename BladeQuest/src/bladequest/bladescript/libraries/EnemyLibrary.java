@@ -8,11 +8,13 @@ import bladequest.bladescript.LibraryWriter;
 import bladequest.bladescript.Script.BadSpecialization;
 import bladequest.bladescript.ScriptVar;
 import bladequest.bladescript.ScriptVar.BadTypeException;
+import bladequest.combat.triggers.Event;
 import bladequest.enemy.AI;
 import bladequest.enemy.AIState;
 import bladequest.enemy.Enemy;
 import bladequest.enemy.ScriptedAIState;
 import bladequest.world.Global;
+import bladequest.world.PlayerCharacter;
 import bladequest.world.Stats;
 
 public class EnemyLibrary {
@@ -64,6 +66,20 @@ public class EnemyLibrary {
 	{
 		ai.add(stateName, state);
 		return ai;
+	}
+	
+	//NOTE: FOR REGISTERING TRIGGERS, DO IT ON BATTLE START, NOT ON ENEMY PROTOTYPE/TEMPLATE/WHATEVER CREATE!
+	//DONT DO IT
+	//NO DONT
+	public static Event getOnPhysicalHitEvent(PlayerCharacter character)
+	{
+		return character.getOnPhysicalHitEvent();
+	}
+	
+	public static Enemy onBattleStartRun(Enemy enemy, ScriptVar fn)
+	{
+		enemy.addBattleStartAction(new Enemy.ScriptedBattleStartAction(fn));
+		return enemy;
 	}
 	public static Enemy setEnemyAI(Enemy enemy, AI ai)
 	{

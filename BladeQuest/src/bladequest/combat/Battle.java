@@ -567,6 +567,11 @@ public class Battle
 					e.endBattle();
 				}
 				
+				for (PlayerCharacter p : partyList)
+				{
+					p.endBattle();
+				}
+				
 				
 				Global.musicBox.resumeLastSong();
 				Global.screenFader.fadeIn(2);
@@ -645,6 +650,7 @@ public class Battle
 					party[i].genWeaponSwing();
 					party[i].setFace(faces.Idle);
 					party[i].setImageIndex(0);
+					party[i].startBattle();
 				}
 			
 			//init

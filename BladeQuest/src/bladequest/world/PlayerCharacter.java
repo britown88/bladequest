@@ -8,6 +8,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import bladequest.combat.BattleCalc;
 import bladequest.combat.BattleEventBuilderObject;
+import bladequest.combat.triggers.Event;
 import bladequest.combatactions.CombatAction;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleSprite;
@@ -68,6 +69,8 @@ public class PlayerCharacter
 	
 	private boolean visible;
 	private boolean positionSpecial;
+	
+	private Event onPhysicalHitEvent;
 	
 	public PlayerCharacter(String name, String displayNam, String bSpr, String wSpr)
 	{
@@ -139,9 +142,18 @@ public class PlayerCharacter
 		visible = c.visible;
 		escaped = c.escaped;
 		positionSpecial = c.positionSpecial;
+		
+		if (Global.battle != null) //triple-ghetto state check
+		{
+			onPhysicalHitEvent = new Event();	
+		}		
 	}
 
-	
+
+	public Event getOnPhysicalHitEvent()
+	{
+		return onPhysicalHitEvent;
+	}
 	public void setExp(int exp){this.exp = exp;}
 	public void setDisplayName(String str){displayName = str;}
 	public void setSprites(String world, String battle)
@@ -155,6 +167,14 @@ public class PlayerCharacter
 		abilities.clear();
 	}
 	
+	public void startBattle()
+	{
+		onPhysicalHitEvent = new Event();
+	}
+	public void endBattle()
+	{
+		onPhysicalHitEvent = null;
+	}
 	
 	public int getExp(){return exp;}
 	public int getRemainingExp(){return expToLevel - exp;}

@@ -1,5 +1,6 @@
 package bladequest.bladescript.libraries;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import bladequest.battleactions.BattleAction;
@@ -14,7 +15,11 @@ import bladequest.battleactions.bactRunAnimation;
 import bladequest.battleactions.bactSetFace;
 import bladequest.battleactions.bactWait;
 import bladequest.bladescript.LibraryWriter;
+import bladequest.bladescript.ScriptVar;
+import bladequest.bladescript.ScriptVar.BadTypeException;
 import bladequest.combat.Battle;
+import bladequest.combat.triggers.Condition;
+import bladequest.combat.triggers.Trigger;
 import bladequest.enemy.Enemy;
 import bladequest.graphics.BattleSprite.faces;
 import bladequest.statuseffects.StatusEffect;
@@ -149,6 +154,45 @@ public class BattleLibrary {
 		ability.addAction(action);
 		action.addDependency(prev);
 		return ability; 
+	}
+	
+	//conditionList is a list of conditions/events OR a single condition/event.
+	public static Trigger createTrigger(ScriptVar conditionList, ScriptVar onTrigger)
+	{
+		List<Condition> conditions = new ArrayList<Condition>();
+		try {		
+			if (conditionList.isOpaque()) //single condition...
+			{
+					conditions.add((Condition)conditionList.getOpaque());
+			}
+			else
+			{
+				while (!conditionList.isEmptyList())
+				{
+					conditions.add((Condition)conditionList.head().getOpaque());
+					conditionList = conditionList.tail();
+				}
+			}
+		} catch (BadTypeException e) {
+			e.printStackTrace();
+		}		
+		
+		return new Trigger(conditions)
+		{
+			ScriptVar onTrigger;
+			Trigger initialize(ScriptVar onTrigger)
+			{
+				this.onTrigger = onTrigger;
+				return this;
+			}
+			public void trigger() {
+				try {
+					onTrigger.apply(ScriptVar.toScriptVar(this));
+				} catch (BadTypeException e) {
+					e.printStackTrace();
+				}
+			}
+		}.initialize(onTrigger);
 	}
 	
 	
