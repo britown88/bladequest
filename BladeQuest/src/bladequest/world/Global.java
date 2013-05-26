@@ -31,6 +31,17 @@ import bladequest.UI.NameSelect;
 import bladequest.UI.SaveLoadMenu;
 import bladequest.UI.MainMenu.MainMenu;
 import bladequest.UI.MerchantScreen.MerchantScreen;
+import bladequest.actions.actFadeControl;
+import bladequest.actions.actMessage;
+import bladequest.actions.actModifyInventory;
+import bladequest.actions.actPlayMusic;
+import bladequest.actions.actResetGame;
+import bladequest.actions.actRestoreParty;
+import bladequest.actions.actShowScene;
+import bladequest.actions.actWait;
+import bladequest.actions.actShowScene.InputTriggers;
+import bladequest.actions.actSwitch;
+import bladequest.actions.actTeleportParty;
 import bladequest.combat.Battle;
 import bladequest.enemy.Enemy;
 import bladequest.graphics.BattleAnim;
@@ -57,6 +68,7 @@ import bladequest.system.MapLoadThread;
 
 public class Global 
 {
+	private static GameObject gameOverObject;
 	private static final String TAG = Global.class.getSimpleName();
 	public static LoadingScreen loadingScreen;
 	public final static int MAX_FPS = 60;
@@ -634,8 +646,11 @@ public class Global
     		if(debugButton != null)
     			debugButton.update();
 
-    		if(map != null)
+    		if(gameOverObject.isRunning())
+    			gameOverObject.update();
+    		else if(map != null)
     			map.update();
+    		
         	party.update();
         	updateVpPos();
         	screenShaker.update();
@@ -644,6 +659,7 @@ public class Global
     		break;
     	case GS_BATTLE:
     		battle.update();
+    		screenShaker.update();
     		break;  
     	case GS_BATTLETRANSITION:
     		imageScale += 0.10F*imageScale;
@@ -1107,6 +1123,7 @@ public class Global
 		loadSound("sound");
 		
 		menu = new MainMenu();
+		createGameOverObject();
 		
 	}	
 	
@@ -1235,4 +1252,27 @@ public class Global
 		
 	}
 
+	public static void executeGameOver()
+	{
+		screenFader.setFaded();
+		gameOverObject.execute();
+	}
+	
+	private static void createGameOverObject()
+	{
+		gameOverObject = new GameObject("gameover", 0, 0);
+		gameOverObject.addState();
+		gameOverObject.setStateCollision(0, false, false, false, false);
+		gameOverObject.setStateMovement(0, 0, 0);
+		gameOverObject.setStateOpts(0, true, false, false);
+		gameOverObject.setStateFace(0, "down");
+		gameOverObject.addAction(0, new actFadeControl(100, 255, 0, 0, 0, true, true));
+		gameOverObject.addAction(0, new actPlayMusic("annihilation", true, true, 2.0f));
+		gameOverObject.addAction(0, new actShowScene("gameover", InputTriggers.Timer, 12.0f, 0, 0, 0, 0, false));
+		gameOverObject.addAction(0, new actFadeControl(1, 255, 255, 255, 255, false, false));
+		gameOverObject.addAction(0, new actWait(9.5f));
+		gameOverObject.addAction(0, new actFadeControl(1, 255, 255, 255, 255, true, true));
+		gameOverObject.addAction(0, new actResetGame());
+
+	}
 }

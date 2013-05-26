@@ -577,9 +577,12 @@ public class Battle
 					p.endBattle();
 				}
 				
+				if(!isDefeated())
+				{
+					Global.musicBox.resumeLastSong();
+					Global.screenFader.fadeIn(2);
+				}
 				
-				Global.musicBox.resumeLastSong();
-				Global.screenFader.fadeIn(2);
 				Global.GameState = States.GS_WORLDMOVEMENT;				
 			}
 	}
@@ -945,7 +948,7 @@ public class Battle
 		
 		Global.party.setAllowMovement(true);
 		Global.setPanned(0, 0);				
-		Global.map.gameOverObject.execute();
+		Global.executeGameOver();
 	}
 	private void triggerEndBattle()
 	{
