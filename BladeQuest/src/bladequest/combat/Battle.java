@@ -11,6 +11,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import bladequest.UI.ListBox;
 import bladequest.UI.MenuPanel;
+import bladequest.UI.ListBox.LBStates;
 import bladequest.UI.MenuPanel.Anchors;
 import bladequest.UI.MsgBox;
 import bladequest.UI.MainMenu.MainMenu;
@@ -86,7 +87,7 @@ public class Battle
 	//menu panels
 	private MenuPanel infoPanel, displayNamePanel, mpWindow, charStatusPanel;
 	private MenuPanel characterPanes[];
-	private ListBox mainMenu;
+	private ListBox mainMenu, backButton;
 	
 	private BattleStateMachine stateMachine;
 	
@@ -502,7 +503,6 @@ public class Battle
 			}			
 		};
 	}
-	
 	private BattleState getCharStatusState()
 	{
 		
@@ -519,10 +519,27 @@ public class Battle
 				charStatusPanel.close();
 				cancelToPrevState();
 			}
-
-			public void touchActionUp(int x, int y) {}
-			public void touchActionMove(int x, int y) {}
-			public void touchActionDown(int x, int y) {}
+			@Override
+			public void touchActionUp(int x, int y) {
+				if(backButton.touchActionUp(x, y) == LBStates.Selected)
+				{
+					charStatusPanel.close();
+					cancelToPrevState();
+				}
+					
+			}
+			@Override
+			public void update() {
+				backButton.update();
+			}
+			@Override
+			public void touchActionMove(int x, int y) {
+				backButton.touchActionMove(x, y);
+			}
+			@Override
+			public void touchActionDown(int x, int y) {
+				backButton.touchActionDown(x, y);
+			}
 		};
 		
 	}
@@ -695,6 +712,10 @@ public class Battle
 		mpWindow.thickFrame = false;
 		mpWindow.addTextBox("", 5, mpWindowHeight/2, battleText);
 		//mpWindow.hide();
+		
+		backButton = new ListBox(Global.vpWidth, 0, MainMenu.menuWidth, MainMenu.barHeight, 1, 1, nameDisplayPaint);
+		backButton.addItem("BACK", null, false);
+		backButton.anchor = Anchors.TopRight;
 	}
 	private void buildMainMenu()
 	{
@@ -1350,6 +1371,9 @@ public class Battle
 		
 		if(!charStatusPanel.Closed())
 			charStatusPanel.render();
+		
+		if(charStatusPanel.Opened())
+			backButton.render();
 	}
 	private void drawSelect()
 	{

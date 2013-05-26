@@ -31,13 +31,13 @@ import bladequest.world.TargetTypes;
 
 public class MainMenu 
 {
-	private Paint menuText, menuTextRight, menuTextCenter, grayMenuText, 
-	blueMenuText, redMenuTextCenter, blueMenuTextRight,
+	private Paint menuText, menuTextCenter, grayMenuText, 
+	blueMenuText, redMenuTextCenter,
 	blueMenuTextCenter, smallText, smallTextCenter, smallTextRight;
 	private final float menuWidthVpPercent = 28.0f; 
 	private final float menuHeightVpPercent = 16.0f;
 	
-	private static int menuWidth, barHeight;
+	public static int menuWidth, barHeight;
 	
 	private Vector<DamageMarker> markers;
 	private Item itemToUse;
@@ -60,7 +60,7 @@ public class MainMenu
 	private boolean eqpRemove;
 	
 	//status
-	private MenuPanel charStatusGrow, charStatus, charStatusLabel;
+	private MenuPanel charStatusGrow, charStatus;
 	private ListBox backButton;
 	
 	//options
@@ -981,7 +981,6 @@ public class MainMenu
 				charStatusGrow.update();
 				charStatus.update();
 				backButton.update();
-				charStatusLabel.update();
 				if(nextChar != null && sideBar.Opened())
 				{
 					selectedChar = nextChar;
@@ -996,7 +995,6 @@ public class MainMenu
 					charStatus.render();
 					
 					backButton.render();
-					charStatusLabel.render();
 					
 					if(!sideBar.Opened())
 						sideBar.render();
@@ -1221,15 +1219,11 @@ public class MainMenu
 		
 		menuText = Global.textFactory.getTextPaint(13, Color.WHITE, Align.LEFT);	
 		menuTextCenter = Global.textFactory.getTextPaint(13, Color.WHITE, Align.CENTER);	
-		menuTextRight = Global.textFactory.getTextPaint(13, Color.WHITE, Align.RIGHT);
 		
 		grayMenuText = Global.textFactory.getTextPaint(13, Color.GRAY, Align.LEFT);
-		//grayMenuTextCenter = Global.textFactory.getTextPaint(13, Color.GRAY, Align.CENTER);		
-		//redMenuText = Global.textFactory.getTextPaint(13, Color.RED, Align.LEFT);
 		blueMenuText = Global.textFactory.getTextPaint(13, Color.CYAN, Align.LEFT);
 		redMenuTextCenter = Global.textFactory.getTextPaint(13, Color.RED, Align.CENTER);
 		blueMenuTextCenter = Global.textFactory.getTextPaint(13, Color.CYAN, Align.CENTER);
-		blueMenuTextRight = Global.textFactory.getTextPaint(13, Color.CYAN, Align.RIGHT);
 		
 	}
 	private static Paint buildPaint(int size, int c, Align align)
@@ -1676,8 +1670,7 @@ public class MainMenu
 		charStatus = new MenuPanel(Global.vpWidth/2, Global.vpHeight/2, Global.vpWidth, Global.vpHeight);
 		charStatus.anchor = Anchors.TrueCenter;
 		
-		charStatusLabel = new MenuPanel(0, 0, menuWidth, barHeight);
-		charStatusLabel.addTextBox("STATUS", menuWidth/2, barHeight/2, menuTextCenter);
+		
 		
 		backButton = new ListBox(new Rect(Global.vpWidth-menuWidth, 0, Global.vpWidth, barHeight), 1, 1, menuTextCenter);
 		backButton.addItem("BACK", null, false);
@@ -2073,6 +2066,13 @@ public class MainMenu
 	public static void populateCharStatusPanel(MenuPanel panel, PlayerCharacter pc)
 	{
 		panel.clear();
+		
+		Paint p = buildPaint(13,  Color.WHITE, Align.CENTER);
+		
+		MenuPanel label = new MenuPanel(0, 0, menuWidth, barHeight);
+		label.addTextBox("STATUS", menuWidth/2, barHeight/2, p);
+		
+		panel.addChildPanel(label);
 		
 		buildCharMainBox(panel, pc);
 		buildCharStatsBox(panel, pc);
