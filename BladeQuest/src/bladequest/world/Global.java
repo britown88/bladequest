@@ -493,7 +493,6 @@ public class Global
 	{
 		showScene = scenes.get(sceneName);
 		showScene.load();
-		GameState = States.GS_SHOWSCENE;
 	}
 	
 	public static Icon createIcon(String name, int x, int y, float scale)
@@ -581,6 +580,13 @@ public class Global
 			imageTimer = 0;
 			
 			animateTiles = !animateTiles;
+		}
+		
+		if(showScene != null && !showScene.done && 
+				(System.currentTimeMillis() - showScene.startTime)/1000.0f > showScene.waitTime)
+		{
+			showScene.unload();
+			showScene.done = true;
 		}
 		
 		//update
@@ -812,10 +818,16 @@ public class Global
 	
 	public static void restartGame()
 	{
+		screenFader.setFadeColor(255, 255, 255, 255);
+		screenFader.setFaded();
+		
 		if(map != null)
 			map.unloadTiles();
 		title= new TitleScreen();
     	GameState = States.GS_TITLE;
+    	
+    	screenFader.fadeIn(3);
+    	
     	title.titleStart();
     	musicBox.play("", false, true, 0);
 

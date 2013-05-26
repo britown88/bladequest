@@ -616,7 +616,15 @@ public class BqMap
 					Boolean.parseBoolean(dl.values.get(2))));}
 	private void actshowscene(DataLine dl){
 		loadedObject.addAction(loadedStateIndex, 
-			new actShowScene(dl.values.get(1)));}
+			new actShowScene(
+					dl.values.get(1),
+					actShowScene.InputTriggers.valueOf(dl.values.get(2)),
+					Float.parseFloat(dl.values.get(3)),
+					Integer.parseInt(dl.values.get(4)),
+					Integer.parseInt(dl.values.get(5)),
+					Integer.parseInt(dl.values.get(6)),
+					Integer.parseInt(dl.values.get(7)),
+					Boolean.parseBoolean(dl.values.get(8))));}
 	private void actmerchant(DataLine dl){
 		loadedObject.addAction(loadedStateIndex, 
 			new actMerchant(dl.values.get(1), Float.parseFloat(dl.values.get(2))));}

@@ -333,16 +333,6 @@ public class BqThread extends Thread
 	        		break;
 	        	}
 	    		break;
-	    		
-	    	case GS_SHOWSCENE:
-	    		switch (event.getAction())
-	        	{        		
-	        	case MotionEvent.ACTION_UP:
-	        		Global.showScene.unload();
-	        		Global.GameState = States.GS_WORLDMOVEMENT;
-	        		break;
-	        	}
-	    		break;
 			default:
 				break;
 	    		
