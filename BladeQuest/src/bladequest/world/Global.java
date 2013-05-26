@@ -1094,6 +1094,8 @@ public class Global
 		music = new HashMap<String, Song>();
 		loadSound("sound");
 		
+		menu = new MainMenu();
+		
 	}	
 	
 	public static int streamVolume;

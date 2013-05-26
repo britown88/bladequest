@@ -13,6 +13,7 @@ import bladequest.UI.ListBox;
 import bladequest.UI.MenuPanel;
 import bladequest.UI.MenuPanel.Anchors;
 import bladequest.UI.MsgBox;
+import bladequest.UI.MainMenu.MainMenu;
 import bladequest.combat.triggers.Condition;
 import bladequest.combat.triggers.Event;
 import bladequest.combat.triggers.HitCounterCondition;
@@ -83,7 +84,7 @@ public class Battle
 	private Paint statsText, nameText, battleText, grayBattleText, enemyBattleText,nameDisplayPaint;
 	
 	//menu panels
-	private MenuPanel infoPanel, displayNamePanel, mpWindow;
+	private MenuPanel infoPanel, displayNamePanel, mpWindow, charStatusPanel;
 	private MenuPanel characterPanes[];
 	private ListBox mainMenu;
 	
@@ -120,6 +121,13 @@ public class Battle
 			@Override
 			public void touchActionUp(int x, int y) 
 			{
+				for(MenuPanel mp : characterPanes)
+					if(mp.contains(x, y))
+					{
+						MainMenu.populateCharStatusPanel(charStatusPanel, (PlayerCharacter)mp.obj);
+						stateMachine.setState(getCharStatusState());
+						return;
+					}
 				stateMachine.setState(getSelectState());
 			}
 		};
@@ -131,6 +139,14 @@ public class Battle
 			@Override
 			public void touchActionUp(int x, int y) 
 			{
+				for(MenuPanel mp : characterPanes)
+					if(mp.contains(x, y))
+					{
+						MainMenu.populateCharStatusPanel(charStatusPanel, (PlayerCharacter)mp.obj);
+						stateMachine.setState(getCharStatusState());
+						return;
+					}
+				
 				stateMachine.setState(getSelectState());
 			}
 			
@@ -222,7 +238,15 @@ public class Battle
 			
 			@Override			
 			public void touchActionUp(int x, int y) 
-			{
+			{				
+				for(MenuPanel mp : characterPanes)
+					if(mp.contains(x, y))
+					{
+						MainMenu.populateCharStatusPanel(charStatusPanel, (PlayerCharacter)mp.obj);
+						stateMachine.setState(getCharStatusState());
+						return;
+					}						
+			
 				switch(mainMenu.touchActionUp(x, y))
 				{
 				case Selected:
@@ -479,6 +503,30 @@ public class Battle
 		};
 	}
 	
+	private BattleState getCharStatusState()
+	{
+		
+		return new BattleState()
+		{
+			@Override
+			public void onSwitchedTo(BattleState prevState) 
+			{
+				charStatusPanel.open();
+			}
+			@Override
+			public void backButtonPressed() 
+			{
+				charStatusPanel.close();
+				cancelToPrevState();
+			}
+
+			public void touchActionUp(int x, int y) {}
+			public void touchActionMove(int x, int y) {}
+			public void touchActionDown(int x, int y) {}
+		};
+		
+	}
+	
 	private boolean infoPanelContains(int x, int y)
 	{
 		Rect r = new Rect(0, Global.vpHeight - frameMinHeight,Global.vpWidth, Global.vpHeight);
@@ -606,6 +654,11 @@ public class Battle
 		buildPanels();
 		buildMainMenu();
 		
+		charStatusPanel = new MenuPanel(Global.vpWidth/2, Global.vpHeight/2, 0, 0);
+		charStatusPanel.anchor = Anchors.TrueCenter;
+		charStatusPanel.setOpenSize(Global.vpWidth,  Global.vpHeight);
+		charStatusPanel.openSpeed = 30;
+		
 	}
 	private void buildCharacterPanes()
 	{
@@ -674,8 +727,7 @@ public class Battle
 	{		
 		for(PlayerCharacter c : partyList)
 		{
-			int i = c.Index();
-		
+			int i = c.Index();		
 			
 			if (c.getEscaped())
 			{
@@ -683,7 +735,8 @@ public class Battle
 				continue;
 			}			
 			
-			characterPanes[i].clear();			
+			characterPanes[i].clear();		
+			characterPanes[i].obj = c;
 			
 			characterPanes[i].addTextBox(c.getDisplayName(), 5, (int)((charPanelYSpacing - statFrameBuffer)*0.25f), nameText);
 			characterPanes[i].addTextBox("HP:" + c.getHP(), 7, (int)((charPanelYSpacing - statFrameBuffer)*0.50f), statsText);
@@ -1291,6 +1344,12 @@ public class Battle
 		stateMachine.getState().drawPanels();
 		
 		displayNamePanel.render();
+		
+		if(msgBox.Closed() && !infoPanel.Closed())		
+			infoPanel.render();
+		
+		if(!charStatusPanel.Closed())
+			charStatusPanel.render();
 	}
 	private void drawSelect()
 	{
@@ -1325,6 +1384,7 @@ public class Battle
 	{
 		updatePanels();
 		updateCharacterPanes();
+		charStatusPanel.update();
 		msgBox.update();
 		
 		if(msgBox.Closed())
@@ -1356,8 +1416,7 @@ public class Battle
 		if(!msgBox.Closed())
 			msgBox.render();
 		
-		if(msgBox.Closed() && !infoPanel.Closed())		
-			infoPanel.render();
+		
 		
 		Global.screenFader.render();
 		
