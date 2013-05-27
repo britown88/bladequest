@@ -1849,11 +1849,11 @@ public class Global
 		
 		GameDataLoader.loadNewGame(activity);
 		
-		for(PlayerCharacter pc : party.getPartyList(false))
-		{
-			pc.modifyLevel(99, false);
-			pc.fullRestore();
-		}
+//		for(PlayerCharacter pc : party.getPartyList(false))
+//		{
+//			pc.modifyLevel(99, false);
+//			pc.fullRestore();
+//		}
 		
 	}
 	

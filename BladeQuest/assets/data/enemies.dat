@@ -60,6 +60,7 @@ addColoredStaffHit (RGBA 255 0 0 255) (RGBA 0 0 0 255) >
 setELevel 4 >
 setGold 23 >
 setItems "potion" 25 "antidote" 85 true >
+modStat "MaxHP" 1000 >
 setBoss >
 makeRatAI >
 addEAbility "bite")

@@ -102,6 +102,8 @@ public class Enemy extends PlayerCharacter
 		attackAnim = e.attackAnim;
 		colorIndices = e.colorIndices;
 		
+		fullRestore();
+		
 		if (e.ai != null)
 		{
 			ai = new AI(e.ai);
