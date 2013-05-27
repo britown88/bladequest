@@ -1,5 +1,6 @@
 #!HEAD
 
+
 #!OBJ 0 0
 \name$0x0$ <- newObject "start" 0 0
 
@@ -24,9 +25,82 @@ addSwitchCondition "startgame"
 
 state1$2x3$ 0
 name$2x3$ > createState >
+setSpriteFromTile 1 2 >
 setCollisionData true true true true >
 addAction (startBattle "2rats")
 
 
 
 \runstate1$2x3$ <- state1$2x3$ 0
+#!OBJ 2 5
+\name$2x5$ <- newObject "heals" 2 5
+
+state1$2x5$ 0
+name$2x5$ > createState >
+setSpriteFromTile 1 2 >
+setCollisionData true true true true >
+addAction (restoreParty 0) >
+addAction (message "You've been fully healed bro.")
+
+
+\runstate1$2x5$ <- state1$2x5$ 0
+#!OBJ 2 7
+\name$2x7$ <- newObject "menutest" 2 7
+
+state1$2x7$ 0
+name$2x7$ > createState >
+setSpriteFromTile 1 2 >
+setCollisionData true true true true >
+addAction (message "This will test the Yes and No functions!") >
+addAction (messageWithYesNo "Would you like to?" > 
+	addToBranch 0 (message "You chose yes!") >
+	addToBranch 1 (message "You chose no!")) >
+addAction (message "This concludes the test!")
+
+
+\runstate1$2x7$ <- state1$2x7$ 0
+
+
+
+
+
+#!OBJ 4 3
+\name$4x3$ <- newObject "name" 4 3
+
+state1$4x3$ 0
+name$4x3$ > createState >
+setSpriteFromTile 1 2 >
+setCollisionData true true true true >
+addAction (message "What was my name again?") >
+addAction (playMusic "mystery" true true 10.0) >
+addAction (openNameSelect "aramis") >
+addAction (message "|aramis|: \nOh, right, it's |aramis|!") >
+addAction (pauseMusic 5.0)
+
+\runstate1$4x3$ <- state1$4x3$ 0
+#!OBJ 4 5
+\name$4x5$ <- newObject "name" 4 5
+
+state1$4x5$ 0
+name$4x5$ > createState >
+setSpriteFromTile 1 2 >
+setCollisionData true true true true >
+addAction (fadeControl 5 255 0 250 200 true true) >
+addAction (openBubble "exclam" "party" 2.0 false false) >
+addAction (fadeControl 4 255 0 250 200 false true) >
+addAction (message "An eerie glow surrounds you.") >
+addAction (messageWithYesNo "Save your game?" > 
+	addToBranch 0 (openSaveMenu 0))
+
+\runstate1$4x5$ <- state1$4x5$ 0
+#!OBJ 4 7
+\name$4x7$ <- newObject "name" 4 7
+
+state1$4x7$ 0
+name$4x7$ > createState >
+setSpriteFromTile 1 2 >
+setCollisionData true true true true >
+addAction (message "This tests the merchant screen.") >
+addAction (openMerchant "itemshop" 0.5)
+
+\runstate1$4x7$ <- state1$4x7$ 0

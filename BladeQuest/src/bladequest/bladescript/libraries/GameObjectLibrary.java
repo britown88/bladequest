@@ -153,7 +153,7 @@ public class GameObjectLibrary
 		Action act = new actNameSelect(charName);
 		return act;
 	}
-	public static Action resetgame()
+	public static Action resetgame(int i)
 	{		
 		Action act = new actResetGame();
 		return act;
@@ -189,7 +189,7 @@ public class GameObjectLibrary
 		Action act = new actPath(path, wait);
 		return act;
 	}
-	public static Action restoreParty()
+	public static Action restoreParty(int i)
 	{		
 		Action act = new actRestoreParty();
 		return act;
@@ -209,7 +209,7 @@ public class GameObjectLibrary
 		Action act = new actSwitch(switchName, state);
 		return act;
 	}
-	public static Action openSaveMenu()
+	public static Action openSaveMenu(int i)
 	{		
 		Action act = new actSaveMenu();
 		return act;

@@ -18,15 +18,21 @@ public class Action
 	
 	public void addToBranch(int index, Action action)
 	{
-		if(index > branches.size() - 1)
-			for(int i = 0; i < index - branches.size() + 1; ++i)
+		int size = branches.size();
+		if(index > size - 1)
+			for(int i = 0; i < index - size + 1; ++i)
 				branches.add(new ArrayList<Action>());
 		
 		branches.get(index).add(action);		
 	}
 	
 	protected void startBranch(int resultIndex)
-	{				
+	{		
+		int size = branches.size();
+		if(resultIndex > size - 1)
+			for(int i = 0; i < resultIndex - size + 1; ++i)
+				branches.add(new ArrayList<Action>());
+		
 		runningList = new ArrayList<Action>(branches.get(resultIndex));
 		
 		if(!runningList.isEmpty())

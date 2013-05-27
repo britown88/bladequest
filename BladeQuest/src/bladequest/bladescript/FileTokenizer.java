@@ -183,12 +183,29 @@ public class FileTokenizer implements Tokenizer {
 		savedChar = true;
 		saved = character;
 	}
+	
+	private boolean escapeNextCharacter;
 
 	public ScriptToken nextCharacter(char character)
 	{
 		boolean lastEnd = lastCharEnd;
 		lastCharEnd = false;
 		boolean bufferEmpty = buffer.equals(""); 
+		
+		if(escapeNextCharacter)
+		{
+			escapeNextCharacter = false;
+			switch (character)
+			{
+			case 'n':
+				buffer += '\n';
+				return null;
+			case '\\':
+				buffer += '\\';
+				return null;			
+			};
+		}
+		
 		switch (character)
 		{
 		case ' ': case '\t':	if (commented || stringBuffer) break; return sendBuffer(); 
@@ -212,6 +229,8 @@ public class FileTokenizer implements Tokenizer {
 				if (bufferEmpty) {buffer += character; return sendBuffer();}
 				saveChar(character); return sendBuffer();				
 			}
+			else if(stringBuffer && character == '\\')
+				escapeNextCharacter = true;
 			break;
 		case '\"': if (commented) break;
 			if (stringBuffer)
@@ -242,7 +261,7 @@ public class FileTokenizer implements Tokenizer {
 			}		
 		default:
 		}
-		if (!commented)
+		if (!commented && !escapeNextCharacter)
 		{
 			buffer += character;
 		}		

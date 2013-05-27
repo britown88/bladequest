@@ -64,6 +64,12 @@ public class GameObject {
 		Global.closeReactionBubble(name);
 	}
 	
+	public void postCreate()
+	{
+		for(ObjectState state : states)
+			state.postCreate();
+	}
+	
 	public void setStateBubble(int index, String str){states.get(index).setBubble(str);}
 	public void setStateSprite(int index, String str){states.get(index).setSprite(str);}
 	public void addAction(int index, Action act){states.get(index).addAction(act);}	

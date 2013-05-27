@@ -154,6 +154,8 @@ public class BqMap
 					foreground[index].addObject(go);
 				else
 					background[index].addObject(go);
+				
+				go.postCreate();
 
 			}
 			

@@ -50,20 +50,23 @@
          this.noneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.manualToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.tsbBranchAction = new System.Windows.Forms.ToolStripButton();
-         this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-         this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
-         this.cmbActions = new System.Windows.Forms.ToolStripComboBox();
-         this.toolStripLabel4 = new System.Windows.Forms.ToolStripLabel();
-         this.comPath = new System.Windows.Forms.ToolStripComboBox();
          this.txtScript = new ScintillaNET.Scintilla();
+         this.toolStrip2 = new System.Windows.Forms.ToolStrip();
+         this.cmbActions = new System.Windows.Forms.ToolStripComboBox();
+         this.cmbPathing = new System.Windows.Forms.ToolStripComboBox();
+         this.toolStripLabel5 = new System.Windows.Forms.ToolStripLabel();
+         this.toolStripLabel6 = new System.Windows.Forms.ToolStripLabel();
+         this.chkWrap = new System.Windows.Forms.ToolStripButton();
+         this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
          this.toolStrip1.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.txtScript)).BeginInit();
+         this.toolStrip2.SuspendLayout();
          this.SuspendLayout();
          // 
          // btnSave
          // 
          this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-         this.btnSave.Location = new System.Drawing.Point(513, 342);
+         this.btnSave.Location = new System.Drawing.Point(236, 375);
          this.btnSave.Name = "btnSave";
          this.btnSave.Size = new System.Drawing.Size(75, 23);
          this.btnSave.TabIndex = 4;
@@ -74,7 +77,7 @@
          // btnCancel
          // 
          this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-         this.btnCancel.Location = new System.Drawing.Point(594, 342);
+         this.btnCancel.Location = new System.Drawing.Point(317, 375);
          this.btnCancel.Name = "btnCancel";
          this.btnCancel.Size = new System.Drawing.Size(75, 23);
          this.btnCancel.TabIndex = 5;
@@ -99,15 +102,10 @@
             this.tsbNewState,
             this.tsbOutline,
             this.tsbCollision,
-            this.tsbBranchAction,
-            this.toolStripSeparator3,
-            this.toolStripLabel3,
-            this.cmbActions,
-            this.toolStripLabel4,
-            this.comPath});
+            this.tsbBranchAction});
          this.toolStrip1.Location = new System.Drawing.Point(0, 0);
          this.toolStrip1.Name = "toolStrip1";
-         this.toolStrip1.Size = new System.Drawing.Size(681, 25);
+         this.toolStrip1.Size = new System.Drawing.Size(404, 25);
          this.toolStrip1.TabIndex = 6;
          this.toolStrip1.Text = "toolStrip1";
          // 
@@ -250,16 +248,42 @@
          this.tsbBranchAction.Text = "Add Branch Action";
          this.tsbBranchAction.Click += new System.EventHandler(this.tsbBranchAction_Click);
          // 
-         // toolStripSeparator3
+         // txtScript
          // 
-         this.toolStripSeparator3.Name = "toolStripSeparator3";
-         this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+         this.txtScript.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+         this.txtScript.Font = new System.Drawing.Font("Consolas", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         this.txtScript.Location = new System.Drawing.Point(13, 53);
+         this.txtScript.Margins.Margin0.Width = 20;
+         this.txtScript.Name = "txtScript";
+         this.txtScript.Scrolling.HorizontalWidth = 200;
+         this.txtScript.Size = new System.Drawing.Size(379, 316);
+         this.txtScript.Styles.BraceBad.Size = 13F;
+         this.txtScript.Styles.BraceLight.Size = 13F;
+         this.txtScript.Styles.ControlChar.Size = 13F;
+         this.txtScript.Styles.Default.BackColor = System.Drawing.SystemColors.Window;
+         this.txtScript.Styles.Default.Size = 13F;
+         this.txtScript.Styles.IndentGuide.Size = 13F;
+         this.txtScript.Styles.LastPredefined.Size = 13F;
+         this.txtScript.Styles.LineNumber.Size = 13F;
+         this.txtScript.Styles.Max.Size = 13F;
+         this.txtScript.TabIndex = 7;
          // 
-         // toolStripLabel3
+         // toolStrip2
          // 
-         this.toolStripLabel3.Name = "toolStripLabel3";
-         this.toolStripLabel3.Size = new System.Drawing.Size(50, 22);
-         this.toolStripLabel3.Text = "Actions:";
+         this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripLabel6,
+            this.cmbActions,
+            this.chkWrap,
+            this.toolStripSeparator4,
+            this.toolStripLabel5,
+            this.cmbPathing});
+         this.toolStrip2.Location = new System.Drawing.Point(0, 25);
+         this.toolStrip2.Name = "toolStrip2";
+         this.toolStrip2.Size = new System.Drawing.Size(404, 25);
+         this.toolStrip2.TabIndex = 8;
+         this.toolStrip2.Text = "toolStrip2";
          // 
          // cmbActions
          // 
@@ -287,22 +311,16 @@
             "startBattle",
             "switchControl",
             "teleportParty",
-            "wait seconds"});
+            "wait"});
          this.cmbActions.Name = "cmbActions";
          this.cmbActions.Size = new System.Drawing.Size(75, 25);
          this.cmbActions.ToolTipText = "Add Action";
-         this.cmbActions.DropDownClosed += new System.EventHandler(this.cmbActions_DropDownClosed);
+         this.cmbActions.SelectedIndexChanged += new System.EventHandler(this.cmbActions_SelectedIndexChanged);
          // 
-         // toolStripLabel4
+         // cmbPathing
          // 
-         this.toolStripLabel4.Name = "toolStripLabel4";
-         this.toolStripLabel4.Size = new System.Drawing.Size(51, 22);
-         this.toolStripLabel4.Text = "Pathing:";
-         // 
-         // comPath
-         // 
-         this.comPath.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-         this.comPath.Items.AddRange(new object[] {
+         this.cmbPathing.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+         this.cmbPathing.Items.AddRange(new object[] {
             "MoveLeft",
             "MoveUp",
             "MoveRight",
@@ -318,38 +336,46 @@
             "Hide",
             "Show",
             "Wait"});
-         this.comPath.Name = "comPath";
-         this.comPath.Size = new System.Drawing.Size(75, 25);
-         this.comPath.DropDownClosed += new System.EventHandler(this.comPath_DropDownClosed);
-         this.comPath.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.comPath_KeyPress);
+         this.cmbPathing.Name = "cmbPathing";
+         this.cmbPathing.Size = new System.Drawing.Size(75, 25);
+         this.cmbPathing.DropDownClosed += new System.EventHandler(this.cmbPathing_DropDownClosed);
+         this.cmbPathing.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cmbPathing_KeyPress);
          // 
-         // txtScript
+         // toolStripLabel5
          // 
-         this.txtScript.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-         this.txtScript.Font = new System.Drawing.Font("Consolas", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-         this.txtScript.Location = new System.Drawing.Point(13, 29);
-         this.txtScript.Margins.Margin0.Width = 20;
-         this.txtScript.Name = "txtScript";
-         this.txtScript.Scrolling.HorizontalWidth = 200;
-         this.txtScript.Size = new System.Drawing.Size(656, 307);
-         this.txtScript.Styles.BraceBad.Size = 13F;
-         this.txtScript.Styles.BraceLight.Size = 13F;
-         this.txtScript.Styles.ControlChar.Size = 13F;
-         this.txtScript.Styles.Default.BackColor = System.Drawing.SystemColors.Window;
-         this.txtScript.Styles.Default.Size = 13F;
-         this.txtScript.Styles.IndentGuide.Size = 13F;
-         this.txtScript.Styles.LastPredefined.Size = 13F;
-         this.txtScript.Styles.LineNumber.Size = 13F;
-         this.txtScript.Styles.Max.Size = 13F;
-         this.txtScript.TabIndex = 7;
+         this.toolStripLabel5.Name = "toolStripLabel5";
+         this.toolStripLabel5.Size = new System.Drawing.Size(51, 22);
+         this.toolStripLabel5.Text = "Pathing:";
+         // 
+         // toolStripLabel6
+         // 
+         this.toolStripLabel6.Name = "toolStripLabel6";
+         this.toolStripLabel6.Size = new System.Drawing.Size(50, 22);
+         this.toolStripLabel6.Text = "Actions:";
+         // 
+         // chkWrap
+         // 
+         this.chkWrap.Checked = true;
+         this.chkWrap.CheckOnClick = true;
+         this.chkWrap.CheckState = System.Windows.Forms.CheckState.Checked;
+         this.chkWrap.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+         this.chkWrap.Image = ((System.Drawing.Image)(resources.GetObject("chkWrap.Image")));
+         this.chkWrap.ImageTransparentColor = System.Drawing.Color.Magenta;
+         this.chkWrap.Name = "chkWrap";
+         this.chkWrap.Size = new System.Drawing.Size(23, 22);
+         this.chkWrap.Text = "Wrap Action in Add";
+         // 
+         // toolStripSeparator4
+         // 
+         this.toolStripSeparator4.Name = "toolStripSeparator4";
+         this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
          // 
          // ObjectForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(681, 377);
+         this.ClientSize = new System.Drawing.Size(404, 410);
+         this.Controls.Add(this.toolStrip2);
          this.Controls.Add(this.txtScript);
          this.Controls.Add(this.toolStrip1);
          this.Controls.Add(this.btnCancel);
@@ -361,6 +387,8 @@
          this.toolStrip1.ResumeLayout(false);
          this.toolStrip1.PerformLayout();
          ((System.ComponentModel.ISupportInitialize)(this.txtScript)).EndInit();
+         this.toolStrip2.ResumeLayout(false);
+         this.toolStrip2.PerformLayout();
          this.ResumeLayout(false);
          this.PerformLayout();
 
@@ -381,19 +409,21 @@
       private System.Windows.Forms.ToolStripButton tsbNewState;
       private System.Windows.Forms.ToolStripButton tsbOutline;
       private System.Windows.Forms.ToolStripButton tsbBranchAction;
-      private System.Windows.Forms.ToolStripComboBox cmbActions;
       private System.Windows.Forms.ToolStripLabel toolStripLabel2;
       private System.Windows.Forms.ToolStripTextBox txtTileX;
       private System.Windows.Forms.ToolStripTextBox txtTileY;
       private System.Windows.Forms.ToolStripButton tsbSpriteToTile;
-      private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-      private System.Windows.Forms.ToolStripLabel toolStripLabel3;
       private ScintillaNET.Scintilla txtScript;
-      private System.Windows.Forms.ToolStripLabel toolStripLabel4;
-      private System.Windows.Forms.ToolStripComboBox comPath;
       private System.Windows.Forms.ToolStripDropDownButton tsbCollision;
       private System.Windows.Forms.ToolStripMenuItem allToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem noneToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem manualToolStripMenuItem;
+      private System.Windows.Forms.ToolStrip toolStrip2;
+      private System.Windows.Forms.ToolStripLabel toolStripLabel6;
+      private System.Windows.Forms.ToolStripComboBox cmbActions;
+      private System.Windows.Forms.ToolStripButton chkWrap;
+      private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+      private System.Windows.Forms.ToolStripLabel toolStripLabel5;
+      private System.Windows.Forms.ToolStripComboBox cmbPathing;
    }
 }

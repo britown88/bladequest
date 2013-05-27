@@ -736,8 +736,9 @@ public class Parser {
 			@Override
 			public void endLine() throws ParserException
 			{
-				if (substatements.isEmpty()) return;  //doesn't die on infix line end (e.g. a > b syntax)
-				super.endLine();
+//				if (substatements.isEmpty()) return;  //doesn't die on infix line end (e.g. a > b syntax)
+//				super.endLine();
+				return;
 			}			
 			@Override
 			public void lambdaFunction() throws ParserException 

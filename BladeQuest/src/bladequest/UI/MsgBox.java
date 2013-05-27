@@ -31,6 +31,8 @@ public class MsgBox extends MenuPanel
 	private boolean YesNoOpt, hasCharName;
 	private YesNo selectedOption;
 	
+	private final char wildCard = '|';
+	
 	private int rowCount;
 	
 	public boolean alwaysSpeed0;
@@ -87,7 +89,7 @@ public class MsgBox extends MenuPanel
 	private void clear(String str)
 	{
 		this.msg = str;
-		hasCharName = str.indexOf('$') != -1;
+		hasCharName = str.indexOf(wildCard) != -1;
 		for(int i = 0; i < rowCount; ++i)
 			textBoxes.get(i).text = "";
 		
@@ -316,10 +318,10 @@ public class MsgBox extends MenuPanel
 	
 	private String replaceCharNames(String str)
 	{
-		if(str.indexOf('$') != -1)
+		if(str.indexOf(wildCard) != -1)
 		{
-			int first = str.indexOf('$');
-			int last  = str.lastIndexOf('$');
+			int first = str.indexOf(wildCard);
+			int last  = str.lastIndexOf(wildCard);
 			String charName = str.substring(first+1, last);
 			
 			PlayerCharacter c = null;
@@ -343,7 +345,7 @@ public class MsgBox extends MenuPanel
 			else
 			{
 				//put moneysigns back before replacing
-				charName = "$"+charName+"$";
+				charName = ""+wildCard+charName+wildCard;
 				//return modified word, maintaining any punctuation or characters following
 				return str.replace(charName, c.getDisplayName());				
 			}

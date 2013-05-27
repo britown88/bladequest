@@ -559,9 +559,7 @@ public class Party
 	}
 	
 	public long getStepCount() { return stepcount; }
-	
-	
-	
+		
 	private void step()
 	{
 		stepcount++;
@@ -581,9 +579,7 @@ public class Party
 				}
 				se.onStep(c);
 			}
-				
-		
-		//check for encounters, if not, continue movement
+
 		if(objPath != null)
 			HandleObjectPath();
 		else

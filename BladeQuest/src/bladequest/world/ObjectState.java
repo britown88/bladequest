@@ -68,6 +68,12 @@ public class ObjectState {
 			collSides[i] = false;
 	}
 	
+	public void postCreate()
+	{
+		if(spr == null)
+			faceOnActivate = false;			
+	}
+	
 	public void makeSolid() 
 	{
 		for(int i = 0; i < 4; ++i)
@@ -367,7 +373,10 @@ public class ObjectState {
 					
 		
 			}
-			else if(currentAction+1 < actionList.size())
+			else if(currentAction+1 < actionList.size() && 
+					actionList.get(currentAction).name.equals("actMessage") &&
+					actionList.get(currentAction+1).name.equals("actMessage") &&
+					!((actMessage)actionList.get(currentAction)).yesNo() )
 			{				
 				actionList.get(currentAction).reset();
 				currentAction++;
@@ -385,7 +394,7 @@ public class ObjectState {
 	
 	public void face(String face)
 	{
-		if(faceOnMove && tileSprite == null)
+		if(spr != null && faceOnMove && tileSprite == null)
 			spr.changeFace(face);
 	}
 	

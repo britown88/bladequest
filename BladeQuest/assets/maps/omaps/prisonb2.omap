@@ -1,0 +1,476 @@
+#!HEAD
+
+
+#!OBJ 0 0
+\name$0x0$ <- newObject "start" 0 0
+
+state1$0x0$ 0
+name$0x0$ > createState >
+setOptions true false false > 
+setAutoStart true >
+addAction (wait 1.0) >
+addAction (panControl 0 10 100 false) >
+addAction (openBubble "angry" "guard1" -1.0 true false) >
+addAction (fadeControl 1 255 0 0 0 false true) >
+addAction (createPath "guard2" true >
+	addPathAction "DecreaseMoveSpeed" >
+	addPathAction "MoveDown" >
+	addPathAction "MoveDown" >
+	addPathAction "MoveDown" >
+	addPathAction "MoveDown" >
+	addPathAction "MoveDown" >
+	addPathAction "FaceLeft") >
+addAction (closeBubble "guard1") >
+addAction (createPath "guard1" false >
+	addPathAction "FaceRight" >
+	addPathAction "Wait") >
+addAction (createPath "guard2" true >
+	addPathAction "MoveLeft" >
+	addPathAction "MoveLeft") >
+addAction (wait 1.0) >
+addAction (message "Guard: \nReady for the night watch, sir.") >
+addAction (createPath "guard1" true >
+	addPathAction "DecreaseMoveSpeed" >
+	addPathAction "MoveRight") >
+addAction (wait 0.5) >
+addAction (message "Guard: \nYou're late.") >
+addAction (message "Guard: \nSorry, sir! \nIt won't happen again!") >
+addAction (createPath "guard1" true >
+	addPathAction "MoveDown" >
+	addPathAction "MoveRight" >
+	addPathAction "MoveRight") >
+addAction (createPath "guard2" true >
+	addPathAction "FaceDown") >
+addAction (createPath "guard1" true >
+	addPathAction "MoveRight" >
+	addPathAction "MoveUp" >
+	addPathAction "FaceLeft") >
+addAction (createPath "guard2" true >
+	addPathAction "FaceRight") >
+addAction (message "Guard: \nJust get to your post. \nAnd don't fall asleep this time.") >
+addAction (message "There's a new arrival in cell four who's a bit of a handful.") >
+addAction (message "Think you can handle that?") >
+addAction (message "Guard: \nYes, sir!") >
+addAction (createPath "guard1" true >
+	addPathAction "MoveRight") >
+addAction (wait 0.5) >
+addAction (message "Guard: \nIf you need me I'll be asleep, so too bad.") >
+addAction (message "These long shifts are killing me.") >
+addAction (createPath "guard1" false >
+	addPathAction "MoveUp" >
+	addPathAction "MoveUp" >
+	addPathAction "MoveUp" >
+	addPathAction "MoveUp" >
+	addPathAction "MoveUp" >
+	addPathAction "MoveUp" >
+	addPathAction "MoveUp" >
+	addPathAction "MoveUp" >
+	addPathAction "MoveUp" >
+	addPathAction "MoveRight" >
+	addPathAction "MoveRight" >
+	addPathAction "MoveRight") >
+addAction (panControl 0 5 1 false) >
+addAction (createPath "guard2" true >
+	addPathAction "MoveLeft" >
+	addPathAction "MoveLeft" >
+	addPathAction "MoveLeft" >
+	addPathAction "MoveLeft" >
+	addPathAction "MoveLeft" >
+	addPathAction "MoveLeft" >	
+	addPathAction "MoveLeft" >
+	addPathAction "MoveUp" >
+	addPathAction "MoveUp" >
+	addPathAction "MoveUp" >
+	addPathAction "MoveUp" >
+	addPathAction "MoveRight" >
+	addPathAction "MoveRight" >
+	addPathAction "MoveRight" >
+	addPathAction "MoveRight" >
+	addPathAction "MoveRight" >
+	addPathAction "MoveRight" >
+	addPathAction "MoveRight" >
+	addPathAction "FaceUp") >
+addAction (switchControl "startgame" true) >
+addAction (createPath "sleepguard" true >
+	addPathAction "FaceUp") >
+addAction (wait 0.5) >
+addAction (message "Guard: \nHey, you.  You got a message from the warden.") >
+addAction (message "It says 'Tap the screen to move around,' whatever that means.") >
+addAction (playMusic "sneak" false true 5.0) >
+addAction (panControl 0 0 1 true) >
+addAction (createPath "sleepguard" true >
+	addPathAction "FaceDown")
+
+\runstate1$0x0$ <- state1$0x0$ 0
+
+state2$0x0$ 0
+name$0x0$ > createState >
+addSwitchCondition "startgame"
+
+\runstate2$0x0$ <- state2$0x0$ 0
+
+#!OBJ 18 9
+\name$18x9$ <- newObject "guard2" 18 9
+
+state1$18x9$ 0
+name$18x9$ > createState >
+setSprite "guard" > 
+setOptions true true false > 
+setCollisionData true true true true
+
+\runstate1$18x9$ <- state1$18x9$ 0
+
+state2$18x9$ 0
+name$18x9$ > createState >
+addSwitchCondition "startgame"
+
+\runstate2$18x9$ <- state2$18x9$ 0
+#!OBJ 14 14
+\name$14x14$ <- newObject "guard1" 14 14
+
+state1$14x14$ 0
+name$14x14$ > createState >
+setAnimated true >
+setSprite "guard" > 
+setFace "down" > 
+setOptions true true false > 
+setCollisionData true true true true
+
+\runstate1$14x14$ <- state1$14x14$ 0
+
+state2$14x14$ 0
+name$14x14$ > createState >
+addSwitchCondition "startgame"
+
+\runstate2$14x14$ <- state2$14x14$ 0
+#!OBJ 16 10
+\name$16x10$ <- newObject "sleepguard" 16 10
+
+state1$16x10$ 0
+name$16x10$ > createState
+
+\runstate1$16x10$ <- state1$16x10$ 0
+
+state2$16x10$ 0
+name$16x10$ > createState >
+addSwitchCondition "startgame" >
+setSprite "guard" > 
+setOptions true true false > 
+setCollisionData true true true true >
+addAction (message "?????: \nHey buddy, I think my room's too small.  ") >
+addAction (message "Waddya say we upgrade me to a suite?") >
+addAction (message "Guard: \nQuiet down in there!") >
+addAction (message "?????: \nThis is the worst inn I've ever stayed at.") >
+addAction (message "The service is terrible.") >
+addAction (switchControl "prisonguardtalked" true)
+
+\runstate2$16x10$ <- state2$16x10$ 0
+
+state3$16x10$ 0
+name$16x10$ > createState >
+addSwitchCondition "prisonguardnewspeech" >
+setSprite "guard" > 
+setOptions true true false > 
+setCollisionData true true true true >
+addAction (message "Guard: \nI've got my eye on your this time...") >
+addAction (message "Don't think you'll be getting out again!") >
+addAction (openBubble "sweat" "party" 2.0 false false) >
+addAction (message "????? \nYou are an example to us all.")
+
+\runstate3$16x10$ <- state3$16x10$ 0
+
+state4$16x10$ 0
+name$16x10$ > createState >
+addSwitchCondition "guardasleep" >
+setSprite "guard" > 
+setOptions true true false > 
+setCollisionData true true true true >
+setBubble "sleep" >
+addAction (message "?????: \nAsleep on the job eh?") >
+addAction (message "Well you won't be needing this then...") >
+addAction (message "*sneakity sneakity*") >
+addAction (message "Got the Prison Key!") >
+addAction (modifyInventory "prisonkey" 1 false)
+
+\runstate4$16x10$ <- state4$16x10$ 0
+
+state5$16x10$ 0
+name$16x10$ > createState >
+addItemCondition "prisonkey" >
+setSprite "guard" > 
+setOptions true true false > 
+setCollisionData true true true true >
+setBubble "sleep" >
+addAction (openBubble "exclam" "sleepguard" 2.0 false false) >
+addAction (message "Hey!") >
+addAction (wait 1.0) >
+addAction (openBubble "dots" "sleepguard" 2.0 false true) >
+addAction (wait 1.0) >
+addAction (openBubble "sleep" "sleepguard" -1.0 true false)
+
+\runstate5$16x10$ <- state5$16x10$ 0
+
+
+
+
+
+
+
+
+
+#!OBJ 15 9
+\name$15x9$ <- newObject "door4" 15 9
+
+state1$15x9$ 0
+name$15x9$ > createState >
+setSpriteFromTile 5 2 >
+setLayer "Above" > 
+setCollisionData false false false true >
+addAction (message "It's locked")
+
+\runstate1$15x9$ <- state1$15x9$ 0
+
+state2$15x9$ 0
+name$15x9$ > createState >
+addItemCondition "prisonkey" >
+setSpriteFromTile 5 2 >
+setLayer "Above" > 
+setCollisionData false false false true >
+addAction (message "Unlocked with the Prison Key!") >
+addAction (switchControl "pdoor4" true)
+
+\runstate2$15x9$ <- state2$15x9$ 0
+
+state3$15x9$ 0
+name$15x9$ > createState >
+addSwitchCondition "pdoor4"
+
+\runstate3$15x9$ <- state3$15x9$ 0
+
+
+#!OBJ 11 9
+\name$11x9$ <- newObject "door3" 11 9
+
+state1$11x9$ 0
+name$11x9$ > createState >
+setSpriteFromTile 5 2 >
+setLayer "Above" > 
+setCollisionData false false false true >
+addAction (message "It's locked")
+
+\runstate1$11x9$ <- state1$11x9$ 0
+
+state2$11x9$ 0
+name$11x9$ > createState >
+addItemCondition "prisonkey" >
+setSpriteFromTile 5 2 >
+setLayer "Above" > 
+setCollisionData false false false true >
+addAction (message "Unlocked with the Prison Key!") >
+addAction (switchControl "pdoor3" true)
+
+\runstate2$11x9$ <- state2$11x9$ 0
+
+state3$11x9$ 0
+name$11x9$ > createState >
+addSwitchCondition "pdoor3"
+
+\runstate3$11x9$ <- state3$11x9$ 0
+
+
+#!OBJ 7 9
+\name$7x9$ <- newObject "door2" 7 9
+
+state1$7x9$ 0
+name$7x9$ > createState >
+setSpriteFromTile 5 2 >
+setLayer "Above" > 
+setCollisionData false false false true >
+addAction (message "It's locked")
+
+\runstate1$7x9$ <- state1$7x9$ 0
+
+state2$7x9$ 0
+name$7x9$ > createState >
+addItemCondition "prisonkey" >
+setSpriteFromTile 5 2 >
+setLayer "Above" > 
+setCollisionData false false false true >
+addAction (message "Unlocked with the Prison Key!") >
+addAction (switchControl "pdoor2" true)
+
+\runstate2$7x9$ <- state2$7x9$ 0
+
+state3$7x9$ 0
+name$7x9$ > createState >
+addSwitchCondition "pdoor2"
+
+\runstate3$7x9$ <- state3$7x9$ 0
+
+
+#!OBJ 3 9
+\name$3x9$ <- newObject "door1" 3 9
+
+state1$3x9$ 0
+name$3x9$ > createState >
+setSpriteFromTile 5 2 >
+setLayer "Above" > 
+setCollisionData false false false true >
+addAction (message "It's locked")
+
+\runstate1$3x9$ <- state1$3x9$ 0
+
+state2$3x9$ 0
+name$3x9$ > createState >
+addItemCondition "prisonkey" >
+setSpriteFromTile 5 2 >
+setLayer "Above" > 
+setCollisionData false false false true >
+addAction (message "Unlocked with the Prison Key!") >
+addAction (switchControl "pdoor1" true)
+
+\runstate2$3x9$ <- state2$3x9$ 0
+
+state3$3x9$ 0
+name$3x9$ > createState >
+addSwitchCondition "pdoor1"
+
+\runstate3$3x9$ <- state3$3x9$ 0
+
+
+#!OBJ 16 6
+\name$16x6$ <- newObject "name" 16 6
+
+state1$16x6$ 0
+name$16x6$ > createState >
+setSpriteFromTile 7 2
+
+\runstate1$16x6$ <- state1$16x6$ 0
+
+#!OBJ 16 5
+\name$16x5$ <- newObject "name" 16 5
+
+state1$16x5$ 0
+name$16x5$ > createState >
+setSpriteFromTile 7 1 >
+setOptions true false false
+
+\runstate1$16x5$ <- state1$16x5$ 0
+
+state2$16x5$ 0
+name$16x5$ > createState >
+addSwitchCondition "prisonguardtalked" >
+setSpriteFromTile 7 1 >
+setOptions true false false >
+addAction (message "?????: \nNo getting around this guy.  Guess I'll catch a nap.") >
+addAction (fadeControl 1 255 0 0 0 true true) >
+addAction (restoreParty 0) >
+addAction (switchControl "guardasleep" true) >
+addAction (switchControl "prisonguardnewspeech" true) >
+addAction (fadeControl 2 255 0 0 0 false true)
+
+\runstate2$16x5$ <- state2$16x5$ 0
+
+state3$16x5$ 0
+name$16x5$ > createState >
+addSwitchCondition "guardasleep" >
+setSpriteFromTile 7 1 >
+setOptions true false false >
+addAction (fadeControl 1 255 0 0 0 true true) >
+addAction (restoreParty 0) >
+addAction (fadeControl 2 255 0 0 0 false true)
+
+\runstate3$16x5$ <- state3$16x5$ 0
+
+#!OBJ 14 5
+\name$14x5$ <- newObject "name" 14 5
+
+state1$14x5$ 0
+name$14x5$ > createState >
+setCollisionData true true true true >
+addAction (message "?????: \nYikes, the last guy who stayed here had a rough time.")
+
+\runstate1$14x5$ <- state1$14x5$ 0
+
+#!OBJ 7 5
+\name$7x5$ <- newObject "name" 7 5
+
+state1$7x5$ 0
+name$7x5$ > createState >
+setSprite "bandit" > 
+setMovement 1 50 >
+setOptions true true true >
+setCollisionData true true true true >
+addAction (message "Hey! Thanks for springing me!") >
+addAction (message "Here, take this. I was saving it.") >
+addAction (modifyInventory "potion" 1 false) >
+addAction (message "Got a Potion!") >
+addAction (switchControl "bandittalked" true)
+
+\runstate1$7x5$ <- state1$7x5$ 0
+
+state2$7x5$ 0
+name$7x5$ > createState >
+addSwitchCondition "bandittalked" >
+setSprite "bandit" > 
+setMovement 1 50 >
+setOptions true true true >
+setCollisionData true true true true >
+addAction (message "Just leave the door open, I'll sneak out later.")
+
+\runstate2$7x5$ <- state2$7x5$ 0
+
+state3$7x5$ 0
+name$7x5$ > createState >
+addSwitchCondition "banditescaped"
+
+
+\runstate3$7x5$ <- state3$7x5$ 0
+
+
+#!OBJ 2 5
+\name$2x5$ <- newObject "name" 2 5
+
+state1$2x5$ 0
+name$2x5$ > createState >
+setOptions true false false >
+setCollisionData true true true true >
+addAction (message "Found an Antidote!") >
+addAction (modifyInventory "antidote" 1 false) >
+addAction (switchControl "antidotefound" true)
+
+\runstate1$2x5$ <- state1$2x5$ 0
+
+state2$2x5$ 0
+name$2x5$ > createState >
+addSwitchCondition "antidotefound"
+
+\runstate2$2x5$ <- state2$2x5$ 0
+
+#!OBJ 21 5
+\name$21x5$ <- newObject "name" 21 5
+
+state1$21x5$ 0
+name$21x5$ > createState >
+setSpriteFromTile 1 3 >
+setLayer "Under" >
+setOptions true false false >
+addAction (fadeControl 3 255 0 0 0 true true) >
+addAction (teleportParty name$21x5$ 4 15 "prisonb1") >
+addAction (fadeControl 3 255 0 0 0 false true) 
+
+\runstate1$21x5$ <- state1$21x5$ 0
+
+state2$21x5$ 0
+name$21x5$ > createState >
+addSwitchCondition "bandittalked" >
+setSpriteFromTile 1 3 >
+setLayer "Under" >
+setOptions true false false >
+addAction (fadeControl 3 255 0 0 0 true true) >
+addAction (teleportParty name$21x5$ 4 15 "prisonb1") >
+addAction (switchControl "banditescaped" true) >
+addAction (fadeControl 3 255 0 0 0 false true) 
+
+\runstate2$21x5$ <- state2$21x5$ 0
+

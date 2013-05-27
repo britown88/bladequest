@@ -43,8 +43,8 @@ import bladequest.system.FileReader;
 
 public class GameDataLoader 
 {
-	//private static final String NewGameFile = "data/startgame.dat"; 
-	private static final String NewGameFile = "data/starttest.dat"; 
+	private static final String NewGameFile = "data/startgame.dat"; 
+	//private static final String NewGameFile = "data/starttest.dat"; 
 	
 	private static FileSections section;
 	private static final String TAG = GameDataLoader.class.getSimpleName();
