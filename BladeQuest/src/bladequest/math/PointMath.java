@@ -21,6 +21,10 @@ public class PointMath {
 	{
 		  return new Point(lhs.x + rhs.x, lhs.y + rhs.y);
 	}
+	public static Point offset(Point lhs, float x, float y)
+	{
+		 return new Point(lhs.x + (int)x, lhs.y + (int)y);
+	}
 	public static float offsetAngle(Point vectorTo, float distance)
 	{
 	   float xNormalized = -vectorTo.x / distance;
@@ -32,6 +36,17 @@ public class PointMath {
 		   angle = (float)(Math.PI * 2  - angle);
 	   }
 	   return angle;
+	}
+	public static float angleBetween(Point p1, Point p2)
+	{
+		return (float)Math.atan2(p2.y-p1.y, p2.x-p1.x);
+	}
+	public static float length(Point p1, Point p2)
+	{
+		float y = (p2.y-p1.y);
+	    float x = (p2.x-p1.x); 
+		
+	    return (float)Math.sqrt(x*x + y*y);
 	}
 	public static List<Point> getArc(Point startPoint, Point endPoint, int steps, float arcFactor)
 	{

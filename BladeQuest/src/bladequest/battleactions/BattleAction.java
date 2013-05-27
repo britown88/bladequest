@@ -77,6 +77,7 @@ public class BattleAction
 	public static BattleEventBuilder changeTargets(BattleEventBuilder builder, PlayerCharacter target)
 	{
 		List<PlayerCharacter> charList = new ArrayList<PlayerCharacter>();
+		charList.add(target);
 		return changeTargets(builder, charList);
 	}
 	public static BattleEventBuilder changeTargets(BattleEventBuilder builder, List<PlayerCharacter> targets)
@@ -122,6 +123,51 @@ public class BattleAction
 			}
 		}.initialize(builder, targets);
 	}
+	
+	public static BattleEventBuilder changeSource(BattleEventBuilder builder, PlayerCharacter source)
+	{
+		return new BattleEventBuilder()
+		{
+			BattleEventBuilder builder;
+			PlayerCharacter source;
+			BattleEventBuilder initialize(BattleEventBuilder builder, PlayerCharacter source)
+			{
+				this.builder = builder;
+				this.source = source;
+				return this;
+			}
+			@Override
+			public List<PlayerCharacter> getTargets() {
+				return builder.getTargets();
+			}
+
+			@Override
+			public BattleAction getLast()
+			{
+				return builder.getLast();
+			}
+			@Override
+			public PlayerCharacter getSource() {
+				return source;
+			}
+
+			@Override
+			public void addEventObject(BattleAction eventObj) {
+				builder.addEventObject(eventObj);
+			}
+
+			@Override
+			public void addMarker(DamageMarker marker) {
+				builder.addMarker(marker);
+			}
+
+			@Override
+			public int getCurrentBattleFrame() {
+				return builder.getCurrentBattleFrame();
+			}
+		}.initialize(builder, source);
+	}
+	
 	public static BattleEventBuilder changeRunner(BattleEventBuilder builder, BattleActionRunner runner)
 	{
 		return new BattleEventBuilder()

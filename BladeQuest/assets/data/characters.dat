@@ -7,7 +7,7 @@ setCombatAction "combSteal" >
 setBaseStats 7 10 4 2 >
 setLevel 5 >
 mapBound equip {"knife", "felthat", "cottonshirt"} >
-mapBound addAbility {"poisonjab"} >
+mapBound addAbility {"poisonjab", "dblattack"} >
 addLearnableAbility "dblattack" 6)
 
 \joy <- (createCharacter "joy" "Joy" "bjoy" "joy" >
@@ -16,6 +16,7 @@ setAbilityName "Magic" >
 setCombatAction "combAuras" >
 setBaseStats 3 3 6 10 >
 setLevel 6 >
+mapBound addAbility {"heal", "ignite"} >
 mapBound equip {"windstaff", "felthat", "cottonshirt"})
 
 \luc <- (createCharacter "luc" "Luc" "bluc" "luc" >

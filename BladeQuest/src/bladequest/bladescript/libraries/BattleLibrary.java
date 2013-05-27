@@ -14,6 +14,7 @@ import bladequest.battleactions.bactMessage;
 import bladequest.battleactions.bactMirror;
 import bladequest.battleactions.bactRemoveStatus;
 import bladequest.battleactions.bactRunAnimation;
+import bladequest.battleactions.bactRunAnimationBuilder;
 import bladequest.battleactions.bactSetFace;
 import bladequest.battleactions.bactWait;
 import bladequest.bladescript.LibraryWriter;
@@ -146,6 +147,10 @@ public class BattleLibrary {
 	{
 		return new bactRunAnimation(Global.battleAnims.get(animName));
 	}	
+	public static BattleAction animBuildAction(String animName)
+	{
+		return new bactRunAnimationBuilder(Global.animationBuilders.get(animName));
+	}		
 	
 	public static BattleAction addDependency(BattleAction child, BattleAction parent)
 	{

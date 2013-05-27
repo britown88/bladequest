@@ -33,6 +33,7 @@ public class bactTryEscape  extends DelegatingAction {
 		state.argb(255, 255, 255, 255);
 		state.pos1 = new Point(0, 0);
 		state.size = new Point(playerSprite.getWidth(), playerSprite.getHeight());
+		state.mirrored = true;
 		baObj.addState(state);		
 		
         state = new BattleAnimObjState(8, PosTypes.Source);
@@ -41,6 +42,7 @@ public class bactTryEscape  extends DelegatingAction {
 		state.argb(255, 255, 255, 255);
 		state.pos1 = new Point((Global.vpWidth-Battle.partyPos.x-Battle.advanceDistance), 0);
 		state.size = new Point(playerSprite.getWidth(), playerSprite.getHeight());
+		state.mirrored = true;
 		baObj.addState(state);		
 		
 		baObj.interpolateLinearly();

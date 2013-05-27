@@ -1,12 +1,20 @@
 #abilities file
 
+
+#####################ARAMIS####################################
 \poisonjab <- (addAbility "poisonjab" "Poison Jab" "Single" 2 >
 setDesc "Poisons an enemy." >
 add (setFaceAction "Cast" 0) >
 add (messageAction "HAHA IMMA GONNA POISON YOOOUUUU") >
-addDep (animAction "movetest") >
+addDep (animAction "fire") >
 addDep (inflictStatusAction (poisonStatus 10.0)))
 
+\dblattack <- (addAbility "dblattack" "Double Attack" "Single" 4 >
+setDesc "Attack twice quickly." >
+add (basicAttackAction 0.9 "Physical" 0.6) >
+addDep (basicAttackAction 0.9 "Physical" 0.6))
+
+######################LUC#####################################
 \assault <- (addAbility "assault" "Assault" "Single" 2 >
 setDisabled >
 setDesc "Usable only in Berserker stance.  Assault an enemy." >
@@ -19,17 +27,34 @@ add (waitAction 450) >
 addDep (attackRandomlyAction 0.5 "PhysicalIgnoreDef" 15 0.1) >
 addDep (breakStanceAction 0))
 
+####################ROLAND##########################################
 \frostwish <- (addAbility "frostwish" "Frost Wish" "AllAllies" 5 >
 useOutsideBattle >
 setDesc "Heal allies with a winter's chill." >
 add (damageAction -1.0 "Magic" > addDamageComponent "Water" 1.0))
 
-#todo: make these actual attacks, instead of just showing a damage number
-\dblattack <- (addAbility "dblattack" "Double Attack" "Single" 4 >
-setDesc "Attack twice quickly." >
-add (damageAction 0.9 "Physical") >
-add (waitAction 150) > #hack for attack -> addDep another attack
-addDep (damageAction 0.9 "Physical"))
+
+#####################JOY##########################################
+\heal <- (addAbility "heal" "Heal" "Single" 2 >
+useOutsideBattle >
+setDesc "Heal allies with restorative magic." >
+add (waitAction 450) >
+addDep (animBuildAction "heal") >
+addDep (damageAction -1.0 "Magic"))
+
+
+\ignite <- (addAbility "ignite" "Ignite" "Single" 3 >
+add (waitAction 450) >
+addDep (animBuildAction "igniteSmoke") >
+add (waitAction 450) >
+addDep (animBuildAction "ignite") > 
+add (waitAction 600) >
+addDep (damageAction 1.5 "Magic"))
+
+
+#########ENEMY ABILITIES#################
+
+
 
 addDefaultWait ability
   add ability (waitAction 450)

@@ -27,6 +27,7 @@ public class combAuras extends CombatAction  {
 	{
 		List<CombatAction> out = new ArrayList<CombatAction>();
 		out.add(new combEmpowerLife());
+		out.add(new combEmpowerFire());
 		return out;
 	}
 	private BattleState getSelectAuraState(CombatActionBuilder actionBuilder)
