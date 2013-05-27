@@ -16,7 +16,7 @@ public class actPauseMusic extends Action
 	@Override
 	public void run()
 	{
-		Global.musicBox.pause(true, fadeTime);
+		Global.musicBox.pause(fadeTime);
 	}
 	
 	@Override

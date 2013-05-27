@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -36,13 +37,12 @@ import bladequest.actions.actFadeControl;
 import bladequest.actions.actPlayMusic;
 import bladequest.actions.actResetGame;
 import bladequest.actions.actShowScene;
-import bladequest.actions.actShowScene.InputTriggers;
 import bladequest.actions.actWait;
+import bladequest.battleactions.BattleAction;
 import bladequest.bladescript.FileTokenizer;
 import bladequest.bladescript.Parser;
 import bladequest.bladescript.Script;
 import bladequest.bladescript.ScriptVar;
-import bladequest.battleactions.BattleAction;
 import bladequest.combat.Battle;
 import bladequest.combat.BattleEventBuilder;
 import bladequest.enemy.Enemy;
@@ -600,7 +600,8 @@ public class Global
 	{
 		//if(GameState != States.GS_TITLE)
 		screenFader.update();
-		musicBox.update();
+		if(musicBox != null)
+			musicBox.update();
 		
 		target.update();
 		if(Global.playTimer != null)
@@ -867,12 +868,18 @@ public class Global
     	screenFader.fadeIn(3);
     	
     	title.titleStart();
-    	musicBox.play("", false, true, 0);
-
+    	musicBox.release();
+    	musicBox = new MusicBox();
+    	menuButton.setClosed();
+    	audioMgr = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
+        audioMgr.requestAudioFocus(activity, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+       
 	}
 	
 	public static void closeGame()
 	{
+		musicBox.release();
+		musicBox = null;
 		appRunning = false;
         activity.panel.destroyContext();
         activity.finish();

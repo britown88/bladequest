@@ -1,125 +1,116 @@
 package bladequest.sound;
 
-import android.content.res.AssetFileDescriptor;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
 import bladequest.world.Global;
 
 public class MusicBox
 {
+	
+	public enum FadeTypes
+	{
+		FadingIn,
+		FadingOut,
+		NotFading
+	}
 	private String playingSong, lastSong;
-	private boolean paused, done, looping, playingIntro;
-	private MediaPlayer mPlayer;
 	private float fadeTime;
 	private long startTime;
-	private boolean fadingIn, fadingOut;
+	private boolean done;
+	private IntroLoopPlayer player;
+	private FadeTypes fadeType;
 	
 	public MusicBox()
 	{
-		mPlayer = new MediaPlayer();
-		mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);	
-		mPlayer.setOnCompletionListener(new OnCompletionListener() {public void onCompletion(MediaPlayer mp) {OnCompletion(mp);}});
-
 		playingSong = "";
-		paused = true;
-		looping = false;
-		
-	}
-	
-	public void OnCompletion(MediaPlayer mp)
-	{
-		Song song = Global.music.get(playingSong);
-		
-		if(playingIntro)
-			playSong(song, false, looping);			
-		
+		fadeType = FadeTypes.NotFading;
 	}
 	
 	public boolean isDone() { return done; }
 	public String getPlayingSong() { return playingSong; }
 	
+	
 	public void update()
 	{
-		if(fadingIn || fadingOut)
+		if(player != null)			
 		{
-			long time = System.currentTimeMillis() - startTime;
-			float seconds = time / 1000.0f;					
+			player.update();
 			
-			if(seconds < fadeTime)
+			if(fadeType != FadeTypes.NotFading)
 			{
-				float percent = seconds/fadeTime;
-				if(fadingOut)
-					percent = 1.0f - percent;
+				long time = System.currentTimeMillis() - startTime;
+				float seconds = time / 1000.0f;					
 				
-				mPlayer.setVolume(percent, percent);			
-			}	
-			else
-				if(fadingOut && !paused)
+				if(seconds < fadeTime)
 				{
-					playingSong = "";
-					pause(true, 0);
-				}
+					float percent = seconds/fadeTime;
+					if(fadeType == FadeTypes.FadingOut)
+						percent = 1.0f - percent;
 					
+					player.setVolume(percent, percent);			
+				}	
+				else
+				{
+					if(fadeType == FadeTypes.FadingOut)
+					{
+						playingSong = "";
+						pause(0);
+					}
+					
+					fadeType = FadeTypes.NotFading;
+				}
+			}
 		}
-
+	}
+	
+	private void clearFading()
+	{
+		if(fadeType != FadeTypes.NotFading)
+		{
+			if(fadeType == FadeTypes.FadingOut)
+			{
+				playingSong = "";
+				pause(0);
+			}
+			
+			player.setVolume(100, 100);
+			fadeType = FadeTypes.NotFading;
+		}
 	}
 	
 	public void play(String songName, boolean playIntro, boolean loop, float fadeTime)
 	{		
-		if(playingSong.equals(songName) || songName.equals("inherit"))
+		if(!songName.equals("") && (playingSong.equals(songName) || songName.equals("inherit")))
 			return;
-
-		this.fadeTime = fadeTime;
-		startTime = System.currentTimeMillis();
-		fadingIn = true;
-		fadingOut = false;
-		if(fadeTime > 0)
-			mPlayer.setVolume(0, 0);
-		else
-			mPlayer.setVolume(1, 1);
-		
-		//non-infinite-loop
-		if(!loop)
-			done = false;		
 		
 		playingSong = songName;
 		Song song = Global.music.get(songName);
 		
+		clearFading();
+		this.fadeTime = fadeTime;
+		if(fadeTime > 0)
+		{
+			fadeType = FadeTypes.FadingIn;
+			startTime = System.currentTimeMillis();
+		}
+		
+		//non-infinite-loop
+		if(!loop) done = false;			
+		
 		if(song != null)
-		{
 			playSong(song, playIntro, loop);
-			paused = false;
-		}
 		else
-		{
-			pause(true, 0);
-		}
+			pause(0);
+
 	}
 	
 	private void playSong(Song song, boolean playIntro, boolean loop)
 	{
-		AssetFileDescriptor afd;
-		mPlayer.reset();
+		if(player != null)
+			player.unload();
 		
+		player = new IntroLoopPlayer(song, playIntro, loop);
+		player.play();
 		
-		playingIntro = playIntro && song.HasIntro();
-		looping = !playingIntro && loop;
-		
-		String songPath = playingIntro ? song.IntroPath() : song.Path(); 
-		
-		try {			
-			afd = Global.activity.getAssets().openFd(songPath);
-			mPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
-			mPlayer.setLooping(looping);
-			mPlayer.prepare();
-			afd.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		mPlayer.start();		
-		
+		update();
 	}
 	
 	public void resumeLastSong()
@@ -129,44 +120,45 @@ public class MusicBox
 	
 	public void saveSong()
 	{
-		lastSong = playingSong;
+		lastSong = fadeType == FadeTypes.FadingOut ? "" : playingSong;
 	}
 	
-	public void pause(boolean setPaused, float fadeTime)
+	public void pause(float fadeTime)
 	{
-		if(!paused)
+		//setFadeData
+		if(fadeTime > 0)
 		{
-			if(fadeTime == 0)
-			{
-				fadingOut = false;
-				fadingIn = false;
-				mPlayer.pause();
-				
-				if(setPaused)
-					paused = true;
-			}			
-			else
-			{
-				this.fadeTime = fadeTime;
-				startTime = System.currentTimeMillis();
-				fadingIn = false;
-				fadingOut = true;
-			}
-		}		
+			this.fadeTime = fadeTime;
+			startTime = System.currentTimeMillis();
+			fadeType = FadeTypes.FadingOut;
+		}
+		else if(player != null)
+			player.pause();
+		
 	}
 	
-	public void stop()
+	//system music calls for screen on/off
+	public void systemPause()
 	{
-		mPlayer.release();
-	}
-	
-	public void resume()
-	{
-		if(!paused)
-		{
-			mPlayer.start();
-			paused = false;
-		}		
+		if(player != null)
+			player.pause();
 	}	
+	public void systemResume()
+	{
+		if(player != null)
+			player.play();
+	}	
+	
+	public void release()
+	{
+		if(player != null)
+		{
+			player.unload();
+			player = null;
+		}
+			
+	}
+	
+	
 
 }
