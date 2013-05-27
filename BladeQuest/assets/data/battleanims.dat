@@ -73,6 +73,63 @@ endstate
 endobj
 endba
 
+#fire
+ba fire 60.0
+obj bmp 0 fire
+#rate = 6
+state 0 tar
+bmpsrc 0 0 52 52
+pos 1 0 0
+size 106 106
+argb 255 255 255 255
+endstate
+
+state 6 tar
+bmpsrc 52 0 105 52
+pos 1 0 0
+size 106 106
+argb 255 255 255 255
+endstate
+
+state 12 tar
+bmpsrc 105 0 158 52
+pos 1 0 0
+size 106 106
+argb 255 255 255 255
+endstate
+
+state 18 tar
+bmpsrc 158 0 211 52
+pos 1 0 0
+size 106 106
+argb 255 255 255 255
+endstate
+
+state 24 tar
+bmpsrc 211 0 264 52
+pos 1 0 0
+size 106 106
+argb 255 255 255 255
+endstate
+
+state 30 tar
+bmpsrc 264 0 317 52
+pos 1 0 0
+size 106 106
+argb 255 255 255 255
+endstate
+
+state 36 tar
+bmpsrc 264 0 317 52
+pos 1 0 0
+size 106 106
+argb 255 255 255 255
+endstate
+
+endobj
+endba
+
+
 ba title 80.0f
 #sky
 obj bmp 0 title-sky

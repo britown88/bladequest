@@ -128,19 +128,22 @@ addDefaultWait item
  
  addDefaultAnimation item
   addDep item (animAction "movetest")
+  
+
+
 
 \potion <- (addItem "potion" "Potion" "Usable" "orb" "Restores 50 HP." >
 setValue 50 >
 setTargetType "Single" >
 addDefaultWait >
-addDefaultAnimation >
+addDep (animBuildAction "heal") >
 addDep (damageAction -50.0 "Fixed"))
 
 \megalixer <- (addItem "megalixer" "MegaLicksr" "Usable" "orb" "Fully heals all allies." >
 setValue 9999 >
 setTargetType "AllAllies" >
 addDefaultWait >
-addDefaultAnimation >
+addDep (animBuildAction "icebarrage") >
 addDep (damageAction -9999.0 "Fixed"))
 
 \bomb <- (addItem "bomb" "Bomb" "Usable" "orb" "Devastating damage to all enemies." >
@@ -155,7 +158,7 @@ addDep (damageAction 9999.0 "Fixed"))
 setValue 50 >
 setTargetType "Single" >
 addDefaultWait >
-addDefaultAnimation >
+addDep (animBuildAction "antidote") >
 addDep (removeStatusAction "poison"))
 
 \prisonkey <- (addItem "prisonkey" "Prison Key" "Key" "orb" "Key to the castle prison cells.")

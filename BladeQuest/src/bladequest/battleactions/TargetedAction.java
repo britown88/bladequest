@@ -8,7 +8,7 @@ import bladequest.world.PlayerCharacter;
 
 public abstract class TargetedAction extends DelegatingAction {
 	
-	List<PlayerCharacter> targets;
+	protected List<PlayerCharacter> targets;
 	
 	public TargetedAction(PlayerCharacter target)
 	{

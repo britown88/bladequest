@@ -4,7 +4,7 @@ import bladequest.combat.BattleEventBuilder;
 
 public abstract class DelegatingAction extends BattleAction {
 
-	BattleActionRunner runner;
+	protected BattleActionRunner runner;
 	
 	@Override
 	public void initialize()
