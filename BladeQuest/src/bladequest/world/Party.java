@@ -399,8 +399,7 @@ public class Party
 	
 	public void teleport(int x, int y)
 	{
-		
-		if(Global.map != null)
+		if(Global.map != null && Global.map.isLoaded())
 			Global.map.unloadTiles();
 		Global.setPanned(0, 0);
 		worldPos = new Point(x*32, y*32);
@@ -545,17 +544,19 @@ public class Party
 	
 	private boolean stepActivate()
 	{
+		boolean executes = false;
 		for(GameObject b : Global.map.Objects())
 		{
 			if(gridPos.equals(b.getGridPos()))
 			{				
 				objectAtDestination = false;
 				if(!b.AutoStarts())
-					return b.execute();
+					if(b.execute())
+						executes = true;
 			}
 				
 		}
-		return false;
+		return executes;
 	}
 	
 	public long getStepCount() { return stepcount; }

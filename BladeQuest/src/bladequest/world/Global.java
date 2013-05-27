@@ -469,7 +469,7 @@ public class Global
 	private static Point partyBuffer = new Point(6, 4);
 	public static void updateVpPos()
 	{		
-		if(map != null)
+		if(map != null && map.isLoaded())
 		{
 			vpWorldPos.x = party.getX() - partyBuffer.x*32;
 			vpWorldPos.y = party.getY() - partyBuffer.y*32;		
@@ -1267,6 +1267,7 @@ public class Global
 			pc.modifyLevel(99, false);
 			pc.fullRestore();
 		}
+		
 	}
 	
 	private static MapLoadThread mapLoadThread;

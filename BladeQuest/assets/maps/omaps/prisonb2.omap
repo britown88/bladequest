@@ -448,7 +448,7 @@ addSwitchCondition "antidotefound"
 \runstate2$2x5$ <- state2$2x5$ 0
 
 #!OBJ 21 5
-\name$21x5$ <- newObject "name" 21 5
+\name$21x5$ <- newObject "staircase" 21 5
 
 state1$21x5$ 0
 name$21x5$ > createState >

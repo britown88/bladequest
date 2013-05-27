@@ -21,7 +21,6 @@ public class MapLoadThread extends Thread
 		
 		map.load();
 		Global.playTimer.start();
-		
 		done = true;
 		
 	}

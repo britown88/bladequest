@@ -22,10 +22,12 @@ public class actTeleportParty extends Action
 	@Override
 	public void run()
 	{
+		Global.party.teleport(dest.x, dest.y);
+		
 		if(!Global.map.Name().equals(mapName))
 			Global.LoadMap(mapName, parent.getCurrentState());
 
-		Global.party.teleport(dest.x, dest.y);
+		
 	}
 	
 	@Override

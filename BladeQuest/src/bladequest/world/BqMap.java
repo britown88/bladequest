@@ -54,6 +54,9 @@ public class BqMap
 	
 	InputStream mapFile;
 	
+	private boolean loaded;
+	public boolean isLoaded(){return loaded;}
+	
 	
 	public BqMap(String mapname, InputStream file)
 	{	
@@ -72,6 +75,7 @@ public class BqMap
 	
 	public void  load()
 	{
+		loaded = false;
 		FileReader fr = new FileReader(mapFile);		
 		String s = "";
 		List<DataLine> lines = new ArrayList<DataLine>();
@@ -91,6 +95,8 @@ public class BqMap
 		for(GameObject go : objects)
 			if(go.AutoStarts())
 				go.execute();
+		
+		loaded = true;
 	}
 	
 	private void buildDisplayName()
