@@ -11,7 +11,7 @@ setAutoStart true >
 addAction (wait 1.0) >
 addAction (panControl 0 10 100 false) >
 addAction (openBubble "angry" "guard1" -1.0 true false) >
-addAction (fadeControl 1 255 0 0 0 false true) >
+addAction (fadeControl 2.0 255 0 0 0 false true) >
 addAction (createPath "guard2" true >
 	addPathAction "DecreaseMoveSpeed" >
 	addPathAction "MoveDown" >
@@ -363,11 +363,11 @@ addSwitchCondition "prisonguardtalked" >
 setSpriteFromTile 7 1 >
 setOptions true false false >
 addAction (message "?????: \nNo getting around this guy.  Guess I'll catch a nap.") >
-addAction (fadeControl 1 255 0 0 0 true true) >
+addAction (fadeControl 2.0 255 0 0 0 true true) >
 addAction (restoreParty 0) >
 addAction (switchControl "guardasleep" true) >
 addAction (switchControl "prisonguardnewspeech" true) >
-addAction (fadeControl 2 255 0 0 0 false true)
+addAction (fadeControl 1.0 255 0 0 0 false true)
 
 \runstate2$16x5$ <- state2$16x5$ 0
 
@@ -376,9 +376,9 @@ name$16x5$ > createState >
 addSwitchCondition "guardasleep" >
 setSpriteFromTile 7 1 >
 setOptions true false false >
-addAction (fadeControl 1 255 0 0 0 true true) >
+addAction (fadeControl 1.0 255 0 0 0 true true) >
 addAction (restoreParty 0) >
-addAction (fadeControl 2 255 0 0 0 false true)
+addAction (fadeControl 1.0 255 0 0 0 false true)
 
 \runstate3$16x5$ <- state3$16x5$ 0
 
@@ -455,9 +455,9 @@ name$21x5$ > createState >
 setSpriteFromTile 1 3 >
 setLayer "Under" >
 setOptions true false false >
-addAction (fadeControl 3 255 0 0 0 true true) >
+addAction (fadeControl 1.0 255 0 0 0 true true) >
 addAction (teleportParty name$21x5$ 4 15 "prisonb1") >
-addAction (fadeControl 3 255 0 0 0 false true) 
+addAction (fadeControl 1.0 255 0 0 0 false true) 
 
 \runstate1$21x5$ <- state1$21x5$ 0
 
@@ -467,10 +467,10 @@ addSwitchCondition "bandittalked" >
 setSpriteFromTile 1 3 >
 setLayer "Under" >
 setOptions true false false >
-addAction (fadeControl 3 255 0 0 0 true true) >
+addAction (fadeControl 1.0 255 0 0 0 true true) >
 addAction (teleportParty name$21x5$ 4 15 "prisonb1") >
 addAction (switchControl "banditescaped" true) >
-addAction (fadeControl 3 255 0 0 0 false true) 
+addAction (fadeControl 1.0 255 0 0 0 false true) 
 
 \runstate2$21x5$ <- state2$21x5$ 0
 

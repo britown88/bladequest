@@ -8,7 +8,7 @@ state1$0x0$ 0
 name$0x0$ > createState >
 setOptions true false false > 
 setAutoStart true >
-addAction (fadeControl 4 255 0 0 0 false true) >
+addAction (fadeControl 0.5 255 0 0 0 false true) >
 addAction (switchControl "startgame" true)
 
 \runstate1$0x0$ <- state1$0x0$ 0
@@ -85,9 +85,9 @@ state1$4x5$ 0
 name$4x5$ > createState >
 setSpriteFromTile 1 2 >
 setCollisionData true true true true >
-addAction (fadeControl 5 255 0 250 200 true true) >
-addAction (openBubble "exclam" "party" 2.0 false false) >
-addAction (fadeControl 4 255 0 250 200 false true) >
+addAction (fadeControl 0.5 255 0 250 200 true true) >
+addAction (openBubble "exclam" "party" 1.0 false false) >
+addAction (fadeControl 0.5 255 0 250 200 false true) >
 addAction (message "An eerie glow surrounds you.") >
 addAction (messageWithYesNo "Save your game?" > 
 	addToBranch 0 (openSaveMenu 0))

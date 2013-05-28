@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import bladequest.UI.ListBox.LBStates;
 import bladequest.UI.MenuPanel.Anchors;
+import bladequest.world.GameObject;
 import bladequest.world.Global;
 import bladequest.world.Item;
 import bladequest.world.PlayerCharacter;
@@ -344,6 +345,9 @@ public class DebugScreen
 						Global.LoadMap(map);
 
 					Global.party.teleport(X.getValue(), Y.getValue());
+					
+					Global.pan(0, 0, 100);
+					Global.party.setAllowMovement(true);
 				}
 				break;
 			default:

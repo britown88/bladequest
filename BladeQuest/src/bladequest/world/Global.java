@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -447,7 +448,7 @@ public class Global
 		GameState = States.GS_MENUTRANSITION;
 		screenFader.clear();
 		screenFader.setFadeColor(255, 0, 0, 0);
-		screenFader.fadeOut(4);
+		screenFader.fadeOut(0.5f);
 	}
 	
 	public static void closeMainMenu()
@@ -599,7 +600,8 @@ public class Global
 	{
 		//if(GameState != States.GS_TITLE)
 		screenFader.update();
-		musicBox.update();
+		if(musicBox != null)
+			musicBox.update();
 		
 		target.update();
 		if(Global.playTimer != null)
@@ -632,7 +634,7 @@ public class Global
 			if(screenFader.isDone())
 			{
 				GameState = transitionInto;
-				screenFader.fadeIn(4);
+				screenFader.fadeIn(0.5f);
 			}
 				
 			break;
@@ -645,7 +647,7 @@ public class Global
 			{
 				GameState = States.GS_WORLDMOVEMENT;
 				delay();
-				screenFader.fadeIn(4);
+				screenFader.fadeIn(0.5f);
 			}				
 			break;
 		case GS_TITLE:
@@ -863,15 +865,21 @@ public class Global
 		title= new TitleScreen();
     	GameState = States.GS_TITLE;
     	
-    	screenFader.fadeIn(3);
+    	screenFader.fadeIn(1.0f);
     	
     	title.titleStart();
-    	musicBox.play("", false, true, 0);
-
+    	musicBox.release();
+    	musicBox = new MusicBox();
+    	menuButton.setClosed();
+    	audioMgr = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
+        audioMgr.requestAudioFocus(activity, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+       
 	}
 	
 	public static void closeGame()
 	{
+		musicBox.release();
+		musicBox = null;
 		appRunning = false;
         activity.panel.destroyContext();
         activity.finish();

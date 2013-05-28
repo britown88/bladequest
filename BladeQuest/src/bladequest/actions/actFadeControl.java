@@ -6,10 +6,11 @@ import bladequest.world.*;
 
 public class actFadeControl extends Action 
 {
-	private int fadeSpeed, a, r, g, b;
+	private int a, r, g, b;
+	float fadeTime;
 	private boolean fadeOut, wait;
 	
-	public actFadeControl(int fadeSpeed, int a, int r, int g, int b, boolean fadeOut, boolean wait)
+	public actFadeControl(float fadeTime, int a, int r, int g, int b, boolean fadeOut, boolean wait)
 	{
 		super();
 		this.a = a;
@@ -17,7 +18,7 @@ public class actFadeControl extends Action
 		this.g = g;
 		this.b = b;
 		this.fadeOut = fadeOut;
-		this.fadeSpeed = fadeSpeed;
+		this.fadeTime = fadeTime;
 		this.wait = wait;
 		
 	}
@@ -26,13 +27,13 @@ public class actFadeControl extends Action
 	public void run()
 	{
 		Global.screenFader.setFadeColor(a, r, g, b);
-		if(fadeSpeed >= 100)
+		if(fadeTime == -1)
 			Global.screenFader.setFaded();
 		else
 			if(fadeOut)
-				Global.screenFader.fadeOut(fadeSpeed);
+				Global.screenFader.fadeOut(fadeTime);
 			else
-				Global.screenFader.fadeIn(fadeSpeed);				
+				Global.screenFader.fadeIn(fadeTime);				
 
 	}
 	

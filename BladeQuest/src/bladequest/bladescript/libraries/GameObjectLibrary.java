@@ -108,9 +108,9 @@ public class GameObjectLibrary
 		action.addToBranch(index, actToAdd);
 		return action;
 	}
-	public static Action fadeControl(int fadeSpeed, int a, int r, int g, int b, boolean fadeOut, boolean wait)
+	public static Action fadeControl(float fadeTime, int a, int r, int g, int b, boolean fadeOut, boolean wait)
 	{		
-		Action act = new actFadeControl(fadeSpeed, a, r, g, b, fadeOut, wait);
+		Action act = new actFadeControl(fadeTime, a, r, g, b, fadeOut, wait);
 		return act;
 	}
 	public static Action messageWithYesNo(String message)

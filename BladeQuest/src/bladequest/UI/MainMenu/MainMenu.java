@@ -152,7 +152,7 @@ public class MainMenu
 				{
 					Global.GameState = States.GS_WORLDMOVEMENT;
 					Global.delay();
-					Global.screenFader.fadeIn(4);
+					Global.screenFader.fadeIn(0.5f);
 					
 					sideBar.setClosed();
 					
@@ -2088,7 +2088,7 @@ public class MainMenu
 		{
 			close = true;
 			Global.screenFader.setFadeColor(255, 0, 0, 0);
-			Global.screenFader.fadeOut(4);
+			Global.screenFader.fadeOut(0.5f);
 		}
 		
 	}	

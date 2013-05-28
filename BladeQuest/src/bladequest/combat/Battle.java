@@ -596,7 +596,7 @@ public class Battle
 				if(!isDefeated())
 				{
 					Global.musicBox.resumeLastSong();
-					Global.screenFader.fadeIn(2);
+					Global.screenFader.fadeIn(1.0f);
 				}
 				
 				Global.GameState = States.GS_WORLDMOVEMENT;				
@@ -979,7 +979,7 @@ public class Battle
 	private void triggerEndBattle()
 	{
 		Global.screenFader.setFadeColor(255, 0, 0, 0);
-		Global.screenFader.fadeOut(2);
+		Global.screenFader.fadeOut(2.0f);
 
 	}
 	

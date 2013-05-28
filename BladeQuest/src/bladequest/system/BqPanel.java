@@ -101,12 +101,13 @@ implements SurfaceHolder.Callback
     public void resume(){
     	renderThread.setRunning(true);
     	updateThread.setRunning(true);
-    	Global.musicBox.resume();
+    	Global.musicBox.systemResume();
     }
     
     public void pause()
     {
-    	Global.musicBox.pause(false, 0);
+    	if(Global.musicBox != null)
+    		Global.musicBox.systemPause();
     	renderThread.setRunning(false);
     	updateThread.setRunning(false);
     	
