@@ -27,7 +27,9 @@ namespace BladeCraft.Classes
       {
          writer.WriteLine("#!OBJ " + X.ToString() + " " + Y.ToString());
 
-         string s = Script.Replace("$", "$"+X.ToString()+"x"+Y.ToString()+"$");
+         string s = Script.Replace("$X", X.ToString()).
+            Replace("$Y", Y.ToString()).
+            Replace("$", "$"+X.ToString()+"x"+Y.ToString()+"$");
          writer.Write(s);
 
       }

@@ -1952,7 +1952,6 @@ public class Global
 		gameOverObject.setStateMovement(0, 0, 0);
 		gameOverObject.setStateOpts(0, true, false, false);
 		gameOverObject.setStateFace(0, "down");
-		gameOverObject.addAction(0, new actFadeControl(100, 255, 0, 0, 0, true, true));
 		gameOverObject.addAction(0, new actPlayMusic("annihilation", true, true, 2.0f));
 		gameOverObject.addAction(0, new actShowScene("gameover"));
 		gameOverObject.addAction(0, new actFadeControl(1, 255, 255, 255, 255, false, false));

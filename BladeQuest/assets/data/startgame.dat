@@ -1,8 +1,10 @@
 #newgame start info for demo
 #Always do setmap last!
 startgame 0
-insertStartCharacter "aramis" 1 > setCharacterStartName "????"
-setStartPosition 16 5
-setStartMap "prisonb2"
+insertStartCharacter "aramis" 1 > setCharacterStartName "?????"
+setStartPosition 4 15
+setStartMap "prisonb1"
+#setStartPosition 16 5
+#setStartMap "prisonb2"
 
 \start <- startgame 0

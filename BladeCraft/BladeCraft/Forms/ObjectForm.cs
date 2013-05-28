@@ -112,7 +112,7 @@ namespace BladeCraft.Forms
 
       private void tsbAddObject_Click(object sender, EventArgs e)
       {
-         insertMacro("\\name$ <- newObject \"name\" " + txtX.Text + " " + txtY.Text + "\r\n\r\n");
+         insertMacro("\\objName$ <- \"name\"\r\n\\name$ <- newObject \"name\" $X $Y\r\n\r\n");
       }
 
       private void tsbSpriteToTile_Click(object sender, EventArgs e)

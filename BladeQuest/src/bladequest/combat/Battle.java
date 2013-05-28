@@ -972,9 +972,9 @@ public class Battle
 //		if(Global.BattleStartObject != null)
 //			Global.BattleStartObject.clearActions();
 		
-		Global.party.setAllowMovement(true);
-		Global.setPanned(0, 0);				
-		Global.executeGameOver();
+//		Global.party.setAllowMovement(true);
+//		Global.setPanned(0, 0);				
+//		Global.executeGameOver();
 	}
 	private void triggerEndBattle()
 	{

@@ -61,6 +61,7 @@ public class ScreenFader
 	{
 		alpha = finalAlpha;
 		fading = false;
+		done = true;
 	}
 	
 	public void clear()
