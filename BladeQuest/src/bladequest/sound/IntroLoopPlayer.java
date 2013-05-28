@@ -3,7 +3,7 @@ package bladequest.sound;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
+import android.media.MediaPlayer.OnErrorListener;
 import android.util.Log;
 import bladequest.world.Global;
 
@@ -35,22 +35,22 @@ public class IntroLoopPlayer
 		play();
 	}
 	
-	private void prepareAndPlaySong(String path, boolean loop)
+	private void prepareAndPlaySong(String path)
 	{
 		mPlayer.reset();		
 		
 		try {
 			AssetFileDescriptor afd = Global.activity.getAssets().openFd(path);		
 			mPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(),afd.getLength());
-			mPlayer.setLooping(loop);
-			if(playIntro && !loopHasStarted)
-				mPlayer.setOnCompletionListener(new OnCompletionListener() {
-					
-					@Override
-					public void onCompletion(MediaPlayer mp) {
-						completion();
-					}
-				});
+			
+			mPlayer.setOnErrorListener(new OnErrorListener() {
+				
+				@Override
+				public boolean onError(MediaPlayer mp, int what, int extra) {
+					// TODO Auto-generated method stub
+					return false;
+				}
+			});
 			mPlayer.prepare();		
 			
 			afd.close();
@@ -60,7 +60,7 @@ public class IntroLoopPlayer
 		
 	}
 
-	private void completion()
+	private void onCompletion()
 	{
 		if(playIntro && !loopHasStarted)
 		{
@@ -79,8 +79,8 @@ public class IntroLoopPlayer
 	
 	public void update()
 	{
-		//if(!paused && System.currentTimeMillis() - startTime >= duration)
-			//onCompletion();
+		if(!paused && System.currentTimeMillis() - startTime >= duration)
+			onCompletion();
 	}
 	
 	public void play()
@@ -92,11 +92,11 @@ public class IntroLoopPlayer
 			pausedAt = 0;
 			
 			if(playIntro && !loopHasStarted)
-				prepareAndPlaySong(song.IntroPath(), false);			
+				prepareAndPlaySong(song.IntroPath());			
 			else
 			{
 				loopHasStarted = true;
-				prepareAndPlaySong(song.Path(), loop);			
+				prepareAndPlaySong(song.Path());			
 			}
 			
 			duration = mPlayer.getDuration();
