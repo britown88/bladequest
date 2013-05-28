@@ -27,6 +27,11 @@ add (waitAction 450) >
 addDep (attackRandomlyAction 0.5 "PhysicalIgnoreDef" 15 0.1) >
 addDep (breakStanceAction 0))
 
+\redcard <- (addAbility "redcard" "Red Card" "Single" 3 >
+setDesc "Confuses an enemy." >
+add (waitAction 450) >
+addDep (inflictStatusAction (confuseStatus 4))) #4 == duration
+
 ####################ROLAND##########################################
 \frostwish <- (addAbility "frostwish" "Frost Wish" "AllAllies" 5 >
 useOutsideBattle >
@@ -49,12 +54,10 @@ addDep (animBuildAction "igniteSmoke") >
 add (waitAction 450) >
 addDep (animBuildAction "ignite") > 
 add (waitAction 600) >
-addDep (damageAction 1.5 "Magic"))
+addDep (damageAction 1.5 "Magic" > addDamageComponent "Fire" 1.0))
 
 
 #########ENEMY ABILITIES#################
-
-
 
 addDefaultWait ability
   add ability (waitAction 450)
@@ -69,11 +72,13 @@ addDep (damageAction 1.5 "Physical"))
 
 recruitBroKick ability power damageType offset
    ability > add (\firstWait <- waitAction offset) >
+	     addDep (specialMirroringAction true) >
              addDep (basicAttackAction power damageType 0.35f) >  #should have a little tiny downtime between slashes
 	     add (waitAction 135 > addDependency firstWait) >
              addDep (mirrorAction true) >
 	     addDep (waitAction 135) >  #.35 * 5 * 150 = 262.  fudge it a bit
-             addDep (mirrorAction false)
+             addDep (mirrorAction false) >
+             addDep (specialMirroringAction false)
 
 
 \recruit1 <- (addAbility "recruit1" "Clashing Super Hit" "Single" 0 >

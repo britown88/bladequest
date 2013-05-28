@@ -227,7 +227,7 @@ public class Global
 		
 		Parser p = null;
 		try {
-			p = new Parser(new FileTokenizer(activity.getAssets().open(file)), script);
+			p = new Parser(new FileTokenizer(file, activity.getAssets().open(file)), script);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;

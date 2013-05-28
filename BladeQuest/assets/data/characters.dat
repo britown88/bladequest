@@ -26,7 +26,7 @@ setCombatAction "combStance" >
 setBaseStats 10 4 7 2 >
 setLevel 5 >
 mapBound equip {"earthsword", "felthat", "cottonshirt"} >
-mapBound addAbility {"assault", "zornhau"} >
+mapBound addAbility {"assault", "zornhau", "redcard"} >
 addLearnableAbility "zornhau" 6)
 
 \roland <- (createCharacter "roland" "Roland" "broland" "roland" >

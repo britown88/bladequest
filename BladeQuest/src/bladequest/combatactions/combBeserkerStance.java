@@ -121,6 +121,7 @@ public class combBeserkerStance extends Stance {
 				
 				statShift = 0;
 			}
+			public StatusEffect clone() {return this;}
 			StatusEffect initialize(Stance stance)
 			{
 				this.stance = stance;

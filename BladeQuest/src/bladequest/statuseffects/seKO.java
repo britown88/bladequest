@@ -19,7 +19,7 @@ public class seKO extends StatusEffect
 	{ 
 		return "status " + seKO.class.getSimpleName(); 
 	}
-	
+	public StatusEffect clone() {return this;}
 	@Override
 	public void onTurn(BattleEventBuilder eventBuilder) {}
 	

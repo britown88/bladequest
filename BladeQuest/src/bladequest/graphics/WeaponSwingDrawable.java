@@ -34,7 +34,7 @@ public class WeaponSwingDrawable
 		animBmp.recycle();
 	}
 	
-	public void render(int frame, int x, int y)
+	public void render(int frame, int x, int y, boolean mirrored)
 	{
 		Rect dest = new Rect(
 				Global.vpToScreenX(x),
@@ -42,7 +42,15 @@ public class WeaponSwingDrawable
 				Global.vpToScreenX(x + frameSize.x * 2),
 				Global.vpToScreenY(y + frameSize.y * 2));
 		
-		Global.renderer.drawBitmap(bmp, srcFrames[frame], dest, null);		
+		if (mirrored)
+		{
+			Global.renderer.drawMirroredBitmap(bmp, 0.0f, srcFrames[frame], dest, null);
+		}
+		else
+		{
+			Global.renderer.drawBitmap(bmp, 0.0f, srcFrames[frame], dest, null);
+		}
+				
 	}
 	
 	public BattleAnim genAnim() 

@@ -1,31 +1,39 @@
 package bladequest.observer;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ObserverUpdatePool<T> {
-	Map<Observer<T>, List<T> > triggeredObservers;
-	List<Observer<T>> ordering;
+	
+	private class Triggered
+	{
+		Triggered(Observer<T> observer, List<T> list) 
+		{
+			this.observer = observer;
+			this.list = list;
+		}
+		public Observer<T> observer;
+		public List<T> list;
+	};
+	
+	List<Triggered> triggeredObservers;
 	int obsRef;
 	
 	private void rebuild()
 	{
-		ordering = new ArrayList<Observer<T> >();
-		triggeredObservers = new HashMap<Observer<T>, List<T> >();		
+		triggeredObservers = new ArrayList<Triggered>();		
 	}
 	private void send()
 	{
-		Map<Observer<T>, List<T> > triggersToSend = triggeredObservers;
-		List<Observer<T>> order = ordering;
+		List<Triggered> triggersToSend = triggeredObservers;
 		
 		rebuild();
 		
 		incref();
-		for (Observer<T>  observer : order)
+		for (Triggered t : triggersToSend)
 		{
-			for (T value : triggersToSend.get(observer))
+			Observer<T> observer = t.observer;
+			for (T value : t.list)
 			{
 				observer.next(value);
 			}
@@ -41,13 +49,20 @@ public class ObserverUpdatePool<T> {
 	
 	public void pushObserver(Observer<T> child, T parent)
 	{
-		List<T> triggeredParents = triggeredObservers.get(child);
+		List<T> triggeredParents = null;
+		for (Triggered t : triggeredObservers)
+		{
+			if (t.observer == child)
+			{
+				triggeredParents = t.list;
+				break;
+			}
+		}
 		if (triggeredParents == null)
 		{
 			triggeredParents = new ArrayList<T>();
 			triggeredParents.add(parent);
-			triggeredObservers.put(child, triggeredParents);
-			ordering.add(child);
+			triggeredObservers.add(new Triggered(child, triggeredParents));
 		}
 		else
 		{
@@ -65,7 +80,7 @@ public class ObserverUpdatePool<T> {
 	}
 	void decref()
 	{
-		if (--obsRef == 0 && !ordering.isEmpty())
+		if (--obsRef == 0 && !triggeredObservers.isEmpty())
 		{
 			send();
 		}

@@ -1259,7 +1259,7 @@ public class Parser {
 		{
 			//YOU DUN GOOFED			
 			e.printStackTrace();
-			Log.d("Parser", "Error on line: " + lineNumber + e.what());
+			Log.d("Parser", tokenizer.getExceptionInfo() + " Error on line: " + lineNumber + e.what());
 		}	
 	}
 	

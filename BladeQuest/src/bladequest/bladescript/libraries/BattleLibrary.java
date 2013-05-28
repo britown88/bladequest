@@ -16,6 +16,7 @@ import bladequest.battleactions.bactRemoveStatus;
 import bladequest.battleactions.bactRunAnimation;
 import bladequest.battleactions.bactRunAnimationBuilder;
 import bladequest.battleactions.bactSetFace;
+import bladequest.battleactions.bactSpecialMirrored;
 import bladequest.battleactions.bactWait;
 import bladequest.bladescript.LibraryWriter;
 import bladequest.bladescript.ScriptVar;
@@ -26,6 +27,7 @@ import bladequest.combat.triggers.Trigger;
 import bladequest.enemy.Enemy;
 import bladequest.graphics.BattleSprite.faces;
 import bladequest.statuseffects.StatusEffect;
+import bladequest.statuseffects.seConfuse;
 import bladequest.statuseffects.sePoison;
 import bladequest.world.Ability;
 import bladequest.world.DamageTypes;
@@ -79,6 +81,11 @@ public class BattleLibrary {
 	public static StatusEffect poisonStatus(float power)
 	{
 		return new sePoison(power);
+	}
+	
+	public static StatusEffect confuseStatus(int duration)
+	{
+		return new seConfuse(duration);
 	}
 	
 	
@@ -162,6 +169,11 @@ public class BattleLibrary {
 		((bactDamage)child).addDamageComponent(Stats.valueOf(affinity), factor);
 
 		return child;
+	}
+	
+	public static BattleAction specialMirroringAction(boolean mirrored)
+	{
+		return new bactSpecialMirrored(mirrored);
 	}
 	
 	public static Ability addDep(Ability ability, BattleAction action)
