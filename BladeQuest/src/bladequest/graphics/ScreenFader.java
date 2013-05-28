@@ -5,7 +5,9 @@ import bladequest.world.Global;
 public class ScreenFader 
 {
 	private int red, green, blue;
-	private int alpha, finalAlpha, fadeSpeed;
+	private int alpha, finalAlpha;
+	private float fadeTime;
+	private long startTime;
 	private boolean fading, fadeIn, done, flashing;
 	
 	public ScreenFader()
@@ -21,31 +23,33 @@ public class ScreenFader
 		red = r;
 		green = g;
 		blue = b;
-		finalAlpha = a;		
+		finalAlpha = Math.min(255, a);		
 	}
 	
-	public void fadeIn(int fadeSpeed)
+	public void fadeIn(float fadeTime)
 	{
 		alpha = finalAlpha;
 		fading = true;
-		this.fadeSpeed = fadeSpeed;
+		this.fadeTime = fadeTime;
 		fadeIn = true;
 		done = false;
+		startTime = System.currentTimeMillis();
 	}
 	
-	public void fadeOut(int fadeSpeed)
+	public void fadeOut(float fadeTime)
 	{
 		alpha = 0;
 		fading = true;
-		this.fadeSpeed = fadeSpeed;
+		this.fadeTime = fadeTime;
 		fadeIn = false;
 		done = false;
+		startTime = System.currentTimeMillis();
 	}
 	
-	public void flash(int speed)
+	public void flash(float flashLength)
 	{
 		flashing = true;
-		fadeOut(speed);
+		fadeOut(flashLength/2);
 	}
 	
 	public boolean isDone() { return done; }
@@ -71,16 +75,9 @@ public class ScreenFader
 	{
 		if(fading)
 		{
-			int fadeAmount = (int)(255 * (fadeSpeed/100.0f));
-			if(fadeAmount == 0)
-				fadeAmount = 1;
-
-			if(fadeIn)
-				alpha = Math.max(alpha - fadeAmount, 0);				
-			else
-				alpha = Math.min(alpha + fadeAmount, Math.min(finalAlpha, 255));
-			
-			if(alpha == 0 || alpha == Math.min(finalAlpha, 255))
+			float delta = (System.currentTimeMillis() - startTime)/(fadeTime*1000.0f);
+						
+			if(delta >= 1.0f)
 			{
 				if(flashing)
 				{
@@ -88,24 +85,29 @@ public class ScreenFader
 					{
 						flashing = false;
 						fading = false;
-						done = true;						
+						done = true;		
+						alpha = 0;
 					}
 					else
-					{
-						fadeIn(fadeSpeed);
-					}
-					
+						fadeIn(fadeTime);					
 				}
 				else
 				{
 					fading = false;
-					done = true;					
+					done = true;	
+					alpha = fadeIn ? 0 : finalAlpha;
 				}
-				
-				
 			}
-										
-
+			
+			if(fading)
+			{
+				if(fadeIn)
+					alpha = (int)(finalAlpha*(1.0f-delta));
+				else
+					alpha = (int)(finalAlpha*delta);
+			}
+			
+			
 		}
 	}
 	

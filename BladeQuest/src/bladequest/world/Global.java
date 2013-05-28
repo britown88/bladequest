@@ -448,7 +448,7 @@ public class Global
 		GameState = States.GS_MENUTRANSITION;
 		screenFader.clear();
 		screenFader.setFadeColor(255, 0, 0, 0);
-		screenFader.fadeOut(4);
+		screenFader.fadeOut(0.5f);
 	}
 	
 	public static void closeMainMenu()
@@ -634,7 +634,7 @@ public class Global
 			if(screenFader.isDone())
 			{
 				GameState = transitionInto;
-				screenFader.fadeIn(4);
+				screenFader.fadeIn(0.5f);
 			}
 				
 			break;
@@ -647,7 +647,7 @@ public class Global
 			{
 				GameState = States.GS_WORLDMOVEMENT;
 				delay();
-				screenFader.fadeIn(4);
+				screenFader.fadeIn(0.5f);
 			}				
 			break;
 		case GS_TITLE:
@@ -865,7 +865,7 @@ public class Global
 		title= new TitleScreen();
     	GameState = States.GS_TITLE;
     	
-    	screenFader.fadeIn(3);
+    	screenFader.fadeIn(1.0f);
     	
     	title.titleStart();
     	musicBox.release();

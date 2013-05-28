@@ -7,7 +7,6 @@ import java.util.List;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.os.Build;
 import bladequest.world.Global;
 
 public class IntroLoopPlayer
@@ -82,20 +81,44 @@ public class IntroLoopPlayer
 		catch (IOException e) {}
 	}
 	
+	private void rebuildLoopPlayer(int index)
+	{
+		if(loopPlayers.get(index).isPlaying())
+			loopPlayers.get(index).stop();
+		loopPlayers.get(index).release();
+		
+		loopPlayers.remove(index);
+		
+		MediaPlayer loopPlayer = new MediaPlayer();		
+		loopPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);		
+		
+		try {
+			AssetFileDescriptor afd = Global.activity.getAssets().openFd(song.Path());		
+			loopPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(),afd.getLength());
+			loopPlayer.setLooping(false);
+			loopPlayer.prepare();		
+			afd.close();
+		} catch (Exception e) {}
+		
+		loopPlayers.add(index, loopPlayer);
+	}
+	
 	private void onCompletion()
 	{
 		if(playIntro && !loopHasStarted)
 		{
 			loopHasStarted = true;
+			if(introPlayer.isPlaying())
+				introPlayer.stop();
+			introPlayer.release();
+			introPlayer = null;
 			play();
 		}
-		else if(loop)
+		else if(loop && loopHasStarted)
 		{			
 			loopPlayerBack = !loopPlayerBack;
-			play();				
-			loopPlayers.get(loopPlayerBack ? 0 : 1).seekTo(0);
-			loopPlayers.get(loopPlayerBack ? 0 : 1).pause();
-			
+			play();			
+			rebuildLoopPlayer(loopPlayerBack ? 0 : 1);		
 		}		
 	}
 	

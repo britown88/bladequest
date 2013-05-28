@@ -98,15 +98,14 @@ public class MusicBox
 		if(song != null)
 			playSong(song, playIntro, loop);
 		else
-			pause(0);
+			stop();
+			
 
 	}
 	
 	private void playSong(Song song, boolean playIntro, boolean loop)
 	{
-		if(player != null)
-			player.unload();
-		
+		stop();
 		player = new IntroLoopPlayer(song, playIntro, loop);
 		player.play();
 		
@@ -133,8 +132,17 @@ public class MusicBox
 			fadeType = FadeTypes.FadingOut;
 		}
 		else if(player != null)
-			player.pause();
+			stop();
 		
+	}
+	
+	public void stop()
+	{
+		if(player != null)
+		{
+			player.unload();
+			player = null;
+		}
 	}
 	
 	//system music calls for screen on/off

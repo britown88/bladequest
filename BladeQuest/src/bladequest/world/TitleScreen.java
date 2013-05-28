@@ -88,7 +88,7 @@ public class TitleScreen
 			playingAnim = Global.playAnimation("title", null, null);
 			break;
 		case CompanyTransition:
-			Global.screenFader.fadeOut(2);
+			Global.screenFader.fadeOut(2.0f);
 			break;
 		case Menu:
 			
@@ -108,7 +108,7 @@ public class TitleScreen
 			menu.close();
 			break;
 		case LoadMenu:
-			Global.screenFader.fadeIn(4);
+			Global.screenFader.fadeIn(0.5f);
 			break;
 		case NewgameTransition:
 			menu.close();
@@ -185,7 +185,7 @@ public class TitleScreen
 		case CompanyTransition:
 			if(Global.screenFader.isDone())
 			{
-				Global.screenFader.fadeIn(2);
+				Global.screenFader.fadeIn(2.0f);
 				changeState(TitleStates.GameLogo);
 			}
 			break;
@@ -213,7 +213,7 @@ public class TitleScreen
 			{
 				state = TitleStates.Menu;
 				Global.screenFader.setFadeColor(255, 0, 0, 0);
-				Global.screenFader.fadeIn(4);
+				Global.screenFader.fadeIn(0.5f);
 				buildMenu();
 				menu.open();
 			}			
