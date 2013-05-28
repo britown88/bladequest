@@ -104,8 +104,7 @@ public class MusicBox
 	
 	private void playSong(Song song, boolean playIntro, boolean loop)
 	{
-		player.playSong(song, playIntro, loop);		
-		update();
+		player.playSong(song, playIntro, loop);
 	}
 	
 	public void resumeLastSong()

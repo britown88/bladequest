@@ -91,10 +91,13 @@ implements OnGestureListener, AudioManager.OnAudioFocusChangeListener
 	
 	@Override
 	protected void onResume() {
-		panel.resume();
-		super.onResume();
-		if(Global.playTimer != null)
-			Global.playTimer.start();
+		if(Global.appRunning)
+		{
+			panel.resume();
+			super.onResume();
+			if(Global.playTimer != null)
+				Global.playTimer.start();
+		}		
 	}
 	
 	@Override

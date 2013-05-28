@@ -1,134 +1,152 @@
 package bladequest.sound;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnErrorListener;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.util.Log;
 import bladequest.world.Global;
-
-
+ 
+ 
 public class IntroLoopPlayer
 {
-	private MediaPlayer mPlayer;
-	private Song song;
-	private long startTime, duration, pausedAt;
 	
-	private boolean paused, loop, playIntro, loopHasStarted;
-	
-	public IntroLoopPlayer()
-	{			
-		mPlayer = new MediaPlayer();		
-		mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);		
-	}
-	
-	public boolean loopHasStarted(){return loopHasStarted;}
-	
-	public void playSong(Song song, boolean playIntro, boolean loop)
-	{
-		this.song = song;			
-		this.loop = loop;
-		this.playIntro = playIntro && song.HasIntro();
-		loopHasStarted = false;
-		
-		paused = true;//play only runs from paused		
-		play();
-	}
-	
-	private void prepareAndPlaySong(String path)
-	{
-		mPlayer.reset();		
-		
-		try {
-			AssetFileDescriptor afd = Global.activity.getAssets().openFd(path);		
-			mPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(),afd.getLength());
-			
-			mPlayer.setOnErrorListener(new OnErrorListener() {
-				
-				@Override
-				public boolean onError(MediaPlayer mp, int what, int extra) {
-					// TODO Auto-generated method stub
-					return false;
-				}
-			});
-			mPlayer.prepare();		
-			
-			afd.close();
-		} catch (Exception e) {Log.d("MEDIAPLAYER", "FUCKED");}
-		
-		mPlayer.start();
-		
-	}
+    private Song song;
+    private long startTime, duration, pausedAt;
+   
+    private boolean paused, loop, playIntro, loopHasStarted, prepared, started;
+    
+    private MediaPlayer mPlayer;
+    private int playIndex;
+   
+    public IntroLoopPlayer()
+    {           
 
+    	playIndex = 0;
+    	started = false;
+    	prepared = false;
+    	
+    	mPlayer = new MediaPlayer();           
+    	mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+    	mPlayer.setOnPreparedListener(new OnPreparedListener()
+    	{ 
+    		@Override
+    		public void onPrepared(MediaPlayer mp) {
+    			startTime = System.currentTimeMillis();		
+    			startTime -= pausedAt;
+    			pausedAt = 0;
+    			duration = mp.getDuration();
+    			mp.start();
+    			prepared = true;
+    		}                       
+    	});
+    }
+
+    
+    public void playSong(Song song, boolean playIntro, boolean loop)
+    {
+        this.song = song;                      
+        this.loop = loop;
+        this.playIntro = playIntro && song.HasIntro();
+        loopHasStarted = false;
+       
+        paused = true;//play only runs from paused             
+        play();
+    }
+   
+    private void prepareAndPlaySong(String path)
+    {
+        if (started)
+        {
+            while (!prepared) {}
+            started = false;
+        }
+        mPlayer.reset();               
+       
+        try {
+            AssetFileDescriptor afd = Global.activity.getAssets().openFd(path);            
+            mPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(),afd.getLength());
+            prepared = false;
+            mPlayer.prepareAsync();        
+           
+            afd.close();
+        } catch (Exception e) {Log.d("MEDIAPLAYER", "FUCKED");}
+   
+        started = true;
+        //mPlayer.start();
+               
+	}
+ 
 	private void onCompletion()
 	{
+		while (!prepared) {}
 		if(playIntro && !loopHasStarted)
 		{
 			loopHasStarted = true;
 			paused = true;
 			play();
 		}
-		else if(loop && loopHasStarted)	
+		else if(loop && loopHasStarted)
 		{
 			paused = true;
-			play();	
+			play();
 		}
-				
-		
 	}
-	
+       
 	public void update()
 	{
-		if(!paused && System.currentTimeMillis() - startTime >= duration)
+		if(started && prepared && !paused && System.currentTimeMillis() - startTime >= duration)
 			onCompletion();
 	}
-	
+       
 	public void play()
 	{
 		if(paused)
-		{
-			startTime = System.currentTimeMillis();		
-			startTime -= pausedAt;
-			pausedAt = 0;
-			
+		{ 
 			if(playIntro && !loopHasStarted)
-				prepareAndPlaySong(song.IntroPath());			
+				prepareAndPlaySong(song.IntroPath());                   
 			else
 			{
 				loopHasStarted = true;
-				prepareAndPlaySong(song.Path());			
+				prepareAndPlaySong(song.Path());                 
 			}
-			
-			duration = mPlayer.getDuration();
-			paused = false;			
-		}		
+               
+			paused = false;                
+		}              
 	}
-	
+       
 	public void pause()
-	{	
+	{      
+		if (!started) return;
+		while (!prepared) {}
 		long st = System.currentTimeMillis();
 		if(mPlayer.isPlaying())
 		{
-			mPlayer.pause();
-			long d = System.currentTimeMillis() - st;
-			
-			pausedAt = System.currentTimeMillis() - startTime + d;
-			paused = true;
-		}		
-	}
-	
-	public void setVolume(float left, float right)
-	{
-		mPlayer.setVolume(left, right);			
-	}
-
-	public void unload() 
-	{
-		if(mPlayer.isPlaying())
-			mPlayer.stop();
-		
-		mPlayer.release();
-		
-	}
+                mPlayer.pause();
+                long d = System.currentTimeMillis() - st;
+               
+                pausedAt = System.currentTimeMillis() - startTime + d;
+                paused = true;
+            }              
+        }
+       
+        public void setVolume(float left, float right)
+        {
+            while (!prepared) {}
+            mPlayer.setVolume(left, right);                
+        }
+ 
+        public void unload()
+        {
+            while (!prepared) {}
+            if(mPlayer.isPlaying())
+                mPlayer.stop();
+           
+            mPlayer.release();
+               
+        }
 
 }
