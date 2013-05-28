@@ -14,7 +14,10 @@ public class CharacterLibrary
 		} catch (Exception e) {
 		}
 	}
-	
+	public static boolean hasStatus(PlayerCharacter character, String statusName)
+	{
+		return character.hasStatus(statusName);
+	}
 	public static PlayerCharacter createCharacter(String name, String displayName, String battleSprite, String worldSprite)
 	{
 		PlayerCharacter pc = new PlayerCharacter(name, displayName, battleSprite, worldSprite);

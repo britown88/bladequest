@@ -3,6 +3,7 @@ package bladequest.battleactions;
 import java.util.List;
 
 import android.graphics.Point;
+import bladequest.combat.BattleCalc;
 import bladequest.combat.BattleEvent;
 import bladequest.combat.BattleEventBuilder;
 import bladequest.graphics.BattleAnim;
@@ -75,7 +76,7 @@ public class bactAttackClose  extends DelegatingAction {
 			builder.addEventObject(new bactChangeVisibility(true).addDependency(builder.getLast()));
 			//now visible in this new place, start attacking!
 			//attack at double speed.
-			BattleAction slashEnd = BattleActionPatterns.BuildSwordSlash(builder, power, type, 0.5f, builder.getLast());
+			BattleAction slashEnd = BattleActionPatterns.BuildSwordSlashWithAccuracy(builder, power, type, 0.5f, builder.getLast(), BattleCalc.AccuracyType.NoMiss, 0.0f);
 			
 			//jump back to starting location.
 			currentAnim = buildJumpAnimation(attacker, PointMath.add(offset, pointOff), PointMath.add(offset, startPos), returnArcFactor, returnSpeed);

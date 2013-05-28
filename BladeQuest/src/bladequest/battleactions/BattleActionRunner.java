@@ -61,6 +61,7 @@ public class BattleActionRunner extends BattleAction {
 		}
 	}
 	
+	
 	@Override
 	public State run(BattleEventBuilder builder)
 	{		
@@ -74,25 +75,37 @@ public class BattleActionRunner extends BattleAction {
 			}
 		}
 		
-		for (BattleAction action : rootActions)
+		List<BattleAction> ranActions  = new ArrayList<BattleAction>();
+		
+		boolean runAgain = true;
+		
+		while (runAgain)
 		{
-			State outState = action.run(builder);
-			if (outState == State.Finished)
+			runAgain = false;
+			for (BattleAction action : rootActions)
 			{
-				remainingActions.remove(action);
-				action.removeReferences();
-				
-				rootActions = new ArrayList<BattleAction>();
-
-				for (BattleAction subActions : remainingActions)
+				ranActions.add(action);
+				State outState = action.run(builder);
+				if (outState == State.Finished)
 				{
-					if (subActions.isRoot())
+					remainingActions.remove(action);
+					action.removeReferences();
+					
+					rootActions = new ArrayList<BattleAction>();
+
+					for (BattleAction subActions : remainingActions)
 					{
-						rootActions.add(subActions);
-					}
-				}				
-			}
+						if (subActions.isRoot() && !ranActions.contains(subActions))
+						{
+							rootActions.add(subActions);
+						}
+						runAgain = true;
+					}				
+					break;					
+				}
+			}			
 		}
+
 		
 		if (remainingActions.isEmpty()) return State.Finished;
 		return State.Continue;

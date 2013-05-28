@@ -98,7 +98,7 @@ public class Battle
 	
 	private BattleActionRunner graphicalBattleActionRunner;
 	
-	//envent stuff
+	//event stuff
 	public ObserverUpdatePool<Condition> updatePool;
 	private Event startTurn, onSelectStart;
 	
@@ -1883,6 +1883,19 @@ public class Battle
 		return encounter;
 	}
 	
+	public Point getPlayerDefaultPosition(PlayerCharacter p)
+	{
+		if (p == currentChar)
+		{
+			return new Point(partyPos.x - selCharX + (charXSpacing * p.Index()), 
+					        partyPos.y + (charYSpacing * p.Index()));
+		}
+		else
+		{
+			return new Point(partyPos.x + (charXSpacing * p.Index()), 
+			        		 partyPos.y + (charYSpacing * p.Index()));			
+		}
+	}
 	
 	public enum Team
 	{

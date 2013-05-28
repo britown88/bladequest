@@ -11,6 +11,14 @@ import bladequest.world.PlayerCharacter.Action;
 
 public class BattleCalc 
 {
+
+	public enum AccuracyType
+	{
+		Regular,
+		NoMiss,
+		ReplaceEvade,
+		WithEvade
+	}
 	
 	public static final float maxEvade = 90.0f;
 	public static final float minEvade = 5.0f;
@@ -21,7 +29,19 @@ public class BattleCalc
 	private static DamageReturnType damageReturnType;	
 	public static DamageReturnType getDmgReturnType(){return damageReturnType;}
 	
-	public static int calculatedDamage(PlayerCharacter attacker, PlayerCharacter defender, float power, DamageTypes type, List<DamageComponent> damageComponents)
+	private static int getStandardEvasion(PlayerCharacter character, DamageTypes type)
+	{
+		switch (type)
+		{
+		case PhysicalIgnoreDef:	
+		case Physical:
+			return (int)((float)character.getStat(Stats.Evade)*(maxEvade/255.0f));
+		default:
+			return 0;
+		} 
+	}
+	
+	public static int calculatedDamage(PlayerCharacter attacker, PlayerCharacter defender, float power, DamageTypes type, List<DamageComponent> damageComponents, float customMiss, AccuracyType accuracy)
 	{
 		attacker.updateSecondaryStats();
 		defender.updateSecondaryStats();
@@ -45,7 +65,36 @@ public class BattleCalc
 		
 		int variance = Global.rand.nextInt(20);		
 		int dmgMod = (int)((float)baseDmg*(float)((variance-10)/100.0F));
+	
+		int evade = 0;
+		int standardEvade = getStandardEvasion(defender, type);
+		int roll;
+		switch (accuracy)
+		{
+		case Regular:
+			evade = standardEvade;
+			break;
+		case NoMiss: evade = 0; break;
+		case ReplaceEvade:
+			evade = (int)customMiss;
+		case WithEvade:
+			roll = Global.rand.nextInt(100);
+			evade = (int)customMiss;
+			if(roll < standardEvade)
+			{
+				damageReturnType = DamageReturnType.Miss;
+				return 0;
+			}
+			break;
+		}
 		
+		roll = Global.rand.nextInt(100);
+		
+		if(roll < evade)
+		{
+			damageReturnType = DamageReturnType.Miss;
+			return 0;
+		}
 		
 		
 		int finalDmg = 0;
@@ -58,13 +107,6 @@ public class BattleCalc
 			break;
 		case PhysicalIgnoreDef:	
 		case Physical:
-			int roll = Global.rand.nextInt(100);
-			int evadeChance = (int)((float)defender.getStat(Stats.Evade)*(maxEvade/255.0f));
-			
-			if(roll < evadeChance)
-				damageReturnType = DamageReturnType.Miss;
-			else
-			{
 				roll = Global.rand.nextInt(100);
 				int blockChance = (int)((float)defender.getStat(Stats.Block)*(90.0f/255.0f));				
 				if(roll < blockChance)
@@ -84,7 +126,6 @@ public class BattleCalc
 					else
 						damageReturnType = DamageReturnType.Hit;				
 				}				
-			}
 			break;
 		case Magic:
 		case MagicalIgnoreDef:

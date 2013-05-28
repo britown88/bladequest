@@ -17,13 +17,27 @@ public class bactDamage extends BattleAction
 	float power;
 	DamageTypes type;
 	List<DamageComponent> damageComponents;
+	float customMiss;
+	
+	BattleCalc.AccuracyType accuracyType;
 	
 	public bactDamage(float power, DamageTypes type)
 	{
 		this.damageComponents = new ArrayList<DamageComponent>();
 		this.power = power;
 		this.type = type;
+		this.customMiss = 0.0f;
+		this.accuracyType = BattleCalc.AccuracyType.Regular;
 	}
+	
+	public bactDamage(float power, DamageTypes type, BattleCalc.AccuracyType accuracy, float missChance)
+	{
+		this.damageComponents = new ArrayList<DamageComponent>();
+		this.power = power;
+		this.type = type;
+		this.customMiss = missChance;
+		this.accuracyType = accuracy;
+	}	
 	
 	public void addDamageComponent(Stats affinity, float power)
 	{
@@ -33,10 +47,11 @@ public class bactDamage extends BattleAction
 	@Override
 	public State run(BattleEventBuilder builder)
 	{
+		
 		PlayerCharacter attacker = builder.getSource();
 		for(PlayerCharacter t : builder.getTargets())
 		{			
-			int dmg = BattleCalc.calculatedDamage(attacker, t, power, type, damageComponents);
+			int dmg = BattleCalc.calculatedDamage(attacker, t, power, type, damageComponents, customMiss, accuracyType);
 			
 			
 			if (dmg > 0)
@@ -74,7 +89,7 @@ public class bactDamage extends BattleAction
 	{
 		for(PlayerCharacter t : targets)
 		{
-			int dmg = BattleCalc.calculatedDamage(attacker, t, power, type, damageComponents);
+			int dmg = BattleCalc.calculatedDamage(attacker, t, power, type, damageComponents, customMiss, accuracyType);
 			switch(BattleCalc.getDmgReturnType())
 			{
 			case Blocked:
