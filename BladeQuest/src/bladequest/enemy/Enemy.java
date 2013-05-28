@@ -11,8 +11,8 @@ import bladequest.battleactions.bactShake;
 import bladequest.battleactions.bactWait;
 import bladequest.bladescript.ScriptVar;
 import bladequest.bladescript.ScriptVar.BadTypeException;
+import bladequest.combat.Battle;
 import bladequest.combat.BattleCalc;
-import bladequest.combat.BattleEvent;
 import bladequest.combat.BattleEventBuilder;
 import bladequest.graphics.AnimatedBitmap;
 import bladequest.graphics.BattleAnim;
@@ -28,6 +28,7 @@ import bladequest.world.Ability;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
 import bladequest.world.Stats;
+import bladequest.world.TargetTypes;
 
 
 public class Enemy extends PlayerCharacter
@@ -183,48 +184,24 @@ public class Enemy extends PlayerCharacter
 		this.ai = ai;
 	}
 	
-	public BattleEvent genBattleEvent(List<PlayerCharacter> chars, List<Enemy> enemies)
+	public void genBattleEvent()
 	{
 		Act();
-		List<PlayerCharacter> targets = new ArrayList<PlayerCharacter>();
-		List<PlayerCharacter> everybody = new ArrayList<PlayerCharacter>();
-		
-		for(PlayerCharacter c : chars)everybody.add(c);
-		for(Enemy e : enemies)everybody.add(e);
+		//List<PlayerCharacter> targets;
 		
 		switch(action)
 		{
 		case Ability:
-			switch(abilityToUse.TargetType())
-			{
-			case Single:
-			case SingleEnemy:
-				targets.add(chars.get(Global.rand.nextInt(chars.size())));
-				break;				
-			case SingleAlly:			
-				targets.add(enemies.get(Global.rand.nextInt(enemies.size())));
-				break;
-			case AllAllies:
-				for(Enemy e : enemies)targets.add(e);
-				break;
-			case AllEnemies:
-				for(PlayerCharacter c : chars)targets.add(c);
-				break;				
-			case Everybody:
-				for(PlayerCharacter c : everybody)targets.add(c);
-				break;
-			case Self:
-				targets.add(this);
-				break;
-			}			
+			TargetTypes targetType = abilityToUse.TargetType();
+			if (targetType == TargetTypes.Single) targetType = TargetTypes.SingleEnemy;
+			targets = Battle.getRandomTargets(targetType, this);
 			break;
 		default://attack
-			targets.add(chars.get(Global.rand.nextInt(chars.size())));			
+			targets = Battle.getRandomTargets(TargetTypes.SingleEnemy, this);			
 			break;
 		}
 		
-		return new BattleEvent(this.action, abilityToUse, this, targets, Global.battle.getMarkers());
-		
+		//return new BattleEvent(this.action, abilityToUse, this, targets, Global.battle.getMarkers());
 	}
 	
 

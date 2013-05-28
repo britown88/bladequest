@@ -35,8 +35,18 @@ public class bactDamage extends BattleAction
 	{
 		PlayerCharacter attacker = builder.getSource();
 		for(PlayerCharacter t : builder.getTargets())
-		{
+		{			
 			int dmg = BattleCalc.calculatedDamage(attacker, t, power, type, damageComponents);
+			
+			
+			if (dmg > 0)
+			{
+				//CALLS GENERIC CODE OH SHIT OH FUCK
+				t.getOnDamagedEvent().trigger();
+				//WARNING WARNING DANGER DANGER GAME STATE DESTROYED
+			}
+			
+			
 			switch(BattleCalc.getDmgReturnType())
 			{
 			case Blocked:

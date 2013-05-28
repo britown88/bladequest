@@ -100,7 +100,9 @@ public class Battle
 	
 	//envent stuff
 	public ObserverUpdatePool<Condition> updatePool;
-	private Event startTurn;	
+	private Event startTurn, onSelectStart;
+	
+	
 	
 	private long startTime;
 	private int currentFrame; 
@@ -144,7 +146,7 @@ public class Battle
 						stateMachine.setState(getCharStatusState());
 						return;
 					}
-				stateMachine.setState(getSelectState());
+				if (!getCharacterBattleAction()) nextChar = true;
 			}
 		};
 	}
@@ -163,7 +165,7 @@ public class Battle
 						return;
 					}
 				
-				stateMachine.setState(getSelectState());
+				if (!getCharacterBattleAction()) nextChar = true;
 			}
 			
 			@Override
@@ -630,10 +632,9 @@ public class Battle
 	}
 	
 	public void startBattle(String encounter)
-	{		
-		
-		
+	{	
 		startTurn = new Event();
+		onSelectStart = new Event();
 		
 		HitCounterCondition condition = new HitCounterCondition(4);
 		startTurn.register(condition);
@@ -819,10 +820,21 @@ public class Battle
 	{
 		for(PlayerCharacter c : partyList)
 		{
+			if (c.getMirroredSpecial() == false)
+			{
+				c.setMirrored(c.getDefaultMirrored());
+			}
 			if (c.getPositionSpecial()) continue;
 			c.setPosition(partyPos.x + (charXSpacing * c.Index()), partyPos.y + (charYSpacing * c.Index()));
 		}
 		
+		for (PlayerCharacter c : encounter.Enemies())
+		{
+			if (c.getMirroredSpecial() == false)
+			{
+				c.setMirrored(c.getDefaultMirrored());
+			}
+		}
 
 		if(currentChar != null && currentChar.getPositionSpecial() == false)	
 			currentChar.setPosition(partyPos.x + (charXSpacing * currentChar.Index()) - selCharX, partyPos.y + (charYSpacing * currentChar.Index()));
@@ -980,10 +992,13 @@ public class Battle
 		//add enemy actions to event queue
 		for(Enemy e : encounter.Enemies())
 			if(e.isInBattle())
-				battleEvents.add(e.genBattleEvent(partyList, encounter.Enemies()));
+			{
+				getEnemyBattleAction(e);
+				addBattleEvent(e, e.getTargets());
+			}
 
 		for(PlayerCharacter c : partyList)
-			if(c.isInBattle())
+			if(c.isInBattle() && c.getAction() != Action.Skipped)
 				addBattleEvent(c, c.getTargets());
 		
 		battleEvents = BattleCalc.genMoveOrder(battleEvents);
@@ -1040,6 +1055,61 @@ public class Battle
 	public PlayerCharacter getCurrentActor()
 	{
 		return battleEvents.get(0).getSource();
+	}
+	public boolean getPlayerHasGone(PlayerCharacter c)
+	{
+		for (BattleEvent b : battleEvents)
+		{
+			if (b.getSource() == c) return false;
+		}
+		return true;
+	}
+	public PlayerBattleActionSelect resetPlayerAction(PlayerCharacter c)
+	{
+		int argNum = 0;
+		for (BattleEvent b : battleEvents)
+		{
+			if (b.getSource() == c) return new PlayerBattleActionSelect()
+			{
+
+				BattleEvent replaceEvent;
+				int eventNumber;
+				PlayerBattleActionSelect initialize(BattleEvent replaceEvent, int eventNumber)
+				{
+					this.replaceEvent = replaceEvent;
+					this.eventNumber = eventNumber;
+					return this;
+				}
+				
+				@Override
+				public void skipPlayerInput() {
+					battleEvents.remove(replaceEvent);
+				}
+
+				@Override
+				public PlayerCharacter getPlayer() {
+					return replaceEvent.getSource();
+				}
+
+				@Override
+				public void setUseAbility(Ability ability,
+						List<PlayerCharacter> targets) {
+					battleEvents.add(eventNumber, new BattleEvent(Action.Ability, ability, replaceEvent.getSource(), targets,  markers));
+					skipPlayerInput();					
+				}
+
+				@Override
+				public void setAttack(PlayerCharacter target) {
+					List<PlayerCharacter> targets = new ArrayList<PlayerCharacter>();
+					targets.add(target);
+					battleEvents.add(eventNumber, new BattleEvent(Action.Attack, null, replaceEvent.getSource(), targets,  markers));
+					skipPlayerInput();										
+				}
+				
+			}.initialize(b, argNum);
+			++argNum;
+		}
+		return null;		
 	}
 	private void nextActorInit()
 	{
@@ -1100,11 +1170,13 @@ public class Battle
 				battleEvents.remove(0);
 			}
 			
+			
 			if(battleEvents.size() == 0)
 			{
 				selectFirstChar();
 				startTurn.trigger();
 				stateMachine.setState(getWaitingForInputState());
+				return;
 			}
 			else
 			{
@@ -1122,7 +1194,7 @@ public class Battle
 				case CombatAction:setInfoBarText(actor.getDisplayName()+actor.getCombatActionText());break;
 				default: break;}
 				
-				if(!actor.isInBattle())
+				if(!actor.isInBattle() || actor.getAction() == Action.Skipped)
 					nextActorInit();
 				else 
 				{					
@@ -1132,20 +1204,20 @@ public class Battle
 						currentEvent.setTargets(getTargetable(actor, targets));
 					}
 					
-					if(actor.getAction() == Action.CombatAction)
+					if(action == Action.CombatAction)
 					{
 						showDisplayName(actor.combatActionName);
 					}						
-					else if(actor.getAction() == Action.Ability)
+					else if(action == Action.Ability)
 					{
 						showDisplayName(ability.getDisplayName());
-						actor.useAbility();
+						actor.useAbility(ability);
 					}						
-					else if(actor.getAction() == Action.Item)
+					else if(action == Action.Item)
 					{
 						showDisplayName(actor.getItemToUse().getName());
 					}
-					else if (actor.getAction() == Action.Run)
+					else if (action == Action.Run)
 					{
 						showDisplayName("Run");
 					}
@@ -1333,9 +1405,119 @@ public class Battle
 				break;
 			}
 	}
+	
+	public static interface PlayerBattleActionSelect
+	{
+		void skipPlayerInput();
+		PlayerCharacter getPlayer();
+		void setUseAbility(Ability ability, List<PlayerCharacter> targets);
+		void setAttack(PlayerCharacter target);
+	}
+	
+	private PlayerBattleActionSelect actionSetter; 
+	public Event getOnActionSelectEvent()
+	{
+		return onSelectStart;
+	}
+	public PlayerBattleActionSelect getActionSetter()
+	{
+		return actionSetter;
+	}
+	
+	private class ActionSelector implements PlayerBattleActionSelect
+	{
+		public boolean inputSkipped = false;
+		public Ability forceAbility = null;
+		public boolean forceAttack = false;			
+		public List<PlayerCharacter> targets;
+		PlayerCharacter selectedChar;
+		ActionSelector(PlayerCharacter selectedChar)
+		{
+			this.selectedChar = selectedChar;
+		}
+		@Override
+		public void skipPlayerInput() {
+			inputSkipped = true;
+		}
+
+		@Override
+		public PlayerCharacter getPlayer() {
+			return selectedChar;
+		}
+
+		@Override
+		public void setUseAbility(Ability ability, List<PlayerCharacter> targets) {
+			forceAbility = ability;
+			this.targets = targets;
+		}
+
+		@Override
+		public void setAttack(PlayerCharacter target) {
+			forceAttack = true;
+			targets = new ArrayList<PlayerCharacter>();
+			targets.add(target);
+		}			
+	};
+
+	private boolean processActionSelector(PlayerCharacter c)
+	{
+		ActionSelector selector = new ActionSelector(c);
+		actionSetter = selector;
+		
+		onSelectStart.trigger();
+		actionSetter = null;
+		
+		boolean turnOver = false;
+		
+		if (selector.inputSkipped == true)
+		{
+			c.setBattleAction(Action.Skipped);
+			turnOver = true;
+		}
+		else if (selector.forceAbility != null)
+		{
+			c.setBattleAction(Action.Ability);
+			c.setAbilityToUse(selector.forceAbility);
+			c.setTargets(selector.targets);
+			turnOver = true;
+		}
+		else if (selector.forceAttack)
+		{
+			c.setBattleAction(Action.Attack);
+			c.setTargets(selector.targets);
+			turnOver = true;
+		}
+		return turnOver;
+	}
+	private void getEnemyBattleAction(Enemy e)
+	{
+		
+		boolean turnOver = processActionSelector(e);
+		if (!turnOver)
+		{
+			e.genBattleEvent();
+		}
+		
+	}
+	private boolean getCharacterBattleAction()
+	{
+		boolean turnOver = processActionSelector(currentChar);
+		if (!turnOver)
+		{
+			stateMachine.setState(getSelectState());	
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 	private void addBattleEvent(PlayerCharacter source, List<PlayerCharacter> targets)
 	{
-		battleEvents.add(new BattleEvent(source.getAction(), source.getAbilityToUse(), source, targets, markers));
+		if (source.getAction() != Action.Skipped)
+		{
+			battleEvents.add(new BattleEvent(source.getAction(), source.getAbilityToUse(), source, targets, markers));
+		}
 	}
 	
 	public void setInfoBarText(String str)
@@ -1386,6 +1568,7 @@ public class Battle
 		{
 			if(prevChar)
 			{
+				nextChar = prevChar = false;
 				if(currentChar.getAction() == Action.Item)
 					currentChar.unuseItem();
 			
@@ -1405,28 +1588,31 @@ public class Battle
 					
 					if(currentChar.getAction() == Action.Item)
 						currentChar.unuseItem();
-					
-					break;
-				}
 				
-
-				stateMachine.setState(getSelectState());
+					if (getCharacterBattleAction()) break;
+				}
 			}
 			else 
 			{
-				//loop until nondead party member
-				do ++currentCharIndex;
-				while(currentCharIndex < partyList.size() && !partyList.get(currentCharIndex).isInBattle());
-				
-				if(currentCharIndex < partyList.size())
-				{					
-					currentChar = partyList.get(currentCharIndex);
-					stateMachine.setState(getSelectState());
+				nextChar = prevChar = false;
+				for (;;)
+				{
+					//loop until nondead party member
+					do ++currentCharIndex;
+					while(currentCharIndex < partyList.size() && !partyList.get(currentCharIndex).isInBattle());
+					
+					if(currentCharIndex < partyList.size())
+					{					
+						currentChar = partyList.get(currentCharIndex);
+						if (getCharacterBattleAction()) break;
+					}
+					else
+					{
+						stateMachine.setState(getActState());
+						break;
+					}
 				}
-				else
-					stateMachine.setState(getActState());
 			}			
-			nextChar = prevChar = false;
 		}
 	}
 	
@@ -1694,6 +1880,71 @@ public class Battle
 	public Encounter getEncounter()
 	{
 		return encounter;
+	}
+	
+	
+	public enum Team
+	{
+		Player,
+		Enemy
+	}
+	
+	public static List<PlayerCharacter> getRandomTargets(TargetTypes targetType, PlayerCharacter character)
+	{
+		Team team;
+		if (character.isEnemy()) team = Team.Enemy;
+		else team = Team.Player;
+		
+		return getRandomTargets(targetType, character, team);
+	}
+	public static List<PlayerCharacter> getRandomTargets(TargetTypes targetType, PlayerCharacter character, Team team)
+	{
+		List<PlayerCharacter> targets = new ArrayList<PlayerCharacter>();
+		List<PlayerCharacter> us, them;
+		
+		if (team == Team.Enemy)
+		{
+			us = new ArrayList<PlayerCharacter>();			
+			them = Global.battle.getParty();
+			for (Enemy e : Global.battle.getEncounter().Enemies()) us.add(e);
+		}
+		else
+		{
+			us = Global.battle.getParty();
+			them = new ArrayList<PlayerCharacter>();
+			for (Enemy e : Global.battle.getEncounter().Enemies()) them.add(e);
+		}
+		
+		List<PlayerCharacter> everybody = new ArrayList<PlayerCharacter>();
+		
+		for(PlayerCharacter c : us) everybody.add(c);
+		for(PlayerCharacter e : them) everybody.add(e);
+		
+		switch(targetType)
+		{
+			case Single:
+				targets.add(everybody.get(Global.rand.nextInt(everybody.size())));
+				break;
+			case SingleEnemy:
+				targets.add(them.get(Global.rand.nextInt(them.size())));
+				break;				
+			case SingleAlly:			
+				targets.add(us.get(Global.rand.nextInt(us.size())));
+				break;
+			case AllAllies:
+				for(PlayerCharacter p : us)targets.add(p);
+				break;
+			case AllEnemies:
+				for(PlayerCharacter p : them)targets.add(p);
+				break;				
+			case Everybody:
+				for(PlayerCharacter p : everybody)targets.add(p);
+				break;
+			case Self:
+				targets.add(character);
+				break;			
+		}
+		return targets;
 	}
 	
 	 public List<DamageMarker> getMarkers()

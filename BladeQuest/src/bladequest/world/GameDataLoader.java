@@ -1,6 +1,5 @@
 package bladequest.world;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,12 +8,9 @@ import java.util.Map;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.util.Log;
-import bladequest.bladescript.FileTokenizer;
 import bladequest.bladescript.LibraryWriter;
-import bladequest.bladescript.Parser;
-import bladequest.bladescript.Script;
-import bladequest.bladescript.ScriptVar;
 import bladequest.bladescript.Script.BadSpecialization;
+import bladequest.bladescript.ScriptVar;
 import bladequest.bladescript.ScriptVar.BadTypeException;
 import bladequest.bladescript.libraries.BattleLibrary;
 import bladequest.bladescript.libraries.CharacterLibrary;
@@ -30,7 +26,6 @@ import bladequest.combatactions.combDragonForm;
 import bladequest.combatactions.combStance;
 import bladequest.combatactions.combSteal;
 import bladequest.combatactions.combWish;
-import bladequest.enemy.Enemy;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleAnimObjState;
 import bladequest.graphics.BattleAnimObjState.PosTypes;

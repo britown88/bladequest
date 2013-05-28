@@ -2,17 +2,14 @@ package bladequest.battleactions;
 
 import android.graphics.Point;
 import android.graphics.Rect;
-import bladequest.battleactions.BattleAction.State;
-import bladequest.combat.Battle;
 import bladequest.combat.BattleEventBuilder;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleAnimObjState;
-import bladequest.graphics.BattleAnimObject;
-import bladequest.graphics.BattleSprite;
 import bladequest.graphics.BattleAnimObjState.PosTypes;
+import bladequest.graphics.BattleAnimObject;
 import bladequest.graphics.BattleAnimObject.Types;
+import bladequest.graphics.BattleSprite;
 import bladequest.graphics.BattleSprite.faces;
-import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
 
 public class bactFlashColorize extends DelegatingAction {

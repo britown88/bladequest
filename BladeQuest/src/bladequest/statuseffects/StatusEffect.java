@@ -7,7 +7,7 @@ import bladequest.combat.BattleEventBuilder;
 import bladequest.combatactions.Stance;
 import bladequest.world.PlayerCharacter;
 
-public class StatusEffect 
+public abstract class StatusEffect 
 {
 	protected String name, icon;
 	protected boolean 
@@ -31,8 +31,25 @@ public class StatusEffect
 	public boolean isBattleOnly() {return battleOnly;}
 	public String Name() { return name; }
 	
+	
+	//override to set a weakened sprite face.
+	public boolean weakens() {return false;}
+	
 	//for stance statuses only
 	public Stance getStance() {return null;}
+	
+	public abstract StatusEffect clone();
+	
+	public boolean getStacks() {return false;}
+	
+	public enum ReapplyResult
+	{
+		Reapplied,
+		Missed,
+		Replace
+	}
+	
+	public ReapplyResult onReapply(StatusEffect other){return ReapplyResult.Missed;}
 	
 	public void onTurn(BattleEventBuilder eventBuilder) {}
 	public void onInflict(PlayerCharacter c) {}

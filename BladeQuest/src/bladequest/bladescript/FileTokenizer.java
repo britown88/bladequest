@@ -9,8 +9,10 @@ public class FileTokenizer implements Tokenizer {
 	char saved;
 	String buffer;
 	boolean stringBuffer, commented, lastCharEnd, atEnd;
-	public FileTokenizer(InputStream input)
+	String fileName;
+	public FileTokenizer(String fileName, InputStream input)
 	{
+		this.fileName = fileName;
 		atEnd = false;
 		this.input = input;
 		savedChar = false;
@@ -23,7 +25,10 @@ public class FileTokenizer implements Tokenizer {
 			
 		};
 	}
-	
+	public String getExceptionInfo()
+	{
+		return "Error in file: " + fileName;
+	}
 	public boolean isFloat(String str)
 	{
 		boolean foundDot = false;

@@ -22,16 +22,28 @@ public class bactInflictStatus extends BattleAction
 	
 	boolean tryApplyStatus(PlayerCharacter character)
 	{
-		if (se.isNegative() && !character.hasStatus(se.Name()) || 
-				   (!se.isNegative()))
+		if (se.getStacks())
 		{
-			if (character.hasStatus(se.Name()))
-			{
-				character.removeStatusEffect(se.Name());
-			}			
+			character.applyStatusEffect(se.clone()); 
 			return true;
 		}
-		return false;
+		List<StatusEffect> effects = character.getStatusEffects();
+		for (StatusEffect effect : effects)
+		{
+			if (effect.Name().equals(se.Name()))
+			{
+				StatusEffect.ReapplyResult result = effect.onReapply(se);
+				switch (result)
+				{
+				case Missed: return false;
+				case Replace: character.removeStatusEffect(effect);  character.applyStatusEffect(se.clone()); return true;
+				default:
+					return true;
+				}
+			}
+		}
+		character.applyStatusEffect(se.clone());
+		return true;
 	}
 	
 	@Override
@@ -48,7 +60,7 @@ public class bactInflictStatus extends BattleAction
 						builder.addMarker(new DamageMarker(se.Name().toUpperCase(Locale.US), t));	
 					}	
 					
-					t.applyStatusEffect(se);
+					
 				}
 				else if (!se.isHidden())
 				{
@@ -69,8 +81,6 @@ public class bactInflictStatus extends BattleAction
 			{
 				if (!se.isHidden())
 					markers.add(new DamageMarker(se.Name().toUpperCase(Locale.US), t));	
-				
-				t.applyStatusEffect(se);
 			}	
 			else if (!se.isHidden())				
 				markers.add(new DamageMarker("MISS", t));

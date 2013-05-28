@@ -6,6 +6,7 @@ import bladequest.statuseffects.StatusEffect;
 import bladequest.world.PlayerCharacter;
 
 public class bactBreakStance extends BattleAction {
+	
 	@Override
 	public State run(BattleEventBuilder builder)
 	{
@@ -34,6 +35,7 @@ public class bactBreakStance extends BattleAction {
 				battleOnly = true;
 				hidden = true;
 			}
+			public StatusEffect clone() {return this;}
 			StatusEffect initialize(Stance stance)
 			{
 				this.stance = stance;

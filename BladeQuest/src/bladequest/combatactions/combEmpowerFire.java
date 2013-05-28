@@ -7,6 +7,7 @@ import bladequest.battleactions.BattleAction;
 import bladequest.battleactions.TargetedAction;
 import bladequest.battleactions.bactChangeVisibility;
 import bladequest.battleactions.bactFlashColorize;
+import bladequest.battleactions.bactInflictStatus;
 import bladequest.battleactions.bactRunAnimation;
 import bladequest.battleactions.bactSetFace;
 import bladequest.battleactions.bactWait;
@@ -18,9 +19,11 @@ import bladequest.graphics.BattleAnimObjState.PosTypes;
 import bladequest.graphics.BattleAnimObject;
 import bladequest.graphics.BattleAnimObject.Types;
 import bladequest.graphics.BattleSprite.faces;
+import bladequest.statuseffects.StatusEffect;
 import bladequest.world.DamageTypes;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
+import bladequest.world.Stats;
 import bladequest.world.TargetTypes;
 
 public class combEmpowerFire extends CombatAction {
@@ -77,6 +80,56 @@ public class combEmpowerFire extends CombatAction {
 		return out;
 	}
 	
+	
+	StatusEffect getEmpowerFireStatus(int power)
+	{
+		return new StatusEffect("Empower Fire", false)
+		{
+			int statShift;
+			int duration;
+			{
+				icon = ""; //shouldn't show.
+				negative = false;
+				removeOnDeath = true;
+				curable = false;
+				battleOnly = true;
+				hidden = false; //show name for status switch!
+				
+				duration = 4;
+				statShift = 0;
+			}
+			StatusEffect initialize(int shift)
+			{
+				this.statShift = shift;
+				return this;
+			}
+			public void onTurn(BattleEventBuilder builder)
+			{
+				if (duration == 0)
+				{
+					Global.battle.setInfoBarText(builder.getSource().getDisplayName() + "'s empower fire wore off...");
+					builder.getSource().removeStatusEffect(this);
+					builder.addEventObject(new bactWait(600));
+					return;
+				}
+				--duration;
+			}
+			public StatusEffect clone() {return this;}
+			public void onInflict(PlayerCharacter c) 
+			{	
+				c.modStat(Stats.Fire.ordinal(), statShift);
+			}
+			public void onRemove(PlayerCharacter c) 
+			{
+				c.modStat(Stats.Fire.ordinal(), -statShift);				
+			}		
+			public ReapplyResult onReapply(StatusEffect other)
+			{
+				return ReapplyResult.Replace; 
+			}
+		}.initialize(power);
+	}
+	
 	@Override
 	public void buildEvents(BattleEventBuilder builder)
 	{
@@ -101,8 +154,8 @@ public class combEmpowerFire extends CombatAction {
 					builder.addEventObject(new bactChangeVisibility(false).addDependency(builder.getLast()));
 					builder.addEventObject(new bactFlashColorize(255,255,0,0,450,1.0f).addDependency(builder.getLast()));
 					builder.addEventObject(new bactChangeVisibility(true).addDependency(builder.getLast()));
+					builder.addEventObject(new bactInflictStatus(getEmpowerFireStatus(builder.getSource().getLevel()*2)).addDependency(builder.getLast()));
 					builder.addEventObject(new bactRunAnimation(Global.battleAnims.get("fire")).addDependency(builder.getLast()));
-					//TODO: fire affinity status buff.
 				}
 				protected BattleEventBuilder getAdaptedBuilder(BattleEventBuilder builder)
 				{

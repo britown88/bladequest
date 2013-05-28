@@ -36,13 +36,12 @@ import bladequest.actions.actFadeControl;
 import bladequest.actions.actPlayMusic;
 import bladequest.actions.actResetGame;
 import bladequest.actions.actShowScene;
-import bladequest.actions.actShowScene.InputTriggers;
 import bladequest.actions.actWait;
+import bladequest.battleactions.BattleAction;
 import bladequest.bladescript.FileTokenizer;
 import bladequest.bladescript.Parser;
 import bladequest.bladescript.Script;
 import bladequest.bladescript.ScriptVar;
-import bladequest.battleactions.BattleAction;
 import bladequest.combat.Battle;
 import bladequest.combat.BattleEventBuilder;
 import bladequest.enemy.Enemy;
@@ -227,7 +226,7 @@ public class Global
 		
 		Parser p = null;
 		try {
-			p = new Parser(new FileTokenizer(activity.getAssets().open(file)), script);
+			p = new Parser(new FileTokenizer(file, activity.getAssets().open(file)), script);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;

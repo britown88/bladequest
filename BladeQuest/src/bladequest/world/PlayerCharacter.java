@@ -69,8 +69,10 @@ public class PlayerCharacter
 	
 	private boolean visible;
 	private boolean positionSpecial;
+	private boolean mirrorSpecial;
+	private boolean defaultMirroredState = false;
 	
-	private Event onPhysicalHitEvent;
+	private Event onPhysicalHitEvent, onDamagedEvent;
 	
 	public PlayerCharacter(String name, String displayNam, String bSpr, String wSpr)
 	{
@@ -145,7 +147,8 @@ public class PlayerCharacter
 		
 		if (Global.battle != null) //triple-ghetto state check
 		{
-			onPhysicalHitEvent = new Event();	
+			onPhysicalHitEvent = new Event();
+			onDamagedEvent = new Event();
 		}		
 	}
 
@@ -154,6 +157,10 @@ public class PlayerCharacter
 	{
 		return onPhysicalHitEvent;
 	}
+	public Event getOnDamagedEvent()
+	{
+		return onDamagedEvent;
+	}	
 	public void setExp(int exp){this.exp = exp;}
 	public void setDisplayName(String str){displayName = str;}
 	public void setSprites(String world, String battle)
@@ -170,10 +177,12 @@ public class PlayerCharacter
 	public void startBattle()
 	{
 		onPhysicalHitEvent = new Event();
+		onDamagedEvent = new Event();
 	}
 	public void endBattle()
 	{
 		onPhysicalHitEvent = null;
+		onDamagedEvent = null;
 	}
 	
 	public int getExp(){return exp;}
@@ -546,9 +555,9 @@ public class PlayerCharacter
 
 	}
 	
-	public void useAbility()
+	public void useAbility(Ability ability)
 	{	
-		MP = Math.max(0,  MP-abilityToUse.MPCost());			
+		MP = Math.max(0,  MP-ability.MPCost());			
 	}
 	
 	public void modifyMP(int MP)
@@ -857,25 +866,33 @@ public class PlayerCharacter
 	
 	public void removeStatusEffect(String se)
 	{
+		List<StatusEffect> newList = new ArrayList<StatusEffect>();
+		
 		for(StatusEffect s : statusEffects)
 			if(s.Name().equals(se))
 			{
-				s.onRemove(this);
-				statusEffects.remove(s);
-				setFace(battleSpr.getFace());
-				//setIdle(false);
-				return;
-			}		
+				newList.add(s);
+			}
+		
+		for (StatusEffect s : newList)
+		{
+			removeStatusEffect(s);
+
+		}
+	}
+	
+	
+	public void removeStatusEffect(StatusEffect se)
+	{
+		se.onRemove(this);
+		statusEffects.remove(se);
+		setFace(battleSpr.getFace());		
 	}
 	
 	public void applyStatusEffect(StatusEffect se)
 	{
 		if(!dead || se.Name().equals("KO"))
-		{
-			for(StatusEffect s : statusEffects)
-				if(s.Name().equals(se.Name()))
-					return;
-			
+		{	
 			se.onInflict(this);
 			statusEffects.add(se);
 			setFace(battleSpr.getFace());			
@@ -1017,10 +1034,10 @@ public class PlayerCharacter
 	}
 
 	
-	private boolean hasNegativeStatus()
+	private boolean hasWeakeningStatus()
 	{
 		for(StatusEffect se : statusEffects)
-			if(se.isNegative())
+			if(se.weakens())
 				return true;
 		
 		return false;
@@ -1058,7 +1075,7 @@ public class PlayerCharacter
 		if(!isEnemy)
 		{
 			BattleSprite.faces oldFace = battleSpr.getFace();
-			boolean weak = HP <= (float)stats[Stats.MaxHP.ordinal()]*0.25F || hasNegativeStatus();
+			boolean weak = HP <= (float)stats[Stats.MaxHP.ordinal()]*0.25F || hasWeakeningStatus();
 			imageIndex = 0;			
 			
 			switch(newFace)
@@ -1122,9 +1139,12 @@ public class PlayerCharacter
 			//draw weapon swing
 			if(battleSpr.getFace() == faces.Attack)
 			{
+				boolean mirrored = getMirrored();
+				//int offset = -20;
+				//if (mirrored) offset *= -1;
 				WeaponSwingDrawable swing = getWeaponSwing();
 				if(swing != null)
-					swing.render(imageIndex, position.x-20, position.y-6);
+					swing.render(imageIndex, position.x -20, position.y-6, mirrored);
 			}
 		}	
 		
@@ -1164,7 +1184,12 @@ public class PlayerCharacter
 	public boolean getVisible() { return visible;}
 	
 	public void setMirrored(boolean isMirrored) {battleSpr.setMirrored(isMirrored);}
-	public boolean getMirrored() { return battleSpr.getMirrored();}	
+	public void setDefaultMirroredState(boolean isMirrored) {defaultMirroredState = isMirrored;}
+	public void setMirroredSpecial(boolean mirroredSpecial) {this.mirrorSpecial = mirroredSpecial;}
+	public boolean getMirrored() { return battleSpr.getMirrored();}
+	public boolean getDefaultMirrored() { return defaultMirroredState;}
+	public boolean getMirroredSpecial() {return this.mirrorSpecial;} 
+	
 	
 	public void setEscaped(boolean escape) {escaped = escape;}
 	public boolean getEscaped() {return escaped;}
@@ -1176,7 +1201,8 @@ public class PlayerCharacter
 		Guard,
 		CombatAction,
 		Ability,
-		Run
+		Run,
+		Skipped
 	}
 
 }

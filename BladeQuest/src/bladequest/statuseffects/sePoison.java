@@ -25,6 +25,8 @@ public class sePoison extends StatusEffect
 		battleOnly = false;
 		hidden = false;
 	}
+	public StatusEffect clone() {return new sePoison(power);}
+	public boolean weakens() {return true;}
 	@Override
 	public String saveLine() 
 	{ 

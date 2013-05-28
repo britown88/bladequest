@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import bladequest.battleactions.TargetedAction;
 import bladequest.battleactions.bactDamage;
 import bladequest.battleactions.bactRunAnimation;
+import bladequest.battleactions.bactWait;
 import bladequest.combat.BattleEventBuilder;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleAnimObjState;
@@ -35,6 +36,7 @@ public class seRegen extends StatusEffect {
 		this.maxHeal = maxHeal;
 		this.duration = duration;
 	}
+	public StatusEffect clone() {return new seRegen(minHeal, maxHeal, duration);}
 	static BattleAnim makeSparkleFairyBullshit(int particleCount)
 	{
 		BitmapFrame[] frames = Global.getSparkleParticle().getFrames();
@@ -69,12 +71,21 @@ public class seRegen extends StatusEffect {
 	public void onTurn(BattleEventBuilder builder) 
 	{
 		PlayerCharacter healTarget =  builder.getSource();
+		if (duration == 0)
+		{
+			Global.battle.setInfoBarText(healTarget.getDisplayName() + "'s regen wore off...");
+			healTarget.removeStatusEffect(this);
+			builder.addEventObject(new bactWait(450));
+			return;
+		}
+		
+		
 		Global.battle.setInfoBarText(healTarget.getDisplayName() + " is regaining HP!");
 		
 		List<PlayerCharacter> healTargetList = new ArrayList<PlayerCharacter>();
 		healTargetList.add(healTarget);
 		
-		BattleAnim anim = makeSparkleFairyBullshit(25);
+		BattleAnim anim = makeSparkleFairyBullshit(20);
 		
 		int healAmnt = Global.rand.nextInt(maxHeal-minHeal) + minHeal;
 		
@@ -97,10 +108,7 @@ public class seRegen extends StatusEffect {
 				
 		
 		
-		if (duration > 0 && --duration == 0)
-		{
-			healTarget.removeStatusEffect(name);
-		}
+		--duration;
 	}
 	@Override
 	public void onInflict(PlayerCharacter c) 
@@ -108,4 +116,8 @@ public class seRegen extends StatusEffect {
 		if(Global.GameState == States.GS_BATTLE)
 			Global.playAnimation(makeSparkleFairyBullshit(25), null, c.getPosition(true)); //TODO: regeneration animation
 	}	
+	public ReapplyResult onReapply(StatusEffect other)
+	{
+		return ReapplyResult.Replace;
+	}
 }
