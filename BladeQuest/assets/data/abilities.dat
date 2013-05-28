@@ -9,6 +9,16 @@ add (messageAction "HAHA IMMA GONNA POISON YOOOUUUU") >
 addDep (animAction "movetest") >
 addDep (inflictStatusAction (poisonStatus 10.0)))
 
+
+\backstab <- (addAbility "backstab" "Backstab" "Single" 3 >
+setDesc "Hits confused enemies for massive damage." >
+add (positionSpecialAction true) >
+addDep (sneakToAction 0) >
+addDep (basicAttackAction 3.0 "Physical" 0.4)) >
+addDep (jumpHomeAction 6.0 3) >
+addDep (positionSpecialAction false) >
+addDep (waitAction 300)
+
 \dblattack <- (addAbility "dblattack" "Double Attack" "Single" 4 >
 setDesc "Attack twice quickly." >
 add (basicAttackAction 0.9 "Physical" 0.6) >

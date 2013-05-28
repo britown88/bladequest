@@ -4,6 +4,8 @@ import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
+import android.media.MediaPlayer.OnErrorListener;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.util.Log;
 import bladequest.world.Global;
 
@@ -14,12 +16,35 @@ public class IntroLoopPlayer
 	private Song song;
 	private long startTime, duration, pausedAt;
 	
-	private boolean paused, loop, playIntro, loopHasStarted;
+	private boolean paused, loop, playIntro, loopHasStarted, prepared, started;
 	
 	public IntroLoopPlayer()
 	{			
+		started = false;
+		prepared = false;
 		mPlayer = new MediaPlayer();		
-		mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);		
+		mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+		mPlayer.setOnPreparedListener(new OnPreparedListener()
+		{
+
+			@Override
+			public void onPrepared(MediaPlayer mp) {
+				duration = mp.getDuration();
+				mp.start();
+				prepared = true;
+			}
+			
+		});
+		mPlayer.setOnErrorListener(new OnErrorListener()
+		{
+
+			@Override
+			public boolean onError(MediaPlayer mp, int what, int extra) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+		});
 	}
 	
 	public boolean loopHasStarted(){return loopHasStarted;}
@@ -37,6 +62,11 @@ public class IntroLoopPlayer
 	
 	private void prepareAndPlaySong(String path, boolean loop)
 	{
+		if (started)
+		{
+			while (!prepared) {}
+			started = false;
+		}
 		mPlayer.reset();		
 		
 		try {
@@ -51,12 +81,14 @@ public class IntroLoopPlayer
 						completion();
 					}
 				});
-			mPlayer.prepare();		
+			prepared = false;
+			mPlayer.prepareAsync();		
 			
 			afd.close();
 		} catch (Exception e) {Log.d("MEDIAPLAYER", "FUCKED");}
 		
-		mPlayer.start();
+		started = true;
+		//mPlayer.start();
 		
 	}
 
@@ -85,6 +117,8 @@ public class IntroLoopPlayer
 	
 	public void play()
 	{
+		//if (!started) return;
+		//while (!prepared) {} //loloo
 		if(paused)
 		{
 			startTime = System.currentTimeMillis();		
@@ -99,13 +133,15 @@ public class IntroLoopPlayer
 				prepareAndPlaySong(song.Path(), loop);			
 			}
 			
-			duration = mPlayer.getDuration();
+		//	duration = mPlayer.getDuration();
 			paused = false;			
 		}		
 	}
 	
 	public void pause()
 	{	
+		if (!started) return;
+		while (!prepared) {}
 		long st = System.currentTimeMillis();
 		if(mPlayer.isPlaying())
 		{
@@ -119,11 +155,13 @@ public class IntroLoopPlayer
 	
 	public void setVolume(float left, float right)
 	{
+		while (!prepared) {}
 		mPlayer.setVolume(left, right);			
 	}
 
 	public void unload() 
 	{
+		while (!prepared) {}
 		if(mPlayer.isPlaying())
 			mPlayer.stop();
 		

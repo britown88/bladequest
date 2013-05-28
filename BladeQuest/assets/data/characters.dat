@@ -7,7 +7,7 @@ setCombatAction "combSteal" >
 setBaseStats 7 10 4 2 >
 setLevel 5 >
 mapBound equip {"knife", "felthat", "cottonshirt"} >
-mapBound addAbility {"poisonjab", "dblattack"} >
+mapBound addAbility {"poisonjab", "dblattack", "backstab"} >
 addLearnableAbility "dblattack" 6)
 
 \joy <- (createCharacter "joy" "Joy" "bjoy" "joy" >

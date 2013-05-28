@@ -10,13 +10,16 @@ import bladequest.battleactions.bactBasicAttack;
 import bladequest.battleactions.bactBreakStance;
 import bladequest.battleactions.bactDamage;
 import bladequest.battleactions.bactInflictStatus;
+import bladequest.battleactions.bactJumpHome;
 import bladequest.battleactions.bactMessage;
 import bladequest.battleactions.bactMirror;
 import bladequest.battleactions.bactRemoveStatus;
 import bladequest.battleactions.bactRunAnimation;
 import bladequest.battleactions.bactRunAnimationBuilder;
 import bladequest.battleactions.bactSetFace;
+import bladequest.battleactions.bactSneakToTarget;
 import bladequest.battleactions.bactSpecialMirrored;
+import bladequest.battleactions.bactSpecialPosition;
 import bladequest.battleactions.bactWait;
 import bladequest.bladescript.LibraryWriter;
 import bladequest.bladescript.ScriptVar;
@@ -95,6 +98,21 @@ public class BattleLibrary {
 		return ability;
 	}
 	
+	public static BattleAction positionSpecialAction(boolean isSpecial)
+	{
+		return new bactSpecialPosition(isSpecial);
+	}
+	
+	public static BattleAction sneakToAction(ScriptVar ignored)
+	{
+		return new bactSneakToTarget();
+	}
+	
+	//anim time out off 60fps in 6 actions, so 10 == 1000ms.
+	public static BattleAction jumpHomeAction(float invArc, int animTime)
+	{
+		return new bactJumpHome(invArc, animTime);
+	}
 	
 	public static BattleAction inflictStatusAction(StatusEffect effect)
 	{
