@@ -79,8 +79,7 @@ public class sePoison extends StatusEffect
 			Global.screenShaker.shake(3, 0.1f, true);
 			Global.screenFader.setFadeColor(64, 34, 177, 76);
 			Global.screenFader.flash(0.25f);
-		}
-		
+		}		
 	}
 	
 	@Override
