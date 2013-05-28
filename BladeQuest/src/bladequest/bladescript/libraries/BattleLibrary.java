@@ -25,6 +25,7 @@ import bladequest.bladescript.LibraryWriter;
 import bladequest.bladescript.ScriptVar;
 import bladequest.bladescript.ScriptVar.BadTypeException;
 import bladequest.combat.Battle;
+import bladequest.combat.BattleCalc;
 import bladequest.combat.triggers.Condition;
 import bladequest.combat.triggers.Trigger;
 import bladequest.enemy.Enemy;
@@ -148,10 +149,23 @@ public class BattleLibrary {
 	{
 		return new bactDamage(power, DamageTypes.valueOf(damageType));
 	}
+	
+	//misschance is a percentage!
+	public static BattleAction damageWithAccuracyAction(float power, String damageType, String accuracyType, float missChance)
+	{
+		return new bactDamage(power, DamageTypes.valueOf(damageType), BattleCalc.AccuracyType.valueOf(accuracyType), missChance);
+	}	
 	public static BattleAction basicAttackAction(float power, String damageType, float speedFactor)
 	{
 		return new bactBasicAttack(power, DamageTypes.valueOf(damageType), speedFactor);
 	}
+	
+	//Function takes Target character and returns bool.
+	public static BattleAction conditionalAttackAction(float power, String damageType, float speedFactor, ScriptVar function)
+	{
+		return new bactBasicAttack(power, DamageTypes.valueOf(damageType), speedFactor, function);
+	}
+		
 	
 	public static BattleAction mirrorAction(boolean mirrored)
 	{

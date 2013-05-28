@@ -22,25 +22,38 @@ public class bactSneakToTarget extends DelegatingAction {
 		
 		final int perspectiveSize = 80;
 		final int hitBuffer = 235;
-		//a bit of buffer on the end so as to not mess with the UI
-		float targetX = (float)(hitBuffer + Global.rand.nextInt(Global.vpWidth-hitBuffer-94));
-		float targetY = perspectiveSize + Global.rand.nextInt(Global.vpHeight - perspectiveSize-64);
 		
-		Point p = new Point((int)targetX, (int)targetY);
+		Point p = null;
+
+		do 
+		{
+			//a bit of buffer on the end so as to not mess with the UI
+			float targetX = (float)(hitBuffer + Global.rand.nextInt(Global.vpWidth-hitBuffer-112));
+			float targetY = perspectiveSize + Global.rand.nextInt(Global.vpHeight - perspectiveSize-64);
+		
+			p = new Point((int)targetX, (int)targetY);
+
+			
+		} while (PointMath.length(attacker.getPosition(true), p) < 75);
+		
 		Point stabPoint = PointMath.getStabPoint(attacker, target);
-		BattleAnim misdirection = PointMath.buildJumpAnimation(attacker, attacker.getPosition(true), p, arcFactorMisdirect,4);
-		BattleAnim endJump = PointMath.buildJumpAnimation(attacker, p, stabPoint, arcFactorFast,2);
+		
+		BattleAnim misdirection = PointMath.buildJumpAnimation(attacker, attacker.getPosition(true), p, arcFactorMisdirect,3);
+		BattleAnim endJump = PointMath.buildJumpAnimation(attacker, p, stabPoint, arcFactorFast,1);
 		
 		PointMath.toTopLeft(p, attacker);
 		PointMath.toTopLeft(stabPoint, attacker);
 		
 		builder.addEventObject(new bactChangeVisibility(false));
-		builder.addEventObject(new bactRunAnimation(misdirection).addDependency(builder.getLast()));
+		builder.addEventObject(new bactRunAnimation(misdirection));
 		builder.addEventObject(new bactChangePosition(p).addDependency(builder.getLast()));
 		builder.addEventObject(new bactChangeVisibility(true).addDependency(builder.getLast()));
-		builder.addEventObject(new bactWait(150).addDependency(builder.getLast()));
-		builder.addEventObject(new bactChangeVisibility(false).addDependency(builder.getLast()));
-		builder.addEventObject(new bactRunAnimation(endJump).addDependency(builder.getLast()));
+		
+		BattleAction waitAction = new bactWait(150).addDependency(builder.getLast()); 
+		
+		builder.addEventObject(waitAction);
+		builder.addEventObject(new bactChangeVisibility(false).addDependency(waitAction));
+		builder.addEventObject(new bactRunAnimation(endJump).addDependency(waitAction));
 		builder.addEventObject(new bactChangePosition(stabPoint).addDependency(builder.getLast()));
 		builder.addEventObject(new bactChangeVisibility(true).addDependency(builder.getLast()));
 	}

@@ -1,5 +1,6 @@
 package bladequest.battleactions;
 
+import bladequest.combat.BattleCalc;
 import bladequest.combat.BattleEvent;
 import bladequest.combat.BattleEventBuilder;
 import bladequest.combat.DamageComponent;
@@ -23,12 +24,22 @@ public class BattleActionPatterns {
 		
 		return builder.getLast();
 	}
+
 	
+	public static BattleAction BuildSwordSlashWithAccuracy(BattleEventBuilder builder, float power, DamageTypes type, float speedFactor, BattleAction prev, BattleCalc.AccuracyType accuracyType, float missChance)
+	{
+		return BuildSwordSlashImpl(builder, power, type, speedFactor, prev, accuracyType, missChance);
+	}
+	public static BattleAction BuildSwordSlashWithAccuracy(BattleEventBuilder builder, float power, DamageTypes type, float speedFactor, BattleCalc.AccuracyType accuracyType, float missChance)
+	{
+		return BuildSwordSlashImpl(builder, power, type, speedFactor, null, accuracyType, missChance);
+	}
 	public static BattleAction BuildSwordSlash(BattleEventBuilder builder, float power, DamageTypes type, float speedFactor)
 	{
-		return BuildSwordSlash(builder, power, type, speedFactor, null);
+		return BuildSwordSlashImpl(builder, power, type, speedFactor, null, BattleCalc.AccuracyType.Regular, 0.0f);
+
 	}
-	public static BattleAction BuildSwordSlash(BattleEventBuilder builder, float power, DamageTypes type, float speedFactor, BattleAction prev)
+	public static BattleAction BuildSwordSlashImpl(BattleEventBuilder builder, float power, DamageTypes type, float speedFactor, BattleAction prev, BattleCalc.AccuracyType accuracyType, float missChance)
 	{
 		PlayerCharacter attacker = builder.getSource();
 
@@ -41,7 +52,8 @@ public class BattleActionPatterns {
 		builder.addEventObject(new bactWait(frameLen*3));
 		BattleAction animStartAction = builder.getLast();
 		
-		bactDamage damageAction = new bactDamage(power, type);
+		bactDamage damageAction = new bactDamage(power, type, accuracyType, missChance);
+		
 		if (anim != null)
 		{
 			SyncronizableAction animationAction = new bactRunAnimation(new BattleAnim(anim, speedFactor));
@@ -67,5 +79,9 @@ public class BattleActionPatterns {
 				damageAction.addDamageComponent(dc.getAffinity(), dc.getPower());
 		
 		return builder.getLast();
+	}
+	public static BattleAction BuildSwordSlash(BattleEventBuilder builder, float power, DamageTypes type, float speedFactor, BattleAction prev)
+	{
+		return BuildSwordSlashImpl(builder, power, type, speedFactor, null, BattleCalc.AccuracyType.Regular, 0.0f);
 	}
 }
