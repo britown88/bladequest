@@ -22,6 +22,7 @@ public class MusicBox
 	{
 		playingSong = "";
 		fadeType = FadeTypes.NotFading;
+		player = new IntroLoopPlayer();
 	}
 	
 	public boolean isDone() { return done; }
@@ -98,17 +99,12 @@ public class MusicBox
 		if(song != null)
 			playSong(song, playIntro, loop);
 		else
-			stop();
-			
-
+			pause(0);
 	}
 	
 	private void playSong(Song song, boolean playIntro, boolean loop)
 	{
-		stop();
-		player = new IntroLoopPlayer(song, playIntro, loop);
-		player.play();
-		
+		player.playSong(song, playIntro, loop);		
 		update();
 	}
 	
@@ -131,18 +127,9 @@ public class MusicBox
 			startTime = System.currentTimeMillis();
 			fadeType = FadeTypes.FadingOut;
 		}
-		else if(player != null)
-			stop();
+		else 
+			player.pause();
 		
-	}
-	
-	public void stop()
-	{
-		if(player != null)
-		{
-			player.unload();
-			player = null;
-		}
 	}
 	
 	//system music calls for screen on/off
@@ -153,8 +140,7 @@ public class MusicBox
 	}	
 	public void systemResume()
 	{
-		if(player != null)
-			player.play();
+		player.play();
 	}	
 	
 	public void release()
@@ -166,7 +152,5 @@ public class MusicBox
 		}
 			
 	}
-	
-	
 
 }

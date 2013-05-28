@@ -2,7 +2,7 @@
 size 30 20
 tileset Prison
 displayname "TESTOLOL"
-BGM inherit
+BGM sneak
 [tiles]
 t 0 0 3 4 b 0 0 0 0 
 t 1 0 4 6 b 0 0 0 0 
