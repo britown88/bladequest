@@ -46,14 +46,17 @@ public class IntroLoopPlayer
     }
 
     
-    public void playSong(Song song, boolean playIntro, boolean loop)
+    public void playSong(Song song, boolean playIntro, boolean loop, boolean fadeIn)
     {
         this.song = song;                      
         this.loop = loop;
         this.playIntro = playIntro && song.HasIntro();
         loopHasStarted = false;
+        
+        mPlayer.setVolume(fadeIn?0:1, fadeIn?0:1);
        
-        paused = true;//play only runs from paused             
+        paused = true;//play only runs from paused        
+        pausedAt = 0;
         play();
     }
    

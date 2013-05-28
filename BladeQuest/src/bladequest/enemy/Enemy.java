@@ -268,17 +268,17 @@ public class Enemy extends PlayerCharacter
 	
 		BattleAction waitAction = new bactWait(350); 
 		builder.addEventObject(waitAction);
-		builder.addEventObject(new bactFlash(8).addDependency(builder.getLast()));
+		builder.addEventObject(new bactFlash(1.0f).addDependency(builder.getLast()));
 		waitAction.setReferences();
 		
 		waitAction = new bactWait(1800);
 		builder.addEventObject(waitAction);
-		builder.addEventObject(new bactFlash(20).addDependency(builder.getLast()));
+		builder.addEventObject(new bactFlash(0.25f).addDependency(builder.getLast()));
 		waitAction.setReferences();
 		
 		waitAction = new bactWait(2100);
 		builder.addEventObject(waitAction);
-		builder.addEventObject(new bactFlash(20).addDependency(builder.getLast()));
+		builder.addEventObject(new bactFlash(0.25f).addDependency(builder.getLast()));
 		waitAction.setReferences();
 		
 		waitAction = new bactWait(2500);

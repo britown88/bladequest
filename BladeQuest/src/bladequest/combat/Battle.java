@@ -980,6 +980,7 @@ public class Battle
 	{
 		Global.screenFader.setFadeColor(255, 0, 0, 0);
 		Global.screenFader.fadeOut(2.0f);
+		Global.musicBox.pause(2.0f);
 
 	}
 	

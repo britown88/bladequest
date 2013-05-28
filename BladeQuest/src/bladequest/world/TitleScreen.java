@@ -88,7 +88,7 @@ public class TitleScreen
 			playingAnim = Global.playAnimation("title", null, null);
 			break;
 		case CompanyTransition:
-			Global.screenFader.fadeOut(2.0f);
+			Global.screenFader.fadeOut(2.0f);			
 			break;
 		case Menu:
 			
@@ -104,7 +104,7 @@ public class TitleScreen
 		case MenuTransition:
 			Global.saveLoadMenu.open(SaveLoadMenu.LOADING);
 			Global.screenFader.setFadeColor(255, 0, 0, 0);
-			Global.screenFader.fadeOut(4);
+			Global.screenFader.fadeOut(0.5f);
 			menu.close();
 			break;
 		case LoadMenu:
@@ -113,7 +113,8 @@ public class TitleScreen
 		case NewgameTransition:
 			menu.close();
 			Global.screenFader.setFadeColor(255, 0, 0, 0);
-			Global.screenFader.fadeOut(1);
+			Global.screenFader.fadeOut(3.0f);
+			Global.musicBox.pause(3.0f);
 			break;
 		default:
 			break;

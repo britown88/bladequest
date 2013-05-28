@@ -4,15 +4,15 @@ import bladequest.combat.BattleEventBuilder;
 import bladequest.world.Global;
 
 public class bactFlash extends BattleAction {
-	int flashSpeed;
-	public bactFlash(int flashSpeed)
+	float flashDuration;
+	public bactFlash(float flashDuration)
 	{
-		this.flashSpeed = flashSpeed;
+		this.flashDuration = flashDuration;
 	}
 	public State run(BattleEventBuilder builder)
 	{
 		Global.screenFader.setFadeColor(255, 255, 255, 255);
-		Global.screenFader.flash(flashSpeed);
+		Global.screenFader.flash(flashDuration);
 		return State.Finished;
 	}
 }

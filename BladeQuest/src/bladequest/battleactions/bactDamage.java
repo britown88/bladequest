@@ -54,7 +54,7 @@ public class bactDamage extends BattleAction
 				break;
 			case Critical:
 				Global.screenFader.setFadeColor(255, 255, 255, 255);
-				Global.screenFader.flash(15);
+				Global.screenFader.flash(0.25f);
 			case Hit:
 				if(dmg >= 0 && !t.isEnemy())
 					t.showDamaged();

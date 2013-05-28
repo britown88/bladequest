@@ -92,6 +92,7 @@ public class MusicBox
 			fadeType = FadeTypes.FadingIn;
 			startTime = System.currentTimeMillis();
 		}
+			
 		
 		//non-infinite-loop
 		if(!loop) done = false;			
@@ -104,7 +105,7 @@ public class MusicBox
 	
 	private void playSong(Song song, boolean playIntro, boolean loop)
 	{
-		player.playSong(song, playIntro, loop);
+		player.playSong(song, playIntro, loop, fadeTime > 0);
 	}
 	
 	public void resumeLastSong()
