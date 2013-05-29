@@ -26,7 +26,7 @@ public class WorldAnimLibrary
 		for (int i = 0; i < 40; ++i)
 		{
 		
-			pList.add(new Point(Global.rand.nextInt(200), Global.rand.nextInt(200)));
+			pList.add(new Point(Global.rand.nextInt(600), Global.rand.nextInt(400)));
 		}
 		
 //		pList.add(new Point(0, 0));
@@ -34,7 +34,7 @@ public class WorldAnimLibrary
 //		pList.add(new Point(0, 200));
 //		pList.add(new Point(200, 200));		
 		
-		return WorldAnimations.buildShatter(new Point(100, 100), pList, 4, 25.0f);
+		return WorldAnimations.buildShatter(new Point(300, 100), pList, 4, 30.0f);
 	}
 
 }

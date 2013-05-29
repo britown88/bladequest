@@ -61,6 +61,9 @@ public class BattleAnimObjState
 		randomized = true;
 	}
 	
+	public BattleAnimObjState()
+	{
+	}
 	public BattleAnimObjState(int frame, PosTypes posType)
 	{
 		show = true;
@@ -85,7 +88,7 @@ public class BattleAnimObjState
 		
 	}
 	
-	public BattleAnimObjState(BattleAnimObjState other)
+	public void copyFrom(BattleAnimObjState other)
 	{
 		this.mirrored = other.mirrored;
 		this.rotation = other.rotation;
@@ -108,6 +111,11 @@ public class BattleAnimObjState
 		
 		if(other.bmpSrcRect != null)
 			this.bmpSrcRect = new Rect(other.bmpSrcRect);
+	}
+	
+	public BattleAnimObjState(BattleAnimObjState other)
+	{
+		copyFrom(other);
 	}
 	
 	public enum PosTypes

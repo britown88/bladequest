@@ -750,13 +750,25 @@ public class Global
 	
 	public static Point vpToScreen(Point p)
 	{
-		return new Point(p.x + ((screenWidth-vpWidth) / 2), p.y + ((screenHeight-vpHeight) / 2));
+		Point p2 = new Point(p);
+		setvpToScreen(p2);
+		return p2;
+	}
+	public static void setvpToScreen(Point p)
+	{
+		p.set(p.x + ((screenWidth-vpWidth) / 2), p.y + ((screenHeight-vpHeight) / 2));
 	}
 	public static Rect vpToScreen(Rect r)
 	{
-		return new Rect((int)(r.left + ((float)(screenWidth-vpWidth) / 2.0f)), (int)(r.top + ((float)(screenHeight-vpHeight) / 2.0f)),
-				(int)(r.right + ((float)(screenWidth-vpWidth) / 2.0f)), (int)(r.bottom + ((float)(screenHeight-vpHeight) / 2.0f)));
-		
+		Rect r2 = new Rect(r);
+		setvpToScreen(r2);
+		return r2;
+	}
+	
+	public static void setvpToScreen(Rect r)
+	{
+		r.set( (int)(r.left + ((float)(screenWidth-vpWidth) / 2.0f)), (int)(r.top + ((float)(screenHeight-vpHeight) / 2.0f)),
+		       (int)(r.right + ((float)(screenWidth-vpWidth) / 2.0f)),(int)(r.bottom + ((float)(screenHeight-vpHeight) / 2.0f)));
 	}
 	public static int vpToScreenX(int x)
 	{

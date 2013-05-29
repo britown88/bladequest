@@ -42,56 +42,72 @@ public class WorldAnimations
 				int finalFrames = 2 << iterations;
 				
 				List<ForkingPath> openPaths = new ArrayList<ForkingPath>();
-				List<ForkingPath> lastPaths;
+				List<ForkingPath> lastPaths = new ArrayList<ForkingPath>();
+				
+				List<ForkingPath> swapBuf; 
 
 				openPaths.add(PointMath.getForkingPath(start, targets, iterations, radius));
 
 				while (!openPaths.isEmpty())
 				{
-				  lastPaths = openPaths;
-				  openPaths = new ArrayList<ForkingPath>();
-				  for (ForkingPath pat : lastPaths)
-				  {
-				     Point p = pat.getPoint();
-				     for (ForkingPath next : pat.getPaths())
-				     {
-				    	 Point nextPt = next.getPoint();
-				    	 
-				    	 BattleAnimObject obj = new BattleAnimObject(Types.Line, false, "");
-							
-							BattleAnimObjState state = new BattleAnimObjState((int)(index*frameLength), PosTypes.Screen);
-							state.pos1 = new Point(p);
-							state.pos2 = new Point(p);
-							state.strokeWidth = 0.0f;								
-							state.argb(255, 255, 255, 255);
-							obj.addState(state);
-							
-							state = new BattleAnimObjState((int)(index*frameLength + frameLength), PosTypes.Screen);
-							state.pos1 = new Point(p);
-							state.pos2 = new Point(nextPt);
-							state.strokeWidth = 5.0f;								
-							state.argb(255, 255, 255, 255);
-							obj.addState(state);
-							
-							state = new BattleAnimObjState((int)(finalFrames*frameLength), PosTypes.Screen);
-							state.pos1 = new Point(p);
-							state.pos2 = new Point(nextPt);
-							state.strokeWidth = 5.0f;								
-							state.argb(255, 255, 255, 255);
-							obj.addState(state);
-							
-							anim.addObject(obj);
-				        openPaths.add(next);
-				     }				     
-				  }
-				  ++index;
-				  
-				}
-				
-				
+					swapBuf = lastPaths;
+					lastPaths = openPaths;
+					openPaths = swapBuf;
+					openPaths.clear();
+					for (ForkingPath pat : lastPaths)
+					{
+						Point p = pat.p;
+						if (pat.child != null)
+						{
+							for (ForkingPath next = pat.child; next != null; next = next.next)
+							{
+								Point nextPt = next.p;
+								 
+						    	 BattleAnimObject obj = new BattleAnimObject(Types.Line, false, "");
+									
+								BattleAnimObjState state = new BattleAnimObjState((int)(index*frameLength), PosTypes.Screen);
+								state.pos1 = new Point(p);
+								state.pos2 = new Point(p);
+								state.strokeWidth = 0.0f;								
+								state.argb(255, 255, 255, 255);
+								obj.addState(state);
 								
-		
-
+								state = new BattleAnimObjState((int)(index*frameLength + frameLength), PosTypes.Screen);
+								state.pos1 = new Point(p);
+								state.pos2 = new Point(nextPt);
+								state.strokeWidth = 2.0f;								
+								state.argb(255, 255, 255, 255);
+								obj.addState(state);
+								
+								state = new BattleAnimObjState((int)(finalFrames*frameLength), PosTypes.Screen);
+								state.pos1 = new Point(p);
+								state.pos2 = new Point(nextPt);
+								state.strokeWidth = 2.0f;								
+								state.argb(255, 0, 0, 0);
+								obj.addState(state);
+								
+								state = new BattleAnimObjState((int)(finalFrames*frameLength + 400), PosTypes.Screen);
+								state.pos1 = new Point(p);
+								state.pos2 = new Point(nextPt);
+								state.strokeWidth = 2.0f;								
+								state.argb(255, 0, 0, 0);
+								obj.addState(state);		
+								
+								state = new BattleAnimObjState((int)(finalFrames*frameLength + 2000), PosTypes.Screen);
+								state.pos1 = new Point(p);
+								state.pos2 = new Point(nextPt);
+								state.strokeWidth = 2.0f;								
+								state.argb(255, 255, 0, 0);
+								obj.addState(state);									
+								
+								anim.addObject(obj);
+								
+								openPaths.add(next);								
+							}
+						}
+				     }				     
+				  ++index;
+				}
 				return anim;
 			}
 		}.initialize(start, targets, iterations, radius);

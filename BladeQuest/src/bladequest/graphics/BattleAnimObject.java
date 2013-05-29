@@ -1,15 +1,15 @@
 package bladequest.graphics;
 
-import java.util.*;
-
-import bladequest.world.Global;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.graphics.Bitmap;
-import android.graphics.Paint.Style;
 import android.graphics.ColorMatrixColorFilter;
-import android.graphics.Rect;
-import android.graphics.Point;
 import android.graphics.Paint;
+import android.graphics.Paint.Style;
+import android.graphics.Point;
+import android.graphics.Rect;
+import bladequest.world.Global;
 
 public class BattleAnimObject 
 {
@@ -23,6 +23,7 @@ public class BattleAnimObject
 	
 	private BattleAnimObjState workingState, currentState, nextState, y0, y3;
 
+	//TODO: consider using syncronization here instead of mass allocations on render
 	private Paint objPaint;
 	private Rect objRect, drawRect;
 	private Bitmap customBmp;
@@ -42,7 +43,11 @@ public class BattleAnimObject
 		//objPaint.setStrokeCap(Cap.)
 		
 		objRect = new Rect();
-		
+		workingState = new BattleAnimObjState();
+		drawRect = new Rect();
+		lineDrawPos1 = new Point();
+		lineDrawPos2= new Point();
+				
 	}
 	
 	public BattleAnimObject(Types type, boolean outlineOnly, Bitmap customBmp)
@@ -58,7 +63,10 @@ public class BattleAnimObject
 		//objPaint.setStrokeCap(Cap.)
 		
 		objRect = new Rect();
-		
+		workingState = new BattleAnimObjState();
+		drawRect = new Rect();
+		lineDrawPos1 = new Point();
+		lineDrawPos2= new Point();		
 	}
 	
 	public BattleAnimObject(BattleAnimObject other)
@@ -78,8 +86,12 @@ public class BattleAnimObject
 		objPaint.setStyle(outlineOnly || type == Types.Line ? Style.STROKE : Style.FILL);
 		objPaint.setAntiAlias(true);
 
+		workingState = new BattleAnimObjState();
 		
 		objRect = new Rect();
+		drawRect = new Rect();
+		lineDrawPos1 = new Point();
+		lineDrawPos2= new Point();		
 	}
 
 	
@@ -124,7 +136,7 @@ public class BattleAnimObject
 			
 			
 			currentState = states.get(index);
-			workingState = new BattleAnimObjState(currentState);
+			workingState.copyFrom(currentState);
 			
 			y0 = index == 0 ? currentState : states.get(index - 1);
 			
@@ -158,7 +170,7 @@ public class BattleAnimObject
 	
 	private void updateRect()
 	{
-		objRect = new Rect(
+		objRect.set(
 				workingState.pos1.x - (int)(workingState.size.x/2),
 				workingState.pos1.y - (int)(workingState.size.y/2),
 				workingState.pos1.x + (int)(workingState.size.x/2),
@@ -168,11 +180,13 @@ public class BattleAnimObject
 	
 	private void updateDrawPos()
 	{
-		drawRect = Global.vpToScreen(objRect);
-		lineDrawPos1 = Global.vpToScreen(workingState.pos1);
-		lineDrawPos2 = Global.vpToScreen(workingState.pos2);
+		drawRect.set(objRect.left, objRect.top, objRect.right, objRect.bottom);
+		lineDrawPos1.set(workingState.pos1.x, workingState.pos1.y);
+		lineDrawPos2.set(workingState.pos2.x, workingState.pos2.y);
 		
-		
+		Global.setvpToScreen(drawRect);
+		Global.setvpToScreen(lineDrawPos1);
+		Global.setvpToScreen(lineDrawPos2);
 	}
 	
 	public void addState(BattleAnimObjState state){states.add(state);}
@@ -263,6 +277,7 @@ public class BattleAnimObject
 				            0, 1-t, 0, 0, workingState.g*t,
 				            0, 0, 1-t, 0, workingState.b*t, 
 				            0, 0, 0, 1, 0};					
+					
 					objPaint.setColorFilter(new ColorMatrixColorFilter(colorTransform));
 				}
 					

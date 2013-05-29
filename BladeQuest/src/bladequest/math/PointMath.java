@@ -157,50 +157,72 @@ public class PointMath {
 	    }		
 	}
 	
-	private static List<Point> jaggedPathStep(PointF start, PointF end, int iterations, float radius)
+	private static void jaggedPathStep(PointF start, PointF end, int iterations, float radius, List<Point> out)
 	{
-		List<Point> out = new ArrayList<Point>();
 		
 		
 		float x = (start.x + end.x)/2.0f - radius + Global.rand.nextFloat() * radius * 2.0f;
 		float y = (start.y + end.y)/2.0f - radius + Global.rand.nextFloat() * radius * 2.0f;
 		
-		PointF midPoint = new PointF(x,y);
+
 		if (iterations == 0)
 		{
 			out.add(new Point((int)x, (int)y));
-			return out;
+			return;
 		}
-		
-		for (Point p : jaggedPathStep(start, midPoint, iterations - 1, radius/2))
-		{
-			out.add(p);
-		}
+
+		PointF midPoint = new PointF(x,y);
+		jaggedPathStep(start, midPoint, iterations - 1, radius/2, out);		
 		
 		out.add(new Point((int)x, (int)y));
 
-		for (Point p : jaggedPathStep(midPoint, end, iterations - 1, radius/2))
-		{
-			out.add(p);
-		}
-		return out;
+		jaggedPathStep(midPoint, end, iterations - 1, radius/2, out);
 	}
 	public static List<Point> jaggedPath(Point start, Point end, int iterations, float radius)
 	{
 		List<Point> out = new ArrayList<Point>();
 		out.add(start);
-		for (Point p : jaggedPathStep(new PointF(start.x, start.y), new PointF(end.x, end.y), iterations, radius))
-		{
-			out.add(p);
-		}		
+		
+		jaggedPathStep(new PointF(start.x, start.y), new PointF(end.x, end.y), iterations, radius, out);
+		
 		out.add(end);
 		return out;
 	}
 	
-	public interface ForkingPath
+	public static class ForkingPath
 	{
-		Point getPoint();
-		List<ForkingPath> getPaths();
+		ForkingPath(Point p)
+		{
+			this.p = p;
+		}
+		public Point p;
+		public ForkingPath child;
+		public ForkingPath next;  //next on this level.
+		public ForkingPath last;
+		void addPath(ForkingPath path)
+		{
+			path.next = null;
+			if (child != null)
+			{
+				last.next = path;
+				last = path;
+			}
+			else
+			{
+				last = child = path;
+			}
+		}
+		void addChildren(ForkingPath path)
+		{
+			if (path.child == null) return;
+			ForkingPath iter = path.child;
+			while (iter != null)
+			{
+				ForkingPath current = iter.next;
+				addPath(iter);
+				iter = current;
+			}
+		}
 	}
 	
 	public static ForkingPath getForkingPath(Point start, List<Point> targets, int iterations, float radius)
@@ -208,25 +230,7 @@ public class PointMath {
 	   //hit a random target.  Split into above and below.  generate a forking path to each from a random point (0.25 - 0.5?) and done
 	   //get all targets outside a tolerance, fork, call getForkingPath on one of them randomly.  get their lists, ignore first point, add them!
 		
-		if (targets.isEmpty()) return new ForkingPath() {
-			
-			private Point startPoint;
-			public ForkingPath init(Point startPoint)
-			{
-				this.startPoint = startPoint;
-				return this;
-			}
-			
-			@Override
-			public Point getPoint() {
-				return startPoint;
-			}
-			
-			@Override
-			public List<ForkingPath> getPaths() {
-				return new ArrayList<PointMath.ForkingPath>();
-			}
-		}.init(start);
+		if (targets.isEmpty()) return new ForkingPath(start);
 		
 		int randomPick = Global.rand.nextInt(targets.size());
 		Point finalPoint = targets.get(randomPick);
@@ -284,86 +288,43 @@ public class PointMath {
 			}
 		}
 		
+	
+		ForkingPath outputPath = new ForkingPath(start);		
 		
-		List<ForkingPath> out = new ArrayList<ForkingPath>();
-		
-		ForkingPath outputPath = new ForkingPath()
-	    {
-			Point p;
-			List<ForkingPath> path;
-			ForkingPath initialize(Point p, List<ForkingPath> path)
-			{
-				this.p = p;
-				this.path = path;
-				return this;
-			}
-			public Point getPoint()
-			{
-				return p;
-			}
-			public List<ForkingPath> getPaths()
-			{
-				return path;
-			}
-		}.initialize(start, out);		
-		
-		
-		List<ForkingPath> lastOut = out;
-		
+		ForkingPath lastPath = outputPath;
+				
 		List<Point> jaggedPath = jaggedPath(start, finalPoint, iterations, radius);
 		
 		int aboveSplit = (int)(Global.rand.nextFloat() * (jaggedPath.size()*0.55f) + jaggedPath.size()*0.1f);
 		int belowSplit = (int)(Global.rand.nextFloat() * (jaggedPath.size()*0.55f) + jaggedPath.size()*0.1f);
 		
-		for (ForkingPath path : getForkingPath(start, beyondTolerance, iterations, radius).getPaths())
-		{
-			//output path.
-			out.add(path);
-		}
+		if (aboveSplit == 0) ++aboveSplit;
+		if (belowSplit == 0) ++belowSplit;
+		
+		outputPath.addChildren(getForkingPath(start, beyondTolerance, iterations, radius));
 		
 		int arg = 0;
-		int nextIter = Math.max(2, iterations-1);
+		int nextIter = Math.max(1, iterations-1);
 		for (Point p : jaggedPath)
 		{
-			List<ForkingPath> sublist = new ArrayList<ForkingPath>();
-			ForkingPath currentPath = new ForkingPath()
-		    {
-				Point p;
-				List<ForkingPath> path;
-				ForkingPath initialize(Point p, List<ForkingPath> path)
-				{
-					this.p = p;
-					this.path = path;
-					return this;
-				}
-				public Point getPoint()
-				{
-					return p;
-				}
-				public List<ForkingPath> getPaths()
-				{
-					return path;
-				}
-			}.initialize(p, sublist);
+			if (arg == 0)  //ignore first point in the path... it's the current position!
+			{
+				++arg;
+				continue;
+			}
+			ForkingPath currentPath = new ForkingPath(p);
 			
 			if (arg == aboveSplit)
 			{
-				for (ForkingPath path : getForkingPath(p, above, nextIter, radius * 0.75f).getPaths())
-				{
-					sublist.add(path);
-				}		
+				currentPath.addChildren(getForkingPath(p, above, nextIter, radius * 0.75f));	
 			}
 			if (arg == belowSplit)
 			{
-				for (ForkingPath path : getForkingPath(p, below, nextIter, radius * 0.75f).getPaths())
-				{
-					sublist.add(path);
-				}		
+				currentPath.addChildren(getForkingPath(p, below, nextIter, radius * 0.75f));
 			}			
 			++arg;
-			
-			lastOut.add(currentPath);
-			lastOut = sublist;
+			lastPath.addPath(currentPath);
+			lastPath = currentPath;
 		}
 		
 		return outputPath;
