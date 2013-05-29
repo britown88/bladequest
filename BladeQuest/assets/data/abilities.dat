@@ -6,7 +6,7 @@
 setDesc "Poisons an enemy." >
 add (setFaceAction "Cast" 0) >
 add (messageAction "HAHA IMMA GONNA POISON YOOOUUUU") >
-addDep (animAction "movetest") >
+addDep (animBuildAction "movetest") >
 addDep (inflictStatusAction (poisonStatus 10.0)))
 
 
@@ -114,3 +114,17 @@ recruit4sub  540 >
 recruit4sub  810 >
 recruit4sub  1080 >
 recruit4sub  1350)
+
+
+##########ROLAND BATTLE 1 ABILITIES#########
+
+
+\entomb <- (addAbility "entomb" "Entomb" "Single" 0 >
+add (waitAction 450) >
+addDep (animBuildAction "entomb") >
+add (waitAction 2150) > 
+addDep (inflictStatusAction (frozenStatus 4)))
+
+\shatter <- (addAbility "shatter" "Shatter" "Single" 0 >
+add (waitAction 450) >
+addDep (rolandSpecialShatterAction 0))

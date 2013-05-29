@@ -5,6 +5,7 @@ import java.util.List;
 
 import bladequest.combat.BattleEventBuilder;
 import bladequest.combatactions.Stance;
+import bladequest.graphics.BattleSprite.faces;
 import bladequest.world.PlayerCharacter;
 
 public abstract class StatusEffect 
@@ -32,6 +33,7 @@ public abstract class StatusEffect
 	public String Name() { return name; }
 	
 	
+	public faces weakendFace() {return faces.Weak;}
 	//override to set a weakened sprite face.
 	public boolean weakens() {return false;}
 	
@@ -55,6 +57,7 @@ public abstract class StatusEffect
 	public void onInflict(PlayerCharacter c) {}
 	public void onRemove(PlayerCharacter c) {}
 	public void onStep(PlayerCharacter c) {}	
+	public void onRender(PlayerCharacter c) {	}
 	
 	public void worldEffect(){}
 	
@@ -76,4 +79,6 @@ public abstract class StatusEffect
 		}
 		return out;
 	}
+
+	
 }

@@ -1174,8 +1174,107 @@ public class Global
 			}
 		};
 	}
-	
+	public static AnimationBuilder getEntombAnim()
+	{
+		return new AnimationBuilder()
+		{
+			
+			@Override
+			public BattleAnim buildAnimation(BattleEventBuilder builder) {
+				BattleAnim out = new BattleAnim(1000.0f); //working in milliseconds
+				
+				final int icicleCount = 20;
+				final int icicleStrikeWait = 1250;
+				final int icicleStrikeTime = 205;
+				final int icicleSpawnGap = 60;
+				final int strikeGap = 40;
+				final int iciclePoofLife = 750;
+			//	final int icicleAdvanceTime = 100;
+				final float icicleRadius = 80.0f;
+				
+				Bitmap icicleBitmap = Global.bitmaps.get("icicle"); 
+				Rect icicleRect = new Rect(0,0,30,80);	
+				
+				Bitmap icePoof = Global.bitmaps.get("particles");
+				Rect poofRect = new Rect(1,13,13,24);
+				
+				//inflict frozen status partially through this!
+				
+				for (int i = 0; i < icicleCount; ++i)
+				{
+					BattleAnimObject icicle = new BattleAnimObject(Types.Bitmap, false, icicleBitmap);
+					
+					int startTime = Global.rand.nextInt(strikeGap * icicleCount);
+					
+					float radius = icicleRadius + Global.rand.nextFloat() * 16.0f;
+					
+					float angle =  (float)(Math.PI - (((float)i)/icicleCount-1) * Math.PI);
+					float x = (float)(Math.cos(angle) * radius);
+					float y = (float)(Math.sin(angle) * radius) + 16.0f;  //offset down slightly to feel a bit more entomb-y
+										
+					float drawAngle =(float)(90  + (angle * 180/Math.PI));
+					
+					BattleAnimObjState state = new BattleAnimObjState(i * icicleSpawnGap, PosTypes.Target);
+					state.pos1 = new Point((int)x, (int)y);
+					state.size = new Point(icicleRect.width()/3, icicleRect.height()/3);
+					state.argb(255, 255, 255, 255);
+					state.rotation = drawAngle;  //angle += 270
+					state.setBmpSrcRect(icicleRect.left, icicleRect.top, icicleRect.right, icicleRect.bottom);
+					icicle.addState(state);		
 
+					//hang in the air a bit.....
+					state = new BattleAnimObjState(startTime + icicleStrikeWait, PosTypes.Target);
+					state.pos1 = new Point((int)x, (int)y);
+					state.size = new Point(icicleRect.width()/3, icicleRect.height()/3);
+					state.argb(255, 255, 255, 255);
+					state.rotation = drawAngle;  //angle += 270
+					state.setBmpSrcRect(icicleRect.left, icicleRect.top, icicleRect.right, icicleRect.bottom);
+					icicle.addState(state);		
+					
+					//Strike!  This should be pretty fast
+					state = new BattleAnimObjState(startTime + icicleStrikeWait + icicleStrikeTime, PosTypes.Target);
+					state.pos1 = new Point(0,0);
+					state.size = new Point(icicleRect.width()/3, icicleRect.height()/3);
+					state.argb(255, 255, 255, 255);
+					state.rotation = drawAngle;
+					state.setBmpSrcRect(icicleRect.left, icicleRect.top, icicleRect.right, icicleRect.bottom);
+					icicle.addState(state);		
+					
+					out.addObject(icicle);
+					
+					//add a poof at this point that's fairly long-lived.
+					BattleAnimObject poofAnim = new BattleAnimObject(Types.Bitmap, false, icePoof);
+					
+					float rnd = Global.rand.nextFloat() * 360.0f;
+					state = new BattleAnimObjState(startTime + icicleStrikeWait +  icicleStrikeTime, PosTypes.Target);
+					state.size = new Point((int)(poofRect.width()*4.5f), (int)(poofRect.height()*4.5f));
+					state.pos1 = new Point(0,0);
+					state.argb(196, 255, 255, 255);
+					state.rotation = rnd;
+					state.setBmpSrcRect(poofRect.left, poofRect.top, poofRect.right, poofRect.bottom);
+					poofAnim.addState(state);
+					
+					
+					int driftX = Global.rand.nextInt(96) - 48;
+					int driftY = Global.rand.nextInt(96) - 48;
+					
+					state = new BattleAnimObjState(startTime + icicleStrikeTime + icicleStrikeWait + iciclePoofLife, PosTypes.Target);
+					state.size = new Point(poofRect.width()*3, poofRect.height()*3);
+					state.pos1 = new Point(driftX,driftY);
+					state.argb(0, 255, 255, 255);
+					state.rotation = rnd;
+					state.setBmpSrcRect(poofRect.left, poofRect.top, poofRect.right, poofRect.bottom);
+					poofAnim.addState(state);
+					
+					out.addObject(poofAnim);
+				}
+				
+				return out;
+			}			
+		};
+	}
+	
+	
 
 	public static AnimationBuilder getIgniteAnim()
 	{
@@ -1846,6 +1945,8 @@ public class Global
 		animationBuilders.put("heal", getHealAnim());
 		animationBuilders.put("ignite", getIgniteAnim());
 		animationBuilders.put("igniteSmoke", getIgniteSmokeAnim());
+		animationBuilders.put("entomb", getEntombAnim());
+		
 	}
 	
 	

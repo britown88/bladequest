@@ -36,5 +36,5 @@ setCombatAction "combDragonForm" >
 setBaseStats 3 7 3 10 >
 setLevel 7 >
 mapBound equip {"icesword", "felthat", "cottonshirt"} >
-mapBound addAbility {"frostwish"})
+mapBound addAbility {"frostwish", "entomb", "shatter"})
 

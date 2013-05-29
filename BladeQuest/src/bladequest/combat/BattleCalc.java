@@ -43,6 +43,8 @@ public class BattleCalc
 	
 	public static int calculatedDamage(PlayerCharacter attacker, PlayerCharacter defender, float power, DamageTypes type, List<DamageComponent> damageComponents, float customMiss, AccuracyType accuracy)
 	{
+		boolean hitStatusApplied = false;
+		
 		attacker.updateSecondaryStats();
 		defender.updateSecondaryStats();
 		
@@ -83,7 +85,7 @@ public class BattleCalc
 			if(roll < standardEvade)
 			{
 				damageReturnType = DamageReturnType.Miss;
-				return 0;
+				hitStatusApplied = true;
 			}
 			break;
 		}
@@ -93,7 +95,7 @@ public class BattleCalc
 		if(roll < evade)
 		{
 			damageReturnType = DamageReturnType.Miss;
-			return 0;
+			hitStatusApplied = true;
 		}
 		
 		
@@ -109,28 +111,40 @@ public class BattleCalc
 		case Physical:
 				roll = Global.rand.nextInt(100);
 				int blockChance = (int)((float)defender.getStat(Stats.Block)*(90.0f/255.0f));				
-				if(roll < blockChance)
+				if(roll < blockChance && !hitStatusApplied)
+				{
+					hitStatusApplied = true;
 					damageReturnType = DamageReturnType.Blocked;
+				}
+
+				finalDmg = applyAffinities(baseDmg + dmgMod, attacker, defender, damageComponents);
+				
+				roll = Global.rand.nextInt(100);
+				int critChance = (int)((float)attacker.getStat(Stats.Crit)*(maxCrit/255.0f));
+				
+				if(roll < critChance && !hitStatusApplied)
+				{
+					damageReturnType = DamageReturnType.Critical;
+					hitStatusApplied = true;
+					finalDmg *= 2.0f;
+				}
 				else
 				{
-					finalDmg = applyAffinities(baseDmg + dmgMod, attacker, defender, damageComponents);
-					
-					roll = Global.rand.nextInt(100);
-					int critChance = (int)((float)attacker.getStat(Stats.Crit)*(maxCrit/255.0f));
-					
-					if(roll < critChance)
+					if (!hitStatusApplied)
 					{
-						damageReturnType = DamageReturnType.Critical;
-						finalDmg *= 2.0f;
+						damageReturnType = DamageReturnType.Hit;
 					}
-					else
-						damageReturnType = DamageReturnType.Hit;				
-				}				
+				}
+									
+					
 			break;
 		case Magic:
 		case MagicalIgnoreDef:
 			finalDmg = applyAffinities(baseDmg + dmgMod, attacker, defender, damageComponents);
-			damageReturnType = DamageReturnType.Hit;			
+			if (!hitStatusApplied)
+			{
+				damageReturnType = DamageReturnType.Hit;
+			}			
 			break;
 		}
 		

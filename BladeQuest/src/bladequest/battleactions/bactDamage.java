@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bladequest.combat.BattleCalc;
+import bladequest.combat.BattleCalc.DamageReturnType;
 import bladequest.combat.BattleEventBuilder;
 import bladequest.combat.DamageComponent;
 import bladequest.combat.DamageMarker;
@@ -19,7 +20,57 @@ public class bactDamage extends BattleAction
 	List<DamageComponent> damageComponents;
 	float customMiss;
 	
+	public static DamageBuilder triggerDamageBuilder;
+	
 	BattleCalc.AccuracyType accuracyType;
+	
+	
+	private class TriggerDamageBuilder implements DamageBuilder
+	{
+		int damage;
+		DamageReturnType returnType;
+		List<DamageComponent> componentTypes;
+		DamageTypes damageType;
+		
+		TriggerDamageBuilder(int damage, DamageReturnType returnType, List<DamageComponent> componentTypes, DamageTypes damageType)
+		{
+			this.damage = damage;
+			this.returnType = returnType;
+			this.componentTypes = componentTypes;			
+			this.damageType = damageType;
+		}
+		
+		@Override
+		public int getDamage() {
+			return damage;
+		}
+
+		@Override
+		public void setDamage(int damage) {
+			this.damage = damage; 
+		}
+
+		@Override
+		public DamageReturnType attackType() {
+			return returnType;
+		}
+
+		@Override
+		public void setAttackType(DamageReturnType type) {
+			returnType = type;
+		}
+
+		@Override
+		public List<DamageComponent> getDamageComponents() {
+			return componentTypes;
+		}
+
+		@Override
+		public DamageTypes getDamageType() {
+			return damageType;
+		}
+		
+	};
 	
 	public bactDamage(float power, DamageTypes type)
 	{
@@ -53,16 +104,15 @@ public class bactDamage extends BattleAction
 		{			
 			int dmg = BattleCalc.calculatedDamage(attacker, t, power, type, damageComponents, customMiss, accuracyType);
 			
+			TriggerDamageBuilder triggerSettings = new TriggerDamageBuilder(dmg, BattleCalc.getDmgReturnType(), damageComponents, type); 
+	
+			triggerDamageBuilder = triggerSettings; 
+			//CALLS GENERIC CODE OH SHIT OH FUCK TRIGGER WARNING
+			t.getOnDamagedEvent().trigger();
+			//WARNING WARNING DANGER DANGER GAME STATE DESTROYED					
 			
-			if (dmg > 0)
-			{
-				//CALLS GENERIC CODE OH SHIT OH FUCK
-				t.getOnDamagedEvent().trigger();
-				//WARNING WARNING DANGER DANGER GAME STATE DESTROYED
-			}
 			
-			
-			switch(BattleCalc.getDmgReturnType())
+			switch(triggerSettings.attackType())
 			{
 			case Blocked:
 				builder.addMarker(new DamageMarker("BLOCK", t));	
@@ -73,8 +123,8 @@ public class bactDamage extends BattleAction
 			case Hit:
 				if(dmg >= 0 && !t.isEnemy())
 					t.showDamaged();
-				t.modifyHP(-dmg, false);
-				builder.addMarker(new DamageMarker(-dmg, t));	
+				t.modifyHP(-triggerSettings.getDamage(), false);
+				builder.addMarker(new DamageMarker(-triggerSettings.getDamage(), t));	
 				break;
 			case Miss:
 				builder.addMarker(new DamageMarker("MISS", t));	

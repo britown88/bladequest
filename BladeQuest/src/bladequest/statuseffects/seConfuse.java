@@ -10,6 +10,7 @@ import bladequest.world.Ability;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
 import bladequest.world.TargetTypes;
+import bladequest.world.PlayerCharacter.Action;
 
 public class seConfuse extends StatusEffect
 {
@@ -40,6 +41,7 @@ public class seConfuse extends StatusEffect
 	
 	void setToConfusedState(Battle.PlayerBattleActionSelect actionSelector)
 	{
+		if (actionSelector.getPlayer().getAction() == Action.Skipped) return; //don't write over other skipping states.
 		Battle.Team team;
 		if (Global.rand.nextInt(100) < 75) //75% of friendly fire
 		{

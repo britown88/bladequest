@@ -1042,6 +1042,23 @@ public class PlayerCharacter
 		
 		return false;
 	}
+	
+
+
+	
+	private faces getWeakenedFace()
+	{
+		faces out = faces.Weak;
+		for(StatusEffect se : statusEffects)
+		{
+			if(se.weakens())
+			{
+				out = se.weakendFace();
+			}
+		}
+		
+		return out;
+	}
 
 	
 	private BattleSprite.faces savedFace;
@@ -1060,7 +1077,7 @@ public class PlayerCharacter
 	public void clearDamaged()
 	{
 		BattleSprite.faces face = battleSpr.getFace();
-		if(face == faces.Damaged)
+		if(face == faces.Damaged && (getWeakenedFace() != faces.Damaged) && savedFace != null)
 		{
 			//reset to idle before setting to avoid oldface loop
 			battleSpr.changeFace(faces.Idle);
@@ -1089,7 +1106,7 @@ public class PlayerCharacter
 				}					
 			case Ready:
 				if(dead) setFace(faces.Dead);
-				else if (weak) setFace(faces.Weak);
+				else if (weak) setFace(getWeakenedFace());
 				else battleSpr.changeFace(newFace);
 				break;
 			case Dead:
@@ -1148,6 +1165,10 @@ public class PlayerCharacter
 			}
 		}	
 		
+		for (StatusEffect se : statusEffects)
+		{
+			se.onRender(this);
+		}
 	}
 	
 	public Rect getRect() {return Global.vpToScreen(new Rect(position.x, position.y, position.x+getWidth(), position.y+getHeight()));}

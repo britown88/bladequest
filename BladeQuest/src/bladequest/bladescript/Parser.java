@@ -207,7 +207,7 @@ public class Parser {
 			}
 			catch (ParserException e)
 			{
-				String errorMsg = currentState + " line :" + getLine();
+				String errorMsg = currentState + " line: " + getLine();
 				Log.d("Parser", "Runtime failure: " + errorMsg);
 				throw new ParserException(errorMsg + " -> " + e.what());
 			}
@@ -1283,12 +1283,16 @@ public class Parser {
 				}
 				if (token.getType() == ScriptToken.Type.EndFile) break; 
 			}		
+			if (stateStack.size() != 1)
+			{
+				throw new ParserException("Parser ended with pending states.  Did you end the file with a missed parenthesis or other grammer?");
+			}
 		}	
 		catch(ParserException e)
 		{
 			//YOU DUN GOOFED			
 			e.printStackTrace();
-			Log.d("Parser", tokenizer.getExceptionInfo() + " Error on line: " + lineNumber + e.what());
+			Log.d("Parser", tokenizer.getExceptionInfo() + " Error on line: " + lineNumber + "  -> "+ e.what());
 		}	
 	}
 	

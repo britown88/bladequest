@@ -23,6 +23,7 @@ import bladequest.graphics.BattleAnimObject.Types;
 import bladequest.graphics.BattleSprite;
 import bladequest.graphics.BattleSprite.faces;
 import bladequest.graphics.ColorizedAnimation;
+import bladequest.statuseffects.StatusEffect;
 import bladequest.system.Recyclable;
 import bladequest.world.Ability;
 import bladequest.world.Global;
@@ -433,7 +434,13 @@ public class Enemy extends PlayerCharacter
 	public void battleRender()
 	{
 		if(!dead)
+		{
 			battleSpr.render(position.x, position.y, 0, true);
+			for (StatusEffect se : getStatusEffects())
+			{
+				se.onRender(this);
+			}			
+		}
 	}
 	
 	@Override

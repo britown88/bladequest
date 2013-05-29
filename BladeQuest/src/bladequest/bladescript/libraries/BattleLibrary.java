@@ -17,6 +17,7 @@ import bladequest.battleactions.bactRemoveStatus;
 import bladequest.battleactions.bactRunAnimation;
 import bladequest.battleactions.bactRunAnimationBuilder;
 import bladequest.battleactions.bactSetFace;
+import bladequest.battleactions.bactShatter;
 import bladequest.battleactions.bactSneakToTarget;
 import bladequest.battleactions.bactSpecialMirrored;
 import bladequest.battleactions.bactSpecialPosition;
@@ -33,6 +34,7 @@ import bladequest.enemy.Enemy;
 import bladequest.graphics.BattleSprite.faces;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.statuseffects.seConfuse;
+import bladequest.statuseffects.seFrozen;
 import bladequest.statuseffects.sePoison;
 import bladequest.world.Ability;
 import bladequest.world.DamageTypes;
@@ -93,11 +95,24 @@ public class BattleLibrary {
 		return new seConfuse(duration);
 	}
 	
+	public static StatusEffect frozenStatus(int duration)
+	{
+		return new seFrozen(duration);
+	}
+	
+	
 	
 	public static Ability add(Ability ability, BattleAction action)
 	{
 		ability.addAction(action);
 		return ability;
+	}
+	
+	
+	//just for Roland's "Shatter"
+	public static BattleAction rolandSpecialShatterAction(ScriptVar ignored)
+	{
+		return new bactShatter();
 	}
 	
 	public static BattleAction positionSpecialAction(boolean isSpecial)

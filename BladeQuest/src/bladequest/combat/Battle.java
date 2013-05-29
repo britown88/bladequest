@@ -1012,7 +1012,7 @@ public class Battle
 			}
 
 		for(PlayerCharacter c : partyList)
-			if(c.isInBattle() && c.getAction() != Action.Skipped)
+			if(c.isInBattle())
 				addBattleEvent(c, c.getTargets());
 		
 		battleEvents = BattleCalc.genMoveOrder(battleEvents);
@@ -1038,6 +1038,7 @@ public class Battle
 			if(actor.isEnemy() || 
 			   selCharOpened || 
 			   actor.getAction() == Action.Guard ||
+			   actor.getAction() == Action.Skipped ||
 			   currentEvent.runningStatus() ||
 			   currentEvent.isDone())
 			{
@@ -1059,6 +1060,7 @@ public class Battle
 		nextActorInit();
 		battleEvents.add(0,new BattleEvent(Action.Ability,ability, source, targets, markers, ActionType.Special));
 		battleEvents.get(0).init();
+		battleEvents.get(0).dontRunStatusEffects();
 		battleEvents.add(0, null); //add event to be deleted in place of the interrupted event.		
 
 	}
@@ -1131,7 +1133,8 @@ public class Battle
 		displayNamePanel.hide();
 		//battleEvents.get(0).getSource().acting = false;
 		PlayerCharacter actor = battleEvents.get(0).getSource();			
-		if(!actor.isEnemy() && battleEvents.get(0).getAction() != Action.Guard)
+		if(!actor.isEnemy() && battleEvents.get(0).getAction() != Action.Guard
+							&& battleEvents.get(0).getAction() != Action.Skipped)
 		{
 			recedeChar();
 			actor.setFace(faces.Idle);
@@ -1200,6 +1203,11 @@ public class Battle
 				Action action = currentEvent.getAction();
 				Ability ability = currentEvent.getAbility();
 				
+				if (actor.getAction() == Action.Skipped)
+				{
+					currentEvent.setActionType(Action.Skipped);
+				}
+				
 				//set frame text
 				switch(action)
 				{case Attack:setInfoBarText(actor.getDisplayName()+" attacks!");break;
@@ -1208,7 +1216,7 @@ public class Battle
 				case CombatAction:setInfoBarText(actor.getDisplayName()+actor.getCombatActionText());break;
 				default: break;}
 				
-				if(!actor.isInBattle() || actor.getAction() == Action.Skipped)
+				if(!actor.isInBattle())
 					nextActorInit();
 				else 
 				{					
@@ -1239,7 +1247,7 @@ public class Battle
 					if(!actor.isEnemy())
 					{
 						currentChar = actor;
-						if (action != Action.Guard || prevSpecial)
+						if ((action != Action.Guard && action != Action.Skipped) || prevSpecial)
 							advanceChar();
 					}
 					else
@@ -1528,10 +1536,7 @@ public class Battle
 	}
 	private void addBattleEvent(PlayerCharacter source, List<PlayerCharacter> targets)
 	{
-		if (source.getAction() != Action.Skipped)
-		{
-			battleEvents.add(new BattleEvent(source.getAction(), source.getAbilityToUse(), source, targets, markers));
-		}
+		battleEvents.add(new BattleEvent(source.getAction(), source.getAbilityToUse(), source, targets, markers));
 	}
 	
 	public void setInfoBarText(String str)

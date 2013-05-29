@@ -31,6 +31,7 @@ public class BattleEvent
 	
 	private List<StatusEffect> endTurnStatuses;
 	private List<DamageMarker> markers;
+	private boolean dontRunStatus;
 	
 	enum ActionType
 	{
@@ -40,6 +41,8 @@ public class BattleEvent
 	
 	ActionType type;
 	
+
+	
 	public BattleEvent(PlayerCharacter.Action action, Ability ability, PlayerCharacter source, List<PlayerCharacter> targets, List<DamageMarker> markers)
 	{
 		this.action = action;
@@ -48,6 +51,7 @@ public class BattleEvent
 		this.targets = new ArrayList<PlayerCharacter>(targets);
 		this.markers = markers;
 		type = ActionType.Chosen;
+		dontRunStatus = false;
 	}
 	
 	public BattleEvent(PlayerCharacter.Action action, Ability ability, PlayerCharacter source, List<PlayerCharacter> targets, List<DamageMarker> markers, ActionType type)
@@ -58,6 +62,7 @@ public class BattleEvent
 		this.targets = new ArrayList<PlayerCharacter>(targets);
 		this.markers = markers;
 		this.type = type;
+		dontRunStatus = false;
 	}	
 	public Ability getAbility() {return ability;}
 	PlayerCharacter.Action getAction() {return action;}
@@ -66,6 +71,17 @@ public class BattleEvent
 	public List<PlayerCharacter> getTargets() { return targets;}	
 	public boolean isDone(){ return done;}
 	public boolean runningStatus() { return endTurnStatuses != null;}
+	
+	public void setActionType(PlayerCharacter.Action action)
+	{
+		//mainly to reset to skipped, possibly for beserk??/
+		this.action = action;
+	}
+	
+	public void dontRunStatusEffects()
+	{
+		dontRunStatus = true;
+	}
 	
 	private BattleEventBuilder makeBattleEventBuilder()
 	{
@@ -168,7 +184,7 @@ public class BattleEvent
 		case Run:
 			builder.addEventObject(new bactTryEscape());
 			break;
-		case Guard:
+		case Guard: case Skipped:
 //insta-fail
 		default:
 			break;
@@ -215,7 +231,7 @@ public class BattleEvent
 				}
 				while (actionRunner.getActions().isEmpty())
 				{
-					if (endTurnStatuses.isEmpty())
+					if (endTurnStatuses.isEmpty() || dontRunStatus)
 					{
 						endTurnStatuses = null; //nothing more to do, we can end the turn.
 						done  = true;
