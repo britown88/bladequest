@@ -6,6 +6,7 @@ import java.util.List;
 import android.graphics.Point;
 import bladequest.bladescript.LibraryWriter;
 import bladequest.graphics.AnimationBuilder;
+import bladequest.world.Global;
 import bladequest.world.WorldAnimations;
 
 public class WorldAnimLibrary 
@@ -22,12 +23,18 @@ public class WorldAnimLibrary
 	{
 		List<Point> pList = new ArrayList<Point>();
 		
-		pList.add(new Point(0, 0));
-		pList.add(new Point(200, 0));
-		pList.add(new Point(0, 200));
-		pList.add(new Point(200, 200));		
+		for (int i = 0; i < 40; ++i)
+		{
 		
-		return WorldAnimations.buildShatter(new Point(0, 0), pList, 5, 5.0f);
+			pList.add(new Point(Global.rand.nextInt(200), Global.rand.nextInt(200)));
+		}
+		
+//		pList.add(new Point(0, 0));
+//		pList.add(new Point(200, 0));
+//		pList.add(new Point(0, 200));
+//		pList.add(new Point(200, 200));		
+		
+		return WorldAnimations.buildShatter(new Point(100, 100), pList, 4, 25.0f);
 	}
 
 }

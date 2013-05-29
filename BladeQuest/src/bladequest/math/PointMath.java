@@ -162,8 +162,8 @@ public class PointMath {
 		List<Point> out = new ArrayList<Point>();
 		
 		
-		float x = (start.x + end.x)/2.0f - radius + Global.rand.nextFloat() * radius;
-		float y = (start.y + end.y)/2.0f - radius + Global.rand.nextFloat() * radius;
+		float x = (start.x + end.x)/2.0f - radius + Global.rand.nextFloat() * radius * 2.0f;
+		float y = (start.y + end.y)/2.0f - radius + Global.rand.nextFloat() * radius * 2.0f;
 		
 		PointF midPoint = new PointF(x,y);
 		if (iterations == 0)
@@ -240,6 +240,18 @@ public class PointMath {
 		float y = finalPoint.y - start.y;
 		float length = (float)Math.sqrt(x*x + y*y);
 		
+		if (length == 0.0f) //wut
+		{
+			for (Point p : targets)
+			{
+				if (p != finalPoint)
+				{
+					beyondTolerance.add(p);		
+				}
+			}
+			return getForkingPath(start, beyondTolerance, iterations, radius);
+		}
+		
 		final float tolerance = 0.6f;
 		
 		for (Point p : targets)
@@ -248,9 +260,13 @@ public class PointMath {
 			{
 				float x2 = p.x - start.x;
 				float y2 = p.y - start.y;
-				float l2 = (float)Math.sqrt(x*x + y*y);
+				float l2 = (float)Math.sqrt(x2*x2 + y2*y2);
+				if (l2 == 0.0f) //wtf, 0 length?  ignore
+				{
+					continue;
+				}
 				//dot
-		        if (Math.sqrt((x*x2 + y*y2)/(length*l2)) < tolerance)      		
+		        if ((x*x2 + y*y2)/(length*l2) < tolerance)      		
 		        {
 		        	beyondTolerance.add(p);
 		        	continue;
@@ -294,8 +310,10 @@ public class PointMath {
 		
 		List<ForkingPath> lastOut = out;
 		
-		int aboveSplit = (int)(Global.rand.nextFloat() * (above.size()/0.55f) + above.size()/0.1f);
-		int belowSplit = (int)(Global.rand.nextFloat() * (below.size()/0.55f) + below.size()/0.1f);
+		List<Point> jaggedPath = jaggedPath(start, finalPoint, iterations, radius);
+		
+		int aboveSplit = (int)(Global.rand.nextFloat() * (jaggedPath.size()*0.55f) + jaggedPath.size()*0.1f);
+		int belowSplit = (int)(Global.rand.nextFloat() * (jaggedPath.size()*0.55f) + jaggedPath.size()*0.1f);
 		
 		for (ForkingPath path : getForkingPath(start, beyondTolerance, iterations, radius).getPaths())
 		{
@@ -304,8 +322,8 @@ public class PointMath {
 		}
 		
 		int arg = 0;
-		int nextIter = iterations-1;
-		for (Point p : jaggedPath(start, finalPoint, iterations, radius))
+		int nextIter = Math.max(2, iterations-1);
+		for (Point p : jaggedPath)
 		{
 			List<ForkingPath> sublist = new ArrayList<ForkingPath>();
 			ForkingPath currentPath = new ForkingPath()

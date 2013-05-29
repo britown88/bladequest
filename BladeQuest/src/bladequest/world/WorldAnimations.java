@@ -37,8 +37,9 @@ public class WorldAnimations
 			public BattleAnim buildAnimation(BattleEventBuilder builder) 
 			{
 				BattleAnim anim = new BattleAnim(1000.0f);
-				long frameLength = 100;
+				long frameLength = 40;
 				int index = 0;
+				int finalFrames = 2 << iterations;
 				
 				List<ForkingPath> openPaths = new ArrayList<ForkingPath>();
 				List<ForkingPath> lastPaths;
@@ -54,6 +55,8 @@ public class WorldAnimations
 				     Point p = pat.getPoint();
 				     for (ForkingPath next : pat.getPaths())
 				     {
+				    	 Point nextPt = next.getPoint();
+				    	 
 				    	 BattleAnimObject obj = new BattleAnimObject(Types.Line, false, "");
 							
 							BattleAnimObjState state = new BattleAnimObjState((int)(index*frameLength), PosTypes.Screen);
@@ -65,14 +68,14 @@ public class WorldAnimations
 							
 							state = new BattleAnimObjState((int)(index*frameLength + frameLength), PosTypes.Screen);
 							state.pos1 = new Point(p);
-							state.pos2 = new Point(next.getPoint());
+							state.pos2 = new Point(nextPt);
 							state.strokeWidth = 5.0f;								
 							state.argb(255, 255, 255, 255);
 							obj.addState(state);
 							
-							state = new BattleAnimObjState((int)(iterations*frameLength), PosTypes.Screen);
+							state = new BattleAnimObjState((int)(finalFrames*frameLength), PosTypes.Screen);
 							state.pos1 = new Point(p);
-							state.pos2 = new Point(next.getPoint());
+							state.pos2 = new Point(nextPt);
 							state.strokeWidth = 5.0f;								
 							state.argb(255, 255, 255, 255);
 							obj.addState(state);

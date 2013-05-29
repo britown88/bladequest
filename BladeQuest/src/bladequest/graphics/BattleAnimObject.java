@@ -293,15 +293,22 @@ public class BattleAnimObject
 					if(currentState.pos1.x != nextState.pos1.x)
 					{
 						workingState.pos1.x = cubicInterpolation(y0.pos1.x, currentState.pos1.x, nextState.pos1.x, y3.pos1.x, progress);
-						workingState.pos2.x = cubicInterpolation(y0.pos2.x, currentState.pos2.x, nextState.pos2.x, y3.pos2.x, progress);
 					}
 					
 					if(currentState.pos1.y != nextState.pos1.y)
 					{
 						workingState.pos1.y = cubicInterpolation(y0.pos1.y, currentState.pos1.y, nextState.pos1.y, y3.pos1.y, progress);
+					}
+					if(currentState.pos2.x != nextState.pos2.x)
+					{
+						workingState.pos2.x = cubicInterpolation(y0.pos2.x, currentState.pos2.x, nextState.pos2.x, y3.pos2.x, progress);
+					}
+					
+					if(currentState.pos2.y != nextState.pos2.y)
+					{
 						workingState.pos2.y = cubicInterpolation(y0.pos2.y, currentState.pos2.y, nextState.pos2.y, y3.pos2.y, progress);
-						
-					}						
+
+					}					
 				}
 				
 				//build final rect
