@@ -2,8 +2,8 @@ package bladequest.battleactions;
 
 import java.util.List;
 
+import bladequest.bladescript.ParserException;
 import bladequest.bladescript.ScriptVar;
-import bladequest.bladescript.ScriptVar.BadTypeException;
 import bladequest.combat.BattleCalc.AccuracyType;
 import bladequest.combat.BattleEventBuilder;
 import bladequest.world.DamageTypes;
@@ -48,7 +48,7 @@ public class bactBasicAttack extends DelegatingAction {
 					{
 						BattleActionPatterns.BuildSwordSlashWithAccuracy(builder, power, type, speedFactor, AccuracyType.ReplaceEvade, 100.0f);
 					}
-				} catch (BadTypeException e) {
+				} catch (ParserException e) {
 					e.printStackTrace();
 				}				
 			}

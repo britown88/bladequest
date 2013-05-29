@@ -34,7 +34,7 @@ public class FunctionBase extends ScriptVar {
 		children.add(childFunc);
 	}
 	@Override
-	public ScriptVar apply(ScriptVar var) throws BadTypeException {
+	public ScriptVar apply(ScriptVar var) throws ParserException {
 		// TODO Auto-generated method stub
 		ScriptVar nextFunc = null;
 		List<ScriptVar> curriedValues = new ArrayList<ScriptVar>();

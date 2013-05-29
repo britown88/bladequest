@@ -336,7 +336,7 @@ public abstract class ScriptVar {
 	}
 	public ScriptVar getSpecializedChild(FunctionSpecializer specialization) throws BadTypeException {throw new BadTypeException("function", typeName());}
 	public void addChildFunction(ScriptVar child)  throws BadTypeException {throw new BadTypeException("function", typeName());}
-	public ScriptVar curryValues(List<ScriptVar> var)   throws BadTypeException {throw new BadTypeException("function", typeName());}
+	public ScriptVar curryValues(List<ScriptVar> var)   throws ParserException {throw new BadTypeException("function", typeName());}
 	public FunctionSpecializer getSpecializer()  throws BadTypeException {throw new BadTypeException("function", typeName());}
-	public ScriptVar apply(ScriptVar var)  throws BadTypeException {throw new BadTypeException("function", typeName());}
+	public ScriptVar apply(ScriptVar var)  throws ParserException {throw new BadTypeException("function", typeName());}
 }

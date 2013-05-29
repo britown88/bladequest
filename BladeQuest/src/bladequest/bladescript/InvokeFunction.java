@@ -11,11 +11,11 @@ public abstract class InvokeFunction extends ScriptVar {
 	FunctionSpecializer specializer;
 	
 	@Override
-	public ScriptVar curryValues(List<ScriptVar> values) throws BadTypeException
+	public ScriptVar curryValues(List<ScriptVar> values) throws ParserException
 	{
 		return invoke(values);
 	}
-	public abstract ScriptVar invoke(List<ScriptVar> values) throws BadTypeException;
+	public abstract ScriptVar invoke(List<ScriptVar> values) throws ParserException;
 	@Override
 	public FunctionSpecializer getSpecializer()  
 	{

@@ -83,7 +83,8 @@ public class Parser {
 			{
 				ExecutionState state = new ExecutionState();
 				state.functionArgs = new ArrayList<ScriptVar>();
-				ScriptVar globalVar = statement.invoke(state);
+				ScriptVar globalVar = null;
+				globalVar = statement.invokeChecked(state, "global variable declaration");	
 				String globalVarName = state.locals.keySet().iterator().next();  //holy shit java really? 
 				script.addGlobal(globalVarName, globalVar);
 			}
@@ -189,13 +190,35 @@ public class Parser {
 		public Map<String, ScriptVar> locals;
 	}
 	
-	private interface Statement
+	private abstract class Statement
 	{
-		ScriptVar invoke(ExecutionState state) throws BadTypeException;
+		int line;
+		Statement()
+		{
+			line = getLineNumber();
+		}
+		public abstract ScriptVar invoke(ExecutionState state) throws ParserException;
+		public ScriptVar invokeChecked(ExecutionState state, String currentState)  throws ParserException
+		{
+			ScriptVar out = null;
+			try
+			{
+				out = invoke(state);
+			}
+			catch (ParserException e)
+			{
+				String errorMsg = currentState + " line :" + getLine();
+				Log.d("Parser", "Runtime failure: " + errorMsg);
+				throw new ParserException(errorMsg + " -> " + e.what());
+			}
+			return out;
+		}
+		public int       getLine() {return lineNumber;}
 	}
 	
 	private Statement getStatementFromLocal(String name)
 	{
+		
 		return new Statement()
 		{
 			private String localName;
@@ -372,11 +395,11 @@ public class Parser {
 				this.statements = statements;
 				return this;
 			}
-			public ScriptVar invoke(ExecutionState state) throws BadTypeException {
+			public ScriptVar invoke(ExecutionState state) throws ParserException {
 				ScriptVar out = null;
 				for (Statement statement : statements)
 				{
-					ScriptVar currentVar = statement.invoke(state);
+					ScriptVar currentVar = statement.invokeChecked(state, "compiled statement");
 					if (out == null)
 					{
 						out = currentVar;
@@ -410,13 +433,13 @@ public class Parser {
 				this.binderStatement = binderStatement;
 				return this;
 			}
-			public ScriptVar invoke(ExecutionState state) throws BadTypeException {
+			public ScriptVar invoke(ExecutionState state) throws ParserException {
 				ScriptVar out = null;
 				//apply the binder before the bindee!!!
-				ScriptVar bound = binderStatement.invoke(state);
+				ScriptVar bound = binderStatement.invokeChecked(state, "Infix Binder");
 				for (Statement statement : statements)
 				{
-					ScriptVar currentVar = statement.invoke(state);
+					ScriptVar currentVar = statement.invokeChecked(state, "Compiled Infix List");
 					if (out == null)
 					{
 						out = currentVar;
@@ -446,11 +469,11 @@ public class Parser {
 				this.statements = statements;
 				return this;
 			}
-			public ScriptVar invoke(ExecutionState state) throws BadTypeException {
+			public ScriptVar invoke(ExecutionState state) throws ParserException {
 				ScriptVar out = new EmptyList();
 				for (Statement statement : statements)
 				{
-					out = new ListNode(statement.invoke(state), out);
+					out = new ListNode(statement.invokeChecked(state, "List Content"), out);
 				}
 				return out;
 			}
@@ -473,7 +496,7 @@ public class Parser {
 			}
 			@Override
 			public ScriptVar invoke(List<ScriptVar> values)
-					throws BadTypeException {
+					throws ParserException {
 				ExecutionState lambdaState= new ExecutionState();
 				lambdaState.functionArgs = values;  //WHOA DUDE
 				lambdaState.locals = new HashMap<String, ScriptVar>(state.locals); //lambda capture!
@@ -483,7 +506,7 @@ public class Parser {
 					//even more lambda capture.  move arguments -> locals.
 					lambdaState.locals.put(argNames.get(argNum++), var);
 				}
-				return body.invoke(lambdaState);
+				return body.invokeChecked(lambdaState, "Lambda function: " + values.size() + " arg(s)");
 			}
 
 			@Override
@@ -618,7 +641,7 @@ public class Parser {
 				return this;
 			}
 			@Override
-			public ScriptVar invoke(ExecutionState state) throws BadTypeException {
+			public ScriptVar invoke(ExecutionState state) throws ParserException {
 
 				ScriptVar var = matchingStatement.invoke(state);
 				
@@ -628,7 +651,7 @@ public class Parser {
 					//function that takes var and returns bool
 					if (s.invoke(state).apply(var).getBoolean() == true)
 					{
-						return outputStatements.get(num).invoke(state);
+						return outputStatements.get(num).invokeChecked(state, "conditional statment");
 					}
 					++num;
 				}
@@ -971,21 +994,23 @@ public class Parser {
 	{
 		return new InvokeFunction(finalSpecializer)
 		{
+			String name;
 			List<Statement> statements;
-			InvokeFunction initialize(List<Statement> statements)
+			InvokeFunction initialize(List<Statement> statements, String functionName)
 			{
 				this.statements = statements;
+				this.name = functionName;
 				return this;
 			}
 			@Override
-			public ScriptVar invoke(List<ScriptVar> arguments) throws BadTypeException {
+			public ScriptVar invoke(List<ScriptVar> arguments) throws ParserException {
 				//time to run the function!
 				ScriptVar last = null;
 				ExecutionState state = new ExecutionState();
 				state.functionArgs = arguments;
 				for (Statement statement : statements)
 				{
-					last = statement.invoke(state);
+					last = statement.invokeChecked(state, "function: " + name);	
 				}
 				return last;
 			}
@@ -994,7 +1019,7 @@ public class Parser {
 			public ScriptVar clone() {
 				return this;
 			}
-		}.initialize(statements);
+		}.initialize(statements, functionName);
 	}
 	
 	ParserState getFunctionDefinitionState(String functionName, List<FunctionSpecializer> specializers, List<String> argNames)
@@ -1170,6 +1195,11 @@ public class Parser {
 		typeSpecializers.put("func", getFunctionSpecializer());		
 	}
 	
+	public int lineNumber = 1;
+	public int getLineNumber()
+	{
+		return lineNumber;
+	}
 	public Parser(Tokenizer tokenizer, Script script)
 	{
 		this.script = script;
@@ -1182,7 +1212,6 @@ public class Parser {
 	
 	public void run()
 	{
-		int lineNumber = 0;
 		stateStack.add(getFunctionLevelParserState());
 		try
 		{

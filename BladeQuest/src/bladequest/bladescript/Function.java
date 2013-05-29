@@ -45,7 +45,7 @@ public class Function extends ScriptVar {
 		return null;
 	}	
 	@Override
-	public ScriptVar apply(ScriptVar var) throws BadTypeException {
+	public ScriptVar apply(ScriptVar var) throws ParserException {
 		// TODO Auto-generated method stub
 		ScriptVar nextFunc = null;
 		curriedValues.add(var);

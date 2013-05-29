@@ -9,8 +9,8 @@ import bladequest.battleactions.BattleAction;
 import bladequest.battleactions.bactFlash;
 import bladequest.battleactions.bactShake;
 import bladequest.battleactions.bactWait;
+import bladequest.bladescript.ParserException;
 import bladequest.bladescript.ScriptVar;
-import bladequest.bladescript.ScriptVar.BadTypeException;
 import bladequest.combat.Battle;
 import bladequest.combat.BattleCalc;
 import bladequest.combat.BattleEventBuilder;
@@ -48,7 +48,7 @@ public class Enemy extends PlayerCharacter
 		{
 			try {
 				scriptFn.apply(ScriptVar.toScriptVar(e));
-			} catch (BadTypeException e1) {
+			} catch (ParserException e1) {
 				e1.printStackTrace();
 			}
 		}

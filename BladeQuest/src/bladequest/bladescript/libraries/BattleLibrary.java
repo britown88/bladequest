@@ -22,6 +22,7 @@ import bladequest.battleactions.bactSpecialMirrored;
 import bladequest.battleactions.bactSpecialPosition;
 import bladequest.battleactions.bactWait;
 import bladequest.bladescript.LibraryWriter;
+import bladequest.bladescript.ParserException;
 import bladequest.bladescript.ScriptVar;
 import bladequest.bladescript.ScriptVar.BadTypeException;
 import bladequest.combat.Battle;
@@ -270,7 +271,7 @@ public class BattleLibrary {
 			public void trigger() {
 				try {
 					onTrigger.apply(ScriptVar.toScriptVar(this));
-				} catch (BadTypeException e) {
+				} catch (ParserException e) {
 					e.printStackTrace();
 				}
 			}

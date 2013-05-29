@@ -1,8 +1,8 @@
 package bladequest.bladescript.libraries;
 
 import bladequest.bladescript.LibraryWriter;
+import bladequest.bladescript.ParserException;
 import bladequest.bladescript.ScriptVar;
-import bladequest.bladescript.ScriptVar.BadTypeException;
 
 public class HigherOrderLibrary {
 
@@ -13,7 +13,7 @@ public class HigherOrderLibrary {
 		{
 			try {
 				fn.apply(ScriptVar.toScriptVar(i));
-			} catch (BadTypeException e) {
+			} catch (ParserException e) {
 				e.printStackTrace();
 			}
 		}
@@ -27,7 +27,7 @@ public class HigherOrderLibrary {
 			try {
 				mapBound(bound, fn, list.tail());				
 				fn.apply(bound).apply(list.head());
-			} catch (BadTypeException e) {
+			} catch (ParserException e) {
 				e.printStackTrace();
 			}			
 		}
@@ -40,7 +40,7 @@ public class HigherOrderLibrary {
 		try {
 			ScriptVar tail = map(fn, list.tail());
 			return new ScriptVar.ListNode(fn.apply(list.head()), tail);
-		} catch (BadTypeException e) {
+		} catch (ParserException e) {
 			e.printStackTrace();
 		}			
 		return null;

@@ -5,14 +5,16 @@ import java.util.Collections;
 import java.util.List;
 
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.graphics.Rect;
+import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleAnimObjState;
 import bladequest.graphics.BattleAnimObjState.PosTypes;
-import bladequest.graphics.BattleAnimObject.Types;
-import bladequest.graphics.BattleSprite.faces;
-import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleAnimObject;
+import bladequest.graphics.BattleAnimObject.Types;
 import bladequest.graphics.BattleSprite;
+import bladequest.graphics.BattleSprite.faces;
+import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
 
 public class PointMath {
@@ -153,5 +155,175 @@ public class PointMath {
 			state.size = new Point(spr.getWidth(), spr.getHeight());
 			insertObj.addState(state);
 	    }		
+	}
+	
+	private static List<Point> jaggedPathStep(PointF start, PointF end, int iterations, float radius)
+	{
+		List<Point> out = new ArrayList<Point>();
+		
+		
+		float x = (start.x + end.x)/2.0f - radius + Global.rand.nextFloat() * radius;
+		float y = (start.y + end.y)/2.0f - radius + Global.rand.nextFloat() * radius;
+		
+		PointF midPoint = new PointF(x,y);
+		
+		for (Point p : jaggedPathStep(start, midPoint, iterations - 1, radius/2))
+		{
+			out.add(p);
+		}
+		
+		out.add(new Point((int)x, (int)y));
+
+		for (Point p : jaggedPathStep(midPoint, end, iterations - 1, radius/2))
+		{
+			out.add(p);
+		}
+		return out;
+	}
+	public static List<Point> jaggedPath(Point start, Point end, int iterations, float radius)
+	{
+		List<Point> out = new ArrayList<Point>();
+		out.add(start);
+		for (Point p : jaggedPathStep(new PointF(start.x, start.y), new PointF(end.x, end.y), iterations, radius))
+		{
+			out.add(p);
+		}		
+		out.add(end);
+		return out;
+	}
+	
+	public interface ForkingPath
+	{
+		Point getPoint();
+		List<ForkingPath> getPaths();
+	}
+	
+	public static ForkingPath getForkingPath(Point start, List<Point> targets, int iterations, float radius)
+	{
+	   //hit a random target.  Split into above and below.  generate a forking path to each from a random point (0.25 - 0.5?) and done
+	   //get all targets outside a tolerance, fork, call getForkingPath on one of them randomly.  get their lists, ignore first point, add them!
+		if (targets.isEmpty()) return null;
+		
+		int randomPick = Global.rand.nextInt(targets.size());
+		Point finalPoint = targets.get(randomPick);
+		
+		//it's possible to do more binning here so that more spawn from the start line... but eh
+		List<Point> above = new ArrayList<Point>();
+		List<Point> below = new ArrayList<Point>();
+		List<Point> beyondTolerance = new ArrayList<Point>();
+		
+		float x = finalPoint.x - start.x;
+		float y = finalPoint.y - start.y;
+		float length = (float)Math.sqrt(x*x + y*y);
+		
+		final float tolerance = 0.4f;
+		
+		for (Point p : targets)
+		{
+			if (p != finalPoint)
+			{
+				float x2 = p.x - start.x;
+				float y2 = p.y - start.y;
+				float l2 = (float)Math.sqrt(x*x + y*y);
+				//dot
+		        if (Math.sqrt((x*x2 + y*y2)/(length*l2)) > tolerance)      		
+		        {
+		        	beyondTolerance.add(p);
+		        	continue;
+		        }
+		        
+		        //det
+		        if (x * y2 - y * x2 > 0.0f)
+		        {
+		        	above.add(p);
+		        }
+		        else
+		        {
+		        	below.add(p);
+		        }
+			}
+		}
+		
+		
+		List<ForkingPath> out = new ArrayList<ForkingPath>();
+		
+		ForkingPath outputPath = new ForkingPath()
+	    {
+			Point p;
+			List<ForkingPath> path;
+			ForkingPath initialize(Point p, List<ForkingPath> path)
+			{
+				this.p = p;
+				this.path = path;
+				return this;
+			}
+			public Point getPoint()
+			{
+				return p;
+			}
+			public List<ForkingPath> getPaths()
+			{
+				return path;
+			}
+		}.initialize(start, out);		
+		
+		
+		List<ForkingPath> lastOut = out;
+		
+		int aboveSplit = (int)(Global.rand.nextFloat() * (above.size()/0.55f) + above.size()/0.1f);
+		int belowSplit = (int)(Global.rand.nextFloat() * (below.size()/0.55f) + below.size()/0.1f);
+		
+		for (ForkingPath path : getForkingPath(start, beyondTolerance, iterations, radius).getPaths())
+		{
+			//output path.
+			out.add(path);
+		}
+		
+		int arg = 0;
+		int nextIter = iterations-1;
+		for (Point p : jaggedPath(start, finalPoint, iterations, radius))
+		{
+			List<ForkingPath> sublist = new ArrayList<ForkingPath>();
+			ForkingPath currentPath = new ForkingPath()
+		    {
+				Point p;
+				List<ForkingPath> path;
+				ForkingPath initialize(Point p, List<ForkingPath> path)
+				{
+					this.p = p;
+					this.path = path;
+					return this;
+				}
+				public Point getPoint()
+				{
+					return p;
+				}
+				public List<ForkingPath> getPaths()
+				{
+					return path;
+				}
+			}.initialize(p, sublist);
+			
+			if (arg == aboveSplit)
+			{
+				for (ForkingPath path : getForkingPath(p, above, nextIter, radius * 0.75f).getPaths())
+				{
+					sublist.add(path);
+				}		
+			}
+			if (arg == belowSplit)
+			{
+				for (ForkingPath path : getForkingPath(p, below, nextIter, radius * 0.75f).getPaths())
+				{
+					sublist.add(path);
+				}		
+			}			
+			++arg;
+			
+			lastOut.add(currentPath);
+			lastOut = sublist;
+		}
+		
+		return outputPath;
 	}
 }
