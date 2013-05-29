@@ -45,6 +45,7 @@ public class Action
 	
 	protected void startBranch(int resultIndex)
 	{		
+		newIndex = -1;
 		addNewLists(resultIndex);
 		
 		runningList = new ArrayList<Action>(branches.get(resultIndex));
@@ -57,32 +58,39 @@ public class Action
 			runningList.get(0).run();			
 		}		
 	}
+	private int newIndex;
+	protected void startNewbranch(int index)
+	{
+		newIndex = index;
+	}
 	
 	//returns whether done
 	protected boolean branchIsDone()
 	{
 		if(runningList.get(branchActionIndex).isDone())
 		{
-			++branchActionIndex;
-			if(branchActionIndex >= runningList.size())
+			if(newIndex != -1)
+				startBranch(newIndex);
 			{
-				if(branchIsLooping)
+				++branchActionIndex;
+				if(branchActionIndex >= runningList.size())
 				{
-					branchActionIndex = 0;
-					runningList.get(branchActionIndex).run();					
-				}
-				else
-				{
-					runningBranch = false;
-					return true;
+					if(branchIsLooping)
+					{
+						branchActionIndex = 0;
+						runningList.get(branchActionIndex).run();					
+					}
+					else
+					{
+						runningBranch = false;
+						return true;
+					}				
 				}				
-			}				
-			else
-				runningList.get(branchActionIndex).run();			
-		}
-		
+				else
+					runningList.get(branchActionIndex).run();	
+			}					
+		}		
 		return false;	
-
 	}
 	
 	public Action()

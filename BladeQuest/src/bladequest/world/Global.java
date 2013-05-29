@@ -33,6 +33,7 @@ import bladequest.UI.NameSelect;
 import bladequest.UI.SaveLoadMenu;
 import bladequest.UI.MainMenu.MainMenu;
 import bladequest.UI.MerchantScreen.MerchantScreen;
+import bladequest.actions.actExpectInput;
 import bladequest.actions.actFadeControl;
 import bladequest.actions.actPlayMusic;
 import bladequest.actions.actResetGame;
@@ -211,6 +212,8 @@ public class Global
 	
 	public static TilePlateBitmap[] tilePlateBmps;	
 	public static int tilePlateBitmapCount = 24;
+	
+	public static actExpectInput inputExpecter;
 	
 	public static void logMessage(String str)
 	{

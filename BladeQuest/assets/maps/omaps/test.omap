@@ -117,3 +117,21 @@ addAction (message "This tests the merchant screen.") >
 addAction (openMerchant "itemshop" 0.5)
 
 \runstate1$4x7$ <- state1$4x7$ 0
+#!OBJ 6 3
+\objName$6x3$ <- "name"
+\name$6x3$ <- newObject objName$6x3$ 6 3
+
+state1$6x3$ 0
+name$6x3$ > createState >
+setSpriteFromTile 1 2 >
+setCollisionData true true true true >
+addAction (message "The screen will now flash until you tap the screen.") >
+addAction (expectInput 2.0 >
+	addToBranch 0 (fadeControl 0.25 100 200 0 0 true true) >
+	addToBranch 0 (fadeControl 0.25 100 200 0 0 false true) >
+	addToBranch 1 (fadeControl 0.0 255 0 0 0 false false) >
+	addToBranch 1 (message "This is the post event ensuring the screen isnt left faded.") >
+	setBranchLoop 0 true) >
+addAction (message "This concludes the test.")
+
+\runstate1$6x3$ <- state1$6x3$ 0

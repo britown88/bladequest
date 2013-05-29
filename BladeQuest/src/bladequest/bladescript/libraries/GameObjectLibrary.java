@@ -5,6 +5,7 @@ import java.util.Map;
 
 import bladequest.actions.Action;
 import bladequest.actions.actAnimation;
+import bladequest.actions.actExpectInput;
 import bladequest.actions.actFadeControl;
 import bladequest.actions.actMerchant;
 import bladequest.actions.actMessage;
@@ -236,6 +237,11 @@ public class GameObjectLibrary
 	public static Action panControl(int x, int y, int speed, boolean wait)
 	{		
 		Action act = new actPanControl(x, y, speed, wait);
+		return act;
+	}
+	public static Action expectInput(float delay)
+	{		
+		Action act = new actExpectInput(delay);
 		return act;
 	}
 	public static Action createPath(String target, boolean wait, String cmds)

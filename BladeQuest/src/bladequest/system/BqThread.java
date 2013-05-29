@@ -217,13 +217,16 @@ public class BqThread extends Thread
 	        		
 	        		break;
 	        	case MotionEvent.ACTION_UP:
+	        		
+	        		if(Global.inputExpecter != null)
+	        			Global.inputExpecter.provideInput();
+	        		
 	        		if(Global.worldMsgBox != null) 
 	        		{
 	        			Global.worldMsgBox.touchActionUp(p.x, p.y);
 	        			if(Global.worldMsgBox.Closing() && Global.party.allowMovement())
 	        				Global.menuButton.open();
-	        		}
-	        			
+	        		}	        			
 	        		
 	        		if(Global.debugButton != null && Global.debugButton.contains(p.x, p.y) && Global.debugButton.touchActionUp(p.x, p.y) == LBStates.Selected)
 	        			Global.openDebugMenu();
