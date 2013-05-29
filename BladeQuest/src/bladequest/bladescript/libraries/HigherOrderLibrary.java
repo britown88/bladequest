@@ -29,7 +29,7 @@ public class HigherOrderLibrary {
 		{			
 			try {
 				fn.apply(ScriptVar.toScriptVar(i));
-			} catch (BadTypeException e) {
+			} catch (ParserException e) {
 				e.printStackTrace();
 			}
 		}
