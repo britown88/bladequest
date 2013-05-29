@@ -262,9 +262,9 @@ public class GameObjectLibrary
 		Action act = new actShake(duration, intensity, wait);
 		return act;
 	}
-	public static Action startBattle(String encounter)
+	public static Action startBattle(String encounter, boolean allowGameOver)
 	{		
-		Action act = new actStartBattle(encounter);
+		Action act = new actStartBattle(encounter, allowGameOver);
 		return act;
 	}
 	public static Action switchControl(String switchName, boolean state)

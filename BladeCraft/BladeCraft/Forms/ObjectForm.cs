@@ -74,7 +74,7 @@ namespace BladeCraft.Forms
          actionParams.Add("createPath", "\"target\" wait \"LURD\"");
          actionParams.Add("restoreParty", "0");
          actionParams.Add("shakeControl", "duration intensity wait");
-         actionParams.Add("startBattle", "\"encounter\"");
+         actionParams.Add("startBattle", "\"encounter\" startBattle");
          actionParams.Add("switchControl", "\"switchName\" state");
          actionParams.Add("openSaveMenu", "0");
          actionParams.Add("teleportParty", "parent x y \"mapname\"");

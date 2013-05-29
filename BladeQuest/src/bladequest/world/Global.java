@@ -801,7 +801,7 @@ public class Global
 		return y - ((screenHeight-vpHeight) / 2) + vpWorldPos.y;
 	}
 	
-	public static void beginBattle(String en)
+	public static void beginBattle(String en, boolean allowGameOver)
 	{
 		encounter = en;
 		GameState = States.GS_BATTLETRANSITION;
@@ -814,7 +814,7 @@ public class Global
 		if(battle == null)
 			battle = new Battle();
 		
-		battle.startBattle(encounter);
+		battle.startBattle(encounter, allowGameOver);
 	}
 	
 	public static void startGame()

@@ -3,7 +3,7 @@ defGuardActions state obj name
 state >
 addAction (openBubble "exclam" name 1.0 false false) >
 addAction (message "Stop right there!") >
-addAction (startBattle "guard") >
+addAction (startBattle "guard" false) >
 addAction (message "Back to your cell with you!") >
 addAction (restoreParty 0) >
 addAction (switchControl "pdoor4" false) >
