@@ -65,16 +65,16 @@ namespace BladeCraft.Forms
          actionParams.Add("showScene", "\"name\"");
          actionParams.Add("openMerchant", "\"name\" discount");
          actionParams.Add("openNameSelect", "\"charName\"");
-         actionParams.Add("resetgame", "0");
+         actionParams.Add("resetGame", "0");
          actionParams.Add("playMusic", "\"song\" playIntro loop fadeTime");
          actionParams.Add("pauseMusic", "fadeTime");
          actionParams.Add("openBubble", "\"name\" \"target\" duration loop wait");
          actionParams.Add("closeBubble", "\"target\"");
          actionParams.Add("panControl", "x y speed wait");
-         actionParams.Add("createPath", "\"target\" wait");
+         actionParams.Add("createPath", "\"target\" wait \"LURD\"");
          actionParams.Add("restoreParty", "0");
          actionParams.Add("shakeControl", "duration intensity wait");
-         actionParams.Add("startBattle", "\"encounter\"");
+         actionParams.Add("startBattle", "\"encounter\" startBattle");
          actionParams.Add("switchControl", "\"switchName\" state");
          actionParams.Add("openSaveMenu", "0");
          actionParams.Add("teleportParty", "parent x y \"mapname\"");
@@ -112,7 +112,7 @@ namespace BladeCraft.Forms
 
       private void tsbAddObject_Click(object sender, EventArgs e)
       {
-         insertMacro("\\name$ <- newObject \"name\" " + txtX.Text + " " + txtY.Text + "\r\n\r\n");
+         insertMacro("\\objName$ <- \"name\"\r\n\\name$ <- newObject objName$ $X $Y\r\n\r\n");
       }
 
       private void tsbSpriteToTile_Click(object sender, EventArgs e)
@@ -155,38 +155,14 @@ namespace BladeCraft.Forms
          insertMacro("addToBranch index actToAdd >\r\n");
       }
 
-      private void cmbActions_SelectedIndexChanged(object sender, EventArgs e)
+      private void actionClick(Object sender, EventArgs e)
       {
-         string str = (string)cmbActions.SelectedItem;
+         string line = ((ToolStripItem)sender).Text + " " + actionParams[((ToolStripItem)sender).Text];
          if(chkWrap.Checked)
-            insertMacro("addAction (" + str + " " + actionParams[str] + ") >\r\n");
+            insertMacro("addAction (" + line + ") >\r\n");
          else
-            insertMacro(str + " " + actionParams[str] + " >\r\n");
-         txtScript.Focus();
+            insertMacro(line + " >");
+
       }
-
-      private void cmbPathing_KeyPress(object sender, KeyPressEventArgs e)
-      {
-         if (e.KeyChar == (char)Keys.Return)
-            insertMacro("addPathAction \"" + cmbPathing.SelectedItem + "\" >\r\n");
-      }
-
-      private void cmbPathing_DropDownClosed(object sender, EventArgs e)
-      {
-         insertMacro("addPathAction \"" + cmbPathing.SelectedItem + "\" >\r\n");
-      }
-
-      
-
-      
-
-      
-      
-      
-
-
-
-
-
    }
 }

@@ -69,6 +69,7 @@ public class Battle
 	private boolean nextChar;
 	private boolean prevChar;
 	private boolean nextActor;
+	private boolean allowGameOver;
 	
 	private PlayerCharacter currentChar;
 	private int currentCharIndex;
@@ -106,6 +107,8 @@ public class Battle
 	
 	private long startTime;
 	private int currentFrame; 
+	
+	private Outcome outcome;
 	
 	
 	void updateCurrentFrame()
@@ -593,7 +596,7 @@ public class Battle
 					p.endBattle();
 				}
 				
-				if(!isDefeated())
+				if(!(isDefeated() && allowGameOver))
 				{
 					Global.musicBox.resumeLastSong();
 					Global.screenFader.fadeIn(1.0f);
@@ -631,8 +634,9 @@ public class Battle
 			c.setEscaped(false);
 	}
 	
-	public void startBattle(String encounter)
+	public void startBattle(String encounter, boolean allowGameOver)
 	{	
+		this.allowGameOver = allowGameOver;
 		startTurn = new Event();
 		onSelectStart = new Event();
 		
@@ -879,6 +883,7 @@ public class Battle
 	
 	private void initVictory()
 	{
+		outcome = Outcome.Victory;
 		messageQueue.clear();
 		//play victory music
 		Global.musicBox.play("victory", true, true, 0);
@@ -959,22 +964,28 @@ public class Battle
 		}		
 		
 	}
+	
+	public Outcome getOutcome(){ return outcome;}
+	
 	private void initEscaped()
 	{
-		setInfoBarText("You have escaped!");		
+		setInfoBarText("You have escaped!");	
+		outcome = Outcome.Escape;
 	}
 
 	private void initDefeat()
 	{
 		setInfoBarText(txtDefeat);
+		outcome = Outcome.Defeat;
 		
 		//clear further actions of the calling object
-//		if(Global.BattleStartObject != null)
-//			Global.BattleStartObject.clearActions();
-		
-		Global.party.setAllowMovement(true);
-		Global.setPanned(0, 0);				
-		Global.executeGameOver();
+		if(allowGameOver)
+		{	
+			Global.party.setAllowMovement(true);
+			Global.setPanned(0, 0);				
+			Global.executeGameOver();
+		}
+
 	}
 	private void triggerEndBattle()
 	{
@@ -1902,6 +1913,13 @@ public class Battle
 		Player,
 		Enemy
 	}
+	public enum Outcome
+	{
+		Victory,
+		Defeat,
+		Escape
+	}
+	
 	
 	public static List<PlayerCharacter> getRandomTargets(TargetTypes targetType, PlayerCharacter character)
 	{

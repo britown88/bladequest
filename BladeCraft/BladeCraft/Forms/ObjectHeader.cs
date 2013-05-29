@@ -32,6 +32,7 @@ namespace BladeCraft.Forms
       private void btnSave_Click(object sender, EventArgs e)
       {
          map.Header = txtScript.Text;
+         Close();
       }
 
 

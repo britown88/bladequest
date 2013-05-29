@@ -191,6 +191,7 @@ public class ObjectState {
 		if(objPath != null)
 			HandleObjectPath();
 	}
+	private boolean facing;
 	
 	private void HandleObjectPath()
 	{		
@@ -216,19 +217,19 @@ public class ObjectState {
 				break;
 			case FaceLeft:
 				parent.Face("left");
-				HandleObjectPath();
+				facing = true;
 				break;
 			case FaceUp:
 				parent.Face("up");
-				HandleObjectPath();
+				facing = true;
 				break;
 			case FaceRight:
 				parent.Face("right");
-				HandleObjectPath();
+				facing = true;
 				break;
 			case FaceDown:
 				parent.Face("down");
-				HandleObjectPath();
+				facing = true;
 				break;
 			case IncreaseMoveSpeed:
 				if(moveSpeed < 6)
@@ -321,6 +322,12 @@ public class ObjectState {
 				HandleObjectPath();
 			}
 			
+		}
+		
+		if(facing)
+		{
+			HandleObjectPath();
+			facing = false;
 		}
 		
 

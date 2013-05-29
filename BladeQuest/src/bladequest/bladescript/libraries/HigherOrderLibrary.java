@@ -20,6 +20,22 @@ public class HigherOrderLibrary {
 		return bound;
 	}
 	
+	public static ScriptVar iterateBetween(ScriptVar fn, int begin, int end)
+	{
+		int step = 1;
+		if(end < begin)
+			step = -1;
+		for (int i = begin; i != end; i += step)
+		{			
+			try {
+				fn.apply(ScriptVar.toScriptVar(i));
+			} catch (BadTypeException e) {
+				e.printStackTrace();
+			}
+		}
+		return ScriptVar.toScriptVar(0);
+	}
+	
 	public static ScriptVar mapBound(ScriptVar bound, ScriptVar fn, ScriptVar list)
 	{
 		if (!list.isEmptyList())

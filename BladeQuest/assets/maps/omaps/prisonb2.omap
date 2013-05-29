@@ -12,94 +12,39 @@ addAction (wait 1.0) >
 addAction (panControl 0 10 100 false) >
 addAction (openBubble "angry" "guard1" -1.0 true false) >
 addAction (fadeControl 2.0 255 0 0 0 false true) >
-addAction (createPath "guard2" true >
-	addPathAction "DecreaseMoveSpeed" >
-	addPathAction "MoveDown" >
-	addPathAction "MoveDown" >
-	addPathAction "MoveDown" >
-	addPathAction "MoveDown" >
-	addPathAction "MoveDown" >
-	addPathAction "FaceLeft") >
+addAction (createPath "guard2" true "sD5l") >
 addAction (closeBubble "guard1") >
-addAction (createPath "guard1" false >
-	addPathAction "FaceRight" >
-	addPathAction "Wait") >
-addAction (createPath "guard2" true >
-	addPathAction "MoveLeft" >
-	addPathAction "MoveLeft") >
+addAction (createPath "guard1" false "rW") >
+addAction (createPath "guard2" true "L2") >
 addAction (wait 1.0) >
 addAction (message "Guard: \nReady for the night watch, sir.") >
-addAction (createPath "guard1" true >
-	addPathAction "DecreaseMoveSpeed" >
-	addPathAction "MoveRight") >
+addAction (createPath "guard1" true "sR") >
 addAction (wait 0.5) >
 addAction (message "Guard: \nYou're late.") >
 addAction (message "Guard: \nSorry, sir! \nIt won't happen again!") >
-addAction (createPath "guard1" true >
-	addPathAction "MoveDown" >
-	addPathAction "MoveRight" >
-	addPathAction "MoveRight") >
-addAction (createPath "guard2" true >
-	addPathAction "FaceDown") >
-addAction (createPath "guard1" true >
-	addPathAction "MoveRight" >
-	addPathAction "MoveUp" >
-	addPathAction "FaceLeft") >
-addAction (createPath "guard2" true >
-	addPathAction "FaceRight") >
+addAction (createPath "guard1" true "DR2") >
+addAction (createPath "guard2" true "d") >
+addAction (createPath "guard1" true "RUl") >
+addAction (createPath "guard2" true "r") >
 addAction (message "Guard: \nJust get to your post. \nAnd don't fall asleep this time.") >
 addAction (message "There's a new arrival in cell four who's a bit of a handful.") >
 addAction (message "Think you can handle that?") >
 addAction (message "Guard: \nYes, sir!") >
-addAction (createPath "guard1" true >
-	addPathAction "MoveRight") >
+addAction (createPath "guard1" true "R") >
 addAction (wait 0.5) >
 addAction (message "Guard: \nIf you need me I'll be asleep, so too bad.") >
 addAction (message "These long shifts are killing me.") >
-addAction (createPath "guard1" false >
-	addPathAction "MoveUp" >
-	addPathAction "MoveUp" >
-	addPathAction "MoveUp" >
-	addPathAction "MoveUp" >
-	addPathAction "MoveUp" >
-	addPathAction "MoveUp" >
-	addPathAction "MoveUp" >
-	addPathAction "MoveUp" >
-	addPathAction "MoveUp" >
-	addPathAction "MoveRight" >
-	addPathAction "MoveRight" >
-	addPathAction "MoveRight") >
+addAction (createPath "guard1" false "U9R3") >
 addAction (panControl 0 5 1 false) >
-addAction (createPath "guard2" true >
-	addPathAction "MoveLeft" >
-	addPathAction "MoveLeft" >
-	addPathAction "MoveLeft" >
-	addPathAction "MoveLeft" >
-	addPathAction "MoveLeft" >
-	addPathAction "MoveLeft" >	
-	addPathAction "MoveLeft" >
-	addPathAction "MoveUp" >
-	addPathAction "MoveUp" >
-	addPathAction "MoveUp" >
-	addPathAction "MoveUp" >
-	addPathAction "MoveRight" >
-	addPathAction "MoveRight" >
-	addPathAction "MoveRight" >
-	addPathAction "MoveRight" >
-	addPathAction "MoveRight" >
-	addPathAction "MoveRight" >
-	addPathAction "MoveRight" >
-	addPathAction "FaceUp") >
+addAction (createPath "guard2" true "L7U4R7u") >
 addAction (switchControl "startgame" true) >
-addAction (createPath "sleepguard" true >
-	addPathAction "FaceUp") >
+addAction (createPath "sleepguard" true "u") >
 addAction (wait 0.5) >
 addAction (message "Guard: \nHey, you.  You got a message from the warden.") >
 addAction (message "It says 'Tap the screen to move around,' whatever that means.") >
 addAction (playMusic "sneak" false true 5.0) >
 addAction (panControl 0 0 1 true) >
-addAction (createPath "sleepguard" true >
-	addPathAction "FaceDown")
+addAction (createPath "sleepguard" true "d")
 
 \runstate1$0x0$ <- state1$0x0$ 0
 

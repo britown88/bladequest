@@ -20,12 +20,11 @@ public class IntroLoopPlayer
     private boolean paused, loop, playIntro, loopHasStarted, prepared, started;
     
     private MediaPlayer mPlayer;
-    private int playIndex;
+    
+    public boolean isLooping(){return loop;}
    
     public IntroLoopPlayer()
     {           
-
-    	playIndex = 0;
     	started = false;
     	prepared = false;
     	

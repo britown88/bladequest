@@ -1,6 +1,7 @@
 #!HEAD
 
 
+
 #!OBJ 0 0
 \name$0x0$ <- newObject "start" 0 0
 
@@ -27,9 +28,10 @@ state1$2x3$ 0
 name$2x3$ > createState >
 setSpriteFromTile 1 2 >
 setCollisionData true true true true >
-addAction (startBattle "2rats")
-
-
+addAction (startBattle "2rats" false >
+	addToBranch 0 (message "You won, congrats.") >
+	addToBranch 1 (message "You lost, bahahahaha") >
+	addToBranch 2 (message "You ran! What a bitch!"))
 
 \runstate1$2x3$ <- state1$2x3$ 0
 #!OBJ 2 5

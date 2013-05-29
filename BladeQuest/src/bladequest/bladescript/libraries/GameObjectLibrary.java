@@ -1,18 +1,61 @@
 package bladequest.bladescript.libraries;
 
-import bladequest.actions.*;
+import java.util.HashMap;
+import java.util.Map;
+
+import bladequest.actions.Action;
+import bladequest.actions.actFadeControl;
+import bladequest.actions.actMerchant;
+import bladequest.actions.actMessage;
+import bladequest.actions.actModifyGold;
+import bladequest.actions.actModifyInventory;
+import bladequest.actions.actModifyParty;
+import bladequest.actions.actNameSelect;
+import bladequest.actions.actPanControl;
+import bladequest.actions.actPath;
+import bladequest.actions.actPauseMusic;
+import bladequest.actions.actPlayMusic;
+import bladequest.actions.actReactionBubble;
+import bladequest.actions.actResetGame;
+import bladequest.actions.actRestoreParty;
+import bladequest.actions.actSaveMenu;
+import bladequest.actions.actShake;
+import bladequest.actions.actShowScene;
+import bladequest.actions.actStartBattle;
+import bladequest.actions.actSwitch;
+import bladequest.actions.actTeleportParty;
+import bladequest.actions.actWait;
 import bladequest.bladescript.LibraryWriter;
-import bladequest.system.DataLine;
 import bladequest.world.GameObject;
 import bladequest.world.Global;
 import bladequest.world.Layer;
 import bladequest.world.ObjectPath;
+import bladequest.world.ObjectPath.Actions;
 import bladequest.world.ObjectState;
 
 public class GameObjectLibrary 
 {
+	private static Map<Character, Actions> pathActions;
+	
 	public static void publishLibrary(LibraryWriter library) 
 	{
+		pathActions = new HashMap<Character, ObjectPath.Actions>();
+		pathActions.put('U', Actions.MoveUp);
+		pathActions.put('D', Actions.MoveDown);
+		pathActions.put('L', Actions.MoveLeft);
+		pathActions.put('R', Actions.MoveRight);
+		pathActions.put('u', Actions.FaceUp);
+		pathActions.put('d', Actions.FaceDown);
+		pathActions.put('l', Actions.FaceLeft);
+		pathActions.put('r', Actions.FaceRight);
+		pathActions.put('S', Actions.IncreaseMoveSpeed);
+		pathActions.put('s', Actions.DecreaseMoveSpeed);
+		pathActions.put('V', Actions.Show);
+		pathActions.put('v', Actions.Hide);
+		pathActions.put('K', Actions.LockFacing);
+		pathActions.put('k', Actions.UnlockFacing);
+		pathActions.put('W', Actions.Wait);		
+		
 		try {
 			library.addAllIn(GameObjectLibrary.class);
 		} catch (Exception e) {
@@ -183,9 +226,29 @@ public class GameObjectLibrary
 		Action act = new actPanControl(x, y, speed, wait);
 		return act;
 	}
-	public static Action createPath(String target, boolean wait)
+	public static Action createPath(String target, boolean wait, String cmds)
 	{		
 		ObjectPath path = new ObjectPath(target);
+		int i = 0;
+		while(i < cmds.length())
+		{
+			char c = cmds.charAt(i++);
+			if(pathActions.containsKey(c))
+			{	
+				
+				String scount = "";				
+				while(i < cmds.length() && 
+						cmds.charAt(i) >= '0' &&
+						cmds.charAt(i) <= '9')
+					scount += cmds.charAt(i++); 
+				
+				int count = scount.length() == 0 ? 1 : Math.max(0, Integer.parseInt(scount));
+				for(int j = 0; j < count; ++j)
+					path.addAction(pathActions.get(c));			
+
+			}
+		}
+
 		Action act = new actPath(path, wait);
 		return act;
 	}
@@ -199,9 +262,9 @@ public class GameObjectLibrary
 		Action act = new actShake(duration, intensity, wait);
 		return act;
 	}
-	public static Action startBattle(String encounter)
+	public static Action startBattle(String encounter, boolean allowGameOver)
 	{		
-		Action act = new actStartBattle(encounter);
+		Action act = new actStartBattle(encounter, allowGameOver);
 		return act;
 	}
 	public static Action switchControl(String switchName, boolean state)
@@ -224,13 +287,6 @@ public class GameObjectLibrary
 		Action act = new actWait(seconds);
 		return act;
 	}
-	
-	public static Action addPathAction(Action path, String action)
-	{
-		((actPath)path).getPath().addAction(ObjectPath.Actions.valueOf(action));
-		return path;
-	}
-	
 	
 
 }

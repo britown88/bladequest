@@ -7,24 +7,32 @@ import bladequest.world.*;
 public class actStartBattle extends Action 
 {
 	String encounter;
+	boolean allowGameOver;
 	
-	public actStartBattle(String encounter)
+	public actStartBattle(String encounter, boolean allowGameOver)
 	{
 		super();
 		this.encounter = encounter;
+		this.allowGameOver = allowGameOver;
 	}
 	
 	@Override
 	public void run()
 	{
-		Global.beginBattle(encounter);
+		Global.beginBattle(encounter, allowGameOver);
 		done = true;
 	}
 	
 	@Override
 	public boolean isDone()
 	{
-		return done;
+		if(!runningBranch)
+		{
+			startBranch(Global.battle.getOutcome().ordinal());
+			return !runningBranch;
+		}
+		else
+			return branchIsDone();
 	}
 
 }

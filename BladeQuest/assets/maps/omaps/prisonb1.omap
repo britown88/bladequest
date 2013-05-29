@@ -1,0 +1,262 @@
+#!HEAD
+defGuardActions state obj name
+state >
+addAction (openBubble "exclam" name 1.0 false false) >
+addAction (message "Stop right there!") >
+addAction (startBattle "guard" false) >
+addAction (message "Back to your cell with you!") >
+addAction (restoreParty 0) >
+addAction (switchControl "pdoor4" false) >
+addAction (switchControl "pdoor3" false) >
+addAction (modifyInventory "prisonkey" 1 true) >
+addAction (fadeControl 1.0 255 0 0 0 true true) >
+addAction (teleportParty obj 15 5 "prisonb2") >
+addAction (fadeControl 1.0 255 0 0 0 false true)
+
+buildLoSState1 obj name
+obj > createState >
+addSwitchCondition "guardsturned" >
+setOptions true false false >
+defGuardActions obj name
+obj > createState
+
+buildLoSState2 obj name
+obj > createState
+obj > createState >
+addSwitchCondition "guardsturned" >
+setOptions true false false >
+defGuardActions obj name
+
+buildGuardLoSObj name x y runState
+\obj <- newObject "guardlos" x y
+(|runState
+|equals 0: 
+obj > buildLoSState1 name
+|equals 1:
+obj > buildLoSState2 name
+)
+
+buildguardlosdown obj name x y count runState
+iterateBetween ([value]buildGuardLoSObj name x value runState) (y > add 1) (y > add count > add 1)
+
+buildguardlosup obj name x y count runState
+iterateBetween ([value]buildGuardLoSObj name x value runState) (y > subtract 1) (y > subtract count > subtract 1)
+
+buildguardlosright obj name x y count runState
+iterateBetween ([value]buildGuardLoSObj name value y runState) (x > add 1) (x > add count > add 1)
+
+buildguardlosleft obj name x y count runState
+iterateBetween ([value]buildGuardLoSObj name value y runState) (x > subtract 1) (x > subtract count > subtract 1)
+
+defGuardState obj name face
+obj > createState >
+setSprite "guard" >
+setFace face >
+setOptions true true true >
+setCollisionData true true true true >
+defGuardActions obj name
+
+defaultguard obj name face1 face2
+defGuardState obj name face1
+defGuardState obj name face2 >
+addSwitchCondition "guardsturned"
+
+
+
+
+
+
+#!OBJ 3 15
+\name$3x15$ <- newObject "name" 3 15
+
+state1$3x15$ 0
+name$3x15$ > createState >
+setSpriteFromTile 0 3 >
+setAutoStart true >
+addAction (fadeControl 0.0 255 0 0 0 false false) >
+addAction (message "|aramis|: \nThese guards are no pushovers.  Best not to fight them head on.") >
+addAction (message "Time to get sneaky.") >
+addAction (switchControl "b1entered" true)
+
+\runstate1$3x15$ <- state1$3x15$ 0
+
+state2$3x15$ 0
+name$3x15$ > createState >
+setSpriteFromTile 0 3 >
+addSwitchCondition "b1entered" >
+addAction (fadeControl 1.0 255 0 0 0 true true) >
+addAction (teleportParty name$3x15$ 20 5 "prisonb2") >
+addAction (fadeControl 1.0 255 0 0 0 false true)
+
+\runstate2$3x15$ <- state2$3x15$ 0
+
+#!OBJ 0 0
+\name$0x0$ <- newObject "guardturner" 0 0
+
+state1$0x0$ 0
+name$0x0$ > createState >
+setAutoStart true >
+setOptions false false false >
+addAction (wait 3.0) >
+addAction (switchControl "guardsturned" true)
+
+\runstate1$0x0$ <- state1$0x0$ 0
+
+state2$0x0$ 0
+name$0x0$ > createState >
+addSwitchCondition "guardsturned" >
+setAutoStart true >
+setOptions false false false >
+addAction (wait 3.0) >
+addAction (switchControl "guardsturned" false)
+
+
+\runstate2$0x0$ <- state2$0x0$ 0
+
+
+#!OBJ 10 14
+\objName$10x14$ <- "guard1"
+\name$10x14$ <- newObject objName$10x14$ 10 14
+
+state4$10x14$ 0
+name$10x14$ > defaultguard objName$10x14$ "down" "up"
+
+\runstate4$10x14$ <- state4$10x14$ 0
+\los1$10x14$ <- name$10x14$ > buildguardlosdown objName$10x14$ 10 14 3 0
+\los2$10x14$ <- name$10x14$ > buildguardlosup objName$10x14$ 10 14 3 1
+#!OBJ 18 12
+\objName$18x12$ <- "guard2"
+\name$18x12$ <- newObject objName$18x12$ 18 12
+
+state4$18x12$ 0
+name$18x12$ > defaultguard objName$18x12$ "down" "right"
+
+\runstate4$18x12$ <- state4$18x12$ 0
+\los1$18x12$ <- name$18x12$ > buildguardlosdown objName$18x12$ 18 12 5 0
+\los2$18x12$ <- name$18x12$ > buildguardlosright objName$18x12$ 18 12 8 1
+#!OBJ 22 7
+\objName$22x7$ <- "guard3"
+\name$22x7$ <- newObject objName$22x7$ 22 7
+
+state4$22x7$ 0
+name$22x7$ > defaultguard objName$22x7$ "up" "down"
+
+\runstate4$22x7$ <- state4$22x7$ 0
+\los1$22x7$ <- name$22x7$ > buildguardlosup objName$22x7$ 22 7 3 0
+\los2$22x7$ <- name$22x7$ > buildguardlosdown objName$22x7$ 22 7 2 1
+
+#!OBJ 10 4
+\objName$10x4$ <- "guard4"
+\name$10x4$ <- newObject objName$10x4$ 10 4
+
+state4$10x4$ 0
+name$10x4$ > defaultguard objName$10x4$ "down" "right"
+
+\runstate4$10x4$ <- state4$10x4$ 0
+\los1$10x4$ <- name$10x4$ > buildguardlosdown objName$10x4$ 10 4 3 0
+\los1$10x4$ <- name$10x4$ > buildguardlosdown objName$10x4$ 11 5 2 0
+\los2$10x4$ <- name$10x4$ > buildguardlosright objName$10x4$ 10 4 5 1
+\los2$10x4$ <- name$10x4$ > buildguardlosright objName$10x4$ 10 5 5 1#!OBJ 26 4
+\objName$10x4$ <- "name"
+\name$10x4$ <- newObject "name" 26 4
+
+state1$10x4$ 0
+name$10x4$ > createState >
+setSpriteFromTile 1 3 >
+addAction (fadeControl 1.0 255 0 0 0 true true) >
+addAction (teleportParty name$10x4$ 3 16 "castlehall") >
+addAction (fadeControl 1.0 255 0 0 0 false true)
+
+
+
+\runstate1$10x4$ <- state1$10x4$ 0
+#!OBJ 8 4
+\objName$8x4$ <- "name"
+\name$8x4$ <- newObject "name" 8 4
+
+state1$8x4$ 0
+name$8x4$ > createState >
+setSpriteFromTile 7 1
+
+\runstate1$8x4$ <- state1$8x4$ 0
+#!OBJ 8 5
+\objName$8x5$ <- "name"
+\name$8x5$ <- newObject "name" 8 5
+
+state1$8x5$ 0
+name$8x5$ > createState >
+setSpriteFromTile 7 2
+
+\runstate1$8x5$ <- state1$8x5$ 0
+#!OBJ 3 4
+\objName$3x4$ <- "name"
+\name$3x4$ <- newObject "name" 3 4
+
+state1$3x4$ 0
+name$3x4$ > createState >
+setSpriteFromTile 7 1
+
+\runstate1$3x4$ <- state1$3x4$ 0
+#!OBJ 3 5
+\objName$3x5$ <- "name"
+\name$3x5$ <- newObject "name" 3 5
+
+state1$3x5$ 0
+name$3x5$ > createState >
+setSpriteFromTile 7 2
+
+\runstate1$3x5$ <- state1$3x5$ 0
+#!OBJ 5 5
+\objName$5x5$ <- "turnguard1"
+\name$5x5$ <- newObject objName$5x5$ 5 5
+
+state1$5x5$ 0
+name$5x5$ > createState >
+setSprite "guard" > 
+setFace "right" > 
+setCollisionData true true true true >
+setOptions true true true 
+
+
+\runstate1$5x5$ <- state1$5x5$ 0
+#!OBJ 7 5
+\objName$7x5$ <- "turnguard2"
+\name$7x5$ <- newObject objName$7x5$ 7 5
+
+state1$7x5$ 0
+name$7x5$ > createState >
+setSprite "guard" > 
+setFace "left" > 
+setCollisionData true true true true >
+setOptions true true true 
+
+
+\runstate1$7x5$ <- state1$7x5$ 0
+#!OBJ 6 4
+\objName$6x4$ <- "turnguard3"
+\name$6x4$ <- newObject objName$6x4$ 6 4
+
+state1$6x4$ 0
+name$6x4$ > createState >
+setFace "down" > 
+setSprite "guard" > 
+setCollisionData true true true true >
+setOptions true true true 
+
+
+\runstate1$6x4$ <- state1$6x4$ 0
+#!OBJ 6 8
+\objName$6x8$ <- "name"
+\name$6x8$ <- newObject "name" 6 8
+
+state1$6x8$ 0
+name$6x8$ > createState >
+setOptions true false false > 
+addAction (createPath "turnguard1" false "dW") >
+addAction (createPath "turnguard2" false "dW") >
+addAction (createPath "turnguard3" true "DW") >
+addAction (openBubble "exclam" "turnguard1" 1.0 false false) >
+addAction (openBubble "exclam" "turnguard2" 1.0 false false) >
+defGuardActions name$6x8$ "turnguard3"
+
+\runstate1$6x8$ <- state1$6x8$ 0
