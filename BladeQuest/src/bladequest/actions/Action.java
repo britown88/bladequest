@@ -15,25 +15,41 @@ public class Action
 	
 	protected List<Action> runningList;
 	protected List<List<Action>> branches;
+	protected List<Boolean> loopBranches;
+	private boolean branchIsLooping;
+	private int branchActionIndex;
+
 	
 	public void addToBranch(int index, Action action)
+	{
+		addNewLists(index);		
+		branches.get(index).add(action);		
+	}
+	
+	public void setBranchLoop(int index, boolean loop)
+	{
+		addNewLists(index);
+		loopBranches.set(index, loop);	
+	}
+	
+	private void addNewLists(int index)
 	{
 		int size = branches.size();
 		if(index > size - 1)
 			for(int i = 0; i < index - size + 1; ++i)
+			{
 				branches.add(new ArrayList<Action>());
-		
-		branches.get(index).add(action);		
+				loopBranches.add(false);
+			}
 	}
 	
 	protected void startBranch(int resultIndex)
 	{		
-		int size = branches.size();
-		if(resultIndex > size - 1)
-			for(int i = 0; i < resultIndex - size + 1; ++i)
-				branches.add(new ArrayList<Action>());
+		addNewLists(resultIndex);
 		
 		runningList = new ArrayList<Action>(branches.get(resultIndex));
+		branchIsLooping = loopBranches.get(resultIndex);
+		branchActionIndex = 0;
 		
 		if(!runningList.isEmpty())
 		{
@@ -45,16 +61,24 @@ public class Action
 	//returns whether done
 	protected boolean branchIsDone()
 	{
-		if(runningList.get(0).isDone())
+		if(runningList.get(branchActionIndex).isDone())
 		{
-			runningList.remove(0);
-			if(runningList.isEmpty())
+			++branchActionIndex;
+			if(branchActionIndex >= runningList.size())
 			{
-				runningBranch = false;
-				return true;
+				if(branchIsLooping)
+				{
+					branchActionIndex = 0;
+					runningList.get(branchActionIndex).run();					
+				}
+				else
+				{
+					runningBranch = false;
+					return true;
+				}				
 			}				
 			else
-				runningList.get(0).run();			
+				runningList.get(branchActionIndex).run();			
 		}
 		
 		return false;	
@@ -68,6 +92,7 @@ public class Action
 		skip = 0;
 		
 		branches = new ArrayList<List<Action>>();
+		loopBranches = new ArrayList<Boolean>();
 	}
 	
 	public boolean isDone()
@@ -81,6 +106,7 @@ public class Action
 	
 	public void reset()
 	{
+		branchIsLooping = false;
 		done = false;
 	}
 

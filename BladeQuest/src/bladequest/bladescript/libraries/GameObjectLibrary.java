@@ -153,6 +153,11 @@ public class GameObjectLibrary
 		action.addToBranch(index, actToAdd);
 		return action;
 	}
+	public static Action setBranchLoop(Action action, int index, boolean loop)
+	{
+		action.setBranchLoop(index, loop);
+		return action;
+	}
 	public static Action fadeControl(float fadeTime, int a, int r, int g, int b, boolean fadeOut, boolean wait)
 	{		
 		Action act = new actFadeControl(fadeTime, a, r, g, b, fadeOut, wait);
