@@ -26,6 +26,7 @@ import bladequest.actions.actShowScene;
 import bladequest.actions.actStartBattle;
 import bladequest.actions.actSwitch;
 import bladequest.actions.actTeleportParty;
+import bladequest.actions.actUnloadScene;
 import bladequest.actions.actWait;
 import bladequest.bladescript.LibraryWriter;
 import bladequest.graphics.AnimationBuilder;
@@ -197,6 +198,11 @@ public class GameObjectLibrary
 	public static Action showScene(String name)
 	{		
 		Action act = new actShowScene(name);
+		return act;
+	}
+	public static Action unloadScene()
+	{		
+		Action act = new actUnloadScene();
 		return act;
 	}
 	public static Action openMerchant(String name, float discount)

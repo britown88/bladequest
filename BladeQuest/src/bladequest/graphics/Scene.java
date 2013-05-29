@@ -19,10 +19,6 @@ public class Scene
 	private Rect src, dest;
 	private DrawScaledBmp dro;
 	
-	public boolean done;
-	public long startTime;
-	public float waitTime;
-	
 	public Scene(InputStream stream)
 	{
 		this.stream = stream;

@@ -581,28 +581,36 @@ public class Battle
 			triggerEndBattle();
 		else				
 			if(Global.screenFader.isFadedOut())
-			{
-				clearBattleOnlyEffects();
-				resetEscapeState();
+			{				
 				Global.map.getBackdrop().unload();
+				
+				//game over, man
+				if(allowGameOver && isDefeated())
+				{	
+					Global.party.setAllowMovement(true);
+					Global.setPanned(0, 0);				
+					Global.executeGameOver();
+				}
+				else
+				{
+					clearBattleOnlyEffects();
+					resetEscapeState();
+					
+					for (Enemy e : this.encounter.Enemies())
+					{
+						e.endBattle();
+					}
+					
+					for (PlayerCharacter p : partyList)
+					{
+						p.endBattle();
+					}				
 
-				for (Enemy e : this.encounter.Enemies())
-				{
-					e.endBattle();
-				}
-				
-				for (PlayerCharacter p : partyList)
-				{
-					p.endBattle();
-				}
-				
-				if(!(isDefeated() && allowGameOver))
-				{
 					Global.musicBox.resumeLastSong();
 					Global.screenFader.fadeIn(1.0f);
-				}
-				
-				Global.GameState = States.GS_WORLDMOVEMENT;				
+					
+					Global.GameState = States.GS_WORLDMOVEMENT;	
+				}		
 			}
 	}
 	
@@ -978,13 +986,7 @@ public class Battle
 		setInfoBarText(txtDefeat);
 		outcome = Outcome.Defeat;
 		
-		//clear further actions of the calling object
-		if(allowGameOver)
-		{	
-			Global.party.setAllowMovement(true);
-			Global.setPanned(0, 0);				
-			Global.executeGameOver();
-		}
+		
 
 	}
 	private void triggerEndBattle()
