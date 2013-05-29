@@ -57,7 +57,7 @@ makeRatAI enemy
 \rat <- (addEnemy "rat" "Rat" "rat" >
 setEBaseStats 10 1 1 1 >
 addColoredStaffHit (RGBA 255 0 0 255) (RGBA 0 0 0 255) >
-setELevel 4 >
+setELevel 99 >
 setGold 23 >
 setItems "potion" 25 "antidote" 85 true >
 modStat "MaxHP" 0 >

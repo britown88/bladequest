@@ -33,11 +33,14 @@ import bladequest.UI.NameSelect;
 import bladequest.UI.SaveLoadMenu;
 import bladequest.UI.MainMenu.MainMenu;
 import bladequest.UI.MerchantScreen.MerchantScreen;
+import bladequest.actions.Action;
 import bladequest.actions.actExpectInput;
 import bladequest.actions.actFadeControl;
+import bladequest.actions.actPauseMusic;
 import bladequest.actions.actPlayMusic;
 import bladequest.actions.actResetGame;
 import bladequest.actions.actShowScene;
+import bladequest.actions.actUnloadScene;
 import bladequest.actions.actWait;
 import bladequest.battleactions.BattleAction;
 import bladequest.bladescript.FileTokenizer;
@@ -621,13 +624,6 @@ public class Global
 			imageTimer = 0;
 			
 			animateTiles = !animateTiles;
-		}
-		
-		if(showScene != null && !showScene.done && 
-				(System.currentTimeMillis() - showScene.startTime)/1000.0f > showScene.waitTime)
-		{
-			showScene.unload();
-			showScene.done = true;
 		}
 		
 		//update
@@ -1970,6 +1966,10 @@ public class Global
 
 	public static void executeGameOver()
 	{
+		//screenFader.setFadeColor(255, 0, 0, 0);
+		
+		Global.map.clearObjectAction();
+		GameState = States.GS_WORLDMOVEMENT;
 		screenFader.setFaded();
 		gameOverObject.execute();
 	}
@@ -1978,16 +1978,20 @@ public class Global
 	{
 		gameOverObject = new GameObject("gameover", 0, 0);
 		gameOverObject.addState(new ObjectState(gameOverObject));
-		gameOverObject.setStateCollision(0, false, false, false, false);
-		gameOverObject.setStateMovement(0, 0, 0);
 		gameOverObject.setStateOpts(0, true, false, false);
-		gameOverObject.setStateFace(0, "down");
-		gameOverObject.addAction(0, new actPlayMusic("annihilation", true, true, 2.0f));
+		gameOverObject.addAction(0, new actPlayMusic("annihilation", true, true,0.0f));
 		gameOverObject.addAction(0, new actShowScene("gameover"));
-		gameOverObject.addAction(0, new actFadeControl(1, 255, 255, 255, 255, false, false));
-		gameOverObject.addAction(0, new actWait(9.5f));
-		gameOverObject.addAction(0, new actFadeControl(1, 255, 255, 255, 255, true, true));
-		gameOverObject.addAction(0, new actResetGame());
+		gameOverObject.addAction(0, new actFadeControl(3.0f, 255, 0, 0, 0, false, true));
+		
+		Action ei = new actExpectInput(5.0f);
+		ei.addToBranch(0, new actWait(0.25f));
+		ei.addToBranch(1, new actPauseMusic(3.0f));
+		ei.addToBranch(1, new actFadeControl(3.0f, 255, 255, 255, 255, true, true));
+		ei.addToBranch(1, new actWait(2.0f));
+		ei.addToBranch(1, new actUnloadScene());
+		ei.addToBranch(1, new actResetGame());
+		ei.setBranchLoop(0, true);
+		gameOverObject.addAction(0, ei);
 
 	}
 }
