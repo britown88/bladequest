@@ -775,6 +775,33 @@ public class Global
 	{
 		return y - vpWorldPos.y + ((screenHeight-vpHeight) / 2);
 	}
+	public static Point worldToVP(Point p)
+	{
+		return new Point(p.x - vpWorldPos.x , p.y - vpWorldPos.y );
+	}
+	
+	public static Point getVPCoordsFromObject(String name)
+	{
+		Point targetP = null;
+		if(target.equals("party"))
+			targetP = Global.party.getGridPos();
+		else
+			for(GameObject go : Global.map.Objects())
+				if(go.Name().equals(target))
+				{
+					targetP = go.getGridPos();
+					break;
+				}						
+
+		if(targetP != null)
+		{
+			targetP = new Point(targetP.x * 32 + 16, targetP.y * 32 + 16);
+			targetP = Global.worldToVP(targetP);				
+		}
+		
+		return targetP;
+	}
+	
 	public static Rect screenToVP(Rect r)
 	{
 		return new Rect(

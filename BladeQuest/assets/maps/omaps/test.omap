@@ -44,8 +44,18 @@ setCollisionData true true true true >
 addAction (restoreParty 0) >
 addAction (message "You've been fully healed bro.")
 
-
 \runstate1$2x5$ <- state1$2x5$ 0
+
+#!OBJ 3 5
+\name$3x5$ <- newObject "heals" 3 5
+
+state1$3x5$ 0
+name$3x5$ > createState >
+setSpriteFromTile 1 2 >
+setCollisionData true true true true >
+addAction (playAnimation (genWindowShatter 0) "party" "party")
+
+\runstate1$3x5$ <- state1$3x5$ 0
 #!OBJ 2 7
 \name$2x7$ <- newObject "menutest" 2 7
 

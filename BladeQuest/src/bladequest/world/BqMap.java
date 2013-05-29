@@ -23,6 +23,7 @@ import bladequest.bladescript.ScriptVar.BadTypeException;
 import bladequest.bladescript.libraries.GameObjectLibrary;
 import bladequest.bladescript.libraries.HigherOrderLibrary;
 import bladequest.bladescript.libraries.MathLibrary;
+import bladequest.bladescript.libraries.WorldAnimLibrary;
 import bladequest.graphics.Scene;
 import bladequest.graphics.Tile;
 import bladequest.graphics.TilePlate;
@@ -186,6 +187,7 @@ public class BqMap
 		HigherOrderLibrary.publishLibrary(library);
 		MathLibrary.publishLibrary(library);
 		GameObjectLibrary.publishLibrary(library);
+		WorldAnimLibrary.publishLibrary(library);
 		
 		return library.getLibrary();
 	}

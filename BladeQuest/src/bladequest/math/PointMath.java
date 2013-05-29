@@ -166,6 +166,11 @@ public class PointMath {
 		float y = (start.y + end.y)/2.0f - radius + Global.rand.nextFloat() * radius;
 		
 		PointF midPoint = new PointF(x,y);
+		if (iterations == 0)
+		{
+			out.add(new Point((int)x, (int)y));
+			return out;
+		}
 		
 		for (Point p : jaggedPathStep(start, midPoint, iterations - 1, radius/2))
 		{
@@ -202,7 +207,26 @@ public class PointMath {
 	{
 	   //hit a random target.  Split into above and below.  generate a forking path to each from a random point (0.25 - 0.5?) and done
 	   //get all targets outside a tolerance, fork, call getForkingPath on one of them randomly.  get their lists, ignore first point, add them!
-		if (targets.isEmpty()) return null;
+		
+		if (targets.isEmpty()) return new ForkingPath() {
+			
+			private Point startPoint;
+			public ForkingPath init(Point startPoint)
+			{
+				this.startPoint = startPoint;
+				return this;
+			}
+			
+			@Override
+			public Point getPoint() {
+				return startPoint;
+			}
+			
+			@Override
+			public List<ForkingPath> getPaths() {
+				return new ArrayList<PointMath.ForkingPath>();
+			}
+		}.init(start);
 		
 		int randomPick = Global.rand.nextInt(targets.size());
 		Point finalPoint = targets.get(randomPick);
@@ -216,7 +240,7 @@ public class PointMath {
 		float y = finalPoint.y - start.y;
 		float length = (float)Math.sqrt(x*x + y*y);
 		
-		final float tolerance = 0.4f;
+		final float tolerance = 0.6f;
 		
 		for (Point p : targets)
 		{
@@ -226,7 +250,7 @@ public class PointMath {
 				float y2 = p.y - start.y;
 				float l2 = (float)Math.sqrt(x*x + y*y);
 				//dot
-		        if (Math.sqrt((x*x2 + y*y2)/(length*l2)) > tolerance)      		
+		        if (Math.sqrt((x*x2 + y*y2)/(length*l2)) < tolerance)      		
 		        {
 		        	beyondTolerance.add(p);
 		        	continue;

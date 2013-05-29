@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import bladequest.actions.Action;
+import bladequest.actions.actAnimation;
 import bladequest.actions.actFadeControl;
 import bladequest.actions.actMerchant;
 import bladequest.actions.actMessage;
@@ -26,6 +27,7 @@ import bladequest.actions.actSwitch;
 import bladequest.actions.actTeleportParty;
 import bladequest.actions.actWait;
 import bladequest.bladescript.LibraryWriter;
+import bladequest.graphics.AnimationBuilder;
 import bladequest.world.GameObject;
 import bladequest.world.Global;
 import bladequest.world.Layer;
@@ -169,6 +171,11 @@ public class GameObjectLibrary
 	public static Action modifyGold(int gold)
 	{		
 		Action act = new actModifyGold(gold);
+		return act;
+	}
+	public static Action playAnimation(AnimationBuilder builder, String source, String target)
+	{		
+		Action act = new actAnimation(builder, source, target);
 		return act;
 	}
 	public static Action modifyInventory(String name, int count, boolean remove)
