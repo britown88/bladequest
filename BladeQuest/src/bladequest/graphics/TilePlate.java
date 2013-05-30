@@ -42,7 +42,7 @@ public class TilePlate
 			if(loaded)
 			{
 				if(!empty)
-					Global.renderer.drawBitmap((Global.animateTiles && animated) ? animBmp.bmp : bmp.bmp,
+					Global.renderer.drawBitmap((Global.animateTiles && animated) ? (animBmp != null ? animBmp.bmp : bmp.bmp): bmp.bmp,
 						Global.worldToScreenX(platePos.x*320),
 						Global.worldToScreenY(platePos.y*320), null	);
 			}
@@ -117,9 +117,13 @@ public class TilePlate
 		}
 		
 		empty = tiles.size() == 0;
-		Canvas canvas = new Canvas(animBmp.bmp);		
-		for(Tile t : tiles)
-			t.render(canvas, tileset, true);
+		
+		if(animBmp != null)
+		{
+			Canvas canvas = new Canvas(animBmp.bmp);		
+			for(Tile t : tiles)
+				t.render(canvas, tileset, true);
+		}		
 	}
 	
 	public void Unload()

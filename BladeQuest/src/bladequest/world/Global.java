@@ -2008,7 +2008,10 @@ public class Global
 	public static void LoadMap(String name)
 	{
 		if(map != null)
+		{
 			map.clearObjectAction();
+			map.unloadTiles();
+		}
 		
 		playingReactions.clear();
 		

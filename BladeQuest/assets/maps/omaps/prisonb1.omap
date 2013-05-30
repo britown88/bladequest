@@ -1,23 +1,26 @@
 #!HEAD
-defGuardActions state obj name
+defGuardActions state obj name encounter
 state >
+addAction (switchControl "turning" false) >
 addAction (openBubble "exclam" name 1.0 false false) >
 addAction (message "Stop right there!") >
-addAction (startBattle "guard" false) >
-addAction (message "Back to your cell with you!") >
+addAction (startBattle encounter false >
+	addToBranch 0 (message "Yeah okay you beat me but you still have to go back to your cell!") >
+	addToBranch 1 (message "Back to your cell with you!"))>
 addAction (restoreParty 0) >
 addAction (switchControl "pdoor4" false) >
 addAction (switchControl "pdoor3" false) >
 addAction (modifyInventory "prisonkey" 1 true) >
 addAction (fadeControl 1.0 255 0 0 0 true true) >
 addAction (teleportParty obj 15 5 "prisonb2") >
-addAction (fadeControl 1.0 255 0 0 0 false true)
+addAction (fadeControl 1.0 255 0 0 0 false true) >
+addAction (switchControl "turning" true) 
 
 buildLoSState1 obj name
 obj > createState >
 addSwitchCondition "guardsturned" >
 setOptions true false false >
-defGuardActions obj name
+defGuardActions obj name "guard"
 obj > createState
 
 buildLoSState2 obj name
@@ -25,7 +28,7 @@ obj > createState
 obj > createState >
 addSwitchCondition "guardsturned" >
 setOptions true false false >
-defGuardActions obj name
+defGuardActions obj name "guard"
 
 buildGuardLoSObj name x y runState
 \obj <- newObject "guardlos" x y
@@ -54,12 +57,14 @@ setSprite "guard" >
 setFace face >
 setOptions true true true >
 setCollisionData true true true true >
-defGuardActions obj name
+defGuardActions obj name "guard"
 
 defaultguard obj name face1 face2
 defGuardState obj name face1
 defGuardState obj name face2 >
 addSwitchCondition "guardsturned"
+
+
 
 
 
@@ -93,23 +98,29 @@ addAction (fadeControl 1.0 255 0 0 0 false true)
 #!OBJ 0 0
 \name$0x0$ <- newObject "guardturner" 0 0
 
+state3$0x0$ 0
+name$0x0$ > createState
+
+\runstate3$0x0$ <- state3$0x0$ 0
+
 state1$0x0$ 0
 name$0x0$ > createState >
+addSwitchCondition "turning" >
 setAutoStart true >
 setOptions false false false >
-addAction (wait 3.0) >
+addAction (wait 2.0) >
 addAction (switchControl "guardsturned" true)
 
 \runstate1$0x0$ <- state1$0x0$ 0
 
 state2$0x0$ 0
 name$0x0$ > createState >
+addSwitchCondition "turning" >
 addSwitchCondition "guardsturned" >
 setAutoStart true >
 setOptions false false false >
-addAction (wait 3.0) >
+addAction (wait 2.0) >
 addAction (switchControl "guardsturned" false)
-
 
 \runstate2$0x0$ <- state2$0x0$ 0
 
@@ -257,6 +268,6 @@ addAction (createPath "turnguard2" false "dW") >
 addAction (createPath "turnguard3" true "DW") >
 addAction (openBubble "exclam" "turnguard1" 1.0 false false) >
 addAction (openBubble "exclam" "turnguard2" 1.0 false false) >
-defGuardActions name$6x8$ "turnguard3"
+defGuardActions name$6x8$ "turnguard3" "3guards"
 
 \runstate1$6x8$ <- state1$6x8$ 0
