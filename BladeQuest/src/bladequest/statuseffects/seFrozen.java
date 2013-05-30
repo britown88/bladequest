@@ -111,15 +111,12 @@ public class seFrozen extends StatusEffect
 				
 				
 				boolean dispels = false;
-				if (builder.getDamageType() == DamageTypes.Magic ||builder.getDamageType() == DamageTypes.MagicalIgnoreDef)
+				for (DamageComponent component : builder.getDamageComponents())
 				{
-					for (DamageComponent component : builder.getDamageComponents())
+					if (component.getAffinity() == Stats.Fire) //FIRE SPELL YAY YAY
 					{
-						if (component.getAffinity() == Stats.Fire) //FIRE SPELL YAY YAY
-						{
-							dispels = true;
-							break;
-						}
+						dispels = true;
+						break;
 					}
 				}
 				if (dispels)
