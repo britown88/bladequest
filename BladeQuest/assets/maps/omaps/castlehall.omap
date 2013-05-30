@@ -1,0 +1,112 @@
+#!HEAD
+createLockedDoor obj
+obj > createState >
+setSprite "door" >
+setOptions true false false >
+setCollisionData true true true true >
+addAction (message "It's locked.")
+
+
+#!OBJ 2 16
+\objName$2x16$ <- "stairs"
+\name$2x16$ <- newObject objName$2x16$ 2 16
+
+state1$2x16$ 0
+name$2x16$ > createState >
+setSpriteFromTile 4 0 >
+setOptions true false false >
+setAutoStart true >
+addAction (fadeControl 0.0 255 0 0 0 false false) >
+addAction (message "|aramis| \nFinally, I think the front gate should be south of here.") >
+addAction (switchControl "castlehallentered" true) >
+addAction (createPath "party" true "s2R2S2") >
+addAction (fadeControl 0.5 255 0 250 200 true true) >
+addAction (openBubble "exclam" "party" 1.0 false false) >
+addAction (fadeControl 0.5 255 0 250 200 false true) >
+addAction (message "An eerie glow surrounds you.") >
+addAction (messageWithYesNo "Save your game?" > 
+	addToBranch 0 (openSaveMenu 0))
+
+\runstate1$2x16$ <- state1$2x16$ 0
+
+state2$2x16$ 0
+name$2x16$ > createState >
+setSpriteFromTile 4 0 >
+addSwitchCondition "castlehallentered" >
+setOptions true false false >
+addAction (fadeControl 1.0 255 0 0 0 true true) >
+addAction (teleportParty name$2x16$ 25 4 "prisonb1") >
+addAction (fadeControl 1.0 255 0 0 0 false true)
+
+
+\runstate2$2x16$ <- state2$2x16$ 0
+
+#!OBJ 3 3
+\objName$3x3$ <- "door"
+\name$3x3$ <- newObject objName$3x3$ 3 3
+\run$3x3$ <- name$3x3$ > createLockedDoor
+#!OBJ 23 3
+\objName$23x3$ <- "door"
+\name$23x3$ <- newObject objName$23x3$ 23 3
+\run$23x3$ <- name$23x3$ > createLockedDoor
+#!OBJ 27 3
+\objName$27x3$ <- "door"
+\name$27x3$ <- newObject objName$27x3$ 27 3
+\run$27x3$ <- name$27x3$ > createLockedDoor
+#!OBJ 25 15
+\objName$25x15$ <- "door"
+\name$25x15$ <- newObject objName$25x15$ 25 15
+\run$25x15$ <- name$25x15$ > createLockedDoor
+#!OBJ 6 16
+\objName$6x16$ <- "name"
+\name$6x16$ <- newObject objName$6x16$ 6 16
+
+state1$6x16$ 0
+name$6x16$ > createState >
+setSprite "savepoint" >
+setCollisionData true true true true >
+addAction (fadeControl 0.5 255 0 250 200 true true) >
+addAction (openBubble "exclam" "party" 1.0 false false) >
+addAction (fadeControl 0.5 255 0 250 200 false true) >
+addAction (message "An eerie glow surrounds you.") >
+addAction (messageWithYesNo "Save your game?" > 
+	addToBranch 0 (openSaveMenu 0))
+
+
+\runstate1$6x16$ <- state1$6x16$ 0
+#!OBJ 13 19
+\objName$13x19$ <- "name"
+\name$13x19$ <- newObject objName$13x19$ 13 19
+
+state1$13x19$ 0
+name$13x19$ > createState >
+addAction (message "|aramis|: Great, it's barred shut.") >
+addAction (createPath "party" true "U")
+
+
+
+\runstate1$13x19$ <- state1$13x19$ 0
+#!OBJ 14 19
+\objName$14x19$ <- "name"
+\name$14x19$ <- newObject objName$14x19$ 14 19
+
+state1$14x19$ 0
+name$14x19$ > createState >
+addAction (message "|aramis|: Great, it's barred shut.") >
+addAction (createPath "party" true "U")
+
+
+
+\runstate1$14x19$ <- state1$14x19$ 0
+#!OBJ 15 19
+\objName$15x19$ <- "name"
+\name$15x19$ <- newObject objName$15x19$ 15 19
+
+state1$15x19$ 0
+name$15x19$ > createState >
+addAction (message "|aramis|: Great, it's barred shut.") >
+addAction (createPath "party" true "U")
+
+
+
+\runstate1$15x19$ <- state1$15x19$ 0

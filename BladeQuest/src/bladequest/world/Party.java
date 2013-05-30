@@ -470,7 +470,7 @@ public class Party
 		}
 		else
 		{
-			switch(objPath.nextAction())
+			switch(objPath.getCurrentAction())
 			{
 			case MoveLeft:
 				originalTarget = new Point(gridPos.x - 1, gridPos.y);
@@ -494,44 +494,54 @@ public class Party
 				break;
 			case FaceLeft:
 				vectorFace(new Point(-1, 0));
+				objPath.advanceActions();
 				HandleObjectPath();
 				break;
 			case FaceUp:
 				vectorFace(new Point(0, -1));
+				objPath.advanceActions();
 				HandleObjectPath();
 				break;
 			case FaceRight:
 				vectorFace(new Point(1, 0));
+				objPath.advanceActions();
 				HandleObjectPath();
 				break;
 			case FaceDown:
 				vectorFace(new Point(0, 1));
+				objPath.advanceActions();
 				HandleObjectPath();
 				break;
 			case IncreaseMoveSpeed:
 				if(Global.moveSpeed < 6)
 					Global.moveSpeed++;
+				objPath.advanceActions();
 				HandleObjectPath();
 				break;
 			case DecreaseMoveSpeed:
 				if(Global.moveSpeed > 1)
 					Global.moveSpeed--;
+				objPath.advanceActions();
 				HandleObjectPath();
 				break;
 			case Hide:
 				hide = true;
+				objPath.advanceActions();
 				HandleObjectPath();
 				break;
 			case Show:
 				hide = false;
+				objPath.advanceActions();
 				HandleObjectPath();
 				break;
 			case LockFacing:
 				faceLocked = true;
+				objPath.advanceActions();
 				HandleObjectPath();
 				break;
 			case UnlockFacing:
 				faceLocked = false;
+				objPath.advanceActions();
 				HandleObjectPath();
 				break;	
 			case Wait:
@@ -582,7 +592,10 @@ public class Party
 			}
 
 		if(objPath != null)
+		{
+			objPath.advanceActions();
 			HandleObjectPath();
+		}			
 		else
 		{
 			if(stepActivate() || initBattle())
@@ -606,6 +619,7 @@ public class Party
 			if(System.currentTimeMillis() - objPathWaitStart >= 1000)
 			{
 				objPathWaiting = false;
+				objPath.advanceActions();
 				HandleObjectPath();
 			}
 			
