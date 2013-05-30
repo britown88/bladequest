@@ -200,7 +200,7 @@ public class GameObjectLibrary
 		Action act = new actShowScene(name);
 		return act;
 	}
-	public static Action unloadScene()
+	public static Action unloadScene(int i)
 	{		
 		Action act = new actUnloadScene();
 		return act;
@@ -215,7 +215,7 @@ public class GameObjectLibrary
 		Action act = new actNameSelect(charName);
 		return act;
 	}
-	public static Action resetgame(int i)
+	public static Action resetGame(int i)
 	{		
 		Action act = new actResetGame();
 		return act;

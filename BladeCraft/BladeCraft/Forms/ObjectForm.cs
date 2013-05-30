@@ -74,11 +74,13 @@ namespace BladeCraft.Forms
          actionParams.Add("createPath", "\"target\" wait \"LURD\"");
          actionParams.Add("restoreParty", "0");
          actionParams.Add("shakeControl", "duration intensity wait");
-         actionParams.Add("startBattle", "\"encounter\" startBattle");
+         actionParams.Add("startBattle", "\"encounter\" allowGameOver");
          actionParams.Add("switchControl", "\"switchName\" state");
          actionParams.Add("openSaveMenu", "0");
          actionParams.Add("teleportParty", "parent x y \"mapname\"");
          actionParams.Add("wait", "seconds");
+         actionParams.Add("unloadScene", "0");
+         actionParams.Add("expectInput", "delay");
       }
 
       private void btnCancel_Click(object sender, EventArgs e)
@@ -161,8 +163,14 @@ namespace BladeCraft.Forms
          if(chkWrap.Checked)
             insertMacro("addAction (" + line + ") >\r\n");
          else
-            insertMacro(line + " >");
+            insertMacro(line);
 
+      }
+
+      private void tsbLoopBranch_Click(object sender, EventArgs e)
+      {
+         insertMacro("setBranchLoop index truefalse >\r\n");
+         
       }
    }
 }
