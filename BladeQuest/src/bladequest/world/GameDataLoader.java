@@ -19,6 +19,7 @@ import bladequest.bladescript.libraries.GameStartLibrary;
 import bladequest.bladescript.libraries.GraphicsLibrary;
 import bladequest.bladescript.libraries.HigherOrderLibrary;
 import bladequest.bladescript.libraries.ItemLibrary;
+import bladequest.bladescript.libraries.MathLibrary;
 import bladequest.bladescript.libraries.SoundLibrary;
 import bladequest.combatactions.CombatAction;
 import bladequest.combatactions.combAuras;
@@ -75,6 +76,7 @@ public class GameDataLoader
 		HigherOrderLibrary.publishLibrary(library);
 		EnemyLibrary.publishLibrary(library);
 		GameStartLibrary.publishLibrary(library);
+		MathLibrary.publishLibrary(library);
 		
 		return library.getLibrary();
 	}

@@ -22,12 +22,14 @@ createWorldSprite "switches" "switches" 0 0
 createWorldSprite "switches" "sword" 1 0
 
 addEnemySprites 0
-createEnemySprite "rat" "newenemies" 96 64 0 0
-createEnemySprite "bat" "enemies32" 48 32 0 1
-createEnemySprite "hawk" "enemies48" 72 48 0 0
-createEnemySprite "gnome" "enemies48" 72 48 0 1
-createEnemySprite "zombie" "enemies48" 72 48 0 2
-createEnemySprite "guard" "enemies48" 72 48 1 0
+createEnemySprite "recruit" "enemies" (point 0 0) (point 48 48)
+createEnemySprite "guard" "enemies" (point 48 0) (point 56 48)
+createEnemySprite "hawk" "enemies" (point 104 0) (point 48 48)
+createEnemySprite "spud" "enemies" (point 0 40) (point 32 32)
+createEnemySprite "bat" "enemies" (point 32 48) (point 32 40)
+createEnemySprite "rat" "enemies" (point 64 48) (point 32 32)
+createEnemySprite "leafbunny" "enemies" (point 96 48) (point 43 34)
+createEnemySprite "satyr" "enemies" (point 0 88) (point 75 76)
 
 addBattleSprites 0
 createBattleSprite "broland" 0 0

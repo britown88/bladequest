@@ -1,5 +1,6 @@
 package bladequest.bladescript.libraries;
 
+import android.graphics.Point;
 import bladequest.bladescript.LibraryWriter;
 import bladequest.graphics.BattleSprite;
 import bladequest.graphics.Sprite;
@@ -64,10 +65,10 @@ public class GraphicsLibrary
 		return spr;
 	}
 	
-	public static BattleSprite createEnemySprite(String name, String bitmap, int destSize, int srcSize, int srcX, int srcY)
+	public static BattleSprite createEnemySprite(String name, String bitmap, Point src, Point srcSize)
 	{
-		BattleSprite bs = new BattleSprite(name, bitmap, destSize, destSize);
-		bs.addFrame(BattleSprite.faces.Idle, srcSize, srcX, srcY);
+		BattleSprite bs = new BattleSprite(name, bitmap, (int)(srcSize.x*1.5), (int)(srcSize.y*1.5));
+		bs.addFrame(BattleSprite.faces.Idle, src.x, src.y, src.x + srcSize.x, src.y + srcSize.y);
 		Global.battleSprites.put(name, bs);
 		
 		return bs;

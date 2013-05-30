@@ -40,9 +40,15 @@ public class Script {
 		@Override
 		public boolean Equals(FunctionSpecializer rhs) {
 			
-			OpaqueSpecializer rhsSpecializer = (OpaqueSpecializer)rhs;
-			if (rhsSpecializer == null) return false;
-			return classType.equals(rhsSpecializer.classType);
+			try
+			{
+				OpaqueSpecializer rhsSpecializer = (OpaqueSpecializer)rhs;
+				return classType.equals(rhsSpecializer.classType);
+			}
+			catch(Exception e)
+			{
+				return false;
+			}			
 		}
 		@Override
 		public SpecializationLevel getSpecializationLevelFor(ScriptVar var)
