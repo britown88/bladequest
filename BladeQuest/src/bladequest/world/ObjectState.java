@@ -259,10 +259,12 @@ public class ObjectState {
 				break;
 			case LockFacing:
 				parent.faceLocked = true;
+				objPath.advanceActions();
 				HandleObjectPath();
 				break;
 			case UnlockFacing:
 				parent.faceLocked = false;
+				objPath.advanceActions();
 				HandleObjectPath();
 				break;	
 			case Wait:

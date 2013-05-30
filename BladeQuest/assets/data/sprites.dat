@@ -51,7 +51,7 @@ addSpriteFrame "" 0 32 16 48 >
 setFace ""
 
 addEnemySprites 0
-createEnemySprite "recruit" "enemies" (point 0 0) (point 48 48)
+createEnemySprite "recruit" "enemies" (point 0 0) (point 48 40)
 createEnemySprite "guard" "enemies" (point 48 0) (point 56 48)
 createEnemySprite "hawk" "enemies" (point 104 0) (point 48 48)
 createEnemySprite "spud" "enemies" (point 0 40) (point 32 32)

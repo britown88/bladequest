@@ -68,7 +68,8 @@ public class BqThread extends Thread
 				{
 					onTouchEvent(me);
 					Global.activity.touchEvents.remove(me);
-					me.recycle();
+					if(me != null)
+						me.recycle();
 				}	
 			}			
     	}

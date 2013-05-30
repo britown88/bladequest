@@ -7,6 +7,36 @@ setCollisionData true true true true >
 addAction (message "It's locked.")
 
 
+addRecruitFightActions state
+state > 
+addAction (wait 1.0) >
+addAction (message "|aramis|: \nHmmm... \nYou don't look like the other guards.") >
+addAction (message "You new or something?") >
+addAction (message "Recruit: \nShut up! You're not supposed to be here!") >
+addAction (message "|aramis|: \nOh I get it. Prison duty was a bit much for a newbie.") >
+addAction (message "So they got you up here guarding tapestries.") >
+addAction (message "Recruit: \nYeah well if I catch you, that'll show them what I can do!") >
+addAction (message "|aramis|: \nListen, kid.  You don't have to prove youself. \nJust walk away.") >
+addAction (message "I promise I won't tell the other guards.") >
+addAction (message "Recruit: \nEnough! Bring it on!") >
+addAction (startBattle "recruit" false >
+addToBranch 0 (message "Recruit: \nY-you haven't seen the last of me!") >
+addToBranch 0 (openBubble "sweat" "party" 1.0 false false) >
+addToBranch 0 (message "|aramis|: \nNo, I'm pretty sure I have...") >
+addToBranch 0 (createPath "recruit" true "KUWk") >
+addToBranch 0 (message "|aramis|: \nRun along, now.") >
+addToBranch 0 (panControl 0 0 2 false) >
+addToBranch 0 (createPath "recruit" true "S2D3LD") >
+addToBranch 0 (createPath "party" false "d") >
+addToBranch 0 (createPath "recruit" true "D5") >
+addToBranch 0 (switchControl "recruitfought" true) >
+addToBranch 0 (wait 1.0) >
+addToBranch 0 (createPath "party" false "u") >
+addToBranch 0 (message "|aramis|: \nNow let's see...") >
+addToBranch 0 (message "There's gotta be a back door or something to this place.") >
+addToBranch 1 (message "Recruit: \nHa! I knew you were no match for my power!")  >
+addToBranch 1 (fadeControl 3.0 255 0 0 0 true true)  >
+addToBranch 1 (gameOver 0)) 
 #!OBJ 2 16
 \objName$2x16$ <- "stairs"
 \name$2x16$ <- newObject objName$2x16$ 2 16
@@ -16,16 +46,8 @@ name$2x16$ > createState >
 setSpriteFromTile 4 0 >
 setOptions true false false >
 setAutoStart true >
-addAction (fadeControl 0.0 255 0 0 0 false false) >
 addAction (message "|aramis| \nFinally, I think the front gate should be south of here.") >
-addAction (switchControl "castlehallentered" true) >
-addAction (createPath "party" true "s2R2S2") >
-addAction (fadeControl 0.5 255 0 250 200 true true) >
-addAction (openBubble "exclam" "party" 1.0 false false) >
-addAction (fadeControl 0.5 255 0 250 200 false true) >
-addAction (message "An eerie glow surrounds you.") >
-addAction (messageWithYesNo "Save your game?" > 
-	addToBranch 0 (openSaveMenu 0))
+addAction (switchControl "castlehallentered" true)
 
 \runstate1$2x16$ <- state1$2x16$ 0
 
@@ -57,23 +79,6 @@ addAction (fadeControl 1.0 255 0 0 0 false true)
 \objName$25x15$ <- "door"
 \name$25x15$ <- newObject objName$25x15$ 25 15
 \run$25x15$ <- name$25x15$ > createLockedDoor
-#!OBJ 6 16
-\objName$6x16$ <- "name"
-\name$6x16$ <- newObject objName$6x16$ 6 16
-
-state1$6x16$ 0
-name$6x16$ > createState >
-setSprite "savepoint" >
-setCollisionData true true true true >
-addAction (fadeControl 0.5 255 0 250 200 true true) >
-addAction (openBubble "exclam" "party" 1.0 false false) >
-addAction (fadeControl 0.5 255 0 250 200 false true) >
-addAction (message "An eerie glow surrounds you.") >
-addAction (messageWithYesNo "Save your game?" > 
-	addToBranch 0 (openSaveMenu 0))
-
-
-\runstate1$6x16$ <- state1$6x16$ 0
 #!OBJ 13 19
 \objName$13x19$ <- "name"
 \name$13x19$ <- newObject objName$13x19$ 13 19
@@ -110,3 +115,117 @@ addAction (createPath "party" true "U")
 
 
 \runstate1$15x19$ <- state1$15x19$ 0
+#!OBJ 10 16
+\objName$10x16$ <- "name"
+\name$10x16$ <- newObject objName$10x16$ 10 16
+
+state1$10x16$ 0
+name$10x16$ > createState >
+setSprite "savepoint" >
+setCollisionData true true true true >
+addAction (fadeControl 0.5 255 0 250 200 true true) >
+addAction (fadeControl 0.5 255 0 250 200 false true) >
+addAction (message "An eerie glow surrounds you.") >
+addAction (messageWithYesNo "Save your progress?" > 
+	addToBranch 0 (openSaveMenu 0))
+
+
+\runstate1$10x16$ <- state1$10x16$ 0
+#!OBJ 8 17
+\objName$8x17$ <- "name"
+\name$8x17$ <- newObject objName$8x17$ 8 17
+
+state1$8x17$ 0
+name$8x17$ > createState >
+addAction (createPath "party" true "r") >
+addAction (openBubble "exclam" "party" 1.0 false true) >
+addAction (createPath "party" true "s2R2uS2") >
+addAction (wait 1.0) >
+addAction (fadeControl 0.5 255 0 250 200 true true) >
+addAction (fadeControl 0.5 255 0 250 200 false true) >
+addAction (message "An eerie glow surrounds you.") >
+addAction (messageWithYesNo "Save your game?" > 
+	addToBranch 0 (openSaveMenu 0)) >
+addAction (switchControl "firstsave" true)
+
+\runstate1$8x17$ <- state1$8x17$ 0
+
+state2$8x17$ 0
+name$8x17$ > createState >
+addSwitchCondition "firstsave"
+
+\runstate2$8x17$ <- state2$8x17$ 0
+
+#!OBJ 13 5
+\objName$13x5$ <- "name"
+\name$13x5$ <- newObject objName$13x5$ 13 5
+
+state1$13x5$ 0
+name$13x5$ > createState >
+addAction (openBubble "exclam" "recruit" 1.0 false false) >
+addAction (message "Stop right there!") >
+addAction (panControl 0 -1 3 false) >
+addAction (createPath "party" true "Ru") >
+addRecruitFightActions
+
+\runstate1$13x5$ <- state1$13x5$ 0
+
+state2$13x5$ 0
+name$13x5$ > createState >
+addSwitchCondition "recruitfought"
+
+\runstate2$13x5$ <- state2$13x5$ 0
+
+#!OBJ 15 5
+\objName$15x5$ <- "name"
+\name$15x5$ <- newObject objName$15x5$ 15 5
+
+state1$15x5$ 0
+name$15x5$ > createState >
+addAction (openBubble "exclam" "recruit" 1.0 false false) >
+addAction (message "Stop right there!") >
+addAction (panControl 0 -1 3 false) >
+addAction (createPath "party" true "Lu") >
+addRecruitFightActions
+
+\runstate1$15x5$ <- state1$15x5$ 0
+
+state2$15x5$ 0
+name$15x5$ > createState >
+addSwitchCondition "recruitfought"
+
+\runstate2$15x5$ <- state2$15x5$ 0
+#!OBJ 14 2
+\objName$14x2$ <- "recruit"
+\name$14x2$ <- newObject objName$14x2$ 14 2
+
+state1$14x2$ 0
+name$14x2$ > createState >
+setSprite "guard"
+
+\runstate1$14x2$ <- state1$14x2$ 0
+
+state2$14x2$ 0
+name$14x2$ > createState >
+addSwitchCondition "recruitfought"
+
+\runstate2$14x2$ <- state2$14x2$ 0
+
+#!OBJ 14 5
+\objName$14x5$ <- "name"
+\name$14x5$ <- newObject objName$14x5$ 14 5
+
+state1$14x5$ 0
+name$14x5$ > createState > 
+addAction (openBubble "exclam" "recruit" 1.0 false false) >
+addAction (message "Stop right there!") >
+addAction (panControl 0 -1 3 false) >
+addRecruitFightActions
+
+\runstate1$14x5$ <- state1$14x5$ 0
+
+state2$14x5$ 0
+name$14x5$ > createState >
+addSwitchCondition "recruitfought"
+
+\runstate2$14x5$ <- state2$14x5$ 0

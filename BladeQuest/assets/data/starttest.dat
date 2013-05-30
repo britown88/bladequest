@@ -3,7 +3,7 @@
 startgame 0
 addStartCharacter "aramis" > setCharacterStartName "????"
 map addStartCharacter {"roland", "luc", "joy"}
-setStartPosition 3 16
-setStartMap "castlehall"
+setStartPosition 1 3
+setStartMap "test"
 
 \start <- startgame 0

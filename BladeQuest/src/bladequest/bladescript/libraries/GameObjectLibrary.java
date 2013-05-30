@@ -7,6 +7,7 @@ import bladequest.actions.Action;
 import bladequest.actions.actAnimation;
 import bladequest.actions.actExpectInput;
 import bladequest.actions.actFadeControl;
+import bladequest.actions.actGameOver;
 import bladequest.actions.actMerchant;
 import bladequest.actions.actMessage;
 import bladequest.actions.actModifyGold;
@@ -311,6 +312,10 @@ public class GameObjectLibrary
 		Action act = new actWait(seconds);
 		return act;
 	}
-	
+	public static Action gameOver(int i)
+	{
+		Action act = new actGameOver();
+		return act;
+	}
 
 }

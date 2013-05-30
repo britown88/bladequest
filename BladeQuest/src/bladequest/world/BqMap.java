@@ -101,6 +101,13 @@ public class BqMap
 		loaded = true;
 	}
 	
+	public void clearAutoStarters()
+	{
+		for(GameObject go : objects)
+			go.setStateAutoStart(0, false);
+	}
+	
+	
 	private void buildDisplayName()
 	{
 		nameDisplayPaint = Global.textFactory.getTextPaint(13, Color.WHITE, Align.CENTER);
