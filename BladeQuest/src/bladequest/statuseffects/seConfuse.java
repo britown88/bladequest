@@ -3,7 +3,9 @@ package bladequest.statuseffects;
 import java.util.ArrayList;
 import java.util.List;
 
+import bladequest.battleactions.bactWait;
 import bladequest.combat.Battle;
+import bladequest.combat.BattleEventBuilder;
 import bladequest.combat.triggers.Trigger;
 import bladequest.system.Recyclable;
 import bladequest.world.Ability;
@@ -140,7 +142,19 @@ public class seConfuse extends StatusEffect
 			}
 		}
 	}
-
+	public void onTurn(BattleEventBuilder builder) 
+	{
+		PlayerCharacter target =  builder.getSource();
+		if (duration == 0)
+		{
+			Global.battle.setInfoBarText(target.getDisplayName() + " recovered from confusion!");
+			target.removeStatusEffect(this);
+			builder.addEventObject(new bactWait(450));
+			return;
+		}
+		
+		--duration;
+	}
 	
 
 }

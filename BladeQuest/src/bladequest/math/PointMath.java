@@ -14,6 +14,7 @@ import bladequest.graphics.BattleAnimObject;
 import bladequest.graphics.BattleAnimObject.Types;
 import bladequest.graphics.BattleSprite;
 import bladequest.graphics.BattleSprite.faces;
+import bladequest.graphics.Shadow;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
 
@@ -43,6 +44,18 @@ public class PointMath {
 	   }
 	   return angle;
 	}
+	public static Point project(Point p1, Point p2, Point projectPoint)
+	{
+		Point dir = subtract(p2, p1);
+		Point dir2 = subtract(projectPoint, p1);
+		int dotProduct = dir.x * dir2.x + dir.y * dir2.y;
+		float dirLen = length(dir);
+		float len = dirLen * dirLen;
+		
+		return new Point((int)(p1.x + dir.x*dotProduct/len),
+						 (int)(p1.y + dir.y*dotProduct/len));
+		
+	}
 	public static float angleBetween(Point p1, Point p2)
 	{
 		return (float)Math.atan2(p2.y-p1.y, p2.x-p1.x);
@@ -54,6 +67,13 @@ public class PointMath {
 		
 	    return (float)Math.sqrt(x*x + y*y);
 	}
+	public static float length(Point p1)
+	{
+		float y = (p1.y);
+	    float x = (p1.x); 
+		
+	    return (float)Math.sqrt(x*x + y*y);
+	}	
 	public static void toCenter(Point p, PlayerCharacter source)
 	{
 		BattleSprite battleSpr = source.getBattleSprite();
@@ -129,31 +149,66 @@ public class PointMath {
 		//Jump anim.  get arc
 		List<Point> path = PointMath.getArc(from, to, steps, arcFactor);
 		
+		//get the shadow position points.
+		
+		List<Point> shadowPos = new ArrayList<Point>();
+		
+		for(Point p : path)
+		{
+			shadowPos.add(project(from, to, p));
+		}
+		
 		BattleAnim anim = new BattleAnim(60.0f);
 		
 		BattleSprite playerSprite = attacker.getBattleSprite();
 		
 		BattleAnimObject baObj = new BattleAnimObject(Types.Bitmap, false, playerSprite.getBmpName());
+		BattleAnimObject shadowObj = new BattleAnimObject(Types.Interpolatable, false, "");
 		
-		PointMath.animateAlongPath(playerSprite, playerSprite.getFrameRect(faces.Use, 0), baObj, path, animationTime);		
+		PointMath.animateAlongPath(attacker, playerSprite, playerSprite.getFrameRect(faces.Use, 0), baObj, shadowObj, path, shadowPos, animationTime);		
+		
+		//draw jumping shadows first!
+		if (!shadowObj.isEmpty())
+		{
+			anim.addObject(shadowObj);
+		}		
 		
 		anim.addObject(baObj);
 		
 		return anim;
 	}
 	
-	public static void animateAlongPath(BattleSprite spr, Rect sprRect, BattleAnimObject insertObj, List<Point> path, int stepTime)
+	public static void animateAlongPath(PlayerCharacter attacker, BattleSprite spr, Rect sprRect, BattleAnimObject insertObj, BattleAnimObject shadowObj, List<Point> path, List<Point> shadowPath, int stepTime)
 	{
+		Shadow shadow = attacker.getShadow();
 		int step = 0;
 	    for (Point p : path)
 	    {
-	        BattleAnimObjState state = new BattleAnimObjState(stepTime * step++, PosTypes.Screen);
+	    	Point shadowP = shadowPath.get(step);
+	    	int elev =  shadowP.y - p.y;
+	    	
+	    	int thisStep = step;
+	    	++step;
+	        BattleAnimObjState state = new BattleAnimObjState(stepTime * thisStep, PosTypes.Screen);
 			
 			state.setBmpSrcRect(sprRect.left, sprRect.top, sprRect.right, sprRect.bottom);
 			state.argb(255, 255, 255, 255);
 			state.pos1 = p;
 			state.size = new Point(spr.getWidth(), spr.getHeight());
 			insertObj.addState(state);
+			
+			if (shadow != null)
+			{
+				state = new BattleAnimObjState(stepTime * thisStep, PosTypes.Screen, new Shadow(shadow.getWidth(), 
+																							  shadow.getDepth(), 
+																							  shadow.getElevAtCenter(),
+																							  elev, 																							  
+																							  shadow.getXNudge(), 
+																							  shadowP));
+				
+				shadowObj.addState(state);				
+			}
+			
 	    }		
 	}
 	

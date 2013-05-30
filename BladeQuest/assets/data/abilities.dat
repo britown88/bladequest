@@ -17,7 +17,7 @@ add (positionSpecialAction true) >
 addDep (sneakToAction 0) >
 addDep (conditionalAttackAction 3.0 "Physical" 0.4 
    ([target] hasStatus target "confuse"))) >
-addDep (jumpHomeAction 6.0 3) >
+addDep (jumpHomeAction 4.0 3) >
 addDep (positionSpecialAction false) >
 addDep (setFaceAction "Ready" 0) >
 addDep (waitAction 300)
@@ -86,34 +86,33 @@ addDep (damageAction 1.5 "Physical"))
 
 recruitBroKick ability power damageType offset
    ability > add (\firstWait <- waitAction offset) >
-	     addDep (specialMirroringAction true) >
              addDep (basicAttackAction power damageType 0.35f) >  #should have a little tiny downtime between slashes
 	     add (waitAction 135 > addDependency firstWait) >
              addDep (mirrorAction true) >
 	     addDep (waitAction 135) >  #.35 * 5 * 150 = 262.  fudge it a bit
-             addDep (mirrorAction false) >
-             addDep (specialMirroringAction false)
+             addDep (mirrorAction false)
 
 
 \recruit1 <- (addAbility "recruit1" "Clashing Super Hit" "Single" 0 >
-add (animAction "movetest") >
-addDep (damageAction 0.5 "Physical"))
+add (basicAttackAction 1.0 "Physical" 3.0))
 
 \recruit2 <- (addAbility "recruit2" "Special Mega Kick" "Single" 0 >
-add (animAction "movetest") >
-addDep (damageAction 0.75 "Physical"))
+add (basicAttackAction 0.75 "Physical" 2.0))
 
 \recruit3 <- (addAbility "recruit3" "Climactic Finisher" "Single" 0 >
-add (animAction "movetest") >
-addDep (damageAction 1.0 "Physical"))
+add (basicAttackAction 1.0 "Physical" 1.2))
 
 
 \recruit4 <- (addAbility "recruit4" "DynamoSupernova" "Single" 0 >
-(\recruit4sub <- ([ability offset] recruitBroKick ability 0.1 "Physical" offset)) 270 >
+add (specialMirroringAction true) >
+(\recruit4sub <- ([ability offset] recruitBroKick ability 0.15 "Physical" offset)) 270 >
 recruit4sub  540 >
 recruit4sub  810 >
 recruit4sub  1080 >
-recruit4sub  1350)
+recruit4sub  1350 >
+addDep (specialMirroringAction false) > 
+addDep (targetSelfAction (inflictStatusAction (confuseStatus 3))) >
+addDep (messageAction "Recruit: \nUgh, so dizzy..."))
 
 
 ##########ROLAND BATTLE 1 ABILITIES#########

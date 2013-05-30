@@ -13,6 +13,7 @@ import bladequest.combatactions.CombatAction;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleSprite;
 import bladequest.graphics.BattleSprite.faces;
+import bladequest.graphics.Shadow;
 import bladequest.graphics.Sprite;
 import bladequest.graphics.WeaponSwingDrawable;
 import bladequest.statuseffects.StatusEffect;
@@ -74,6 +75,8 @@ public class PlayerCharacter
 	
 	private Event onPhysicalHitEvent, onDamagedEvent;
 	
+	private Shadow shadow;
+	
 	public PlayerCharacter(String name, String displayNam, String bSpr, String wSpr)
 	{
 		this.name = name;
@@ -101,6 +104,7 @@ public class PlayerCharacter
 	
 	public PlayerCharacter(PlayerCharacter c)
 	{
+		shadow = c.shadow;
 		targets = new Vector<PlayerCharacter>();
 		statusEffects = new ArrayList<StatusEffect>();
 		displayName = c.displayName;
@@ -1144,6 +1148,16 @@ public class PlayerCharacter
 	public void playWeaponAnimation(Point src, Point tar){if(weapEquipped()) weapon.playAnimation(src, tar);}
 	public BattleAnim getWeaponAnimation(){if(weapEquipped()) return weapon.getAnim(); else return null;}
 	
+	public void renderShadow()
+	{
+		if (visible && isInBattle() && shadow != null)
+		{
+			Point centeredPosition = getPosition(true);
+			shadow.setPosition(centeredPosition.x, centeredPosition.y);
+			shadow.render();
+		}
+	}
+	
 	public void battleRender()
 	{
 		if(battleSpr.getFace() != faces.Attack)
@@ -1211,6 +1225,8 @@ public class PlayerCharacter
 	public boolean getDefaultMirrored() { return defaultMirroredState;}
 	public boolean getMirroredSpecial() {return this.mirrorSpecial;} 
 	
+	public void setShadow(Shadow shadow){this.shadow = shadow;}
+	public Shadow getShadow() {return this.shadow;}
 	
 	public void setEscaped(boolean escape) {escaped = escape;}
 	public boolean getEscaped() {return escaped;}

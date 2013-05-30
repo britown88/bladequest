@@ -41,54 +41,54 @@ public class combSteal extends CombatAction
 	@Override
 	public String getDescription() { return "Attempt to steal from an enemy.";}
 	
-	
-	public BattleAnim getJumpToAnimation(PlayerCharacter source, PlayerCharacter target)
-	{
-		BattleAnim anim = new BattleAnim(60.0f);
-		
-		BattleSprite playerSprite =source.getBattleSprite();
-		
-		BattleAnimObject baObj = new BattleAnimObject(Types.Bitmap, false, playerSprite.getBmpName());
-		Rect srcRect = playerSprite.getFrameRect(faces.Use, 0);
-		
-		final float height = 1.0f / 6.0f;
-		
-	    final int steps = 10;
-	    final int stepTime = 2;
-	    
-	    List<Point> points = PointMath.getArc(source.getPosition(), target.getPosition(), steps, height);
-	    
-	    int step = 0;
-	    
-	    for (Point p : points)
-	    {
-	        BattleAnimObjState state = new BattleAnimObjState(stepTime * step++, PosTypes.Screen);
-			
-			state.setBmpSrcRect(srcRect.left, srcRect.top, srcRect.right, srcRect.bottom);
-			state.argb(255, 255, 255, 255);
-			state.pos1 = p;
-			state.size = new Point(playerSprite.getWidth(), playerSprite.getHeight());
-			baObj.addState(state);
-	    }
-	    
-	    Collections.reverse(points);
-	    
-	    for (Point p : points)
-	    {
-	        BattleAnimObjState state = new BattleAnimObjState(stepTime * step++, PosTypes.Screen);
-			
-			state.setBmpSrcRect(srcRect.left, srcRect.top, srcRect.right, srcRect.bottom);
-			state.argb(255, 255, 255, 255);
-			state.pos1 = p;
-			state.size = new Point(playerSprite.getWidth(), playerSprite.getHeight());
-			baObj.addState(state);
-	    }
-	    
-		anim.addObject(baObj);
-		
-		return anim;
-	}
-	
+//	
+//	public BattleAnim getJumpToAnimation(PlayerCharacter source, PlayerCharacter target)
+//	{
+//		BattleAnim anim = new BattleAnim(60.0f);
+//		
+//		BattleSprite playerSprite =source.getBattleSprite();
+//		
+//		BattleAnimObject baObj = new BattleAnimObject(Types.Bitmap, false, playerSprite.getBmpName());
+//		Rect srcRect = playerSprite.getFrameRect(faces.Use, 0);
+//		
+//		final float height = 1.0f / 6.0f;
+//		
+//	    final int steps = 10;
+//	    final int stepTime = 2;
+//	    
+//	    List<Point> points = PointMath.getArc(source.getPosition(), target.getPosition(), steps, height);
+//	    
+//	    int step = 0;
+//	    
+//	    for (Point p : points)
+//	    {
+//	        BattleAnimObjState state = new BattleAnimObjState(stepTime * step++, PosTypes.Screen);
+//			
+//			state.setBmpSrcRect(srcRect.left, srcRect.top, srcRect.right, srcRect.bottom);
+//			state.argb(255, 255, 255, 255);
+//			state.pos1 = p;
+//			state.size = new Point(playerSprite.getWidth(), playerSprite.getHeight());
+//			baObj.addState(state);
+//	    }
+//	    
+//	    Collections.reverse(points);
+//	    
+//	    for (Point p : points)
+//	    {
+//	        BattleAnimObjState state = new BattleAnimObjState(stepTime * step++, PosTypes.Screen);
+//			
+//			state.setBmpSrcRect(srcRect.left, srcRect.top, srcRect.right, srcRect.bottom);
+//			state.argb(255, 255, 255, 255);
+//			state.pos1 = p;
+//			state.size = new Point(playerSprite.getWidth(), playerSprite.getHeight());
+//			baObj.addState(state);
+//	    }
+//	    
+//		anim.addObject(baObj);
+//		
+//		return anim;
+//	}
+//	
 	@Override
 	public void buildEvents(BattleEventBuilder builder)
 	{
@@ -97,13 +97,15 @@ public class combSteal extends CombatAction
 		PlayerCharacter source = builder.getSource();
 		PlayerCharacter target = targets.get(0);
 		
-		BattleAnim jumpAnim = getJumpToAnimation(source, target);
+		BattleAnim jumpAnim = PointMath.buildJumpAnimation(source, source.getPosition(true), target.getPosition(true), 1.0f/4.0f, 3);
+		BattleAnim jumpBack = PointMath.buildJumpAnimation(source, target.getPosition(true), source.getPosition(true), 1.0f/4.0f, 3);
 		
 		builder.addEventObject(new bactSetFace(faces.Ready, 0));
 		builder.addEventObject(new bactWait(BattleEvent.frameFromActIndex(3)).addDependency(builder.getLast()));
 		BattleAction startSteal = builder.getLast();
 		builder.addEventObject(new bactChangeVisibility(false).addDependency(startSteal));		
 		builder.addEventObject(new bactRunAnimation(jumpAnim).addDependency(startSteal));
+		builder.addEventObject(new bactRunAnimation(jumpBack).addDependency(builder.getLast()));
 		builder.addEventObject(new bactChangeVisibility(true).addDependency(builder.getLast()));
 		
 		builder.addEventObject(new BattleAction()

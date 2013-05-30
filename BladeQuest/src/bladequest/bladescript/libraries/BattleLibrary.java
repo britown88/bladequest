@@ -21,6 +21,7 @@ import bladequest.battleactions.bactShatter;
 import bladequest.battleactions.bactSneakToTarget;
 import bladequest.battleactions.bactSpecialMirrored;
 import bladequest.battleactions.bactSpecialPosition;
+import bladequest.battleactions.bactTargetingSelf;
 import bladequest.battleactions.bactWait;
 import bladequest.bladescript.LibraryWriter;
 import bladequest.bladescript.ParserException;
@@ -150,6 +151,10 @@ public class BattleLibrary {
 		return new bactSetFace(faces.valueOf(face), index);
 	}
 
+	public static BattleAction targetSelfAction(BattleAction retarget)
+	{
+		return new bactTargetingSelf(retarget);
+	}
 	
 	public static BattleAction attackCloseAction(float power, String damageType)
 	{

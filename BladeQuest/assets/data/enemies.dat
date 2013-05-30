@@ -62,7 +62,8 @@ setGold 23 >
 setItems "potion" 25 "antidote" 85 true >
 modStat "MaxHP" 0 >
 makeRatAI >
-addEAbility "bite")
+addEAbility "bite" >
+setEShadow (createShadow 40 36 15))
 
 #
 \guard <- (addEnemy "guard" "Guard" "guard" >
@@ -70,7 +71,8 @@ addDefaultSwordHit >
 setEBaseStats 10 10 10 10 >
 setELevel 25 >
 addAttackOnlyState >
-setGold 1200)
+setGold 1200 >
+setEShadow (createShadow 38 24 32 > nudgeX -4))
 
 #
 \hawk <- (addEnemy "hawk" "Hawk" "hawk" >
@@ -78,7 +80,8 @@ addDefaultDaggerHit >
 setEBaseStats 3 3 3 3 >
 setELevel 20 >
 addAttackOnlyState >
-setGold 52)
+setGold 52 >
+setEShadow (createShadow 44 14 40 > addElevation 16))
 
 #
 \spud <- (addEnemy "spud" "Spud" "spud" >
@@ -86,7 +89,8 @@ addDefaultDaggerHit >
 setEBaseStats 3 3 3 3 >
 setELevel 1 >
 addAttackOnlyState >
-setGold 52)
+setGold 52 >
+setEShadow (createShadow 31 16 22))
 
 #
 \leafbunny <- (addEnemy "leafbunny" "Leafy Bunny" "leafbunny" >
@@ -94,7 +98,8 @@ addDefaultDaggerHit >
 setEBaseStats 3 3 3 3 >
 setELevel 20 >
 addAttackOnlyState >
-setGold 52)
+setGold 52 >
+setEShadow (createShadow 42 12 25))
 
 #
 \satyr <- (addEnemy "satyr" "Satyr" "satyr" >
@@ -102,7 +107,8 @@ addDefaultDaggerHit >
 setEBaseStats 3 3 3 3 >
 setELevel 20 >
 addAttackOnlyState >
-setGold 52)
+setGold 52 >
+setEShadow (createShadow 71 34 50 > nudgeX -11))
 
 #
 \bat <- (addEnemy "bat" "Bat" "bat" >
@@ -111,7 +117,8 @@ setEBaseStats 7 10 8 0 >
 setELevel 6 >
 setGold 42  >
 addAttackOnlyState >
-setItems "potion" 50 " " 0 true)
+setItems "potion" 50 " " 0 true >
+setEShadow (createShadow 34 12 30 > addElevation 16))
 
 #
 \recruit <- (addEnemy "recruit" "Recruit" "recruit" >
@@ -125,6 +132,7 @@ DynamoSupernovaState >
 addEAbility "recruit1" >
 addEAbility "recruit2" >
 addEAbility "recruit3" >
-addEAbility "recruit4" )
+addEAbility "recruit4"  >
+setEShadow (createShadow 44 28 21))
 
 

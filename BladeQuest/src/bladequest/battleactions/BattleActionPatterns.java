@@ -47,9 +47,9 @@ public class BattleActionPatterns {
 		builder.addEventObject(new bactSetFace(faces.Ready, 0).addDependency(prev));
 		//wait two frames...
 		int frameLen = (int)(BattleEvent.frameFromActIndex(1) * speedFactor);
-		builder.addEventObject(new bactWait(frameLen*2));
+		builder.addEventObject(new bactWait(frameLen*2).addDependency(prev));
 		builder.addEventObject(new bactSetFace(faces.Attack, 0).addDependency(builder.getLast()));
-		builder.addEventObject(new bactWait(frameLen*3));
+		builder.addEventObject(new bactWait(frameLen*3).addDependency(prev));
 		BattleAction animStartAction = builder.getLast();
 		
 		bactDamage damageAction = new bactDamage(power, type, accuracyType, missChance);
@@ -64,9 +64,9 @@ public class BattleActionPatterns {
 		
 		
 		builder.addEventObject(new bactSetFace(faces.Attack, 1).addDependency(animStartAction));
-		builder.addEventObject(new bactWait(frameLen*4));
+		builder.addEventObject(new bactWait(frameLen*4).addDependency(prev));
 		builder.addEventObject(new bactSetFace(faces.Attack, 2).addDependency(builder.getLast()));
-		builder.addEventObject(new bactWait(frameLen*5));
+		builder.addEventObject(new bactWait(frameLen*5).addDependency(prev));
 		builder.addEventObject(new bactSetFace(faces.Ready, 0).addDependency(builder.getLast()));			
 		
 		if(anim == null)

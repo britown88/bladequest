@@ -146,6 +146,8 @@ public class Renderer
 	
 	public void drawElipse(Rect r, Paint paint)
 	{		
+		r.offset(Global.screenShaker.drawDelta.x, 0);
+		
 		updateBuffer.add(new DrawEllipse(r, paint));		
 	}
 	

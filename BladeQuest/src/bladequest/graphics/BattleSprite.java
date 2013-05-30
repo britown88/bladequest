@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.Log;
@@ -105,7 +107,7 @@ public class BattleSprite {
 	
 	
 	public void render(int x, int y, int index, boolean center)
-	{		
+	{	
 		Point p;
 		
 		if(center)
@@ -126,8 +128,10 @@ public class BattleSprite {
 				Global.renderer.drawBitmap(bitmap, frameLists.get(face.ordinal()).get(index), 
 						new Rect(p.x, p.y,p.x+width, p.y+height), null);				
 			}
-
 		}
+		
+		
+		
 	}	
 	
 	public Rect getFrameRect(faces face, int index)

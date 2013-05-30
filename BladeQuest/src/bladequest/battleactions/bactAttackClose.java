@@ -24,25 +24,7 @@ public class bactAttackClose  extends DelegatingAction {
 		this.power = power;
 		this.type = type;
 	}
-	public BattleAnim buildJumpAnimation(PlayerCharacter attacker, Point from, Point to, float arcFactor, int animationTime)
-	{
-		//animations are relative to CENTER!
-		final int steps = 6;
-		//Jump anim.  get arc
-		List<Point> path = PointMath.getArc(from, to, steps, arcFactor);
-		
-		BattleAnim anim = new BattleAnim(60.0f);
-		
-		BattleSprite playerSprite = attacker.getBattleSprite();
-		
-		BattleAnimObject baObj = new BattleAnimObject(Types.Bitmap, false, playerSprite.getBmpName());
-		
-		PointMath.animateAlongPath(playerSprite, playerSprite.getFrameRect(faces.Use, 0), baObj, path, animationTime);		
-		
-		anim.addObject(baObj);
-		
-		return anim;
-	}
+
 	@Override
 	protected void buildEvents(BattleEventBuilder builder) 
 	{
@@ -60,16 +42,16 @@ public class bactAttackClose  extends DelegatingAction {
 			pointOff.x += 8 + target.getBattleSprite().getWidth();
 			pointOff.y +=  defenderHeight - attackerHeight;
 			
-			final float attackArcFactor = 1.0f/3.0f;  //hardcoded for now.
-			final float returnArcFactor = 1.0f/6.0f;
+			final float attackArcFactor = 1.0f/6.0f;  //hardcoded for now.
+			final float returnArcFactor = 1.0f/2.0f;
 			final int   attackSpeed = 2;
-			final int   returnSpeed = 3;
+			final int   returnSpeed = 4;
 			BattleAnim currentAnim;
 			//Jump anim.  get arc
 			
 			
 			builder.addEventObject(new bactChangeVisibility(false));
-			currentAnim = buildJumpAnimation(attacker, PointMath.add(offset, attacker.getPosition()), PointMath.add(offset, pointOff), attackArcFactor, attackSpeed);
+			currentAnim = PointMath.buildJumpAnimation(attacker, PointMath.add(offset, attacker.getPosition()), PointMath.add(offset, pointOff), attackArcFactor, attackSpeed);
 			builder.addEventObject(new bactRunAnimation(currentAnim));
 			builder.addEventObject(new bactSpecialPosition(true).addDependency(builder.getLast()));
 			builder.addEventObject(new bactChangePosition(pointOff).addDependency(builder.getLast()));
@@ -79,7 +61,7 @@ public class bactAttackClose  extends DelegatingAction {
 			BattleAction slashEnd = BattleActionPatterns.BuildSwordSlashWithAccuracy(builder, power, type, 0.5f, builder.getLast(), BattleCalc.AccuracyType.NoMiss, 0.0f);
 			
 			//jump back to starting location.
-			currentAnim = buildJumpAnimation(attacker, PointMath.add(offset, pointOff), PointMath.add(offset, startPos), returnArcFactor, returnSpeed);
+			currentAnim = PointMath.buildJumpAnimation(attacker, PointMath.add(offset, pointOff), PointMath.add(offset, startPos), returnArcFactor, returnSpeed);
 			
 			builder.addEventObject(new bactChangeVisibility(false).addDependency(slashEnd));
 			

@@ -1212,6 +1212,7 @@ public class Parser {
 	
 	public void run()
 	{
+		List<Integer> parenStack = new ArrayList<Integer>();
 		stateStack.add(getFunctionLevelParserState());
 		try
 		{
@@ -1225,6 +1226,7 @@ public class Parser {
 					state.beginList();
 					break;
 				case BeginParen:
+					parenStack.add(lineNumber);
 					state.beginParen();
 					break;
 				case Boolean:
@@ -1244,6 +1246,7 @@ public class Parser {
 					break;
 				case EndParen:
 					state.endParen();
+					parenStack.remove(parenStack.size()-1);
 					break;
 				case Float:
 					state.readFloat(token.getFloat());
@@ -1285,7 +1288,12 @@ public class Parser {
 			}		
 			if (stateStack.size() != 1)
 			{
-				throw new ParserException("Parser ended with pending states.  Did you end the file with a missed parenthesis or other grammer?");
+				String openParens = "Open paren lines: ";
+				for (int i : parenStack)
+				{
+					openParens = openParens + " " + i;  
+				}
+				throw new ParserException("Parser ended with pending states.  Did you end the file with a missed parenthesis or other grammer?  " + openParens) ;
 			}
 		}	
 		catch(ParserException e)

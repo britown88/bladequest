@@ -2,6 +2,8 @@ package bladequest.bladescript.libraries;
 
 import bladequest.bladescript.LibraryWriter;
 import bladequest.combatactions.CombatAction;
+import bladequest.enemy.Enemy;
+import bladequest.graphics.Shadow;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
 
@@ -83,7 +85,11 @@ public class CharacterLibrary
 		pc.addAbility(name);
 		return pc;
 	}
-	
+	public static PlayerCharacter setShadow(PlayerCharacter pc, Shadow shadow)
+	{
+		pc.setShadow(shadow);
+		return pc;
+	}
 	public static PlayerCharacter addLearnableAbility(PlayerCharacter pc, String name, int level)
 	{
 		pc.addLearnableAbility(name, level);

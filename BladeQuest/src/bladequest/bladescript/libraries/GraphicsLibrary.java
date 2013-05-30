@@ -3,6 +3,7 @@ package bladequest.bladescript.libraries;
 import android.graphics.Point;
 import bladequest.bladescript.LibraryWriter;
 import bladequest.graphics.BattleSprite;
+import bladequest.graphics.Shadow;
 import bladequest.graphics.Sprite;
 import bladequest.world.Global;
 
@@ -112,6 +113,23 @@ public class GraphicsLibrary
 		bs.addFrame(BattleSprite.faces.valueOf(face), srcSize, srcX, srcY);
 		return bs;
 	}
+	
+	public static Shadow createShadow(int width, int depth, int elevationAtCenter)
+	{
+		return new Shadow(width, depth, elevationAtCenter);
+	}
+	
+	public static Shadow addElevation(Shadow shadow, int elevation)
+	{
+		shadow.setElevation(elevation);
+		return shadow;
+	}
+	public static Shadow nudgeX(Shadow shadow, int nudge)
+	{
+		shadow.nudgeX(nudge);
+		return shadow;
+	}
+		
 	
 	
 

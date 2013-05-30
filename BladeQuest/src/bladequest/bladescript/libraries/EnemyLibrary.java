@@ -13,6 +13,7 @@ import bladequest.enemy.AI;
 import bladequest.enemy.AIState;
 import bladequest.enemy.Enemy;
 import bladequest.enemy.ScriptedAIState;
+import bladequest.graphics.Shadow;
 import bladequest.world.Ability;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
@@ -96,7 +97,12 @@ public class EnemyLibrary {
 	{
 		return new ScriptedAIState(stateFn);
 	}
-	
+	public static Enemy setEShadow(Enemy e, Shadow shadow)
+	{
+		e.setShadow(shadow);
+		return e;
+	}
+		
 	public static Ability getEnemyAbility(Enemy enemy, String abilityName)
 	{
 		return enemy.getAbility(abilityName);

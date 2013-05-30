@@ -17,7 +17,7 @@ public class bactSneakToTarget extends DelegatingAction {
 		PlayerCharacter attacker = builder.getSource();
 		PlayerCharacter target = getTarget(builder);
 		final float arcFactorFast = 1.0f/4.0f;
-		final float arcFactorMisdirect = 1.0f/8.0f;
+		final float arcFactorMisdirect = 1.0f/3.0f;
 		//jump to a random point to throw off the enemy!
 		
 		final int perspectiveSize = 80;

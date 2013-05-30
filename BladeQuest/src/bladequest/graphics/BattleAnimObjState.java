@@ -23,6 +23,8 @@ public class BattleAnimObjState
 	
 	public Rect bmpSrcRect;
 	
+	Interpolatable interpObj;
+	
 	public void setBmpSrcRect(int left, int top, int right, int bottom){bmpSrcRect = new Rect(left, top, right, bottom);}
 	public void setRandomRange(Rect range){randomRange = range; random = true;}
 	public void randomize(BattleAnimObject parent)
@@ -78,6 +80,13 @@ public class BattleAnimObjState
 		pos2 = new Point(0,0);
 		size = new Point(0,0);
 	}
+	public BattleAnimObjState(int frame, PosTypes posType, Interpolatable interpObj)
+	{
+		show = true;
+		this.frame = frame;
+		this.posType = posType;		
+		this.interpObj = interpObj;
+	}
 	
 	public void argb(int a, int r, int g, int b)
 	{
@@ -90,6 +99,14 @@ public class BattleAnimObjState
 	
 	public void copyFrom(BattleAnimObjState other)
 	{
+		this.frame = other.frame;
+		this.show = other.show;
+		this.posType = other.posType;		
+		
+		this.interpObj = other.interpObj;
+		if (interpObj != null) return;
+		
+		
 		this.mirrored = other.mirrored;
 		this.rotation = other.rotation;
 		this.size = new Point(other.size);
@@ -100,10 +117,9 @@ public class BattleAnimObjState
 		this.a = other.a;
 		this.pos1 = new Point(other.pos1);
 		this.pos2 = new Point(other.pos2);
-		this.frame = other.frame;
-		this.show = other.show;
+
 		this.random = other.random;
-		this.posType = other.posType;
+
 		if(other.randomRange != null)
 			this.randomRange = new Rect(other.randomRange);
 		this.randomized = other.randomized;

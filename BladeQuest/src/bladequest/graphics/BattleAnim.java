@@ -148,7 +148,7 @@ public class BattleAnim
 							for(BattleAnimObject obj : objects)								
 							{
 								obj.update(frame);
-								obj.render(frame);
+								//obj.render(frame);
 							}
 						}							
 						else
@@ -190,5 +190,49 @@ public class BattleAnim
 			
 	}
 	
+	public static Point linearInterpolation(Point p0, Point p1, float mu)
+	{
+		return new Point(linearInterpolation(p0.x, p1.x, mu),
+						 linearInterpolation(p0.y, p1.y, mu));
+	}
+	public static  int linearInterpolation(int x0, int x1, float mu){return (int)(x0 * (1.0f-mu) + x1*mu);}
+	public static  float linearInterpolation(float x0, float x1, float mu){return x0 * (1.0f-mu) + x1*mu;}
+	public static  int cubicInterpolation(int y0, int y1, int y2, int y3, float mu)
+	{
+		int a0,a1,a2,a3;
+		float mu2;
+
+		mu2 = mu*mu;
+		a0 = (int)(-0.5f*y0 + 1.5f*y1 - 1.5f*y2 + 0.5f*y3);
+		a1 = (int)(y0 - 2.5f*y1 + 2.0f*y2 - 0.5f*y3);
+		a2 = (int)(-0.5f*y0 + 0.5f*y2);
+		a3 = y1;
+	
+		return (int)(a0*mu*mu2 + a1*mu2 + a2*mu + a3);
+	}
+	//TODO: USE THIS
+	@SuppressWarnings("unused")
+	public static float cubicInterpolation(float y0, float y1, float y2, float y3, float mu)
+	{
+		float a0,a1,a2,a3,mu2;
+
+		mu2 = mu*mu;
+		a0 = -0.5f*y0 + 1.5f*y1 - 1.5f*y2 + 0.5f*y3;
+		a1 = y0 - 2.5f*y1 + 2.0f*y2 - 0.5f*y3;
+		a2 = -0.5f*y0 + 0.5f*y2;
+		a3 = y1;
+	
+		return a0*mu*mu2 + a1*mu2 + a2*mu + a3 ;
+	}
+	public static  int cosineInterpolation(int y1, int y2, float t)
+	{
+		float t2 = (1.0f - (float)(Math.cos(t*Math.PI)))/2.0f;
+		return y1 == y2 ? y1 : (int)(y1*(1-t2)+y2*t2);
+	}
+	public static float cosineInterpolation(float y1, float y2, float t)
+	{
+		float t2 = (1.0f - (float)(Math.cos(t*Math.PI)))/2.0f;
+		return y1 == y2 ? y1 : y1*(1-t2)+y2*t2;
+	}
 
 }

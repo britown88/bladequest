@@ -20,7 +20,6 @@ public class BattleAnimObject
 	private boolean outlineOnly;
 	public Point source, target, lineDrawPos1, lineDrawPos2;
 	
-	
 	private BattleAnimObjState workingState, currentState, nextState, y0, y3;
 
 	//TODO: consider using syncronization here instead of mass allocations on render
@@ -158,6 +157,8 @@ public class BattleAnimObject
 	
 	private void updatePaint()
 	{
+		if (type == Types.Interpolatable) return;
+		
 		if(type != Types.Bitmap)
 		{
 			objPaint.setARGB(workingState.a, workingState.r, workingState.g, workingState.b);
@@ -170,6 +171,8 @@ public class BattleAnimObject
 	
 	private void updateRect()
 	{
+		if (type == Types.Interpolatable) return;
+		
 		objRect.set(
 				workingState.pos1.x - (int)(workingState.size.x/2),
 				workingState.pos1.y - (int)(workingState.size.y/2),
@@ -180,6 +183,8 @@ public class BattleAnimObject
 	
 	private void updateDrawPos()
 	{
+		if (type == Types.Interpolatable) return;
+		
 		drawRect.set(objRect.left, objRect.top, objRect.right, objRect.bottom);
 		lineDrawPos1.set(workingState.pos1.x, workingState.pos1.y);
 		lineDrawPos2.set(workingState.pos2.x, workingState.pos2.y);
@@ -193,45 +198,7 @@ public class BattleAnimObject
 	public int getEndFrame() { genStartAndEndFrame();return endFrame; }
 	public int getStartFrame() { genStartAndEndFrame();return startFrame; }
 	
-	private int linearInterpolation(int x0, int x1, float mu){return (int)(x0 * (1.0f-mu) + x1*mu);}
-	private float linearInterpolation(float x0, float x1, float mu){return x0 * (1.0f-mu) + x1*mu;}
-	private int cubicInterpolation(int y0, int y1, int y2, int y3, float mu)
-	{
-		int a0,a1,a2,a3;
-		float mu2;
-
-		mu2 = mu*mu;
-		a0 = (int)(-0.5f*y0 + 1.5f*y1 - 1.5f*y2 + 0.5f*y3);
-		a1 = (int)(y0 - 2.5f*y1 + 2.0f*y2 - 0.5f*y3);
-		a2 = (int)(-0.5f*y0 + 0.5f*y2);
-		a3 = y1;
 	
-		return (int)(a0*mu*mu2 + a1*mu2 + a2*mu + a3);
-	}
-	//TODO: USE THIS
-	@SuppressWarnings("unused")
-	private float cubicInterpolation(float y0, float y1, float y2, float y3, float mu)
-	{
-		float a0,a1,a2,a3,mu2;
-
-		mu2 = mu*mu;
-		a0 = -0.5f*y0 + 1.5f*y1 - 1.5f*y2 + 0.5f*y3;
-		a1 = y0 - 2.5f*y1 + 2.0f*y2 - 0.5f*y3;
-		a2 = -0.5f*y0 + 0.5f*y2;
-		a3 = y1;
-	
-		return a0*mu*mu2 + a1*mu2 + a2*mu + a3 ;
-	}
-	private int cosineInterpolation(int y1, int y2, float t)
-	{
-		float t2 = (1.0f - (float)(Math.cos(t*Math.PI)))/2.0f;
-		return y1 == y2 ? y1 : (int)(y1*(1-t2)+y2*t2);
-	}
-	private float cosineInterpolation(float y1, float y2, float t)
-	{
-		float t2 = (1.0f - (float)(Math.cos(t*Math.PI)))/2.0f;
-		return y1 == y2 ? y1 : y1*(1-t2)+y2*t2;
-	}
 	
 	public float progress;
 	public void update(int frame)
@@ -247,31 +214,39 @@ public class BattleAnimObject
 			{
 				//calculated percantage between the two frames current frame is at
 				int stateLength = nextState.frame - currentState.frame;
+				if (stateLength <=0) stateLength = 1;
 				progress = (float)(frame - currentState.frame) / (float)stateLength;
 				
+				
+				//injected interface.
+				if (type == Types.Interpolatable)
+				{
+					workingState.interpObj = currentState.interpObj.interpolateAgainst(nextState.interpObj, progress);
+					return;
+				}
 				//interpolation			
 				//---size
 				if(currentState.size.x != nextState.size.x || currentState.size.y != nextState.size.y)
 				{
-					workingState.size.x = cosineInterpolation(currentState.size.x, nextState.size.x, progress);
-					workingState.size.y = cosineInterpolation(currentState.size.y, nextState.size.y, progress);
+					workingState.size.x = BattleAnim.cosineInterpolation(currentState.size.x, nextState.size.x, progress);
+					workingState.size.y = BattleAnim.cosineInterpolation(currentState.size.y, nextState.size.y, progress);
 					
 				}
 				
 				//---color
 				
-				workingState.a = cosineInterpolation(currentState.a, nextState.a, progress);
-				workingState.r = cosineInterpolation(currentState.r, nextState.r, progress);
-				workingState.g = cosineInterpolation(currentState.g, nextState.g, progress);
-				workingState.b = cosineInterpolation(currentState.b, nextState.b, progress);
-				
+				workingState.a = BattleAnim.cosineInterpolation(currentState.a, nextState.a, progress);
+				workingState.r = BattleAnim.cosineInterpolation(currentState.r, nextState.r, progress);
+				workingState.g = BattleAnim.cosineInterpolation(currentState.g, nextState.g, progress);
+				workingState.b = BattleAnim.cosineInterpolation(currentState.b, nextState.b, progress);
+
 				if((type == Types.Line || outlineOnly) && currentState.strokeWidth != nextState.strokeWidth)
-					workingState.strokeWidth = linearInterpolation(currentState.strokeWidth, nextState.strokeWidth, progress);
+					workingState.strokeWidth = BattleAnim.linearInterpolation(currentState.strokeWidth, nextState.strokeWidth, progress);
 				
 				//bitmap colorization
 				if(type == Types.Bitmap)
 				{
-					float t= workingState.colorize=cosineInterpolation(currentState.colorize, nextState.colorize, progress);
+					float t= workingState.colorize= BattleAnim.cosineInterpolation(currentState.colorize, nextState.colorize, progress);
 					float[] colorTransform = {
 				            1-t, 0, 0, 0, workingState.r*t, 
 				            0, 1-t, 0, 0, workingState.g*t,
@@ -285,7 +260,7 @@ public class BattleAnimObject
 				
 				//---rotation (lerp rotation)
 				
-				workingState.rotation = linearInterpolation(currentState.rotation, nextState.rotation, progress);
+				workingState.rotation = BattleAnim.linearInterpolation(currentState.rotation, nextState.rotation, progress);
 				
 				//---position (including lines)
 
@@ -293,35 +268,35 @@ public class BattleAnimObject
 				{
 					if(currentState.pos1.x != nextState.pos1.x)
 					{
-						workingState.pos1.x = linearInterpolation(currentState.pos1.x, nextState.pos1.x, progress);
-						workingState.pos2.x = linearInterpolation(currentState.pos2.x, nextState.pos2.x, progress);
+						workingState.pos1.x = BattleAnim.linearInterpolation(currentState.pos1.x, nextState.pos1.x, progress);
+						workingState.pos2.x = BattleAnim.linearInterpolation(currentState.pos2.x, nextState.pos2.x, progress);
 					}
 					
 					if(currentState.pos1.y != nextState.pos1.y)
 					{
-						workingState.pos1.y = linearInterpolation(currentState.pos1.y, nextState.pos1.y, progress);
-						workingState.pos2.y = linearInterpolation(currentState.pos2.y, nextState.pos2.y, progress);
+						workingState.pos1.y = BattleAnim.linearInterpolation(currentState.pos1.y, nextState.pos1.y, progress);
+						workingState.pos2.y = BattleAnim.linearInterpolation(currentState.pos2.y, nextState.pos2.y, progress);
 					}						
 				}
 				else
 				{
 					if(currentState.pos1.x != nextState.pos1.x)
 					{
-						workingState.pos1.x = cubicInterpolation(y0.pos1.x, currentState.pos1.x, nextState.pos1.x, y3.pos1.x, progress);
+						workingState.pos1.x = BattleAnim.cubicInterpolation(y0.pos1.x, currentState.pos1.x, nextState.pos1.x, y3.pos1.x, progress);
 					}
 					
 					if(currentState.pos1.y != nextState.pos1.y)
 					{
-						workingState.pos1.y = cubicInterpolation(y0.pos1.y, currentState.pos1.y, nextState.pos1.y, y3.pos1.y, progress);
+						workingState.pos1.y = BattleAnim.cubicInterpolation(y0.pos1.y, currentState.pos1.y, nextState.pos1.y, y3.pos1.y, progress);
 					}
 					if(currentState.pos2.x != nextState.pos2.x)
 					{
-						workingState.pos2.x = cubicInterpolation(y0.pos2.x, currentState.pos2.x, nextState.pos2.x, y3.pos2.x, progress);
+						workingState.pos2.x = BattleAnim.cubicInterpolation(y0.pos2.x, currentState.pos2.x, nextState.pos2.x, y3.pos2.x, progress);
 					}
 					
 					if(currentState.pos2.y != nextState.pos2.y)
 					{
-						workingState.pos2.y = cubicInterpolation(y0.pos2.y, currentState.pos2.y, nextState.pos2.y, y3.pos2.y, progress);
+						workingState.pos2.y = BattleAnim.cubicInterpolation(y0.pos2.y, currentState.pos2.y, nextState.pos2.y, y3.pos2.y, progress);
 
 					}					
 				}
@@ -340,25 +315,35 @@ public class BattleAnimObject
 		//if state is shown and frame is within object's screentime
 		if((workingState.show && frame >= startFrame && frame <= endFrame) || alwaysDraw)
 		{
+			if (type == Types.Interpolatable)
+			{
+				workingState.interpObj.render();
+				return;
+			}
+			
 			updateDrawPos();
 			
 			//render based on current state
 			switch(type)
 			{
 			case Rect:
-				Global.renderer.drawRect(drawRect, new Paint(objPaint), false);
+				Global.renderer.drawRect(new Rect(drawRect), new Paint(objPaint), false);
 				break;
 			case Elipse:				
-				Global.renderer.drawElipse(drawRect, new Paint(objPaint));
+				Global.renderer.drawElipse(new Rect(drawRect), new Paint(objPaint));
 				break;
 			case Bitmap:
+				Rect srcRect = workingState.bmpSrcRect;
+				Rect draw = drawRect;
+				if (srcRect != null) srcRect = new Rect(srcRect);
+				if (draw != null) draw = new Rect(drawRect);
 				if (currentState.mirrored)
 				{
-					Global.renderer.drawMirroredBitmap(customBmp == null ? Global.bitmaps.get(bmpName) : customBmp, workingState.rotation, workingState.bmpSrcRect, drawRect, new Paint(objPaint));					
+					Global.renderer.drawMirroredBitmap(customBmp == null ? Global.bitmaps.get(bmpName) : customBmp, workingState.rotation, srcRect, draw, new Paint(objPaint));					
 				}
 				else
 				{
-					Global.renderer.drawBitmap(customBmp == null ? Global.bitmaps.get(bmpName) : customBmp, workingState.rotation, workingState.bmpSrcRect, drawRect, new Paint(objPaint));
+					Global.renderer.drawBitmap(customBmp == null ? Global.bitmaps.get(bmpName) : customBmp, workingState.rotation, srcRect, draw, new Paint(objPaint));
 				}
 				break;
 			case Line:
@@ -367,10 +352,16 @@ public class BattleAnimObject
 						lineDrawPos2.x, lineDrawPos2.y, 
 						new Paint(objPaint));
 				break;
+			default:
 				
 			}
 		}
 		
+	}
+	
+	public boolean isEmpty()
+	{
+		return states.isEmpty();
 	}
 	
 	public enum Types
@@ -378,7 +369,8 @@ public class BattleAnimObject
 		Rect,
 		Elipse,
 		Bitmap,
-		Line
+		Line,
+		Interpolatable
 	}
 
 }

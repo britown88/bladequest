@@ -648,17 +648,6 @@ public class Battle
 		startTurn = new Event();
 		onSelectStart = new Event();
 		
-		HitCounterCondition condition = new HitCounterCondition(4);
-		startTurn.register(condition);
-		new Trigger(condition)
-		{
-			@Override
-			public void trigger() {
-				showMessage("Holy shit, it's turn 4!");
-			}
-			
-		};
-		
 		stateMachine.setState(getStartState());
 		this.encounter = new Encounter(Global.encounters.get(encounter));
 		
@@ -1637,6 +1626,14 @@ public class Battle
 	
 	private void drawActors()
 	{
+		for(PlayerCharacter c : partyList)
+		{
+			c.renderShadow();
+		}
+		for(Enemy e : encounter.Enemies())
+		{
+			e.renderShadow();
+		}
 		for(PlayerCharacter c : partyList)
 		{
 			c.battleRender();
