@@ -28,10 +28,19 @@ public class actPath extends Action
 	}
 	
 	@Override
+	public void reset()
+	{
+		path.reset();
+	}
+	
+	@Override
 	public boolean isDone()
 	{
 		if(wait)
-			return path.isDone();
+		{
+
+				return path.isDone();		
+		}			
 		else
 			return true;
 	}

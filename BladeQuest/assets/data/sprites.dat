@@ -18,11 +18,40 @@ createWorldSprite "npcsprites" "guard" 1 0
 createWorldSprite "npcsprites" "bandit" 2 0
 
 addMiscSprites 0
-createWorldSprite "switches" "switches" 0 0
-createWorldSprite "switches" "sword" 1 0
+createSprite "savepoint" "misc" 32 32 >
+addSpriteFrame "" 16 48 32 64 >
+addSpriteFrame "" 32 48 48 64 >
+addSpriteFrame "" 48 48 64 64 >
+addSpriteFrame "" 32 48 48 64 >
+setFace ""
+createSprite "sword1" "misc" 32 32 >
+addSpriteFrame "" 32 16 48 32 >
+addSpriteFrame "" 48 16 64 32 >
+setFace ""
+createSprite "sword2" "misc" 32 32 >
+addSpriteFrame "" 32 32 48 48 >
+addSpriteFrame "" 48 32 64 48 >
+setFace ""
+createSprite "orb" "misc" 32 32 >
+addSpriteFrame "" 32 0 48 16 >
+addSpriteFrame "" 48 0 64 16 >
+setFace ""
+createSprite "plant" "misc" 32 32 >
+addSpriteFrame "" 0 0 16 16 >
+setFace ""
+createSprite "footsteps" "misc" 32 32 >
+addSpriteFrame "" 16 0 32 16 >
+setFace ""
+createSprite "chest" "misc" 32 32 >
+addSpriteFrame "" 0 16 16 32 >
+addSpriteFrame "" 16 16 32 32 >
+setFace ""
+createSprite "door" "misc" 32 32 >
+addSpriteFrame "" 0 32 16 48 >
+setFace ""
 
 addEnemySprites 0
-createEnemySprite "recruit" "enemies" (point 0 0) (point 48 48)
+createEnemySprite "recruit" "enemies" (point 0 0) (point 48 40)
 createEnemySprite "guard" "enemies" (point 48 0) (point 56 48)
 createEnemySprite "hawk" "enemies" (point 104 0) (point 48 48)
 createEnemySprite "spud" "enemies" (point 0 40) (point 32 32)

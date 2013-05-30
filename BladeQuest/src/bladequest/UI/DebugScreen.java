@@ -122,6 +122,11 @@ public class DebugScreen
 		closing = false;
 		
 		currentState = states.Root;
+		Global.map.clearAutoStarters();
+		Global.screenFader.clear();
+		Global.map.clearObjectAction();
+		Global.setPanned(0, 0);
+		Global.party.setAllowMovement(true);
 	}
 	
 	private void close()
@@ -300,9 +305,7 @@ public class DebugScreen
 						entry.obj = !(Boolean)entry.obj;
 						entry.getTextAt(1).text = ""+(Boolean)entry.obj;
 						
-						Global.screenFader.clear();
-						Global.setPanned(0, 0);
-						Global.party.setAllowMovement(true);
+						Global.map.clearObjectAction();
 					}
 					
 				}

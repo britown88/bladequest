@@ -189,7 +189,11 @@ public class ObjectState {
 	public void step()
 	{
 		if(objPath != null)
+		{
+			objPath.advanceActions();
 			HandleObjectPath();
+		}
+			
 	}
 	private boolean facing;
 	
@@ -201,7 +205,7 @@ public class ObjectState {
 		}
 		else
 		{
-			switch(objPath.nextAction())
+			switch(objPath.getCurrentAction())
 			{
 			case MoveLeft:
 				move("left", true);
@@ -234,27 +238,33 @@ public class ObjectState {
 			case IncreaseMoveSpeed:
 				if(moveSpeed < 6)
 					moveSpeed++;
+				objPath.advanceActions();
 				HandleObjectPath();
 				break;
 			case DecreaseMoveSpeed:
 				if(moveSpeed > 1)
 					moveSpeed--;
+				objPath.advanceActions();
 				HandleObjectPath();
 				break;
 			case Hide:
 				parent.hide = true;
+				objPath.advanceActions();
 				HandleObjectPath();
 				break;
 			case Show:
 				parent.hide = false;
+				objPath.advanceActions();
 				HandleObjectPath();
 				break;
 			case LockFacing:
 				parent.faceLocked = true;
+				objPath.advanceActions();
 				HandleObjectPath();
 				break;
 			case UnlockFacing:
 				parent.faceLocked = false;
+				objPath.advanceActions();
 				HandleObjectPath();
 				break;	
 			case Wait:
@@ -319,6 +329,7 @@ public class ObjectState {
 			if(System.currentTimeMillis() - objPathWaitStart >= 1000)
 			{
 				objPathWaiting = false;
+				objPath.advanceActions();
 				HandleObjectPath();
 			}
 			
@@ -326,6 +337,7 @@ public class ObjectState {
 		
 		if(facing)
 		{
+			objPath.advanceActions();
 			HandleObjectPath();
 			facing = false;
 		}

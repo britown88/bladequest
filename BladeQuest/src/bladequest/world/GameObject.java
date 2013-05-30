@@ -116,7 +116,10 @@ public class GameObject {
 		else
 			if(states.get(currentState) != Global.mapChangeCallingState)
 				states.get(currentState).clearActions();
+		
+		updateState();
 	}
+	
 	
 	public void setTarget(String face, boolean ignoreParty)
 	{

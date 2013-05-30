@@ -6,7 +6,7 @@ public class ObjectPath
 {
 	private List<Actions> actionList;
 	private String target;
-	private int index;
+	int index;
 	private boolean done;
 
 	
@@ -24,22 +24,35 @@ public class ObjectPath
 		actionList.add(action);
 	}
 	
-	public Actions nextAction()
+	public Actions getCurrentAction()
 	{
-		Actions returnval;
-		if(actionList.size() > 0)
-		{
-			returnval = actionList.get(index);			
+		return actionList.size() > index ? actionList.get(index) : null; 
 			
-			index += 1;
-			if(index >= actionList.size())
-				done = true;			
-		}
-		else
-			returnval = null;
-		
-		return returnval;		
 	}
+	
+	public void advanceActions()
+	{
+		index += 1;
+		if(index >= actionList.size())
+			done = true;
+	}
+	
+//	public Actions nextAction()
+//	{
+//		Actions returnval;
+//		if(actionList.size() > 0)
+//		{
+//			returnval = actionList.get(index);			
+//			
+//			index += 1;
+//			if(index >= actionList.size())
+//				done = true;			
+//		}
+//		else
+//			returnval = null;
+//		
+//		return returnval;		
+//	}
 	
 	public void reset()
 	{

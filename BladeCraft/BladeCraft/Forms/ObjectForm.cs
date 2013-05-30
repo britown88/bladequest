@@ -154,7 +154,7 @@ namespace BladeCraft.Forms
 
       private void tsbBranchAction_Click(object sender, EventArgs e)
       {
-         insertMacro("addToBranch index actToAdd >\r\n");
+         insertMacro("addToBranch index (actToAdd) >\r\n");
       }
 
       private void actionClick(Object sender, EventArgs e)

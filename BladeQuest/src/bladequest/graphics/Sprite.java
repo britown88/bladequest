@@ -56,7 +56,7 @@ public class Sprite {
 		}		
 	}
 	
-	public void changeFace(String face){this.face = face;}
+	public void changeFace(String face){if(frameLists.containsKey(face)) this.face = face;}
 	public String getFace() { return face; }
 	
 	
