@@ -25,7 +25,7 @@ namespace BladeCraft.Forms
 
         private void ZoneForm_Load(object sender, EventArgs e)
         {
-            encounterRate.Value = zone.encounterRate;
+            encounterRate.Value = (Decimal)zone.encounterRate;
             X.Value = zone.zone.X;
             Y.Value = zone.zone.Y;
             numWidth.Value = zone.zone.Width;
@@ -37,7 +37,7 @@ namespace BladeCraft.Forms
 
         private void button3_Click(object sender, EventArgs e)
         {
-            zone.encounterRate = (int)encounterRate.Value;
+            zone.encounterRate = (float)encounterRate.Value;
             zone.zone.X = (int)X.Value;
             zone.zone.Y = (int)Y.Value;
             zone.zone.Width = (int)numWidth.Value;
@@ -54,6 +54,9 @@ namespace BladeCraft.Forms
 
         private void button1_Click(object sender, EventArgs e)
         {
+           ListViewItem item = new ListViewItem();
+           lvwEncounters.Items.Add(item);
+           item.BeginEdit();
         }
 
         private void button2_Click(object sender, EventArgs e)

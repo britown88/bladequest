@@ -718,3 +718,23 @@ t 20 17 1 4 a 0 0 0 0
 t 21 17 1 4 a 0 0 0 0 
 t 22 17 1 4 a 0 0 0 0 
 [encounters]
+zone 3 9 7 9 2
+encounter 2rats
+encounter bat
+endzone
+zone 11 6 7 12 2
+encounter 2rats
+encounter bat
+endzone
+zone 19 14 8 4 2
+encounter 2rats
+encounter bat
+endzone
+zone 23 4 4 8 2
+encounter 2rats
+encounter bat
+endzone
+zone 18 4 4 6 0
+encounter 2rats
+encounter bat
+endzone

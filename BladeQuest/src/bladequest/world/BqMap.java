@@ -403,7 +403,7 @@ public class BqMap
 	private void displayname(DataLine dl){displayName = dl.values.get(0);}
 	private void BGM(DataLine dl){defaultBGM = dl.values.get(0);}
 	
-	private void zone(DataLine dl){loadedEncounterZone = new EncounterZone(Integer.parseInt(dl.values.get(0)),Integer.parseInt(dl.values.get(1)),Integer.parseInt(dl.values.get(2)),Integer.parseInt(dl.values.get(3)),Integer.parseInt(dl.values.get(4)));}
+	private void zone(DataLine dl){loadedEncounterZone = new EncounterZone(Integer.parseInt(dl.values.get(0)),Integer.parseInt(dl.values.get(1)),Integer.parseInt(dl.values.get(2)),Integer.parseInt(dl.values.get(3)),Float.parseFloat(dl.values.get(4)));}
 	private void encounter(DataLine dl){loadedEncounterZone.addEncounter(dl.values.get(0));}
 	private void endzone(DataLine dl){encounterZones.add(loadedEncounterZone);}
 	
