@@ -345,7 +345,7 @@ public class DebugScreen
 				if(goButton.touchActionUp(x, y) == LBStates.Selected)
 				{
 					if(map.length() > 0 && !Global.map.Name().equals(map))
-						Global.LoadMap(map);
+						Global.LoadMap(map, false, false);
 
 					Global.party.teleport(X.getValue(), Y.getValue());
 					

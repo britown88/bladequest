@@ -127,9 +127,15 @@ public class SaveLoadMenu
 				{
 					Global.screenFader.clear();
 					Global.musicBox.play("", false, true, 0);
-					Global.LoadMap(Global.saveLoader.save.mapName);
+					
+					boolean suppressBGM = false;
 					if(Global.saveLoader.save.playingSong != null)
-						Global.musicBox.play(Global.saveLoader.save.playingSong, false, true, 0);
+					{
+						Global.musicBox.play(Global.saveLoader.save.playingSong, false, true, 2.0f);
+						suppressBGM = true;
+					}
+					
+					Global.LoadMap(Global.saveLoader.save.mapName, true, suppressBGM);
 				}
 				
 				closed = true;
@@ -229,6 +235,8 @@ public class SaveLoadMenu
 					}
 					
 				}
+				else
+					Global.saveLoader.save = null;
 				deleting = false;
 			}
 	}
