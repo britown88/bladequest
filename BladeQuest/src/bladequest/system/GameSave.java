@@ -23,9 +23,11 @@ public class GameSave
 	public int textSpeed;
 	public String controlScheme;
 	public Map<String, Map<String, Integer>> merchantLimitedQtyItems;
+	StringBuilder serializedString;
 	
 	public GameSave()
 	{
+		serializedString = new StringBuilder(); 
 		switches = new HashMap<String, Boolean>();
 		defaultNames = new HashMap<String, String>();
 		characters = new ArrayList<PlayerCharacter>();

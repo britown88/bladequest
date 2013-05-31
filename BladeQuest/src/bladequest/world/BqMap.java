@@ -27,6 +27,7 @@ import bladequest.bladescript.libraries.WorldAnimLibrary;
 import bladequest.graphics.Scene;
 import bladequest.graphics.Tile;
 import bladequest.graphics.TilePlate;
+import bladequest.sound.BladeSong;
 import bladequest.system.CommandLine;
 import bladequest.system.DataLine;
 import bladequest.system.FileReader;
@@ -215,7 +216,7 @@ public class BqMap
 	public void setBGM(String bgm){defaultBGM = bgm;}	
 	public void playBGM(boolean playIntro)
 	{
-		Global.musicBox.play(defaultBGM, playIntro, true, 0);
+		BladeSong.instance().play(defaultBGM, playIntro, true, 0);
 	}	
 	
 	private void initTilePlates()

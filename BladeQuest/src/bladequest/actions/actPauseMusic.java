@@ -1,7 +1,6 @@
 package bladequest.actions;
 
-import bladequest.actions.Action;
-import bladequest.world.*;
+import bladequest.sound.BladeSong;
 
 
 public class actPauseMusic extends Action 
@@ -16,7 +15,7 @@ public class actPauseMusic extends Action
 	@Override
 	public void run()
 	{
-		Global.musicBox.pause(fadeTime);
+		BladeSong.instance().fadeOut(fadeTime);
 	}
 	
 	@Override

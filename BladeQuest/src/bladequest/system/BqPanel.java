@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import bladequest.graphics.TilePlate;
+import bladequest.sound.BladeSong;
 import bladequest.world.Global;
 
 
@@ -101,13 +102,12 @@ implements SurfaceHolder.Callback
     public void resume(){
     	renderThread.setRunning(true);
     	updateThread.setRunning(true);
-    	Global.musicBox.systemResume();
+    	BladeSong.instance().systemResume();
     }
     
     public void pause()
     {
-    	if(Global.musicBox != null)
-    		Global.musicBox.systemPause();
+    	BladeSong.instance().systemPause();
     	renderThread.setRunning(false);
     	updateThread.setRunning(false);
     	

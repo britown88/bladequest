@@ -20,12 +20,11 @@ import bladequest.battleactions.BattleActionRunner;
 import bladequest.combat.BattleEvent.ActionType;
 import bladequest.combat.triggers.Condition;
 import bladequest.combat.triggers.Event;
-import bladequest.combat.triggers.HitCounterCondition;
-import bladequest.combat.triggers.Trigger;
 import bladequest.combatactions.CombatActionBuilder;
 import bladequest.enemy.Enemy;
 import bladequest.graphics.BattleSprite.faces;
 import bladequest.observer.ObserverUpdatePool;
+import bladequest.sound.BladeSong;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.world.Ability;
 import bladequest.world.Encounter;
@@ -111,10 +110,13 @@ public class Battle
 	private Outcome outcome;
 	
 	
+	private String interruptedSong;
+	
 	void updateCurrentFrame()
 	{
 		currentFrame = (int)(System.currentTimeMillis()-startTime);
 	}
+	
 	
 	public Battle()
 	{
@@ -126,6 +128,10 @@ public class Battle
 		messageQueue = new ArrayList<String>();
 		
 		msgBox = new MsgBox();
+		
+		
+		interruptedSong = BladeSong.instance().getCurrentSong();
+		BladeSong.instance().stop();
 		
 		updatePool = new ObserverUpdatePool<Condition>();		
 		
@@ -606,7 +612,7 @@ public class Battle
 						p.endBattle();
 					}				
 
-					Global.musicBox.resumeLastSong();
+					BladeSong.instance().play(interruptedSong, false, true, 1.0f);
 					Global.screenFader.fadeIn(1.0f);
 					
 					Global.GameState = States.GS_WORLDMOVEMENT;	
@@ -883,7 +889,7 @@ public class Battle
 		outcome = Outcome.Victory;
 		messageQueue.clear();
 		//play victory music
-		Global.musicBox.play("victory", true, true, 0);
+		BladeSong.instance().play("victory", true, true, 0);
 		
 		//get characters still in the battle 
 		List<PlayerCharacter> aliveChars = new ArrayList<PlayerCharacter>();
@@ -982,7 +988,7 @@ public class Battle
 	{
 		Global.screenFader.setFadeColor(255, 0, 0, 0);
 		Global.screenFader.fadeOut(2.0f);
-		Global.musicBox.pause(2.0f);
+		BladeSong.instance().fadeOut(2.0f);
 
 	}
 	

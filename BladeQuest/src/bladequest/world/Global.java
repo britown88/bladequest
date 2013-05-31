@@ -69,7 +69,7 @@ import bladequest.graphics.TextFactory;
 import bladequest.graphics.TilePlateBitmap;
 import bladequest.graphics.WeaponSwing;
 import bladequest.math.PointMath;
-import bladequest.sound.MusicBox;
+import bladequest.sound.BladeSong;
 import bladequest.sound.Song;
 import bladequest.system.BqActivity;
 import bladequest.system.BqPanel;
@@ -181,7 +181,6 @@ public class Global
 	public static TextFactory textFactory;
 	public static ScreenFader screenFader;
 	public static ScreenShaker screenShaker;
-	public static MusicBox musicBox;
 	public static TargetReticle target;
 
 	public static List<String> gameLog; 
@@ -606,8 +605,7 @@ public class Global
 	{
 		//if(GameState != States.GS_TITLE)
 		screenFader.update();
-		if(musicBox != null)
-			musicBox.update();
+		BladeSong.instance().update();
 		
 		target.update();
 		if(Global.playTimer != null)
@@ -843,14 +841,13 @@ public class Global
 	{
 		encounter = en;
 		GameState = States.GS_BATTLETRANSITION;
-		musicBox.saveSong();
-		if(encounters.get(en).isBossFight)
-			musicBox.play("boss", true, true, 0);
-		else
-			musicBox.play("battle", true, true, 0);
 		
-		if(battle == null)
-			battle = new Battle();
+		battle = new Battle();
+		
+		if(encounters.get(en).isBossFight)
+			BladeSong.instance().play("boss", true, true, 0);
+		else
+			BladeSong.instance().play("battle", true, true, 0);		
 		
 		battle.startBattle(encounter, allowGameOver);
 	}
@@ -871,7 +868,7 @@ public class Global
         	playingAnims = new ArrayList<BattleAnim>();
         	GameState = States.GS_TITLE;
         	title.titleStart();
-        	musicBox.play("", false, true, 0);
+        	BladeSong.instance().play("", false, true, 0);
         	
         	
         	Paint paint = textFactory.getTextPaint(13, Color.WHITE, Align.CENTER);
@@ -906,8 +903,7 @@ public class Global
     	screenFader.fadeIn(1.0f);
     	
     	title.titleStart();
-    	musicBox.release();
-    	musicBox = new MusicBox();
+    	BladeSong.instance().stop();
     	menuButton.setClosed();
     	audioMgr = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
         audioMgr.requestAudioFocus(activity, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
@@ -916,8 +912,7 @@ public class Global
 	
 	public static void closeGame()
 	{
-		musicBox.release();
-		musicBox = null;
+		BladeSong.instance().stop();
 		appRunning = false;
         activity.panel.destroyContext();
         activity.finish();
@@ -1833,9 +1828,6 @@ public class Global
 		AssetFileDescriptor afd = null;
 		String[] files = null;
 		String sfxName;	
-		
-		if(musicBox == null)
-			musicBox = new MusicBox();		
 		
 		path += "/effects";
 		try{ files = activity.getAssets().list(path); } catch (Exception e) {
