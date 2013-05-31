@@ -81,6 +81,8 @@ namespace BladeCraft.Forms
          actionParams.Add("wait", "seconds");
          actionParams.Add("unloadScene", "0");
          actionParams.Add("expectInput", "delay");
+         actionParams.Add("changeElevation", "\"target\" pixels time wait");
+         actionParams.Add("setFloating", "\"target\" startFloating period intensity");
       }
 
       private void btnCancel_Click(object sender, EventArgs e)
