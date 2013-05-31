@@ -25,6 +25,8 @@ addToBranch 0 (openBubble "sweat" "party" 1.0 false false) >
 addToBranch 0 (message "|aramis|: \nNo, I'm pretty sure I have...") >
 addToBranch 0 (createPath "recruit" true "KUWk") >
 addToBranch 0 (message "|aramis|: \nRun along, now.") >
+addToBranch 0 (openBubble "dots" "recruit" 1.0 false false) >
+addToBranch 0 (wait 1.0) >
 addToBranch 0 (panControl 0 0 2 false) >
 addToBranch 0 (createPath "recruit" true "S2D3LD") >
 addToBranch 0 (createPath "party" false "d") >
@@ -140,13 +142,13 @@ name$8x17$ > createState >
 addAction (createPath "party" true "r") >
 addAction (openBubble "exclam" "party" 1.0 false true) >
 addAction (createPath "party" true "s2R2uS2") >
+addAction (switchControl "firstsave" true) >
 addAction (wait 1.0) >
 addAction (fadeControl 0.5 255 0 250 200 true true) >
 addAction (fadeControl 0.5 255 0 250 200 false true) >
 addAction (message "An eerie glow surrounds you.") >
 addAction (messageWithYesNo "Save your game?" > 
-	addToBranch 0 (openSaveMenu 0)) >
-addAction (switchControl "firstsave" true)
+	addToBranch 0 (openSaveMenu 0)) 
 
 \runstate1$8x17$ <- state1$8x17$ 0
 

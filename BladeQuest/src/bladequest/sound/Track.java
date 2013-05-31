@@ -86,6 +86,12 @@ public class Track {
 			super(player);
 			startTime = System.currentTimeMillis() - delay;
 			player.mp.start(); //restart from a paused state
+			
+			
+			if (player.loops)
+			{
+				nextPlay = new Music(player.file, 1.0f, true);
+			}			
 		}				
 		boolean isPlaying() {return true;}
 		void pause()

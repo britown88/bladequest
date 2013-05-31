@@ -128,7 +128,8 @@ public class SaveLoadMenu
 				{
 					Global.screenFader.clear();
 					BladeSong.instance().play("", false, true, 0);
-					Global.LoadMap(Global.saveLoader.save.mapName);
+
+					Global.LoadMap(Global.saveLoader.save.mapName, true);
 				}
 				
 				closed = true;
@@ -200,7 +201,7 @@ public class SaveLoadMenu
 					Global.saveLoader.readSaves(Global.activity);
 					buildPanels();
 					
-					showMessage("Game saved!", false);
+					showMessage("Game saved!", false);					
 					closeAfterMsg = true;
 				}			
 			}
@@ -223,11 +224,15 @@ public class SaveLoadMenu
 					{
 						Global.saveLoader.loadGame((Integer)menu.getSelectedEntry().obj);
 						Global.clearAnimations();
+						//Global.musicBox.pause(1.0f);
+						BladeSong.instance().fadeOut(1.0f);
 						showMessage("Game loaded!", false);
 						closeAfterMsg = true;
 					}
 					
 				}
+				else
+					Global.saveLoader.save = null;
 				deleting = false;
 			}
 	}

@@ -45,7 +45,6 @@ public class BqMap
 	public List<EncounterZone> encounterZones;
 	
 	private int nameDisplayLength = 150, nameDisplayCounter = 0;
-	private boolean showDisplayName = false;
 	private Paint nameDisplayPaint;
 	
 	private Scene backdrop;
@@ -72,7 +71,7 @@ public class BqMap
 		defaultBGM = "";
 		
 		mapFile = file;
-		buildDisplayName();
+		
 		
 	}
 	
@@ -100,6 +99,8 @@ public class BqMap
 				go.execute();
 		
 		loaded = true;
+		buildDisplayName();
+		nameDisplayCounter = 0;
 	}
 	
 	public void clearAutoStarters()
@@ -113,34 +114,16 @@ public class BqMap
 	{
 		nameDisplayPaint = Global.textFactory.getTextPaint(13, Color.WHITE, Align.CENTER);
 				
-		displayNamePanel = new MenuPanel();
-		displayNamePanel.thickFrame = false;
-		displayNamePanel.setInset(-10, -7);
-		displayNamePanel.addTextBox("", 0, 0, nameDisplayPaint);	
-		displayNamePanel.hide(); 
+		Rect displayNameRect = new Rect();
+		nameDisplayPaint.getTextBounds(displayName, 0, displayName.length()-1, displayNameRect);		
+		displayNameRect = Global.screenToVP(displayNameRect);
+		displayNameRect.inset(-20, -10);	
 		
-		if(displayName != null)
-		{
-			displayNamePanel.show();
-			nameDisplayCounter = 0;
-			showDisplayName = true;			
-			
-			Rect displayNameRect = new Rect();
-			nameDisplayPaint.getTextBounds(displayName, 0, displayName.length()-1, displayNameRect);
-			
-			displayNameRect = Global.screenToVP(displayNameRect);
-			displayNameRect.inset(-10, 0);			
-			
-			displayNamePanel.pos.x = (Global.vpWidth - displayNameRect.width())/2;
-			displayNamePanel.pos.y = 0;
-			displayNamePanel.width = displayNameRect.width();
-			displayNamePanel.height = displayNameRect.height();
-			displayNamePanel.update();
-			
-			displayNamePanel.getTextAt(0).text = displayName;
-			displayNamePanel.getTextAt(0).x = displayNamePanel.insetWidth()/2;
-			displayNamePanel.getTextAt(0).y = displayNamePanel.insetHeight()/2;
-		}
+		displayNamePanel = new MenuPanel((Global.vpWidth - displayNameRect.width())/2, 0, displayNameRect.width(), displayNameRect.height());
+		displayNamePanel.thickFrame = false;
+		displayNamePanel.update();		
+
+		displayNamePanel.addTextBox(displayName, displayNamePanel.width / 2, displayNamePanel.height / 2, nameDisplayPaint);
 	}
 	
 	
@@ -267,13 +250,9 @@ public class BqMap
 	{
 		displayNamePanel.update();
 		
-		if(showDisplayName)
+		if(displayNamePanel.isShown())
 			if(nameDisplayCounter++ >= nameDisplayLength)
-			{
-				displayNamePanel.hide();
-				showDisplayName = false;
-			}
-				
+				displayNamePanel.hide();				
 			
 		for(GameObject b : objects) 
 			b.update();   
@@ -415,11 +394,17 @@ public class BqMap
 	}	
 	
 	private void size(DataLine dl){mapSize = new Point(Integer.parseInt(dl.values.get(0)), Integer.parseInt(dl.values.get(1)));}
-	private void tileset(DataLine dl){tilesetName = dl.values.get(0).toLowerCase(Locale.US);backdrop = Global.scenes.get(tilesetName + "backdrop");initTilePlates();}
+	private void tileset(DataLine dl)
+	{
+		tilesetName = dl.values.get(0).toLowerCase(Locale.US);
+		backdrop = Global.scenes.get(tilesetName + "backdrop");
+		initTilePlates();
+	}
+	
 	private void displayname(DataLine dl){displayName = dl.values.get(0);}
 	private void BGM(DataLine dl){defaultBGM = dl.values.get(0);}
 	
-	private void zone(DataLine dl){loadedEncounterZone = new EncounterZone(Integer.parseInt(dl.values.get(0)),Integer.parseInt(dl.values.get(1)),Integer.parseInt(dl.values.get(2)),Integer.parseInt(dl.values.get(3)),Integer.parseInt(dl.values.get(4)));}
+	private void zone(DataLine dl){loadedEncounterZone = new EncounterZone(Integer.parseInt(dl.values.get(0)),Integer.parseInt(dl.values.get(1)),Integer.parseInt(dl.values.get(2)),Integer.parseInt(dl.values.get(3)),Float.parseFloat(dl.values.get(4)));}
 	private void encounter(DataLine dl){loadedEncounterZone.addEncounter(dl.values.get(0));}
 	private void endzone(DataLine dl){encounterZones.add(loadedEncounterZone);}
 	

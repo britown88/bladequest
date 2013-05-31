@@ -247,7 +247,7 @@ namespace BladeCraft.Classes
                Convert.ToInt32(values[2]),
                Convert.ToInt32(values[3]));
 
-            loadzone.encounterRate = Convert.ToInt32(values[4]);
+            loadzone.encounterRate = (float)Convert.ToDecimal(values[4]);
             return;
          }
          if (item == "encounter")

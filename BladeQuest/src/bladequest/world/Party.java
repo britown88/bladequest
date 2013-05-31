@@ -3,11 +3,13 @@ package bladequest.world;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import android.graphics.Point;
 import android.graphics.Rect;
 import bladequest.graphics.ReactionBubble;
+import bladequest.graphics.Shadow;
 import bladequest.graphics.Sprite;
 import bladequest.graphics.Tile;
 import bladequest.pathfinding.AStarObstacle;
@@ -44,14 +46,24 @@ public class Party
 	public PlayerCharacter partyMembers[];
 	private List<Item> inventory;
 	
-	private static int noEncounterBuffer = 15;
-	private int noEncounterTimer;
+	private final float encounterGrowth = 0.975f; 
+	private List<EncounterZone> inZoneList;
+	
 	
 	private boolean faceLocked = false;
 	private boolean hide = false;
 	
 	private long stepcount;
 	
+	private Shadow shadow;
+	private boolean moving, floating;
+	private int startElevation, targetElevation;
+	private float elevationTime;
+	private long elevationTimer;
+
+	private int floatIndex, floatPeriod, floatIntensity;
+	
+
 	
 	public Party(int x, int y) 
 	{
@@ -71,8 +83,10 @@ public class Party
 
 		gridaligned = true;
 		obs = new ArrayList<AStarObstacle>();
-
-		noEncounterTimer = 0;
+		
+		inZoneList = new ArrayList<EncounterZone>();
+		
+		shadow = new Shadow(20, 10, 16, 200, 2.0f);
 	}	
 
 	public int getX() {return worldPos.x;}
@@ -94,8 +108,6 @@ public class Party
 		
 		allowMovement = am; 
 	}
-	
-
 	
 	public PlayerCharacter[] getPartyMembers(boolean includeAll)
 	{
@@ -379,13 +391,12 @@ public class Party
 	
 	public void openReactionBubble(ReactionBubble bubble, float duration, boolean loop)
 	{
-		Global.openReactionBubble(bubble, "party", new Point(worldPos.x, worldPos.y - 32), duration, loop);
+		Global.openReactionBubble(bubble, "party", new Point(worldPos.x, worldPos.y - 32 - shadow.getElevation()), duration, loop);
 	}
 	public void closeReactionBubble()
 	{
 		Global.closeReactionBubble("party");
 	}
-
 	
 	//gets character from party, null if character is not in party
 	public PlayerCharacter getCharacter(String name)
@@ -399,6 +410,10 @@ public class Party
 	
 	public void teleport(int x, int y)
 	{
+		for(EncounterZone ez : inZoneList)
+			ez.reset();		
+		inZoneList.clear();
+		
 		if(Global.map != null && Global.map.isLoaded())
 			Global.map.unloadTiles();
 		Global.setPanned(0, 0);
@@ -424,29 +439,39 @@ public class Party
 			if(c != null && !c.isDead())
 				annihilated = false;
 		
-		//check for encounters, start battle
-		if(!annihilated && noEncounterTimer++ > noEncounterBuffer)
-		{
-			List<EncounterZone> zones = new ArrayList<EncounterZone>();
+		//update enzonelist
+		for(EncounterZone zone : Global.map.encounterZones)
+		{	
+			//add new encounters
+			if(zone.getZone().contains(gridPos.x,  gridPos.y) && !inZoneList.contains(zone))
+				inZoneList.add(zone);
 			
-			for(EncounterZone zone : Global.map.encounterZones)
+			//remove exited
+			Iterator<EncounterZone> iter = inZoneList.iterator();
+			while (iter.hasNext()) 
 			{
-				if(zone.getZone().contains(gridPos.x, gridPos.y))
-					zones.add(zone);
+				EncounterZone ez = iter.next();
+
+			    if(!ez.getZone().contains(gridPos.x,  gridPos.y))
+			    {
+			    	ez.reset();
+			    	iter.remove();
+			    }
 			}
-			
-			if(zones.size() > 0)
-			{
-				String battle = zones.get(Global.rand.nextInt(zones.size())).getEncounter();
-				if(battle != null)
-				{
-					noEncounterTimer = 0;			
-					Global.beginBattle(battle, true);
-					return true;
-				}
-				
-			}		
 		}
+		
+		//check for encounters, start battle
+		if(!annihilated)
+			for(EncounterZone zone : inZoneList)
+				if(zone.checkForEncounters(encounterGrowth))
+				{
+					String battle = zone.getEncounter();
+					if(battle != null)
+					{		
+						Global.beginBattle(battle, true);
+						return true;
+					}					
+				}	
 		
 		return false;
 	}
@@ -607,12 +632,63 @@ public class Party
 			else
 				mapPath();
 		}
+		
+		
 	
 	}
 	
-	public void update()
+	public void setElevation(int pixels)
 	{
+		shadow.setElevation(pixels);
+	}
+	public void moveElevation(int pixels, float time)
+	{
+		moving = true;
+		elevationTime = time;
+		elevationTimer = System.currentTimeMillis();
+		startElevation = shadow.getElevation();
+		targetElevation = pixels;
+	}
+	public void setFloating(boolean floating, int periodLength, int intensity)
+	{
+		this.floating = floating;
+		this.floatPeriod = periodLength;
+		this.floatIntensity = intensity;
+		this.targetElevation = shadow.getElevation();
+		floatIndex = 0;
+
+	}
+	
+	private void updateElevation()
+	{		
+		Point vpCoords = Global.worldToVP(worldPos);
+		shadow.setPosition(vpCoords.x + 16, vpCoords.y + 16 - shadow.getElevation());
 		
+		if(moving)
+		{
+			float delta = (System.currentTimeMillis() - elevationTimer) / (elevationTime * 1000.0f);
+			
+			if(delta < 1.0f)
+				shadow.setElevation((int)(startElevation + (targetElevation - startElevation)*delta));
+			else
+			{
+				shadow.setElevation(targetElevation);
+				moving = false;				
+			}				
+		}	
+		else if(floating)
+		{			
+			double offset = Math.sin(floatIndex++*(2*Math.PI)/floatPeriod);
+			shadow.setElevation(targetElevation + (int)(offset*floatIntensity));			
+			
+		}
+			
+	}
+	
+ 	public void update()
+	{
+ 		updateElevation();
+ 		
 		//handle path waiting
 		if(objPathWaiting)
 		{
@@ -790,8 +866,10 @@ public class Party
 		updateAnimation();
 		if(!hide)
 		{
+			if(shadow.getElevation() > 0)
+				shadow.render();
 			Sprite spr = firstCharSpr;
-			spr.render(worldPos.x, worldPos.y, imageIndex);
+			spr.render(worldPos.x, worldPos.y - shadow.getElevation(), imageIndex);
 
 		}
 		

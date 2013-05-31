@@ -10,6 +10,7 @@ addAction (startBattle encounter false >
 addAction (restoreParty 0) >
 addAction (switchControl "pdoor4" false) >
 addAction (switchControl "pdoor3" false) >
+addAction (switchControl "guardasleep" false) >
 addAction (modifyInventory "prisonkey" 1 true) >
 addAction (fadeControl 1.0 255 0 0 0 true true) >
 addAction (teleportParty obj 15 5 "prisonb2") >
@@ -63,6 +64,9 @@ defaultguard obj name face1 face2
 defGuardState obj name face1
 defGuardState obj name face2 >
 addSwitchCondition "guardsturned"
+
+
+
 
 
 
@@ -147,6 +151,7 @@ name$18x12$ > defaultguard objName$18x12$ "down" "right"
 \runstate4$18x12$ <- state4$18x12$ 0
 \los1$18x12$ <- name$18x12$ > buildguardlosdown objName$18x12$ 18 12 5 0
 \los2$18x12$ <- name$18x12$ > buildguardlosright objName$18x12$ 18 12 8 1
+\los3$18x12$ <- name$18x12$ > buildguardlosright objName$18x12$ (18 > add 1) (12 > add 1) 7 1
 #!OBJ 22 7
 \objName$22x7$ <- "guard3"
 \name$22x7$ <- newObject objName$22x7$ 22 7
@@ -267,7 +272,7 @@ name$6x8$ > createState >
 setOptions true false false > 
 addAction (createPath "turnguard1" false "dW") >
 addAction (createPath "turnguard2" false "dW") >
-addAction (createPath "turnguard3" true "DW") >
+addAction (createPath "turnguard3" true "D") >
 addAction (openBubble "exclam" "turnguard1" 1.0 false false) >
 addAction (openBubble "exclam" "turnguard2" 1.0 false false) >
 defGuardActions name$6x8$ "turnguard3" "3guards"

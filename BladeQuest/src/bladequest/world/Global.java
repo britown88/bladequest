@@ -706,7 +706,8 @@ public class Global
     		{
     			map.playBGM(true);
     			GameState = States.GS_WORLDMOVEMENT; 
-    			//screenFader.fadeIn(10);
+    			if(fadeInAfterLoad)
+    				screenFader.fadeIn(2.0f);
     				
     			delay();
     		}
@@ -1996,9 +1997,12 @@ public class Global
 	}
 	
 	private static MapLoadThread mapLoadThread;
+	private static boolean fadeInAfterLoad;
 	
-	public static void LoadMap(String name)
+	public static void LoadMap(String name, boolean fadein)
 	{
+		fadeInAfterLoad = fadein;
+		
 		if(map != null)
 		{
 			map.clearObjectAction();
@@ -2029,7 +2033,7 @@ public class Global
 	public static void LoadMap(String name, ObjectState callingState)
 	{
 		mapChangeCallingState = callingState;
-		LoadMap(name);	
+		LoadMap(name, false);	
 		
 	}
 

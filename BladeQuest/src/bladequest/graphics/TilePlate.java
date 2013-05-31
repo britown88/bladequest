@@ -118,11 +118,11 @@ public class TilePlate
 		
 		empty = tiles.size() == 0;
 		
-		if(animBmp != null)
+		if(!empty)
 		{
-			Canvas canvas = new Canvas(animBmp.bmp);		
-			for(Tile t : tiles)
-				t.render(canvas, tileset, true);
+		Canvas canvas = new Canvas(animBmp.bmp);		
+		for(Tile t : tiles)
+			t.render(canvas, tileset, true);
 		}		
 	}
 	

@@ -2,6 +2,8 @@
 
 
 
+
+
 #!OBJ 0 0
 \name$0x0$ <- newObject "start" 0 0
 
@@ -23,7 +25,7 @@ addAction (createPath "guard1" true "sR") >
 addAction (wait 0.5) >
 addAction (message "Guard: \nYou're late.") >
 addAction (message "Guard: \nSorry, sir! \nIt won't happen again!") >
-addAction (createPath "guard1" true "DR2") >
+addAction (createPath "guard1" true "DR") >
 addAction (createPath "guard2" true "d") >
 addAction (createPath "guard1" true "RUl") >
 addAction (createPath "guard2" true "r") >

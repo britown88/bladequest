@@ -5,8 +5,10 @@ import java.util.Map;
 
 import bladequest.actions.Action;
 import bladequest.actions.actAnimation;
+import bladequest.actions.actElevation;
 import bladequest.actions.actExpectInput;
 import bladequest.actions.actFadeControl;
+import bladequest.actions.actFloat;
 import bladequest.actions.actGameOver;
 import bladequest.actions.actMerchant;
 import bladequest.actions.actMessage;
@@ -281,6 +283,14 @@ public class GameObjectLibrary
 	{		
 		Action act = new actRestoreParty();
 		return act;
+	}
+	public static Action changeElevation(String target, int pixels, float time, boolean wait)
+	{
+		return new actElevation(target, pixels, time, wait);
+	}
+	public static Action setFloating(String target, boolean startFloating, int period, int intensity)
+	{
+		return new actFloat(target, startFloating, period, intensity);
 	}
 	public static Action shakeControl(float duration, int intensity, boolean wait)
 	{		

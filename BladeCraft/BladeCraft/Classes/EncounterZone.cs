@@ -9,7 +9,7 @@ namespace BladeCraft.Classes
     public class EncounterZone
     {
         public List<string> encounters;
-        public int encounterRate;
+        public float encounterRate;
         public Rectangle zone;
 
         public EncounterZone()

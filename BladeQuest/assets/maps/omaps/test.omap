@@ -4,6 +4,7 @@
 
 
 
+
 #!OBJ 0 0
 \name$0x0$ <- newObject "start" 0 0
 
@@ -118,12 +119,12 @@ addAction (message "This tests the merchant screen.") >
 addAction (openMerchant "itemshop" 0.5)
 
 \runstate1$4x7$ <- state1$4x7$ 0
-#!OBJ 6 3
-\objName$6x3$ <- "name"
-\name$6x3$ <- newObject objName$6x3$ 6 3
+#!OBJ 8 3
+\objName$8x3$ <- "name"
+\name$8x3$ <- newObject objName$8x3$ 8 3
 
-state1$6x3$ 0
-name$6x3$ > createState >
+state1$8x3$ 0
+name$8x3$ > createState >
 setSpriteFromTile 1 2 >
 setCollisionData true true true true >
 addAction (message "The screen will now flash until you tap the screen.") >
@@ -135,4 +136,21 @@ addAction (expectInput 2.0 >
 	setBranchLoop 0 true) >
 addAction (message "This concludes the test.")
 
-\runstate1$6x3$ <- state1$6x3$ 0
+\runstate1$8x3$ <- state1$8x3$ 0
+#!OBJ 6 5
+\objName$6x5$ <- "floatyskull"
+\name$6x5$ <- newObject objName$6x5$ 6 5
+
+state1$6x5$ 0
+name$6x5$ > createState >
+setSpriteFromTile 1 2 >
+setCollisionData true true true true >
+addAction (changeElevation "floatyskull" 64 2.0 true) >
+addAction (setFloating "floatyskull" true 90 4) >
+addAction (changeElevation "party" 64 2.0 true) >
+addAction (setFloating "party" true 90 4)
+
+
+
+
+\runstate1$6x5$ <- state1$6x5$ 0
