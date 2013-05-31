@@ -127,15 +127,12 @@ public class SaveLoadMenu
 				{
 					Global.screenFader.clear();
 					Global.musicBox.play("", false, true, 0);
-					
-					boolean suppressBGM = false;
+
 					if(Global.saveLoader.save.playingSong != null)
-					{
 						Global.musicBox.play(Global.saveLoader.save.playingSong, false, true, 2.0f);
-						suppressBGM = true;
-					}
+	
 					
-					Global.LoadMap(Global.saveLoader.save.mapName, true, suppressBGM);
+					Global.LoadMap(Global.saveLoader.save.mapName, true);
 				}
 				
 				closed = true;
@@ -207,7 +204,7 @@ public class SaveLoadMenu
 					Global.saveLoader.readSaves(Global.activity);
 					buildPanels();
 					
-					showMessage("Game saved!", false);
+					showMessage("Game saved!", false);					
 					closeAfterMsg = true;
 				}			
 			}
@@ -230,6 +227,7 @@ public class SaveLoadMenu
 					{
 						Global.saveLoader.loadGame((Integer)menu.getSelectedEntry().obj);
 						Global.clearAnimations();
+						Global.musicBox.pause(1.0f);
 						showMessage("Game loaded!", false);
 						closeAfterMsg = true;
 					}

@@ -706,8 +706,7 @@ public class Global
     	case GS_LOADING:
     		if(mapLoadThread != null && mapLoadThread.isDone() && map != null)
     		{
-    			if(!suppressMapBGM)
-    				map.playBGM(true);
+    			map.playBGM(true);
     			GameState = States.GS_WORLDMOVEMENT; 
     			if(fadeInAfterLoad)
     				screenFader.fadeIn(2.0f);
@@ -2007,12 +2006,10 @@ public class Global
 	
 	private static MapLoadThread mapLoadThread;
 	private static boolean fadeInAfterLoad;
-	private static boolean suppressMapBGM;
 	
-	public static void LoadMap(String name, boolean fadein, boolean suppressBGM)
+	public static void LoadMap(String name, boolean fadein)
 	{
 		fadeInAfterLoad = fadein;
-		suppressMapBGM = suppressBGM;
 		
 		if(map != null)
 		{
@@ -2044,7 +2041,7 @@ public class Global
 	public static void LoadMap(String name, ObjectState callingState)
 	{
 		mapChangeCallingState = callingState;
-		LoadMap(name, false, false);	
+		LoadMap(name, false);	
 		
 	}
 
