@@ -13,6 +13,8 @@ public class Shadow implements Interpolatable {
 	int elevation;
 	int xNudge;
 	Point position;
+	int invisibleAt = 72;
+	float growSize = 2.5f;
 	
 	public Shadow(int width, int depth, int elevationAtCenter) {
 		elevation = 0;
@@ -21,6 +23,19 @@ public class Shadow implements Interpolatable {
 		this.elevationAtCenter = elevationAtCenter;
 		xNudge = 0;
 		position = new Point(0,0);
+		invisibleAt = 72;
+		growSize = 2.5f;
+	}
+	
+	public Shadow(int width, int depth, int elevationAtCenter, int invisibleAt, float growSize) {
+		elevation = 0;
+		this.width = width;
+		this.depth = depth;
+		this.elevationAtCenter = elevationAtCenter;
+		xNudge = 0;
+		position = new Point(0,0);
+		this.invisibleAt = invisibleAt;
+		this.growSize = growSize;
 	}
 
 	
@@ -31,6 +46,8 @@ public class Shadow implements Interpolatable {
 		this.elevation = elevation ;		
 		this.xNudge = xNudge;
 		this.position = position;
+		invisibleAt = 72;
+		growSize = 2.5f;
 	}
 
 	
@@ -106,8 +123,7 @@ public class Shadow implements Interpolatable {
 	}
 	public void render()
 	{
-		final int invisibleAt = 72;
-		final float growSize = 2.5f;
+		
 		
 		float t = elevation / (float)invisibleAt;
 		t = (float)Math.sqrt(t); //quadratic falloff...  tweakmeplz

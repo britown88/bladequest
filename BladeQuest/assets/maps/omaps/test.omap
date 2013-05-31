@@ -137,3 +137,17 @@ addAction (expectInput 2.0 >
 addAction (message "This concludes the test.")
 
 \runstate1$6x3$ <- state1$6x3$ 0
+#!OBJ 6 5
+\objName$6x5$ <- "name"
+\name$6x5$ <- newObject objName$6x5$ 6 5
+
+state1$6x5$ 0
+name$6x5$ > createState >
+setSpriteFromTile 1 2 >
+setCollisionData true true true true >
+addAction (changeElevation "party" 64 2.0 true) >
+addAction (setFloating "party" true 90 4)
+
+
+
+\runstate1$6x5$ <- state1$6x5$ 0

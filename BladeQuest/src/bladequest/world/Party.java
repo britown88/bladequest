@@ -9,6 +9,7 @@ import java.util.List;
 import android.graphics.Point;
 import android.graphics.Rect;
 import bladequest.graphics.ReactionBubble;
+import bladequest.graphics.Shadow;
 import bladequest.graphics.Sprite;
 import bladequest.graphics.Tile;
 import bladequest.pathfinding.AStarObstacle;
@@ -46,7 +47,6 @@ public class Party
 	private List<Item> inventory;
 	
 	private final float encounterGrowth = 0.975f; 
-	private float encounterChance;
 	private List<EncounterZone> inZoneList;
 	
 	
@@ -55,6 +55,15 @@ public class Party
 	
 	private long stepcount;
 	
+	private Shadow shadow;
+	private boolean moving, floating;
+	private int startElevation, targetElevation;
+	private float elevationTime;
+	private long elevationTimer;
+
+	private int floatIndex, floatPeriod, floatIntensity;
+	
+
 	
 	public Party(int x, int y) 
 	{
@@ -76,6 +85,8 @@ public class Party
 		obs = new ArrayList<AStarObstacle>();
 		
 		inZoneList = new ArrayList<EncounterZone>();
+		
+		shadow = new Shadow(20, 10, 16, 200, 2.0f);
 	}	
 
 	public int getX() {return worldPos.x;}
@@ -626,9 +637,58 @@ public class Party
 	
 	}
 	
-	public void update()
+	public void setElevation(int pixels)
 	{
+		shadow.setElevation(pixels);
+	}
+	public void moveElevation(int pixels, float time)
+	{
+		moving = true;
+		elevationTime = time;
+		elevationTimer = System.currentTimeMillis();
+		startElevation = shadow.getElevation();
+		targetElevation = pixels;
+	}
+	public void setFloating(boolean floating, int periodLength, int intensity)
+	{
+		this.floating = floating;
+		this.floatPeriod = periodLength;
+		this.floatIntensity = intensity;
+		this.targetElevation = shadow.getElevation();
+		floatIndex = 0;
+
+	}
+	
+	private void updateElevation()
+	{		
+		Point vpCoords = Global.worldToVP(worldPos);
+		shadow.setPosition(vpCoords.x + 16, vpCoords.y + 16 - shadow.getElevation());
 		
+		if(moving)
+		{
+			float delta = (System.currentTimeMillis() - elevationTimer) / (elevationTime * 1000.0f);
+			
+			if(delta < 1.0f)
+				shadow.setElevation((int)(startElevation + (targetElevation - startElevation)*delta));
+			else
+			{
+				shadow.setElevation(targetElevation);
+				moving = false;				
+			}				
+		}	
+		else if(floating)
+		{			
+			double offset = Math.sin(floatIndex++*(2*Math.PI)/floatPeriod);
+			shadow.setElevation(targetElevation + (int)(offset*floatIntensity));			
+			
+		}
+			
+	}
+	
+ 	public void update()
+	{
+ 		updateElevation();
+ 		
 		//handle path waiting
 		if(objPathWaiting)
 		{
@@ -806,8 +866,10 @@ public class Party
 		updateAnimation();
 		if(!hide)
 		{
+			if(shadow.getElevation() > 0)
+				shadow.render();
 			Sprite spr = firstCharSpr;
-			spr.render(worldPos.x, worldPos.y, imageIndex);
+			spr.render(worldPos.x, worldPos.y - shadow.getElevation(), imageIndex);
 
 		}
 		
