@@ -1,5 +1,6 @@
 package bladequest.actions;
 
+import bladequest.world.GameObject;
 import bladequest.world.Global;
 
 public class actElevation extends Action
@@ -21,8 +22,18 @@ public class actElevation extends Action
 	@Override
 	public void run()
 	{
-		Global.party.moveElevation(elevation, time);
 		startTime = System.currentTimeMillis();
+		if(target.equals("party"))
+			Global.party.moveElevation(elevation, time);
+		else
+		{
+			for(GameObject go : Global.map.Objects())
+				if(go.Name().equals(target))
+				{
+					go.moveElevation(elevation, time);
+					return;
+				}				
+		}		
 	}
 	
 	@Override

@@ -1,5 +1,6 @@
 package bladequest.actions;
 
+import bladequest.world.GameObject;
 import bladequest.world.Global;
 
 public class actFloat extends Action
@@ -19,7 +20,17 @@ public class actFloat extends Action
 	@Override
 	public void run()
 	{
-		Global.party.setFloating(startFloating, period, intensity);
+		if(target.equals("party"))
+			Global.party.setFloating(startFloating, period, intensity);
+		else
+		{
+			for(GameObject go : Global.map.Objects())
+				if(go.Name().equals(target))
+				{
+					go.setFloating(startFloating, period, intensity);
+					return;
+				}				
+		}	
 	}
 	
 	@Override

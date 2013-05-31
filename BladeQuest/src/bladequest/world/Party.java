@@ -391,7 +391,7 @@ public class Party
 	
 	public void openReactionBubble(ReactionBubble bubble, float duration, boolean loop)
 	{
-		Global.openReactionBubble(bubble, "party", new Point(worldPos.x, worldPos.y - 32), duration, loop);
+		Global.openReactionBubble(bubble, "party", new Point(worldPos.x, worldPos.y - 32 - shadow.getElevation()), duration, loop);
 	}
 	public void closeReactionBubble()
 	{

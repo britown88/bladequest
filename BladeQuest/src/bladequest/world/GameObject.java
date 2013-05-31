@@ -6,6 +6,7 @@ import java.util.List;
 import android.graphics.Point;
 import bladequest.actions.Action;
 import bladequest.graphics.ReactionBubble;
+import bladequest.graphics.Shadow;
 import bladequest.graphics.Tile;
 
 public class GameObject {
@@ -22,6 +23,14 @@ public class GameObject {
 	public boolean faceLocked = false;
 	public boolean hide = false;
 	
+	private Shadow shadow;
+	private boolean moving, floating;
+	private int startElevation, targetElevation;
+	private float elevationTime;
+	private long elevationTimer;
+
+	private int floatIndex, floatPeriod, floatIntensity;
+	
 	public GameObject(String name, int x, int y)
 	{
 		this.name = name;
@@ -34,6 +43,7 @@ public class GameObject {
 		target = gridPos;
 		
 		states = new ArrayList<ObjectState>();
+		shadow = new Shadow(20, 10, 16, 200, 2.0f);
 		
 	}
 	
@@ -55,9 +65,57 @@ public class GameObject {
 	public void addState(ObjectState state){states.add(state);}
 	
 	
+	public void setElevation(int pixels)
+	{
+		shadow.setElevation(pixels);
+	}
+	public void moveElevation(int pixels, float time)
+	{
+		moving = true;
+		elevationTime = time;
+		elevationTimer = System.currentTimeMillis();
+		startElevation = shadow.getElevation();
+		targetElevation = pixels;
+	}
+	public void setFloating(boolean floating, int periodLength, int intensity)
+	{
+		this.floating = floating;
+		this.floatPeriod = periodLength;
+		this.floatIntensity = intensity;
+		this.targetElevation = shadow.getElevation();
+		floatIndex = 0;
+
+	}
+	
+	private void updateElevation()
+	{		
+		Point vpCoords = Global.worldToVP(worldPos);
+		shadow.setPosition(vpCoords.x + 16, vpCoords.y + 16 - shadow.getElevation());
+		
+		if(moving)
+		{
+			float delta = (System.currentTimeMillis() - elevationTimer) / (elevationTime * 1000.0f);
+			
+			if(delta < 1.0f)
+				shadow.setElevation((int)(startElevation + (targetElevation - startElevation)*delta));
+			else
+			{
+				shadow.setElevation(targetElevation);
+				moving = false;				
+			}				
+		}	
+		else if(floating)
+		{			
+			double offset = Math.sin(floatIndex++*(2*Math.PI)/floatPeriod);
+			shadow.setElevation(targetElevation + (int)(offset*floatIntensity));			
+			
+		}
+			
+	}
+	
 	public void openReactionBubble(ReactionBubble bubble, float duration, boolean loop)
 	{
-		Global.openReactionBubble(bubble, name, new Point(worldPos.x, worldPos.y - 32), duration, loop);
+		Global.openReactionBubble(bubble, name, new Point(worldPos.x, worldPos.y - 32 - shadow.getElevation()), duration, loop);
 	}
 	public void closeReactionBubble()
 	{
@@ -203,7 +261,7 @@ public class GameObject {
 	
 	public void update()
 	{
-		
+		updateElevation();
 		updateState();
 		
 		if(states.get(currentState).isRunning())
@@ -286,7 +344,9 @@ public class GameObject {
 	{
 		if(!hide)
 		{
-			states.get(currentState).render(worldPos.x, worldPos.y);
+			if(shadow.getElevation() > 0)
+				shadow.render();
+			states.get(currentState).render(worldPos.x, worldPos.y - shadow.getElevation());
 
 		}
 			
