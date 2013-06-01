@@ -350,6 +350,8 @@ public class DebugScreen
 					Global.party.teleport(X.getValue(), Y.getValue());
 					
 					Global.pan(0, 0, 100);
+					Global.party.setElevation(0);
+					Global.party.setFloating(false, 0, 0);
 					Global.party.setAllowMovement(true);
 				}
 				break;

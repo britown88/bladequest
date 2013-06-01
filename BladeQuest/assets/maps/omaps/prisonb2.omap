@@ -4,6 +4,7 @@
 
 
 
+
 #!OBJ 0 0
 \name$0x0$ <- newObject "start" 0 0
 
@@ -12,7 +13,7 @@ name$0x0$ > createState >
 setOptions true false false > 
 setAutoStart true >
 addAction (wait 1.0) >
-addAction (panControl 0 10 100 false) >
+addAction (panControl 0 10 0.0 false) >
 addAction (openBubble "angry" "guard1" -1.0 true false) >
 addAction (fadeControl 2.0 255 0 0 0 false true) >
 addAction (createPath "guard2" true "sD5l") >
@@ -38,7 +39,7 @@ addAction (wait 0.5) >
 addAction (message "Guard: \nIf you need me I'll be asleep, so too bad.") >
 addAction (message "These long shifts are killing me.") >
 addAction (createPath "guard1" false "U9R3") >
-addAction (panControl 0 5 1 false) >
+addAction (panControl 0 5 3.0 false) >
 addAction (createPath "guard2" true "L7U4R7u") >
 addAction (switchControl "startgame" true) >
 addAction (createPath "sleepguard" true "u") >
@@ -46,7 +47,7 @@ addAction (wait 0.5) >
 addAction (message "Guard: \nHey, you.  You got a message from the warden.") >
 addAction (message "It says 'Tap the screen to move around,' whatever that means.") >
 addAction (playMusic "sneak" false true 5.0) >
-addAction (panControl 0 0 1 true) >
+addAction (panControl 0 0 5.0 true) >
 addAction (createPath "sleepguard" true "d")
 
 \runstate1$0x0$ <- state1$0x0$ 0

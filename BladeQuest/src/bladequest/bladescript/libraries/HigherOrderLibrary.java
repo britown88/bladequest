@@ -1,5 +1,6 @@
 package bladequest.bladescript.libraries;
 
+import android.util.Log;
 import bladequest.bladescript.LibraryWriter;
 import bladequest.bladescript.ParserException;
 import bladequest.bladescript.ScriptVar;
@@ -31,6 +32,7 @@ public class HigherOrderLibrary {
 				fn.apply(ScriptVar.toScriptVar(i));
 			} catch (ParserException e) {
 				e.printStackTrace();
+				Log.d("Parser", e.what());
 			}
 		}
 		return ScriptVar.toScriptVar(0);

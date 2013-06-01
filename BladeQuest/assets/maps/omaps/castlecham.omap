@@ -1,0 +1,125 @@
+#!HEAD
+
+
+
+
+
+#!OBJ 12 0
+createWindowObj x y
+\obj <- newObject "window" (12 > add x) y
+obj > createState >
+setSpriteFromTile x (19 > add y) >
+setLayer "Under"
+obj > createState >
+addSwitchCondition "glassshattered" >
+setSpriteFromTile (5 > add x) (19 > add y) >
+setLayer "Under"
+
+createWindowColumn x
+createWindowObj x > iterateBetween 0 5
+
+\name$12x0$ <- ([x] createWindowObj x > iterateBetween 0 5) > iterateBetween 0 5
+
+#!OBJ 0 0
+\objName$0x0$ <- "name"
+\name$0x0$ <- newObject objName$0x0$ 0 0
+
+state1$0x0$ 0
+name$0x0$ > createState >
+setOptions true false false >
+setAutoStart true >
+addAction (createPath "party" true "u") >
+addAction (message "|aramis|: \nLessee... \nHow does anyone find their way around here?") >
+addAction (createPath "party" true "ssU4") >
+addAction (playMusic "mystery" true true 2.0) >
+addAction (flash 0.5 255 255 0 0 true) >
+addAction (createPath "party" true "d") >
+addAction (message "|aramis|: \nWhoa, what?") >
+addAction (wait 0.5) >
+addAction (createPath "party" true "u") >
+addAction (wait 0.5) >
+addAction (openBubble "exclam" "party" 1.0 false true) >
+addAction (createPath "party" true "SSSSD2L2dss") >
+addAction (wait 1.0) >
+addAction (message "|aramis|: \nWhat are they doing over there??") >
+addAction (flash 1.0 255 255 0 0 true) >
+addAction (openBubble "exclam" "party" 1.0 false true) >
+addAction (changeElevation "party" 64 4.0 false) >
+addAction (setFloating "party" true 90 4) >
+addAction (message "|aramis|: \nWoah, hey, hold on a second!") >
+addAction (panControl 2 -11 5.0 true ) >
+addAction (switchControl "orbscene" true)
+
+\runstate1$0x0$ <- state1$0x0$ 0
+
+state2$0x0$ 0
+name$0x0$ > createState >
+addSwitchCondition "orbscene"
+
+\runstate2$0x0$ <- state2$0x0$ 0
+
+#!OBJ 12 6
+\objName$12x6$ <- "robeUL"
+\name$12x6$ <- newObject objName$12x6$ 12 6
+
+state1$12x6$ 0
+name$12x6$ > createState >
+setSprite "robe" >
+setFace "right"
+
+
+\runstate1$12x6$ <- state1$12x6$ 0
+#!OBJ 12 8
+\objName$12x8$ <- "robeLL"
+\name$12x8$ <- newObject objName$12x8$ 12 8
+
+state1$12x8$ 0
+name$12x8$ > createState >
+setSprite "robe" >
+setFace "right"
+
+
+\runstate1$12x8$ <- state1$12x8$ 0
+#!OBJ 16 6
+\objName$16x6$ <- "robeUR"
+\name$16x6$ <- newObject objName$16x6$ 16 6
+
+state1$16x6$ 0
+name$16x6$ > createState >
+setSprite "robe" >
+setFace "left"
+
+
+\runstate1$16x6$ <- state1$16x6$ 0
+#!OBJ 16 8
+\objName$16x8$ <- "robeLR"
+\name$16x8$ <- newObject objName$16x8$ 16 8
+
+state1$16x8$ 0
+name$16x8$ > createState >
+setSprite "robe" >
+setFace "left"
+
+
+\runstate1$16x8$ <- state1$16x8$ 0
+#!OBJ 14 6
+\objName$14x6$ <- "baligant"
+\name$14x6$ <- newObject objName$14x6$ 14 6
+
+state1$14x6$ 0
+name$14x6$ > createState >
+setSprite "robe"
+
+
+\runstate1$14x6$ <- state1$14x6$ 0
+#!OBJ 14 7
+\objName$14x7$ <- "orb"
+\name$14x7$ <- newObject objName$14x7$ 14 7
+
+state1$14x7$ 0
+name$14x7$ > createState >
+setSprite "orb" >
+setLayer "Above"
+
+
+\runstate1$14x7$ <- state1$14x7$ 0

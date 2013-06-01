@@ -162,7 +162,9 @@ public class Global
 	public static Point vpGridPos = new Point(0, 0);
 	private static Point vpPan = new Point(0, 0);
 	private static Point vpPanTarget = new Point(0, 0);
-	private static int vpPanSpeed = 0;
+	private static Point vpPanStart = new Point(0, 0);
+	private static float vpPanLength;
+	private static long panStartTime;
 	
 	public static int screenWidth = 0;
 	public static int screenHeight = 0;
@@ -461,17 +463,19 @@ public class Global
 		menu.close();
 	}
 	
-	public static void pan(int x, int y, int speed)
+	public static void pan(int x, int y, float length)
 	{
 		vpPanTarget = new Point(x*32, y*32);
-		vpPanSpeed = speed;
+		vpPanStart = new Point(vpPan);
+		vpPanLength = length;
+		panStartTime = System.currentTimeMillis();
 	}
 	
 	public static void setPanned(int x, int y)
 	{
 		vpPan = new Point(x*32, y*32);
 		vpPanTarget = new Point(x*32, y*32);
-		vpPanSpeed = 0;
+		vpPanLength = 0.0f;
 	}
 	
 	public static boolean isPanned()
@@ -502,19 +506,18 @@ public class Global
 			//update pan
 			if(!vpPan.equals(vpPanTarget))
 			{
-				Point panDelta = new Point(vpPanTarget.x - vpPan.x, vpPanTarget.y - vpPan.y);
-				if(panDelta.x > 0) panDelta.x = 1;if(panDelta.x < 0) panDelta.x = -1;
-				if(panDelta.y > 0) panDelta.y = 1;if(panDelta.y < 0) panDelta.y = -1;
+				float delta = (System.currentTimeMillis() - panStartTime) / (vpPanLength * 1000.0f);
 				
-				
-				vpPan.x += panDelta.x*vpPanSpeed;
-				vpPan.y += panDelta.y*vpPanSpeed;
-				
-				//snap
-				if(panDelta.x > 0 && vpPan.x > vpPanTarget.x) vpPan.x = vpPanTarget.x;
-				if(panDelta.x < 0 && vpPan.x < vpPanTarget.x) vpPan.x = vpPanTarget.x;
-				if(panDelta.y > 0 && vpPan.y > vpPanTarget.y) vpPan.y = vpPanTarget.y;
-				if(panDelta.y < 0 && vpPan.y < vpPanTarget.y) vpPan.y = vpPanTarget.y;
+				if(delta < 1.0)
+				{					
+					vpPan.x = (int)(vpPanStart.x + (vpPanTarget.x - vpPanStart.x) * delta);
+					vpPan.y = (int)(vpPanStart.y + (vpPanTarget.y - vpPanStart.y) * delta);
+				}
+				else
+				{
+					vpPan.x = vpPanTarget.x;
+					vpPan.y = vpPanTarget.y;
+				}
 			}
 			
 			//apply pan

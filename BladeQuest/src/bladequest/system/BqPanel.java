@@ -229,9 +229,17 @@ implements SurfaceHolder.Callback
     	
     	Global.map.renderBackground(loadList);    	    	
     	Global.target.render();  	
-    	Global.map.renderBackgroundObjs();  	
-    	Global.party.render();      	 
-    	Global.map.renderForeground(loadList);
+    	Global.map.renderBackgroundObjs();  
+    	if(Global.party.getElevation() <= 0)
+    	{
+    		Global.party.render();      	 
+        	Global.map.renderForeground(loadList);
+    	}
+    	else
+    	{    		     	 
+        	Global.map.renderForeground(loadList);
+        	Global.party.render(); 
+    	}    	
     	Global.map.renderForegroundObjs();
     	Global.renderReactionBubbles();
     	Global.renderAnimations();
