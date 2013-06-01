@@ -1,9 +1,7 @@
 package bladequest.actions;
 
 import bladequest.UI.MsgBox.YesNo;
-import bladequest.actions.Action;
-import bladequest.actions.Action.YesNoResult;
-import bladequest.world.*;
+import bladequest.world.Global;
 
 
 public class actMessage extends Action 

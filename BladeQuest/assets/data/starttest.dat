@@ -1,9 +1,10 @@
 #newgame start info for testing
 #Always do setmap last!
 startgame 0
-addStartCharacter "aramis" > setCharacterStartName "????"
-map addStartCharacter {"roland", "luc", "joy"}
+addStartCharacter "luc" > setCharacterStartName "????"
 setStartPosition 1 3
 setStartMap "test"
+
+#map addStartCharacter {"roland", "luc", "joy"}
 
 \start <- startgame 0

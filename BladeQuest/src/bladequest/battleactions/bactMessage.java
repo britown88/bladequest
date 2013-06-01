@@ -15,7 +15,7 @@ public class bactMessage extends BattleAction
 	@Override
 	public State run(BattleEventBuilder builder)
 	{
-		Global.battle.showMessage(message);
+	 	Global.battle.showMessage(message);
 		return State.Finished;			
 		
 	}

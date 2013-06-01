@@ -118,7 +118,7 @@ public class Script {
 			}
 			@Override
 			public ScriptVar invoke(List<ScriptVar> values)
-					throws BadTypeException {
+					throws ParserException {
 
 				Object[] objects = new Object[values.size()];
 				int argNum = 0;
@@ -132,13 +132,13 @@ public class Script {
 				try {
 					return ScriptVar.toScriptVar(method.invoke(null, objects));
 				} catch (IllegalArgumentException e) {
-					
+					e.printStackTrace();
 				} catch (IllegalAccessException e) {
-
+					e.printStackTrace();
 				} catch (InvocationTargetException e) {
-
+					e.printStackTrace();
 				}
-				return null;
+				throw new ParserException("Something very bad happened when invoking a function, check the stack trace printed first.");
 			}
 
 			@Override

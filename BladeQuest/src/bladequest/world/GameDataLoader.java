@@ -14,6 +14,7 @@ import bladequest.bladescript.ScriptVar;
 import bladequest.bladescript.ScriptVar.BadTypeException;
 import bladequest.bladescript.libraries.BattleLibrary;
 import bladequest.bladescript.libraries.CharacterLibrary;
+import bladequest.bladescript.libraries.EncounterLibrary;
 import bladequest.bladescript.libraries.EnemyLibrary;
 import bladequest.bladescript.libraries.GameStartLibrary;
 import bladequest.bladescript.libraries.GraphicsLibrary;
@@ -77,6 +78,7 @@ public class GameDataLoader
 		EnemyLibrary.publishLibrary(library);
 		GameStartLibrary.publishLibrary(library);
 		MathLibrary.publishLibrary(library);
+		EncounterLibrary.publishLibrary(library);
 		
 		return library.getLibrary();
 	}
@@ -95,8 +97,8 @@ public class GameDataLoader
 		Global.compileScript("data/items.dat", standardLibrary);
 		Global.compileScript("data/enemies.dat", standardLibrary);
 		Global.compileScript("data/characters.dat", standardLibrary);
+		Global.compileScript("data/encounters.dat", standardLibrary);
 		
-		loadFile(Global.activity, "data/battles.dat");
 		loadFile(Global.activity, "data/merchants.dat");
 		
 		Log.d(TAG, "Loading maps.");Global.loadMaps("maps");

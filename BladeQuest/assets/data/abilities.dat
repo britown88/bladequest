@@ -101,17 +101,17 @@ recruitBroKick ability power damageType offset
 
 \recruit2 <- (addAbility "specialmegakick" "Special Mega Kick" "Single" 0 >
 add (waitAction 450) >
-addDep (damageAction 0.75 "Physical")  >
+addDep (damageAction 1.2 "Physical")  >
 add (barrelRollAction 600))
 
 \recruit3 <- (addAbility "climacticfinisher" "Climactic Finisher" "Single" 0 >
 add (messageAction "Recruit: \nYou won't see THIS coming!") >
-addDep (basicAttackActionWithAccuracy 1.0 "Physical" 3.0 "ReplaceEvade" 0.7))
+addDep (basicAttackActionWithAccuracy 1.4 "Physical" 3.0 "ReplaceEvade" 0.7))
 
 
 \recruit4 <- (addAbility "dynamosupernova" "Dynamo Supernova" "Single" 0 >
 add (specialMirroringAction true) >
-(\recruit4sub <- ([ability offset] recruitBroKick ability 0.15 "Physical" offset)) 270 >
+(\recruit4sub <- ([ability offset] recruitBroKick ability 0.75 "Physical" offset)) 270 >
 recruit4sub  540 >
 recruit4sub  810 >
 recruit4sub  1080 >

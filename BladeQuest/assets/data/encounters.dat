@@ -1,0 +1,104 @@
+inheritEncounter x
+  createEncounter x "inherit"
+
+\errybodyEncounter <- (inheritEncounter "errybody" >
+addEnemy "rat" 150 96 >
+addEnemy "bat" 100 96 >
+addEnemy "guard" 50 96 >
+addEnemy "recruit" 200 96 >
+addEnemy "hawk" 50 158 >
+addEnemy "spud" 100 158 >
+addEnemy "leafbunny" 150 158 >
+addEnemy "satyr" 200 158)
+
+#
+\SPUDSEncounter <- (inheritEncounter "SPUDS" >
+addEnemy "spud" 0 100  >
+addEnemy "spud" 50 100 >
+addEnemy "spud" 100 100 >
+addEnemy "spud" 150 100 >
+addEnemy "spud" 200 100 >
+addEnemy "spud" -30 120 >
+addEnemy "spud" 20 120 >
+addEnemy "spud" 70 120 >
+addEnemy "spud" 120 120 >
+addEnemy "spud" 170 120 >
+addEnemy "spud" 220 120 >
+addEnemy "spud" -10 140 >
+addEnemy "spud" 40 140 >
+addEnemy "spud" 90 140 >
+addEnemy "spud" 140 140 >
+addEnemy "spud" 190 140 >
+addEnemy "spud" 240 140 >
+addEnemy "spud" -40 160 >
+addEnemy "spud" 10 160 >
+addEnemy "spud" 60 160 >
+addEnemy "spud" 110 160 >
+addEnemy "spud" 160 160 >
+addEnemy "spud" 210 160 >
+addEnemy "spud" 260 160 >
+addEnemy "spud" -20 180 >
+addEnemy "spud" 30 180 >
+addEnemy "spud" 80 180 >
+addEnemy "spud" 130 180 >
+addEnemy "spud" 180 180 >
+addEnemy "spud" 230 180 >
+addEnemy "spud" 280 180 >
+addEnemy "spud" 0 200 >
+addEnemy "spud" 50 200 >
+addEnemy "spud" 100 200 >
+addEnemy "spud" 150 200 >
+addEnemy "spud" 200 200 >
+addEnemy "spud" 250 200 >
+addEnemy "spud" 300 200)
+
+\TwoRatsEncounter <- (inheritEncounter "2rats" >
+addEnemy "rat" 150 96 >
+addEnemy "rat" 100 158)
+
+
+\RatEncounter <- (inheritEncounter "rat" >
+addEnemy "rat" 128 128)
+
+\BatEncounter <- (inheritEncounter "bat" >
+addEnemy "bat" 128 128)
+
+\guardEncounter <- (inheritEncounter "guard" >
+addEnemy "guard" 128 128 >
+disableRunning)
+
+fireHalfHPTrigger trigger enemy fn
+  setSwitchCondition trigger false
+  fn enemy
+
+onHalfHP enemy fn
+  \triggerRun <- (createSwitchCondition true)
+  createTrigger {triggerRun, getOnDamagedEvent enemy} (
+  [trigger] (|(enemy > getHP) > less (enemy > getStat "MaxHP" > divide 2)
+  | equals true : fireHalfHPTrigger triggerRun enemy fn
+  | equals false : ""
+  ))
+
+writeRecruitTaunt recruit
+addNextAbility recruit recruit (
+  temporaryAbility "" "" "Single" 0 > 
+  add  (messageAction"|aramis|: \nDid you name these moves yourself?") >
+  add  (messageAction"Recruit: \nSHUT UP!!!!!!!"))
+
+onRecruitBattleStart battle  
+\recruit <- (getEncounter battle > getEncounterEnemy 0)
+onHalfHP recruit ([enemy] writeRecruitTaunt enemy)
+
+\RecruitEncounter <- (inheritEncounter "recruit" >
+addEnemy "recruit" 128 128 >
+onEncounterBegin onRecruitBattleStart >
+disableRunning)
+
+\ThreeGuardsEncounter <- (inheritEncounter "3guards" >
+addEnemy "guard" 128 78 >
+addEnemy "guard" 68 128 >
+addEnemy "guard" 128 178 >
+disableRunning)
+
+
+

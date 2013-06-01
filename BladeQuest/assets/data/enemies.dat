@@ -34,8 +34,8 @@ addBiteOnlyState enemy
 
 RandomRecruitAction e decision
    setAbility decision (|randomRoll 100
-    |greater 33  : (e > getEnemyAbility "specialmegakick")
-    |greater 66  : (e > getEnemyAbility "dynamosupernova")
+    |greater 33  : (e > getEnemyAbility "climacticfinisher")
+    |greater 66  : (e > getEnemyAbility "climacticfinisher")
     |greater 100 : (e > getEnemyAbility "climacticfinisher")
    )
 
@@ -137,8 +137,10 @@ setEShadow (createShadow 34 12 30 > addElevation 16))
 #
 \recruit <- (addEnemy "recruit" "Recruit" "recruit" >
 addDefaultSwordHit >
-setEBaseStats 10 0 0 0 >
-setELevel 7 >
+setEBaseStats 10 10 10 10 >
+setELevel 8 >
+modStat "BattlePower" -3 >
+modStat "MaxHP" 150 >
 setGold 250 >
 setBoss >
 setItems "potion" 100 "silversword" 100 true >

@@ -62,7 +62,7 @@ public class PlayerCharacter
 	private CombatAction combAction;
 	
 	private List<StatusEffect> statusEffects;
-	private List<Ability> abilities;
+	protected List<Ability> abilities;
 	private List<LearnableAbility> learnableAbilities;
 	
 	private BattleEventBuilderObject battleEventBuilderObj;
