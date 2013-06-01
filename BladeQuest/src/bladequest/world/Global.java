@@ -1114,6 +1114,29 @@ public class Global
 			
 		};
 	}
+	public static AnimatedBitmap getReactionAnger()
+	{
+		return new AnimatedBitmap()	
+		{
+			BitmapFrame[] frames;
+			{
+				final int height = 32;
+				final int width = 16;
+				
+				frames = new BitmapFrame[4];
+				for (int i = 0; i < frames.length; ++i)
+				{
+					frames[i] = new BitmapFrame(bitmaps.get("reactionbubbles"),new Rect((i+7)*width, 0, (i+8)*width, height));
+				}
+			}
+			@Override
+			public BitmapFrame[] getFrames() {
+				return frames;
+			}
+			
+		};
+	}
+	
 	
 	public static AnimationBuilder getIceBarrage()
 	{

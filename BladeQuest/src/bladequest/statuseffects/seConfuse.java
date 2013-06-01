@@ -58,7 +58,7 @@ public class seConfuse extends StatusEffect
 		
 		//50% chance of using an ability...
 		List<Ability> abilities = affected.getAbilities();
-		if (Global.rand.nextInt(100) < 50 && !abilities.isEmpty())
+		if (Global.rand.nextInt(100) < 50 && !abilities.isEmpty() && !affected.muted())
 		{
 			Ability a = abilities.get(Global.rand.nextInt(abilities.size()));
 			if (a.isEnabled())

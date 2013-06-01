@@ -30,6 +30,7 @@ public abstract class StatusEffect
 	public boolean removesOnDeath() { return removeOnDeath; }
 	public boolean isCurable() { return curable; }
 	public boolean isBattleOnly() {return battleOnly;}
+	public boolean mutes() {return false;}
 	public String Name() { return name; }
 	
 	

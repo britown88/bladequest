@@ -234,6 +234,14 @@ public class PlayerCharacter
 		else
 			return Math.min(255, stats[stat]);
 	}		
+	public boolean muted()
+	{
+		for (StatusEffect se : statusEffects)
+		{
+			if (se.mutes()) return true;
+		}
+		return false;
+	}
 	public void modStat(int stat, int amt)
 	{
 		statMods[stat] += amt;

@@ -102,7 +102,7 @@ public class Battle
 	
 	//event stuff
 	public ObserverUpdatePool<Condition> updatePool;
-	private Event startTurn, onSelectStart;
+	private Event startTurn, onSelectStart, damageDealt;
 	
 	
 	
@@ -656,6 +656,7 @@ public class Battle
 		this.allowGameOver = allowGameOver;
 		startTurn = new Event();
 		onSelectStart = new Event();
+		damageDealt = new Event();
 		
 		stateMachine.setState(getStartState());
 		this.encounter = new Encounter(Global.encounters.get(encounter));
@@ -1085,6 +1086,71 @@ public class Battle
 		}
 		return true;
 	}
+	private static class MoveReselecter implements PlayerBattleActionSelect
+	{
+
+		private enum SetType
+		{
+			Unset, Skipped, Attacking, Ability
+		}
+		SetType setType;
+		BattleEvent replaceEvent;
+		int eventNumber;
+		Battle battle;
+		
+		MoveReselecter(BattleEvent replaceEvent, int eventNumber, Battle battle)
+		{
+			setType = SetType.Unset;
+			this.replaceEvent = replaceEvent;
+			this.eventNumber = eventNumber;
+			this.battle = battle;
+		}
+		
+		@Override
+		public void skipPlayerInput() {
+			setType = SetType.Skipped;
+			replaceEvent.interrupt();
+			battle.battleEvents.remove(replaceEvent);
+		}
+
+		@Override
+		public PlayerCharacter getPlayer() {
+			return replaceEvent.getSource();
+		}
+
+		@Override
+		public void setUseAbility(Ability ability,
+				List<PlayerCharacter> targets) {
+			battle.battleEvents.add(eventNumber, new BattleEvent(Action.Ability, ability, replaceEvent.getSource(), targets,  battle.markers));
+			skipPlayerInput();		
+			setType = SetType.Ability;
+		}
+
+		@Override
+		public void setAttack(PlayerCharacter target) {
+			List<PlayerCharacter> targets = new ArrayList<PlayerCharacter>();
+			targets.add(target);
+			battle.battleEvents.add(eventNumber, new BattleEvent(Action.Attack, null, replaceEvent.getSource(), targets,  battle.markers));
+			skipPlayerInput();		
+			setType = SetType.Attacking;
+		}
+
+		@Override
+		public boolean isSkipped() {
+			return setType == SetType.Skipped;
+		}
+
+		@Override
+		public boolean isAbilitySet() {
+			return setType == SetType.Ability;
+		}
+
+		@Override
+		public boolean isAttackSet() {
+			return setType == SetType.Attacking;
+		}
+		
+	}
 	public PlayerBattleActionSelect resetPlayerAction(PlayerCharacter c)
 	{
 		int argNum = 0;
@@ -1095,47 +1161,11 @@ public class Battle
 				++argNum;
 				continue;
 			}
-			if (b.getSource() == c  && !b.isSpecial()) return new PlayerBattleActionSelect()
-			{
-
-				BattleEvent replaceEvent;
-				int eventNumber;
-				PlayerBattleActionSelect initialize(BattleEvent replaceEvent, int eventNumber)
-				{
-					this.replaceEvent = replaceEvent;
-					this.eventNumber = eventNumber;
-					return this;
-				}
-				
-				@Override
-				public void skipPlayerInput() {
-					replaceEvent.interrupt();
-					battleEvents.remove(replaceEvent);
-				}
-
-				@Override
-				public PlayerCharacter getPlayer() {
-					return replaceEvent.getSource();
-				}
-
-				@Override
-				public void setUseAbility(Ability ability,
-						List<PlayerCharacter> targets) {
-					battleEvents.add(eventNumber, new BattleEvent(Action.Ability, ability, replaceEvent.getSource(), targets,  markers));
-					skipPlayerInput();					
-				}
-
-				@Override
-				public void setAttack(PlayerCharacter target) {
-					List<PlayerCharacter> targets = new ArrayList<PlayerCharacter>();
-					targets.add(target);
-					battleEvents.add(eventNumber, new BattleEvent(Action.Attack, null, replaceEvent.getSource(), targets,  markers));
-					skipPlayerInput();										
-				}
-				
-			}.initialize(b, argNum);
+			
+			if (b.getSource() == c  && !b.isSpecial()) return new MoveReselecter(b, argNum, this);
 			++argNum;
 		}
+			 
 		return null;		
 	}
 	private void nextActorInit()
@@ -1457,6 +1487,9 @@ public class Battle
 		PlayerCharacter getPlayer();
 		void setUseAbility(Ability ability, List<PlayerCharacter> targets);
 		void setAttack(PlayerCharacter target);
+		boolean isSkipped();
+		boolean isAbilitySet();
+		boolean isAttackSet();
 	}
 	
 	private PlayerBattleActionSelect actionSetter; 
@@ -1464,6 +1497,10 @@ public class Battle
 	{
 		return onSelectStart;
 	}
+	public Event getOnDamageDealt()
+	{
+		return damageDealt;
+	}	
 	public PlayerBattleActionSelect getActionSetter()
 	{
 		return actionSetter;
@@ -1501,6 +1538,18 @@ public class Battle
 			forceAttack = true;
 			targets = new ArrayList<PlayerCharacter>();
 			targets.add(target);
+		}
+		@Override
+		public boolean isSkipped() {
+			return inputSkipped;
+		}
+		@Override
+		public boolean isAbilitySet() {
+			return forceAbility != null;
+		}
+		@Override
+		public boolean isAttackSet() {
+			return forceAttack == true;
 		}			
 	};
 

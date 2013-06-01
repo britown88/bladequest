@@ -31,13 +31,16 @@ public class bactDamage extends BattleAction
 		DamageReturnType returnType;
 		List<DamageComponent> componentTypes;
 		DamageTypes damageType;
+		PlayerCharacter attacker, defender;
 		
-		TriggerDamageBuilder(int damage, DamageReturnType returnType, List<DamageComponent> componentTypes, DamageTypes damageType)
+		TriggerDamageBuilder(PlayerCharacter attacker, PlayerCharacter defender, int damage, DamageReturnType returnType, List<DamageComponent> componentTypes, DamageTypes damageType)
 		{
 			this.damage = damage;
 			this.returnType = returnType;
 			this.componentTypes = componentTypes;			
 			this.damageType = damageType;
+			this.attacker = attacker;
+			this.defender = defender;
 		}
 		
 		@Override
@@ -68,6 +71,16 @@ public class bactDamage extends BattleAction
 		@Override
 		public DamageTypes getDamageType() {
 			return damageType;
+		}
+
+		@Override
+		public PlayerCharacter getAttacker() {
+			return attacker;
+		}
+
+		@Override
+		public PlayerCharacter getDefender() {
+			return defender;
 		}
 		
 	};
@@ -104,11 +117,12 @@ public class bactDamage extends BattleAction
 		{			
 			int dmg = BattleCalc.calculatedDamage(attacker, t, power, type, damageComponents, customMiss, accuracyType);
 			
-			TriggerDamageBuilder triggerSettings = new TriggerDamageBuilder(dmg, BattleCalc.getDmgReturnType(), damageComponents, type); 
+			TriggerDamageBuilder triggerSettings = new TriggerDamageBuilder(attacker, t, dmg, BattleCalc.getDmgReturnType(), damageComponents, type); 
 	
 			triggerDamageBuilder = triggerSettings; 
 			//CALLS GENERIC CODE OH SHIT OH FUCK TRIGGER WARNING
 			t.getOnDamagedEvent().trigger();
+			Global.battle.getOnDamageDealt().trigger();
 			//WARNING WARNING DANGER DANGER GAME STATE DESTROYED					
 			
 			

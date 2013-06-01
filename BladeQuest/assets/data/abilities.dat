@@ -114,7 +114,7 @@ addDep (inflictStatusAction (regenStatus 4 10 4)))
 \maddeningeyes <- (addAbility "maddeningeyes" "Maddening Eyes" "Single" 2 >
 add (\defWait <- waitAction 450) >
 addDep (flashAction 0.5f 235 255 0 0) >
-addDep (inflictStatusAction (confuseStatus 2)))
+addDep (inflictStatusAction (beserkStatus 2)))
 
 
 ###########HAWK##########################
