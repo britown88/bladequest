@@ -34,8 +34,8 @@ addBiteOnlyState enemy
 
 RandomRecruitAction e decision
    setAbility decision (|randomRoll 100
-    |greater 33  : (e > getEnemyAbility "climacticfinisher")
-    |greater 66  : (e > getEnemyAbility "climacticfinisher")
+    |greater 33  : (e > getEnemyAbility "specialmegakick")
+    |greater 66  : (e > getEnemyAbility "dynamosupernova")
     |greater 100 : (e > getEnemyAbility "climacticfinisher")
    )
 
