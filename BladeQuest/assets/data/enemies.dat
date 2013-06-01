@@ -129,7 +129,7 @@ LeafyBunnyAI enemy
    enemy > setEnemyAI (
            createAI "useDrain" (createAIState ([e decision]
                 (|randomRoll 100 
-                 |greater 40   : "" #do nothing, just attack
+                 |greater 50   : "" #do nothing, just attack
                  |greater 65   : decision > setAbility (e > getEnemyAbility "maddeningeyes") 
            		 |greater 100  : decision > setAbility (e > getEnemyAbility "leafygreens")
            ))))
