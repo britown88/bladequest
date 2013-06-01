@@ -10,6 +10,7 @@ import bladequest.UI.MenuPanel.Anchors;
 import bladequest.UI.SaveLoadMenu;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.Scene;
+import bladequest.sound.BladeSong;
 import bladequest.system.DataLoadThread;
 
 
@@ -84,7 +85,7 @@ public class TitleScreen
 		case Company:
 			break;
 		case GameLogo:	
-			Global.musicBox.play(openingSong, true, true, 0);
+			BladeSong.instance().play(openingSong, true, true, 0);
 			playingAnim = Global.playAnimation("title", null, null);
 			break;
 		case CompanyTransition:
@@ -114,7 +115,7 @@ public class TitleScreen
 			menu.close();
 			Global.screenFader.setFadeColor(255, 0, 0, 0);
 			Global.screenFader.fadeOut(3.0f);
-			Global.musicBox.pause(3.0f);
+			BladeSong.instance().fadeOut(3.0f);
 			break;
 		default:
 			break;
@@ -142,7 +143,7 @@ public class TitleScreen
 	private void close()
 	{
 		Global.screenFader.setFadeColor(255, 0, 0, 0);
-		Global.musicBox.play("", false, true, 0);
+		BladeSong.instance().play("", false, true, 0);
 		whitescene.unload();
 		Global.clearAnimations();
 	}
@@ -325,8 +326,8 @@ public class TitleScreen
 		case GameLogo:	
 			if(!skippedIntro)
 			{
-				Global.musicBox.play("", false, true, 0);
-				Global.musicBox.play(openingSong, false, true, 0);
+				//BladeSong.instance().play("", false, true, 0);
+				BladeSong.instance().play(openingSong, false, true, 0);
 				
 			}
 			changeState(TitleStates.Menu);	

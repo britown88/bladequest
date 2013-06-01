@@ -6,6 +6,7 @@ import android.graphics.Paint.Align;
 import android.graphics.Rect;
 import bladequest.UI.ListBox.LBStates;
 import bladequest.UI.MsgBox.YesNo;
+import bladequest.sound.BladeSong;
 import bladequest.system.GameSave;
 import bladequest.world.PlayerCharacter;
 import bladequest.world.Global;
@@ -126,12 +127,8 @@ public class SaveLoadMenu
 				if(saveLoad == LOADING && Global.saveLoader.save != null)
 				{
 					Global.screenFader.clear();
-					Global.musicBox.play("", false, true, 0);
+					BladeSong.instance().play("", false, true, 0);
 
-					if(Global.saveLoader.save.playingSong != null)
-						Global.musicBox.play(Global.saveLoader.save.playingSong, false, true, 2.0f);
-	
-					
 					Global.LoadMap(Global.saveLoader.save.mapName, true);
 				}
 				
@@ -227,7 +224,8 @@ public class SaveLoadMenu
 					{
 						Global.saveLoader.loadGame((Integer)menu.getSelectedEntry().obj);
 						Global.clearAnimations();
-						Global.musicBox.pause(1.0f);
+						//Global.musicBox.pause(1.0f);
+						BladeSong.instance().fadeOut(1.0f);
 						showMessage("Game loaded!", false);
 						closeAfterMsg = true;
 					}

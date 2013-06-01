@@ -1,7 +1,6 @@
 package bladequest.actions;
 
-import bladequest.actions.Action;
-import bladequest.world.*;
+import bladequest.sound.BladeSong;
 
 
 public class actPlayMusic extends Action 
@@ -23,13 +22,13 @@ public class actPlayMusic extends Action
 	@Override
 	public void run()
 	{
-		Global.musicBox.play(song, playIntro, loop, fadeTime);
+		BladeSong.instance().play(song, playIntro, loop, fadeTime);
 	}
 	
 	@Override
 	public boolean isDone()
 	{
-		return loop || Global.musicBox.isDone();
+		return loop || BladeSong.instance().getCurrentSong().equals("");  //only true when no longer playing anything.
 	}
 
 }

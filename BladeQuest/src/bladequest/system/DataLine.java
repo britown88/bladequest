@@ -27,6 +27,10 @@ public class DataLine
 		}while(s.length() > 0);
 		
 	}
+	public String getLine()
+	{
+		return line;
+	}
 	
 	private String readWord()
 	{

@@ -2,20 +2,29 @@ package bladequest.system;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.graphics.Point;
 import android.util.Log;
+import bladequest.serialize.DeserializeFactory;
+import bladequest.serialize.Deserializer;
+import bladequest.serialize.Serializable;
+import bladequest.serialize.Serializer;
+import bladequest.statuseffects.StatusEffect;
+import bladequest.statuseffects.seKO;
+import bladequest.statuseffects.sePoison;
+import bladequest.world.Ability;
 import bladequest.world.Global;
-import bladequest.world.PlayerCharacter;
 import bladequest.world.Item;
+import bladequest.world.Merchant;
 import bladequest.world.Party;
 import bladequest.world.PlayTimer;
+import bladequest.world.PlayerCharacter;
 import bladequest.world.Stats;
-import bladequest.world.Ability;
-import bladequest.world.Merchant;
-import bladequest.statuseffects.*;
 
 public class GameSaveLoader 
 {
@@ -28,10 +37,29 @@ public class GameSaveLoader
 	private PlayerCharacter c;
 	
 	public GameSave save;
+		
+	public Map<String, DeserializeFactory> factories;
+	public List<Serializable> objects;
 	
 	public GameSaveLoader()
 	{
 		saves = new ArrayList<GameSave>();
+		factories = new HashMap<String, DeserializeFactory>();
+		objects = new ArrayList<Serializable>();
+	}
+	
+	public void registerFactory(String tag, DeserializeFactory factory)
+	{
+		factories.put(tag, factory);
+	}
+	
+	public void register(Serializable serializable)
+	{
+		objects.add(serializable);
+	}
+	public void unregister(Serializable serializable)
+	{
+		objects.remove(serializable);
 	}
 	
 	public boolean hasSaves()
@@ -42,6 +70,110 @@ public class GameSaveLoader
 	public List<GameSave> getSaves() { return saves; }
 	
 	public void deleteSave(int index) { saves.remove(index); }
+	
+	private class SaveSerializer implements Serializer
+	{
+		SaveSerializer(GameSave currentSave)
+		{
+			this.currentSave = currentSave; 
+		}
+		GameSave currentSave;
+		@Override
+		public void startObject(String tag) {
+			currentSave.serializedString.append(" ");
+			currentSave.serializedString.append("\"");
+			currentSave.serializedString.append(tag);
+			currentSave.serializedString.append("\"");
+		}
+		public void write(String data) {
+			currentSave.serializedString.append(" ");
+			currentSave.serializedString.append("\"");
+			currentSave.serializedString.append(data);
+			currentSave.serializedString.append("\"");
+		}
+
+		public void write(int data) {
+			currentSave.serializedString.append(" ");
+			currentSave.serializedString.append(data);
+		}
+
+		public void write(float data) {
+			currentSave.serializedString.append(" ");
+			currentSave.serializedString.append(data);
+		}
+
+		@Override
+		public void endObject() {
+		}
+		
+	}
+	private class SaveDeserializer implements Deserializer
+	{
+		SaveDeserializer(String deserializedData)
+		{
+			data = deserializedData.toCharArray();
+			skipAhead();
+		}
+		public boolean atEnd()
+		{
+			return index == data.length;
+		}
+		private void skipAhead()
+		{
+			if (!atEnd())
+			{
+				++index;
+			}
+		}
+		char[] data;
+		int index;
+		@Override
+		public Object readObject() {
+			DeserializeFactory factory = factories.get(readString());
+			return factory.deserialize(this);
+		}
+
+		@Override
+		public String readString() {
+			StringBuilder builder = new StringBuilder();
+			while (data[index] != '\"')
+			{
+				if (data[index] == '\\')
+				{
+					++index;
+				}
+				builder.append(data[index]);
+				++index;
+			}
+			skipAhead();
+			skipAhead();
+			return builder.toString();
+		}
+
+		@Override
+		public int readInt() {
+			StringBuilder builder = new StringBuilder();
+			while (data[index] != ' ')
+			{
+				builder.append(data[index++]);
+			}
+			skipAhead();
+			return Integer.parseInt(builder.toString());
+		}
+
+		@Override
+		public float readFloat() {
+			StringBuilder builder = new StringBuilder();
+			while (data[index] != ' ')
+			{
+				builder.append(data[index++]);
+			}
+			skipAhead();
+			return Float.parseFloat(builder.toString());
+		}
+		
+	}
+	
 	
 	public void saveGame(int index)
 	{
@@ -73,8 +205,8 @@ public class GameSaveLoader
 			if(m.limQtyChanged())
 				save.merchantLimitedQtyItems.put(m.getName(), m.getLimQtyItems());			
 		
-		if(Global.map.BGM().equals("inherit"))
-			save.playingSong = Global.musicBox.getPlayingSong();
+		//if(Global.map.BGM().equals("inherit"))
+		//	save.playingSong = Global.musicBox.getPlayingSong();
 		
 		for(Map.Entry<String, Boolean> entry : Global.switches.entrySet())
 			save.switches.put(entry.getKey(), entry.getValue());
@@ -84,12 +216,20 @@ public class GameSaveLoader
 			it.setCount(i.getCount());
 			save.items.add(it);
 		}
+		
 			
 		for(PlayerCharacter c : Global.party.getPartyMembers(true))
 			if(c != null)
 				save.characters.add(new PlayerCharacter(c));	
 			else
 				save.characters.add(null);
+		
+		Serializer serialize = new SaveSerializer(save);
+		for (Serializable obj : objects)
+		{
+			obj.serialize(serialize);
+		}
+		
 		
 		if(index >= saves.size())
 			saves.add(0, save);
@@ -135,6 +275,15 @@ public class GameSaveLoader
 		int i = 0;
 		for(PlayerCharacter c : save.characters)
 			Global.party.insertCharacter(c, i++);	
+		
+		SaveDeserializer deserializer = new SaveDeserializer(save.serializedString.toString());
+		
+		while (!deserializer.atEnd())
+		{
+			//read top-level objects until all are loaded. 
+			//note the return is ignored here: we're assuming top-level objects at this point know how to "find their way home."
+			deserializer.readObject(); 
+		}
 		
 		Global.loading = true;
 		
@@ -219,7 +368,8 @@ public class GameSaveLoader
 					str += "\nendcharacter\n";	
 				}
 				++index;							
-			}			
+			}		
+			str += "serializestring " + gs.serializedString.toString();
 			str += "endsave\n";			
 		}
 		
@@ -401,6 +551,11 @@ public class GameSaveLoader
 		else if(dl.item.equals("endcharacter"))
 		{
 			tempSave.characters.add(c);
+		}
+		else if (dl.item.equals("serializestring"))
+		{
+			tempSave.serializedString = new StringBuilder();
+			tempSave.serializedString.append(dl.getLine().substring("serializestring".length()));
 		}
 		else if(dl.item.equals("endsave"))
 		{
