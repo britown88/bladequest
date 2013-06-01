@@ -130,9 +130,7 @@ public class BattleAnimObject
 	{
 		if(index >= 0 && index < states.size())
 		{
-			stateIndex = index;	
-			
-			
+			stateIndex = index;
 			
 			currentState = states.get(index);
 			workingState.copyFrom(currentState);
@@ -209,6 +207,8 @@ public class BattleAnimObject
 			//update to most current state
 			if(frame >= nextState.frame)
 				setState(stateIndex+1);
+			
+			workingState.updateSpriteAnimation();
 
 			if(nextState != null)
 			{

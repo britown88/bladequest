@@ -241,12 +241,14 @@ implements SurfaceHolder.Callback
         	Global.party.render(); 
     	}    	
     	Global.map.renderForegroundObjs();
-    	Global.renderReactionBubbles();
-    	Global.renderAnimations();
-    	Global.map.renderDisplayName(); 
+    	Global.renderReactionBubbles();    	
     	
     	if(Global.showScene != null)
     		Global.showScene.render();
+    	
+    	Global.renderAnimations();
+    	
+    	Global.map.renderDisplayName(); 
     	
     	Global.screenFader.render();
     	
