@@ -383,7 +383,7 @@ public class PlayerCharacter
 	{
 		Item item = null;
 		
-		for(Item i : Global.party.getInventory(false))
+		for(Item i : Global.party.getInventory())
 			if(i.getId() == id)
 			{
 				item = i;
@@ -680,7 +680,7 @@ public class PlayerCharacter
 		List<Item> itemList = new ArrayList<Item>();
 		
 		//build list of items of the appropriate type usable by this character		
-		for(Item i : Global.party.getInventory(false))
+		for(Item i : Global.party.getInventory())
 			if(i.getType() == type && i.getUsableChars().contains(name))
 				itemList.add(i);
 		
@@ -1042,6 +1042,15 @@ public class PlayerCharacter
 	{
 		for(StatusEffect se : statusEffects)
 			if(se.weakens())
+				return true;
+		
+		return false;
+	}
+	
+	public boolean hasAdverseStatus()
+	{
+		for(StatusEffect se : statusEffects)
+			if(se.isNegative())
 				return true;
 		
 		return false;

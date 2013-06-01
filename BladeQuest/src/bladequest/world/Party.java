@@ -16,6 +16,7 @@ import bladequest.pathfinding.AStarObstacle;
 import bladequest.pathfinding.AStarPath;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.world.Item.Type;
+import bladequest.world.Item.UseTypes;
 
 public class Party 
 {
@@ -256,11 +257,22 @@ public class Party
 		
 	}
 	
-	public List<Item> getInventory(boolean onlyUsable)
+	public List<Item> getInventory()
 	{
 		List<Item> usables = new ArrayList<Item>();
 		for(Item i : inventory)
-			if((onlyUsable ? (i.getType() == Item.Type.Usable) : true) && !i.isUsed())
+			if(!i.isUsed())
+				usables.add(i);
+		
+		return usables;
+
+	}
+	
+	public List<Item> getUsableInventory(Item.UseTypes useType)
+	{
+		List<Item> usables = new ArrayList<Item>();
+		for(Item i : inventory)
+			if(i.isUsable(useType) && !i.isUsed())
 				usables.add(i);
 		
 		return usables;
@@ -291,14 +303,18 @@ public class Party
 	
 	public void sortInventoryType()
 	{
-		List<Item.Type> typeList = new ArrayList<Item.Type>();		
-		typeList.add(Item.Type.Accessory);
-		typeList.add(Item.Type.Helmet);
-		typeList.add(Item.Type.Key);
-		typeList.add(Item.Type.Shield);		
-		typeList.add(Item.Type.Torso);
+		List<Item.Type> typeList = new ArrayList<Item.Type>();			
+		
 		typeList.add(Item.Type.Usable);
+		typeList.add(Item.Type.UsableSavePointOnly);
+		typeList.add(Item.Type.UsableWorldOnly);		
+		typeList.add(Item.Type.UsableBattleOnly);
 		typeList.add(Item.Type.Weapon);
+		typeList.add(Item.Type.Shield);		
+		typeList.add(Item.Type.Helmet);
+		typeList.add(Item.Type.Torso);
+		typeList.add(Item.Type.Accessory);
+		typeList.add(Item.Type.Key);
 		
 		List<Item> newList = new ArrayList<Item>();
 		
@@ -311,20 +327,26 @@ public class Party
 		
 	}
 	
-	public void sortInventoryUsable()
+	public void sortInventoryUsable(Item.UseTypes useType)
 	{
 		List<Item> newList = new ArrayList<Item>();
 		
+		//currently usable items first
 		for(Item i : inventory)
-			if(i.getType() == Type.Usable 
-					&& i.getTargetType() != TargetTypes.AllEnemies
-					&& i.getTargetType() != TargetTypes.SingleEnemy)
+			if(i.isUsable(useType))
 				newList.add(i);
 		
+		
+		//usable items not currnetly usable next
 		for(Item i : inventory)
-			if(!newList.contains(i) && i.getType() == Type.Usable)
+			if(!newList.contains(i) && 
+					i.getType() == Type.Usable ||
+					i.getType() == Type.UsableBattleOnly ||
+					i.getType() == Type.UsableWorldOnly ||
+					i.getType() == Type.UsableSavePointOnly)
 				newList.add(i);
 		
+		//then the rest
 		for(Item i : inventory)
 			if(!newList.contains(i))
 				newList.add(i);

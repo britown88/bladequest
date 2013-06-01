@@ -30,6 +30,7 @@ import bladequest.world.Ability;
 import bladequest.world.Encounter;
 import bladequest.world.Global;
 import bladequest.world.Item;
+import bladequest.world.Item.UseTypes;
 import bladequest.world.PlayerCharacter;
 import bladequest.world.PlayerCharacter.Action;
 import bladequest.world.States;
@@ -197,7 +198,7 @@ public class Battle
 			{
 				mainMenu.clearObjects();
 				mainMenu.addItem("Attack", "atk", false);
-				mainMenu.addItem("Item", "itm", Global.party.getInventory(true).isEmpty());
+				mainMenu.addItem("Item", "itm", Global.party.getUsableInventory(UseTypes.Battle).isEmpty());
 				mainMenu.addItem(currentChar.getActionName(), "act", false);
 				mainMenu.addItem("Guard", "grd", false);
 				mainMenu.addItem(currentChar.getAbilitiesName(), "ab", currentChar.getAbilities().isEmpty());
@@ -332,7 +333,7 @@ public class Battle
 			
 			@Override
 			public void addMenuItems() {
-				for(Item i : Global.party.getInventory(true))
+				for(Item i : Global.party.getUsableInventory(UseTypes.Battle))
 					mainMenu.addItem(i.getName(), i, false);
 			}
 		};

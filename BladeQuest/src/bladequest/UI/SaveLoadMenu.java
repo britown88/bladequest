@@ -127,7 +127,9 @@ public class SaveLoadMenu
 				if(saveLoad == LOADING && Global.saveLoader.save != null)
 				{
 					Global.screenFader.clear();
-					BladeSong.instance().play("", false, true, 0);
+					BladeSong.instance().play("", false, true, 0);	
+					Global.party.allowSaving();
+					Global.menuButton.open();
 
 					Global.LoadMap(Global.saveLoader.save.mapName, true);
 				}
@@ -270,9 +272,7 @@ public class SaveLoadMenu
 		}
 		
 	}
-	
-	
-	
+		
 	public void touchActionUp(int x, int y)
 	{
 		if(!close)

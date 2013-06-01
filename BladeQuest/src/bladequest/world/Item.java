@@ -116,6 +116,23 @@ public class Item
 	public Type getType(){return type;}
 	public void addUsableBy(String name){usableBy.add(name);}
 	public List<String> getUsableChars() { return usableBy; }
+	public boolean isUsable(UseTypes useType)
+	{
+		switch(type)
+		{
+		case Usable:
+			return true;
+		case UsableBattleOnly:
+			return useType == UseTypes.Battle;
+		case UsableWorldOnly:
+			return useType == UseTypes.World;
+		case UsableSavePointOnly:
+			return useType == UseTypes.World && Global.party.SavingAllowed();
+		default:
+			return false;
+		
+		}
+	}
 	
 	public List<DamageComponent> getDamageComponents(){return damageComponents;}
 	public void addDamageComponent(Stats affinity, float power){damageComponents.add(new DamageComponent(affinity, power));}
@@ -139,6 +156,8 @@ public class Item
 	public int getStatMod(int stat){return statMods[stat]; }
 	
 	public String getAnimName(){return swingAnim;}
+	
+	
 	
 	public void initSwingData(String swingModel, String swingAnim)
 	{
@@ -211,9 +230,18 @@ public class Item
 			count = 99;			
 	}
 	
+	public enum UseTypes
+	{
+		Battle,
+		World
+	}
+	
 	public enum Type
 	{
 		Usable,
+		UsableBattleOnly,
+		UsableWorldOnly,
+		UsableSavePointOnly,
 		Weapon,
 		Shield,
 		Helmet,

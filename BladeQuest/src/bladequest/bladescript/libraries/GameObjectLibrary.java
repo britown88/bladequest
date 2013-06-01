@@ -170,7 +170,7 @@ public class GameObjectLibrary
 		Action act = new actFadeControl(fadeTime, a, r, g, b, fadeOut, wait);
 		return act;
 	}
-	public static Action flash(int a, int r, int g, int b, float flashLength, boolean wait)
+	public static Action flash(float flashLength, int a, int r, int g, int b, boolean wait)
 	{
 		return new actFlash(a, r, g, b, flashLength, wait);
 	}

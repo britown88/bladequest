@@ -146,7 +146,7 @@ addDefaultWait >
 addDep (animBuildAction "icebarrage") >
 addDep (damageAction -9999.0 "Fixed"))
 
-\bomb <- (addItem "bomb" "Bomb" "Usable" "orb" "Devastating damage to all enemies." >
+\bomb <- (addItem "bomb" "Bomb" "UsableBattleOnly" "orb" "Devastating damage to all enemies." >
 setValue 500 >
 setTargetType "AllEnemies" >
 addDefaultWait >
@@ -160,6 +160,12 @@ setTargetType "Single" >
 addDefaultWait >
 addDep (animBuildAction "antidote") >
 addDep (removeStatusAction "poison"))
+
+\antidote <- (addItem "sleepingbag" "Sleeping Bag" "UsableSavePointOnly" "orb" "Use at a save point to fully restore one party member." >
+setValue 100 >
+setTargetType "Single" >
+addDefaultWait >
+addDep (fullRestore 0))
 
 \prisonkey <- (addItem "prisonkey" "Prison Key" "Key" "orb" "Key to the castle prison cells.")
 

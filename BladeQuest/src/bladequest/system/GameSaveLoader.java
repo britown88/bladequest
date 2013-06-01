@@ -210,7 +210,7 @@ public class GameSaveLoader
 		
 		for(Map.Entry<String, Boolean> entry : Global.switches.entrySet())
 			save.switches.put(entry.getKey(), entry.getValue());
-		for(Item i : Global.party.getInventory(false))
+		for(Item i : Global.party.getInventory())
 		{
 			Item it = new Item(i);
 			it.setCount(i.getCount());

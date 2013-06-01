@@ -24,6 +24,7 @@ import bladequest.world.Ability;
 import bladequest.world.Global;
 import bladequest.world.Item;
 import bladequest.world.Item.Type;
+import bladequest.world.Item.UseTypes;
 import bladequest.world.PlayerCharacter;
 import bladequest.world.States;
 import bladequest.world.Stats;
@@ -282,7 +283,7 @@ public class MainMenu
 						showMessage(i.getDescription(), false);
 						
 						//add usable by string
-						if(i.getType() != Type.Usable)
+						if(!i.isUsable(UseTypes.World))
 						{
 							List<String> charNames = new ArrayList<String>();
 							PlayerCharacter c;
@@ -1349,7 +1350,7 @@ public class MainMenu
 		
 		if(invShowKeys)
 		{
-			for(Item i : Global.party.getInventory(false))
+			for(Item i : Global.party.getInventory())
 				if(i.getType() == Type.Key)
 					invList.addItem(i.getName(), i, false);
 		}
@@ -1357,13 +1358,10 @@ public class MainMenu
 		{
 			float iconScale = 2.0f;
 			int d = (int)((float)Global.iconSize*iconScale/2.0f);
-			for(Item i : Global.party.getInventory(false))
+			for(Item i : Global.party.getInventory())
 				if(i.getType() != Type.Key)
 				{
-					disabled = (i.getType() != Type.Usable) || 
-							(i.getTargetType() == TargetTypes.SingleEnemy) ||
-							(i.getTargetType() == TargetTypes.AllEnemies) ||
-							(i.getTargetType() == TargetTypes.Self);
+					disabled = !i.isUsable(UseTypes.World);
 					
 					entry = invList.addItem(i.getName(), i, disabled);
 					
@@ -1643,8 +1641,8 @@ public class MainMenu
 			entry.getTextAt(0).x += d*2 + 4;
 		}			
 		
-		for(Item i : Global.party.getInventory(false))
-			if(i.getType() != Type.Key && i.getType() != Type.Usable && i.getUsableChars().contains(selectedChar.getName()))
+		for(Item i : Global.party.getInventory())
+			if(i.getType() != Type.Key && !i.isUsable(UseTypes.World) && i.getUsableChars().contains(selectedChar.getName()))
 			{
 				if(i.getType() == equipItemType)
 				{	
@@ -1831,7 +1829,7 @@ public class MainMenu
 	{
 		List<Item> usableItems = new ArrayList<Item>();
 
-		for(Item i : Global.party.getInventory(false))
+		for(Item i : Global.party.getInventory())
 			if(i.getType() == type && i.getUsableChars().contains(pc.getName()))
 				usableItems.add(i);	
 		
@@ -2253,14 +2251,14 @@ public class MainMenu
 		}
 		else if(opt.equals("usf"))
 		{
-			Global.party.sortInventoryUsable();
+			Global.party.sortInventoryUsable(UseTypes.World);
 		}
 		
 		else if(opt.equals("aut"))
 		{
 			Global.party.sortInventoryABC();
 			Global.party.sortInventoryType();
-			Global.party.sortInventoryUsable();
+			Global.party.sortInventoryUsable(UseTypes.World);
 		}
 		
 		fillInventory();

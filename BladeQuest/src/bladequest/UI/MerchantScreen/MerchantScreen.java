@@ -507,7 +507,7 @@ public class MerchantScreen
 		float iconScale = 2.0f;
 		int d = (int)((float)Global.iconSize*iconScale/2.0f);
 		
-		for(Item i : Global.party.getInventory(false))
+		for(Item i : Global.party.getInventory())
 		{		
 			if(i.isSellable() && i.getType() != Item.Type.Key)
 			{

@@ -9,6 +9,7 @@ import bladequest.battleactions.bactAttackRandomTargets;
 import bladequest.battleactions.bactBasicAttack;
 import bladequest.battleactions.bactBreakStance;
 import bladequest.battleactions.bactDamage;
+import bladequest.battleactions.bactFullRestore;
 import bladequest.battleactions.bactInflictStatus;
 import bladequest.battleactions.bactJumpHome;
 import bladequest.battleactions.bactMessage;
@@ -139,7 +140,11 @@ public class BattleLibrary {
 	public static BattleAction removeStatusAction(String statusName)
 	{
 		return new bactRemoveStatus(statusName);
-	}	
+	}
+	public static BattleAction fullRestore(int i)
+	{
+		return new bactFullRestore();
+	}
 	
 	public static BattleAction messageAction(String message)
 	{

@@ -5,6 +5,7 @@
 
 
 
+
 #!OBJ 0 0
 \name$0x0$ <- newObject "start" 0 0
 
@@ -98,11 +99,10 @@ addAction (pauseMusic 5.0)
 
 state1$4x5$ 0
 name$4x5$ > createState >
-setSpriteFromTile 1 2 >
+setSprite "savepoint" >
 setCollisionData true true true true >
-addAction (fadeControl 0.5 255 0 250 200 true true) >
-addAction (openBubble "exclam" "party" 1.0 false false) >
-addAction (fadeControl 0.5 255 0 250 200 false true) >
+addAction (flash 1.0 255 0 250 200 true) >
+addAction (allowSaving 0) >
 addAction (message "An eerie glow surrounds you.") >
 addAction (messageWithYesNo "Save your game?" > 
 	addToBranch 0 (openSaveMenu 0))
