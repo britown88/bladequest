@@ -83,6 +83,11 @@ public class BattleAnim
 		}
 	}
 	
+	public long getDuration()
+	{
+		return (long)(getFinalFrame() * framePeriod); 
+	}
+	
 	public void play(Point source, Point target)
 	{
 		this.src = source; this.tar = target;

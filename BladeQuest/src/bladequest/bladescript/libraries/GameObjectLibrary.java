@@ -6,6 +6,7 @@ import java.util.Map;
 import bladequest.actions.Action;
 import bladequest.actions.actAllowSaving;
 import bladequest.actions.actAnimation;
+import bladequest.actions.actClearAnimations;
 import bladequest.actions.actElevation;
 import bladequest.actions.actExpectInput;
 import bladequest.actions.actFadeControl;
@@ -33,6 +34,7 @@ import bladequest.actions.actSwitch;
 import bladequest.actions.actTeleportParty;
 import bladequest.actions.actUnloadScene;
 import bladequest.actions.actWait;
+import bladequest.actions.actMessage.Position;
 import bladequest.bladescript.LibraryWriter;
 import bladequest.graphics.AnimationBuilder;
 import bladequest.world.GameObject;
@@ -188,15 +190,29 @@ public class GameObjectLibrary
 		Action act = new actMessage(message);
 		return act;
 	}
+	public static Action messageTop(String message)
+	{		
+		Action act = new actMessage(message, Position.Top);
+		return act;
+	}
 	public static Action modifyGold(int gold)
 	{		
 		Action act = new actModifyGold(gold);
 		return act;
 	}
-	public static Action playAnimation(AnimationBuilder builder, String source, String target)
+	public static Action playAnimation(AnimationBuilder builder, String source, String target, boolean wait)
 	{		
-		Action act = new actAnimation(builder, source, target);
+		Action act = new actAnimation(builder, source, target, wait);
 		return act;
+	}
+	public static Action playAnimationStoppedShort(AnimationBuilder builder, String source, String target, float secondsShort)
+	{		
+		Action act = new actAnimation(builder, source, target, secondsShort);
+		return act;
+	}
+	public static Action clearAnimations(int i)
+	{
+		return new actClearAnimations();
 	}
 	public static Action modifyInventory(String name, int count, boolean remove)
 	{		
