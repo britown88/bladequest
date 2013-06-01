@@ -369,6 +369,22 @@ public class Global
 		if(worldMsgBox == null)
 			worldMsgBox = new MsgBox();
 		
+		worldMsgBox.setBottom();
+		
+		menuButton.close();
+		
+		worldMsgBox.addMessage(str, yesNoOpt);
+		if(worldMsgBox.Closed())
+			worldMsgBox.open();
+	}
+	
+	public static void showMessageTop(String str, boolean yesNoOpt)
+	{
+		if(worldMsgBox == null)
+			worldMsgBox = new MsgBox();
+		
+		worldMsgBox.setTop();
+		
 		menuButton.close();
 		
 		worldMsgBox.addMessage(str, yesNoOpt);

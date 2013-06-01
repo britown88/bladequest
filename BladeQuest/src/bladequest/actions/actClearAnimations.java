@@ -2,16 +2,14 @@ package bladequest.actions;
 
 import bladequest.world.Global;
 
-public class actGameOver extends Action
+public class actClearAnimations extends Action
 {
-	public actGameOver(){}
+	public actClearAnimations(){}
 	
 	@Override
 	public void run()
 	{
-		Global.party.setAllowMovement(true);
-		Global.setPanned(0, 0);				
-		Global.executeGameOver();
+		Global.clearAnimations();
 	}
 	
 	@Override
@@ -19,5 +17,4 @@ public class actGameOver extends Action
 	{
 		return true;
 	}
-
 }

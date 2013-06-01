@@ -4,6 +4,7 @@
 
 
 
+
 #!OBJ 12 0
 createWindowObj x y
 \obj <- newObject "window" (12 > add x) y
@@ -29,25 +30,105 @@ name$0x0$ > createState >
 setOptions true false false >
 setAutoStart true >
 addAction (createPath "party" true "u") >
-addAction (message "|aramis|: \nLessee... \nHow does anyone find their way around here?") >
+addAction (messageTop "|aramis|: \nHow big is this place anyway?") >
 addAction (createPath "party" true "ssU4") >
 addAction (playMusic "mystery" true true 2.0) >
-addAction (flash 0.5 255 255 0 0 true) >
+addAction (flash 1.0 255 255 0 0 true) >
 addAction (createPath "party" true "d") >
-addAction (message "|aramis|: \nWhoa, what?") >
+addAction (messageTop "|aramis|: \nWhoa, what?") >
 addAction (wait 0.5) >
 addAction (createPath "party" true "u") >
 addAction (wait 0.5) >
 addAction (openBubble "exclam" "party" 1.0 false true) >
 addAction (createPath "party" true "SSSSD2L2dss") >
 addAction (wait 1.0) >
-addAction (message "|aramis|: \nWhat are they doing over there??") >
+addAction (messageTop "|aramis|: \nWhat are they doing over there??") >
 addAction (flash 1.0 255 255 0 0 true) >
 addAction (openBubble "exclam" "party" 1.0 false true) >
-addAction (changeElevation "party" 64 4.0 false) >
+addAction (changeElevation "party" 64 2.0 false) >
 addAction (setFloating "party" true 90 4) >
-addAction (message "|aramis|: \nWoah, hey, hold on a second!") >
-addAction (panControl 2 -11 5.0 true ) >
+addAction (messageTop "|aramis|: \nWoah, hey, hold on a second!") >
+addAction (panControl 2 -11 6.0 true ) >
+addAction (wait 1.0) >
+addAction (createPath "baligant" true "sD") >
+addAction (messageTop "Robed Figure: \nIt's awakening! \nThe time has come at last!") >
+addAction (wait 0.5) >
+addAction (createPath "roland" true "sLuW") >
+addAction (messageTop "Robed Figure: \nBut what is causing it? Nothing has changed.") >
+addAction (messageTop "Robed Figure: \nIt matters not.") >
+addAction (messageTop "Come, my brothers!  Our goals shall soon be realized!") >
+addAction (createPath "robeUL" false "R") >
+addAction (createPath "robeLL" false "R") >
+addAction (createPath "robeUR" false "L") >
+addAction (createPath "roland" false "l") >
+addAction (wait 1.0) >
+addAction (flash 0.5 255 255 0 0 true) >
+addAction (flash 1.5 255 255 0 0 true) >
+addAction (messageTop "|aramis|: \nAAAAAAAAAAAHHHH!!!!!") >
+addAction (fadeControl 1.0 255 255 0 0 true true) >
+addAction (teleportParty name$0x0$ 14 4 "castlecham") >
+addAction (fadeControl 2.0 255 255 0 0 false true) >
+addAction (createPath "robeUL" false "u") >
+addAction (createPath "robeLL" false "u") >
+addAction (createPath "robeUR" false "u") >
+addAction (createPath "roland" false "u") >
+addAction (createPath "baligant" true "U") >
+addAction (openBubble "exclam" "robeUL" 1.0 false false) >
+addAction (openBubble "exclam" "robeLL" 1.0 false false) >
+addAction (openBubble "exclam" "robeUR" 1.0 false false) >
+addAction (openBubble "exclam" "roland" 1.0 false false) >
+addAction (openBubble "exclam" "baligant" 1.0 false true) >
+addAction (message "Robed Figure: \nWhat is this human doing here!?") >
+addAction (message "|aramis|: \nHey now, I don't like this one bit!") >
+addAction (message "Robed Figure: \nRoland, get him down from there.") >
+addAction (message "Robed Figure: \nYes, my brother.") >
+addAction (createPath "roland" true "RU3LuW") >
+addAction (flash 1.5 255 255 0 0 true) >
+addAction (createPath "baligant" true "d") >
+addAction (openBubble "exclam" "baligant" 1.0 false true) >
+addAction (message "Robed Figure: \nThe sphere!") >
+addAction (wait 1.0) >
+addAction (flash 1.0 255 255 0 0 true) >
+addAction (wait 1.0) >
+addAction (createPath "orb" true "s2U") >
+addAction (wait 1.0) >
+addAction (fadeControl 0.5 255 255 0 0 true true) >
+addAction (createPath "baligant" false "SSrKL2ks") >
+addAction (fadeControl 0.5 255 255 0 0 false true) >
+addAction (wait 1.0) >
+addAction (createPath "orb" true "U2") >
+addAction (wait 1.0) >
+addAction (flash 2.0 255 255 0 0 false) >
+addAction (changeElevation "orb" 64 4.0 true) >
+addAction (message "Robed Figure: \nIt's reacting to the human!") >
+addAction (createPath "baligant" true "R2u") >
+addAction (message "Robed Figure: \nNo! It can't be!!!") >
+addAction (playAnimationStoppedShort (genWindowShatter 0) "party" "party" 4.0) >
+addAction (shakeControl 4.0 2 false) >
+addAction (fadeControl 4.0 255 255 0 0 true true) >
+addAction (switchControl "glassshattered" true) >
+addAction (wait 1.0) >
+addAction (fadeControl 4.0 255 255 0 0 false true) >
+addAction (wait 2.0) >
+addAction (message "Robed Figure: \nIt has appeared!!! \nJoyeuse!") >
+addAction (message "I must have it!") >
+addAction (pauseMusic 1.0) >
+addAction (wait 1.0) >
+addAction (message "Woman's Voice: \nCome with me. \nI need your strength.") >
+addAction (playAnimation (genGrowingCircle (point 208 80) 150 255 0 0 1.0 32) "party" "party" true) >
+addAction (playAnimation (genCircle (point 208 80) 150 255 0 0 32) "party" "party" false) >
+addAction (wait 1.0) >
+addAction (fadeControl 0.5 255 255 0 0 true true) >
+addAction (clearAnimations 0) >
+addAction (wait 2.0) >
+addAction (createPath "party" true "v") >
+addAction (createPath "orb" true "v") >
+addAction (fadeControl 6.0 255 255 0 0 false true) >
+addAction (fadeControl 6.0 255 0 0 0 true true) >
+addAction (wait 2.0) >
+addAction (playMusic "ancients" true true 0.0) >
+addAction (showScene "baligantcastle") >
+addAction (fadeControl 3.0 255 0 0 0 false true) >
 addAction (switchControl "orbscene" true)
 
 \runstate1$0x0$ <- state1$0x0$ 0
@@ -92,7 +173,7 @@ setFace "left"
 
 \runstate1$16x6$ <- state1$16x6$ 0
 #!OBJ 16 8
-\objName$16x8$ <- "robeLR"
+\objName$16x8$ <- "roland"
 \name$16x8$ <- newObject objName$16x8$ 16 8
 
 state1$16x8$ 0
@@ -102,16 +183,17 @@ setFace "left"
 
 
 \runstate1$16x8$ <- state1$16x8$ 0
-#!OBJ 14 6
-\objName$14x6$ <- "baligant"
-\name$14x6$ <- newObject objName$14x6$ 14 6
+#!OBJ 14 5
+\objName$14x5$ <- "baligant"
+\name$14x5$ <- newObject objName$14x5$ 14 5
 
-state1$14x6$ 0
-name$14x6$ > createState >
-setSprite "robe"
+state1$14x5$ 0
+name$14x5$ > createState >
+setSprite "robe" >
+setLayer "Above"
 
 
-\runstate1$14x6$ <- state1$14x6$ 0
+\runstate1$14x5$ <- state1$14x5$ 0
 #!OBJ 14 7
 \objName$14x7$ <- "orb"
 \name$14x7$ <- newObject objName$14x7$ 14 7
@@ -121,5 +203,16 @@ name$14x7$ > createState >
 setSprite "orb" >
 setLayer "Above"
 
-
 \runstate1$14x7$ <- state1$14x7$ 0
+
+state2$14x7$ 0
+name$14x7$ > createState >
+addSwitchCondition "glassshattered" >
+setLayer "Above" >
+setSprite "sword2" >
+setAnimated false >
+setImageIndex 1
+
+
+\runstate2$14x7$ <- state2$14x7$ 0
+

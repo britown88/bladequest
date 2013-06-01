@@ -85,6 +85,10 @@ namespace BladeCraft.Forms
          actionParams.Add("setFloating", "\"target\" startFloating period intensity");
          actionParams.Add("flash", "flashlength a r g b wait");
          actionParams.Add("allowSaving", "0");
+         actionParams.Add("clearAnimations", "0");
+         actionParams.Add("messageTop", "\"message\"");
+         actionParams.Add("playAnimation", "\"source\" \"target\" wait");
+         actionParams.Add("playAnimationStoppedShort", "\"source\" \"target\" shortSeconds");
       }
 
       private void btnCancel_Click(object sender, EventArgs e)

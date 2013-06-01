@@ -3,6 +3,7 @@ package bladequest.bladescript.libraries;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.graphics.Color;
 import android.graphics.Point;
 import bladequest.bladescript.LibraryWriter;
 import bladequest.graphics.AnimationBuilder;
@@ -19,22 +20,51 @@ public class WorldAnimLibrary
 		}
 	}
 	
+	public static AnimationBuilder genGrowingCircle(Point start, int a, int r, int g, int b, float time, int radius)
+	{
+		return WorldAnimations.buildGrowingCircle(start, Color.argb(a,  r,  g,  b), time, radius);
+		
+	}
+	
+	public static AnimationBuilder genCircle(Point start, int a, int r, int g, int b, int radius)
+	{
+		return WorldAnimations.buildCircle(start, Color.argb(a,  r,  g,  b), radius);
+		
+	}
+	
+	
 	public static AnimationBuilder genWindowShatter(int value)
 	{
 		List<Point> pList = new ArrayList<Point>();
 		
-		for (int i = 0; i < 40; ++i)
+		pList.add(new Point(21, 28));
+		pList.add(new Point(23, 13));
+		pList.add(new Point(30, 13));
+		pList.add(new Point(42, 13));
+		pList.add(new Point(53, 17));
+		pList.add(new Point(59, 28));
+		pList.add(new Point(73, 37));
+		pList.add(new Point(66, 51));
+		pList.add(new Point(66, 64));
+		pList.add(new Point(61, 66));
+		pList.add(new Point(55, 70));
+		pList.add(new Point(46, 72));
+		pList.add(new Point(39, 73));
+		pList.add(new Point(33, 72));
+		pList.add(new Point(22, 66));
+		pList.add(new Point(17, 62));
+		pList.add(new Point(6, 46));
+		pList.add(new Point(37, 25));
+		pList.add(new Point(55, 52));
+		pList.add(new Point(33, 58));
+		
+		for(Point p : pList)
 		{
+			p.x = p.x*2 + 32*4;
+			p.y = p.y*2;
+		}	
 		
-			pList.add(new Point(Global.rand.nextInt(600), Global.rand.nextInt(400)));
-		}
-		
-//		pList.add(new Point(0, 0));
-//		pList.add(new Point(200, 0));
-//		pList.add(new Point(0, 200));
-//		pList.add(new Point(200, 200));		
-		
-		return WorldAnimations.buildShatter(new Point(300, 100), pList, 4, 30.0f);
+		return WorldAnimations.buildShatter(new Point(32*4+80, 80), pList, 4, 30.0f);
 	}
 
 }

@@ -6,7 +6,6 @@ public class actFlash extends Action
 {
 	private int a, r, g, b;
 	private float flashLength;
-	private long startTime;
 	private boolean wait;
 	
 	public actFlash(int a, int r, int g, int b, float flashLength, boolean wait)
@@ -24,13 +23,12 @@ public class actFlash extends Action
 	{
 		Global.screenFader.setFadeColor(a, r, g, b);
 		Global.screenFader.flash(flashLength);
-		startTime = System.currentTimeMillis();
 	}
 	
 	@Override
 	public boolean isDone()
 	{
-		return !wait || System.currentTimeMillis() - startTime >= flashLength*1000.0f;
+		return !wait || Global.screenFader.isDone();
 	}
 	
 

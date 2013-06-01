@@ -6,8 +6,15 @@ import bladequest.world.Global;
 
 public class actMessage extends Action 
 {
+	public enum Position
+	{
+		Top,
+		Bottom
+	}
+	
 	String msg;
 	boolean yesNoOpt;
+	Position pos;
 
 	
 	public actMessage(String str)
@@ -15,6 +22,16 @@ public class actMessage extends Action
 		super();
 		msg = str;
 		this.yesNoOpt = false;
+		pos = Position.Bottom;
+
+	}
+	
+	public actMessage(String str, Position pos)
+	{
+		super();
+		msg = str;
+		this.yesNoOpt = false;
+		this.pos = pos;
 
 	}
 	
@@ -25,13 +42,25 @@ public class actMessage extends Action
 		super();
 		msg = str;
 		this.yesNoOpt = yesNoOpt;
+		pos = Position.Bottom;
 
 	}
 	
 	@Override
 	public void run()
 	{
-		Global.showMessage(msg, yesNoOpt);
+		switch(pos)
+		{
+		case Top:
+			Global.showMessageTop(msg, yesNoOpt);
+			break;
+		case Bottom:
+			Global.showMessage(msg, yesNoOpt);
+			break;
+		default:
+			break;
+		}
+		
 	}
 	
 	@Override

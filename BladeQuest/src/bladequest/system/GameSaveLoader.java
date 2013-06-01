@@ -135,6 +135,7 @@ public class GameSaveLoader
 
 		@Override
 		public String readString() {
+			skipAhead();
 			StringBuilder builder = new StringBuilder();
 			while (data[index] != '\"')
 			{
@@ -369,7 +370,7 @@ public class GameSaveLoader
 				}
 				++index;							
 			}		
-			str += "serializestring " + gs.serializedString.toString() + "\n";
+			str += "serializestring" + gs.serializedString.toString() + "\n";
 			str += "endsave\n";			
 		}
 		

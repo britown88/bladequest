@@ -66,6 +66,20 @@ public class MsgBox extends MenuPanel
 		alwaysSpeed0 = false;
 		//clear(msg);		
 	}
+	
+	public void setTop()
+	{
+		pos.y = buffer;
+		anchor = Anchors.TopCenter;
+		update();
+	}
+	
+	public void setBottom()
+	{
+		pos.y = Global.vpHeight - buffer;
+		anchor = Anchors.BottomCenter;
+		update();
+	}
 		
 	public void addMessage(String msg)
 	{
