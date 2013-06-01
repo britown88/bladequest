@@ -369,7 +369,7 @@ public class GameSaveLoader
 				}
 				++index;							
 			}		
-			str += "serializestring " + gs.serializedString.toString();
+			str += "serializestring " + gs.serializedString.toString() + "\n";
 			str += "endsave\n";			
 		}
 		

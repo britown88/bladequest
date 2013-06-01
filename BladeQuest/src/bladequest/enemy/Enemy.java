@@ -167,17 +167,34 @@ public class Enemy extends PlayerCharacter
 	{
 		return ai;
 	}
-	public void Act()
+	public PlayerCharacter Act()
 	{
-		abilityToUse = ai.getState().pickAbility(this);
-		if (abilityToUse == null)  //default attack.
+		class Picker implements AIDecision
+		{
+			PlayerCharacter target;
+			Ability ability;
+			@Override
+			public void pickAbility(Ability ability) {
+				this.ability = ability;
+			}
+
+			@Override
+			public void pickTarget(PlayerCharacter target) {
+				this.target = target;
+			}	
+		};
+		Picker p = new Picker();
+		ai.getState().runAI(this, p);
+		if (p.ability == null)  //default attack.
 		{
 			action = Action.Attack;
 		}
 		else
 		{
 			action = Action.Ability;
+			abilityToUse = p.ability;
 		}
+		return p.target;
 	}
 	
 	public void setAI(AI ai)
@@ -187,21 +204,27 @@ public class Enemy extends PlayerCharacter
 	
 	public void genBattleEvent()
 	{
-		Act();
-		//List<PlayerCharacter> targets;
-		
-		switch(action)
+		PlayerCharacter target = Act();
+
+		if (target == null)
 		{
-		case Ability:
-			TargetTypes targetType = abilityToUse.TargetType();
-			if (targetType == TargetTypes.Single) targetType = TargetTypes.SingleEnemy;
-			targets = Battle.getRandomTargets(targetType, this);
-			break;
-		default://attack
-			targets = Battle.getRandomTargets(TargetTypes.SingleEnemy, this);			
-			break;
+			switch(action)
+			{
+			case Ability:
+				TargetTypes targetType = abilityToUse.TargetType();
+				if (targetType == TargetTypes.Single) targetType = TargetTypes.SingleEnemy;
+				targets = Battle.getRandomTargets(targetType, this);
+				break;
+			default://attack
+				targets = Battle.getRandomTargets(TargetTypes.SingleEnemy, this);			
+				break;
+			}			
 		}
-		
+		else
+		{
+			targets = new ArrayList<PlayerCharacter>();
+			targets.add(target);
+		}
 		//return new BattleEvent(this.action, abilityToUse, this, targets, Global.battle.getMarkers());
 	}
 	

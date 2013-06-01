@@ -120,77 +120,7 @@ public class Track {
 			}
 		}
 	}
-//	
-//	//transient state, we're waiting for the player to shift into the "paused" state.
-//	private class LoopState extends MusicState
-//	{
-//		LoopState(Music player)
-//		{
-//			super(player);
-//			player.mp.pause();
-//		}		
-//		boolean isPlaying() {return true;}
-//		void pause()
-//		{
-//			//wow, what a sniper!
-//			player.setState(new UnsetState(player));  //play from the beginning if we get unpaused.
-//		}
-//		void update()
-//		{
-//			if (player.mp.isPlaying() == false) //okay, we're paused...
-//			{
-//				player.setState(new RestartingState(player));
-//			}
-//		}
-//	}
-//	//transient state, we're waiting for the player to shift into the "paused" state.
-//	private class RestartingState extends MusicState
-//	{
-//		boolean seekComplete = false;
-//		boolean moveToPause = false;
-//		RestartingState(Music player)
-//		{
-//			super(player);
-//			player.mp.setOnSeekCompleteListener(new OnSeekCompleteListener()
-//			{
-//				public void onSeekComplete(MediaPlayer mp) {
-//					seekComplete = true;
-//				}	
-//			});
-//			player.mp.seekTo(0);
-//		}		
-//		boolean isPlaying() {return !moveToPause;}
-//		void pause()
-//		{
-//			if (seekComplete)
-//			{
-//				player.setState(new UnsetState(player));  //play from the beginning if we get unpaused.	
-//			}
-//			else //bad times.
-//			{
-//				moveToPause = true;
-//			}
-//
-//		}
-//		void play()
-//		{
-//			moveToPause = false;
-//		}
-//		void update()
-//		{
-//			if (seekComplete) 
-//			{
-//				if (!moveToPause) //OKAY.  ITS CLEAN GUYS.  WE CAN PLAY.  FUCK
-//				{
-//					player.setState(new PlayState(player));
-//				}
-//				else  //someone called pause in that tiny buffer? BS! 
-//				{
-//					player.setState(new UnsetState(player));	
-//				}
-//			}
-//		}
-//	}	
+
 	
 	private class PausedState extends MusicState
 	{

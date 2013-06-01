@@ -46,7 +46,7 @@ public class combStance extends CombatAction
 			@Override
 			public void addMenuItems() {
 				for(Stance stance : stances)
-					mainMenu.addItem(stance.getName(), stance, stance.isBroken() || stance.equalTo(Stance.getStance(actionBuilder.getUser())));
+					mainMenu.addItem(stance.getShortName(), stance, stance.isBroken() || stance.equalTo(Stance.getStance(actionBuilder.getUser())));
 			}
 		};
 	}

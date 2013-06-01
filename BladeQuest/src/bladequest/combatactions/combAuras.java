@@ -50,7 +50,7 @@ public class combAuras extends CombatAction  {
 			@Override
 			public void addMenuItems() {
 				for(CombatAction action : getAuras())
-					mainMenu.addItem(action.getName(), action, false);
+					mainMenu.addItem(action.getShortName(), action, false);
 			}
 		};
 	}

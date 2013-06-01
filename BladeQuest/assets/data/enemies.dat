@@ -22,20 +22,25 @@ addDefaultStaffHit enemy
    
    
 addAttackOnlyState enemy
-	enemy > setEnemyAI (createAI "default" (createAIState ([e] "")))
+	enemy > setEnemyAI (
+		createAI "default" (createAIState ([e decision] ""))
+		)
 	
 addBiteOnlyState enemy
-	enemy > setEnemyAI (createAI "biteMe" (createAIState ([e] "bite")))	
+	enemy > setEnemyAI (
+		createAI "biteMe" (createAIState ([e decision] setAbility decision (e > getEnemyAbility "bite")))
+		)	
 
 
 DynamoSupernovaState enemy
-	enemy > setEnemyAI (createAI "RAAAAAAAAAAAAAAAH" (createAIState ([e] "recruit4")))	
+	enemy > setEnemyAI (
+		createAI "RAAAAAAAAAAAAAAAH" (createAIState ([e decision] setAbility decision (e > getEnemyAbility "recruit4")))
+		)	
 
 
-
-retaliateState enemy
+retaliateState enemy decision
      switchEnemyState enemy "default"
-     "bite"
+     decision > setAbility (enemy > getEnemyAbility "bite")
      
 switchToRetaliate enemy
 	switchEnemyState enemy "retaliate"     
@@ -46,7 +51,9 @@ createSwitchToRetaliateTrigger enemy
      createTrigger (getOnPhysicalHitEvent enemy) ([trigger] switchToRetaliate enemy)
      
 makeRatAI enemy
-   enemy > setEnemyAI (createAI "default" (createAIState ([e] "")) > addAIState "retaliate" (createAIState retaliateState)) >
+   enemy > setEnemyAI (
+           createAI "default" (createAIState ([e decision] "")) > 
+           addAIState "retaliate" (createAIState retaliateState)) >
            onBattleStartRun createSwitchToRetaliateTrigger 
    
 

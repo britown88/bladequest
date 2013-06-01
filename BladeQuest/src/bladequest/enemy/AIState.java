@@ -1,6 +1,5 @@
 package bladequest.enemy;
 
-import bladequest.world.Ability;
 
 public abstract class AIState {
 	
@@ -9,5 +8,5 @@ public abstract class AIState {
 	{
 		return this;
 	}
-	public abstract Ability pickAbility(Enemy e);
+	public abstract void runAI(Enemy e, AIDecision decision);
 }

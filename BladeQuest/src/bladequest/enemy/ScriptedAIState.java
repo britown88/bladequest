@@ -2,7 +2,6 @@ package bladequest.enemy;
 
 import bladequest.bladescript.ParserException;
 import bladequest.bladescript.ScriptVar;
-import bladequest.world.Ability;
 
 public class ScriptedAIState extends AIState {
 
@@ -12,13 +11,12 @@ public class ScriptedAIState extends AIState {
 		this.scriptFn = scriptFn;
 	}
 	@Override
-	public Ability pickAbility(Enemy enemy) {
+	public void runAI(Enemy e, AIDecision decision) {
 		try {
-			return enemy.getAbility(scriptFn.apply(ScriptVar.toScriptVar(enemy)).getString());
-		} catch (ParserException e) {
-			e.printStackTrace();
+			scriptFn.apply(ScriptVar.toScriptVar(e)).apply(ScriptVar.toScriptVar(decision));
+		} catch (ParserException ex) {
+			ex.printStackTrace();
 		}
-		return null;
 	}
 
 }

@@ -26,6 +26,11 @@ public class combEmpowerLife extends CombatAction {
 		actionText = " empowers the party!";
 	}
 	
+	public String getShortName()
+	{
+		return "Life";
+	}
+	
 	@Override
 	public String getDescription() { return "Cause your party to regenerate health over a few turns.";}
 	

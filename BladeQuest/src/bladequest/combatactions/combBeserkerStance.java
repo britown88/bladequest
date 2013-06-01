@@ -30,12 +30,16 @@ public class combBeserkerStance extends Stance {
 	
 	public combBeserkerStance()
 	{
-		name = "Beserker";
+		name = "Beserker Stance";
 		type = DamageTypes.Magic; //ignored
 		targetType = TargetTypes.Self;
 		
 		actionText = " shifted to beserker stance."; ///?????
 		broken = false;
+	}
+	public String getShortName()
+	{
+		return "Beserker";
 	}
 	public boolean equalTo(Stance rhs)
 	{

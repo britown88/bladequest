@@ -10,6 +10,7 @@ import bladequest.bladescript.ScriptVar;
 import bladequest.bladescript.ScriptVar.BadTypeException;
 import bladequest.combat.triggers.Event;
 import bladequest.enemy.AI;
+import bladequest.enemy.AIDecision;
 import bladequest.enemy.AIState;
 import bladequest.enemy.Enemy;
 import bladequest.enemy.ScriptedAIState;
@@ -87,6 +88,16 @@ public class EnemyLibrary {
 	{
 		enemy.setAI(ai);
 		return enemy;
+	}
+	public static AIDecision setAbility(AIDecision decision, Ability ability)
+	{
+		decision.pickAbility(ability);
+		return decision;
+	}
+	public static AIDecision setTarget(AIDecision decision, PlayerCharacter target)
+	{
+		decision.pickTarget(target);
+		return decision;
 	}
 	public static Enemy switchEnemyState(Enemy enemy, String newState)
 	{

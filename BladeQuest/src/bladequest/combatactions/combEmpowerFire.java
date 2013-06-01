@@ -36,6 +36,11 @@ public class combEmpowerFire extends CombatAction {
 		actionText = " empowers the party!";
 	}
 	
+	public String getShortName()
+	{
+		return "Fire";
+	}
+	
 	@Override
 	public String getDescription() { return "Cause your party to gain fire affinity.";}
 	
