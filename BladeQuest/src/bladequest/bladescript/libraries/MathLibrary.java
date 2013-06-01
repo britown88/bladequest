@@ -37,7 +37,10 @@ public class MathLibrary
 	{
 		return x / y;
 	}
-	
+	public static float negate(float f)
+	{
+		return -f;
+	}
 	public static Point point(int x, int y)
 	{
 		return new Point(x, y);
