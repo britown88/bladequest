@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.Rect;
 import bladequest.combat.BattleEventBuilder;
 import bladequest.graphics.AnimationBuilder;
 import bladequest.graphics.BattleAnim;
@@ -191,6 +192,234 @@ public class WorldAnimations
 				return anim;
 			}
 		}.initialize(start, c, radius);
+	}
+	public static AnimationBuilder buildSugoiMoon()
+	{
+		return new AnimationBuilder() {	
+			AnimationBuilder initialize()
+			{
+				
+				return this;
+			}
+			
+			@Override
+			public BattleAnim buildAnimation(BattleEventBuilder builder) 
+			{
+				BattleAnim anim = new BattleAnim(1000.0f);
+				//anim.loop();
+				BattleAnimObject obj = new BattleAnimObject(Types.Bitmap, false, "sugoimoonkundesu");
+				BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Screen);
+				state.pos1 = new Point(100,100);
+				state.size = new Point(60, 58);
+				state.argb(255, 0, 0, 0);
+				state.colorize = 0.0f;
+				
+				state.makeAnimated(0.1f);
+				state.addFrame(new Rect(0, 0, 30, 29));
+				state.addFrame(new Rect(30, 0, 60, 29));
+				state.addFrame(new Rect(60, 0, 90, 29));
+				state.addFrame(new Rect(90, 0, 120, 29));
+				state.addFrame(new Rect(120, 0, 150, 29));
+				state.addFrame(new Rect(90, 0, 120, 29));
+				state.addFrame(new Rect(60, 0, 90, 29));
+				state.addFrame(new Rect(30, 0, 60, 29));
+				
+				//state.setBmpSrcRect(0, 0, 30, 29);
+				
+				obj.addState(state);				
+				
+				state = new BattleAnimObjState(5000, PosTypes.Screen);
+				state.pos1 = new Point(100,100);
+				state.size = new Point(60, 58);
+				state.argb(255, 0, 0, 0);
+				state.colorize = 0.0f;
+				//state.setBmpSrcRect(0, 0, 30, 29);
+				obj.addState(state);	
+				anim.addObject(obj);
+				
+				return anim;
+			}
+		}.initialize();
+	}
+	
+	public static AnimationBuilder buildTwinkleStar()
+	{
+		return new AnimationBuilder() {	
+			AnimationBuilder initialize()
+			{				
+				return this;
+			}
+			
+			@Override
+			public BattleAnim buildAnimation(BattleEventBuilder builder) 
+			{
+				BattleAnim anim = new BattleAnim(1000.0f);
+				//anim.loop();
+				BattleAnimObject obj = new BattleAnimObject(Types.Bitmap, false, "twinkle");
+				
+				BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Screen);
+				state.pos1 = new Point(120,60);
+				state.size = new Point(18, 18);
+				state.argb(255, 0, 0, 0);
+				state.colorize = 0.0f;
+				
+				
+				state.makeAnimated(0.1f);
+				state.addFrame(new Rect(0, 0, 9, 9));
+				state.addFrame(new Rect(9, 0, 18, 9));
+				state.addFrame(new Rect(18, 0, 27, 9));
+				state.addFrame(new Rect(9, 0, 18, 9));
+
+				
+				//state.setBmpSrcRect(0, 0, 30, 29);
+				
+				obj.addState(state);				
+				
+				state = new BattleAnimObjState(30000, PosTypes.Screen);
+				state.pos1 = new Point(450,120);
+				state.size = new Point(18, 18);
+				state.argb(255, 0, 0, 0);
+				state.colorize = 0.0f;
+				//state.setBmpSrcRect(0, 0, 30, 29);
+				obj.addState(state);	
+				anim.addObject(obj);
+				
+				return anim;
+			}
+		}.initialize();
+	}
+	
+	public static AnimationBuilder buildTitleSequence()
+	{
+		return new AnimationBuilder() {	
+			AnimationBuilder initialize()
+			{				
+				return this;
+			}
+			
+			@Override
+			public BattleAnim buildAnimation(BattleEventBuilder builder) 
+			{
+				BattleAnim anim = new BattleAnim(1000.0f);
+
+				//twinkle
+				BattleAnimObject obj = new BattleAnimObject(Types.Bitmap, false, "twinkle");
+				BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Screen);
+				state.pos1 = new Point(120,60);
+				state.size = new Point(18, 18);
+				state.argb(255, 0, 0, 0);
+				state.colorize = 0.0f;				
+				state.makeAnimated(0.1f);
+				state.addFrame(new Rect(0, 0, 9, 9));
+				state.addFrame(new Rect(9, 0, 18, 9));
+				state.addFrame(new Rect(18, 0, 27, 9));
+				state.addFrame(new Rect(9, 0, 18, 9));				
+				obj.addState(state);				
+				state = new BattleAnimObjState(30000, PosTypes.Screen);
+				state.pos1 = new Point(450,120);
+				state.size = new Point(18, 18);
+				state.argb(255, 0, 0, 0);
+				state.colorize = 0.0f;
+				//state.setBmpSrcRect(0, 0, 30, 29);
+				obj.addState(state);	
+				anim.addObject(obj);
+				
+				obj = new BattleAnimObject(Types.Bitmap, false, "dapperhatlogotrans");
+				state = new BattleAnimObjState(2000, PosTypes.Screen);
+				state.pos1 = new Point(224, 144);
+				state.size = new Point(144, 57);
+				state.argb(0, 0, 0, 0);
+				state.colorize = 0.0f;
+				obj.addState(state);
+				state = new BattleAnimObjState(4000, PosTypes.Screen);
+				state.pos1 = new Point(224, 144);
+				state.size = new Point(144, 57);
+				state.argb(255, 255, 255, 255);
+				state.colorize = 1.0f;
+				obj.addState(state);
+				state = new BattleAnimObjState(7000, PosTypes.Screen);
+				state.pos1 = new Point(224, 144);
+				state.size = new Point(144, 57);
+				state.argb(255, 0, 0, 0);
+				state.colorize = 0.0f;
+				obj.addState(state);
+				state = new BattleAnimObjState(8000, PosTypes.Screen);
+				state.pos1 = new Point(224, 144);
+				state.size = new Point(144, 57);
+				state.argb(255, 0, 0, 0);
+				state.colorize = 0.0f;
+				obj.addState(state);
+				state = new BattleAnimObjState(10000, PosTypes.Screen);
+				state.pos1 = new Point(224, 144);
+				state.size = new Point(144, 57);
+				state.argb(0, 0, 0, 0);
+				state.colorize = 0.0f;
+				obj.addState(state);				
+
+				anim.addObject(obj);
+				
+				
+				obj = new BattleAnimObject(Types.Bitmap, false, "titlemainsilver");
+				state = new BattleAnimObjState(10000, PosTypes.Screen);
+				state.pos1 = new Point(224, 144);
+				state.size = new Point(224, 144);
+				state.argb(0, 0, 0, 0);
+				state.colorize = 0.0f;
+				obj.addState(state);
+				state = new BattleAnimObjState(12000, PosTypes.Screen);
+				state.pos1 = new Point(224, 144);
+				state.size = new Point(224, 144);
+				state.argb(255, 255, 255, 255);
+				state.colorize = 1.0f;
+				obj.addState(state);
+				state = new BattleAnimObjState(15000, PosTypes.Screen);
+				state.pos1 = new Point(224, 144);
+				state.size = new Point(224, 144);
+				state.argb(255, 0, 0, 0);
+				state.colorize = 0.0f;
+				obj.addState(state);
+				state = new BattleAnimObjState(30000, PosTypes.Screen);
+				state.pos1 = new Point(224, 144);
+				state.size = new Point(224, 144);
+				state.argb(255, 0, 0, 0);
+				state.colorize = 0.0f;
+				obj.addState(state);				
+
+				anim.addObject(obj);
+				
+				obj = new BattleAnimObject(Types.Bitmap, false, "titlesubsilver");
+				state = new BattleAnimObjState(12000, PosTypes.Screen);
+				state.pos1 = new Point(224, 144);
+				state.size = new Point(224, 144);
+				state.argb(0, 0, 0, 0);
+				state.colorize = 0.0f;
+				obj.addState(state);
+				state = new BattleAnimObjState(14000, PosTypes.Screen);
+				state.pos1 = new Point(224, 144);
+				state.size = new Point(224, 144);
+				state.argb(255, 255, 255, 255);
+				state.colorize = 1.0f;
+				obj.addState(state);
+				state = new BattleAnimObjState(17000, PosTypes.Screen);
+				state.pos1 = new Point(224, 144);
+				state.size = new Point(224, 144);
+				state.argb(255, 0, 0, 0);
+				state.colorize = 0.0f;
+				obj.addState(state);
+				state = new BattleAnimObjState(30000, PosTypes.Screen);
+				state.pos1 = new Point(224, 144);
+				state.size = new Point(224, 144);
+				state.argb(255, 0, 0, 0);
+				state.colorize = 0.0f;
+				obj.addState(state);				
+
+				anim.addObject(obj);
+				
+
+				
+				return anim;
+			}
+		}.initialize();
 	}
 
 }

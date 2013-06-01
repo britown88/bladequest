@@ -151,7 +151,7 @@ public class Battle
 			public void touchActionUp(int x, int y) 
 			{
 				for(MenuPanel mp : characterPanes)
-					if(mp.contains(x, y))
+					if(mp.contains(x, y) && mp.obj != null)
 					{
 						MainMenu.populateCharStatusPanel(charStatusPanel, (PlayerCharacter)mp.obj);
 						stateMachine.setState(getCharStatusState());
@@ -169,7 +169,7 @@ public class Battle
 			public void touchActionUp(int x, int y) 
 			{
 				for(MenuPanel mp : characterPanes)
-					if(mp.contains(x, y))
+					if(mp.contains(x, y) && mp.obj != null)
 					{
 						MainMenu.populateCharStatusPanel(charStatusPanel, (PlayerCharacter)mp.obj);
 						stateMachine.setState(getCharStatusState());
@@ -269,7 +269,7 @@ public class Battle
 			public void touchActionUp(int x, int y) 
 			{				
 				for(MenuPanel mp : characterPanes)
-					if(mp.contains(x, y))
+					if(mp.contains(x, y) && mp.obj != null)
 					{
 						MainMenu.populateCharStatusPanel(charStatusPanel, (PlayerCharacter)mp.obj);
 						stateMachine.setState(getCharStatusState());

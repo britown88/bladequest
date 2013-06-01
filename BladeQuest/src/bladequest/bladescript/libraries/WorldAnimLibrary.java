@@ -32,6 +32,18 @@ public class WorldAnimLibrary
 		
 	}
 	
+	public static AnimationBuilder genMoonKun(int i)
+	{
+		return WorldAnimations.buildSugoiMoon();
+		
+	}
+	
+	public static AnimationBuilder genTitleSequence(int i)
+	{
+		return WorldAnimations.buildTitleSequence();
+		
+	}
+	
 	
 	public static AnimationBuilder genWindowShatter(int value)
 	{

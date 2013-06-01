@@ -1,5 +1,8 @@
 package bladequest.graphics;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.graphics.Point;
 import android.graphics.Rect;
 import bladequest.world.Global;
@@ -24,6 +27,39 @@ public class BattleAnimObjState
 	public Rect bmpSrcRect;
 	
 	Interpolatable interpObj;
+	
+	private boolean isSpriteAnimated;
+	private int spriteIndex;
+	private float frameLength;
+	private long spriteStartTime;
+	private List<Rect> frames;
+	
+	public void makeAnimated(float frameLength)
+	{
+		isSpriteAnimated = true;
+		this.frameLength = frameLength;
+		spriteIndex = 0;
+	}
+	
+	public void addFrame(Rect frame)
+	{
+		frames.add(frame);
+	}
+	
+	public void updateSpriteAnimation()
+	{
+		if(isSpriteAnimated && frames.size() > 0)
+		{
+			if(System.currentTimeMillis() - spriteStartTime >= frameLength*1000.0f)
+			{
+				spriteStartTime = System.currentTimeMillis();
+				spriteIndex++;
+				if(spriteIndex >= frames.size())
+					spriteIndex = 0;
+				bmpSrcRect = frames.get(spriteIndex);
+			}
+		}
+	}
 	
 	public void setBmpSrcRect(int left, int top, int right, int bottom){bmpSrcRect = new Rect(left, top, right, bottom);}
 	public void setRandomRange(Rect range){randomRange = range; random = true;}
@@ -65,6 +101,7 @@ public class BattleAnimObjState
 	
 	public BattleAnimObjState()
 	{
+		frames = new ArrayList<Rect>();
 	}
 	public BattleAnimObjState(int frame, PosTypes posType)
 	{
@@ -79,6 +116,8 @@ public class BattleAnimObjState
 		pos1 = new Point(0,0);
 		pos2 = new Point(0,0);
 		size = new Point(0,0);
+		
+		frames = new ArrayList<Rect>();
 	}
 	public BattleAnimObjState(int frame, PosTypes posType, Interpolatable interpObj)
 	{
@@ -86,6 +125,8 @@ public class BattleAnimObjState
 		this.frame = frame;
 		this.posType = posType;		
 		this.interpObj = interpObj;
+		
+		frames = new ArrayList<Rect>();
 	}
 	
 	public void argb(int a, int r, int g, int b)
@@ -105,6 +146,12 @@ public class BattleAnimObjState
 		
 		this.interpObj = other.interpObj;
 		if (interpObj != null) return;
+		
+		
+		this.isSpriteAnimated = other.isSpriteAnimated;
+		this.spriteIndex = other.spriteIndex; 
+		this.frameLength = other.frameLength;
+		this.frames = new ArrayList<Rect>(other.frames);
 		
 		
 		this.mirrored = other.mirrored;
