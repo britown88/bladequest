@@ -75,16 +75,38 @@ addDep (damageAction 1.5 "Magic" > addDamageComponent "Fire" 1.0))
 
 #########ENEMY ABILITIES#################
 
+#######COMMON##########
 addDefaultWait ability
   add ability (waitAction 450)
+
+
+
+
+
+###############RAT####################
 
 \bite <- (addAbility "bite" "Bite" "Single" 5 >
 add (\defWait <- waitAction 450) >
 addDep (animAction "bite") >
-addDep (inflictStatusAction (poisonStatus 1.5)) >
 add (addDependency (waitAction 250)  defWait) >
 addDep (damageAction 1.5 "Physical"))
 
+
+###############BAT####################
+
+\drain <- (addAbility "drain" "Drain" "Single" 3 >
+add (\defWait <- waitAction 450) >
+addDep (scriptAction ([builder]
+   \source <- getSource(builder)
+   \target <- getTarget(builder)
+   \damage <- (basicDamageCalc source target 0.65 "Magic")
+   add builder (damageAction damage "Fixed") >
+   addDep (animBuildAction "drain") >
+   addDep (targetSelfAction (damageAction (negate damage) "Fixed"))
+   )))
+
+
+############LEAFY RABBIT################
 
 
 ################RECRUIT  ABILITIES############################################

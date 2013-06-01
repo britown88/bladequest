@@ -71,10 +71,10 @@ makeRatAI enemy
 \rat <- (addEnemy "rat" "Rat" "rat" >
 setEBaseStats 10 1 1 1 >
 addColoredStaffHit (RGBA 255 0 0 255) (RGBA 0 0 0 255) >
-setELevel 4 >
+setELevel 5 >
 setGold 23 >
 setItems "potion" 25 "antidote" 85 true >
-modStat "MaxHP" 0 >
+modStat "MaxHP" -10 >
 makeRatAI >
 addEAbility "bite" >
 setEShadow (createShadow 40 36 15))
@@ -124,14 +124,28 @@ addAttackOnlyState >
 setGold 52 >
 setEShadow (createShadow 71 34 50 > nudgeX -11))
 
+
+#######BAT AI######
+
+setUseDrainState enemy
+   enemy > setEnemyAI (
+           createAI "useDrain" (createAIState ([e decision] 
+           		decision > setAbility (e > getEnemyAbility "drain")
+           ))) 
+ 
+
+#######END AI####
 #
 \bat <- (addEnemy "bat" "Bat" "bat" >
 addDefaultDaggerHit >
-setEBaseStats 7 10 8 0 >
-setELevel 6 >
+setEBaseStats 5 10 8 3 >
+setELevel 7 >
 setGold 42  >
-addAttackOnlyState >
+setUseDrainState >
 setItems "potion" 50 " " 0 true >
+addEAbility "drain" >
+modStat "MaxHP" -30 >
+modStat "Intelligence" 2 >
 setEShadow (createShadow 34 12 30 > addElevation 16))
 
 #

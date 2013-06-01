@@ -249,6 +249,33 @@ public abstract class ScriptVar {
 			}
 		}.initialize(intVar);
 	}	
+	public static ScriptVar toScriptVar(float fltVar)
+	{
+		return new ScriptVar()
+		{
+			float fltVar;
+			ScriptVar initialize(float fltVar)
+			{
+				this.fltVar = fltVar;
+				return this;
+			}
+			@Override
+			public ScriptVar clone() {
+				return this;
+			}
+			@Override
+			public boolean isFloat() 
+			{
+				return true; 
+			}
+			@Override
+			public float getFloat() 
+			{
+				return fltVar;
+			}
+		}.initialize(fltVar);
+	}	
+	
 	public static ScriptVar convertStringList(List<String> strings)
 	{
 		List<ScriptVar> vars = new ArrayList<ScriptVar>();

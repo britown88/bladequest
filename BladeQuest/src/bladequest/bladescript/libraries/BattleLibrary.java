@@ -11,6 +11,7 @@ import bladequest.battleactions.bactBarrelRoll;
 import bladequest.battleactions.bactBasicAttack;
 import bladequest.battleactions.bactBreakStance;
 import bladequest.battleactions.bactDamage;
+import bladequest.battleactions.bactFlash;
 import bladequest.battleactions.bactFullRestore;
 import bladequest.battleactions.bactInflictStatus;
 import bladequest.battleactions.bactJumpHome;
@@ -19,6 +20,7 @@ import bladequest.battleactions.bactMirror;
 import bladequest.battleactions.bactRemoveStatus;
 import bladequest.battleactions.bactRunAnimation;
 import bladequest.battleactions.bactRunAnimationBuilder;
+import bladequest.battleactions.bactScript;
 import bladequest.battleactions.bactSetFace;
 import bladequest.battleactions.bactShatter;
 import bladequest.battleactions.bactSneakToTarget;
@@ -33,6 +35,7 @@ import bladequest.bladescript.ScriptVar.BadTypeException;
 import bladequest.combat.Battle;
 import bladequest.combat.BattleCalc;
 import bladequest.combat.BattleEventBuilder;
+import bladequest.combat.DamageComponent;
 import bladequest.combat.triggers.Condition;
 import bladequest.combat.triggers.Trigger;
 import bladequest.enemy.Enemy;
@@ -172,7 +175,10 @@ public class BattleLibrary {
 	{
 		return new bactFullRestore();
 	}
-	
+	public static BattleAction flashAction(float seconds, int a, int r, int g, int b)
+	{
+		return new bactFlash(seconds,a,r,g,b);
+	}
 	public static BattleAction messageAction(String message)
 	{
 		return new bactMessage(message);
@@ -229,6 +235,20 @@ public class BattleLibrary {
 		builder.addEventObject(action.addDependency(builder.getLast()));
 		return builder;
 	}
+	public static PlayerCharacter getTarget(BattleEventBuilder builder)
+	{
+		return BattleAction.getTarget(builder);
+	}
+	public static PlayerCharacter getSource(BattleEventBuilder builder)
+	{
+		return builder.getSource();
+	}
+	public static float basicDamageCalc(PlayerCharacter attacker, PlayerCharacter defender, float power, String type)
+	{
+		return BattleCalc.calculatedDamage(attacker, defender, power, DamageTypes.valueOf(type), new ArrayList<DamageComponent>(), 0.0f, BattleCalc.AccuracyType.Regular);
+	}
+	
+	
 	public static BattleEventBuilder makeGraphicalBattleEventBuilder(Battle battle)
 	{
 		return battle.makeGraphicalBattleEventBuilder();
@@ -276,6 +296,12 @@ public class BattleLibrary {
 
 		return child;
 	}
+	
+	public static BattleAction scriptAction(ScriptVar script)
+	{
+		return new bactScript(script);
+	}
+	
 	
 	public static BattleAction specialMirroringAction(boolean mirrored)
 	{

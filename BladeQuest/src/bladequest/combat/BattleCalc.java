@@ -41,7 +41,7 @@ public class BattleCalc
 		} 
 	}
 	
-	public static int calculatedDamage(PlayerCharacter attacker, PlayerCharacter defender, float power, DamageTypes type, List<DamageComponent> damageComponents, float customMiss, AccuracyType accuracy)
+	public static int calculatedDamage(PlayerCharacter attacker, PlayerCharacter defender, float power, DamageTypes type, List<DamageComponent> arrayList, float customMiss, AccuracyType accuracy)
 	{
 		boolean hitStatusApplied = false;
 		
@@ -117,7 +117,7 @@ public class BattleCalc
 					damageReturnType = DamageReturnType.Blocked;
 				}
 
-				finalDmg = applyAffinities(baseDmg + dmgMod, attacker, defender, damageComponents);
+				finalDmg = applyAffinities(baseDmg + dmgMod, attacker, defender, arrayList);
 				
 				roll = Global.rand.nextInt(100);
 				int critChance = (int)((float)attacker.getStat(Stats.Crit)*(maxCrit/255.0f));
@@ -140,7 +140,7 @@ public class BattleCalc
 			break;
 		case Magic:
 		case MagicalIgnoreDef:
-			finalDmg = applyAffinities(baseDmg + dmgMod, attacker, defender, damageComponents);
+			finalDmg = applyAffinities(baseDmg + dmgMod, attacker, defender, arrayList);
 			if (!hitStatusApplied)
 			{
 				damageReturnType = DamageReturnType.Hit;

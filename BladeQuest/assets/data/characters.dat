@@ -21,7 +21,7 @@ setAbilityName "Magic" >
 setCombatAction "combAuras" >
 setBaseStats 3 3 6 10 >
 setLevel 99 >
-mapBound addAbility {"heal", "ignite"} >
+mapBound addAbility {"heal", "ignite", "drain"} >
 mapBound equip {"windstaff", "felthat", "cottonshirt"}) > 
 setDefaultShadow
 
