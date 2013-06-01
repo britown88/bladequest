@@ -452,7 +452,7 @@ public class MerchantScreen
 		
 		buySellPanel.getTextAt(0).text = selling ? "Selling" : "Buying";
 		buySellPanel.changePicBox(0, Global.createIcon(itemtoBuySell.getIcon(), buySellPanel.openSize.x / 2 - d, barHeight/2, iconScale));
-		buySellPanel.getTextAt(1).text = itemtoBuySell.getName();
+		buySellPanel.getTextAt(1).text = itemtoBuySell.getDisplayName();
 		
 		int owned = Global.party.getItemCount(itemtoBuySell.idName);
 		int unitPrice = getCost(itemtoBuySell.getValue());
@@ -485,7 +485,7 @@ public class MerchantScreen
 			
 			disabled = Global.party.getGold() < i.getValue() || itemCount == 0;
 			
-			entry = items.addItem(i.getName(), i, disabled);
+			entry = items.addItem(i.getDisplayName(), i, disabled);
 			
 			entry.getTextAt(0).x += d*2 + 4;					
 
@@ -511,7 +511,7 @@ public class MerchantScreen
 		{		
 			if(i.isSellable() && i.getType() != Item.Type.Key)
 			{
-				entry = items.addItem(i.getName(), i, false);			
+				entry = items.addItem(i.getDisplayName(), i, false);			
 				entry.getTextAt(0).x += d*2 + 4;					
 				//add item count
 				entry.addTextBox(""+i.getValue()+"G", items.getColumnWidth() - d, items.getRowHeight()/2, menuTextRight);

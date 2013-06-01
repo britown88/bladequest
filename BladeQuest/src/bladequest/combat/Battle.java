@@ -334,7 +334,7 @@ public class Battle
 			@Override
 			public void addMenuItems() {
 				for(Item i : Global.party.getUsableInventory(UseTypes.Battle))
-					mainMenu.addItem(i.getName(), i, false);
+					mainMenu.addItem(i.getShortName(), i, false);
 			}
 		};
 	}
@@ -371,7 +371,7 @@ public class Battle
 			@Override
 			public void addMenuItems() {
 				for(Ability a : currentChar.getAbilities())
-					mainMenu.addItem(a.getDisplayName(), a, !a.isEnabled() || a.MPCost() > currentChar.getMP());
+					mainMenu.addItem(a.getShortName(), a, !a.isEnabled() || a.MPCost() > currentChar.getMP());
 			}
 		};
 	}
@@ -964,7 +964,7 @@ public class Battle
 		if(wonItem != null)
 		{
 			Global.party.addItem(wonItem, 1);	
-			addMsgToInfobar("Found a " + Global.items.get(wonItem).getName() + "!");
+			addMsgToInfobar("Found a " + Global.items.get(wonItem).getDisplayName() + "!");
 		}		
 		
 	}
@@ -1207,7 +1207,7 @@ public class Battle
 				//set frame text
 				switch(action)
 				{case Attack:setInfoBarText(actor.getDisplayName()+" attacks!");break;
-				case Item:setInfoBarText(actor.getDisplayName()+" uses "+actor.getItemToUse().getName()+"!");break;
+				case Item:setInfoBarText(actor.getDisplayName()+" uses "+actor.getItemToUse().getDisplayName()+"!");break;
 				case Ability:setInfoBarText(actor.getDisplayName()+" casts "+ability.getDisplayName()+"!");break;
 				case CombatAction:setInfoBarText(actor.getDisplayName()+actor.getCombatActionText());break;
 				default: break;}
@@ -1233,7 +1233,7 @@ public class Battle
 					}						
 					else if(action == Action.Item)
 					{
-						showDisplayName(actor.getItemToUse().getName());
+						showDisplayName(actor.getItemToUse().getDisplayName());
 					}
 					else if (action == Action.Run)
 					{

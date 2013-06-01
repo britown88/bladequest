@@ -284,14 +284,14 @@ public class Party
 		List<String> nameList = new ArrayList<String>();
 		
 		for(Item i : inventory)
-			nameList.add(i.getName());
+			nameList.add(i.getDisplayName());
 		
 		Collections.sort(nameList);
 		
 		List<Item> newList = new ArrayList<Item>();
 		for(String s : nameList)
 			for(Item i : inventory)
-				if(i.getName() == s)
+				if(i.getDisplayName() == s)
 				{
 					newList.add(i);
 					break;
@@ -360,14 +360,14 @@ public class Party
 		
 		for(Item i : inventory)
 			if(i.getType() == Item.Type.Key)				
-				nameList.add(i.getName());
+				nameList.add(i.getDisplayName());
 		
 		Collections.sort(nameList);
 		
 		List<Item> newList = new ArrayList<Item>();
 		for(String s : nameList)
 			for(Item i : inventory)
-				if(i.getName() == s)
+				if(i.getDisplayName() == s)
 				{
 					newList.add(i);
 					break;

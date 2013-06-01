@@ -60,7 +60,6 @@ public class BattleLibrary {
 	{
 		return p.isInBattle();
 	}	
-
 	
 	public static Ability addAbility(String name, String displayName, String targetType, int mpcost)
 	{
@@ -78,6 +77,11 @@ public class BattleLibrary {
 	public static Ability setShortDescription(Ability ability, String desc)
 	{
 		ability.setShortDescription(desc);
+		return ability;
+	}
+	public static Ability setShortName(Ability ability, String desc)
+	{
+		ability.setShortName(desc);
 		return ability;
 	}
 	public static Ability useOutsideBattle(Ability ability)

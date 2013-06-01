@@ -13,7 +13,7 @@ public class combDragonForm extends CombatAction
 {
 	public combDragonForm()
 	{
-		name = "DragonForm";
+		name = "Drgn Form";
 		type = DamageTypes.Magic;
 		targetType = TargetTypes.Self;
 		actionText = " assumes the form of a dragon!";

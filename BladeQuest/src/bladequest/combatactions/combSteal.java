@@ -127,7 +127,7 @@ public class combSteal extends CombatAction
 						Global.party.addItem(item, 1);
 						
 						builder.addMarker(new DamageMarker("STEAL", target));
-						Global.battle.setInfoBarText("Stole a "+ Global.items.get(item).getName() +"!");
+						Global.battle.setInfoBarText("Stole a "+ Global.items.get(item).getDisplayName() +"!");
 					}
 				}
 				else

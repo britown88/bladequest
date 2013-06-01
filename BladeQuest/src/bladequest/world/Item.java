@@ -13,7 +13,7 @@ import bladequest.graphics.WeaponSwingDrawable;
 
 public class Item 
 {
-	private String displayName, icon, description, shortDescription;
+	private String displayName, shortName, icon, description, shortDescription;
 	private int count, useCount;
 	private Type type;
 	private int power, value;
@@ -109,10 +109,12 @@ public class Item
 	
 	public List<BattleAction> getActions() { return actions;}
 	public void addAction(BattleAction action){actions.add(action);}	
-	public String getName(){return displayName;}	
+	public String getDisplayName(){return displayName;}	
 	public String getDescription(){return description;}
 	public String getShortDescription() { return shortDescription == null ? description : shortDescription;}
 	public void setShortDescription(String desc) { shortDescription = desc;}
+	public String getShortName() { return shortName == null ? displayName : shortName;}
+	public void setShortName(String desc) { shortName = desc;}
 	public int getCount(){return count - useCount;}	
 	public void setCount(int i){count = i; useCount = 0;}
 	public int getId(){return id;}

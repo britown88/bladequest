@@ -139,7 +139,8 @@ addDefaultWait >
 addDep (animBuildAction "heal") >
 addDep (damageAction -50.0 "Fixed"))
 
-\megalixer <- (addItem "megalixer" "MegaLicksr" "Usable" "orb" "Fully heals all allies." >
+\megalixer <- (addItem "megalixer" "MegaLickser" "Usable" "orb" "Fully heals all allies." >
+setShortName "MegaLiksr" >
 setValue 9999 >
 setTargetType "AllAllies" >
 addDefaultWait >
