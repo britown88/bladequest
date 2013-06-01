@@ -147,6 +147,14 @@ public class MsgBox extends MenuPanel
 	}
 	
 	@Override
+	public void setClosed()
+	{
+		super.setClosed();
+		yesNoMenu.setClosed();
+		msgQueue.clear();
+	}
+	
+	@Override
 	public void open()
 	{
 		super.open();

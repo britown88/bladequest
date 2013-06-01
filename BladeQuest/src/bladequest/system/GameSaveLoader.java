@@ -137,7 +137,7 @@ public class GameSaveLoader
 		public String readString() {
 			skipAhead();
 			StringBuilder builder = new StringBuilder();
-			while (data[index] != '\"')
+			while (!atEnd() && data[index] != '\"')
 			{
 				if (data[index] == '\\')
 				{
@@ -154,7 +154,7 @@ public class GameSaveLoader
 		@Override
 		public int readInt() {
 			StringBuilder builder = new StringBuilder();
-			while (data[index] != ' ')
+			while (!atEnd() && data[index] != ' ')
 			{
 				builder.append(data[index++]);
 			}
@@ -165,7 +165,7 @@ public class GameSaveLoader
 		@Override
 		public float readFloat() {
 			StringBuilder builder = new StringBuilder();
-			while (data[index] != ' ')
+			while (!atEnd() && data[index] != ' ')
 			{
 				builder.append(data[index++]);
 			}

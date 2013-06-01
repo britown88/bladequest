@@ -40,12 +40,16 @@ public class BladeSong extends Serializable {
 		public Object deserialize(Deserializer deserializer) {
 			
 			BladeSong instance = instance();
-			instance.stop();
+			//instance.stop();
 			
 			if (deserializer.readInt() != 0) //something should be playing, and it's....
 			{
 				//TODO: Make this not just guess arguments (e.g. not suck donkey balls)
-				instance.play(deserializer.readString(), false, true, 2.0f);
+				instance.fadeInto(2.0f, deserializer.readString(), 2.0f);
+			}
+			else
+			{
+				instance.fadeOut(2.0f);
 			}
 			return instance;
 		}
@@ -58,6 +62,7 @@ public class BladeSong extends Serializable {
 		void onStop(){}
 		void onPause(){}
 		void onResume(){}
+		void onSkipIntro(){}
 		void onSerialize(Serializer serializer){serializer.write(0);} //by default, write 0 for "Stopped",
 		String playingSong(){return "";}
 		abstract BladeSongState strippedState();
@@ -99,6 +104,10 @@ public class BladeSong extends Serializable {
 		{
 			track.kill();
 			currentState = new StoppedState();
+		}
+		void onSkipIntro()
+		{
+			track.skipIntro();
 		}
 		BladeSongState strippedState()
 		{
@@ -157,6 +166,10 @@ public class BladeSong extends Serializable {
 			//!?!?
 			stop();
 		}				
+		void onSkipIntro()
+		{
+			parent.onSkipIntro();
+		}
 		BladeSongState strippedState()
 		{
 			return parent.strippedState();
@@ -196,12 +209,72 @@ public class BladeSong extends Serializable {
 		{
 			parent.onResume();
 		}		
+		void onSkipIntro()
+		{
+			parent.onSkipIntro();
+		}
 		void onSerialize(Serializer serializer)
 		{
 			parent.onSerialize(serializer);
 		}		
 	}	
 	
+	private class FadeIntoState extends BladeSongState
+	{
+		PlaySongState parent;
+		long startTime;
+		float fadeOutTime, fadeInTime;
+		String nextSong;
+		FadeIntoState(PlaySongState parent, float fadeOutTime, String nextSong, float fadeInTime)// in seconds
+		{
+			this.parent = parent;
+			this.nextSong = nextSong;
+			this.fadeOutTime = fadeOutTime * 1000.0f;
+			this.fadeInTime = fadeInTime;
+			this.startTime = System.currentTimeMillis();
+		}
+		void onUpdate()
+		{
+			parent.onUpdate();
+			long time = System.currentTimeMillis()- startTime;
+			if (time > fadeOutTime)
+			{
+				play(nextSong, true, true, fadeInTime);
+			}
+			else
+			{
+				float volume = 1.0f-(time/((float)fadeOutTime));
+				parent.track.setVolume(volume);
+			}
+		}		
+		void onStop()
+		{
+			parent.onStop();
+		}		
+		void onPause()
+		{
+			parent.onPause();
+		}
+		void onResume()
+		{
+			//!?!?
+			parent.onResume();
+		}				
+		void onSkipIntro()
+		{
+			parent.onSkipIntro();
+		}
+		BladeSongState strippedState()
+		{
+			return parent.strippedState();
+		}	
+		void onSerialize(Serializer serializer)
+		{
+			serializer.write(1);
+			serializer.write(nextSong);
+			//more info here....
+		}
+	}
 
 	public synchronized void stop()
 	{
@@ -237,8 +310,11 @@ public class BladeSong extends Serializable {
 	public synchronized void pause()
 	{
 		currentState.onPause();
+	}	
+	public synchronized void skipIntro()
+	{
+		currentState.onSkipIntro();
 	}
-	
 	private PlaySongState getPlayingSongState() 
 	{
 		PlaySongState state = null;
@@ -268,6 +344,19 @@ public class BladeSong extends Serializable {
 		PlaySongState state = getPlayingSongState();
 		if (state == null) return; //can't fade out while not playing anything!
 		currentState = new FadeOutState(state, fadeTime);
+	}
+	
+	public synchronized void fadeInto(float fadeOutTime, String nextSong, float fadeInTime)
+	{
+		PlaySongState state = getPlayingSongState();
+		
+		if (fadeOutTime <= 0.0f || state == null)
+		{
+			play(nextSong, true, true, fadeInTime);
+			return;
+		}
+
+		currentState = new FadeIntoState(state, fadeOutTime, nextSong, fadeInTime);
 	}
 	
 	//system music calls for screen on/off
