@@ -14,7 +14,7 @@ public class Ability
 	private boolean usableOutOfBattle;
 	private boolean enabled;
 	
-	public String name, description;
+	public String name, description, shortDescription;
 	
 	private List<BattleAction> actions;
 	
@@ -30,6 +30,8 @@ public class Ability
 		
 		actions = new ArrayList<BattleAction>();
 	}
+	public String getShortDescription() { return shortDescription == null ? description : shortDescription;}
+	public void setShortDescription(String desc) { shortDescription = desc;}
 	public void setDescription(String desc)
 	{
 		this.description = desc;

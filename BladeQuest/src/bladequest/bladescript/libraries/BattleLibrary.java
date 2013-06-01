@@ -41,6 +41,7 @@ import bladequest.statuseffects.sePoison;
 import bladequest.world.Ability;
 import bladequest.world.DamageTypes;
 import bladequest.world.Global;
+import bladequest.world.Item;
 import bladequest.world.PlayerCharacter;
 import bladequest.world.Stats;
 import bladequest.world.TargetTypes;
@@ -74,7 +75,11 @@ public class BattleLibrary {
 		ability.setDescription(description);
 		return ability;
 	}
-	
+	public static Ability setShortDescription(Ability ability, String desc)
+	{
+		ability.setShortDescription(desc);
+		return ability;
+	}
 	public static Ability useOutsideBattle(Ability ability)
 	{
 		ability.makeUsableOutOfBattle();

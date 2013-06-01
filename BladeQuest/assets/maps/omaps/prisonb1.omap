@@ -78,6 +78,7 @@ addSwitchCondition "guardsturned"
 
 
 
+
 #!OBJ 3 15
 \name$3x15$ <- newObject "name" 3 15
 
@@ -291,4 +292,31 @@ addAction (fadeControl 1.0 255 0 0 0 false true)
 
 
 \runstate1$26x4$ <- state1$26x4$ 0
+
+#!OBJ 3 11
+\objName$3x11$ <- "name"
+\name$3x11$ <- newObject objName$3x11$ 3 11
+
+state1$3x11$ 0
+name$3x11$ > createState >
+setCollisionData true true true true >
+setSprite "chest" >
+setAnimated false >
+setImageIndex 0 >
+addAction (switchControl "prisonb1chest1" true) >
+addAction (message "Found a sleeping bag!") >
+addAction (modifyInventory "sleepingbag" 1 false)
+
+\runstate1$3x11$ <- state1$3x11$ 0
+
+state2$3x11$ 0
+name$3x11$ > createState >
+addSwitchCondition "prisonb1chest1" >
+setCollisionData true true true true >
+setSprite "chest" >
+setAnimated false >
+setImageIndex 1
+
+
+\runstate2$3x11$ <- state2$3x11$ 0
 

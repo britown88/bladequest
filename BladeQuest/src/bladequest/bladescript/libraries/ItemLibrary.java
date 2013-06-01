@@ -21,6 +21,11 @@ public class ItemLibrary {
 		itm.setPower(power);
 		return itm;
 	}
+	public static Item setShortDescription(Item item, String desc)
+	{
+		item.setShortDescription(desc);
+		return item;
+	}
 	public static Item setUsableBy(Item itm, String character)
 	{
 		itm.addUsableBy(character);

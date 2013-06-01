@@ -1413,12 +1413,12 @@ public class MainMenu
 		if(itemToUse != null)
 		{
 			charUseInfo.getTextAt(0).text = "Count:" + itemToUse.getCount();
-			charUseDesc.getTextAt(0).text = itemToUse.getDescription();
+			charUseDesc.getTextAt(0).text = itemToUse.getShortDescription();
 		}
 		if(abilityToUse != null)
 		{
 			charUseInfo.getTextAt(0).text = "Cost:" + abilityToUse.MPCost();
-			charUseDesc.getTextAt(0).text = abilityToUse.getDescription();
+			charUseDesc.getTextAt(0).text = abilityToUse.getShortDescription();
 		}
 		
 		//update frames		

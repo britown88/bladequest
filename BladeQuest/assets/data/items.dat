@@ -162,6 +162,7 @@ addDep (animBuildAction "antidote") >
 addDep (removeStatusAction "poison"))
 
 \antidote <- (addItem "sleepingbag" "Sleeping Bag" "UsableSavePointOnly" "orb" "Use at a save point to fully restore one party member." >
+setShortDescription "Restore a party member." >
 setValue 100 >
 setTargetType "Single" >
 addDefaultWait >
