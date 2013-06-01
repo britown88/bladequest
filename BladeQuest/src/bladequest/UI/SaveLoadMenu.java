@@ -127,7 +127,7 @@ public class SaveLoadMenu
 				if(saveLoad == LOADING && Global.saveLoader.save != null)
 				{
 					Global.screenFader.clear();
-					BladeSong.instance().play("", false, true, 0);	
+					//BladeSong.instance().play("", false, true, 0);	
 					Global.party.allowSaving();
 					Global.menuButton.open();
 
@@ -227,7 +227,7 @@ public class SaveLoadMenu
 						Global.saveLoader.loadGame((Integer)menu.getSelectedEntry().obj);
 						Global.clearAnimations();
 						//Global.musicBox.pause(1.0f);
-						BladeSong.instance().fadeOut(1.0f);
+						//BladeSong.instance().fadeOut(1.0f);
 						showMessage("Game loaded!", false);
 						closeAfterMsg = true;
 					}

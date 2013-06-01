@@ -2,7 +2,7 @@
 
 
 #####################ARAMIS####################################
-\poisonjab <- (addAbility "poisonjab" "Coat Weapon" "Single" 2 >
+\poisonjab <- (addAbility "coatweapon" "Coat Weapon" "Single" 2 >
 setShortName "Coat Wpn" >
 setDesc "Coats an ally's weapon with poison, giving them a chance to inflict poison on hit." >
 add (setFaceAction "Cast" 0) >

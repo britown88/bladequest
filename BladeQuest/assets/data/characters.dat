@@ -3,15 +3,16 @@
 setDefaultShadow character
   setShadow character (createShadow 32 16 32)
 
-\aramis <- (createCharacter "aramis" "Aramis" "baramis" "aramis" >
+\aramis <- createCharacter "aramis" "Aramis" "baramis" "aramis" >
 setPortrait 0 0 >
 setAbilityName "Tricks" >
 setCombatAction "combSteal" >
 setBaseStats 7 10 4 2 >
-setLevel 6 >
+setLevel 5 >
 mapBound equip {"knife", "felthat", "cottonshirt"} >
-mapBound addAbility {"poisonjab", "dblattack", "backstab"} >
-addLearnableAbility "dblattack" 6) > 
+mapBound addAbility {"coatweapon"} >
+addLearnableAbility "dblattack" 6 > 
+addLearnableAbility "backstab" 8 > 
 setDefaultShadow
 
 \joy <- (createCharacter "joy" "Joy" "bjoy" "joy" >

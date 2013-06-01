@@ -42,6 +42,7 @@ addToBranch 1 (gameOver 0))
 
 
 
+
 #!OBJ 2 16
 \objName$2x16$ <- "stairs"
 \name$2x16$ <- newObject objName$2x16$ 2 16
@@ -130,6 +131,7 @@ setSprite "savepoint" >
 setCollisionData true true true true >
 addAction (fadeControl 0.5 255 0 250 200 true true) >
 addAction (fadeControl 0.5 255 0 250 200 false true) >
+addAction (allowSaving 0) >
 addAction (message "An eerie glow surrounds you.") >
 addAction (messageWithYesNo "Save your progress?" > 
 	addToBranch 0 (openSaveMenu 0))

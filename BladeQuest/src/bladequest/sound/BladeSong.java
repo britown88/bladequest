@@ -22,6 +22,7 @@ public class BladeSong extends Serializable {
 		{
 			bladeSongInstance = new BladeSong();
 			Global.saveLoader.registerFactory(deserializeTag, new BladeSongFactory());
+			Global.saveLoader.register(bladeSongInstance);
 		}
 		
 		return bladeSongInstance;

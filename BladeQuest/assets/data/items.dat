@@ -5,7 +5,7 @@ usableByMagicPeople item
   mapBound item setUsableBy {"joy", "roland"}
 
 \knife <- (addItem "knife" "Knife" "Weapon" "dagger" "A small and simple dagger." >
-setPower 7 >
+setPower 5 >
 setValue 10 >
 setUsableBy "aramis" >
 swing "dagger" "slice1" >
