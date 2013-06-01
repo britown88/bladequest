@@ -378,6 +378,12 @@ public class Global
 			worldMsgBox.open();
 	}
 	
+	public static void clearMessages()
+	{
+		if(worldMsgBox != null)
+			worldMsgBox.setClosed();
+	}
+	
 	public static void showMessageTop(String str, boolean yesNoOpt)
 	{
 		if(worldMsgBox == null)
@@ -912,6 +918,7 @@ public class Global
 	
 	public static void restartGame()
 	{
+		clearMessages();
 		screenFader.setFadeColor(255, 255, 255, 255);
 		screenFader.setFaded();
 		

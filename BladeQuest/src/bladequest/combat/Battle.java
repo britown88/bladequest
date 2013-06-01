@@ -70,6 +70,7 @@ public class Battle
 	private boolean prevChar;
 	private boolean nextActor;
 	private boolean allowGameOver;
+	private boolean battleEnding;
 	
 	private PlayerCharacter currentChar;
 	private int currentCharIndex;
@@ -651,6 +652,7 @@ public class Battle
 	
 	public void startBattle(String encounter, boolean allowGameOver)
 	{	
+		battleEnding = false;
 		this.allowGameOver = allowGameOver;
 		startTurn = new Event();
 		onSelectStart = new Event();
@@ -1160,7 +1162,9 @@ public class Battle
 	}
 	private void applyBattleOver()
 	{
+		battleEnding = true;
 		if (!graphicsCleared()) return;
+		
 		
 		if(isVictory())
 		{
@@ -1173,7 +1177,9 @@ public class Battle
 		else if (isEscaped())
 		{
 			stateMachine.setState(getEscapedState());
-		}		
+		}	
+		
+		battleEnding = false;
 	}
 	private void nextActor(boolean firstActor)
 	{	
@@ -1799,11 +1805,12 @@ public class Battle
 	
 	public void backButtonPressed()
 	{
-		stateMachine.getState().backButtonPressed();
+		if(!battleEnding)
+			stateMachine.getState().backButtonPressed();
 	}
 	public void onLongPress(int x, int y)
 	{
-		if(msgBox.Closed())
+		if(msgBox.Closed() && !battleEnding)
 			stateMachine.getState().onLongPress(x, y);
 	}
 	public void touchActionUp(int x, int y)
@@ -1812,8 +1819,8 @@ public class Battle
 			msgBox.touchActionUp(x, y);
 		else 
 		{	
-			
-			stateMachine.getState().touchActionUp(x, y);
+			if(!battleEnding)
+				stateMachine.getState().touchActionUp(x, y);
 		}
 			
 		
@@ -1823,7 +1830,8 @@ public class Battle
 		if(!msgBox.Closed())
 			msgBox.touchActionDown(x, y);
 
-		stateMachine.getState().touchActionDown(x, y);
+		if(!battleEnding)
+			stateMachine.getState().touchActionDown(x, y);
 	
 	}
 	public void touchActionMove(int x, int y)
@@ -1831,7 +1839,8 @@ public class Battle
 		if(!msgBox.Closed())
 			msgBox.touchActionMove(x, y);
 		else
-			stateMachine.getState().touchActionMove(x, y);
+			if(!battleEnding)
+				stateMachine.getState().touchActionMove(x, y);
 
 		
 	}

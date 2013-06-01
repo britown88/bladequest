@@ -434,6 +434,7 @@ public class Party
 	
 	public void teleport(int x, int y)
 	{
+		Global.clearMessages();
 		for(EncounterZone ez : inZoneList)
 			ez.reset();		
 		inZoneList.clear();
