@@ -48,7 +48,8 @@ public class Function extends ScriptVar {
 	public ScriptVar apply(ScriptVar var) throws ParserException {
 		// TODO Auto-generated method stub
 		ScriptVar nextFunc = null;
-		curriedValues.add(var);
+		List<ScriptVar> nextValues = new ArrayList<ScriptVar>(curriedValues);
+		nextValues.add(var);
 		SpecializationLevel specialization = SpecializationLevel.NotSpecialized;
 		for (ScriptVar child : children)
 		{
@@ -72,7 +73,9 @@ public class Function extends ScriptVar {
 			}
 			throw new BadTypeException(types, var.typeName());
 		}
-		return nextFunc.clone().curryValues(curriedValues);
+		
+		
+		return nextFunc.clone().curryValues(nextValues);
 	}
 	@Override
 	public boolean isFunction()

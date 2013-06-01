@@ -6,6 +6,7 @@
 
 
 
+
 #!OBJ 0 0
 \name$0x0$ <- newObject "start" 0 0
 
@@ -145,9 +146,9 @@ state1$6x5$ 0
 name$6x5$ > createState >
 setSpriteFromTile 1 2 >
 setCollisionData true true true true >
-addAction (changeElevation "floatyskull" 64 2.0 true) >
+addAction (changeElevation "floatyskull" 64 2.0 false) >
 addAction (setFloating "floatyskull" true 90 4) >
-addAction (changeElevation "party" 64 2.0 true) >
+addAction (changeElevation "party" 64 2.0 false) >
 addAction (setFloating "party" true 90 4)
 
 

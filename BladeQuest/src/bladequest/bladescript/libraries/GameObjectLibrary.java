@@ -253,9 +253,9 @@ public class GameObjectLibrary
 		Action act = new actReactionBubble(target);
 		return act;
 	}
-	public static Action panControl(int x, int y, int speed, boolean wait)
+	public static Action panControl(int x, int y, float time, boolean wait)
 	{		
-		Action act = new actPanControl(x, y, speed, wait);
+		Action act = new actPanControl(x, y, time, wait);
 		return act;
 	}
 	public static Action expectInput(float delay)

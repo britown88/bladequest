@@ -58,7 +58,7 @@ public class Party
 	
 	private Shadow shadow;
 	private boolean moving, floating;
-	private int startElevation, targetElevation;
+	private int startElevation, targetElevation, floatingElevation;
 	private float elevationTime;
 	private long elevationTimer;
 
@@ -267,7 +267,7 @@ public class Party
 		return usables;
 
 	}
-	
+	public int getElevation(){return shadow.getElevation();}
 	public List<Item> getUsableInventory(Item.UseTypes useType)
 	{
 		List<Item> usables = new ArrayList<Item>();
@@ -679,7 +679,7 @@ public class Party
 		this.floating = floating;
 		this.floatPeriod = periodLength;
 		this.floatIntensity = intensity;
-		this.targetElevation = shadow.getElevation();
+		this.floatingElevation = shadow.getElevation();
 		floatIndex = 0;
 
 	}
@@ -698,13 +698,15 @@ public class Party
 			else
 			{
 				shadow.setElevation(targetElevation);
+				if(floating)
+					floatingElevation = targetElevation;
 				moving = false;				
 			}				
 		}	
 		else if(floating)
 		{			
 			double offset = Math.sin(floatIndex++*(2*Math.PI)/floatPeriod);
-			shadow.setElevation(targetElevation + (int)(offset*floatIntensity));			
+			shadow.setElevation(floatingElevation + (int)(offset*floatIntensity));			
 			
 		}
 			
