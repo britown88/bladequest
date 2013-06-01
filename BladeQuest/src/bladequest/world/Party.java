@@ -19,7 +19,7 @@ import bladequest.world.Item.Type;
 
 public class Party 
 {
-	private boolean allowMovement;
+	private boolean allowMovement, allowSaving;
 	private ObjectPath objPath;
 	private long objPathWaitStart;
 	private boolean objPathWaiting;
@@ -388,6 +388,8 @@ public class Party
 	public void addGold(int gold){this.gold =Math.min(999999, this.gold+gold);}	
 	public int getGold(){return gold;}	
 	public List<Point> getPath(){return movePath;}
+	public boolean SavingAllowed(){return allowSaving;}
+	public void allowSaving(){ allowSaving = true; }
 	
 	public void openReactionBubble(ReactionBubble bubble, float duration, boolean loop)
 	{
@@ -599,6 +601,7 @@ public class Party
 	private void step()
 	{
 		stepcount++;
+		allowSaving = false;
 		gridaligned = true;
 		gridPos = movePath.get(0);
 		

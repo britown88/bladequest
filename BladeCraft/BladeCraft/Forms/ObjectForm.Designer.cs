@@ -51,43 +51,45 @@
          this.manualToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.tsbBranchAction = new System.Windows.Forms.ToolStripButton();
          this.tsbLoopBranch = new System.Windows.Forms.ToolStripButton();
+         this.chkWrap = new System.Windows.Forms.ToolStripButton();
          this.txtScript = new ScintillaNET.Scintilla();
          this.menuStrip1 = new System.Windows.Forms.MenuStrip();
          this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.actionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.movementToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-         this.partyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-         this.effectsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-         this.uIToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.changeElevationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.createPathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.teleportPartyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.setFloatingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.partyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.restorePartyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.modifyPartyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.modifyInventoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.modifyGoldToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.effectsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.closeBubbleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.fadeControlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.openBubbleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.panControlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.pauseMusicToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.playMusicToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.shakeControlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-         this.unloadSceneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.showSceneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.unloadSceneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.uIToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.waitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.resetGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.expectInputToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.switchControlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.startBattleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.uIToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
          this.openSaveMenuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.openNameSelectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.openMerchantToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.messageWithYesNoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.messageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-         this.waitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-         this.resetGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-         this.expectInputToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-         this.switchControlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-         this.fadeControlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-         this.chkWrap = new System.Windows.Forms.ToolStripButton();
-         this.startBattleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.flashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.allowSavingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.toolStrip1.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.txtScript)).BeginInit();
          this.menuStrip1.SuspendLayout();
@@ -290,6 +292,18 @@
          this.tsbLoopBranch.Text = "Loop Branch";
          this.tsbLoopBranch.Click += new System.EventHandler(this.tsbLoopBranch_Click);
          // 
+         // chkWrap
+         // 
+         this.chkWrap.Checked = true;
+         this.chkWrap.CheckOnClick = true;
+         this.chkWrap.CheckState = System.Windows.Forms.CheckState.Checked;
+         this.chkWrap.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+         this.chkWrap.Image = ((System.Drawing.Image)(resources.GetObject("chkWrap.Image")));
+         this.chkWrap.ImageTransparentColor = System.Drawing.Color.Magenta;
+         this.chkWrap.Name = "chkWrap";
+         this.chkWrap.Size = new System.Drawing.Size(23, 22);
+         this.chkWrap.Text = "Wrap Action in Add";
+         // 
          // txtScript
          // 
          this.txtScript.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -353,45 +367,6 @@
          this.movementToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
          this.movementToolStripMenuItem.Text = "Movement";
          // 
-         // partyToolStripMenuItem
-         // 
-         this.partyToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.restorePartyToolStripMenuItem,
-            this.modifyPartyToolStripMenuItem,
-            this.modifyInventoryToolStripMenuItem,
-            this.modifyGoldToolStripMenuItem});
-         this.partyToolStripMenuItem.Name = "partyToolStripMenuItem";
-         this.partyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-         this.partyToolStripMenuItem.Text = "Party";
-         // 
-         // effectsToolStripMenuItem
-         // 
-         this.effectsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.closeBubbleToolStripMenuItem,
-            this.fadeControlToolStripMenuItem,
-            this.openBubbleToolStripMenuItem,
-            this.panControlToolStripMenuItem,
-            this.pauseMusicToolStripMenuItem,
-            this.playMusicToolStripMenuItem,
-            this.shakeControlToolStripMenuItem,
-            this.showSceneToolStripMenuItem,
-            this.unloadSceneToolStripMenuItem});
-         this.effectsToolStripMenuItem.Name = "effectsToolStripMenuItem";
-         this.effectsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-         this.effectsToolStripMenuItem.Text = "Effects";
-         // 
-         // uIToolStripMenuItem
-         // 
-         this.uIToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.waitToolStripMenuItem,
-            this.resetGameToolStripMenuItem,
-            this.expectInputToolStripMenuItem,
-            this.switchControlToolStripMenuItem,
-            this.startBattleToolStripMenuItem});
-         this.uIToolStripMenuItem.Name = "uIToolStripMenuItem";
-         this.uIToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-         this.uIToolStripMenuItem.Text = "System";
-         // 
          // changeElevationToolStripMenuItem
          // 
          this.changeElevationToolStripMenuItem.Name = "changeElevationToolStripMenuItem";
@@ -422,6 +397,18 @@
          this.setFloatingToolStripMenuItem.Text = "setFloating";
          this.setFloatingToolStripMenuItem.Click += new System.EventHandler(this.actionClick);
          // 
+         // partyToolStripMenuItem
+         // 
+         this.partyToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.allowSavingToolStripMenuItem,
+            this.restorePartyToolStripMenuItem,
+            this.modifyPartyToolStripMenuItem,
+            this.modifyInventoryToolStripMenuItem,
+            this.modifyGoldToolStripMenuItem});
+         this.partyToolStripMenuItem.Name = "partyToolStripMenuItem";
+         this.partyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+         this.partyToolStripMenuItem.Text = "Party";
+         // 
          // restorePartyToolStripMenuItem
          // 
          this.restorePartyToolStripMenuItem.Name = "restorePartyToolStripMenuItem";
@@ -450,12 +437,37 @@
          this.modifyGoldToolStripMenuItem.Text = "modifyGold";
          this.modifyGoldToolStripMenuItem.Click += new System.EventHandler(this.actionClick);
          // 
+         // effectsToolStripMenuItem
+         // 
+         this.effectsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.closeBubbleToolStripMenuItem,
+            this.fadeControlToolStripMenuItem,
+            this.flashToolStripMenuItem,
+            this.openBubbleToolStripMenuItem,
+            this.panControlToolStripMenuItem,
+            this.pauseMusicToolStripMenuItem,
+            this.playMusicToolStripMenuItem,
+            this.shakeControlToolStripMenuItem,
+            this.showSceneToolStripMenuItem,
+            this.unloadSceneToolStripMenuItem});
+         this.effectsToolStripMenuItem.Name = "effectsToolStripMenuItem";
+         this.effectsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+         this.effectsToolStripMenuItem.Text = "Effects";
+         // 
          // closeBubbleToolStripMenuItem
          // 
          this.closeBubbleToolStripMenuItem.Name = "closeBubbleToolStripMenuItem";
          this.closeBubbleToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
          this.closeBubbleToolStripMenuItem.Text = "closeBubble";
          this.closeBubbleToolStripMenuItem.Click += new System.EventHandler(this.actionClick);
+         // 
+         // fadeControlToolStripMenuItem
+         // 
+         this.fadeControlToolStripMenuItem.Name = "fadeControlToolStripMenuItem";
+         this.fadeControlToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
+         this.fadeControlToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+         this.fadeControlToolStripMenuItem.Text = "fadeControl";
+         this.fadeControlToolStripMenuItem.Click += new System.EventHandler(this.actionClick);
          // 
          // openBubbleToolStripMenuItem
          // 
@@ -492,6 +504,13 @@
          this.shakeControlToolStripMenuItem.Text = "shakeControl";
          this.shakeControlToolStripMenuItem.Click += new System.EventHandler(this.actionClick);
          // 
+         // showSceneToolStripMenuItem
+         // 
+         this.showSceneToolStripMenuItem.Name = "showSceneToolStripMenuItem";
+         this.showSceneToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+         this.showSceneToolStripMenuItem.Text = "showScene";
+         this.showSceneToolStripMenuItem.Click += new System.EventHandler(this.actionClick);
+         // 
          // unloadSceneToolStripMenuItem
          // 
          this.unloadSceneToolStripMenuItem.Name = "unloadSceneToolStripMenuItem";
@@ -499,12 +518,54 @@
          this.unloadSceneToolStripMenuItem.Text = "unloadScene";
          this.unloadSceneToolStripMenuItem.Click += new System.EventHandler(this.actionClick);
          // 
-         // showSceneToolStripMenuItem
+         // uIToolStripMenuItem
          // 
-         this.showSceneToolStripMenuItem.Name = "showSceneToolStripMenuItem";
-         this.showSceneToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
-         this.showSceneToolStripMenuItem.Text = "showScene";
-         this.showSceneToolStripMenuItem.Click += new System.EventHandler(this.actionClick);
+         this.uIToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.waitToolStripMenuItem,
+            this.resetGameToolStripMenuItem,
+            this.expectInputToolStripMenuItem,
+            this.switchControlToolStripMenuItem,
+            this.startBattleToolStripMenuItem});
+         this.uIToolStripMenuItem.Name = "uIToolStripMenuItem";
+         this.uIToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+         this.uIToolStripMenuItem.Text = "System";
+         // 
+         // waitToolStripMenuItem
+         // 
+         this.waitToolStripMenuItem.Name = "waitToolStripMenuItem";
+         this.waitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W)));
+         this.waitToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+         this.waitToolStripMenuItem.Text = "wait";
+         this.waitToolStripMenuItem.Click += new System.EventHandler(this.actionClick);
+         // 
+         // resetGameToolStripMenuItem
+         // 
+         this.resetGameToolStripMenuItem.Name = "resetGameToolStripMenuItem";
+         this.resetGameToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+         this.resetGameToolStripMenuItem.Text = "resetGame";
+         this.resetGameToolStripMenuItem.Click += new System.EventHandler(this.actionClick);
+         // 
+         // expectInputToolStripMenuItem
+         // 
+         this.expectInputToolStripMenuItem.Name = "expectInputToolStripMenuItem";
+         this.expectInputToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+         this.expectInputToolStripMenuItem.Text = "expectInput";
+         this.expectInputToolStripMenuItem.Click += new System.EventHandler(this.actionClick);
+         // 
+         // switchControlToolStripMenuItem
+         // 
+         this.switchControlToolStripMenuItem.Name = "switchControlToolStripMenuItem";
+         this.switchControlToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+         this.switchControlToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+         this.switchControlToolStripMenuItem.Text = "switchControl";
+         this.switchControlToolStripMenuItem.Click += new System.EventHandler(this.actionClick);
+         // 
+         // startBattleToolStripMenuItem
+         // 
+         this.startBattleToolStripMenuItem.Name = "startBattleToolStripMenuItem";
+         this.startBattleToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+         this.startBattleToolStripMenuItem.Text = "startBattle";
+         this.startBattleToolStripMenuItem.Click += new System.EventHandler(this.actionClick);
          // 
          // uIToolStripMenuItem1
          // 
@@ -554,62 +615,19 @@
          this.messageToolStripMenuItem.Text = "message";
          this.messageToolStripMenuItem.Click += new System.EventHandler(this.actionClick);
          // 
-         // waitToolStripMenuItem
+         // flashToolStripMenuItem
          // 
-         this.waitToolStripMenuItem.Name = "waitToolStripMenuItem";
-         this.waitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W)));
-         this.waitToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
-         this.waitToolStripMenuItem.Text = "wait";
-         this.waitToolStripMenuItem.Click += new System.EventHandler(this.actionClick);
+         this.flashToolStripMenuItem.Name = "flashToolStripMenuItem";
+         this.flashToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+         this.flashToolStripMenuItem.Text = "flash";
+         this.flashToolStripMenuItem.Click += new System.EventHandler(this.actionClick);
          // 
-         // resetGameToolStripMenuItem
+         // allowSavingToolStripMenuItem
          // 
-         this.resetGameToolStripMenuItem.Name = "resetGameToolStripMenuItem";
-         this.resetGameToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
-         this.resetGameToolStripMenuItem.Text = "resetGame";
-         this.resetGameToolStripMenuItem.Click += new System.EventHandler(this.actionClick);
-         // 
-         // expectInputToolStripMenuItem
-         // 
-         this.expectInputToolStripMenuItem.Name = "expectInputToolStripMenuItem";
-         this.expectInputToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
-         this.expectInputToolStripMenuItem.Text = "expectInput";
-         this.expectInputToolStripMenuItem.Click += new System.EventHandler(this.actionClick);
-         // 
-         // switchControlToolStripMenuItem
-         // 
-         this.switchControlToolStripMenuItem.Name = "switchControlToolStripMenuItem";
-         this.switchControlToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-         this.switchControlToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
-         this.switchControlToolStripMenuItem.Text = "switchControl";
-         this.switchControlToolStripMenuItem.Click += new System.EventHandler(this.actionClick);
-         // 
-         // fadeControlToolStripMenuItem
-         // 
-         this.fadeControlToolStripMenuItem.Name = "fadeControlToolStripMenuItem";
-         this.fadeControlToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
-         this.fadeControlToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
-         this.fadeControlToolStripMenuItem.Text = "fadeControl";
-         this.fadeControlToolStripMenuItem.Click += new System.EventHandler(this.actionClick);
-         // 
-         // chkWrap
-         // 
-         this.chkWrap.Checked = true;
-         this.chkWrap.CheckOnClick = true;
-         this.chkWrap.CheckState = System.Windows.Forms.CheckState.Checked;
-         this.chkWrap.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-         this.chkWrap.Image = ((System.Drawing.Image)(resources.GetObject("chkWrap.Image")));
-         this.chkWrap.ImageTransparentColor = System.Drawing.Color.Magenta;
-         this.chkWrap.Name = "chkWrap";
-         this.chkWrap.Size = new System.Drawing.Size(23, 22);
-         this.chkWrap.Text = "Wrap Action in Add";
-         // 
-         // startBattleToolStripMenuItem
-         // 
-         this.startBattleToolStripMenuItem.Name = "startBattleToolStripMenuItem";
-         this.startBattleToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
-         this.startBattleToolStripMenuItem.Text = "startBattle";
-         this.startBattleToolStripMenuItem.Click += new System.EventHandler(this.actionClick);
+         this.allowSavingToolStripMenuItem.Name = "allowSavingToolStripMenuItem";
+         this.allowSavingToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+         this.allowSavingToolStripMenuItem.Text = "allowSaving";
+         this.allowSavingToolStripMenuItem.Click += new System.EventHandler(this.actionClick);
          // 
          // ObjectForm
          // 
@@ -697,5 +715,7 @@
       private System.Windows.Forms.ToolStripMenuItem messageWithYesNoToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem messageToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem startBattleToolStripMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem flashToolStripMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem allowSavingToolStripMenuItem;
    }
 }

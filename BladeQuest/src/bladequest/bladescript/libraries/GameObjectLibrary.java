@@ -4,10 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import bladequest.actions.Action;
+import bladequest.actions.actAllowSaving;
 import bladequest.actions.actAnimation;
 import bladequest.actions.actElevation;
 import bladequest.actions.actExpectInput;
 import bladequest.actions.actFadeControl;
+import bladequest.actions.actFlash;
 import bladequest.actions.actFloat;
 import bladequest.actions.actGameOver;
 import bladequest.actions.actMerchant;
@@ -167,6 +169,14 @@ public class GameObjectLibrary
 	{		
 		Action act = new actFadeControl(fadeTime, a, r, g, b, fadeOut, wait);
 		return act;
+	}
+	public static Action flash(int a, int r, int g, int b, float flashLength, boolean wait)
+	{
+		return new actFlash(a, r, g, b, flashLength, wait);
+	}
+	public static Action allowSaving(int i)
+	{
+		return new actAllowSaving();
 	}
 	public static Action messageWithYesNo(String message)
 	{		
