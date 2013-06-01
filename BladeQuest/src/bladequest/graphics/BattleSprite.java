@@ -20,6 +20,8 @@ public class BattleSprite {
 	private faces face;
 	private boolean mirrored;
 	
+	private float rotation = 0.0f;
+	
 	public String name;
 	
 	private List<List<Rect>> frameLists;
@@ -105,6 +107,10 @@ public class BattleSprite {
 		this.mirrored = isMirrored;
 	}
 	
+	public void setRotation(float rotation)
+	{
+		this.rotation = rotation;
+	}
 	
 	public void render(int x, int y, int index, boolean center)
 	{	
@@ -120,17 +126,15 @@ public class BattleSprite {
 		{
 			if (mirrored)
 			{
-				Global.renderer.drawMirroredBitmap(bitmap, 0.0f, frameLists.get(face.ordinal()).get(index), 
+				Global.renderer.drawMirroredBitmap(bitmap, rotation, frameLists.get(face.ordinal()).get(index), 
 						new Rect(p.x, p.y,p.x+width, p.y+height), null);				
 			}
 			else
 			{
-				Global.renderer.drawBitmap(bitmap, frameLists.get(face.ordinal()).get(index), 
+				Global.renderer.drawBitmap(bitmap, rotation, frameLists.get(face.ordinal()).get(index), 
 						new Rect(p.x, p.y,p.x+width, p.y+height), null);				
 			}
 		}
-		
-		
 		
 	}	
 	

@@ -213,7 +213,7 @@ public class Parser {
 			}
 			return out;
 		}
-		public int       getLine() {return lineNumber;}
+		public int       getLine() {return line;}
 	}
 	
 	private Statement getStatementFromLocal(String name)
@@ -655,7 +655,7 @@ public class Parser {
 					}
 					++num;
 				}
-				return null;
+				throw new ParserException("none of the functions pattern-matched!");
 			}
 		}.initialize(matchingStatement, conditionalStatements, outputStatements);
 	}

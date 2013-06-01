@@ -52,7 +52,11 @@ public class Script {
 		}
 		@Override
 		public SpecializationLevel getSpecializationLevelFor(ScriptVar var)
-				throws BadTypeException {
+				throws ParserException {
+			if (var == null)
+			{
+				throw new ParserException("illegal null scriptvar?");
+			}
 			if (!var.isOpaque()) return SpecializationLevel.NotSpecialized;
 			//otherwise....  we do actually know this type.  #note to self - doable in C++ *statically* with counting template for future use
 			//though you can't do conversions in C++.  This should automatically handle bactDamage -> battleAction, but it breaks some overloading.

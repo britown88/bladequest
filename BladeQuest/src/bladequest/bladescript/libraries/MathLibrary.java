@@ -2,6 +2,7 @@ package bladequest.bladescript.libraries;
 
 import android.graphics.Point;
 import bladequest.bladescript.LibraryWriter;
+import bladequest.world.Global;
 
 public class MathLibrary 
 {
@@ -14,6 +15,11 @@ public class MathLibrary
 		}
 	}
 	
+	
+	public static boolean greater(int x, int y)
+	{
+		return x > y;
+	}
 	public static int add(int x, int y)
 	{
 		return x + y;
@@ -24,4 +30,9 @@ public class MathLibrary
 		return new Point(x, y);
 	}
 
+	//NOT INCLUSIVE!
+	public static int randomRoll(int max)
+	{
+		return Global.rand.nextInt(max);
+	}
 }

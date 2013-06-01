@@ -17,11 +17,23 @@ public class bactBasicAttack extends DelegatingAction {
 	float speedFactor;
 	PlayerCharacter target;
 	ScriptVar hitsIf;
+	AccuracyType accuracy;
+	float accuracyVal;
+	
 	
 	public bactBasicAttack(float power, DamageTypes type, float speedFactor) {
 		this.power = power;
 		this.type = type;
-		this.speedFactor = speedFactor;	
+		this.speedFactor = speedFactor;
+		this.accuracy = AccuracyType.Regular;
+		this.accuracyVal = 1.0f;
+	}
+	public bactBasicAttack(float power, DamageTypes type, float speedFactor, AccuracyType accuracy, float accuracyVal) {
+		this.power = power;
+		this.type = type;
+		this.speedFactor = speedFactor;
+		this.accuracy = accuracy;
+		this.accuracyVal = accuracyVal;
 	}
 	public bactBasicAttack(float power, DamageTypes type, float speedFactor, ScriptVar hitsIf) {
 		this.power = power;
@@ -54,7 +66,7 @@ public class bactBasicAttack extends DelegatingAction {
 			}
 			else
 			{
-				BattleActionPatterns.BuildSwordSlash(builder, power, type, speedFactor);
+				BattleActionPatterns.BuildSwordSlashWithAccuracy(builder, power, type, speedFactor, accuracy, accuracyVal);
 			}
 			builder.addEventObject(new bactRunChildren(this).addDependency(builder.getLast()));
 		}

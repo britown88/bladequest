@@ -84,6 +84,9 @@ add (addDependency (waitAction 250)  defWait) >
 addDep (damageAction 1.5 "Physical"))
 
 
+
+################RECRUIT  ABILITIES############################################
+
 recruitBroKick ability power damageType offset
    ability > add (\firstWait <- waitAction offset) >
              addDep (basicAttackAction power damageType 0.35f) >  #should have a little tiny downtime between slashes
@@ -93,17 +96,18 @@ recruitBroKick ability power damageType offset
              addDep (mirrorAction false)
 
 
-\recruit1 <- (addAbility "recruit1" "Clashing Super Hit" "Single" 0 >
-add (basicAttackAction 1.0 "Physical" 3.0))
 
-\recruit2 <- (addAbility "recruit2" "Special Mega Kick" "Single" 0 >
-add (basicAttackAction 0.75 "Physical" 2.0))
+\recruit2 <- (addAbility "specialmegakick" "Special Mega Kick" "Single" 0 >
+add (waitAction 450) >
+addDep (damageAction 0.75 "Physical")  >
+add (barrelRollAction 600))
 
-\recruit3 <- (addAbility "recruit3" "Climactic Finisher" "Single" 0 >
-add (basicAttackAction 1.0 "Physical" 1.2))
+\recruit3 <- (addAbility "climacticfinisher" "Climactic Finisher" "Single" 0 >
+add (messageAction "Recruit: \nYou won't see THIS coming!") >
+addDep (basicAttackActionWithAccuracy 1.0 "Physical" 3.0 "ReplaceEvade" 0.7))
 
 
-\recruit4 <- (addAbility "recruit4" "DynamoSupernova" "Single" 0 >
+\recruit4 <- (addAbility "dynamosupernova" "Dynamo Supernova" "Single" 0 >
 add (specialMirroringAction true) >
 (\recruit4sub <- ([ability offset] recruitBroKick ability 0.15 "Physical" offset)) 270 >
 recruit4sub  540 >

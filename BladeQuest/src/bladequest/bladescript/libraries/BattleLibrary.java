@@ -6,6 +6,7 @@ import java.util.List;
 import bladequest.battleactions.BattleAction;
 import bladequest.battleactions.bactAttackClose;
 import bladequest.battleactions.bactAttackRandomTargets;
+import bladequest.battleactions.bactBarrelRoll;
 import bladequest.battleactions.bactBasicAttack;
 import bladequest.battleactions.bactBreakStance;
 import bladequest.battleactions.bactDamage;
@@ -41,7 +42,6 @@ import bladequest.statuseffects.sePoison;
 import bladequest.world.Ability;
 import bladequest.world.DamageTypes;
 import bladequest.world.Global;
-import bladequest.world.Item;
 import bladequest.world.PlayerCharacter;
 import bladequest.world.Stats;
 import bladequest.world.TargetTypes;
@@ -115,6 +115,11 @@ public class BattleLibrary {
 		return ability;
 	}
 	
+	//special mega kiiiiiiiiiiiick
+	public static BattleAction barrelRollAction(int milliseconds)
+	{
+		return new bactBarrelRoll((long)milliseconds);
+	}
 	
 	//just for Roland's "Shatter"
 	public static BattleAction rolandSpecialShatterAction(ScriptVar ignored)
@@ -190,6 +195,11 @@ public class BattleLibrary {
 	{
 		return new bactBasicAttack(power, DamageTypes.valueOf(damageType), speedFactor);
 	}
+	public static BattleAction basicAttackActionWithAccuracy(float power, String damageType, float speedFactor, String accuracyType, float accuracyVal)
+	{
+		return new bactBasicAttack(power, DamageTypes.valueOf(damageType), speedFactor, BattleCalc.AccuracyType.valueOf(accuracyType), accuracyVal);
+	}
+		
 	
 	//Function takes Target character and returns bool.
 	public static BattleAction conditionalAttackAction(float power, String damageType, float speedFactor, ScriptVar function)

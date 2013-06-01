@@ -78,10 +78,10 @@ public class BattleCalc
 			break;
 		case NoMiss: evade = 0; break;
 		case ReplaceEvade:
-			evade = (int)customMiss;
+			evade = (int)(customMiss*100);
 		case WithEvade:
 			roll = Global.rand.nextInt(100);
-			evade = (int)customMiss;
+			evade = (int)(customMiss*100);
 			if(roll < standardEvade)
 			{
 				damageReturnType = DamageReturnType.Miss;

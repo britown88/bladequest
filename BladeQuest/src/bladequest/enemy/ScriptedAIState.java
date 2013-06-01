@@ -1,5 +1,6 @@
 package bladequest.enemy;
 
+import android.util.Log;
 import bladequest.bladescript.ParserException;
 import bladequest.bladescript.ScriptVar;
 
@@ -16,6 +17,7 @@ public class ScriptedAIState extends AIState {
 			scriptFn.apply(ScriptVar.toScriptVar(e)).apply(ScriptVar.toScriptVar(decision));
 		} catch (ParserException ex) {
 			ex.printStackTrace();
+			Log.d("Parser", ex.what());
 		}
 	}
 
