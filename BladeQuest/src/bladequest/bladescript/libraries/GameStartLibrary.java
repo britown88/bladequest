@@ -21,7 +21,7 @@ public class GameStartLibrary
 	}
 	public static int setStartMap(String name)
 	{
-		Global.LoadMap(name, false);
+		Global.LoadMap(name);
 		return 0;
 	}
 	

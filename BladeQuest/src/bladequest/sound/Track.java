@@ -317,5 +317,14 @@ public class Track {
 			nextPlay.kill();
 		}
 	}
-
+	synchronized void skipIntro()
+	{
+		if (intro != null && !intro.isDead())
+		{
+			intro.kill();
+			loop.play();
+		}
+		
+	}
+	
 }

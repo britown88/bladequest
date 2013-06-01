@@ -131,7 +131,8 @@ public class SaveLoadMenu
 					Global.party.allowSaving();
 					Global.menuButton.open();
 
-					Global.LoadMap(Global.saveLoader.save.mapName, true);
+					Global.loadedSave = true;
+					Global.LoadMap(Global.saveLoader.save.mapName);
 				}
 				
 				closed = true;

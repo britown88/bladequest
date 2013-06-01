@@ -728,12 +728,13 @@ public class Global
     		break;
     	case GS_LOADING:
     		if(mapLoadThread != null && mapLoadThread.isDone() && map != null)
-    		{
-    			map.playBGM(true);
-    			GameState = States.GS_WORLDMOVEMENT; 
-    			if(fadeInAfterLoad)
+    		{    			
+    			if(loadedSave)
     				screenFader.fadeIn(2.0f);
-    				
+    			else
+    				map.playBGM(true);
+    			loadedSave = false;
+    			GameState = States.GS_WORLDMOVEMENT; 
     			delay();
     		}
     		break;
@@ -919,6 +920,7 @@ public class Global
 	public static void restartGame()
 	{
 		clearMessages();
+		loadedSave = false;
 		screenFader.setFadeColor(255, 255, 255, 255);
 		screenFader.setFaded();
 		
@@ -930,7 +932,7 @@ public class Global
     	screenFader.fadeIn(1.0f);
     	
     	title.titleStart();
-    	BladeSong.instance().stop();
+    	BladeSong.instance().fadeOut(2.0f);
     	menuButton.setClosed();
     	audioMgr = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
         audioMgr.requestAudioFocus(activity, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
@@ -2007,6 +2009,7 @@ public class Global
 	//called when new game is selected from the title screen	
 	public static void NewGame()
 	{		
+		loadedSave = false;
 		playTimer = new PlayTimer(0);
 		party = new Party(0, 0);
 		
@@ -2023,12 +2026,10 @@ public class Global
 	}
 	
 	private static MapLoadThread mapLoadThread;
-	private static boolean fadeInAfterLoad;
+	public static boolean loadedSave;
 	
-	public static void LoadMap(String name, boolean fadein)
-	{
-		fadeInAfterLoad = fadein;
-		
+	public static void LoadMap(String name)
+	{		
 		if(map != null)
 		{
 			map.clearObjectAction();
@@ -2059,7 +2060,7 @@ public class Global
 	public static void LoadMap(String name, ObjectState callingState)
 	{
 		mapChangeCallingState = callingState;
-		LoadMap(name, false);	
+		LoadMap(name);	
 		
 	}
 

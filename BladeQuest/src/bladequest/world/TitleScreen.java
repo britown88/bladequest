@@ -327,7 +327,7 @@ public class TitleScreen
 			if(!skippedIntro)
 			{
 				//BladeSong.instance().play("", false, true, 0);
-				BladeSong.instance().play(openingSong, false, true, 0);
+				BladeSong.instance().skipIntro();
 				
 			}
 			changeState(TitleStates.Menu);	
