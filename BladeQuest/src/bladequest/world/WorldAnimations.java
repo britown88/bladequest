@@ -242,7 +242,7 @@ public class WorldAnimations
 		}.initialize();
 	}
 	
-	public static AnimationBuilder buildTwinkleStar()
+	public static AnimationBuilder buildTwinkleShrink()
 	{
 		return new AnimationBuilder() {	
 			AnimationBuilder initialize()
@@ -258,8 +258,8 @@ public class WorldAnimations
 				BattleAnimObject obj = new BattleAnimObject(Types.Bitmap, false, "twinkle");
 				
 				BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Screen);
-				state.pos1 = new Point(120,60);
-				state.size = new Point(18, 18);
+				state.pos1 = new Point(208,80);
+				state.size = new Point(27, 27);
 				state.argb(255, 0, 0, 0);
 				state.colorize = 0.0f;
 				
@@ -269,18 +269,14 @@ public class WorldAnimations
 				state.addFrame(new Rect(9, 0, 18, 9));
 				state.addFrame(new Rect(18, 0, 27, 9));
 				state.addFrame(new Rect(9, 0, 18, 9));
-
-				
-				//state.setBmpSrcRect(0, 0, 30, 29);
 				
 				obj.addState(state);				
 				
-				state = new BattleAnimObjState(30000, PosTypes.Screen);
-				state.pos1 = new Point(450,120);
-				state.size = new Point(18, 18);
+				state = new BattleAnimObjState(12000, PosTypes.Screen);
+				state.pos1 = new Point(208,80);
+				state.size = new Point(0, 0);
 				state.argb(255, 0, 0, 0);
 				state.colorize = 0.0f;
-				//state.setBmpSrcRect(0, 0, 30, 29);
 				obj.addState(state);	
 				anim.addObject(obj);
 				

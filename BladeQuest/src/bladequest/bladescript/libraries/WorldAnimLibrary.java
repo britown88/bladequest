@@ -38,6 +38,12 @@ public class WorldAnimLibrary
 		
 	}
 	
+	public static AnimationBuilder genTwinkleShrink(int i)
+	{
+		return WorldAnimations.buildTwinkleShrink();
+		
+	}
+	
 	public static AnimationBuilder genTitleSequence(int i)
 	{
 		return WorldAnimations.buildTitleSequence();
