@@ -14,7 +14,7 @@ public class Ability
 	private boolean usableOutOfBattle;
 	private boolean enabled;
 	
-	public String name, description, shortDescription;
+	public String name, shortName, description, shortDescription;
 	
 	private List<BattleAction> actions;
 	
@@ -36,6 +36,8 @@ public class Ability
 	{
 		this.description = desc;
 	}
+	public String getShortName() { return shortName == null ? displayName : shortName;}
+	public void setShortName(String desc) { shortName = desc;}
 	public String getDescription() { return description; }
 	public boolean isUsableOutOfBattle() { return usableOutOfBattle;}
 	public void makeUsableOutOfBattle() { usableOutOfBattle = true;}

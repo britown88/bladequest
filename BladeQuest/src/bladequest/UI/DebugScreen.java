@@ -93,7 +93,7 @@ public class DebugScreen
 		
 		for(Item item : Global.items.values())
 		{
-			panel = itemList.addItem(item.getName(), item, false);
+			panel = itemList.addItem(item.getDisplayName(), item, false);
 			panel.addTextBox(""+Global.party.getItemCount(item.idName), itemList.getColumnWidth() - 8, itemList.getRowHeight()/2, menuTextRight);
 		}
 		

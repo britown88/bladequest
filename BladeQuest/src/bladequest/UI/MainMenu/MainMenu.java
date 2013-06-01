@@ -1352,7 +1352,7 @@ public class MainMenu
 		{
 			for(Item i : Global.party.getInventory())
 				if(i.getType() == Type.Key)
-					invList.addItem(i.getName(), i, false);
+					invList.addItem(i.getDisplayName(), i, false);
 		}
 		else
 		{
@@ -1363,7 +1363,7 @@ public class MainMenu
 				{
 					disabled = !i.isUsable(UseTypes.World);
 					
-					entry = invList.addItem(i.getName(), i, disabled);
+					entry = invList.addItem(i.getDisplayName(), i, disabled);
 					
 					entry.getTextAt(0).x += d*2 + 4;					
 					//add item count
@@ -1601,27 +1601,27 @@ public class MainMenu
 		int d = (int)((float)Global.iconSize*iconScale/2.0f);
 		
 		//Weapon
-		entry = eqpEquipSlots.addItem(selectedChar.weapEquipped() ? selectedChar.weapon().getName() : "Weapon", Item.Type.Weapon, !selectedChar.weapEquipped());
+		entry = eqpEquipSlots.addItem(selectedChar.weapEquipped() ? selectedChar.weapon().getDisplayName() : "Weapon", Item.Type.Weapon, !selectedChar.weapEquipped());
 		entry.getTextAt(0).x += d*2 + 4;
 		entry.addPicBox(Global.createIcon(selectedChar.weapEquipped() ? selectedChar.weapon().getIcon() : "sword", d + 6, eqpEquipSlots.getRowHeight()/2, iconScale));
 		
 		//Shield
-		entry = eqpEquipSlots.addItem(selectedChar.shieldEquipped() ? selectedChar.shield().getName() : "Shield", Item.Type.Shield, !selectedChar.shieldEquipped());
+		entry = eqpEquipSlots.addItem(selectedChar.shieldEquipped() ? selectedChar.shield().getDisplayName() : "Shield", Item.Type.Shield, !selectedChar.shieldEquipped());
 		entry.getTextAt(0).x += d*2 + 4;
 		entry.addPicBox(Global.createIcon(selectedChar.shieldEquipped() ? selectedChar.shield().getIcon() : "hshield", d + 6, eqpEquipSlots.getRowHeight()/2, iconScale));
 		
 		//Helmet
-		entry = eqpEquipSlots.addItem(selectedChar.helmEquipped() ? selectedChar.helmet().getName() : "Helmet", Item.Type.Helmet, !selectedChar.helmEquipped());
+		entry = eqpEquipSlots.addItem(selectedChar.helmEquipped() ? selectedChar.helmet().getDisplayName() : "Helmet", Item.Type.Helmet, !selectedChar.helmEquipped());
 		entry.getTextAt(0).x += d*2 + 4;
 		entry.addPicBox(Global.createIcon(selectedChar.helmEquipped() ? selectedChar.helmet().getIcon() : "hhelmet", d + 6, eqpEquipSlots.getRowHeight()/2, iconScale));
 		
 		//Torso
-		entry = eqpEquipSlots.addItem(selectedChar.torsoEquipped() ? selectedChar.torso().getName() : "Torso", Item.Type.Torso, !selectedChar.torsoEquipped());
+		entry = eqpEquipSlots.addItem(selectedChar.torsoEquipped() ? selectedChar.torso().getDisplayName() : "Torso", Item.Type.Torso, !selectedChar.torsoEquipped());
 		entry.getTextAt(0).x += d*2 + 4;
 		entry.addPicBox(Global.createIcon(selectedChar.torsoEquipped() ? selectedChar.torso().getIcon() : "htorso", d + 6, eqpEquipSlots.getRowHeight()/2, iconScale));
 		
 		//Accessory
-		entry = eqpEquipSlots.addItem(selectedChar.accessEquipped() ? selectedChar.accessory().getName() : "Accessory", Item.Type.Accessory, !selectedChar.accessEquipped());
+		entry = eqpEquipSlots.addItem(selectedChar.accessEquipped() ? selectedChar.accessory().getDisplayName() : "Accessory", Item.Type.Accessory, !selectedChar.accessEquipped());
 		entry.getTextAt(0).x += d*2 + 4;
 		entry.addPicBox(Global.createIcon(selectedChar.accessEquipped() ? selectedChar.accessory().getIcon() : "ring", d + 6, eqpEquipSlots.getRowHeight()/2, iconScale));
 				
@@ -1646,7 +1646,7 @@ public class MainMenu
 			{
 				if(i.getType() == equipItemType)
 				{	
-					entry = eqpSelect.addItem(i.getName(), i, disabled);				
+					entry = eqpSelect.addItem(i.getDisplayName(), i, disabled);				
 					entry.getTextAt(0).x += d*2 + 4;					
 					//add item count
 					entry.addTextBox(""+i.getCount(), eqpSelect.getColumnWidth() - 32, eqpSelect.getRowHeight()/2, disabled ? grayMenuText : menuText);
@@ -2031,19 +2031,19 @@ public class MainMenu
 		
 		//equipment
 		equipBox.addPicBox(Global.createIcon(pc.weapEquipped() ? pc.weapon().getIcon() : "sword", d + iconBuffer, eqpRows[0] + iconYBuff, iconScale));
-		equipBox.addTextBox(pc.weapEquipped() ? pc.weapon().getName() : "Weapon", eqpCols[0], eqpRows[0], pc.weapEquipped() ? whiteLeft : grayLeft);
+		equipBox.addTextBox(pc.weapEquipped() ? pc.weapon().getDisplayName() : "Weapon", eqpCols[0], eqpRows[0], pc.weapEquipped() ? whiteLeft : grayLeft);
 		
 		equipBox.addPicBox(Global.createIcon(pc.shieldEquipped() ? pc.shield().getIcon() : "hshield", d + iconBuffer, eqpRows[1] + iconYBuff, iconScale));
-		equipBox.addTextBox(pc.shieldEquipped() ? pc.shield().getName() : "Shield", eqpCols[0], eqpRows[1], pc.shieldEquipped() ? whiteLeft : grayLeft);
+		equipBox.addTextBox(pc.shieldEquipped() ? pc.shield().getDisplayName() : "Shield", eqpCols[0], eqpRows[1], pc.shieldEquipped() ? whiteLeft : grayLeft);
 		
 		equipBox.addPicBox(Global.createIcon(pc.helmEquipped() ? pc.helmet().getIcon() : "hhelmet", d + iconBuffer, eqpRows[2] + iconYBuff, iconScale));
-		equipBox.addTextBox(pc.helmEquipped() ? pc.helmet().getName() : "Helmet", eqpCols[0], eqpRows[2], pc.helmEquipped() ? whiteLeft : grayLeft);
+		equipBox.addTextBox(pc.helmEquipped() ? pc.helmet().getDisplayName() : "Helmet", eqpCols[0], eqpRows[2], pc.helmEquipped() ? whiteLeft : grayLeft);
 		
 		equipBox.addPicBox(Global.createIcon(pc.torsoEquipped() ? pc.torso().getIcon() : "htorso", d + iconBuffer, eqpRows[3] + iconYBuff, iconScale));
-		equipBox.addTextBox(pc.torsoEquipped() ? pc.torso().getName() : "Torso", eqpCols[0], eqpRows[3], pc.torsoEquipped() ? whiteLeft : grayLeft);
+		equipBox.addTextBox(pc.torsoEquipped() ? pc.torso().getDisplayName() : "Torso", eqpCols[0], eqpRows[3], pc.torsoEquipped() ? whiteLeft : grayLeft);
 		
 		equipBox.addPicBox(Global.createIcon(pc.accessEquipped() ? pc.accessory().getIcon() : "ring", d + iconBuffer, eqpRows[4] + iconYBuff, iconScale));
-		equipBox.addTextBox(pc.accessEquipped() ? pc.accessory().getName() : "Accessory", eqpCols[0], eqpRows[4], pc.accessEquipped() ? whiteLeft : grayLeft);
+		equipBox.addTextBox(pc.accessEquipped() ? pc.accessory().getDisplayName() : "Accessory", eqpCols[0], eqpRows[4], pc.accessEquipped() ? whiteLeft : grayLeft);
 		
 		//Affinity
 		equipBox.addTextBox("Affinity", eqpCols[1], eqpRows[0], blue);

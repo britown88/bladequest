@@ -2,11 +2,11 @@
 
 
 #####################ARAMIS####################################
-\poisonjab <- (addAbility "poisonjab" "Poison Jab" "Single" 2 >
-setDesc "Poisons an enemy." >
+\poisonjab <- (addAbility "poisonjab" "Coat Weapon" "Single" 2 >
+setShortName "Coat Wpn" >
+setDesc "Coats an ally's weapon with poison, giving them a chance to inflict poison on hit." >
 add (setFaceAction "Cast" 0) >
-add (messageAction "HAHA IMMA GONNA POISON YOOOUUUU") >
-addDep (animBuildAction "movetest") >
+addDep (animAction "movetest") >
 addDep (inflictStatusAction (poisonStatus 10.0)))
 
 
@@ -24,6 +24,7 @@ addDep (waitAction 300)
 
 
 \dblattack <- (addAbility "dblattack" "Double Attack" "Single" 4 >
+setShortName "DblAttack" >
 setDesc "Attack twice quickly." >
 add (basicAttackAction 0.9 "Physical" 0.6) >
 addDep (basicAttackAction 0.9 "Physical" 0.6))
@@ -48,6 +49,7 @@ addDep (inflictStatusAction (confuseStatus 4))) #4 == duration
 
 ####################ROLAND##########################################
 \frostwish <- (addAbility "frostwish" "Frost Wish" "AllAllies" 5 >
+setShortName "FrostWish" >
 useOutsideBattle >
 setDesc "Heal allies with a winter's chill." >
 add (damageAction -1.0 "Magic" > addDamageComponent "Water" 1.0))

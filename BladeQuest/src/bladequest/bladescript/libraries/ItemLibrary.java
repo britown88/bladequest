@@ -26,6 +26,11 @@ public class ItemLibrary {
 		item.setShortDescription(desc);
 		return item;
 	}
+	public static Item setShortName(Item item, String desc)
+	{
+		item.setShortName(desc);
+		return item;
+	}
 	public static Item setUsableBy(Item itm, String character)
 	{
 		itm.addUsableBy(character);
