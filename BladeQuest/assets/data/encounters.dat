@@ -101,4 +101,9 @@ addEnemy "guard" 128 178 >
 disableRunning)
 
 
+\BunnyAndSpud <- (inheritEncounter "bunnyandspud" >
+addEnemy "leafbunny" 68 128 >
+addEnemy "spud" 158 158)
 
+\OneHawk <- (inheritEncounter "1hawk" >
+addEnemy "hawk" 128 128)

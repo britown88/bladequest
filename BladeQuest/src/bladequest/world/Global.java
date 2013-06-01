@@ -1091,6 +1091,30 @@ public class Global
 		};
 	}
 	
+	public static AnimatedBitmap getGale()
+	{
+		return new AnimatedBitmap()	
+		{
+			
+			BitmapFrame[] frames;
+			{
+				final int height = 56;
+				final int width = 34;
+				
+				frames = new BitmapFrame[2];
+				for (int i = 0; i < frames.length; ++i)
+				{
+					frames[i] = new BitmapFrame(bitmaps.get("gale"),new Rect(i*width, 0, (i+1)*width, height));
+				}
+			}
+			@Override
+			public BitmapFrame[] getFrames() {
+				return frames;
+			}
+			
+		};
+	}
+	
 	public static AnimationBuilder getIceBarrage()
 	{
 		return new AnimationBuilder()
@@ -1731,7 +1755,98 @@ public class Global
 			}
 		};
 	}
-	
+	public static AnimationBuilder getGaleAnim()
+	{
+		return new AnimationBuilder()
+		{
+			public BattleAnim buildAnimation(BattleEventBuilder builder) {
+				BattleAnim out = new BattleAnim(1000.0f);
+				PlayerCharacter source = builder.getSource();
+				PlayerCharacter target = BattleAction.getTarget(builder);
+			
+				Point startPos = source.getPosition(true);
+				startPos.x += 16 + source.getWidth()/2;
+				
+				Point endPos = target.getPosition(true);
+				
+				BitmapFrame[] frames = Global.getGale().getFrames();
+			
+				BattleAnimObject gale = new BattleAnimObject(Types.Bitmap, false, frames[0].bitmap);	
+				
+				//flip frames every 100ms
+				final int growTime = 500;
+				final int growSteps = 5;
+
+				//part 1 - grow a up big and string
+				for (int i = 0; i < growSteps; ++i)
+				{
+					BattleAnimObjState state = new BattleAnimObjState(i * (growTime/growSteps), PosTypes.Screen);
+					
+					float t = i/(float)growSteps;
+					
+					state.size = new Point(BattleAnim.linearInterpolation(0, frames[i%frames.length].srcRect.width(), t),
+										   BattleAnim.linearInterpolation(0, frames[i%frames.length].srcRect.height(), t));
+					state.pos1 = new Point(startPos.x, startPos.y);
+					state.argb(255, 255, 255, 255);
+					state.rotation = 0.0f;				
+					
+					Rect rect = frames[i%frames.length].srcRect;
+					state.setBmpSrcRect(rect.left, rect.top, rect.right, rect.bottom);
+					gale.addState(state);					
+				}
+				
+				int step = growSteps;
+					
+				final int waitSteps = 3;
+				
+				for (int i = step; i < growSteps+waitSteps; ++i)
+				{
+					BattleAnimObjState state = new BattleAnimObjState(i * (growTime/growSteps), PosTypes.Screen);
+					
+					
+					state.size = new Point(frames[i%frames.length].srcRect.width(),
+										   frames[i%frames.length].srcRect.height());
+					state.pos1 = new Point(startPos.x, startPos.y);
+					state.argb(255, 255, 255, 255);
+					state.rotation = 0.0f;				
+					
+					Rect rect = frames[i%frames.length].srcRect;
+					state.setBmpSrcRect(rect.left, rect.top, rect.right, rect.bottom);
+					gale.addState(state);					
+				}		
+				
+				step = growSteps + waitSteps;
+				
+				final int shootSteps = 10;
+				//part 2 - pew pew pew pew pew
+				
+				for (; step < growSteps + shootSteps + waitSteps; ++step)
+				{
+					int i = step-growSteps-waitSteps;
+					
+					BattleAnimObjState state = new BattleAnimObjState((i + waitSteps) * 100 + growTime, PosTypes.Screen);
+					
+					float t = (i/(float)(shootSteps-1));
+					
+					state.size = new Point(frames[i%frames.length].srcRect.width(),
+							   			   frames[i%frames.length].srcRect.height());
+					
+					t *= 2.2f;
+					state.pos1 = BattleAnim.linearInterpolation(startPos, endPos, t);
+					state.argb(255, 255, 255, 255);
+					state.rotation = 0.0f;		
+					
+					Rect rect = frames[step%frames.length].srcRect;
+					state.setBmpSrcRect(rect.left, rect.top, rect.right, rect.bottom);
+					gale.addState(state);		
+				}
+				
+
+				out.addObject(gale);
+				return out;
+			}
+		};
+	}
 	
 	public static AnimatedBitmap getBeserkerSwords()
 	{
@@ -1967,6 +2082,7 @@ public class Global
 		animationBuilders.put("ignite", getIgniteAnim());
 		animationBuilders.put("igniteSmoke", getIgniteSmokeAnim());
 		animationBuilders.put("entomb", getEntombAnim());
+		animationBuilders.put("gale", getGaleAnim());
 		
 	}
 	
