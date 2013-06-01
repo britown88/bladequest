@@ -3,16 +3,26 @@ package bladequest.statuseffects;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.graphics.Point;
+import android.graphics.Rect;
+import bladequest.battleactions.DamageBuilder;
+import bladequest.battleactions.bactDamage;
+import bladequest.battleactions.bactRunAnimation;
 import bladequest.battleactions.bactWait;
 import bladequest.combat.Battle;
 import bladequest.combat.BattleEventBuilder;
 import bladequest.combat.triggers.Trigger;
+import bladequest.graphics.BattleAnim;
+import bladequest.graphics.BattleAnimObjState;
+import bladequest.graphics.BattleAnimObjState.PosTypes;
+import bladequest.graphics.BattleAnimObject;
+import bladequest.graphics.BattleAnimObject.Types;
+import bladequest.graphics.BitmapFrame;
 import bladequest.system.Recyclable;
-import bladequest.world.Ability;
+import bladequest.world.DamageTypes;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
 import bladequest.world.TargetTypes;
-import bladequest.world.PlayerCharacter.Action;
 
 public class seBeserk extends StatusEffect
 {
@@ -40,7 +50,7 @@ public class seBeserk extends StatusEffect
 	{ 
 		return "status " + seBeserk.class.getSimpleName() + " " + duration; 
 	}
-	
+	public boolean mutes() {return true;}
 	void setToBeserkState(Battle.PlayerBattleActionSelect actionSelector)
 	{
 		if (actionSelector.isSkipped() ||
@@ -51,6 +61,36 @@ public class seBeserk extends StatusEffect
 		if (affected.isEnemy()) team = Battle.Team.Enemy;
 		else team = Battle.Team.Player;
 		actionSelector.setAttack(Battle.getRandomTargets(TargetTypes.SingleEnemy, affected, team).get(0));
+	}
+	BattleAnimObjState getAngerBubbleState(BitmapFrame frame, int frameCount)
+	{
+		int yOffset = affected.getHeight()/2; 
+		BattleAnimObjState out = new BattleAnimObjState(frameCount, PosTypes.Source);
+		out.pos1 = new Point(-8, -yOffset);
+		out.argb(255, 255, 255, 255);
+		out.size = new Point(32, 64);
+		Rect r = frame.srcRect;
+		out.setBmpSrcRect(r.left, r.top, r.right, r.bottom);
+		return out;
+	}
+	BattleAnim getAngerAnim()
+	{
+		BitmapFrame[] frames = Global.getReactionAnger().getFrames();
+		BattleAnim out = new BattleAnim(1000.0f);
+		BattleAnimObject angerBubble = new BattleAnimObject(Types.Bitmap, false, frames[0].bitmap);
+		int frameCount = 0;
+		final int playCount = 3;
+		for (int i = 0; i < playCount; ++i)
+		{
+			for (BitmapFrame frame : frames)
+			{
+				angerBubble.addState(getAngerBubbleState(frame, frameCount++*100));
+			}	
+		}
+		angerBubble.addState(getAngerBubbleState(frames[frames.length-1], frameCount++*100));  //cap off the final animation!
+
+		out.addObject(angerBubble);
+		return out;
 	}
 	@Override
 	public void onInflict(PlayerCharacter c) 
@@ -64,10 +104,8 @@ public class seBeserk extends StatusEffect
 			{
 				setToBeserkState(Global.battle.resetPlayerAction(c));
 			}
-		}
+		}	
 		
-		
-		c.setDefaultMirroredState(true);
 		disposeTriggers.add(new Trigger(Global.battle.getOnActionSelectEvent()){
 			 
 		PlayerCharacter aff;
@@ -89,7 +127,7 @@ public class seBeserk extends StatusEffect
 		
 		}.initialize(c));
 		
-		disposeTriggers.add(new Trigger(affected.getOnPhysicalHitEvent()){
+		disposeTriggers.add(new Trigger(Global.battle.getOnDamageDealt()){
 			PlayerCharacter aff;
 			Trigger initialize(PlayerCharacter aff)
 			{
@@ -98,14 +136,21 @@ public class seBeserk extends StatusEffect
 			}			
 			@Override
 			public void trigger() {
-				aff.removeStatusEffect("beserk");
+				DamageBuilder builder = bactDamage.triggerDamageBuilder;
+				if (builder.getAttacker() == aff)
+				{
+					if (builder.getDamageType() == DamageTypes.Physical ||
+						builder.getDamageType() == DamageTypes.PhysicalIgnoreDef)
+					{
+						builder.setDamage((int)(builder.getDamage() * 1.5));
+					}
+				}
 			}
 		}.initialize(c));
 	}
 	@Override
 	public void onRemove(PlayerCharacter c)
 	{
-		c.setDefaultMirroredState(false);
 		for (Recyclable disposeTrigger : disposeTriggers)
 		{
 			if (disposeTrigger != null)
@@ -125,6 +170,10 @@ public class seBeserk extends StatusEffect
 			builder.addEventObject(new bactWait(450));
 			return;
 		}
+		
+		Global.battle.setInfoBarText(target.getDisplayName() + " is going beserk!");
+		
+		builder.addEventObject(new bactRunAnimation(getAngerAnim()));
 		
 		--duration;
 	}
