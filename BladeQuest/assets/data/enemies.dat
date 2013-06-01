@@ -70,7 +70,7 @@ makeRatAI enemy
 #
 \rat <- (addEnemy "rat" "Rat" "rat" >
 setEBaseStats 10 1 1 1 >
-addColoredStaffHit (RGBA 255 0 0 255) (RGBA 0 0 0 255) >
+addDefaultStaffHit >
 setELevel 5 >
 setGold 23 >
 setItems "potion" 25 "antidote" 85 true >
@@ -88,31 +88,65 @@ addAttackOnlyState >
 setGold 1200 >
 setEShadow (createShadow 38 24 32 > nudgeX -4))
 
+############HAWK AI#############
+
+HawkAI enemy
+   enemy > setEnemyAI (
+           createAI "hawkAI" (createAIState ([e decision]
+                (|randomRoll 100 
+                 |greater 70   : "" #do nothing, just attack 
+           		 |greater 100  : decision > setAbility (e > getEnemyAbility "gale")
+           ))))
+
+##############################
 #
 \hawk <- (addEnemy "hawk" "Hawk" "hawk" >
 addDefaultDaggerHit >
 setEBaseStats 3 3 3 3 >
-setELevel 20 >
-addAttackOnlyState >
-setGold 52 >
+setELevel 7 >
+HawkAI >
+modStat "MaxHP" -30 >
+modStat "Speed" 6 >
+modStat "BattlePower" -2 >
+modStat "Intelligence" -1 >
+setGold 32 >
+addEAbility "gale" >
 setEShadow (createShadow 44 14 40 > addElevation 16))
 
 #
 \spud <- (addEnemy "spud" "Spud" "spud" >
 addDefaultDaggerHit >
 setEBaseStats 3 3 3 3 >
-setELevel 1 >
+setELevel 5 >
+modStat "BattlePower" -1 >
 addAttackOnlyState >
-setGold 52 >
+setGold 22 >
 setEShadow (createShadow 31 16 22))
 
-#
+################BUNNY AI##############
+
+LeafyBunnyAI enemy
+   enemy > setEnemyAI (
+           createAI "useDrain" (createAIState ([e decision]
+                (|randomRoll 100 
+                 |greater 40   : "" #do nothing, just attack
+                 |greater 65   : decision > setAbility (e > getEnemyAbility "maddeningeyes") 
+           		 |greater 100  : decision > setAbility (e > getEnemyAbility "leafygreens")
+           ))))
+
+#####################################
+
+
 \leafbunny <- (addEnemy "leafbunny" "Leafy Bunny" "leafbunny" >
 addDefaultDaggerHit >
 setEBaseStats 3 3 3 3 >
-setELevel 20 >
-addAttackOnlyState >
+setELevel 6 >
+LeafyBunnyAI >
 setGold 52 >
+modStat "MaxHP" -14 >
+modStat "BattlePower" -2 >
+addEAbility "leafygreens" >
+addEAbility "maddeningeyes" >
 setEShadow (createShadow 42 12 25))
 
 #

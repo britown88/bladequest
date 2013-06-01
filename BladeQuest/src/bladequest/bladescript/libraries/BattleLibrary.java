@@ -46,6 +46,7 @@ import bladequest.statuseffects.StatusEffect;
 import bladequest.statuseffects.seConfuse;
 import bladequest.statuseffects.seFrozen;
 import bladequest.statuseffects.sePoison;
+import bladequest.statuseffects.seRegen;
 import bladequest.system.Recyclable;
 import bladequest.world.Ability;
 import bladequest.world.DamageTypes;
@@ -116,6 +117,12 @@ public class BattleLibrary {
 	{
 		return new sePoison(power);
 	}
+	
+	public static StatusEffect regenStatus(int minRegen, int maxRegen, int duration)
+	{
+		return new seRegen(minRegen, maxRegen, duration);
+	}
+	
 	
 	public static StatusEffect confuseStatus(int duration)
 	{

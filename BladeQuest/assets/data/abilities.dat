@@ -81,8 +81,6 @@ addDefaultWait ability
 
 
 
-
-
 ###############RAT####################
 
 \bite <- (addAbility "bite" "Bite" "Single" 5 >
@@ -107,6 +105,25 @@ addDep (scriptAction ([builder]
 
 
 ############LEAFY RABBIT################
+
+\leafygreens <- (addAbility "leafygreens" "Leafy Greens" "SingleAlly" 2 >
+add (\defWait <- waitAction 450) >
+addDep (inflictStatusAction (regenStatus 4 10 4)))
+
+
+\maddeningeyes <- (addAbility "maddeningeyes" "Maddening Eyes" "Single" 2 >
+add (\defWait <- waitAction 450) >
+addDep (flashAction 0.5f 235 255 0 0) >
+addDep (inflictStatusAction (confuseStatus 2)))
+
+
+###########HAWK##########################
+
+\gale <- (addAbility "gale" "Gale" "Single" 2 >
+add (\defWait <- waitAction 450) >
+addDep (animBuildAction "gale") >
+add (\defWait <- waitAction 1550) >
+addDep (damageAction 1.2 "Magic" > addDamageComponent "Wind" 1.0))
 
 
 ################RECRUIT  ABILITIES############################################
