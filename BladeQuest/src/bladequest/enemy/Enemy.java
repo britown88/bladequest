@@ -72,7 +72,6 @@ public class Enemy extends PlayerCharacter
 	Recyclable AnimRecycleData;
 	BattleAnim builtAnim;
 	
-	private List<Ability> abilities;
 		
 	public Enemy(String name, String spr)
 	{
@@ -83,7 +82,6 @@ public class Enemy extends PlayerCharacter
 		
 		stolen = false;
 		
-		abilities = new ArrayList<Ability>();
 		battleStartActions = new ArrayList<BattleStartAction>(); 
 	}
 	
@@ -98,7 +96,6 @@ public class Enemy extends PlayerCharacter
 		commonDropRate = e.commonDropRate;
 		rareDropRate = e.rareDropRate;
 		rareStealOnly = e.rareStealOnly;
-		abilities = e.abilities;
 		abilityChance = e.abilityChance;
 		bossFight = e.bossFight;
 		attackAnim = e.attackAnim;

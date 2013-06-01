@@ -78,6 +78,12 @@ public class EnemyLibrary {
 	{
 		return character.getOnPhysicalHitEvent();
 	}
+	public static Event getOnDamagedEvent(PlayerCharacter character)
+	{
+		return character.getOnDamagedEvent();
+	}
+		
+	
 	
 	public static Enemy onBattleStartRun(Enemy enemy, ScriptVar fn)
 	{

@@ -72,6 +72,16 @@ public class BattleEvent
 	public boolean isDone(){ return done;}
 	public boolean runningStatus() { return endTurnStatuses != null;}
 	
+	boolean special = false;
+	public void setSpecial()
+	{
+		special = true;
+	}
+	public boolean isSpecial()
+	{
+		return special;
+	}
+	
 	public void setActionType(PlayerCharacter.Action action)
 	{
 		//mainly to reset to skipped, possibly for beserk??/

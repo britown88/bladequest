@@ -16,7 +16,7 @@ addAction (message "Recruit: \nShut up! You're not supposed to be here!") >
 addAction (message "|aramis|: \nOh I get it. Prison duty was a bit much for a newbie.") >
 addAction (message "So they got you up here guarding tapestries.") >
 addAction (message "Recruit: \nYeah well if I catch you, that'll show them what I can do!") >
-addAction (message "|aramis|: \nListen, kid.  You don't have to prove youself. \nJust walk away.") >
+addAction (message "|aramis|: \nListen, kid.  You don't have to prove yourself. \nJust walk away.") >
 addAction (message "I promise I won't tell the other guards.") >
 addAction (message "Recruit: \nEnough! Bring it on!") >
 addAction (startBattle "recruit" false >

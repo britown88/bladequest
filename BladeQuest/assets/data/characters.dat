@@ -8,7 +8,7 @@ setPortrait 0 0 >
 setAbilityName "Tricks" >
 setCombatAction "combSteal" >
 setBaseStats 7 10 4 2 >
-setLevel 99 >
+setLevel 6 >
 mapBound equip {"knife", "felthat", "cottonshirt"} >
 mapBound addAbility {"poisonjab", "dblattack", "backstab"} >
 addLearnableAbility "dblattack" 6) > 

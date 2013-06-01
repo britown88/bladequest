@@ -3,9 +3,11 @@ package bladequest.bladescript.libraries;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.util.Log;
 import bladequest.battleactions.BattleAction;
 import bladequest.battleactions.bactAttackClose;
 import bladequest.battleactions.bactAttackRandomTargets;
+import bladequest.battleactions.bactBarrelRoll;
 import bladequest.battleactions.bactBasicAttack;
 import bladequest.battleactions.bactBreakStance;
 import bladequest.battleactions.bactDamage;
@@ -30,18 +32,21 @@ import bladequest.bladescript.ScriptVar;
 import bladequest.bladescript.ScriptVar.BadTypeException;
 import bladequest.combat.Battle;
 import bladequest.combat.BattleCalc;
+import bladequest.combat.BattleEventBuilder;
 import bladequest.combat.triggers.Condition;
 import bladequest.combat.triggers.Trigger;
 import bladequest.enemy.Enemy;
 import bladequest.graphics.BattleSprite.faces;
+import bladequest.observer.Observer;
+import bladequest.observer.ObserverList;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.statuseffects.seConfuse;
 import bladequest.statuseffects.seFrozen;
 import bladequest.statuseffects.sePoison;
+import bladequest.system.Recyclable;
 import bladequest.world.Ability;
 import bladequest.world.DamageTypes;
 import bladequest.world.Global;
-import bladequest.world.Item;
 import bladequest.world.PlayerCharacter;
 import bladequest.world.Stats;
 import bladequest.world.TargetTypes;
@@ -66,6 +71,14 @@ public class BattleLibrary {
 		//default outside of battle usability to false.
 		Ability newAbility = new Ability(name, displayName, TargetTypes.valueOf(targetType), mpcost, false);
 		Global.abilities.put(name, newAbility);
+		return newAbility;
+	}
+	
+	//for creating abilities on-the-fly.
+	public static Ability temporaryAbility(String name, String displayName, String targetType, int mpcost)
+	{
+		//default outside of battle usability to false.
+		Ability newAbility = new Ability(name, displayName, TargetTypes.valueOf(targetType), mpcost, false);
 		return newAbility;
 	}
 	
@@ -119,6 +132,11 @@ public class BattleLibrary {
 		return ability;
 	}
 	
+	//special mega kiiiiiiiiiiiick
+	public static BattleAction barrelRollAction(int milliseconds)
+	{
+		return new bactBarrelRoll((long)milliseconds);
+	}
 	
 	//just for Roland's "Shatter"
 	public static BattleAction rolandSpecialShatterAction(ScriptVar ignored)
@@ -194,6 +212,27 @@ public class BattleLibrary {
 	{
 		return new bactBasicAttack(power, DamageTypes.valueOf(damageType), speedFactor);
 	}
+	public static BattleAction basicAttackActionWithAccuracy(float power, String damageType, float speedFactor, String accuracyType, float accuracyVal)
+	{
+		return new bactBasicAttack(power, DamageTypes.valueOf(damageType), speedFactor, BattleCalc.AccuracyType.valueOf(accuracyType), accuracyVal);
+	}
+		
+	
+	
+	public static BattleEventBuilder add(BattleEventBuilder builder, BattleAction action)
+	{
+		builder.addEventObject(action);
+		return builder;
+	}
+	public static BattleEventBuilder addDep(BattleEventBuilder builder, BattleAction action)
+	{
+		builder.addEventObject(action.addDependency(builder.getLast()));
+		return builder;
+	}
+	public static BattleEventBuilder makeGraphicalBattleEventBuilder(Battle battle)
+	{
+		return battle.makeGraphicalBattleEventBuilder();
+	}
 	
 	//Function takes Target character and returns bool.
 	public static BattleAction conditionalAttackAction(float power, String damageType, float speedFactor, ScriptVar function)
@@ -268,11 +307,68 @@ public class BattleLibrary {
 		return 0;
 	}
 	
+	public static int addNextAbility(PlayerCharacter source, ScriptVar targets, Ability ability)
+	{
+		List<PlayerCharacter> characters = new ArrayList<PlayerCharacter>();
+		ScriptVar.listFromSingleOrList(characters, targets); 
+		
+		Global.battle.forceNextAbilityEvent(source, characters, ability);
+		return 0;
+	}
+	
 	public static PlayerCharacter getCurrentBattleActor(ScriptVar ignored)
 	{
 		return Global.battle.getCurrentActor();
 	}
 	
+	public static Battle showBattleMessage(Battle battle, String message)
+	{
+		battle.showMessage(message);
+		return battle;
+	}
+	
+	private static class SwitchCondition implements Condition
+	{
+		boolean on;
+		ObserverList<Condition> observers;
+		SwitchCondition(boolean startState)
+		{
+			observers = new ObserverList<Condition>(Global.battle.updatePool);
+			on = startState;
+		}
+		void set(boolean on)
+		{
+			this.on = on;
+			if (on)
+			{
+				observers.push(this);
+			}
+		}
+		@Override
+		public Recyclable register(Observer<Condition> observer) {
+			return observers.add(observer);
+		}
+
+		@Override
+		public void remove(Observer<Condition> observer) {
+			observers.remove(observer);
+		}
+
+		@Override
+		public boolean triggered() {
+			return on;
+		}
+		
+	}
+	public static SwitchCondition createSwitchCondition(boolean startState)
+	{
+		return new SwitchCondition(startState);
+	}
+	public static SwitchCondition setSwitchCondition(SwitchCondition switchCondition, boolean on)
+	{
+		switchCondition.set(on);
+		return switchCondition;
+	}
 	//conditionList is a list of conditions/events OR a single condition/event.
 	public static Trigger createTrigger(ScriptVar conditionList, ScriptVar onTrigger)
 	{
@@ -307,6 +403,7 @@ public class BattleLibrary {
 					onTrigger.apply(ScriptVar.toScriptVar(this));
 				} catch (ParserException e) {
 					e.printStackTrace();
+					Log.d("Parser", e.what());
 				}
 			}
 		}.initialize(onTrigger);

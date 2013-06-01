@@ -213,7 +213,7 @@ public class Parser {
 			}
 			return out;
 		}
-		public int       getLine() {return lineNumber;}
+		public int       getLine() {return line;}
 	}
 	
 	private Statement getStatementFromLocal(String name)
@@ -556,10 +556,46 @@ public class Parser {
 		//lambda args is the argument names now.
 		return new StatementParser(stateStack, lambdaArgs, locals, "Lambda function body")
 		{
+			List<Statement> statements;
+			{
+				statements = new ArrayList<Statement>();
+			}
+			@Override
+			public void endLine() throws ParserException
+			{
+				if (!substatements.isEmpty())
+				{
+					statements.add(compileSubstatements());
+					this.substatements = new ArrayList<Statement>();
+				}
+			}
 			@Override
 			public void endParen() throws ParserException
 			{
-				publishStatement(compileSubstatements());
+				if (!substatements.isEmpty())
+				{
+					statements.add(compileSubstatements());
+				}
+				publishStatement(new Statement()
+				{
+					List<Statement> statements;
+					Statement initialize(List<Statement> statements)
+					{
+						this.statements = statements;
+						return this;
+					}
+					public ScriptVar invoke(ExecutionState state)
+							throws ParserException {
+
+						ScriptVar var = null;
+						for (Statement statement : statements)
+						{
+							var = statement.invoke(state);
+						}
+						return var;
+					}
+					
+				}.initialize(statements));
 				popState(); //pop lambda function base state.
 			}
 		};		
@@ -655,7 +691,7 @@ public class Parser {
 					}
 					++num;
 				}
-				return null;
+				throw new ParserException("none of the functions pattern-matched!");
 			}
 		}.initialize(matchingStatement, conditionalStatements, outputStatements);
 	}

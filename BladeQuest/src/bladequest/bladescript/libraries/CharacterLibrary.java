@@ -6,6 +6,7 @@ import bladequest.enemy.Enemy;
 import bladequest.graphics.Shadow;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
+import bladequest.world.Stats;
 
 public class CharacterLibrary 
 {	
@@ -96,5 +97,14 @@ public class CharacterLibrary
 		return pc;
 	}
 
+	public static int getHP(PlayerCharacter pc)
+	{
+		return pc.getHP();
+	}
+
+	public static int getStat(PlayerCharacter pc, String stat)
+	{
+		return pc.getStat(Stats.valueOf(stat));
+	}	
 
 }

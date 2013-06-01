@@ -1,11 +1,10 @@
 package bladequest.bladescript;
 
-import bladequest.bladescript.ScriptVar.BadTypeException;
 import bladequest.bladescript.ScriptVar.SpecializationLevel;
 
 public interface FunctionSpecializer {
 	
 	boolean Equals(FunctionSpecializer rhs);
 	String getSpecializationName();
-	SpecializationLevel getSpecializationLevelFor(ScriptVar var) throws BadTypeException; 
+	SpecializationLevel getSpecializationLevelFor(ScriptVar var) throws ParserException; 
 }

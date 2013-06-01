@@ -658,6 +658,7 @@ public class Battle
 		stateMachine.setState(getStartState());
 		this.encounter = new Encounter(Global.encounters.get(encounter));
 		
+		
 		for (Enemy e : this.encounter.Enemies())
 		{
 			e.startBattle();
@@ -691,6 +692,7 @@ public class Battle
 			Global.map.getBackdrop().load();
 			buildPaints();
 			
+			this.encounter.onStart();
 			//initial triggering
 			startTurn.trigger();
 			
@@ -699,6 +701,8 @@ public class Battle
 			update();
 			
 			setInfoBarText(txtStart);
+			
+			
 		}		
 	}
 	
@@ -1057,12 +1061,14 @@ public class Battle
 		battleEvents.add(0,new BattleEvent(Action.Ability,ability, source, targets, markers, ActionType.Special));
 		battleEvents.get(0).init();
 		battleEvents.get(0).dontRunStatusEffects();
+		battleEvents.get(0).setSpecial();
 		battleEvents.add(0, null); //add event to be deleted in place of the interrupted event.		
 
 	}
 	public void forceNextAbilityEvent(PlayerCharacter source, List<PlayerCharacter> targets, Ability ability)
 	{
 		battleEvents.add(1,new BattleEvent(Action.Ability,ability, source, targets, markers));
+		battleEvents.get(1).setSpecial();
 	}	
 	public PlayerCharacter getCurrentActor()
 	{
@@ -1070,9 +1076,10 @@ public class Battle
 	}
 	public boolean getPlayerHasGone(PlayerCharacter c)
 	{
-		for (BattleEvent b : battleEvents)
+		for (int i = 1; i < battleEvents.size(); ++i)
 		{
-			if (b.getSource() == c) return false;
+			BattleEvent b  = battleEvents.get(i);
+			if (b.getSource() == c  && !b.isSpecial()) return false;
 		}
 		return true;
 	}
@@ -1080,8 +1087,13 @@ public class Battle
 	{
 		int argNum = 0;
 		for (BattleEvent b : battleEvents)
-		{
-			if (b.getSource() == c) return new PlayerBattleActionSelect()
+		{ 
+			if (argNum == 0)
+			{
+				++argNum;
+				continue;
+			}
+			if (b.getSource() == c  && !b.isSpecial()) return new PlayerBattleActionSelect()
 			{
 
 				BattleEvent replaceEvent;
@@ -1095,6 +1107,7 @@ public class Battle
 				
 				@Override
 				public void skipPlayerInput() {
+					replaceEvent.interrupt();
 					battleEvents.remove(replaceEvent);
 				}
 
@@ -1208,7 +1221,12 @@ public class Battle
 				switch(action)
 				{case Attack:setInfoBarText(actor.getDisplayName()+" attacks!");break;
 				case Item:setInfoBarText(actor.getDisplayName()+" uses "+actor.getItemToUse().getDisplayName()+"!");break;
-				case Ability:setInfoBarText(actor.getDisplayName()+" casts "+ability.getDisplayName()+"!");break;
+				case Ability:
+					if (!ability.getDisplayName().equals(""))
+					{
+						setInfoBarText(actor.getDisplayName()+" casts "+ability.getDisplayName()+"!");	
+					}
+					break;
 				case CombatAction:setInfoBarText(actor.getDisplayName()+actor.getCombatActionText());break;
 				default: break;}
 				
@@ -1228,7 +1246,10 @@ public class Battle
 					}						
 					else if(action == Action.Ability)
 					{
-						showDisplayName(ability.getDisplayName());
+						if (!ability.getDisplayName().equals(""))
+						{
+							showDisplayName(ability.getDisplayName());	
+						}
 						actor.useAbility(ability);
 					}						
 					else if(action == Action.Item)
