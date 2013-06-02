@@ -2,7 +2,7 @@
 size 30 20
 tileset Castle
 displayname "Great Hall"
-BGM carle
+BGM inherit
 [tiles]
 t 0 0 1 5 b 0 0 0 0 
 t 1 0 1 5 b 0 0 0 0 

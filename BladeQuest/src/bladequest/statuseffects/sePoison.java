@@ -32,7 +32,12 @@ public class sePoison extends StatusEffect
 	{ 
 		return "status " + sePoison.class.getSimpleName() + " " + power; 
 	}
-	
+	public int calculateDamage(PlayerCharacter target)
+	{
+		int hp = Math.min(target.getStat(Stats.MaxHP), target.getUnModdedStat(Stats.MaxHP)); 
+		
+		return Math.max(1, (int)((float)hp*(power/100.0f)));
+	}
 	@Override
 	public void onTurn(BattleEventBuilder builder) 
 	{
@@ -41,7 +46,7 @@ public class sePoison extends StatusEffect
 		Global.battle.setInfoBarText(damageTarget.getDisplayName() + " is damaged by poison!");
 		BattleAnim anim = Global.battleAnims.get("poison");
 		
-		int damage = Math.max(1, (int)((float)damageTarget.getStat(Stats.MaxHP)*(power/100.0f)));
+		int damage = calculateDamage(damageTarget);
 		
 		builder.addEventObject(new TargetedAction(damageTarget)
 		{

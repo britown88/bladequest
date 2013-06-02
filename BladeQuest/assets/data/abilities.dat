@@ -169,6 +169,12 @@ addDep (targetSelfAction (inflictStatusAction (confuseStatus 3))) >
 addDep (messageAction "Recruit: \nUgh, so dizzy..."))
 
 
+###################SAYTR###################
+
+\trickery  <- (addAbility "trickery" "Trickery" "Single" 0 >
+add (waitAction 450) >
+
+
 ##########ROLAND BATTLE 1 ABILITIES#########
 
 
@@ -181,3 +187,5 @@ addDep (inflictStatusAction (frozenStatus 4)))
 \shatter <- (addAbility "shatter" "Shatter" "Single" 0 >
 add (waitAction 450) >
 addDep (rolandSpecialShatterAction 0))
+
+
