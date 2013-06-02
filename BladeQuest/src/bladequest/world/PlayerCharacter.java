@@ -73,7 +73,7 @@ public class PlayerCharacter
 	private boolean mirrorSpecial;
 	private boolean defaultMirroredState = false;
 	
-	private Event onPhysicalHitEvent, onDamagedEvent;
+	private Event onPhysicalHitEvent, onDamagedEvent, onAttackEvent;
 	
 	private Shadow shadow;
 	
@@ -153,10 +153,14 @@ public class PlayerCharacter
 		{
 			onPhysicalHitEvent = new Event();
 			onDamagedEvent = new Event();
+			onAttackEvent = new Event();
 		}		
 	}
 
-
+	public Event getOnAttackEvent()
+	{
+		return onAttackEvent;
+	}
 	public Event getOnPhysicalHitEvent()
 	{
 		return onPhysicalHitEvent;
@@ -182,11 +186,13 @@ public class PlayerCharacter
 	{
 		onPhysicalHitEvent = new Event();
 		onDamagedEvent = new Event();
+		onAttackEvent = new Event();
 	}
 	public void endBattle()
 	{
 		onPhysicalHitEvent = null;
 		onDamagedEvent = null;
+		onAttackEvent = null;
 	}
 	
 	public int getExp(){return exp;}

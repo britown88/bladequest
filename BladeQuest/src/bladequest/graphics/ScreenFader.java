@@ -90,7 +90,10 @@ public class ScreenFader
 						alpha = 0;
 					}
 					else
-						fadeIn(fadeTime);					
+					{
+						fadeIn(fadeTime);
+						delta = 0.0f;
+					}
 				}
 				else
 				{

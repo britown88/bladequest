@@ -74,7 +74,8 @@ addDefaultStaffHit >
 setELevel 5 >
 setGold 23 >
 setItems "potion" 25 "antidote" 85 true >
-modStat "MaxHP" -10 >
+modStat "MaxHP" -12 >
+modStat "BattlePower" -1 >
 makeRatAI >
 addEAbility "bite" >
 setEShadow (createShadow 40 36 15))
@@ -127,7 +128,7 @@ setEShadow (createShadow 31 16 22))
 
 LeafyBunnyAI enemy
    enemy > setEnemyAI (
-           createAI "useDrain" (createAIState ([e decision]
+           createAI "leafermadness" (createAIState ([e decision]
                 (|randomRoll 100 
                  |greater 30   : "" #do nothing, just attack
                  |greater 70   : decision > setAbility (e > getEnemyAbility "maddeningeyes") 
@@ -179,7 +180,6 @@ setUseDrainState >
 setItems "potion" 50 " " 0 true >
 addEAbility "drain" >
 modStat "MaxHP" -30 >
-modStat "Intelligence" 2 >
 setEShadow (createShadow 34 12 30 > addElevation 16))
 
 #

@@ -6,9 +6,18 @@
 setShortName "Coat Wpn" >
 setDesc "Coats an ally's weapon with poison, giving them a chance to inflict poison on hit." >
 add (setFaceAction "Cast" 0) >
-addDep (animAction "movetest") >
-addDep (inflictStatusAction (poisonStatus 10.0)))
-
+addDep (waitAction 450) >
+addDep (positionSpecialAction true) >
+addDep (specialMirroringAction true) >
+addDep (jumpToAndFaceAction 6.0 4) >
+addDep (setFaceAction "Use" 0) >
+addDep (animAction "poison") >
+addDep (inflictStatusAction (poisonWeaponStatus 4)) >
+addDep (jumpHomeAction 4.0 3) >
+addDep (positionSpecialAction false) >
+addDep (specialMirroringAction false) >
+addDep (setFaceAction "Ready" 0) >
+addDep (waitAction 300))
 
 \backstab <- (addAbility "backstab" "Backstab" "Single" 3 >
 setDesc "Hits confused enemies for massive damage." >

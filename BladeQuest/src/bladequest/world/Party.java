@@ -47,7 +47,7 @@ public class Party
 	public PlayerCharacter partyMembers[];
 	private List<Item> inventory;
 	
-	private final float encounterGrowth = 0.975f; 
+	private final float encounterGrowth = 0.9675f; 
 	private List<EncounterZone> inZoneList;
 	
 	

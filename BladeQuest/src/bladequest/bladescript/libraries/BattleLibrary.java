@@ -15,6 +15,7 @@ import bladequest.battleactions.bactFlash;
 import bladequest.battleactions.bactFullRestore;
 import bladequest.battleactions.bactInflictStatus;
 import bladequest.battleactions.bactJumpHome;
+import bladequest.battleactions.bactJumpToAndFace;
 import bladequest.battleactions.bactMessage;
 import bladequest.battleactions.bactMirror;
 import bladequest.battleactions.bactRemoveStatus;
@@ -47,6 +48,7 @@ import bladequest.statuseffects.seBeserk;
 import bladequest.statuseffects.seConfuse;
 import bladequest.statuseffects.seFrozen;
 import bladequest.statuseffects.sePoison;
+import bladequest.statuseffects.sePoisonWeapon;
 import bladequest.statuseffects.seRegen;
 import bladequest.system.Recyclable;
 import bladequest.world.Ability;
@@ -119,6 +121,11 @@ public class BattleLibrary {
 		return new sePoison(power);
 	}
 	
+	public static StatusEffect poisonWeaponStatus(int duration)
+	{
+		return new sePoisonWeapon(duration);
+	}
+	
 	public static StatusEffect regenStatus(int minRegen, int maxRegen, int duration)
 	{
 		return new seRegen(minRegen, maxRegen, duration);
@@ -175,6 +182,11 @@ public class BattleLibrary {
 	{
 		return new bactJumpHome(invArc, animTime);
 	}
+	public static BattleAction jumpToAndFaceAction(float invArc, int animTime)
+	{
+		return new bactJumpToAndFace(invArc, animTime);
+	}
+	
 	
 	public static BattleAction inflictStatusAction(StatusEffect effect)
 	{

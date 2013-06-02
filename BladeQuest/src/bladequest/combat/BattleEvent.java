@@ -158,6 +158,21 @@ public class BattleEvent
 			
 		}.initialize(ability);
 	}
+	
+	public static BasicAttackBuilder attackBuilder;
+	private class AttackBuilder implements BasicAttackBuilder 
+	{
+		BattleEventBuilder builder;
+		AttackBuilder(BattleEventBuilder builder)
+		{
+			this.builder = builder;
+		}
+		@Override
+		public BattleEventBuilder getEventBuilder() {
+			return builder;
+		}
+		
+	}
 	public void init()
 	{
 		if (actionRunner != null)
@@ -180,6 +195,10 @@ public class BattleEvent
 				}
 			});
 			BattleActionPatterns.BuildSwordSlash(builder, 1.0f, DamageTypes.Physical, 1.0f, builder.getLast());
+			attackBuilder = new AttackBuilder(builder);
+			//TRIGGER WARNING
+			builder.getSource().getOnAttackEvent().trigger();
+			//TRIGGER WARNING
 			
 			break;
 		case Ability:

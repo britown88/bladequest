@@ -136,9 +136,17 @@ public class PointMath {
 		Point startPos = attacker.getPosition(false);
 		Point offset = PointMath.subtract(attacker.getPosition(true), startPos); 
 		Point pointOff = target.getPosition(false);
-		pointOff.x += 8 + target.getBattleSprite().getWidth();
-		pointOff.y +=  defenderHeight - attackerHeight;
 		
+		if (target.isEnemy())
+		{
+			pointOff.x += 8 + target.getBattleSprite().getWidth();
+		}
+		else
+		{
+			pointOff.x -= 8 + attacker.getBattleSprite().getWidth();
+		}
+		
+		pointOff.y +=  defenderHeight - attackerHeight;
 		return add(pointOff, offset);
 	}
 	
