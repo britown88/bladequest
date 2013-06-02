@@ -8,9 +8,9 @@ setPortrait 0 0 >
 setAbilityName "Tricks" >
 setCombatAction "combSteal" >
 setBaseStats 7 10 4 2 >
-setLevel 5 >
+setLevel 7 >
 mapBound equip {"knife", "felthat", "cottonshirt"} >
-mapBound addAbility {"coatweapon"} >
+mapBound addAbility {"coatweapon", "dblattack"} >
 addLearnableAbility "dblattack" 6 > 
 addLearnableAbility "backstab" 8 > 
 setDefaultShadow
@@ -20,9 +20,9 @@ setPortrait 2 0 >
 setAbilityName "Magic" >
 setCombatAction "combAuras" >
 setBaseStats 3 3 6 10 >
-setLevel 99 >
-mapBound addAbility {"heal", "ignite", "drain"} >
-mapBound equip {"windstaff", "felthat", "cottonshirt"}) > 
+setLevel 6 >
+mapBound addAbility {"heal", "ignite"} >
+mapBound equip {"silverstaff", "felthat", "cottonshirt"}) > 
 setDefaultShadow
 
 \luc <- (createCharacter "luc" "Luc" "bluc" "luc" >
@@ -30,9 +30,9 @@ setPortrait 1 0 >
 setAbilityName "Swordplay" >
 setCombatAction "combStance" >
 setBaseStats 10 4 7 2 >
-setLevel 5 >
-mapBound equip {"woodensword", "felthat", "cottonshirt"} >
-mapBound addAbility {"assault", "zornhau", "redcard"} >
+setLevel 7 >
+mapBound equip {"silversword", "felthat", "cottonshirt"} >
+mapBound addAbility {"assault", "redcard"} >
 addLearnableAbility "zornhau" 6) >
 setDefaultShadow
 

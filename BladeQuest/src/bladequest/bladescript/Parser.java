@@ -945,6 +945,7 @@ public class Parser {
 				out = compileStatementList(substatements);
 				localCreateStatement = null;
 			}
+			binderStatement = null;
 			return out;
 		}
 		@Override

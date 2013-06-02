@@ -24,8 +24,8 @@ public class BattleActionPatterns {
 		
 		return builder.getLast();
 	}
-
 	
+
 	public static BattleAction BuildSwordSlashWithAccuracy(BattleEventBuilder builder, float power, DamageTypes type, float speedFactor, BattleAction prev, BattleCalc.AccuracyType accuracyType, float missChance)
 	{
 		return BuildSwordSlashImpl(builder, power, type, speedFactor, prev, accuracyType, missChance);
@@ -42,43 +42,19 @@ public class BattleActionPatterns {
 	public static BattleAction BuildSwordSlashImpl(BattleEventBuilder builder, float power, DamageTypes type, float speedFactor, BattleAction prev, BattleCalc.AccuracyType accuracyType, float missChance)
 	{
 		PlayerCharacter attacker = builder.getSource();
-
-		BattleAnim anim = attacker.getWeaponAnimation();
-		builder.addEventObject(new bactSetFace(faces.Ready, 0).addDependency(prev));
-		//wait two frames...
-		int frameLen = (int)(BattleEvent.frameFromActIndex(1) * speedFactor);
-		builder.addEventObject(new bactWait(frameLen*2).addDependency(prev));
-		builder.addEventObject(new bactSetFace(faces.Attack, 0).addDependency(builder.getLast()));
-		builder.addEventObject(new bactWait(frameLen*3).addDependency(prev));
-		BattleAction animStartAction = builder.getLast();
 		
 		bactDamage damageAction = new bactDamage(power, type, accuracyType, missChance);
-		
-		if (anim != null)
-		{
-			SyncronizableAction animationAction = new bactRunAnimation(new BattleAnim(anim, speedFactor));
-			builder.addEventObject(animationAction.addDependency(animStartAction));	
-			builder.addEventObject(new bactWait(animationAction.syncronizeTime(0.5f)).addDependency(animStartAction));
-			builder.addEventObject(damageAction.addDependency(builder.getLast()));
-		}
-		
-		
-		builder.addEventObject(new bactSetFace(faces.Attack, 1).addDependency(animStartAction));
-		builder.addEventObject(new bactWait(frameLen*4).addDependency(prev));
-		builder.addEventObject(new bactSetFace(faces.Attack, 2).addDependency(builder.getLast()));
-		builder.addEventObject(new bactWait(frameLen*5).addDependency(prev));
-		builder.addEventObject(new bactSetFace(faces.Ready, 0).addDependency(builder.getLast()));			
-		
-		if(anim == null)
-		{
-			builder.addEventObject(damageAction.addDependency(builder.getLast()));
-		}
 		
 		if(attacker.weapEquipped())
 			for(DamageComponent dc : attacker.weapon().getDamageComponents())
 				damageAction.addDamageComponent(dc.getAffinity(), dc.getPower());
 		
-		return builder.getLast();
+		
+		bactSlash slash = new bactSlash(damageAction, speedFactor);
+		
+		builder.addEventObject(slash.addDependency(prev));
+		
+		return slash;
 	}
 	public static BattleAction BuildSwordSlash(BattleEventBuilder builder, float power, DamageTypes type, float speedFactor, BattleAction prev)
 	{

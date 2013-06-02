@@ -150,13 +150,38 @@ addEAbility "leafygreens" >
 addEAbility "maddeningeyes" >
 setEShadow (createShadow 42 12 25))
 
-#
+#######################SAYTR AI################
+
+SatyrLeadWith e decision attack
+	decision > setAbility (e > getEnemyAbility attack)
+    switchEnemyState e "tryReversal"
+
+SatyrAI enemy
+   enemy > setEnemyAI (
+           createAI "base" (createAIState ([e decision]
+                (|randomRoll 100 
+                 |greater 60   : "" #basic attack
+                 |greater 70   : SatyrLeadWith e decision "provoke"  
+           		 |greater 100  : SatyrLeadWith e decision "trickery"
+           ))) >
+           addAIState "tryReversal" (createAIState ([e2 d2]
+               d2 > setAbility (e2 > getEnemyAbility "satyrreversal")
+               switchEnemyState e2 "base"               
+           )))
+
+################################################
 \satyr <- (addEnemy "satyr" "Satyr" "satyr" >
 addDefaultDaggerHit >
-setEBaseStats 3 3 3 3 >
-setELevel 20 >
-addAttackOnlyState >
-setGold 52 >
+setEBaseStats 10 10 10 10 >
+setELevel 10 >
+modStat "MaxHP" 750 >
+modStat "BattlePower" -2 >
+SatyrAI >
+setBoss >
+setGold 864 >
+addEAbility "satyrreversal" >
+addEAbility "provoke" >
+addEAbility "trickery" >
 setEShadow (createShadow 71 34 50 > nudgeX -11))
 
 

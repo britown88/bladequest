@@ -110,7 +110,7 @@ public abstract class ScriptVar {
 	public boolean isEmptyList()  { return false; }
 	
 	
-	public static ScriptVar genericScriptToVar(List<?> list)
+	public static ScriptVar genericScriptToVar(List<?> list) throws ParserException
 	{
 		ScriptVar out = new EmptyList();
 		for (Object obj : list)
@@ -119,8 +119,9 @@ public abstract class ScriptVar {
 		}
 		return out;
 	}
-	public static ScriptVar toScriptVar(Object obj)
+	public static ScriptVar toScriptVar(Object obj) throws ParserException
 	{
+		if (obj == null) throw new ParserException("Null object returned to scripting language?"); 
 		if (obj.getClass() == Integer.class)
 		{
 			return toScriptVar(((Integer)obj).intValue());
