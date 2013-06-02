@@ -171,6 +171,8 @@ addDep (messageAction "Recruit: \nUgh, so dizzy..."))
 
 ###################SAYTR###################
 
+#why delete me brandon? :(
+
 \trickery  <- (addAbility "trickery" "Trickery" "Single" 0 >
 add (waitAction 450) >
 addDep (animBuildAction "trickery") >
