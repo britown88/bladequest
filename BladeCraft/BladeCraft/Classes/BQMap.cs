@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Xml;
+
 
 using BladeCraft.Forms;
 
@@ -9,6 +11,8 @@ using System.Text.RegularExpressions;
 
 namespace BladeCraft.Classes
 {
+
+
    public class BQMap
    {
       private enum LoadTypes
@@ -46,13 +50,13 @@ namespace BladeCraft.Classes
             headerForm.BringToFront();
          }
       }
-
-
+      
       public BQMap(string name, int x, int y, string displayName, string BGM, bool save)
       {
          this.sizeX = x;
          this.sizeY = y;
          this.name = name;
+         this.path = "bcfiles\\" + name + ".xml";
          this.displayName = displayName;
          this.save = save;
          this.BGM = BGM;
@@ -66,44 +70,16 @@ namespace BladeCraft.Classes
       public BQMap(string filename)
       {
          StreamReader reader = new StreamReader(filename);
-         string line, item;
          string[] values= new string[20];
          zones = new List<EncounterZone>();
          objects = new List<GameObject>();
-         int i, index;
 
          this.path = filename;
 
          name = filename.Remove(filename.Length - 4);
          name = name.Substring(name.LastIndexOf('\\') + 1);
 
-         do
-         {
-            i = 0;
-            index = 0;
-            line = reader.ReadLine();
-            item = readWord(line, index);
-            index += item.Length;
-
-            //reset array
-            for (int j = 0; j < 20; ++j)
-               values[j] = "";
-
-            do
-            {
-               bool usesQuotes = index+1 < line.Length ? line[index+1] == '\"' : false;
-               values[i] = readWord(line, index);
-               index += values[i].Length;
-               values[i] = values[i].TrimStart(' ');
-               if (usesQuotes)
-                  index += 2;
-            } while (values[i++] != "");
-
-            loadLine(item, values);
-         }
-         while (reader.Peek() != -1);
-         reader.Close();
-
+         readXML(filename);
          readObjectFile();
       }
 
@@ -164,7 +140,7 @@ namespace BladeCraft.Classes
          reader.Close();
 
       }
-
+      
       public List<GameObject> getObjects(){ return objects; }
       public void addObject(GameObject obj) { objects.Add(obj); }
       public void deleteObject(int X, int Y)
@@ -187,116 +163,7 @@ namespace BladeCraft.Classes
       }
 
       public string getMapPath() { return path; }      
-
-      private EncounterZone loadzone = null;
-
-      private void loadLine(string item, string[] values)
-      {
-         if (item == "size")
-         {
-            sizeX = Convert.ToInt32(values[0]);
-            sizeY = Convert.ToInt32(values[1]);
-
-            bgtileList = new Tile[sizeX * sizeY];
-            fgtileList = new Tile[sizeX * sizeY];
-            return;
-         }
-         if (item == "tileset")
-         {
-            tileset = values[0];
-            return;
-         }
-         if (item == "displayname")
-         {
-            displayName = values[0];
-            return;
-         }
-         if (item == "BGM")
-         {
-            BGM = values[0];
-            return;
-         } 
-         if (item == "t")
-         {
-            bool fg = values[4] == "a";
-            Tile t = 
-               new Tile(
-               Convert.ToInt32(values[0]), 
-               Convert.ToInt32(values[1]), 
-               Convert.ToInt32(values[2]), 
-               Convert.ToInt32(values[3]), 
-               values[4]);
-            t.collSides[0] = values[5] == "1";
-            t.collSides[1] = values[6] == "1";
-            t.collSides[2] = values[7] == "1";
-            t.collSides[3] = values[8] == "1";
-
-            if (values[9] == "t")
-               t.animate(Convert.ToInt32(values[10]), Convert.ToInt32(values[11]));
-
-            addTile(t, fg);
-
-            return;
-         }
-         if (item == "zone")
-         {
-            loadzone = new EncounterZone();
-            loadzone.zone = new System.Drawing.Rectangle(
-               Convert.ToInt32(values[0]),
-               Convert.ToInt32(values[1]),
-               Convert.ToInt32(values[2]),
-               Convert.ToInt32(values[3]));
-
-            loadzone.encounterRate = (float)Convert.ToDecimal(values[4]);
-            return;
-         }
-         if (item == "encounter")
-         {
-            loadzone.encounters.Add(values[0]);
-            return;
-         }
-         if (item == "endzone")
-         {
-            zones.Add(loadzone);
-            return;
-         }
-
-
-      }
-
-      private string readWord(string line, int index)
-      {
-         string s = "";
-         bool openString = false;
-
-         do
-         {
-            if (index < line.Length)
-            {
-               if (line[index] == '\"')
-               {
-                  if (openString)
-                  {
-                     index++;
-                     break;
-                  }
-                     
-                  else
-                     openString = true;
-               }
-               else
-                  s += line[index];
-
-               index++;
-            }            
-               
-         } while (index < line.Length && ((line[index] != ' ' && line[index] != '\0') ||openString));
-
-
-         return s;
-      }
-
-
+      
       public void setTileset(string ts)
       {
          tileset = ts;
@@ -333,7 +200,7 @@ namespace BladeCraft.Classes
          fgtileList = new Tile[x * y];
       }
 
-      public void addTile(Tile tile, bool foreground)
+      public Tile addTile(Tile tile, bool foreground)
       {
          int index = tile.y * sizeX + tile.x;
 
@@ -342,16 +209,27 @@ namespace BladeCraft.Classes
                fgtileList[index] = tile;
             else
                bgtileList[index] = tile;
+
+         return tile;
       }
 
-      public void animateTile(int x, int y, int bmpX, int bmpY, bool foreground)
+      public Tile animateTile(int x, int y, int bmpX, int bmpY, bool foreground)
       {
          int index = y * sizeX + x;
          if (x >= 0 && x < sizeX && y >= 0 && y < sizeY)
             if (foreground && fgtileList[index] != null)
+            {
                fgtileList[index].animate(bmpX, bmpY);
-            else if(bgtileList[index] != null)
+               return fgtileList[index];
+            }
+            else if (bgtileList[index] != null)
+            {
                bgtileList[index].animate(bmpX, bmpY);
+               return bgtileList[index];
+            }
+
+         return null;
+               
       }
 
       public void deleteTile(int x, int y, bool foreground)
@@ -449,16 +327,160 @@ namespace BladeCraft.Classes
          
       }
 
+      private void writeTile(Tile t, XmlTextWriter xwriter, string layer)
+      {
+         xwriter.WriteStartElement("Tile");
+
+         xwriter.WriteStartElement("WorldPosition");
+         xwriter.WriteAttributeString("X", t.x.ToString());
+         xwriter.WriteAttributeString("Y", t.y.ToString());
+         xwriter.WriteEndElement();
+
+         xwriter.WriteStartElement("BitmapCoordinates");
+         xwriter.WriteAttributeString("X", t.bmpX.ToString());
+         xwriter.WriteAttributeString("Y", t.bmpY.ToString());
+         xwriter.WriteEndElement();
+
+         xwriter.WriteElementString("Layer", layer);
+
+         xwriter.WriteStartElement("CollisionData");
+         xwriter.WriteAttributeString("Left", t.collSides[0].ToString());
+         xwriter.WriteAttributeString("Top", t.collSides[1].ToString());
+         xwriter.WriteAttributeString("Right", t.collSides[2].ToString());
+         xwriter.WriteAttributeString("Bottom", t.collSides[3].ToString());
+         xwriter.WriteEndElement();
+
+         if (t.animated)
+         {
+            xwriter.WriteStartElement("AnimatedBitmapCoordinates");
+            xwriter.WriteAttributeString("X", t.animBmpX.ToString());
+            xwriter.WriteAttributeString("Y", t.animBmpY.ToString());
+            xwriter.WriteEndElement();
+         }
+
+         if (t.IsMaterial())
+         {
+            xwriter.WriteStartElement("MaterialCoordinates");
+            xwriter.WriteAttributeString("X", t.matX.ToString());
+            xwriter.WriteAttributeString("Y", t.matY.ToString());
+            xwriter.WriteEndElement();
+         }
+
+
+         xwriter.WriteEndElement();
+      }
+      
+      private void readXML(string path)
+      {
+         XmlTextReader r = new XmlTextReader(path);
+         Tile newTile = new Tile();
+         EncounterZone newZone = new EncounterZone();
+         string layer = "";
+
+         while (r.Read())
+         {
+            switch (r.NodeType)
+            {
+               case XmlNodeType.Element:
+                  switch (r.LocalName)
+                  {
+                     case "Map":
+                        BGM = r.GetAttribute("BGM");
+                        displayName = r.GetAttribute("DisplayName");
+                        tileset = r.GetAttribute("TileSet");
+
+                        sizeX = Convert.ToInt32(r.GetAttribute("Width"));
+                        sizeY = Convert.ToInt32(r.GetAttribute("Height"));
+
+                        bgtileList = new Tile[sizeX * sizeY];
+                        fgtileList = new Tile[sizeX * sizeY];
+                        break;
+                     case "Tile":
+                        newTile = new Tile();
+                        break;
+                     case "WorldPosition":
+                        newTile.x = Convert.ToInt32(r.GetAttribute("X"));
+                        newTile.y = Convert.ToInt32(r.GetAttribute("Y"));
+                        break;
+                     case "BitmapCoordinates":
+                        newTile.bmpX = Convert.ToInt32(r.GetAttribute("X"));
+                        newTile.bmpY = Convert.ToInt32(r.GetAttribute("Y"));
+                        break;
+                     case "Layer":
+                        layer = r.ReadString();
+                        break;
+                     case "CollisionData":
+                        newTile.collSides[0] = Convert.ToBoolean(r.GetAttribute("Left"));
+                        newTile.collSides[1] = Convert.ToBoolean(r.GetAttribute("Top"));
+                        newTile.collSides[2] = Convert.ToBoolean(r.GetAttribute("Right"));
+                        newTile.collSides[3] = Convert.ToBoolean(r.GetAttribute("Down"));
+                        break;
+                     case "AnimatedBitmapCoordinates":
+                        newTile.animate(Convert.ToInt32(r.GetAttribute("X")), Convert.ToInt32(r.GetAttribute("Y")));
+                        break;
+                     case "MaterialCoordinates":
+                        newTile.addToMaterial(Convert.ToInt32(r.GetAttribute("X")), Convert.ToInt32(r.GetAttribute("Y")));
+                        break;
+                     case "EncounterZone":
+                        newZone = new EncounterZone();
+                        newZone.zone.Width = Convert.ToInt32(r.GetAttribute("Width"));
+                        newZone.zone.Height = Convert.ToInt32(r.GetAttribute("Height"));
+                        newZone.zone.X = Convert.ToInt32(r.GetAttribute("X"));
+                        newZone.zone.Y = Convert.ToInt32(r.GetAttribute("Y"));
+                        newZone.encounterRate = (int)Convert.ToDecimal(r.GetAttribute("EncounterRate"));
+                        break;
+                     case "Encounter":
+                        newZone.encounters.Add(r.ReadString());
+                        break;
+                     
+
+                  }
+                  break;
+               case XmlNodeType.EndElement:
+                  switch (r.LocalName)
+                  {
+                     case "Tile":
+                        addTile(newTile, layer == "Above");
+                        break;
+                     case "EncounterZone":
+                        zones.Add(newZone);
+                        break;
+                        
+                  }
+                  break;
+            };
+         }
+
+      }
+
       public void write()
       {
-         StreamWriter writer = new StreamWriter(path == null ? "assets\\maps\\" + name + ".map" : path);
+         XmlTextWriter xwriter = new XmlTextWriter("bcfiles\\" + name + ".xml", null);
+         xwriter.WriteStartDocument();
+         xwriter.WriteComment("BladeCraft Map File for assets\\maps\\" + name + ".map");
+         xwriter.WriteStartElement("Map");
+         xwriter.WriteAttributeString("Height", sizeY.ToString());
+         xwriter.WriteAttributeString("Width", sizeX.ToString());
+         xwriter.WriteAttributeString("TileSet", tileset);
+         xwriter.WriteAttributeString("DisplayName", displayName);
+         xwriter.WriteAttributeString("BGM", BGM);
+         foreach (Tile t in bgtileList) if (t != null) writeTile(t, xwriter, "Below");
+         foreach (Tile t in fgtileList) if (t != null) writeTile(t, xwriter, "Above");
+         foreach (EncounterZone ez in zones)
+            ez.write(xwriter);
+         xwriter.WriteEndElement();
+         xwriter.WriteEndDocument();
+         xwriter.Close();
+
+         StreamWriter writer = new StreamWriter("assets\\maps\\" + name + ".map");
          writer.WriteLine("[header]");
          writer.WriteLine("size " + sizeX + " " + sizeY);
          writer.WriteLine("tileset " + tileset);
          writer.WriteLine("displayname \"" + displayName +"\"");
-         writer.WriteLine("BGM " + BGM);
-         
+         writer.WriteLine("BGM " + BGM);         
 
+
+         //write map file
          writer.WriteLine("[tiles]");
          foreach (Tile t in bgtileList)
             if(t != null)
@@ -471,7 +493,6 @@ namespace BladeCraft.Classes
                   writer.WriteLine("t " + t.x + " " + t.y + " " + t.bmpX + " " + t.bmpY + " b " +
                   Convert.ToInt32(t.collSides[0]).ToString() + " " + Convert.ToInt32(t.collSides[1]).ToString() + " " +
                   Convert.ToInt32(t.collSides[2]).ToString() + " " + Convert.ToInt32(t.collSides[3]).ToString() + " ");
-
                
          foreach (Tile t in fgtileList)
             if (t != null)
@@ -483,8 +504,7 @@ namespace BladeCraft.Classes
                else
                   writer.WriteLine("t " + t.x + " " + t.y + " " + t.bmpX + " " + t.bmpY + " a " +
                   Convert.ToInt32(t.collSides[0]).ToString() + " " + Convert.ToInt32(t.collSides[1]).ToString() + " " +
-                  Convert.ToInt32(t.collSides[2]).ToString() + " " + Convert.ToInt32(t.collSides[3]).ToString() + " ");
-               
+                  Convert.ToInt32(t.collSides[2]).ToString() + " " + Convert.ToInt32(t.collSides[3]).ToString() + " ");               
 
          writer.WriteLine("[encounters]");
          foreach (EncounterZone ez in zones)
@@ -493,7 +513,6 @@ namespace BladeCraft.Classes
          writer.Close();
 
          writeObjects();
-
       }
    }
 }

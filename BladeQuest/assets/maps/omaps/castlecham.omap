@@ -1,11 +1,5 @@
 #!HEAD
 
-
-
-
-
-
-
 #!OBJ 12 0
 createWindowObj x y
 \obj <- newObject "window" (12 > add x) y
@@ -27,123 +21,124 @@ createWindowObj x > iterateBetween 0 5
 \name$0x0$ <- newObject objName$0x0$ 0 0
 
 state1$0x0$ 0
-name$0x0$ > createState >
-setOptions true false false >
-setAutoStart true >
-addAction (createPath "party" true "u") >
-addAction (wait 2.0) >
-addAction (messageTop "|aramis|: \nHow big is this place anyway?") >
-addAction (pauseMusic 2.0) >
-addAction (createPath "party" true "ssU4") >
-addAction (playMusic "mystery" true true 2.0) >
-addAction (flash 1.0 255 255 0 0 true) >
-addAction (createPath "party" true "d") >
-addAction (messageTop "|aramis|: \nWhoa, what?") >
-addAction (wait 0.5) >
-addAction (createPath "party" true "u") >
-addAction (wait 0.5) >
-addAction (openBubble "exclam" "party" 1.0 false true) >
-addAction (createPath "party" true "SSSSD2L2dss") >
-addAction (wait 1.0) >
-addAction (messageTop "|aramis|: \nWhat are they doing over there??") >
-addAction (flash 1.0 255 255 0 0 true) >
-addAction (openBubble "exclam" "party" 1.0 false true) >
-addAction (changeElevation "party" 64 2.0 false) >
-addAction (setFloating "party" true 90 4) >
-addAction (messageTop "|aramis|: \nWoah, hey, hold on a second!") >
-addAction (panControl 2 -11 6.0 true ) >
-addAction (wait 1.0) >
-addAction (createPath "baligant" true "sD") >
-addAction (messageTop "Robed Figure: \nIt's awakening! \nThe time has come at last!") >
-addAction (wait 0.5) >
-addAction (createPath "roland" true "sLuW") >
-addAction (messageTop "Robed Figure: \nBut what is causing it? Nothing has changed.") >
-addAction (messageTop "Robed Figure: \nIt matters not.") >
-addAction (messageTop "Come, my brothers!  Our goals shall soon be realized!") >
-addAction (createPath "robeUL" false "R") >
-addAction (createPath "robeLL" false "R") >
-addAction (createPath "robeUR" false "L") >
-addAction (createPath "roland" false "l") >
-addAction (wait 1.0) >
-addAction (flash 0.5 255 255 0 0 true) >
-addAction (flash 1.5 255 255 0 0 true) >
-addAction (messageTop "|aramis|: \nAAAAAAAAAAAHHHH!!!!!") >
-addAction (fadeControl 1.0 255 255 0 0 true true) >
-addAction (teleportParty name$0x0$ 14 4 "castlecham") >
-addAction (fadeControl 2.0 255 255 0 0 false true) >
-addAction (createPath "robeUL" false "u") >
-addAction (createPath "robeLL" false "u") >
-addAction (createPath "robeUR" false "u") >
-addAction (createPath "roland" false "u") >
-addAction (createPath "baligant" true "U") >
-addAction (openBubble "exclam" "robeUL" 1.0 false false) >
-addAction (openBubble "exclam" "robeLL" 1.0 false false) >
-addAction (openBubble "exclam" "robeUR" 1.0 false false) >
-addAction (openBubble "exclam" "roland" 1.0 false false) >
-addAction (openBubble "exclam" "baligant" 1.0 false true) >
-addAction (message "Robed Figure: \nWhat is this human doing here!?") >
-addAction (message "|aramis|: \nHey now, I don't like this one bit!") >
-addAction (message "Robed Figure: \nRoland, get him down from there.") >
-addAction (message "Robed Figure: \nYes, my brother.") >
-addAction (createPath "roland" true "RU3LuW") >
-addAction (flash 1.5 255 255 0 0 true) >
-addAction (createPath "baligant" true "d") >
-addAction (openBubble "exclam" "baligant" 1.0 false true) >
-addAction (message "Robed Figure: \nThe sphere!") >
-addAction (wait 1.0) >
-addAction (flash 1.0 255 255 0 0 true) >
-addAction (wait 1.0) >
-addAction (createPath "orb" true "s2U") >
-addAction (wait 1.0) >
-addAction (fadeControl 0.5 255 255 0 0 true true) >
-addAction (createPath "baligant" false "SSrKL2ks") >
-addAction (fadeControl 0.5 255 255 0 0 false true) >
-addAction (wait 1.0) >
-addAction (createPath "orb" true "U2") >
-addAction (wait 1.0) >
-addAction (flash 2.0 255 255 0 0 false) >
-addAction (changeElevation "orb" 64 4.0 true) >
-addAction (message "Robed Figure: \nIt's reacting to the human!") >
-addAction (createPath "baligant" true "R2u") >
-addAction (message "Robed Figure: \nNo! It can't be!!!") >
-addAction (playAnimationStoppedShort (genWindowShatter 0) "party" "party" 4.0) >
-addAction (shakeControl 4.0 2 false) >
-addAction (fadeControl 4.0 255 255 0 0 true true) >
-addAction (switchControl "glassshattered" true) >
-addAction (wait 1.0) >
-addAction (fadeControl 4.0 255 255 0 0 false true) >
-addAction (wait 2.0) >
-addAction (message "Robed Figure: \nIt has appeared!!! \nJoyeuse!") >
-addAction (message "I must have it!  You will not take it from me!") >
-addAction (pauseMusic 1.0) >
-addAction (wait 1.0) >
-addAction (message "Woman's Voice: \nCome with me. \nI need your strength.") >
-addAction (playAnimation (genGrowingCircle (point 208 80) 150 255 0 0 1.0 32) "party" "party" true) >
-addAction (playAnimation (genCircle (point 208 80) 150 255 0 0 32) "party" "party" false) >
-addAction (wait 1.0) >
-addAction (fadeControl 0.5 255 255 0 0 true true) >
-addAction (clearAnimations 0) >
-addAction (wait 2.0) >
-addAction (createPath "party" true "v") >
-addAction (createPath "orb" true "v") >
-addAction (playAnimation (genTwinkleShrink 0) "party" "party" false) >
-addAction (fadeControl 6.0 255 255 0 0 false true) >
-addAction (fadeControl 6.0 255 0 0 0 true true) >
-addAction (wait 2.0) >
-addAction (playMusic "ancients" true true 0.0) >
-addAction (showScene "baligantcastle") >
-addAction (fadeControl 5.0 255 0 0 0 false false) >
-addAction (wait 4.0) >
-addAction (playAnimationStoppedShort (genTitleSequence 0) "party" "party" 5.0) >
-addAction (pauseMusic 5.0) >
-addAction (fadeControl 5.0 255 0 0 0 true true) >
-addAction (unloadScene 0) >
-addAction (createPath "party" true "V") >
-addAction (setFloating "party" false 0 0) >
-addAction (changeElevation "party" 0 0.0 true) >
-addAction (teleportParty name$0x0$ 1 3 "test") >
-addAction (fadeControl 1.0 255 0 0 0 false true) >
-addAction (switchControl "orbscene" true)
+\state$0x0$ <- (name$0x0$ > createState)
+state$0x0$ > setOptions true false false
+state$0x0$ > setAutoStart true
+state$0x0$ > addAction (createPath "party" true "u")
+state$0x0$ > addAction (wait 2.0)
+state$0x0$ > addAction (messageTop "|aramis|: \nHow big is this place anyway?")
+state$0x0$ > addAction (pauseMusic 2.0)
+state$0x0$ > addAction (createPath "party" true "ssU4")
+state$0x0$ > addAction (playMusic "mystery" true true 2.0)
+state$0x0$ > addAction (flash 1.0 255 255 0 0 true)
+state$0x0$ > addAction (createPath "party" true "d")
+state$0x0$ > addAction (messageTop "|aramis|: \nWhoa, what?")
+state$0x0$ > addAction (wait 0.5)
+state$0x0$ > addAction (createPath "party" true "u")
+state$0x0$ > addAction (wait 0.5)
+state$0x0$ > addAction (openBubble "exclam" "party" 1.0 false true)
+state$0x0$ > addAction (createPath "party" true "SSSSD2L2dss")
+state$0x0$ > addAction (wait 1.0)
+state$0x0$ > addAction (messageTop "|aramis|: \nWhat are they doing over there??")
+state$0x0$ > addAction (flash 1.0 255 255 0 0 true)
+state$0x0$ > addAction (openBubble "exclam" "party" 1.0 false true)
+state$0x0$ > addAction (changeElevation "party" 64 2.0 false)
+state$0x0$ > addAction (setFloating "party" true 90 4)
+state$0x0$ > addAction (messageTop "|aramis|: \nWoah, hey, hold on a second!")
+state$0x0$ > addAction (panControl 2 -11 6.0 true )
+state$0x0$ > addAction (wait 1.0)
+state$0x0$ > addAction (createPath "baligant" true "sD")
+state$0x0$ > addAction (messageTop "Robed Figure: \nIt's awakening! \nThe time has come at last!")
+state$0x0$ > addAction (wait 0.5)
+state$0x0$ > addAction (createPath "roland" true "sLuW")
+state$0x0$ > addAction (messageTop "Robed Figure: \nBut what is causing it? Nothing has changed.")
+state$0x0$ > addAction (messageTop "Robed Figure: \nIt matters not.")
+state$0x0$ > addAction (messageTop "Come, my brothers!  Our goals shall soon be realized!")
+state$0x0$ > addAction (createPath "robeUL" false "R")
+state$0x0$ > addAction (createPath "robeLL" false "R")
+state$0x0$ > addAction (createPath "robeUR" false "L")
+state$0x0$ > addAction (createPath "roland" false "l")
+state$0x0$ > addAction (wait 1.0)
+state$0x0$ > addAction (flash 0.5 255 255 0 0 true)
+state$0x0$ > addAction (flash 1.5 255 255 0 0 true)
+state$0x0$ > addAction (messageTop "|aramis|: \nAAAAAAAAAAAHHHH!!!!!")
+state$0x0$ > addAction (fadeControl 1.0 255 255 0 0 true true)
+state$0x0$ > addAction (teleportParty name$0x0$ 14 4 "castlecham")
+state$0x0$ > addAction (fadeControl 2.0 255 255 0 0 false true)
+state$0x0$ > addAction (createPath "robeUL" false "u")
+state$0x0$ > addAction (createPath "robeLL" false "u")
+state$0x0$ > addAction (createPath "robeUR" false "u")
+state$0x0$ > addAction (createPath "roland" false "u")
+state$0x0$ > addAction (createPath "baligant" true "U")
+state$0x0$ > addAction (openBubble "exclam" "robeUL" 1.0 false false)
+state$0x0$ > addAction (openBubble "exclam" "robeLL" 1.0 false false)
+state$0x0$ > addAction (openBubble "exclam" "robeUR" 1.0 false false)
+state$0x0$ > addAction (openBubble "exclam" "roland" 1.0 false false)
+state$0x0$ > addAction (openBubble "exclam" "baligant" 1.0 false true)
+state$0x0$ > addAction (message "Robed Figure: \nWhat is this human doing here!?")
+state$0x0$ > addAction (message "|aramis|: \nHey now, I don't like this one bit!")
+state$0x0$ > addAction (message "Robed Figure: \nRoland, get him down from there.")
+state$0x0$ > addAction (message "Robed Figure: \nYes, my brother.")
+state$0x0$ > addAction (createPath "roland" true "RU3LuW")
+state$0x0$ > addAction (flash 1.5 255 255 0 0 true)
+state$0x0$ > addAction (createPath "baligant" true "d")
+state$0x0$ > addAction (openBubble "exclam" "baligant" 1.0 false true)
+state$0x0$ > addAction (message "Robed Figure: \nThe sphere!")
+state$0x0$ > addAction (wait 1.0)
+state$0x0$ > addAction (flash 1.0 255 255 0 0 true)
+state$0x0$ > addAction (wait 1.0)
+state$0x0$ > addAction (createPath "orb" true "s2U")
+state$0x0$ > addAction (wait 1.0)
+state$0x0$ > addAction (fadeControl 0.5 255 255 0 0 true true)
+state$0x0$ > addAction (createPath "baligant" false "SSrKL2ks")
+state$0x0$ > addAction (fadeControl 0.5 255 255 0 0 false true)
+state$0x0$ > addAction (wait 1.0)
+state$0x0$ > addAction (createPath "orb" true "U2")
+state$0x0$ > addAction (wait 1.0)
+state$0x0$ > addAction (flash 2.0 255 255 0 0 false)
+state$0x0$ > addAction (changeElevation "orb" 64 4.0 true)
+state$0x0$ > addAction (message "Robed Figure: \nIt's reacting to the human!")
+state$0x0$ > addAction (createPath "baligant" true "R2u")
+state$0x0$ > addAction (message "Robed Figure: \nNo! It can't be!!!")
+state$0x0$ > addAction (playAnimationStoppedShort (genWindowShatter 0) "party" "party" 4.0)
+state$0x0$ > addAction (shakeControl 4.0 2 false)
+state$0x0$ > addAction (fadeControl 4.0 255 255 0 0 true true)
+state$0x0$ > addAction (switchControl "glassshattered" true)
+state$0x0$ > addAction (wait 1.0)
+state$0x0$ > addAction (fadeControl 4.0 255 255 0 0 false true)
+state$0x0$ > addAction (wait 2.0)
+state$0x0$ > addAction (message "Robed Figure: \nIt has appeared!!! \nJoyeuse!")
+state$0x0$ > addAction (message "I must have it!  You will not take it from me!")
+state$0x0$ > addAction (pauseMusic 1.0)
+state$0x0$ > addAction (wait 1.0)
+state$0x0$ > addAction (message "Woman's Voice: \nCome with me. \nI need your strength.")
+state$0x0$ > addAction (playAnimation (genGrowingCircle (point 208 80) 150 255 0 0 1.0 32) "party" "party" true)
+state$0x0$ > addAction (playAnimation (genCircle (point 208 80) 150 255 0 0 32) "party" "party" false)
+state$0x0$ > addAction (wait 1.0)
+state$0x0$ > addAction (fadeControl 0.5 255 255 0 0 true true)
+state$0x0$ > addAction (clearAnimations 0)
+state$0x0$ > addAction (wait 2.0)
+state$0x0$ > addAction (createPath "party" true "v")
+state$0x0$ > addAction (createPath "orb" true "v")
+state$0x0$ > addAction (playAnimation (genTwinkleShrink 0) "party" "party" false)
+state$0x0$ > addAction (fadeControl 6.0 255 255 0 0 false true)
+state$0x0$ > addAction (fadeControl 6.0 255 0 0 0 true true)
+state$0x0$ > addAction (wait 2.0)
+state$0x0$ > addAction (playMusic "ancients" true true 0.0)
+state$0x0$ > addAction (showScene "baligantcastle")
+state$0x0$ > addAction (fadeControl 5.0 255 0 0 0 false false)
+state$0x0$ > addAction (wait 4.0)
+state$0x0$ > addAction (playAnimationStoppedShort (genTitleSequence 0) "party" "party" 5.0)
+state$0x0$ > addAction (pauseMusic 5.0)
+state$0x0$ > addAction (fadeControl 5.0 255 255 255 255 true true)
+state$0x0$ > addAction (unloadScene 0)
+state$0x0$ > addAction (resetGame 0)
+state$0x0$ > addAction (createPath "party" true "V")
+state$0x0$ > addAction (setFloating "party" false 0 0)
+state$0x0$ > addAction (changeElevation "party" 0 0.0 true)
+state$0x0$ > addAction (teleportParty name$0x0$ 1 3 "test")
+state$0x0$ > addAction (fadeControl 1.0 255 0 0 0 false true)
+state$0x0$ > addAction (switchControl "orbscene" true)
 
 \runstate1$0x0$ <- state1$0x0$ 0
 

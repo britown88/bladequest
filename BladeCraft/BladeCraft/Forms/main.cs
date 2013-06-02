@@ -43,7 +43,7 @@ namespace BladeCraft
 
         public void readMaps()
         {
-            string[] mapFiles = System.IO.Directory.GetFiles(Application.StartupPath + "\\assets\\maps");
+            string[] mapFiles = System.IO.Directory.GetFiles(Application.StartupPath + "\\bcfiles");
 
 
             foreach (String path in mapFiles)
