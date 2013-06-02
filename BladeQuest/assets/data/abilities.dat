@@ -39,7 +39,7 @@ add (basicAttackAction 0.9 "Physical" 0.6) >
 addDep (basicAttackAction 0.9 "Physical" 0.6))
 
 ######################LUC#####################################
-\assault <- (addAbility "assault" "Assault" "Single" 2 >
+\assault <- (addAbility "assault" "Assault" "Single" 4 >
 setDisabled >
 setDesc "Usable only in Berserker stance.  Assault an enemy." >
 add (attackCloseAction 1.0 "PhysicalIgnoreDef"))
@@ -173,7 +173,13 @@ addDep (messageAction "Recruit: \nUgh, so dizzy..."))
 
 \trickery  <- (addAbility "trickery" "Trickery" "Single" 0 >
 add (waitAction 450) >
+addDep (animBuildAction "trickery") >
+addDep (inflictStatusAction (confuseStatus 2)))
 
+\provoke  <- (addAbility "provoke" "Provoke" "Single" 0 >
+add (waitAction 450) >
+addDep (animBuildAction "provoke") >
+addDep (inflictStatusAction (beserkStatus 2)))
 
 ##########ROLAND BATTLE 1 ABILITIES#########
 

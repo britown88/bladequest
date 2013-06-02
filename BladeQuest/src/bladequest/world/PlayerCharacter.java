@@ -950,6 +950,7 @@ public class PlayerCharacter
 	
 	public String checkForAbilities()
 	{
+		List<LearnableAbility> remainingAbilities = new ArrayList<LearnableAbility>();
 		for(LearnableAbility la : learnableAbilities)
 		{
 			if(la.LevelReq() <= level)
@@ -960,7 +961,6 @@ public class PlayerCharacter
 				for(Ability ab : abilities)
 					if(ab.name.equals(la.GetAbility().name))
 					{
-						learnableAbilities.remove(la);
 						alreadyHas = true;
 						break;
 					}
@@ -973,7 +973,12 @@ public class PlayerCharacter
 				}				
 				
 			}
+			else
+			{
+				remainingAbilities.add(la);
+			}
 		}
+		learnableAbilities = remainingAbilities;
 		return "";
 	}
 	

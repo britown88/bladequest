@@ -128,6 +128,11 @@ public class PointMath {
 	   return new Point((int)outX, (int)outY);
 	}
 	
+	public static Point getRotatedPointDegrees(float x, float y, float angle)
+	{
+		return getRotatedPoint(x,y, (float)(angle/180.0f * Math.PI));
+	}
+	
 	public static Point getStabPoint(PlayerCharacter attacker, PlayerCharacter target)
 	{
 		int attackerHeight = attacker.getBattleSprite().getHeight();

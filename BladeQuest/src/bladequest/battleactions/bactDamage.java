@@ -13,12 +13,13 @@ import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
 import bladequest.world.Stats;
 
-public class bactDamage extends BattleAction
+public class bactDamage extends DelegatingAction
 {
 	float power;
 	DamageTypes type;
 	List<DamageComponent> damageComponents;
 	float customMiss;
+	BattleAction onHit;
 	
 	public static DamageBuilder triggerDamageBuilder;
 	
@@ -108,44 +109,53 @@ public class bactDamage extends BattleAction
 		damageComponents.add(new DamageComponent(affinity, power));
 	}
 	
-	@Override
-	public State run(BattleEventBuilder builder)
-	{
-		
-		PlayerCharacter attacker = builder.getSource();
-		for(PlayerCharacter t : builder.getTargets())
-		{			
-			int dmg = BattleCalc.calculatedDamage(attacker, t, power, type, damageComponents, customMiss, accuracyType);
-			
-			TriggerDamageBuilder triggerSettings = new TriggerDamageBuilder(attacker, t, dmg, BattleCalc.getDmgReturnType(), damageComponents, type); 
 	
-			triggerDamageBuilder = triggerSettings; 
-			//CALLS GENERIC CODE OH SHIT OH FUCK TRIGGER WARNING
-			t.getOnDamagedEvent().trigger();
-			Global.battle.getOnDamageDealt().trigger();
-			//WARNING WARNING DANGER DANGER GAME STATE DESTROYED					
-			
-			
-			switch(triggerSettings.attackType())
+	void setOnHit(BattleAction onHit)
+	{
+		this.onHit = onHit;
+	}
+	
+	@Override
+	//public State run(BattleEventBuilder builder)
+	public void buildEvents(BattleEventBuilder builder)
+	{
+
+		PlayerCharacter attacker = builder.getSource();
+		PlayerCharacter target =  BattleAction.getTarget(builder);
+	
+		int dmg = BattleCalc.calculatedDamage(attacker, target, power, type, damageComponents, customMiss, accuracyType);
+		
+		TriggerDamageBuilder triggerSettings = new TriggerDamageBuilder(attacker, target, dmg, BattleCalc.getDmgReturnType(), damageComponents, type); 
+
+		triggerDamageBuilder = triggerSettings; 
+		//CALLS GENERIC CODE OH SHIT OH FUCK TRIGGER WARNING
+		target.getOnDamagedEvent().trigger();
+		Global.battle.getOnDamageDealt().trigger();
+		//WARNING WARNING DANGER DANGER GAME STATE DESTROYED					
+		
+		
+		switch(triggerSettings.attackType())
+		{
+		case Blocked:
+			builder.addMarker(new DamageMarker("BLOCK", target));	
+			break;
+		case Critical:
+			Global.screenFader.setFadeColor(255, 255, 255, 255);
+			Global.screenFader.flash(0.25f);
+		case Hit:
+			if(dmg >= 0 && !target.isEnemy())
+				target.showDamaged();
+			target.modifyHP(-triggerSettings.getDamage(), false);
+			builder.addMarker(new DamageMarker(-triggerSettings.getDamage(), target));	
+			if (onHit != null)
 			{
-			case Blocked:
-				builder.addMarker(new DamageMarker("BLOCK", t));	
-				break;
-			case Critical:
-				Global.screenFader.setFadeColor(255, 255, 255, 255);
-				Global.screenFader.flash(0.25f);
-			case Hit:
-				if(dmg >= 0 && !t.isEnemy())
-					t.showDamaged();
-				t.modifyHP(-triggerSettings.getDamage(), false);
-				builder.addMarker(new DamageMarker(-triggerSettings.getDamage(), t));	
-				break;
-			case Miss:
-				builder.addMarker(new DamageMarker("MISS", t));	
-				break;
-			}	
-		}
-		return State.Finished;
+				builder.addEventObject(onHit);
+			}
+			break;
+		case Miss:
+			builder.addMarker(new DamageMarker("MISS", target));	
+			break;
+		}	
 	}
 	
 	@Override

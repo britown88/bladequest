@@ -1,9 +1,7 @@
 package bladequest.battleactions;
 
 import java.util.List;
-import java.util.Locale;
 
-import bladequest.battleactions.BattleAction.State;
 import bladequest.combat.BattleEventBuilder;
 import bladequest.combat.DamageMarker;
 import bladequest.world.PlayerCharacter;

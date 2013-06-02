@@ -43,12 +43,17 @@ import bladequest.actions.actShowScene;
 import bladequest.actions.actUnloadScene;
 import bladequest.actions.actWait;
 import bladequest.battleactions.BattleAction;
+import bladequest.battleactions.DelegatingAction;
+import bladequest.battleactions.bactBasicAttack;
+import bladequest.battleactions.bactMessage;
 import bladequest.bladescript.FileTokenizer;
 import bladequest.bladescript.Parser;
 import bladequest.bladescript.Script;
 import bladequest.bladescript.ScriptVar;
 import bladequest.combat.Battle;
 import bladequest.combat.BattleEventBuilder;
+import bladequest.combat.BattleCalc.AccuracyType;
+import bladequest.combat.triggers.Trigger;
 import bladequest.enemy.Enemy;
 import bladequest.graphics.AnimatedBitmap;
 import bladequest.graphics.AnimationBuilder;
@@ -71,11 +76,13 @@ import bladequest.graphics.WeaponSwing;
 import bladequest.math.PointMath;
 import bladequest.sound.BladeSong;
 import bladequest.sound.Song;
+import bladequest.statuseffects.StatusEffect;
 import bladequest.system.BqActivity;
 import bladequest.system.BqPanel;
 import bladequest.system.GameSaveLoader;
 import bladequest.system.Lock;
 import bladequest.system.MapLoadThread;
+import bladequest.system.Recyclable;
 
 
 //THIS IS A TEST COMMENT
@@ -908,12 +915,12 @@ public class Global
         	
         	//create debug button
         	
-        	//TODO: REMOVE THIS PART FOR RELEASE
-//        	debugButton = new ListBox(0, vpHeight, 40, 40, 1, 1, paint);
-//        	debugButton.anchor = Anchors.BottomLeft;
-//        	debugButton.addItem("!", null, false);
-//        	debugButton.update();
-        	//TODO: REMOVE THIS PART FOR RELEASE
+//        	TODO: REMOVE THIS PART FOR RELEASE
+        	debugButton = new ListBox(0, vpHeight, 40, 40, 1, 1, paint);
+        	debugButton.anchor = Anchors.BottomLeft;
+        	debugButton.addItem("!", null, false);
+        	debugButton.update();
+//        	TODO: REMOVE THIS PART FOR RELEASE
         }
 	}
 	
@@ -1157,7 +1164,54 @@ public class Global
 			}
 			
 		};
-	}	
+	}
+	
+	
+	public static AnimatedBitmap getReactionDotDotDot()
+	{
+		return new AnimatedBitmap()	
+		{
+			BitmapFrame[] frames;
+			{
+				final int height = 32;
+				final int width = 16;
+				
+				frames = new BitmapFrame[3];
+				for (int i = 0; i < frames.length; ++i)
+				{
+					frames[i] = new BitmapFrame(bitmaps.get("reactionbubbles"),new Rect((i)*width, 32, (i+1)*width, 32+height));
+				}
+			}
+			@Override
+			public BitmapFrame[] getFrames() {
+				return frames;
+			}
+			
+		};
+	}
+	
+	public static AnimatedBitmap getReactionExclamation()
+	{
+		return new AnimatedBitmap()	
+		{
+			BitmapFrame[] frames;
+			{
+				final int height = 32;
+				final int width = 16;
+				
+				frames = new BitmapFrame[3];
+				for (int i = 0; i < frames.length; ++i)
+				{
+					frames[i] = new BitmapFrame(bitmaps.get("reactionbubbles"),new Rect((i+3)*width, 32, (i+4)*width, 32+height));
+				}
+			}
+			@Override
+			public BitmapFrame[] getFrames() {
+				return frames;
+			}
+			
+		};
+	}
 	
 	public static AnimationBuilder getIceBarrage()
 	{
@@ -1367,6 +1421,141 @@ public class Global
 	}
 	
 	
+	public static AnimationBuilder getProvoke()
+	{
+		return new AnimationBuilder()
+		{
+			@Override
+			public BattleAnim buildAnimation(BattleEventBuilder builder) {
+				BattleAnim out = new BattleAnim(1000.0f);
+				
+				return out;
+			}
+		};
+	}
+	
+	
+	public static AnimationBuilder getProvokeAnim()
+	{
+	    	
+		
+		return new AnimationBuilder()
+		{
+
+			
+			BattleAnimObjState buildBubbleForFrame(PlayerCharacter pc, int time, BitmapFrame frame, PosTypes characterOn)
+			{
+				int offset = 8;
+				if (!pc.isEnemy()) offset = -offset;
+				BattleAnimObjState out = new BattleAnimObjState(time, characterOn);
+				out.pos1 = new Point(offset, -pc.getHeight()/2);
+				out.argb(255, 255, 255, 255);
+				out.size = new Point(32, 64);
+				Rect r = frame.srcRect;
+				out.setBmpSrcRect(r.left, r.top, r.right, r.bottom);
+				return out;
+			}
+			BattleAnimObject buildBubbleFrames(PlayerCharacter pc, int time, BitmapFrame[] frames, int frameCount, int frameWait, PosTypes characterOn)
+			{
+				BattleAnimObject obj = new BattleAnimObject(Types.Bitmap, false, frames[0].bitmap);
+				for (int i = 0; i < frameCount; ++i)
+				{
+					obj.addState(buildBubbleForFrame(pc, time+(i*frameWait), frames[i%frames.length], characterOn));
+				}
+				
+				return obj;
+			}
+			BattleAnimObject buildWaitingBubble(PlayerCharacter pc, int time, BitmapFrame[] frames, int frameCount, int frameWait, PosTypes characterOn)
+			{
+				BattleAnimObject obj = new BattleAnimObject(Types.Bitmap, false, frames[0].bitmap);
+				for (int i = 0; i < frameCount; ++i)
+				{
+					obj.addState(buildBubbleForFrame(pc, time+(i*frameWait), frames[Math.min(i, frames.length-1)], characterOn));
+				}
+				
+				return obj;
+			}			
+			
+			@Override
+			public BattleAnim buildAnimation(BattleEventBuilder builder) {
+				BattleAnim out = new BattleAnim(1000.0f);
+				
+				PlayerCharacter source = builder.getSource();
+				PlayerCharacter target = BattleAction.getTarget(builder);
+				
+				out.addObject(buildBubbleFrames(source, 0, getReactionDotDotDot().getFrames(), 10, 100, PosTypes.Source));
+				out.addObject(buildWaitingBubble(target, 1100, getReactionQuestion().getFrames(), 5, 100, PosTypes.Target));
+				out.addObject(buildWaitingBubble(source, 1700, getReactionExclamation().getFrames(), 5, 100, PosTypes.Source));
+				out.addObject(buildBubbleFrames(target, 2500, getReactionAnger().getFrames(), 7, 100, PosTypes.Target));
+				
+				return out;
+			}
+		};
+	}
+	
+	public static AnimationBuilder getTrickeryAnim()
+	{
+	    	
+		
+		return new AnimationBuilder()
+		{
+
+			
+			BattleAnimObjState buildQuestionMarkFrame(float angle, int time, BitmapFrame frame, int offset)
+			{
+				BattleAnimObjState out = new BattleAnimObjState(time, PosTypes.Target);
+				out.pos1 = PointMath.getRotatedPointDegrees(offset, 0.0f, -angle);
+				out.argb(255, 255, 255, 255);
+				out.size = new Point(32, 64);
+				out.rotation = 270 + angle;
+				Rect r = frame.srcRect;
+				out.setBmpSrcRect(r.left, r.top, r.right, r.bottom);
+				return out;
+			}
+			BattleAnimObject buildQuestionMark(float angle, int time, BitmapFrame[] frames, int offset)
+			{
+				final int questionMarkTime = 4;
+				BattleAnimObject obj = new BattleAnimObject(Types.Bitmap, false, frames[0].bitmap);
+				int i = 0;
+				for (BitmapFrame frame : frames)
+				{
+					obj.addState(buildQuestionMarkFrame(angle, time+(i++)*100, frame, offset));
+				}
+				obj.addState(buildQuestionMarkFrame(angle, time+questionMarkTime*100, frames[frames.length-1], offset));
+				
+				return obj;
+			}
+			@Override
+			public BattleAnim buildAnimation(BattleEventBuilder builder) {
+				BattleAnim out = new BattleAnim(1000.0f);
+				BitmapFrame[] frames = getReactionQuestion().getFrames();
+				
+				int offset = -builder.getSource().getHeight()/2-2;
+				out.addObject(buildQuestionMark(90.0f, 0, frames, offset));
+				
+				final int questionNumber = 8;
+				final int initialWaitTime = 350;
+				final int questionWaitTime = 120;
+				
+				for (int i = 0; i < questionNumber; ++i)
+				{
+					out.addObject(buildQuestionMark(Global.rand.nextFloat()*120 +30, initialWaitTime + questionWaitTime * i, frames, offset));
+				}
+				
+				final int dotdotdotTime = initialWaitTime + questionWaitTime * questionNumber + 500; 
+				
+				BitmapFrame[] dotdotdotFrames = getReactionDotDotDot().getFrames();
+				out.addObject(buildQuestionMark(90.0f, dotdotdotTime, dotdotdotFrames, offset));
+				
+				
+				BitmapFrame[] exclamationFrames = getReactionExclamation().getFrames();
+				
+				out.addObject(buildQuestionMark(90.0f, dotdotdotTime+500, exclamationFrames, offset));
+				
+				return out;
+			}
+		};
+	}
 
 	public static AnimationBuilder getIgniteAnim()
 	{
@@ -1516,6 +1705,105 @@ public class Global
 		};
 	}	
 
+	
+	public static Ability getSaytrReversalActualAttack()
+	{
+		Ability a = new Ability("reversal", "Reversal", TargetTypes.Single, 0, false);
+
+		
+		a.addAction(new DelegatingAction()
+		{
+			protected void buildEvents(BattleEventBuilder builder)
+			{
+				switch (Global.rand.nextInt(3))
+				{
+				case 0:
+					builder.addEventObject(new bactMessage("Satyr: \nYou fell for it!"));
+					break;
+				case 1:
+					builder.addEventObject(new bactMessage("Satyr: \nToo slow!"));
+					break;
+				case 2:
+					builder.addEventObject(new bactMessage("Satyr: \nAhahahaha!!"));
+					break;	
+				}
+				builder.addEventObject(new bactBasicAttack(1.65f, DamageTypes.Physical, 2.0f, AccuracyType.NoMiss, 1.0f));
+			}
+		});
+		
+		return a;		
+	}
+	private static class SatyrCounter extends StatusEffect 
+	{
+		int duration;
+		List<Recyclable> triggers;
+		PlayerCharacter saytr;
+		public SatyrCounter(PlayerCharacter saytr)
+		{
+			super("SatyrCounter", false);
+			this.saytr = saytr;
+		    hidden = true;
+			negative = false;
+			removeOnDeath = true;
+			curable = false;
+			battleOnly = true;
+			duration = 1;
+			triggers = new ArrayList<Recyclable>();
+		}
+		public StatusEffect clone()
+		{
+			return this; //shouldn't matter.
+		}
+		@Override
+		public void onInflict(PlayerCharacter c)
+		{
+			triggers.add(new Trigger(c.getOnPhysicalHitEvent()){
+				@Override
+				public void trigger() {
+					
+					Global.battle.interruptEvent();
+					List<PlayerCharacter> targets = new ArrayList<PlayerCharacter>();
+					targets.add(Global.battle.getCurrentActor());
+				    Global.battle.forceAddAbilityEvent(saytr, targets, getSaytrReversalActualAttack());
+				}
+				
+			});
+		}
+		@Override					
+		public void onRemove(PlayerCharacter c)
+		{
+			for (Recyclable r : triggers)
+			{
+				r.recycle();
+			}
+		}
+		public void onTurn(BattleEventBuilder eventBuilder) 
+		{
+			if (duration == 0)
+			{
+				eventBuilder.getSource().removeStatusEffect(this);
+			}
+			
+			--duration;
+		}		
+	}
+	public static Ability getSatyrReversal()
+	{
+		Ability a = new Ability("satyrreversal", "", TargetTypes.Self, 0, false);
+		
+		a.addAction(new BattleAction()
+		{
+			@Override
+			public State run(BattleEventBuilder builder)
+			{
+				Global.battle.showMessage("Satyr: \nJust try and hit me!");
+				builder.getSource().applyStatusEffect(new SatyrCounter(builder.getSource()));
+				return State.Finished;
+			}
+		});
+		
+		return a;
+	}
 
 	public static AnimationBuilder getHealAnim()
 	{
@@ -1828,8 +2116,8 @@ public class Global
 					
 					float t = i/(float)growSteps;
 					
-					state.size = new Point(BattleAnim.linearInterpolation(0, frames[i%frames.length].srcRect.width(), t),
-										   BattleAnim.linearInterpolation(0, frames[i%frames.length].srcRect.height(), t));
+					state.size = new Point(BattleAnim.linearInterpolation(0, frames[i%frames.length].srcRect.width()*2, t),
+										   BattleAnim.linearInterpolation(0, frames[i%frames.length].srcRect.height()*2, t));
 					state.pos1 = new Point(startPos.x, startPos.y);
 					state.argb(255, 255, 255, 255);
 					state.rotation = 0.0f;				
@@ -1848,8 +2136,8 @@ public class Global
 					BattleAnimObjState state = new BattleAnimObjState(i * (growTime/growSteps), PosTypes.Screen);
 					
 					
-					state.size = new Point(frames[i%frames.length].srcRect.width(),
-										   frames[i%frames.length].srcRect.height());
+					state.size = new Point(frames[i%frames.length].srcRect.width()*2,
+										   frames[i%frames.length].srcRect.height()*2);
 					state.pos1 = new Point(startPos.x, startPos.y);
 					state.argb(255, 255, 255, 255);
 					state.rotation = 0.0f;				
@@ -1872,10 +2160,10 @@ public class Global
 					
 					float t = (i/(float)(shootSteps-1));
 					
-					state.size = new Point(frames[i%frames.length].srcRect.width(),
-							   			   frames[i%frames.length].srcRect.height());
+					state.size = new Point(frames[i%frames.length].srcRect.width()*2,
+							   			   frames[i%frames.length].srcRect.height()*2);
 					
-					t *= 2.2f;
+					t *= 4.8f;
 					state.pos1 = BattleAnim.linearInterpolation(startPos, endPos, t);
 					state.argb(255, 255, 255, 255);
 					state.rotation = 0.0f;		
@@ -2127,7 +2415,8 @@ public class Global
 		animationBuilders.put("igniteSmoke", getIgniteSmokeAnim());
 		animationBuilders.put("entomb", getEntombAnim());
 		animationBuilders.put("gale", getGaleAnim());
-		
+		animationBuilders.put("trickery", getTrickeryAnim());
+		animationBuilders.put("provoke", getProvokeAnim());
 	}
 	
 	
@@ -2153,6 +2442,9 @@ public class Global
 		if(merchants== null)merchants = new HashMap<String, Merchant>(); else merchants.clear(); 
 		if(battleAnims== null)battleAnims = new HashMap<String, BattleAnim>(); else battleAnims.clear(); 
 		//if(reactionBubbles== null)reactionBubbles = new HashMap<String, ReactionBubble>(); else reactionBubbles.clear(); 
+		
+		
+		abilities.put("satyrreversal", getSatyrReversal());
 		
 		//reset pan
 		setPanned(0, 0);	
