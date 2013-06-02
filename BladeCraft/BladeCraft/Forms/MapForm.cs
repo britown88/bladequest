@@ -54,7 +54,6 @@ namespace BladeCraft.Forms
 
       private  Point[] materialPoints;
 
-      private bool[] materialTiles;
 
       public MapForm(BQMap map)
       {
@@ -163,7 +162,6 @@ namespace BladeCraft.Forms
             mapPanel.Height = (int)(map.height() * tileSize * mapScale);
             mapPanel.Invalidate();
 
-            materialTiles = new bool[map.width() * map.height()];
          }
          
       }
@@ -187,7 +185,6 @@ namespace BladeCraft.Forms
 
       private void tscbTilesetName_SelectedIndexChanged(object sender, EventArgs e)
       {
-         materialTiles = new bool[map.width() * map.height()];
          string filename = "assets\\drawable\\tilesets\\" + tscbTilesetName.SelectedItem.ToString().ToLower() + ".png";
          try
          {
@@ -233,7 +230,6 @@ namespace BladeCraft.Forms
 
       private void tsPanel_MouseClick(object sender, MouseEventArgs e)
       {
-         materialTiles = new bool[map.width() * map.height()];
          erase = false;
          tilesetPanel.Focus();
          selectedPoint.X = (int)(e.X / (tileSize * tsScale));
@@ -431,9 +427,9 @@ namespace BladeCraft.Forms
 
       private void addMaterial(int x, int y)
       {
-         int index = y * map.width() + x;
-
-         materialTiles[index] = true;
+         Tile t = map.getTile(x, y, tsbForeground.Checked);
+         if(t != null)
+            t.addToMaterial(selectedPoint.X, selectedPoint.Y);
 
          updateMaterialTile(x - 1, y - 1);
          updateMaterialTile(x   , y - 1);
@@ -449,22 +445,33 @@ namespace BladeCraft.Forms
          mapPanel.Invalidate();         
       }
 
+      private bool hasSameMaterial(int x, int y)
+      {
+         Tile other = map.getTile(x, y, tsbForeground.Checked);
+         if (other != null)
+            return other.hasSameMaterial(selectedPoint.X, selectedPoint.Y);
+         else
+            return false;
+      }
+
       private void updateMaterialTile(int x, int y)
       {
          int index = y * map.width() + x;
 
-         if (x < 0 || y < 0 || x >= map.width() || y >= map.height() || !materialTiles[index])
+         Tile t = map.getTile(x, y, tsbForeground.Checked);
+
+         if (x < 0 || y < 0 || x >= map.width() || y >= map.height() || t == null || !t.hasSameMaterial(selectedPoint.X, selectedPoint.Y))
            return;
 
-         bool top = y > 0 ? materialTiles[index - map.width()] : false;
-         bool left = x > 0 ? materialTiles[index - 1] : false;
-         bool right = x < map.width() - 1 ? materialTiles[index + 1]  : false;
-         bool bottom = y < map.height() - 1 ? materialTiles[index + map.width()] : false;
+         bool top = y > 0 ? hasSameMaterial(x, y - 1): false;
+         bool left = x > 0 ? hasSameMaterial(x - 1, y): false;
+         bool right = x < map.width() - 1 ? hasSameMaterial(x + 1, y ) : false;
+         bool bottom = y < map.height() - 1 ? hasSameMaterial(x, y + 1) : false;
 
-         bool topLeft = top && left && materialTiles[index - map.width() - 1];
-         bool bottomLeft = bottom && left && materialTiles[index + map.width() - 1];
-         bool bottomRight = bottom && right && materialTiles[index + map.width() + 1];
-         bool topRight = top && right && materialTiles[index - map.width() + 1];
+         bool topLeft = top && left && hasSameMaterial(x - 1, y - 1);
+         bool bottomLeft = bottom && left && hasSameMaterial(x - 1, y + 1);
+         bool bottomRight = bottom && right && hasSameMaterial(x + 1, y + 1);
+         bool topRight = top && right && hasSameMaterial(x + 1, y - 1);
 
          char flags = (char)((top ? (char)corners.Top : (char)0) | (bottom ? (char)corners.Bottom : (char)0) |
                   (right ? (char)corners.Right : (char)0) | (left ? (char)corners.Left : (char)0) |
@@ -477,10 +484,16 @@ namespace BladeCraft.Forms
          p.X += selectedPoint.X;
          p.Y += selectedPoint.Y;
 
+
+
          if (tsbFrameTwo.Checked)
            map.animateTile(x, y, p.X, p.Y, tsbForeground.Checked);
          else
            map.addTile(new Tile(x, y, p.X, p.Y, ""), tsbForeground.Checked);
+
+         map.getTile(x, y, tsbForeground.Checked).addToMaterial(selectedPoint.X, selectedPoint.Y);
+
+         
 
       }
 
@@ -868,7 +881,6 @@ namespace BladeCraft.Forms
 
       private void tsbMaterial_Click(object sender, EventArgs e)
       {
-         materialTiles = new bool[map.width() * map.height()];
          tsPanel.Invalidate();
       }
 

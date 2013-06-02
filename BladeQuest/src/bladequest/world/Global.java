@@ -357,7 +357,7 @@ public class Global
 				mouseGridPos = newGridPos;
 				newTarget = true;
 				
-				playSound("dlg");
+				//playSound("dlg");
 			}
 		}
 

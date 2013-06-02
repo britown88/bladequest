@@ -171,9 +171,6 @@ addDep (messageAction "Recruit: \nUgh, so dizzy..."))
 
 ###################SAYTR###################
 
-\trickery  <- (addAbility "trickery" "Trickery" "Single" 0 >
-add (waitAction 450) >
-
 
 ##########ROLAND BATTLE 1 ABILITIES#########
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using System.IO;
+using System.Xml;
 
 namespace BladeCraft.Classes
 {
@@ -31,6 +32,22 @@ namespace BladeCraft.Classes
                 writer.WriteLine("encounter " + str);
 
             writer.WriteLine("endzone");
+        }
+
+        public void write(XmlTextWriter xwriter)
+        {
+
+           xwriter.WriteStartElement("EncounterZone");
+           xwriter.WriteAttributeString("X", zone.X.ToString());
+           xwriter.WriteAttributeString("Y", zone.Y.ToString());
+           xwriter.WriteAttributeString("Width", zone.Width.ToString());
+           xwriter.WriteAttributeString("Height", zone.Height.ToString());
+           xwriter.WriteAttributeString("EncounterRate", encounterRate.ToString());
+
+           foreach (string str in encounters)
+              xwriter.WriteElementString("Encounter", str);
+
+           xwriter.WriteEndElement();
         }
 
     }
