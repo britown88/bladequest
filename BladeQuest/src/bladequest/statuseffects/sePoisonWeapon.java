@@ -49,12 +49,12 @@ public class sePoisonWeapon extends StatusEffect
 	{
 		affected = c;
 		
-		disposeTriggers.add(new Trigger(c.getOnAttackEvent()){
+		disposeTriggers.add(new Trigger(c.getOnPhysicalHitSuccessEvent()){
 		
 		@Override
 		public void trigger() {
-			BasicAttackBuilder builder = BattleEvent.attackBuilder;
-			BattleEventBuilder eventBuilder = builder.getEventBuilder();
+			//BasicAttackBuilder builder = BattleEvent.attackBuilder;
+			BattleEventBuilder eventBuilder = bactDamage.triggerDamageBuilder.getOnHitEventBuilder();
 			eventBuilder.addEventObject(new DelegatingAction()
 			{
 				@Override
@@ -65,7 +65,7 @@ public class sePoisonWeapon extends StatusEffect
 						builder.addEventObject(new bactInflictStatus(new sePoison(10.0f)));
 					}
 				}
-			}.addDependency(eventBuilder.getLast()));
+			});
 		}
 		
 		});

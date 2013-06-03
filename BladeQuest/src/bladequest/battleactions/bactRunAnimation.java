@@ -9,14 +9,27 @@ import bladequest.world.PlayerCharacter;
 
 public class bactRunAnimation extends SyncronizableAction {
 
+	public enum WaitType
+	{
+		WaitForEnd,
+		ReturnInstantly
+	}
+	
+	WaitType wait;
 	BattleAnim animation, playingAnim;
 	public bactRunAnimation(BattleAnim animation) {
 		this.animation = animation;
+		wait = WaitType.WaitForEnd;
 	}
+	public bactRunAnimation(BattleAnim animation, WaitType wait) {
+		this.animation = animation;
+		this.wait = wait;
+	}	
 	
 	@Override
 	public void initialize()
 	{
+		
 		playingAnim = null;
 	}
 	
@@ -31,6 +44,7 @@ public class bactRunAnimation extends SyncronizableAction {
 				targetP = target.getPosition(true);
 			
 			playingAnim = Global.playAnimation(animation, builder.getSource().getPosition(true), targetP);
+			if (wait == WaitType.ReturnInstantly) return State.Finished;
 			return State.Continue;
 		}
 		else

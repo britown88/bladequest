@@ -207,7 +207,8 @@ public class BattleCalc
 	//returns whether rhs has priority over lhs
 	private static boolean checkMovePriority(BattleEvent rhs, BattleEvent lhs)
 	{
-		//TODO: add more advanced move priority code here
+		if (rhs.getPriority().ordinal() < lhs.getPriority().ordinal()) return true;
+		if (rhs.getPriority().ordinal() > lhs.getPriority().ordinal()) return false;
 		return rhs.getSource().getStat(Stats.Speed) > lhs.getSource().getStat(Stats.Speed);
 		
 	}
@@ -245,6 +246,15 @@ public class BattleCalc
 		Blocked,
 		Critical
 	}
+
 	
+	//top of the list == faster
+	public enum MovePriority
+	{
+		Item,
+		High,
+		Regular,
+		Low
+	}
 
 }

@@ -65,6 +65,8 @@ public class BattleAnimObjState
 	public void setRandomRange(Rect range){randomRange = range; random = true;}
 	public void randomize(BattleAnimObject parent)
 	{
+		if (interpObj != null) return;
+		
 		if(random)
 		{
 			int rx = randomRange.left, ry = randomRange.top;

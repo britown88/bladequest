@@ -9,6 +9,7 @@ import bladequest.combat.BattleEventBuilder;
 import bladequest.world.DamageTypes;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
+import bladequest.world.TargetTypes;
 
 public class bactBasicAttack extends DelegatingAction {
 
@@ -45,7 +46,7 @@ public class bactBasicAttack extends DelegatingAction {
 	public void buildEvents(BattleEventBuilder builder)
 	{
 		PlayerCharacter attacker = builder.getSource();
-		List<PlayerCharacter> targets = Global.battle.getTargetable(attacker, builder.getTargets());
+		List<PlayerCharacter> targets = Global.battle.getTargetable(attacker, builder.getTargets(), TargetTypes.Single);
 		if (!targets.isEmpty())
 		{
 			target = targets.get(0);
@@ -68,7 +69,7 @@ public class bactBasicAttack extends DelegatingAction {
 			{
 				BattleActionPatterns.BuildSwordSlashWithAccuracy(builder, power, type, speedFactor, accuracy, accuracyVal);
 			}
-			builder.addEventObject(new bactRunChildren(this).addDependency(builder.getLast()));
+			//builder.addEventObject(new bactRunChildren(this).addDependency(builder.getLast()));
 		}
 	}
 	protected BattleEventBuilder getAdaptedBuilder(BattleEventBuilder builder)

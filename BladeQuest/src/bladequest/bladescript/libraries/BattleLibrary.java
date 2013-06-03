@@ -19,10 +19,12 @@ import bladequest.battleactions.bactJumpToAndFace;
 import bladequest.battleactions.bactMessage;
 import bladequest.battleactions.bactMirror;
 import bladequest.battleactions.bactRemoveStatus;
+import bladequest.battleactions.bactRevive;
 import bladequest.battleactions.bactRunAnimation;
 import bladequest.battleactions.bactRunAnimationBuilder;
 import bladequest.battleactions.bactScript;
 import bladequest.battleactions.bactSetFace;
+import bladequest.battleactions.bactSetRevive;
 import bladequest.battleactions.bactShatter;
 import bladequest.battleactions.bactSneakToTarget;
 import bladequest.battleactions.bactSpecialMirrored;
@@ -167,6 +169,16 @@ public class BattleLibrary {
 		return new bactShatter();
 	}
 	
+	//just for revive stuff
+	public static BattleAction reviveAnimAction(ScriptVar ignored)
+	{
+		return new bactRevive();
+	}
+	
+	public static BattleAction reviveAction(ScriptVar ignored)
+	{
+		return new bactSetRevive();
+	}
 	public static BattleAction positionSpecialAction(boolean isSpecial)
 	{
 		return new bactSpecialPosition(isSpecial);
@@ -260,6 +272,21 @@ public class BattleLibrary {
 		builder.addEventObject(action.addDependency(builder.getLast()));
 		return builder;
 	}
+	public static BattleEventBuilder onHit(BattleAction damageEvent)
+	{
+		bactDamage dmg = null;
+		try
+		{
+			dmg = (bactDamage)damageEvent;
+		}
+		catch(Exception e)
+		{
+			return null;
+		}
+		return dmg.onHitRunner();
+	}
+	
+	
 	public static PlayerCharacter getTarget(BattleEventBuilder builder)
 	{
 		return BattleAction.getTarget(builder);

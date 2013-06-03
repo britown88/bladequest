@@ -116,6 +116,14 @@ public class PointMath {
 	    return out;
 	}
 		
+	public static Point randomPointInRadius(float radius)
+	{
+		float angle = (float)(Global.rand.nextFloat()*Math.PI*2);
+		
+		radius = Global.rand.nextFloat()*radius;
+		return new Point((int)(Math.cos(angle)*radius),
+						 (int)(Math.sin(angle)*radius));
+	}
 	public static Point getRotatedPoint(float x, float y, float angle)
 	{
 	   //cos, sin, -sin cos

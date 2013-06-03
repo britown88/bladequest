@@ -108,7 +108,7 @@ public class seConfuse extends StatusEffect
 		
 		}.initialize(c));
 		
-		disposeTriggers.add(new Trigger(affected.getOnPhysicalHitEvent()){
+		disposeTriggers.add(new Trigger(affected.getOnPhysicalHitLandsEvent()){
 			PlayerCharacter aff;
 			Trigger initialize(PlayerCharacter aff)
 			{

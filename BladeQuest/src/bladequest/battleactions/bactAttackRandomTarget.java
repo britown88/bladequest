@@ -7,6 +7,7 @@ import bladequest.combat.BattleEventBuilder;
 import bladequest.world.DamageTypes;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
+import bladequest.world.TargetTypes;
 
 public class bactAttackRandomTarget extends DelegatingAction {
 
@@ -24,14 +25,14 @@ public class bactAttackRandomTarget extends DelegatingAction {
 	public void buildEvents(BattleEventBuilder builder)
 	{
 		PlayerCharacter attacker = builder.getSource();
-		List<PlayerCharacter> targets = Global.battle.getTargetable(attacker, builder.getTargets());
+		List<PlayerCharacter> targets = Global.battle.getTargetable(attacker, builder.getTargets(), TargetTypes.Single);
 		if (!targets.isEmpty())
 		{
 			target = new ArrayList<PlayerCharacter>();
 			target.add(targets.get(Global.rand.nextInt(targets.size())));
 			
 			BattleActionPatterns.BuildSwordSlash(builder, power, type, speedFactor);
-			builder.addEventObject(new bactRunChildren(this).addDependency(builder.getLast()));
+		//	builder.addEventObject(new bactRunChildren(this).addDependency(builder.getLast()));
 		}
 	}
 	public BattleEventBuilder getAdaptedBuilder(BattleEventBuilder builder) 

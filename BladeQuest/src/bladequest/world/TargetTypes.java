@@ -8,5 +8,6 @@ public enum TargetTypes
 	Everybody,
 	AllAllies,
 	AllEnemies,
-	Self
+	Self,
+	SingleDeadAlly
 }

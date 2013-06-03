@@ -8,9 +8,11 @@ import bladequest.combat.BattleCalc.DamageReturnType;
 import bladequest.combat.BattleEventBuilder;
 import bladequest.combat.DamageComponent;
 import bladequest.combat.DamageMarker;
+import bladequest.graphics.BattleSprite.faces;
 import bladequest.world.DamageTypes;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
+import bladequest.world.PlayerCharacter.Action;
 import bladequest.world.Stats;
 
 public class bactDamage extends DelegatingAction
@@ -19,12 +21,12 @@ public class bactDamage extends DelegatingAction
 	DamageTypes type;
 	List<DamageComponent> damageComponents;
 	float customMiss;
-	BattleAction onHit;
+	
+	BattleActionRunner onHit;
 	
 	public static DamageBuilder triggerDamageBuilder;
 	
 	BattleCalc.AccuracyType accuracyType;
-	
 	
 	private class TriggerDamageBuilder implements DamageBuilder
 	{
@@ -43,7 +45,11 @@ public class bactDamage extends DelegatingAction
 			this.attacker = attacker;
 			this.defender = defender;
 		}
-		
+		@Override
+		public BattleEventBuilder getOnHitEventBuilder()
+		{
+			return onHitRunner();
+		}
 		@Override
 		public int getDamage() {
 			return damage;
@@ -93,6 +99,7 @@ public class bactDamage extends DelegatingAction
 		this.type = type;
 		this.customMiss = 0.0f;
 		this.accuracyType = BattleCalc.AccuracyType.Regular;
+		this.onHit = new BattleActionRunner();		
 	}
 	
 	public bactDamage(float power, DamageTypes type, BattleCalc.AccuracyType accuracy, float missChance)
@@ -102,6 +109,7 @@ public class bactDamage extends DelegatingAction
 		this.type = type;
 		this.customMiss = missChance;
 		this.accuracyType = accuracy;
+		this.onHit = new BattleActionRunner();		
 	}	
 	
 	public void addDamageComponent(Stats affinity, float power)
@@ -109,11 +117,18 @@ public class bactDamage extends DelegatingAction
 		damageComponents.add(new DamageComponent(affinity, power));
 	}
 	
-	
-	void setOnHit(BattleAction onHit)
+	public BattleEventBuilder onHitRunner()
 	{
-		this.onHit = onHit;
+		return this.onHit.asEventBuilder();
+	};
+	
+
+	public void clearState()
+	{
+		super.clearState();
+		if (onHit != null) onHit.reset();
 	}
+	
 	
 	@Override
 	//public State run(BattleEventBuilder builder)
@@ -125,12 +140,21 @@ public class bactDamage extends DelegatingAction
 	
 		int dmg = BattleCalc.calculatedDamage(attacker, target, power, type, damageComponents, customMiss, accuracyType);
 		
+		
 		TriggerDamageBuilder triggerSettings = new TriggerDamageBuilder(attacker, target, dmg, BattleCalc.getDmgReturnType(), damageComponents, type); 
 
+		boolean attackAction = Global.battle.currentBattleEvent().getAction() == Action.Attack;
+		
 		triggerDamageBuilder = triggerSettings; 
 		//CALLS GENERIC CODE OH SHIT OH FUCK TRIGGER WARNING
 		target.getOnDamagedEvent().trigger();
 		Global.battle.getOnDamageDealt().trigger();
+		
+		if (attackAction)
+		{
+			target.getOnPhysicalHitDamageCalcEvent().trigger();
+		}
+
 		//WARNING WARNING DANGER DANGER GAME STATE DESTROYED					
 		
 		
@@ -143,9 +167,20 @@ public class bactDamage extends DelegatingAction
 			Global.screenFader.setFadeColor(255, 255, 255, 255);
 			Global.screenFader.flash(0.25f);
 		case Hit:
-			if(dmg >= 0 && !target.isEnemy())
-				target.showDamaged();
+			//TODO: another trigger here?
 			target.modifyHP(-triggerSettings.getDamage(), false);
+			if (!target.isEnemy() && !target.isDead())
+			{
+				if(triggerSettings.getDamage() >= 0)
+				{
+					target.showDamaged();
+				}
+				else
+				{
+					target.showHealed();
+				}				
+			}
+			
 			builder.addMarker(new DamageMarker(-triggerSettings.getDamage(), target));	
 			if (onHit != null)
 			{
@@ -156,6 +191,7 @@ public class bactDamage extends DelegatingAction
 			builder.addMarker(new DamageMarker("MISS", target));	
 			break;
 		}	
+		onHit.initialize();
 	}
 	
 	@Override

@@ -3,6 +3,7 @@ package bladequest.battleactions;
 import java.util.List;
 
 import bladequest.combat.BattleCalc;
+import bladequest.combat.BattleEventBuilder;
 import bladequest.combat.DamageComponent;
 import bladequest.world.DamageTypes;
 import bladequest.world.PlayerCharacter;
@@ -20,4 +21,6 @@ public interface DamageBuilder {
 	BattleCalc.DamageReturnType attackType();
 	void setAttackType(BattleCalc.DamageReturnType type);
 	List<DamageComponent> getDamageComponents();
+	
+	BattleEventBuilder getOnHitEventBuilder();
 }

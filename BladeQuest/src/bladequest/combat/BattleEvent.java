@@ -7,7 +7,10 @@ import bladequest.battleactions.BattleAction;
 import bladequest.battleactions.BattleAction.State;
 import bladequest.battleactions.BattleActionPatterns;
 import bladequest.battleactions.BattleActionRunner;
+import bladequest.battleactions.bactDamage;
+import bladequest.battleactions.bactSlash;
 import bladequest.battleactions.bactTryEscape;
+import bladequest.combat.BattleCalc.MovePriority;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.world.Ability;
 import bladequest.world.DamageTypes;
@@ -41,8 +44,6 @@ public class BattleEvent
 	
 	ActionType type;
 	
-
-	
 	public BattleEvent(PlayerCharacter.Action action, Ability ability, PlayerCharacter source, List<PlayerCharacter> targets, List<DamageMarker> markers)
 	{
 		this.action = action;
@@ -65,12 +66,33 @@ public class BattleEvent
 		dontRunStatus = false;
 	}	
 	public Ability getAbility() {return ability;}
-	PlayerCharacter.Action getAction() {return action;}
+	public PlayerCharacter.Action getAction() {return action;}
 	public ActionType getType(){return type;}
 	public PlayerCharacter getSource() { return source; }
 	public List<PlayerCharacter> getTargets() { return targets;}	
 	public boolean isDone(){ return done;}
 	public boolean runningStatus() { return endTurnStatuses != null;}
+	
+	public MovePriority getPriority()
+	{
+		switch(action)
+		{
+		case Attack:
+			return MovePriority.Regular;
+		case Ability:
+			return ability.getPriority();
+		case CombatAction:
+			//combat actions... all regular for now
+			return MovePriority.Regular;
+		case Item:
+			return MovePriority.Item;
+		case Run:
+			return MovePriority.Regular;
+		case Guard: case Skipped:
+		default:
+			return MovePriority.Low;
+		}
+	}
 	
 	boolean special = false;
 	public void setSpecial()
@@ -194,7 +216,28 @@ public class BattleEvent
 					return State.Finished;
 				}
 			});
-			BattleActionPatterns.BuildSwordSlash(builder, 1.0f, DamageTypes.Physical, 1.0f, builder.getLast());
+			PlayerCharacter attacker = builder.getSource();
+			
+			bactDamage damageAction = new bactDamage(1.0f, DamageTypes.Physical);
+			damageAction.onHitRunner().addEventObject(new BattleAction()
+			{
+				public State run(BattleEventBuilder builder)
+				{
+					builder.getSource().getOnPhysicalHitSuccessEvent().trigger();
+					for (PlayerCharacter target : builder.getTargets()) {target.getOnPhysicalHitLandsEvent().trigger();}
+					return State.Finished;
+				}
+			});
+			
+			if(attacker.weapEquipped())
+				for(DamageComponent dc : attacker.weapon().getDamageComponents())
+					damageAction.addDamageComponent(dc.getAffinity(), dc.getPower());
+			
+			
+			bactSlash slash = new bactSlash(damageAction, 1.0f);
+			
+			builder.addEventObject(slash);
+			
 			attackBuilder = new AttackBuilder(builder);
 			//TRIGGER WARNING
 			builder.getSource().getOnAttackEvent().trigger();
@@ -227,7 +270,10 @@ public class BattleEvent
 	}
 	public void interrupt()
 	{
-		actionRunner.interrupt();
+		if (actionRunner != null)
+		{		
+			actionRunner.interrupt();
+		}
 	}
 	public void update(Battle battle)
 	{
