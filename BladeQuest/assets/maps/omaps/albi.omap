@@ -1,5 +1,7 @@
 #!HEAD
 
+
+
 #!OBJ 4 14
 \objName$4x14$ <- "name"
 \name$4x14$ <- newObject objName$4x14$ 4 14
@@ -9,90 +11,6 @@ name$4x14$ > createState >
 setSpriteFromTile 6 4
 
 \runstate1$4x14$ <- state1$4x14$ 0
-#!OBJ 17 21
-\objName$17x21$ <- "name"
-\name$17x21$ <- newObject objName$17x21$ 17 21
-
-state1$17x21$ 0
-name$17x21$ > createState >
-setSpriteFromTile 6 4
-
-\runstate1$17x21$ <- state1$17x21$ 0#!OBJ 13 16
-\objName$13x16$ <- "name"
-\name$13x16$ <- newObject objName$13x16$ 13 16
-
-state1$13x16$ 0
-name$13x16$ > createState >
-setSpriteFromTile 6 4
-
-\runstate1$13x16$ <- state1$13x16$ 0#!OBJ 7 9
-\objName$7x9$ <- "name"
-\name$7x9$ <- newObject objName$7x9$ 7 9
-
-state1$7x9$ 0
-name$7x9$ > createState >
-setSpriteFromTile 6 4
-
-\runstate1$7x9$ <- state1$7x9$ 0#!OBJ 11 6
-\objName$11x6$ <- "name"
-\name$11x6$ <- newObject objName$11x6$ 11 6
-
-state1$11x6$ 0
-name$11x6$ > createState >
-setSpriteFromTile 6 4
-
-\runstate1$11x6$ <- state1$11x6$ 0#!OBJ 15 6
-\objName$15x6$ <- "name"
-\name$15x6$ <- newObject objName$15x6$ 15 6
-
-state1$15x6$ 0
-name$15x6$ > createState >
-setSpriteFromTile 6 4
-
-\runstate1$15x6$ <- state1$15x6$ 0#!OBJ 35 27
-\objName$35x27$ <- "name"
-\name$35x27$ <- newObject objName$35x27$ 35 27
-
-state1$35x27$ 0
-name$35x27$ > createState >
-setSpriteFromTile 6 4
-
-\runstate1$35x27$ <- state1$35x27$ 0#!OBJ 32 14
-\objName$32x14$ <- "name"
-\name$32x14$ <- newObject objName$32x14$ 32 14
-
-state1$32x14$ 0
-name$32x14$ > createState >
-setSpriteFromTile 6 4
-
-\runstate1$32x14$ <- state1$32x14$ 0#!OBJ 28 6
-\objName$28x6$ <- "name"
-\name$28x6$ <- newObject objName$28x6$ 28 6
-
-state1$28x6$ 0
-name$28x6$ > createState >
-setSpriteFromTile 6 4
-
-\runstate1$28x6$ <- state1$28x6$ 0#!OBJ 22 3
-\objName$22x3$ <- "name"
-\name$22x3$ <- newObject objName$22x3$ 22 3
-
-state1$22x3$ 0
-name$22x3$ > createState >
-setSpriteFromTile 6 4
-
-\runstate1$22x3$ <- state1$22x3$ 0#!OBJ 36 28
-\objName$36x28$ <- "name"
-\name$36x28$ <- newObject objName$36x28$ 36 28
-
-state1$36x28$ 0
-name$36x28$ > createState >
-setCollisionData true true true true >
-addAction (message "No Trespassing!")
-
-
-
-\runstate1$36x28$ <- state1$36x28$ 0
 #!OBJ 23 23
 \objName$23x23$ <- "name"
 \name$23x23$ <- newObject objName$23x23$ 23 23
@@ -128,8 +46,9 @@ setFace "Left" >
 addAction (openBubble "exclam" "hidekid" 1.0 false true) >
 addAction (createPath "party" true "Du") >
 addAction (createPath "hidekid" true "Ld") >
-addAction (message "Kid: \nAwww, you found me!") >
-addAction (message "Ok, I'll tell you a secret! \nI heard Old Mr. Gilbert keeps stuff in his clock.") >
+addAction (message "Henry: \nAwww, you found me!") >
+addAction (message "Ok, I'll tell you a secret!") >
+addAction (message "I heard Old Mr. Gilbert hides stuff in his bookcase!") >
 addAction (message "He's so weird! \nI would go see but he's scary!") >
 addAction (switchControl "hidekidtalked" true)
 
@@ -138,7 +57,115 @@ addAction (switchControl "hidekidtalked" true)
 state2$1x8$ 0
 name$1x8$ > createState >
 addSwitchCondition "hidekidtalked" >
+setSprite "child1" >
+setCollisionData true true true true >
 addAction (message "Kid \nNow it's your turn to hide!")
 
 
 \runstate2$1x8$ <- state2$1x8$ 0
+#!OBJ 19 11
+\objName$19x11$ <- "name"
+\name$19x11$ <- newObject objName$19x11$ 19 11
+
+state1$19x11$ 0
+name$19x11$ > createState >
+setSprite "child2" >
+setCollisionData true true true true >
+setDefaultPath "R3D2L3U2" >
+addAction (message "Girl: \nWhere's Henry? He's always hiding.")
+
+
+
+\runstate1$19x11$ <- state1$19x11$ 0
+#!OBJ 7 19
+\objName$7x19$ <- "name"
+\name$7x19$ <- newObject objName$7x19$ 7 19
+
+state1$7x19$ 0
+name$7x19$ > createState >
+setCollisionData true true true true >
+setSprite "woman1" >
+setDefaultPath "R3L3" >
+setMoveOptions 1 1000 >
+addAction (message "Woman: \nOh, hello |party1|!") >
+addAction (message "I think I might pick a few of these for dinner tonight.") >
+addAction (message "But only if your mother promises to cook!")
+
+
+\runstate1$7x19$ <- state1$7x19$ 0
+#!OBJ 26 17
+\objName$26x17$ <- "name"
+\name$26x17$ <- newObject objName$26x17$ 26 17
+
+state1$26x17$ 0
+name$26x17$ > createState >
+setCollisionData true true true true >
+setSprite "man3" > 
+setMovement 3 100 >
+setMoveOptions 1 0 >
+addAction (message "Man: \nAhoy there, |party1|!") >
+addAction (message "You going to be around later?") >
+addAction (message "Need some help moving furniture.") >
+addAction (message "|party1|: \nSure thing!")
+
+\runstate1$26x17$ <- state1$26x17$ 0
+#!OBJ 34 6
+\objName$34x6$ <- "name"
+\name$34x6$ <- newObject objName$34x6$ 34 6
+
+state1$34x6$ 0
+name$34x6$ > createState >
+setCollisionData true true true true >
+setSprite "woman1" >
+setFace "right" >
+setOptions true false false > 
+addAction (message "Woman: \nThe summers are so pretty here!")
+
+\runstate1$34x6$ <- state1$34x6$ 0
+#!OBJ 12 7
+\objName$12x7$ <- "kidlooking1"
+\name$12x7$ <- newObject objName$12x7$ 12 7
+
+state1$12x7$ 0
+name$12x7$ > createState >
+setCollisionData true true true true >
+setSprite "child1" >
+setFace "right" >
+addAction (message "Hi |luc|!") >
+addAction (message "We're trying to find Henry.") >
+addAction (message "He said if we found him, he'd tell us a secret!") >
+addAction (createPath "kidlooking1" false "r")
+
+\runstate1$12x7$ <- state1$12x7$ 0
+#!OBJ 13 7
+\objName$13x7$ <- "kidlooking2"
+\name$13x7$ <- newObject objName$13x7$ 13 7
+
+state1$13x7$ 0
+name$13x7$ > createState >
+setCollisionData true true true true >
+setSprite "child1" >
+setFace "left" >
+addAction (message "We're planning our search party!") >
+addAction (createPath "kidlooking2" false "l")
+
+
+\runstate1$13x7$ <- state1$13x7$ 0
+#!OBJ 25 8
+\objName$25x8$ <- "name"
+\name$25x8$ <- newObject objName$25x8$ 25 8
+
+state1$25x8$ 0
+name$25x8$ > createState >
+setSprite "man1" >
+setCollisionData true true true true >
+addAction (messageWithYesNo "Are you excited about the circus?!" >
+addToBranch 0 (message "Of course you are, how could you not!?") >
+addToBranch 0 (message "They're set up over near the mountain pass!") >
+addToBranch 0 (message "I heard they have real live bears!!!") >
+addToBranch 0 (message "BEARS!!!") >
+addToBranch 1 (message "You're no fun!"))
+
+
+\runstate1$25x8$ <- state1$25x8$ 0
+

@@ -783,6 +783,8 @@ public class Party
 				Global.vpGridPos.x + Global.vpGridSize.x + 6,
 				Global.vpGridPos.y + Global.vpGridSize.y + 6);
 		
+		List<Point> addedObjs = new ArrayList<Point>();
+		
 		for(GameObject b : Global.map.Objects())
 		{
 			if(b.hasCollision() && pathArea.contains(b.getGridPos().x, b.getGridPos().y))		
@@ -790,7 +792,7 @@ public class Party
 				boolean[] collSides = b.getCollision();
 				obs.add(new AStarObstacle(b.getTarget(), collSides[0], collSides[1], collSides[2], collSides[3]));
 				obs.add(new AStarObstacle(b.getGridPos(), collSides[0], collSides[1], collSides[2], collSides[3]));
-				
+				addedObjs.add(b.getGridPos());
 				if(b.getGridPos().equals(originalTarget) && b.hasActions())
 				{
 					objectAtDestination = true;
@@ -803,7 +805,9 @@ public class Party
 			if(pathArea.contains(t.WorldPos().x, t.WorldPos().y))
 			{
 				boolean[] collSides = t.getCollision();
-				obs.add(new AStarObstacle(t.WorldPos(), collSides[0], collSides[1], collSides[2], collSides[3]));
+
+				if(!addedObjs.contains(t.WorldPos()))
+					obs.add(new AStarObstacle(t.WorldPos(), collSides[0], collSides[1], collSides[2], collSides[3]));
 			}			
 		}
 	}

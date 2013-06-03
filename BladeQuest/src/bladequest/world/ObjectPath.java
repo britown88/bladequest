@@ -50,6 +50,14 @@ public class ObjectPath
 			
 	}
 	
+	public void undoAction()
+	{
+		index--;
+		
+		if(index < 0)
+			index = actionList.size() - 1;
+	}
+	
 	public void advanceActions()
 	{
 		index += 1;
