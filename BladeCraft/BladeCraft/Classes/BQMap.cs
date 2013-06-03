@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Xml;
+using System.Drawing;
 
 
 using BladeCraft.Forms;
@@ -21,7 +22,17 @@ namespace BladeCraft.Classes
          Object,
          Unknown
       }
-
+      private enum corners
+      {
+         TopRight = 1 << 0,
+         Top = 1 << 1,
+         TopLeft = 1 << 2,
+         Left = 1 << 3,
+         BottomLeft = 1 << 4,
+         Bottom = 1 << 5,
+         BottomRight = 1 << 6,
+         Right = 1 << 7
+      };
       private int sizeX, sizeY;
       private string name, path, tileset, displayName, BGM;
       private bool save;
@@ -36,6 +47,9 @@ namespace BladeCraft.Classes
       private LoadTypes loadType;
 
       private ObjectHeader headerForm;
+      private Point[] materialPoints;
+
+      public List<Point> MatList;
 
       public void openHeaderForm(System.Windows.Forms.Form parent)
       {
@@ -65,6 +79,8 @@ namespace BladeCraft.Classes
 
          zones = new List<EncounterZone>();
          objects = new List<GameObject>();
+         MatList = new List<Point>();
+         buildMaterialLocations();
       }
 
       public BQMap(string filename)
@@ -73,6 +89,7 @@ namespace BladeCraft.Classes
          string[] values= new string[20];
          zones = new List<EncounterZone>();
          objects = new List<GameObject>();
+         MatList = new List<Point>();
 
          this.path = filename;
 
@@ -81,6 +98,7 @@ namespace BladeCraft.Classes
 
          readXML(filename);
          readObjectFile();
+         buildMaterialLocations();
       }
 
       private void readObjectFile()
@@ -140,7 +158,70 @@ namespace BladeCraft.Classes
          reader.Close();
 
       }
-      
+
+      private void buildMaterialLocations()
+      {
+         materialPoints = new Point[1 << 8];
+
+
+         materialPoints[(char)corners.Bottom | (char)corners.Right | (char)corners.BottomRight] = new Point(0, 0);
+         materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.BottomRight | (char)corners.BottomLeft] = new Point(1, 0);
+         materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.BottomLeft] = new Point(2, 0);
+         materialPoints[(char)corners.Bottom | (char)corners.Right] = new Point(3, 0);
+         materialPoints[(char)corners.Left | (char)corners.Right] = new Point(4, 0);
+         materialPoints[(char)corners.Bottom | (char)corners.Left] = new Point(5, 0);
+         materialPoints[(char)corners.Right] = new Point(6, 0);
+         materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right] = new Point(7, 0);
+         materialPoints[(char)corners.Bottom] = new Point(8, 0);
+
+         materialPoints[(char)corners.Bottom | (char)corners.Right | (char)corners.Top | (char)corners.TopRight | (char)corners.BottomRight] = new Point(0, 1);
+         materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopLeft | (char)corners.TopRight | (char)corners.BottomRight | (char)corners.BottomLeft] = new Point(1, 1);
+         materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Top | (char)corners.TopLeft | (char)corners.BottomLeft] = new Point(2, 1);
+         materialPoints[(char)corners.Bottom | (char)corners.Top] = new Point(3, 1);
+         materialPoints[0] = new Point(4, 1);
+         materialPoints[(char)corners.Bottom | (char)corners.Top] = new Point(5, 1);
+         materialPoints[(char)corners.Bottom | (char)corners.Right | (char)corners.Top] = new Point(6, 1);
+         materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top] = new Point(7, 1);
+         materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Top] = new Point(8, 1);
+
+         materialPoints[(char)corners.Right | (char)corners.Top | (char)corners.TopRight] = new Point(0, 2);
+         materialPoints[(char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopLeft | (char)corners.TopRight] = new Point(1, 2);
+         materialPoints[(char)corners.Left | (char)corners.Top | (char)corners.TopLeft] = new Point(2, 2);
+         materialPoints[(char)corners.Right | (char)corners.Top] = new Point(3, 2);
+         materialPoints[(char)corners.Left | (char)corners.Right] = new Point(4, 2);
+         materialPoints[(char)corners.Left | (char)corners.Top] = new Point(5, 2);
+         materialPoints[(char)corners.Top] = new Point(6, 2);
+         materialPoints[(char)corners.Left | (char)corners.Right | (char)corners.Top] = new Point(7, 2);
+         materialPoints[(char)corners.Left] = new Point(8, 2);
+
+         materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopRight | (char)corners.BottomRight | (char)corners.BottomLeft] = new Point(0, 3);
+         materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.BottomRight | (char)corners.BottomLeft] = new Point(1, 3);
+         materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopLeft | (char)corners.BottomRight | (char)corners.BottomLeft] = new Point(2, 3);
+         materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopRight | (char)corners.BottomLeft] = new Point(3, 3);
+         materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopLeft | (char)corners.BottomRight] = new Point(4, 3);
+         materialPoints[(char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopRight] = new Point(5, 3);
+         materialPoints[(char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopLeft] = new Point(6, 3);
+         materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.BottomRight] = new Point(7, 3);
+         materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.BottomLeft] = new Point(8, 3);
+
+         materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopRight | (char)corners.BottomRight] = new Point(0, 4);
+         //materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top] = new Point(1, 4);
+         materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopLeft | (char)corners.BottomLeft] = new Point(2, 4);
+         materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.BottomRight] = new Point(3, 4);
+         materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.BottomLeft] = new Point(4, 4);
+         materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Top | (char)corners.BottomLeft] = new Point(5, 4);
+         materialPoints[(char)corners.Bottom | (char)corners.Right | (char)corners.Top | (char)corners.BottomRight] = new Point(6, 4);
+         materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Top | (char)corners.TopLeft] = new Point(7, 4);
+         materialPoints[(char)corners.Bottom | (char)corners.Right | (char)corners.Top | (char)corners.TopRight] = new Point(8, 4);
+
+         materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopLeft | (char)corners.TopRight | (char)corners.BottomRight] = new Point(0, 5);
+         materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopLeft | (char)corners.TopRight] = new Point(1, 5);
+         materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopLeft | (char)corners.TopRight | (char)corners.BottomLeft] = new Point(2, 5);
+         materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopRight] = new Point(3, 5);
+         materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopLeft] = new Point(4, 5);
+
+      }
+
       public List<GameObject> getObjects(){ return objects; }
       public void addObject(GameObject obj) { objects.Add(obj); }
       public void deleteObject(int X, int Y)
@@ -253,49 +334,99 @@ namespace BladeCraft.Classes
 
       private bool[] fillChecked;
 
-      public void fill(int x, int y, int bmpX, int bmpY)
+      public void fill(int x, int y, Tile t, bool frameTwo, bool foreground)
       {
-         Tile fillingTile = bgtileList[y * sizeX + x];
+         Tile[] tlist = foreground ? fgtileList : bgtileList;
+         Tile fillingTile = tlist[y * sizeX + x];
          if (fillingTile != null)
             fillingTile = new Tile(fillingTile);
 
          fillChecked = new bool[sizeX * sizeY];
 
-         fillStep(fillingTile, x, y, bmpX, bmpY);
+         List<Point> pList = new List<Point>();
+         pList.Add(new Point(x, y));
+
+         while (pList.Count > 0)
+         {
+            Point p = pList[pList.Count - 1];
+            pList.RemoveAt(pList.Count - 1);
+
+            fillStep(fillingTile, p.X, p.Y, t, frameTwo, foreground, pList);
+            
+         }
       }
 
-      private void fillStep(Tile fillingTile, int x, int y, int bmpX, int bmpY)
+      private void fillStep(Tile fillingTile, int x, int y, Tile fillTo, bool frameTwo, bool foreground, List<Point> pList)
       {
-         Tile t = bgtileList[y * sizeX + x];
+         Tile[] tlist = foreground ? fgtileList : bgtileList;
+         Tile t = tlist[y * sizeX + x];
          bool fill = false;
 
          fillChecked[y * sizeX + x] = true;
 
          if (fillingTile == null && t == null)
          {
-            bgtileList[y * sizeX + x] = new Tile(x, y, bmpX, bmpY, "below");
-            t = bgtileList[y * sizeX + x];
+            tlist[y * sizeX + x] = new Tile(x, y, fillTo.bmpX, fillTo.bmpY);
+
+            t = tlist[y * sizeX + x];            
+
+            if (fillTo.isMaterial)
+               addMaterial(t.x, t.y, fillTo.matX, fillTo.matY, frameTwo, foreground);
+            else if (frameTwo)
+               t.animate(fillTo.bmpX, fillTo.animBmpY);
+
             fill = true;
          }
-         else if(fillingTile !=  null && t != null && 
+         else if (fillingTile != null && fillingTile.isMaterial && t.isMaterial && fillingTile.matX == t.matX && fillingTile.matY == t.matY)
+         {
+            if (fillTo.isMaterial)
+               addMaterial(t.x, t.y, fillTo.matX, fillTo.matY, frameTwo, foreground);
+            else
+            {
+               if (frameTwo)
+               {
+                  t.animBmpX = fillTo.bmpX;
+                  t.animBmpY = fillTo.bmpY;
+               }
+               else
+               {
+                  tlist[y * sizeX + x] = new Tile(t.x, t.y, fillTo.bmpX, fillTo.bmpY); 
+               }
+               
+            }
+            fill = true;
+         }
+         else if (fillingTile != null && !fillingTile.isMaterial && t != null &&
             t.bmpX == fillingTile.bmpX && t.bmpY == fillingTile.bmpY)
          {
-            t.bmpX = bmpX;
-            t.bmpY = bmpY;
-            //bgtileList[y * sizeX + x] = t;
+            if (fillTo.isMaterial)
+               addMaterial(t.x, t.y, fillTo.matX, fillTo.matY, frameTwo, foreground);
+            else
+            {
+               if (frameTwo)
+               {
+                  t.animBmpX = fillTo.bmpX;
+                  t.animBmpY = fillTo.bmpY;
+               }
+               else
+               {
+                  tlist[y * sizeX + x] = new Tile(t.x, t.y, fillTo.bmpX, fillTo.bmpY); 
+               }
+            }
+            
             fill = true;
          }
 
          if(fill)
          {
-            if (x + 1 < sizeX && !fillChecked[y * sizeX + x+1])
-               fillStep(fillingTile, x + 1, y, bmpX, bmpY);
+            if (x + 1 < sizeX && !fillChecked[y * sizeX + x + 1])
+               pList.Add(new Point(x + 1, y));
             if (x - 1 >= 0 && !fillChecked[y * sizeX + x-1])
-               fillStep(fillingTile, x - 1, y, bmpX, bmpY);
-            if (y + 1 < sizeY && !fillChecked[(y+1) * sizeX + x])
-               fillStep(fillingTile, x, y + 1, bmpX, bmpY);
-            if (y - 1 >= 0 && !fillChecked[(y-1) * sizeX + x])
-               fillStep(fillingTile, x, y - 1, bmpX, bmpY);
+               pList.Add(new Point(x - 1, y));
+            if (y + 1 < sizeY && !fillChecked[(y + 1) * sizeX + x])
+               pList.Add(new Point(x, y + 1));
+            if (y - 1 >= 0 && !fillChecked[(y - 1) * sizeX + x])
+               pList.Add(new Point(x, y - 1));
          }
 
          
@@ -310,6 +441,95 @@ namespace BladeCraft.Classes
       public String getDisplayName() { return displayName; }
       public void setBGM(String st) { BGM = st; }
       public String getBGM() { return BGM; }
+
+
+      public void addMaterial(int x, int y, int matX, int matY, bool frameTwo, bool foreground)
+      {
+         int index = y * sizeX + x;
+         Tile[] tlist = foreground ? fgtileList : bgtileList;
+
+         if (tlist[index] == null)
+            addTile(new Tile(x, y, 0, 0), foreground);
+                  
+         tlist[index].addToMaterial(matX, matY);
+
+         updateMaterialTile(x - 1, y - 1, matX, matY, foreground, frameTwo);
+         updateMaterialTile(x, y - 1, matX, matY, foreground, frameTwo);
+         updateMaterialTile(x + 1, y - 1, matX, matY, foreground, frameTwo);
+         updateMaterialTile(x - 1, y, matX, matY, foreground, frameTwo);
+         updateMaterialTile(x, y, matX, matY, foreground, frameTwo);
+         updateMaterialTile(x + 1, y, matX, matY, foreground, frameTwo);
+         updateMaterialTile(x - 1, y + 1, matX, matY, foreground, frameTwo);
+         updateMaterialTile(x, y + 1, matX, matY, foreground, frameTwo);
+         updateMaterialTile(x + 1, y + 1, matX, matY, foreground, frameTwo);
+
+      }
+
+      private bool hasSameMaterial(int x, int y, int matX, int matY, bool foreground)
+      {
+         if (x < 0 || x >= sizeX || y < 0 || y >= sizeY)
+            return true;
+
+         int index = y * sizeX + x;
+         Tile[] tlist = foreground ? fgtileList : bgtileList;
+         if (tlist[index] != null)
+            return tlist[index].hasSameMaterial(matX,  matY);
+         else
+            return false;
+      }
+
+      public void swapLayer(int x, int y, bool foreground)
+      {
+         Tile[] fromList = foreground ? fgtileList : bgtileList;
+         Tile[] toList = foreground ? bgtileList : fgtileList;
+         int index = y * sizeX + x;
+         if(fromList[index] != null)
+         {
+            toList[index] = fromList[index];
+            fromList[index] = null;
+         }
+         
+
+         //fromList[index].
+      }
+
+      private void updateMaterialTile(int x, int y, int matX, int matY, bool foreground, bool frameTwo)
+      {
+         int index = y * sizeX + x;
+         Tile[] tlist = foreground ? fgtileList : bgtileList;
+
+         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY || tlist[index] == null || !tlist[index].hasSameMaterial(matX, matY))
+            return;
+
+         bool top = y > 0 ? hasSameMaterial(x, y - 1, matX, matY, foreground) : true;
+         bool left = x > 0 ? hasSameMaterial(x - 1, y, matX, matY, foreground) : true;
+         bool right = x < sizeX - 1 ? hasSameMaterial(x + 1, y, matX, matY, foreground) : true;
+         bool bottom = y < sizeY - 1 ? hasSameMaterial(x, y + 1, matX, matY, foreground) : true;
+
+         bool topLeft = top && left && hasSameMaterial(x - 1, y - 1, matX, matY, foreground);
+         bool bottomLeft = bottom && left && hasSameMaterial(x - 1, y + 1, matX, matY, foreground);
+         bool bottomRight = bottom && right && hasSameMaterial(x + 1, y + 1, matX, matY, foreground);
+         bool topRight = top && right && hasSameMaterial(x + 1, y - 1, matX, matY, foreground);
+
+         char flags = (char)((top ? (char)corners.Top : (char)0) | (bottom ? (char)corners.Bottom : (char)0) |
+                  (right ? (char)corners.Right : (char)0) | (left ? (char)corners.Left : (char)0) |
+                  (topRight ? (char)corners.TopRight : (char)0) | (bottomRight ? (char)corners.BottomRight : (char)0) |
+                  (topLeft ? (char)corners.TopLeft : (char)0) | (bottomLeft ? (char)corners.BottomLeft : (char)0));
+
+
+         Point p = materialPoints[flags];
+
+         p.X += matX;
+         p.Y += matY;
+
+         if (frameTwo)
+            animateTile(x, y, p.X, p.Y, foreground);
+         else
+         {
+            tlist[index].bmpX = p.X;
+            tlist[index].bmpY = p.Y;
+         }
+      }
 
       public void writeObjects()
       {
@@ -406,6 +626,11 @@ namespace BladeCraft.Classes
                         newTile.bmpX = Convert.ToInt32(r.GetAttribute("X"));
                         newTile.bmpY = Convert.ToInt32(r.GetAttribute("Y"));
                         break;
+                     case "Material":
+                        MatList.Add(new Point(
+                           Convert.ToInt32(r.GetAttribute("X")),
+                           Convert.ToInt32(r.GetAttribute("Y"))));
+                        break;
                      case "Layer":
                         layer = r.ReadString();
                         break;
@@ -431,9 +656,7 @@ namespace BladeCraft.Classes
                         break;
                      case "Encounter":
                         newZone.encounters.Add(r.ReadString());
-                        break;
-                     
-
+                        break; 
                   }
                   break;
                case XmlNodeType.EndElement:
@@ -468,6 +691,15 @@ namespace BladeCraft.Classes
          foreach (Tile t in fgtileList) if (t != null) writeTile(t, xwriter, "Above");
          foreach (EncounterZone ez in zones)
             ez.write(xwriter);
+         if (MatList.Count > 0)
+            foreach (Point p in MatList)
+            {
+               xwriter.WriteStartElement("Material");
+               xwriter.WriteAttributeString("X", p.X.ToString());
+               xwriter.WriteAttributeString("Y", p.Y.ToString());
+               xwriter.WriteEndElement();
+            }
+      
          xwriter.WriteEndElement();
          xwriter.WriteEndDocument();
          xwriter.Close();

@@ -9,7 +9,7 @@ namespace BladeCraft.Classes
         //private string layer;
         public bool[] collSides;
 
-        private bool isMaterial;
+        public bool isMaterial;
         public int matX, matY;
 
         public bool animated;
@@ -20,7 +20,7 @@ namespace BladeCraft.Classes
            animated = false;
         }
 
-        public Tile(int x, int y, int bmpX, int bmpY, string layer)
+        public Tile(int x, int y, int bmpX, int bmpY)
         {
             this.x = x;
             this.y = y;

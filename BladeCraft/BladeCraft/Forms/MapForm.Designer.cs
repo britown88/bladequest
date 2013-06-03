@@ -36,7 +36,6 @@
          this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
          this.btnDraw = new System.Windows.Forms.ToolStripButton();
          this.btnFill = new System.Windows.Forms.ToolStripButton();
-         this.tsbMaterial = new System.Windows.Forms.ToolStripButton();
          this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
          this.tsbForeground = new System.Windows.Forms.ToolStripButton();
          this.tsbBackground = new System.Windows.Forms.ToolStripButton();
@@ -59,9 +58,7 @@
          this.tsbOptions = new System.Windows.Forms.ToolStripButton();
          this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
          this.tilesetPanel = new System.Windows.Forms.Panel();
-         this.tsPanel = new BladeCraft.Classes.DBPanel();
          this.mapFrame = new System.Windows.Forms.Panel();
-         this.mapPanel = new BladeCraft.Classes.DBPanel();
          this.numMapZoom = new System.Windows.Forms.NumericUpDown();
          this.label1 = new System.Windows.Forms.Label();
          this.rightClickMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -72,11 +69,19 @@
          this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
          this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.panel1 = new System.Windows.Forms.Panel();
+         this.btnAddMat = new System.Windows.Forms.Button();
+         this.btnRemoveMat = new System.Windows.Forms.Button();
+         this.matPanel = new BladeCraft.Classes.DBPanel();
+         this.mapPanel = new BladeCraft.Classes.DBPanel();
+         this.tsPanel = new BladeCraft.Classes.DBPanel();
+         this.tsbSwapLayers = new System.Windows.Forms.ToolStripButton();
          this.toolStrip1.SuspendLayout();
          this.tilesetPanel.SuspendLayout();
          this.mapFrame.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.numMapZoom)).BeginInit();
          this.rightClickMenu.SuspendLayout();
+         this.panel1.SuspendLayout();
          this.SuspendLayout();
          // 
          // toolStrip1
@@ -87,10 +92,10 @@
             this.toolStripSeparator1,
             this.btnDraw,
             this.btnFill,
-            this.tsbMaterial,
             this.toolStripSeparator5,
             this.tsbForeground,
             this.tsbBackground,
+            this.tsbSwapLayers,
             this.toolStripSeparator2,
             this.tsbFrameTwo,
             this.toolStripSeparator8,
@@ -157,17 +162,6 @@
          this.btnFill.Size = new System.Drawing.Size(23, 22);
          this.btnFill.Text = "btnFill";
          this.btnFill.CheckedChanged += new System.EventHandler(this.btnFill_CheckedChanged);
-         // 
-         // tsbMaterial
-         // 
-         this.tsbMaterial.CheckOnClick = true;
-         this.tsbMaterial.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-         this.tsbMaterial.Image = ((System.Drawing.Image)(resources.GetObject("tsbMaterial.Image")));
-         this.tsbMaterial.ImageTransparentColor = System.Drawing.Color.Magenta;
-         this.tsbMaterial.Name = "tsbMaterial";
-         this.tsbMaterial.Size = new System.Drawing.Size(23, 22);
-         this.tsbMaterial.Text = "Define Material";
-         this.tsbMaterial.Click += new System.EventHandler(this.tsbMaterial_Click);
          // 
          // toolStripSeparator5
          // 
@@ -368,17 +362,8 @@
          this.tilesetPanel.Controls.Add(this.tsPanel);
          this.tilesetPanel.Location = new System.Drawing.Point(13, 28);
          this.tilesetPanel.Name = "tilesetPanel";
-         this.tilesetPanel.Size = new System.Drawing.Size(282, 313);
+         this.tilesetPanel.Size = new System.Drawing.Size(282, 250);
          this.tilesetPanel.TabIndex = 1;
-         // 
-         // tsPanel
-         // 
-         this.tsPanel.Location = new System.Drawing.Point(4, 5);
-         this.tsPanel.Name = "tsPanel";
-         this.tsPanel.Size = new System.Drawing.Size(200, 100);
-         this.tsPanel.TabIndex = 0;
-         this.tsPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.tsPanel_Paint);
-         this.tsPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tsPanel_MouseClick);
          // 
          // mapFrame
          // 
@@ -394,19 +379,6 @@
          this.mapFrame.TabIndex = 2;
          this.mapFrame.Scroll += new System.Windows.Forms.ScrollEventHandler(this.mapFrame_Scroll);
          this.mapFrame.Resize += new System.EventHandler(this.mapFrame_Resize);
-         // 
-         // mapPanel
-         // 
-         this.mapPanel.Location = new System.Drawing.Point(4, 4);
-         this.mapPanel.Name = "mapPanel";
-         this.mapPanel.Size = new System.Drawing.Size(200, 100);
-         this.mapPanel.TabIndex = 0;
-         this.mapPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.mapPanel_Paint);
-         this.mapPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.mapPanel_MouseClick);
-         this.mapPanel.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.mapPanel_MouseDoubleClick);
-         this.mapPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mapPanel_MouseDown);
-         this.mapPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mapPanel_MouseMove);
-         this.mapPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.mapPanel_MouseUp);
          // 
          // numMapZoom
          // 
@@ -508,11 +480,87 @@
          this.pasteToolStripMenuItem.Text = "Paste";
          this.pasteToolStripMenuItem.Click += new System.EventHandler(this.pasteToolStripMenuItem_Click);
          // 
+         // panel1
+         // 
+         this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+         this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+         this.panel1.Controls.Add(this.matPanel);
+         this.panel1.Location = new System.Drawing.Point(12, 284);
+         this.panel1.Name = "panel1";
+         this.panel1.Size = new System.Drawing.Size(254, 57);
+         this.panel1.TabIndex = 5;
+         // 
+         // btnAddMat
+         // 
+         this.btnAddMat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+         this.btnAddMat.Image = ((System.Drawing.Image)(resources.GetObject("btnAddMat.Image")));
+         this.btnAddMat.Location = new System.Drawing.Point(272, 284);
+         this.btnAddMat.Name = "btnAddMat";
+         this.btnAddMat.Size = new System.Drawing.Size(23, 23);
+         this.btnAddMat.TabIndex = 6;
+         this.btnAddMat.UseVisualStyleBackColor = true;
+         this.btnAddMat.Click += new System.EventHandler(this.btnAddMat_Click);
+         // 
+         // btnRemoveMat
+         // 
+         this.btnRemoveMat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+         this.btnRemoveMat.Image = ((System.Drawing.Image)(resources.GetObject("btnRemoveMat.Image")));
+         this.btnRemoveMat.Location = new System.Drawing.Point(272, 313);
+         this.btnRemoveMat.Name = "btnRemoveMat";
+         this.btnRemoveMat.Size = new System.Drawing.Size(23, 23);
+         this.btnRemoveMat.TabIndex = 7;
+         this.btnRemoveMat.UseVisualStyleBackColor = true;
+         // 
+         // matPanel
+         // 
+         this.matPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+         this.matPanel.Location = new System.Drawing.Point(4, 4);
+         this.matPanel.Name = "matPanel";
+         this.matPanel.Size = new System.Drawing.Size(243, 46);
+         this.matPanel.TabIndex = 0;
+         this.matPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.matPanel_Paint);
+         this.matPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.matPanel_MouseClick);
+         // 
+         // mapPanel
+         // 
+         this.mapPanel.Location = new System.Drawing.Point(4, 4);
+         this.mapPanel.Name = "mapPanel";
+         this.mapPanel.Size = new System.Drawing.Size(200, 100);
+         this.mapPanel.TabIndex = 0;
+         this.mapPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.mapPanel_Paint);
+         this.mapPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.mapPanel_MouseClick);
+         this.mapPanel.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.mapPanel_MouseDoubleClick);
+         this.mapPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mapPanel_MouseDown);
+         this.mapPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mapPanel_MouseMove);
+         this.mapPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.mapPanel_MouseUp);
+         // 
+         // tsPanel
+         // 
+         this.tsPanel.Location = new System.Drawing.Point(4, 5);
+         this.tsPanel.Name = "tsPanel";
+         this.tsPanel.Size = new System.Drawing.Size(200, 100);
+         this.tsPanel.TabIndex = 0;
+         this.tsPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.tsPanel_Paint);
+         this.tsPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tsPanel_MouseClick);
+         // 
+         // tsbSwapLayers
+         // 
+         this.tsbSwapLayers.CheckOnClick = true;
+         this.tsbSwapLayers.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+         this.tsbSwapLayers.Image = ((System.Drawing.Image)(resources.GetObject("tsbSwapLayers.Image")));
+         this.tsbSwapLayers.ImageTransparentColor = System.Drawing.Color.Magenta;
+         this.tsbSwapLayers.Name = "tsbSwapLayers";
+         this.tsbSwapLayers.Size = new System.Drawing.Size(23, 22);
+         this.tsbSwapLayers.Text = "tsbSwapLayer";
+         // 
          // MapForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.ClientSize = new System.Drawing.Size(692, 353);
+         this.Controls.Add(this.btnRemoveMat);
+         this.Controls.Add(this.btnAddMat);
+         this.Controls.Add(this.panel1);
          this.Controls.Add(this.label1);
          this.Controls.Add(this.numMapZoom);
          this.Controls.Add(this.mapFrame);
@@ -531,6 +579,7 @@
          this.mapFrame.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.numMapZoom)).EndInit();
          this.rightClickMenu.ResumeLayout(false);
+         this.panel1.ResumeLayout(false);
          this.ResumeLayout(false);
          this.PerformLayout();
 
@@ -578,7 +627,11 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
         private System.Windows.Forms.ToolStripButton tsbOptions;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
-        private System.Windows.Forms.ToolStripButton tsbMaterial;
         private System.Windows.Forms.ToolStripButton toolStripButton2;
+        private System.Windows.Forms.Panel panel1;
+        private Classes.DBPanel matPanel;
+        private System.Windows.Forms.Button btnAddMat;
+        private System.Windows.Forms.Button btnRemoveMat;
+        private System.Windows.Forms.ToolStripButton tsbSwapLayers;
     }
 }
