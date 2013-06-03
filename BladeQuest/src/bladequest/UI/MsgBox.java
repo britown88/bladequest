@@ -360,6 +360,14 @@ public class MsgBox extends MenuPanel
 			if(c == null)
 				c = Global.characters.get(charName);
 			
+			if(str.contains("party"))
+			{
+				int index = Integer.parseInt(charName.substring(charName.length() - 1)) - 1;
+				List<PlayerCharacter> party = Global.party.getPartyList(false);
+				if(party.size() > index)
+					c = party.get(index);
+			}
+			
 			
 			if(c == null)
 				//didnt find a character, return original string

@@ -2,8 +2,8 @@
 #Always do setmap last!
 startgame 0
 map addStartCharacter {"luc", "aramis", "joy"}
-setStartPosition 1 3
-setStartMap "test"
+setStartPosition 20 10
+setStartMap "albi"
 
 
 

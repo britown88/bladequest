@@ -55,7 +55,14 @@ public class Action
 		if(!runningList.isEmpty())
 		{
 			runningBranch = true;
-			runningList.get(0).run();			
+			runningList.get(0).run();	
+			if(runningList.get(branchActionIndex).name.equals("actMessage"))
+				while(branchActionIndex + 1 < runningList.size() && 
+						runningList.get(branchActionIndex + 1).name.equals("actMessage"))
+				{
+					branchActionIndex += 1;
+					runningList.get(branchActionIndex).run();
+				}
 		}		
 	}
 	private int newIndex;
@@ -78,7 +85,15 @@ public class Action
 					if(branchIsLooping)
 					{
 						branchActionIndex = 0;
-						runningList.get(branchActionIndex).run();					
+						runningList.get(branchActionIndex).run();
+						if(runningList.get(branchActionIndex).name.equals("actMessage"))
+							while(branchActionIndex + 1 < runningList.size() && 
+									runningList.get(branchActionIndex + 1).name.equals("actMessage"))
+							{
+								branchActionIndex += 1;
+								runningList.get(branchActionIndex).run();
+							}
+							
 					}
 					else
 					{
@@ -87,7 +102,17 @@ public class Action
 					}				
 				}				
 				else
-					runningList.get(branchActionIndex).run();	
+				{
+					runningList.get(branchActionIndex).run();
+					if(runningList.get(branchActionIndex).name.equals("actMessage"))
+						while(branchActionIndex + 1 < runningList.size() && 
+								runningList.get(branchActionIndex + 1).name.equals("actMessage"))
+						{
+							branchActionIndex += 1;
+							runningList.get(branchActionIndex).run();
+						}
+				}
+						
 			}					
 		}		
 		return false;	

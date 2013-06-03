@@ -132,6 +132,16 @@ public class GameObjectLibrary
 		state.addItemCondition(itemName);
 		return state;
 	}
+	public static ObjectState setDefaultPath(ObjectState state, String path)
+	{
+		state.setDefaultPath(path);
+		return state;
+	}
+	public static ObjectState setMoveOptions(ObjectState state, int speed, int wait)
+	{
+		state.setSpeedOptions(speed, wait);
+		return state;
+	}
 	public static ObjectState createState(GameObject obj)
 	{
 		ObjectState state = new ObjectState(obj);

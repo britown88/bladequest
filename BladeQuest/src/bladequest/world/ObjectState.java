@@ -37,8 +37,11 @@ public class ObjectState {
 	private long objPathWaitStart;
 	private boolean objPathWaiting;
 	private int moveSpeed = 3;
+	private int defaultMoveWait = 0;
+	private int moveWait;
 	
 	private String bubbleName;
+	private ObjectPath defaultPath;
 	
 	
 	public ObjectState(GameObject parent)
@@ -86,6 +89,13 @@ public class ObjectState {
 		collSides[2] = right;
 		collSides[3] = bottom;	
 	}
+	public void setDefaultPath(String serializedPath)
+	{
+		defaultPath = new ObjectPath("");
+		defaultPath.deserialize(serializedPath);
+		defaultPath.setLooping(true);
+	}
+	
 	public boolean[] getCollision() { return collSides; }
 	public boolean hasCollision() { return collSides[0] || collSides[1] || collSides[2] || collSides[3]; }
 	
@@ -103,7 +113,11 @@ public class ObjectState {
 	public int numActions() { return actionList.size(); }
 	
 	public boolean hasPath() { return objPath != null; }
-	public void setMoveSpeed(int i) { moveSpeed = 1; }
+	public void setSpeedOptions(int speed, int wait)
+	{
+		moveSpeed = speed;
+		defaultMoveWait = wait;
+	}
 	
 	public void setBubble(String name){bubbleName = name; }
 	
@@ -152,10 +166,8 @@ public class ObjectState {
 			Global.openReactionBubble(bubble, parent.Name(), drawPos, -1, true);
 		}	
 		
-		ObjectPath p = new ObjectPath("");
-		p.deserialize("D4R4U4L4");
-		p.setLooping(true);
-		applyPath(p);		
+		if(defaultPath != null)
+			applyPath(defaultPath);
 		
 	}
 	
@@ -168,6 +180,9 @@ public class ObjectState {
 			FaceOnActivate();
 			Global.party.setAllowMovement(!waitOnActivate);
 			isRunning = true;
+			if(!parent.isGridAligned())
+				parent.clearMovement();
+			objPath = null;
 			actionList.get(currentAction).run();
 
 			return true;
@@ -196,8 +211,19 @@ public class ObjectState {
 	{
 		if(objPath != null)
 		{
-			objPath.advanceActions();
-			HandleObjectPath();
+			if(!isRunning && defaultMoveWait > 0)
+			{
+				objPathWaitStart = System.currentTimeMillis();
+				moveWait = defaultMoveWait;
+				objPathWaiting = true;
+				
+			}
+			else
+			{
+				objPath.advanceActions();
+				HandleObjectPath();
+			}
+			
 		}
 			
 	}
@@ -281,6 +307,7 @@ public class ObjectState {
 				break;	
 			case Wait:
 				objPathWaitStart = System.currentTimeMillis();
+				moveWait = 1000;
 				objPathWaiting = true;
 				break;
 			}
@@ -336,15 +363,14 @@ public class ObjectState {
 			execute();
 			
 		//handle path waiting
-		if(objPathWaiting)
+		if(objPathWaiting && objPath != null)
 		{
-			if(System.currentTimeMillis() - objPathWaitStart >= 1000)
+			if(System.currentTimeMillis() - objPathWaitStart >= moveWait)
 			{
 				objPathWaiting = false;
 				objPath.advanceActions();
 				HandleObjectPath();
-			}
-			
+			}			
 		}
 		
 		if(facing)
@@ -394,6 +420,12 @@ public class ObjectState {
 					isRunning = false;
 					if(waitOnActivate)
 						Global.party.setAllowMovement(true);
+					if(defaultPath != null)
+					{
+						applyPath(defaultPath);
+						
+					
+					}				
 				}
 				else
 				{
@@ -401,8 +433,6 @@ public class ObjectState {
 					currentAction += actionList.get(currentAction).skip;
 					actionList.get(currentAction).skip = 0;
 				}
-					
-		
 			}
 			else if(currentAction+1 < actionList.size() && 
 					actionList.get(currentAction).name.equals("actMessage") &&

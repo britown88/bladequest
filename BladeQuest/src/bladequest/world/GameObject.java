@@ -145,7 +145,6 @@ public class GameObject {
 	public void addSwitchCondition(int index, String str){states.get(index).addSwitchCondition(str);}
 	public void addItemCondition(int index, String str){states.get(index).addItemCondition(str);}
 	public void setStateOpts(int index, boolean waitOnActivate, boolean faceOnMove, boolean faceOnActivate) {states.get(index).setOpts(waitOnActivate, faceOnMove, faceOnActivate);}
-	public void setStateMoveSpeed(int index, int speed) { states.get(index).setMoveSpeed(speed); }
 	public Point getGridPos(){return gridPos;}	
 	public Point getWorldPos(){return worldPos; }
 	public ObjectState getCurrentState() { return runningState == null ? states.get(currentState) : runningState; }
@@ -187,6 +186,11 @@ public class GameObject {
 				states.get(currentState).clearActions();
 		
 		updateState();
+	}
+	
+	public void clearMovement()
+	{
+		target = gridPos;
 	}
 	
 	
