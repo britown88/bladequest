@@ -44,6 +44,7 @@ addToBranch 1 (gameOver 0))
 
 
 
+
 #!OBJ 2 16
 \objName$2x16$ <- "stairs"
 \name$2x16$ <- newObject objName$2x16$ 2 16
@@ -210,7 +211,7 @@ addSwitchCondition "recruitfought"
 
 state1$14x2$ 0
 name$14x2$ > createState >
-setSprite "guard"
+setSprite "guard2"
 
 \runstate1$14x2$ <- state1$14x2$ 0
 

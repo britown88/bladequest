@@ -567,7 +567,7 @@ namespace BladeCraft.Classes
          xwriter.WriteAttributeString("Left", t.collSides[0].ToString());
          xwriter.WriteAttributeString("Top", t.collSides[1].ToString());
          xwriter.WriteAttributeString("Right", t.collSides[2].ToString());
-         xwriter.WriteAttributeString("Bottom", t.collSides[3].ToString());
+         xwriter.WriteAttributeString("Down", t.collSides[3].ToString());
          xwriter.WriteEndElement();
 
          if (t.animated)

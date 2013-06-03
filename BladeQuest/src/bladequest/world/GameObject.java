@@ -31,6 +31,8 @@ public class GameObject {
 
 	private int floatIndex, floatPeriod, floatIntensity;
 	
+	private ObjectPath defaultPath;
+	
 	public GameObject(String name, int x, int y)
 	{
 		this.name = name;
@@ -45,6 +47,11 @@ public class GameObject {
 		states = new ArrayList<ObjectState>();
 		shadow = new Shadow(20, 10, 16, 200, 2.0f);
 		
+	}
+	
+	public void setDefaultPath(ObjectPath path)
+	{
+		this.defaultPath = path;
 	}
 	
 	public String Name() { return name; }
@@ -127,7 +134,9 @@ public class GameObject {
 	public void postCreate()
 	{
 		for(ObjectState state : states)
-			state.postCreate();
+			state.postCreate();	
+		
+		states.get(currentState).init();
 	}
 	
 	public void setStateBubble(int index, String str){states.get(index).setBubble(str);}
@@ -181,7 +190,7 @@ public class GameObject {
 	}
 	
 	
-	public void setTarget(String face, boolean ignoreParty)
+	public boolean setTarget(String face, boolean ignoreParty)
 	{
 		if(!faceLocked)
 			states.get(currentState).face(face);
@@ -253,8 +262,18 @@ public class GameObject {
 		
 		
 		if(collision)
-			target = gridPos;
+		{
+			blockedTarget = face;
+			target = gridPos;			
+		}
+		else
+			blockedTarget = null;
+		
+		return !collision;
+			
 	}
+	private String blockedTarget = null;
+
 	
 	public boolean isRunning()
 	{
@@ -265,6 +284,10 @@ public class GameObject {
 	{
 		updateElevation();
 		updateState();
+		
+		if(blockedTarget != null)
+			setTarget(blockedTarget, false);
+
 		
 		if(states.get(currentState).isRunning())
 			runningState = states.get(currentState);
@@ -277,8 +300,6 @@ public class GameObject {
 				//running state is done, remove it and do some end-script items
 				runningState = null;
 			}
-				
-
 		}
 		else
 		{
@@ -313,10 +334,14 @@ public class GameObject {
 			{
 				gridPos = target;
 				gridAligned = true;
-				if(runningState != null)
-					runningState.step();
-				else
-					states.get(currentState).step();
+				if(blockedTarget == null)
+				{
+					if(runningState != null)
+						runningState.step();
+					else
+						states.get(currentState).step();
+				}
+				
 			}
 		}
 		
@@ -325,6 +350,8 @@ public class GameObject {
 	
 	private void updateState()
 	{
+		
+		
 		int newState = 0;
 		for(int i = 0; i < states.size(); ++i)
 			if(states.get(i).meetConditions())
@@ -351,8 +378,5 @@ public class GameObject {
 			states.get(currentState).render(worldPos.x, worldPos.y - shadow.getElevation());
 
 		}
-			
-
 	}
-
 }

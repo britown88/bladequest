@@ -54,7 +54,7 @@ iterateBetween ([value]buildGuardLoSObj name value y runState) (x > subtract 1) 
 
 defGuardState obj name face
 obj > createState >
-setSprite "guard" >
+setSprite "guard2" >
 setFace face >
 setOptions true true true >
 setCollisionData true true true true >
@@ -64,6 +64,8 @@ defaultguard obj name face1 face2
 defGuardState obj name face1
 defGuardState obj name face2 >
 addSwitchCondition "guardsturned"
+
+
 
 
 
@@ -231,7 +233,7 @@ setSpriteFromTile 7 2
 
 state1$5x5$ 0
 name$5x5$ > createState >
-setSprite "guard" > 
+setSprite "guard2" > 
 setFace "right" > 
 setCollisionData true true true true >
 setOptions true true true 
@@ -244,7 +246,7 @@ setOptions true true true
 
 state1$7x5$ 0
 name$7x5$ > createState >
-setSprite "guard" > 
+setSprite "guard2" > 
 setFace "left" > 
 setCollisionData true true true true >
 setOptions true true true 
@@ -258,7 +260,7 @@ setOptions true true true
 state1$6x4$ 0
 name$6x4$ > createState >
 setFace "down" > 
-setSprite "guard" > 
+setSprite "guard2" > 
 setCollisionData true true true true >
 setOptions true true true 
 

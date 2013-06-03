@@ -16,6 +16,18 @@ addNPCSprites 0
 createWorldSprite "npcsprites" "robe" 0 0
 createWorldSprite "npcsprites" "guard" 1 0
 createWorldSprite "npcsprites" "bandit" 2 0
+createWorldSprite "npcsprites" "satyr" 0 1
+createWorldSprite "npcsprites" "guard2" 1 1
+createWorldSprite "npcsprites" "oldman" 0 2
+createWorldSprite "npcsprites" "oldwoman" 1 2
+createWorldSprite "npcsprites" "shopkeeper" 2 2
+createWorldSprite "npcsprites" "woman1" 0 3
+createWorldSprite "npcsprites" "woman2" 1 3
+createWorldSprite "npcsprites" "man1" 0 4
+createWorldSprite "npcsprites" "man2" 1 4
+createWorldSprite "npcsprites" "man3" 2 4
+createWorldSprite "npcsprites" "child1" 0 5
+createWorldSprite "npcsprites" "child2" 1 5
 
 addMiscSprites 0
 createSprite "savepoint" "misc" 32 32 >
