@@ -166,9 +166,9 @@ public class Script {
 	}
 	public static class BadSpecialization extends ParserException
 	{
-		BadSpecialization()
+		BadSpecialization(String name)
 		{
-			super("Function could not be specialized!");
+			super("Function " + name + " could not be specialized!");
 		}
 		private static final long serialVersionUID = 8350151948108957058L;
 		
@@ -178,7 +178,7 @@ public class Script {
 		globals.put(name, global);
 	}
 	
-	public static void specializeFunction(ScriptVar function, InvokeFunction specialization, List<FunctionSpecializer> specializations) throws BadTypeException, BadSpecialization
+	public static void specializeFunction(String name, ScriptVar function, InvokeFunction specialization, List<FunctionSpecializer> specializations) throws BadTypeException, BadSpecialization
 	{
 		ScriptVar currentFunc = function;
 		for (FunctionSpecializer specializer : specializations)
@@ -194,7 +194,7 @@ public class Script {
 		
 		if (currentFunc.getSpecializedChild(specialization.getSpecializer()) != null) 
 		{
-			throw new BadSpecialization();
+			throw new BadSpecialization(name);
 		}
 		
 		currentFunc.addChildFunction(specialization);
@@ -208,7 +208,7 @@ public class Script {
 		}
 		else
 		{
-		  specializeFunction(parentFunc, function, specializations);	
+		  specializeFunction(name, parentFunc, function, specializations);	
 		}
 	}
 	public void populateFunction(String name, List<FunctionSpecializer> specializations) throws BadTypeException, BadSpecialization

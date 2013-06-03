@@ -188,6 +188,7 @@ addDep (inflictStatusAction (beserkStatus 2)))
 
 
 \entomb <- (addAbility "entomb" "Entomb" "Single" 0 >
+setDisabled >
 add (waitAction 450) >
 addDep (animBuildAction "entomb") >
 add (waitAction 2150) > 
@@ -195,7 +196,18 @@ addDep (inflictStatusAction (frozenStatus 4)))
 
 \shatter <- (addAbility "shatter" "Shatter" "Single" 0 >
 setPriority "Low" >
+setDisabled >
 add (waitAction 450) >
 addDep (rolandSpecialShatterAction 0))
 
 
+\frozengrip <- (addAbility "frozengrip" "Frozen Grip" "Single" 0 >
+setDisabled >
+add (waitAction 450) >
+addDep (rolandSpecialFrozenGripAction 0))
+
+\icebarrage <- (addAbility "icebarrage" "Ice Barrage" "AllEnemies" 0 >
+setDisabled >
+add (waitAction 450) >
+addDep (animBuildAction "icebarrage") >
+addDep (damageGroupAction 1.2 "Magic" "NoMiss" 0.0))

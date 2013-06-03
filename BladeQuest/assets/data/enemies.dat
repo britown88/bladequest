@@ -32,6 +32,23 @@ addBiteOnlyState enemy
 		)	
 
 
+###############################Super awesome triggers##################
+
+fireSwitchedTrigger trigger enemy fn
+  setSwitchCondition trigger false
+  fn enemy
+
+onHPFraction enemy numer denom fn 
+  \triggerRun <- (createSwitchCondition true)
+  createTrigger {triggerRun, getOnDamagedEvent enemy} (
+  [trigger] (|(enemy > getHP) > less (enemy > getStat "MaxHP" > multiply numer > divide denom)
+  | equals true : fireSwitchedTrigger triggerRun enemy fn
+  | equals false : ""
+  ))
+  
+  
+  ######################################################################
+
 RandomRecruitAction e decision
    setAbility decision (|randomRoll 100
     |greater 33  : (e > getEnemyAbility "specialmegakick")
@@ -229,39 +246,78 @@ setEShadow (createShadow 44 28 21))
 #####################ROLAND!################
 
 
-RolandShatter target e decision
+RolandShatter returnstate target e decision
 	decision > setAbility (e > getEnemyAbility "shatter")
 	decision > setTarget target
-    switchEnemyState e "base"
+    switchEnemyState e returnstate
     
-RolandEntomb e decision
+   
+RolandFrozenGrip returnstate target e decision
+	decision > setAbility (e > getEnemyAbility "frozengrip")
+	decision > setTarget target
+    switchEnemyState e returnstate
+    
+RolandEntomb returnstate switchto e decision
     \frozenfool <- (getRandomTarget e "SingleEnemy")
 	decision > setAbility (e > getEnemyAbility "entomb")
 	decision > setTarget frozenfool
-	setAIState (getAI e) "shatter" (createAIState (RolandShatter frozenfool)) 
-    switchEnemyState e "shatter"    
+	setAIState (getAI e) "attackFn" (createAIState (switchto returnstate frozenfool)) 
+    switchEnemyState e "attackFn"    
+    
+RolandRoundOne e decision
+    (|randomRoll 100   
+	 |greater 80 :  RolandEntomb "base" RolandShatter e decision
+	 |greater 100 : "")    
+    
+RolandRoundTwo e decision
+    (|randomRoll 100   
+	 |greater 30 :  ""  #basic attack
+     |greater 100 : RolandEntomb "base2" RolandFrozenGrip e decision)
+     
+RolandRoundThree e decision
+    (|randomRoll 100   
+	 |greater 20 : RolandEntomb "base3" RolandShatter e decision
+     |greater 50 : RolandEntomb "base3" RolandFrozenGrip e decision
+     |greater 80 : decision > setAbility (e > getEnemyAbility "icebarrage")
+     |greater 100 : "" #basic attack
+     )     
     
 RolandAI enemy
    enemy > setEnemyAI (
-           createAI "base" (createAIState ([e decision]
-                (|randomRoll 100   
-           		 |greater 100  : RolandEntomb e decision
-           ))) >
-           addAIState "shatter" (createAIState ([e dec] "")
-      )) 
-
+           createAI "base" (createAIState RolandRoundOne) >
+           addAIState "base2" (createAIState RolandRoundTwo) >
+           addAIState "base3" (createAIState RolandRoundThree) >           
+           addAIState "attackFn" (createAIState ([e dec] ""))
+      ) 
+      
+RolandTriggers roland      
+	onHPFraction roland 3 4 ([e]  #at 3/4ths hp...
+		addNextAbility e e (temporaryAbility "" "" "Single" 0 > 
+  		add  (messageAction "Roland: \nSo you're not completely useless.") >
+  		add  (messageAction "Roland: \nBut can you pick up the pace?"))
+  		switchEnemyState e "base2")
+	onHPFraction roland 1 4 ([e]  #at 2/5ths hp...
+		addNextAbility e e (temporaryAbility "" "" "Single" 0 > 
+  		add  (messageAction "Roland: \nNot bad, but now witness true power!"))
+  		switchEnemyState e "base3")
+	roland
+	
+	
 #############################################
 
-
 \rolandbattle <- (addEnemy "eroland" "Roland" "eroland" >
-addDefaultSwordHit >
+addColoredSwordHit  (RGBA 105 212 213 255) (RGBA 165 242 243 255) >
 setEBaseStats 10 10 10 10 >
-setELevel 20 >
-modStat "BattlePower" -2 >
-modStat "MaxHP" 150 >
+setELevel 16 >
+modStat "BattlePower" -3 >
+modStat "Fire" -20 >
+modStat "MaxHP" 1350 >
 setGold 2500 >
 setBoss >
 RolandAI >
 addEAbility "shatter" >
 addEAbility "entomb"  >
+addEAbility "frozengrip"  >
+addEAbility "icebarrage" >
+onBattleStartRun RolandTriggers > 
 setEShadow (createShadow 76 30 50 > nudgeX 11))

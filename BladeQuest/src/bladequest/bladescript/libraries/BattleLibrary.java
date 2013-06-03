@@ -11,7 +11,9 @@ import bladequest.battleactions.bactBarrelRoll;
 import bladequest.battleactions.bactBasicAttack;
 import bladequest.battleactions.bactBreakStance;
 import bladequest.battleactions.bactDamage;
+import bladequest.battleactions.bactDamageGroup;
 import bladequest.battleactions.bactFlash;
+import bladequest.battleactions.bactFrozenGrip;
 import bladequest.battleactions.bactFullRestore;
 import bladequest.battleactions.bactInflictStatus;
 import bladequest.battleactions.bactJumpHome;
@@ -173,6 +175,12 @@ public class BattleLibrary {
 		return new bactShatter();
 	}
 	
+	//just for Roland's "Frozen Grip"
+	public static BattleAction rolandSpecialFrozenGripAction(ScriptVar ignored)
+	{
+		return new bactFrozenGrip();
+	}	
+	
 	//just for revive stuff
 	public static BattleAction reviveAnimAction(ScriptVar ignored)
 	{
@@ -248,6 +256,11 @@ public class BattleLibrary {
 	public static BattleAction damageAction(float power, String damageType)
 	{
 		return new bactDamage(power, DamageTypes.valueOf(damageType));
+	}
+	
+	public static BattleAction damageGroupAction(float power, String damageType, String accuracyType, float missChance)
+	{
+		return new bactDamageGroup(power, DamageTypes.valueOf(damageType), BattleCalc.AccuracyType.valueOf(accuracyType), missChance);
 	}
 	
 	//misschance is a percentage!
@@ -348,7 +361,17 @@ public class BattleLibrary {
 	
 	public static BattleAction addDamageComponent(BattleAction child, String affinity, float factor)
 	{
-		((bactDamage)child).addDamageComponent(Stats.valueOf(affinity), factor);
+		if (child instanceof bactDamage)
+		{
+			((bactDamage)child).addDamageComponent(Stats.valueOf(affinity), factor);
+	    }
+		else if (child instanceof bactDamageGroup)
+		{
+			((bactDamageGroup)child).addDamageComponent(Stats.valueOf(affinity), factor);
+		}
+	
+		
+		
 
 		return child;
 	}

@@ -1,6 +1,25 @@
 inheritEncounter x
   createEncounter x "inherit"
 
+
+###############################Super awesome triggers##################
+
+fireSwitchedTrigger trigger enemy fn
+  setSwitchCondition trigger false
+  fn enemy
+
+onHPFraction enemy numer denom fn 
+  \triggerRun <- (createSwitchCondition true)
+  createTrigger {triggerRun, getOnDamagedEvent enemy} (
+  [trigger] (|(enemy > getHP) > less (enemy > getStat "MaxHP" > multiply numer > divide denom)
+  | equals true : fireSwitchedTrigger triggerRun enemy fn
+  | equals false : ""
+  ))
+  
+  
+  ######################################################################
+  
+
 \errybodyEncounter <- (inheritEncounter "errybody" >
 addEnemy "rat" 150 96 >
 addEnemy "bat" 100 96 >
@@ -67,17 +86,6 @@ addEnemy "bat" 128 128)
 addEnemy "guard" 128 128 >
 disableRunning)
 
-fireHalfHPTrigger trigger enemy fn
-  setSwitchCondition trigger false
-  fn enemy
-
-onHalfHP enemy fn
-  \triggerRun <- (createSwitchCondition true)
-  createTrigger {triggerRun, getOnDamagedEvent enemy} (
-  [trigger] (|(enemy > getHP) > less (enemy > getStat "MaxHP" > divide 2)
-  | equals true : fireHalfHPTrigger triggerRun enemy fn
-  | equals false : ""
-  ))
 
 writeRecruitTaunt recruit
 addNextAbility recruit recruit (
@@ -87,7 +95,7 @@ addNextAbility recruit recruit (
 
 onRecruitBattleStart battle  
 \recruit <- (getEncounter battle > getEncounterEnemy 0)
-onHalfHP recruit ([enemy] writeRecruitTaunt enemy)
+onHPFraction recruit 1 2 ([enemy] writeRecruitTaunt enemy)
 
 \RecruitEncounter <- (inheritEncounter "recruit" >
 addEnemy "recruit" 128 128 >
@@ -111,6 +119,7 @@ addEnemy "hawk" 128 128)
 \SatyrBossBattle <- (inheritEncounter "satyrboss" >
 addEnemy "satyr" 128 128 > 
 disableRunning)
+
 
 \RolandBattleOne <- (inheritEncounter "enemyroland1" >
 addEnemy "eroland" 128 128 >

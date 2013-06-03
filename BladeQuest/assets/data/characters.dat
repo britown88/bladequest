@@ -10,7 +10,7 @@ setCombatAction "combSteal" >
 setBaseStats 7 10 4 2 >
 setLevel 10 >
 mapBound equip {"fireknife", "felthat", "cottonshirt"} >
-mapBound addAbility {"coatweapon"} >
+mapBound addAbility {"coatweapon", "dblattack", "backstab"} >
 addLearnableAbility "dblattack" 6 > 
 addLearnableAbility "backstab" 8 > 
 setDefaultShadow

@@ -43,7 +43,7 @@ public class LibraryWriter {
 	private void addInvokeFunction(String name, InvokeFunction function, List<FunctionSpecializer> specializations) throws BadTypeException, BadSpecialization
 	{
 		ScriptVar parentFunc = library.get(name);
-		Script.specializeFunction(parentFunc, function, specializations);	
+		Script.specializeFunction(name, parentFunc, function, specializations);	
 	}
 	private void populateFunction(String name, List<FunctionSpecializer> specializations) throws BadTypeException, BadSpecialization
 	{

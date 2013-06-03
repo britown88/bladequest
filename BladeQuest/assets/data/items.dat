@@ -71,7 +71,7 @@ swingSlash 5 0 0 255)
 
 
 \fireknife <- (addItem "fireknife" "Fire Knife" "Weapon" "dagger" "Knife endowed with the fire element." >
-setPower 7 >
+setPower 9 >
 setValue 10 >
 setUsableBy "aramis" >
 addDamageComp "Fire" 1.0 >
