@@ -1,0 +1,20 @@
+#!HEAD
+
+#!OBJ 2 3
+\objName$2x3$ <- "name"
+\name$2x3$ <- newObject objName$2x3$ 2 3
+
+state1$2x3$ 0
+name$2x3$ > createState >
+setSpriteFromTile 5 22
+
+\runstate1$2x3$ <- state1$2x3$ 0
+#!OBJ 1 4
+\objName$1x4$ <- "name"
+\name$1x4$ <- newObject objName$1x4$ 1 4
+
+state1$1x4$ 0
+name$1x4$ > createState >
+setSpriteFromTile 0 23
+
+\runstate1$1x4$ <- state1$1x4$ 0

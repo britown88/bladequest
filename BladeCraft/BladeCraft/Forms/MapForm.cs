@@ -576,7 +576,7 @@ namespace BladeCraft.Forms
                   else
                   {
                      erase = false;
-                     selectedTile = copyTile;
+                     selectedTile = new Tile(copyTile);
                   }
                }
                else
