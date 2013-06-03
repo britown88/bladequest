@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bladequest.combat.BattleEventBuilder;
+import bladequest.combat.DamageMarker;
+import bladequest.world.PlayerCharacter;
 
 public class BattleActionRunner extends BattleAction {
 	
@@ -14,6 +16,43 @@ public class BattleActionRunner extends BattleAction {
 	{
 		this.actions = new ArrayList<BattleAction>();
 		this.remainingActions = new ArrayList<BattleAction>();
+	}
+	
+	BattleEventBuilder asEventBuilder()  //not all methods support, just building events.
+	{
+		return new BattleEventBuilder()
+		{
+
+			@Override
+			public List<PlayerCharacter> getTargets() {
+				return null;
+			}
+
+			@Override
+			public PlayerCharacter getSource() {
+				return null;
+			}
+
+			@Override
+			public BattleAction getLast() {
+				return actions.get(actions.size()-1);
+			}
+
+			@Override
+			public void addEventObject(BattleAction eventObj) {
+				addAction(eventObj);
+			}
+
+			@Override
+			public void addMarker(DamageMarker marker) {
+				//throw?
+			}
+
+			@Override
+			public int getCurrentBattleFrame() {
+				return 0;
+			}
+		};
 	}
 	
 	public void addAction(BattleAction action)

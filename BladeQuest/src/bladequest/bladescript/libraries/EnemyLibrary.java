@@ -187,6 +187,11 @@ public class EnemyLibrary {
 		enemy.setItems(commonItem, commonDropRate, rareItem, rareDropRate, rareStealOnly);
 		return enemy;
 	}
+	public static Enemy addEStatusImmunity(Enemy enemy, String status)
+	{
+		enemy.addStatusImmunity(status);
+		return enemy;
+	}
 	public static Enemy setBoss(Enemy enemy)
 	{
 		enemy.setBoss();

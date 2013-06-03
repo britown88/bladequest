@@ -26,7 +26,7 @@ public class combAuras extends CombatAction  {
 	private List<CombatAction> getAuras()
 	{
 		List<CombatAction> out = new ArrayList<CombatAction>();
-		out.add(new combEmpowerLife());
+		//out.add(new combEmpowerLife());
 		out.add(new combEmpowerFire());
 		return out;
 	}

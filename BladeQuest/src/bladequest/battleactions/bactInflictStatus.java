@@ -53,7 +53,14 @@ public class bactInflictStatus extends BattleAction
 		{
 			if(t.isInBattle())
 			{
-				if (tryApplyStatus(t))
+				if (t.isImmuneToStatus(se.Name())) 
+				{
+					if (!se.isHidden())
+					{					
+						builder.addMarker(new DamageMarker("IMMUNE", t));
+					}
+				}
+				else if (tryApplyStatus(t))
 				{
 					if (!se.isHidden())
 					{

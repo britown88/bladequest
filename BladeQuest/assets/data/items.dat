@@ -54,7 +54,7 @@ swingSlash 2 255 255 255)
 
 \silverstaff <- (addItem "silverstaff" "Silver Staff" "Weapon" "staff" "A magical staff." >
 setPower 1 >
-modStat "MagicPower" 7 >
+modStat "MagicPower" 4 >
 setValue 500 >
 usableByMagicPeople >
 swing "staff" "slice1" >
@@ -149,6 +149,14 @@ setValue 50 >
 setTargetType "Single" >
 addDefaultWait >
 addDep (animBuildAction "heal") >
+addDep (damageAction -50.0 "Fixed"))
+
+\liferoot <- (addItem "liferoot" "Life Root" "Usable" "orb" "Revives a fallen party member." >
+setValue 500 >
+setTargetType "SingleDeadAlly" >
+addDefaultWait >
+addDep (reviveAnimAction 0 ) >
+addDep (reviveAction 0 ) >
 addDep (damageAction -50.0 "Fixed"))
 
 \megalixer <- (addItem "megalixer" "MegaLickser" "Usable" "orb" "Fully heals all allies." >

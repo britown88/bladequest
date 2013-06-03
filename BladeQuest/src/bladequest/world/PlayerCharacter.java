@@ -68,12 +68,19 @@ public class PlayerCharacter
 	private BattleEventBuilderObject battleEventBuilderObj;
 	private String combatActionText;
 	
+	private List<String> statusImmunities;
+	
 	private boolean visible;
 	private boolean positionSpecial;
 	private boolean mirrorSpecial;
 	private boolean defaultMirroredState = false;
 	
-	private Event onPhysicalHitEvent, onDamagedEvent, onAttackEvent;
+	private Event onPhysicalHitEvent, //you're about to be hit
+			      onPhysicalHitDamageCalcEvent,  //damage on you is being calculated
+			      onPhysicalHitLandsEvent,  //you've been hit
+			      onPhysicalHitSuccessEvent,  //you've successfully hit someone
+			      
+				  onDamagedEvent, onAttackEvent;
 	
 	private Shadow shadow;
 	
@@ -100,6 +107,7 @@ public class PlayerCharacter
 		visible = true;
 		escaped = false;
 		positionSpecial = false;
+		statusImmunities = new ArrayList<String>();
 	}
 	
 	public PlayerCharacter(PlayerCharacter c)
@@ -152,9 +160,15 @@ public class PlayerCharacter
 		if (Global.battle != null) //triple-ghetto state check
 		{
 			onPhysicalHitEvent = new Event();
+			onPhysicalHitLandsEvent = new Event();
+			onPhysicalHitDamageCalcEvent = new Event();
+			onPhysicalHitSuccessEvent = new Event();
+			
 			onDamagedEvent = new Event();
 			onAttackEvent = new Event();
-		}		
+		}
+		
+		statusImmunities = c.statusImmunities;
 	}
 
 	public Event getOnAttackEvent()
@@ -165,6 +179,31 @@ public class PlayerCharacter
 	{
 		return onPhysicalHitEvent;
 	}
+	public void addStatusImmunity(String statusname)
+	{
+		statusImmunities.add(statusname);
+	}
+	public boolean isImmuneToStatus(String statusname)
+	{
+		for (String s : statusImmunities)
+		{
+			if (s.equals(statusname)) return true;
+		}
+		return false;
+	}
+	public Event getOnPhysicalHitDamageCalcEvent()
+	{
+		return onPhysicalHitDamageCalcEvent;
+	}
+	public Event getOnPhysicalHitLandsEvent()
+	{
+		return onPhysicalHitLandsEvent;
+	}
+	public Event getOnPhysicalHitSuccessEvent()
+	{
+		return onPhysicalHitSuccessEvent;	
+	}
+	
 	public Event getOnDamagedEvent()
 	{
 		return onDamagedEvent;
@@ -185,12 +224,18 @@ public class PlayerCharacter
 	public void startBattle()
 	{
 		onPhysicalHitEvent = new Event();
+		onPhysicalHitLandsEvent = new Event();
+		onPhysicalHitDamageCalcEvent = new Event();
+		onPhysicalHitSuccessEvent = new Event();
 		onDamagedEvent = new Event();
 		onAttackEvent = new Event();
 	}
 	public void endBattle()
 	{
 		onPhysicalHitEvent = null;
+		onPhysicalHitDamageCalcEvent = null;
+		onPhysicalHitLandsEvent = null;
+		onPhysicalHitSuccessEvent = null;
 		onDamagedEvent = null;
 		onAttackEvent = null;
 	}
@@ -1104,6 +1149,14 @@ public class PlayerCharacter
 				savedFace = face;
 			
 			setFace(faces.Damaged);
+		}
+	}
+	public void showHealed()
+	{
+		BattleSprite.faces face = battleSpr.getFace();
+		if (!hasWeakeningStatus() && face == faces.Weak)
+		{
+			setFace(faces.Idle);
 		}
 	}
 	public void clearDamaged()

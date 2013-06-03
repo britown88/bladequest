@@ -174,10 +174,11 @@ SatyrAI enemy
 addDefaultDaggerHit >
 setEBaseStats 10 10 10 10 >
 setELevel 10 >
-modStat "MaxHP" 750 >
+modStat "MaxHP" 600 >
 modStat "BattlePower" -2 >
 SatyrAI >
 setBoss >
+addEStatusImmunity "confuse" >
 setGold 864 >
 addEAbility "satyrreversal" >
 addEAbility "provoke" >

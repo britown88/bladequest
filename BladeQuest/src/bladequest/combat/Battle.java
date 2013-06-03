@@ -55,6 +55,7 @@ public class Battle
 	private final String txtStart = "Tap screen to start!";
 	private final String txtTargetSingle = "Select target...";
 	private final String txtTargetSingleAlly = "Select ally...";
+	private final String txtTargetSingleDeadAlly = "Select a fallen ally...";
 	private final String txtTargetSingleEnemy = "Select enemy...";
 	private final String txtTargetEnemies = "Targeting all enemies...";
 	private final String txtTargetAllies = "Targeting all allies...";
@@ -408,6 +409,9 @@ public class Battle
 				case SingleAlly:
 					setInfoBarText(txtTargetSingleAlly);
 					break;
+				case SingleDeadAlly:
+					setInfoBarText(txtTargetSingleDeadAlly);
+					break;					
 				case SingleEnemy:
 					setInfoBarText(txtTargetSingleEnemy);
 					break;
@@ -1072,7 +1076,11 @@ public class Battle
 	{
 		battleEvents.add(1,new BattleEvent(Action.Ability,ability, source, targets, markers));
 		battleEvents.get(1).setSpecial();
-	}	
+	}
+	public BattleEvent currentBattleEvent()
+	{
+		return battleEvents.get(0);
+	}
 	public PlayerCharacter getCurrentActor()
 	{
 		return battleEvents.get(0).getSource();
@@ -1272,8 +1280,19 @@ public class Battle
 				{					
 					//reset targets
 					if (!prevSpecial) //can't reset on special!
-					{
-						currentEvent.setTargets(getTargetable(actor, targets));
+					{   
+						if (Action.Ability == action && ability != null)
+						{
+							currentEvent.setTargets(getTargetable(actor, targets, ability.TargetType()));
+						}
+						else if (Action.Item == action)
+						{
+							currentEvent.setTargets(getTargetable(actor, targets, actor.getItemToUse().getTargetType()));
+						}
+						else
+						{
+							currentEvent.setTargets(getTargetable(actor, targets, TargetTypes.Single));
+						}
 					}
 					
 					if(action == Action.CombatAction)
@@ -1309,14 +1328,24 @@ public class Battle
 			}
 		}
 	}
-	public List<PlayerCharacter> getTargetable(PlayerCharacter actor, List<PlayerCharacter> targets)
+	public List<PlayerCharacter> getTargetable(PlayerCharacter actor, List<PlayerCharacter> targets, TargetTypes targetType)
 	{
-		List<PlayerCharacter> aliveTargets = new ArrayList<PlayerCharacter>();
+		List<PlayerCharacter> validTargets = new ArrayList<PlayerCharacter>();
 		//fill alive targets
-		for(PlayerCharacter c : targets) if(c.isInBattle()) aliveTargets.add(c);
+		for(PlayerCharacter c : targets)
+		{
+			if (targetType == TargetTypes.SingleDeadAlly)
+			{
+				if (c.getEscaped() == false && c.isDead()) validTargets.add(c);
+			}
+			else
+			{
+				if(c.isInBattle()) validTargets.add(c);	
+			}
+		}
 		
 		//reset to random characters if targeting a dead guy
-		if(aliveTargets.isEmpty() && !targets.isEmpty())
+		if(validTargets.isEmpty() && !targets.isEmpty())
 		{
 			List<PlayerCharacter> aliveChars = new ArrayList<PlayerCharacter>();
 			List<Enemy> aliveEnemies = new ArrayList<Enemy>();
@@ -1326,21 +1355,21 @@ public class Battle
 			if(actor.isEnemy())
 				if(targets.get(0).isEnemy())
 					//select new enemy
-					aliveTargets.add(aliveEnemies.get(Global.rand.nextInt(aliveEnemies.size())));
+					validTargets.add(aliveEnemies.get(Global.rand.nextInt(aliveEnemies.size())));
 				else
 					//select new ally
-					aliveTargets.add(aliveChars.get(Global.rand.nextInt(aliveChars.size())));
+					validTargets.add(aliveChars.get(Global.rand.nextInt(aliveChars.size())));
 			else
 				if(targets.get(0).isEnemy())
 					//select new enemy
-					aliveTargets.add(aliveEnemies.get(Global.rand.nextInt(aliveEnemies.size())));
+					validTargets.add(aliveEnemies.get(Global.rand.nextInt(aliveEnemies.size())));
 				else
 					//select new ally... for now, needs to check if dead are targetable.  generalized pass-fail filter later?
-					aliveTargets.add(aliveChars.get(Global.rand.nextInt(aliveChars.size())));
+					validTargets.add(aliveChars.get(Global.rand.nextInt(aliveChars.size())));
 
 		}
 		
-		return aliveTargets;
+		return validTargets;
 	}
 	private boolean isDefeated()
 	{
@@ -1911,6 +1940,9 @@ public class Battle
 		case SingleAlly:
 			targetAlly(x, y);
 			break;
+		case SingleDeadAlly:
+			targetDeadAlly(x, y);
+			break;			
 		case Self:
 			targets.add(currentChar);
 			break;
@@ -1961,6 +1993,15 @@ public class Battle
 				break;
 			}
 	}
+	private void targetDeadAlly(int x, int y)
+	{
+		for(PlayerCharacter c : partyList)
+			if(c.getRect().contains(x, y)  && c.isDead()  && !c.getEscaped())
+			{
+				targets.add(c);
+				break;
+			}
+	}	
 	private void setTarget(PlayerCharacter c)
 	{
 		targets.clear();
@@ -2053,6 +2094,10 @@ public class Battle
 			case SingleAlly:			
 				targets.add(us.get(Global.rand.nextInt(us.size())));
 				break;
+			case SingleDeadAlly:			
+				//TODO: Fix!
+				targets.add(us.get(Global.rand.nextInt(us.size())));
+				break;				
 			case AllAllies:
 				for(PlayerCharacter p : us)targets.add(p);
 				break;

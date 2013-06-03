@@ -43,8 +43,10 @@ import bladequest.actions.actShowScene;
 import bladequest.actions.actUnloadScene;
 import bladequest.actions.actWait;
 import bladequest.battleactions.BattleAction;
+import bladequest.battleactions.DamageBuilder;
 import bladequest.battleactions.DelegatingAction;
 import bladequest.battleactions.bactBasicAttack;
+import bladequest.battleactions.bactDamage;
 import bladequest.battleactions.bactMessage;
 import bladequest.bladescript.FileTokenizer;
 import bladequest.bladescript.Parser;
@@ -53,6 +55,7 @@ import bladequest.bladescript.ScriptVar;
 import bladequest.combat.Battle;
 import bladequest.combat.BattleEventBuilder;
 import bladequest.combat.BattleCalc.AccuracyType;
+import bladequest.combat.BattleCalc.DamageReturnType;
 import bladequest.combat.triggers.Trigger;
 import bladequest.enemy.Enemy;
 import bladequest.graphics.AnimatedBitmap;
@@ -1448,7 +1451,7 @@ public class Global
 				int offset = 8;
 				if (!pc.isEnemy()) offset = -offset;
 				BattleAnimObjState out = new BattleAnimObjState(time, characterOn);
-				out.pos1 = new Point(offset, -pc.getHeight()/2);
+				out.pos1 = new Point(offset, -pc.getHeight()/2+4);
 				out.argb(255, 255, 255, 255);
 				out.size = new Point(32, 64);
 				Rect r = frame.srcRect;
@@ -1530,7 +1533,7 @@ public class Global
 				BattleAnim out = new BattleAnim(1000.0f);
 				BitmapFrame[] frames = getReactionQuestion().getFrames();
 				
-				int offset = -builder.getSource().getHeight()/2-2;
+				int offset = -builder.getSource().getHeight()/2+4;
 				out.addObject(buildQuestionMark(90.0f, 0, frames, offset));
 				
 				final int questionNumber = 8;
@@ -1757,14 +1760,24 @@ public class Global
 		@Override
 		public void onInflict(PlayerCharacter c)
 		{
-			triggers.add(new Trigger(c.getOnPhysicalHitEvent()){
+			triggers.add(new Trigger(c.getOnPhysicalHitDamageCalcEvent()){
 				@Override
 				public void trigger() {
+					
+					DamageBuilder builder = bactDamage.triggerDamageBuilder;
+					
+					if (builder.attackType() == DamageReturnType.Miss) return;
+					
+					builder.setAttackType(DamageReturnType.Miss);
 					
 					Global.battle.interruptEvent();
 					List<PlayerCharacter> targets = new ArrayList<PlayerCharacter>();
 					targets.add(Global.battle.getCurrentActor());
-				    Global.battle.forceAddAbilityEvent(saytr, targets, getSaytrReversalActualAttack());
+					
+					if (targets.get(0).isEnemy() != saytr.isEnemy())
+					{
+					    Global.battle.forceAddAbilityEvent(saytr, targets, getSaytrReversalActualAttack());	
+					}
 				}
 				
 			});

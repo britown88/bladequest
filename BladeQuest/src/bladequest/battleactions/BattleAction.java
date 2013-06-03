@@ -3,6 +3,7 @@ package bladequest.battleactions;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.util.Log;
 import bladequest.combat.BattleEventBuilder;
 import bladequest.combat.DamageMarker;
 import bladequest.world.PlayerCharacter;
@@ -34,6 +35,20 @@ public class BattleAction
 	public void decref()
 	{
 		--refCount;
+		if (refCount < 0)
+		{
+			refCount = 0;
+			Log.d("Bladequest.world", "Bad decref - " + this.getClass().getName() );
+			
+			try {
+				throw new Exception(){
+					private static final long serialVersionUID = 1L;};	
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
 	}
 	public final void reset()
 	{
@@ -224,6 +239,6 @@ public class BattleAction
 	
 	public State run(BattleEventBuilder builder){return State.Finished;}
 	public void runOutsideOfBattle(PlayerCharacter attacker, List<PlayerCharacter> targets, List<DamageMarker> markers) {}
-	public boolean isRoot() {return refCount == 0; }
+	public boolean isRoot() {return refCount <= 0; }
 	public boolean willAffectTarget(PlayerCharacter target){ return true;}
 }

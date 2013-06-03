@@ -11,6 +11,7 @@ public abstract class DelegatingAction extends BattleAction {
 	{
 		runner = null;
 	}
+	@Override
 	public void clearState()
 	{
 		if (runner != null) runner.reset();

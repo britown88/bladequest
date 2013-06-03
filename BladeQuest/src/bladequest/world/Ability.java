@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bladequest.battleactions.BattleAction;
+import bladequest.combat.BattleCalc.MovePriority;
 import bladequest.combat.DamageMarker;
 
 public class Ability 
@@ -14,6 +15,7 @@ public class Ability
 	private boolean usableOutOfBattle;
 	private boolean enabled;
 	
+	MovePriority priority;
 	public String name, shortName, description, shortDescription;
 	
 	private List<BattleAction> actions;
@@ -27,6 +29,7 @@ public class Ability
 		this.usableOutOfBattle = usableOutOfBattle;
 		this.enabled = true;
 		this.description = "";
+		this.priority = MovePriority.Regular;
 		
 		actions = new ArrayList<BattleAction>();
 	}
@@ -52,6 +55,15 @@ public class Ability
 	public int MPCost() { return mpcost;}
 	public boolean isEnabled() { return enabled;}
 	public void setEnabled(boolean enabled) {this.enabled = enabled;}
+	public MovePriority getPriority() 
+	{
+		return priority;
+	}
+	public void setPriority(MovePriority priority)
+	{
+		this.priority = priority;
+	}
+	
 	
 	public boolean willAffect(PlayerCharacter c)
 	{
