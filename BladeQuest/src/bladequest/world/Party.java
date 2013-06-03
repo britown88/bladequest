@@ -516,7 +516,10 @@ public class Party
 		if(objPath.isDone())
 		{
 			//allowMovement = true;
-			objPath = null;
+			if(objPath.loops())
+				objPath.reset();
+			else
+				objPath = null;
 		}
 		else
 		{

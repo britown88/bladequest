@@ -5,6 +5,8 @@
 
 
 
+
+
 #!OBJ 0 0
 \name$0x0$ <- newObject "start" 0 0
 
@@ -63,7 +65,7 @@ addSwitchCondition "startgame"
 
 state1$18x9$ 0
 name$18x9$ > createState >
-setSprite "guard" > 
+setSprite "guard2" > 
 setOptions true true false > 
 setCollisionData true true true true
 
@@ -80,7 +82,7 @@ addSwitchCondition "startgame"
 state1$14x14$ 0
 name$14x14$ > createState >
 setAnimated true >
-setSprite "guard" > 
+setSprite "guard2" > 
 setFace "down" > 
 setOptions true true false > 
 setCollisionData true true true true
@@ -103,7 +105,7 @@ name$16x10$ > createState
 state2$16x10$ 0
 name$16x10$ > createState >
 addSwitchCondition "startgame" >
-setSprite "guard" > 
+setSprite "guard2" > 
 setOptions true true false > 
 setCollisionData true true true true >
 addAction (message "?????: \nHey buddy, I think my room's too small.  ") >
@@ -118,7 +120,7 @@ addAction (switchControl "prisonguardtalked" true)
 state3$16x10$ 0
 name$16x10$ > createState >
 addSwitchCondition "prisonguardnewspeech" >
-setSprite "guard" > 
+setSprite "guard2" > 
 setOptions true true false > 
 setCollisionData true true true true >
 addAction (message "Guard: \nI've got my eye on your this time...") >
@@ -131,7 +133,7 @@ addAction (message "????? \nYou are an example to us all.")
 state4$16x10$ 0
 name$16x10$ > createState >
 addSwitchCondition "guardasleep" >
-setSprite "guard" > 
+setSprite "guard2" > 
 setOptions true true false > 
 setCollisionData true true true true >
 setBubble "sleep" >
@@ -146,7 +148,7 @@ addAction (modifyInventory "prisonkey" 1 false)
 state5$16x10$ 0
 name$16x10$ > createState >
 addItemCondition "prisonkey" >
-setSprite "guard" > 
+setSprite "guard2" > 
 setOptions true true false > 
 setCollisionData true true true true >
 setBubble "sleep" >

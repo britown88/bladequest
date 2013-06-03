@@ -150,7 +150,13 @@ public class ObjectState {
 			ReactionBubble bubble = new ReactionBubble(Global.reactionBubbles.get(bubbleName));
 			Point drawPos = new Point(parent.getWorldPos().x, parent.getWorldPos().y - 32);
 			Global.openReactionBubble(bubble, parent.Name(), drawPos, -1, true);
-		}			
+		}	
+		
+		ObjectPath p = new ObjectPath("");
+		p.deserialize("D4R4U4L4");
+		p.setLooping(true);
+		applyPath(p);		
+		
 	}
 	
 	public boolean execute()
@@ -201,23 +207,29 @@ public class ObjectState {
 	{		
 		if(objPath.isDone())
 		{
-			objPath = null;
+			if(objPath.loops())
+			{				
+				objPath.reset();
+				HandleObjectPath();
+			}				
+			else
+				objPath = null;
 		}
 		else
 		{
 			switch(objPath.getCurrentAction())
 			{
 			case MoveLeft:
-				move("left", true);
+				move("left", false);
 				break;
 			case MoveUp:
-				move("up", true);
+				move("up", false);
 				break;
 			case MoveRight:
-				move("right", true);
+				move("right", false);
 				break;
 			case MoveDown:
-				move("down", true);
+				move("down", false);
 				break;
 			case FaceLeft:
 				parent.Face("left");

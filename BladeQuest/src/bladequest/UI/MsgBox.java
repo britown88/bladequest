@@ -429,6 +429,7 @@ public class MsgBox extends MenuPanel
 	{
 		if(Opened())
 		{
+			setSpeed(0);
 			if(yesNoMenu.Opened())
 				yesNoMenu.touchActionDown(x, y);
 		}

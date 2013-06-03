@@ -46,26 +46,9 @@ import bladequest.world.ObjectState;
 
 public class GameObjectLibrary 
 {
-	private static Map<Character, Actions> pathActions;
 	
 	public static void publishLibrary(LibraryWriter library) 
-	{
-		pathActions = new HashMap<Character, ObjectPath.Actions>();
-		pathActions.put('U', Actions.MoveUp);
-		pathActions.put('D', Actions.MoveDown);
-		pathActions.put('L', Actions.MoveLeft);
-		pathActions.put('R', Actions.MoveRight);
-		pathActions.put('u', Actions.FaceUp);
-		pathActions.put('d', Actions.FaceDown);
-		pathActions.put('l', Actions.FaceLeft);
-		pathActions.put('r', Actions.FaceRight);
-		pathActions.put('S', Actions.IncreaseMoveSpeed);
-		pathActions.put('s', Actions.DecreaseMoveSpeed);
-		pathActions.put('V', Actions.Show);
-		pathActions.put('v', Actions.Hide);
-		pathActions.put('K', Actions.LockFacing);
-		pathActions.put('k', Actions.UnlockFacing);
-		pathActions.put('W', Actions.Wait);		
+	{	
 		
 		try {
 			library.addAllIn(GameObjectLibrary.class);
@@ -282,26 +265,7 @@ public class GameObjectLibrary
 	public static Action createPath(String target, boolean wait, String cmds)
 	{		
 		ObjectPath path = new ObjectPath(target);
-		int i = 0;
-		while(i < cmds.length())
-		{
-			char c = cmds.charAt(i++);
-			if(pathActions.containsKey(c))
-			{	
-				
-				String scount = "";				
-				while(i < cmds.length() && 
-						cmds.charAt(i) >= '0' &&
-						cmds.charAt(i) <= '9')
-					scount += cmds.charAt(i++); 
-				
-				int count = scount.length() == 0 ? 1 : Math.max(0, Integer.parseInt(scount));
-				for(int j = 0; j < count; ++j)
-					path.addAction(pathActions.get(c));			
-
-			}
-		}
-
+		path.deserialize(cmds);
 		Action act = new actPath(path, wait);
 		return act;
 	}

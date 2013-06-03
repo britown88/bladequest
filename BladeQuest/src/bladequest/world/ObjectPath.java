@@ -8,6 +8,9 @@ public class ObjectPath
 	private String target;
 	int index;
 	private boolean done;
+	private boolean loop;
+	
+	static HashMap<Character, ObjectPath.Actions> pathActions;
 
 	
 	public ObjectPath(String target)
@@ -16,6 +19,23 @@ public class ObjectPath
 		this.target = target;
 		index = 0;
 		done = false;
+		
+		pathActions = new HashMap<Character, ObjectPath.Actions>();
+		pathActions.put('U', Actions.MoveUp);
+		pathActions.put('D', Actions.MoveDown);
+		pathActions.put('L', Actions.MoveLeft);
+		pathActions.put('R', Actions.MoveRight);
+		pathActions.put('u', Actions.FaceUp);
+		pathActions.put('d', Actions.FaceDown);
+		pathActions.put('l', Actions.FaceLeft);
+		pathActions.put('r', Actions.FaceRight);
+		pathActions.put('S', Actions.IncreaseMoveSpeed);
+		pathActions.put('s', Actions.DecreaseMoveSpeed);
+		pathActions.put('V', Actions.Show);
+		pathActions.put('v', Actions.Hide);
+		pathActions.put('K', Actions.LockFacing);
+		pathActions.put('k', Actions.UnlockFacing);
+		pathActions.put('W', Actions.Wait);	
 		
 	}
 	
@@ -35,6 +55,29 @@ public class ObjectPath
 		index += 1;
 		if(index >= actionList.size())
 			done = true;
+	}
+	
+	public void deserialize(String cmds)
+	{
+		int i = 0;
+		while(i < cmds.length())
+		{
+			char c = cmds.charAt(i++);
+			if(pathActions.containsKey(c))
+			{	
+				
+				String scount = "";				
+				while(i < cmds.length() && 
+						cmds.charAt(i) >= '0' &&
+						cmds.charAt(i) <= '9')
+					scount += cmds.charAt(i++); 
+				
+				int count = scount.length() == 0 ? 1 : Math.max(0, Integer.parseInt(scount));
+				for(int j = 0; j < count; ++j)
+					addAction(pathActions.get(c));			
+
+			}
+		}
 	}
 	
 //	public Actions nextAction()
@@ -61,6 +104,9 @@ public class ObjectPath
 	}
 	
 	public boolean isDone() { return done; }
+	
+	public boolean loops() { return loop; }
+	public void setLooping(boolean l) { loop = l; }
 	
 	public void attachPath()
 	{

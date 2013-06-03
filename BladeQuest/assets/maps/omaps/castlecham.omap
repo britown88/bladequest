@@ -1,5 +1,7 @@
 #!HEAD
 
+
+
 #!OBJ 12 0
 createWindowObj x y
 \obj <- newObject "window" (12 > add x) y
@@ -218,7 +220,7 @@ state2$14x7$ 0
 name$14x7$ > createState >
 addSwitchCondition "glassshattered" >
 setLayer "Above" >
-setSprite "sword2" >
+setSprite "sword1" >
 setAnimated false >
 setImageIndex 1
 
