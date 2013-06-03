@@ -8,8 +8,8 @@ setPortrait 0 0 >
 setAbilityName "Tricks" >
 setCombatAction "combSteal" >
 setBaseStats 7 10 4 2 >
-setLevel 5 >
-mapBound equip {"knife", "felthat", "cottonshirt"} >
+setLevel 10 >
+mapBound equip {"fireknife", "felthat", "cottonshirt"} >
 mapBound addAbility {"coatweapon"} >
 addLearnableAbility "dblattack" 6 > 
 addLearnableAbility "backstab" 8 > 
@@ -20,7 +20,7 @@ setPortrait 2 0 >
 setAbilityName "Magic" >
 setCombatAction "combAuras" >
 setBaseStats 3 3 6 10 >
-setLevel 6 >
+setLevel 10 >
 mapBound addAbility {"heal", "ignite"} >
 mapBound equip {"silverstaff", "felthat", "cottonshirt"}) > 
 setDefaultShadow
@@ -30,7 +30,7 @@ setPortrait 1 0 >
 setAbilityName "Swordplay" >
 setCombatAction "combStance" >
 setBaseStats 10 4 7 2 >
-setLevel 7 >
+setLevel 10 >
 mapBound equip {"silversword", "felthat", "cottonshirt"} >
 mapBound addAbility {"assault", "redcard"} >
 addLearnableAbility "zornhau" 6) >

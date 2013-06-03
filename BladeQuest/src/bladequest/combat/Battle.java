@@ -2068,14 +2068,40 @@ public class Battle
 		if (team == Team.Enemy)
 		{
 			us = new ArrayList<PlayerCharacter>();			
-			them = Global.battle.getParty();
-			for (Enemy e : Global.battle.getEncounter().Enemies()) us.add(e);
+			them = new ArrayList<PlayerCharacter>();
+			for (Enemy e : Global.battle.getEncounter().Enemies())
+			{
+				if (e.isInBattle())
+				{
+					us.add(e);
+				}	
+			}
+			for (PlayerCharacter c : Global.battle.getParty())
+			{
+				if (c.isInBattle())
+				{
+					them.add(c);
+				}	
+			}			
 		}
 		else
 		{
-			us = Global.battle.getParty();
+			us = new ArrayList<PlayerCharacter>();
 			them = new ArrayList<PlayerCharacter>();
-			for (Enemy e : Global.battle.getEncounter().Enemies()) them.add(e);
+			for (PlayerCharacter c : Global.battle.getParty())
+			{
+				if (c.isInBattle())
+				{
+					us.add(c);
+				}	
+			}						
+			for (Enemy e : Global.battle.getEncounter().Enemies()) 
+			{
+				if (e.isInBattle())
+				{
+					them.add(e);
+				}	
+			}				
 		}
 		
 		List<PlayerCharacter> everybody = new ArrayList<PlayerCharacter>();

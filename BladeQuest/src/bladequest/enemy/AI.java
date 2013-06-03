@@ -32,6 +32,11 @@ public class AI {
 	{
 		stateMap.put(string, state);
 	}
+	public void reset(String string, AIState state)
+	{
+		stateMap.remove(string);
+		stateMap.put(string, state);
+	}	
 	public void switchToState(String string)
 	{
 		state = stateMap.get(string);

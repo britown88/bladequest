@@ -225,3 +225,43 @@ addEAbility "climacticfinisher"  >
 setEShadow (createShadow 44 28 21))
 
 
+
+#####################ROLAND!################
+
+
+RolandShatter target e decision
+	decision > setAbility (e > getEnemyAbility "shatter")
+	decision > setTarget target
+    switchEnemyState e "base"
+    
+RolandEntomb e decision
+    \frozenfool <- (getRandomTarget e "SingleEnemy")
+	decision > setAbility (e > getEnemyAbility "entomb")
+	decision > setTarget frozenfool
+	setAIState (getAI e) "shatter" (createAIState (RolandShatter frozenfool)) 
+    switchEnemyState e "shatter"    
+    
+RolandAI enemy
+   enemy > setEnemyAI (
+           createAI "base" (createAIState ([e decision]
+                (|randomRoll 100   
+           		 |greater 100  : RolandEntomb e decision
+           ))) >
+           addAIState "shatter" (createAIState ([e dec] "")
+      )) 
+
+#############################################
+
+
+\rolandbattle <- (addEnemy "eroland" "Roland" "eroland" >
+addDefaultSwordHit >
+setEBaseStats 10 10 10 10 >
+setELevel 20 >
+modStat "BattlePower" -2 >
+modStat "MaxHP" 150 >
+setGold 2500 >
+setBoss >
+RolandAI >
+addEAbility "shatter" >
+addEAbility "entomb"  >
+setEShadow (createShadow 76 30 50 > nudgeX 11))

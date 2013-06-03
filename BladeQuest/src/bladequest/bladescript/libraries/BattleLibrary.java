@@ -116,7 +116,11 @@ public class BattleLibrary {
 		ability.setEnabled(false);
 		return ability;
 	}	
-	
+	public static Ability setPriority(Ability ability, String priority)
+	{
+		ability.setPriority(BattleCalc.MovePriority.valueOf(priority));
+		return ability;
+	}
 	
 	public static StatusEffect poisonStatus(float power)
 	{
@@ -398,6 +402,11 @@ public class BattleLibrary {
 	{
 		return Global.battle.getCurrentActor();
 	}
+	public static PlayerCharacter getRandomTarget(PlayerCharacter character, String type)
+	{
+		return Battle.getRandomTargets(TargetTypes.valueOf(type), character).get(0);
+	}
+	
 	
 	public static Battle showBattleMessage(Battle battle, String message)
 	{

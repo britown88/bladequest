@@ -194,6 +194,7 @@ add (waitAction 2150) >
 addDep (inflictStatusAction (frozenStatus 4)))
 
 \shatter <- (addAbility "shatter" "Shatter" "Single" 0 >
+setPriority "Low" >
 add (waitAction 450) >
 addDep (rolandSpecialShatterAction 0))
 

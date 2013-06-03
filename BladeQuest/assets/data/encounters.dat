@@ -111,3 +111,7 @@ addEnemy "hawk" 128 128)
 \SatyrBossBattle <- (inheritEncounter "satyrboss" >
 addEnemy "satyr" 128 128 > 
 disableRunning)
+
+\RolandBattleOne <- (inheritEncounter "enemyroland1" >
+addEnemy "eroland" 128 128 >
+disableRunning)

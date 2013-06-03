@@ -70,6 +70,12 @@ public class EnemyLibrary {
 		ai.add(stateName, state);
 		return ai;
 	}
+	//resetting to a custom state.
+	public static AI setAIState(AI ai, String stateName, AIState state)
+	{
+		ai.reset(stateName, state);
+		return ai;
+	}	
 	
 	//NOTE: FOR REGISTERING TRIGGERS, DO IT ON BATTLE START, NOT ON ENEMY PROTOTYPE/TEMPLATE/WHATEVER CREATE!
 	//DONT DO IT
@@ -95,6 +101,10 @@ public class EnemyLibrary {
 		enemy.setAI(ai);
 		return enemy;
 	}
+	public static AI getAI(Enemy enemy)
+	{
+		return enemy.getAI();
+	}	
 	public static AIDecision setAbility(AIDecision decision, Ability ability)
 	{
 		decision.pickAbility(ability);
