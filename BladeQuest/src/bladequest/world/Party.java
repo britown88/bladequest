@@ -445,6 +445,7 @@ public class Party
 		worldPos = new Point(x*32, y*32);
 		gridPos = new Point(x, y);
 		clearMovementPath();
+		Global.updateVpPos();
 	}
 	
 	public void clearMovementPath()

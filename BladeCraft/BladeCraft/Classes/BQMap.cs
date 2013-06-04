@@ -674,6 +674,8 @@ namespace BladeCraft.Classes
             };
          }
 
+         r.Close();
+
       }
 
       public void write()

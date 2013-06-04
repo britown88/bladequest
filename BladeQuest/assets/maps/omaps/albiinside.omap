@@ -1,5 +1,18 @@
 #!HEAD
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 #!OBJ 2 3
 \objName$2x3$ <- "name"
 \name$2x3$ <- newObject objName$2x3$ 2 3
@@ -18,3 +31,198 @@ name$1x4$ > createState >
 setSpriteFromTile 0 23
 
 \runstate1$1x4$ <- state1$1x4$ 0
+#!OBJ 24 4
+\objName$24x4$ <- "name"
+\name$24x4$ <- newObject objName$24x4$ 24 4
+
+state1$24x4$ 0
+name$24x4$ > createState >
+setSpriteFromTile 3 28 >
+setLayer "Above"
+
+\runstate1$24x4$ <- state1$24x4$ 0
+#!OBJ 30 4
+\objName$30x4$ <- "name"
+\name$30x4$ <- newObject objName$30x4$ 30 4
+
+state1$30x4$ 0
+name$30x4$ > createState >
+setSpriteFromTile 3 27 >
+setLayer "Above"
+
+\runstate1$30x4$ <- state1$30x4$ 0
+#!OBJ 22 3
+\objName$22x3$ <- "name"
+\name$22x3$ <- newObject objName$22x3$ 22 3
+
+state1$22x3$ 0
+name$22x3$ > createState >
+setCollisionData true true true true >
+setSprite "shopkeeper"
+
+
+\runstate1$22x3$ <- state1$22x3$ 0
+#!OBJ 28 3
+\objName$28x3$ <- "name"
+\name$28x3$ <- newObject objName$28x3$ 28 3
+
+state1$28x3$ 0
+name$28x3$ > createState >
+setCollisionData true true true true >
+setSprite "shopkeeper"
+
+
+\runstate1$28x3$ <- state1$28x3$ 0
+#!OBJ 6 4
+\objName$6x4$ <- "name"
+\name$6x4$ <- newObject objName$6x4$ 6 4
+
+state1$6x4$ 0
+name$6x4$ > createState >
+setSpriteFromTile 2 24 
+
+\runstate1$6x4$ <- state1$6x4$ 0
+#!OBJ 9 3
+\objName$9x3$ <- "name"
+\name$9x3$ <- newObject objName$9x3$ 9 3
+
+state1$9x3$ 0
+name$9x3$ > createState >
+setSpriteFromTile 2 23
+
+\runstate1$9x3$ <- state1$9x3$ 0
+#!OBJ 20 5
+\objName$20x5$ <- "name"
+\name$20x5$ <- newObject objName$20x5$ 20 5
+
+state1$20x5$ 0
+name$20x5$ > createState >
+setSpriteFromTile 2 24
+
+\runstate1$20x5$ <- state1$20x5$ 0
+#!OBJ 6 9
+\objName$6x9$ <- "name"
+\name$6x9$ <- newObject objName$6x9$ 6 9
+
+state1$6x9$ 0
+name$6x9$ > createState >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$6x9$ 7 10 "albi") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$6x9$ <- state1$6x9$ 0
+#!OBJ 22 9
+\objName$22x9$ <- "name"
+\name$22x9$ <- newObject objName$22x9$ 22 9
+
+state1$22x9$ 0
+name$22x9$ > createState >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$22x9$ 11 7 "albi") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$22x9$ <- state1$22x9$ 0
+
+#!OBJ 28 9
+\objName$28x9$ <- "name"
+\name$28x9$ <- newObject objName$28x9$ 28 9
+
+state1$28x9$ 0
+name$28x9$ > createState >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$28x9$ 15 7 "albi") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$28x9$ <- state1$28x9$ 0
+
+#!OBJ 5 4
+\objName$5x4$ <- "spinman"
+\name$5x4$ <- newObject objName$5x4$ 5 4
+
+state1$5x4$ 0
+name$5x4$ > createState >
+setCollisionData true true true true >
+setSprite "man1" >
+setFace "up" >
+setOptions true true false >
+addAction (message "Marc: \nAnd a one...") >
+addAction (createPath "spinman" true "rWdWlWuW") >
+addAction (message "And a two...") >
+addAction (createPath "spinman" true "rWdW") >
+addAction (openBubble "exclam" "spinman" 1.0 false false) >
+addAction (wait 0.5) >
+addAction (message "Marc: \n|luc|!!!") >
+addAction (message "You should really knock first or something!") >
+addAction (message "I was just...uuuh...cleaning!") >
+addAction (openBubble "sweat" "spinman" 1.0 false false) >
+addAction (createPath "spinman" true "uW")
+
+\runstate1$5x4$ <- state1$5x4$ 0
+#!OBJ 9 24
+\objName$9x24$ <- "name"
+\name$9x24$ <- newObject objName$9x24$ 9 24
+
+state1$9x24$ 0
+name$9x24$ > createState >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$9x24$ 4 15 "albi") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$9x24$ <- state1$9x24$ 0
+#!OBJ 31 24
+\objName$31x24$ <- "name"
+\name$31x24$ <- newObject objName$31x24$ 31 24
+
+state1$31x24$ 0
+name$31x24$ > createState >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$31x24$ 13 17 "albi") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$31x24$ <- state1$31x24$ 0
+#!OBJ 8 39
+\objName$8x39$ <- "name"
+\name$8x39$ <- newObject objName$8x39$ 8 39
+
+state1$8x39$ 0
+name$8x39$ > createState >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$8x39$ 17 22 "albi") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$8x39$ <- state1$8x39$ 0
+#!OBJ 22 39
+\objName$22x39$ <- "name"
+\name$22x39$ <- newObject objName$22x39$ 22 39
+
+state1$22x39$ 0
+name$22x39$ > createState >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$22x39$ 32 15 "albi") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$22x39$ <- state1$22x39$ 0
+#!OBJ 43 9
+\objName$43x9$ <- "name"
+\name$43x9$ <- newObject objName$43x9$ 43 9
+
+state1$43x9$ 0
+name$43x9$ > createState >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$43x9$ 22 4 "albi") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$43x9$ <- state1$43x9$ 0
+
+#!OBJ 43 27
+\objName$43x27$ <- "name"
+\name$43x27$ <- newObject objName$43x27$ 43 27
+
+state1$43x27$ 0
+name$43x27$ > createState >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$43x27$ 28 7 "albi") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$43x27$ <- state1$43x27$ 0
+
