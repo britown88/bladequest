@@ -196,6 +196,9 @@ public class GameObject {
 	
 	public boolean setTarget(String face, boolean ignoreParty)
 	{
+		if(!Global.map.isLoaded())
+			return true;
+		
 		if(!faceLocked)
 			states.get(currentState).face(face);
 		

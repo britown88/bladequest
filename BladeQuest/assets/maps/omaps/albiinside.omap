@@ -13,6 +13,7 @@
 
 
 
+
 #!OBJ 2 3
 \objName$2x3$ <- "name"
 \name$2x3$ <- newObject objName$2x3$ 2 3
@@ -226,3 +227,34 @@ addAction (fadeControl 0.5 255 0 0 0 false true)
 
 \runstate1$43x27$ <- state1$43x27$ 0
 
+#!OBJ 43 24
+\objName$43x24$ <- "name"
+\name$43x24$ <- newObject objName$43x24$ 43 24
+
+state1$43x24$ 0
+name$43x24$ > createState >
+setCollisionData true true true true >
+addAction (message "Innkeeper Sarah: \nOh hi there, |luc|!") >
+addAction (message "Looking for a night away from home? \n*teehee*") >
+addAction (messageWithYesNo "Bed for the night is 10G, yould you like to stay?" >
+	addToBranch 0 (startGoldTransaction 10 >
+		addToBranch 0 (message "Have a nice night!") >
+		addToBranch 0 (fadeControl 1.0 255 0 0 0 true true) >
+		addToBranch 0 (restoreParty 0) >
+		addToBranch 0 (teleportParty name$43x24$ 49 19 "albiinside") >
+		addToBranch 0 (fadeControl 1.0 255 0 0 0 false true) >
+		addToBranch 1 (message "Oh no, you dont have enough!")) >
+	addToBranch 1 (message "Ok, see you around!"))
+
+
+
+\runstate1$43x24$ <- state1$43x24$ 0
+#!OBJ 43 23
+\objName$43x23$ <- "name"
+\name$43x23$ <- newObject objName$43x23$ 43 23
+
+state1$43x23$ 0
+name$43x23$ > createState >
+setSprite "woman1"
+
+\runstate1$43x23$ <- state1$43x23$ 0
