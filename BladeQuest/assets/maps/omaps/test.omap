@@ -1,6 +1,7 @@
 #!HEAD
 
 
+
 #!OBJ 0 0
 \name$0x0$ <- newObject "start" 0 0
 
@@ -150,3 +151,18 @@ addAction (setFloating "party" true 90 4)
 
 
 \runstate1$6x5$ <- state1$6x5$ 0
+#!OBJ 6 3
+\objName$6x3$ <- "name"
+\name$6x3$ <- newObject objName$6x3$ 6 3
+
+state1$6x3$ 0
+name$6x3$ > createState >
+setCollisionData true true true true >
+setSpriteFromTile 1 2 >
+addAction (messageWithYesNo "Drop 10G in the skull?" >
+	addToBranch 0 (startGoldTransaction 10 >
+		addToBranch 0 (message "Welp, there goes...") >
+		addToBranch 1 (message "Oh, you dont have enough!")) >
+	addToBranch 1 (message "That is probably wise."))
+
+\runstate1$6x3$ <- state1$6x3$ 0
