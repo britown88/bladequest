@@ -451,7 +451,6 @@ public class bactFrozenGrip extends DelegatingAction {
 		//TINY TOSS
 		//SPLOOM
 	
-		//don't use this attack if there's only one valid target.  Use shatter instead!
 		//pick a random target.
 		List<PlayerCharacter> targets = Battle.getRandomTargets(TargetTypes.AllEnemies, builder.getSource());
 		PlayerCharacter target = BattleAction.getTarget(builder);		

@@ -15,6 +15,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.os.Debug;
 import bladequest.UI.MenuPanel;
 import bladequest.bladescript.LibraryWriter;
 import bladequest.bladescript.Script.BadSpecialization;
@@ -41,7 +42,8 @@ public class BqMap
 	private Point mapSize, plateCount;
 	private TilePlate[] background, foreground;
 	public List<GameObject> objects;
-	public List<Tile> levelTiles;
+	public Tile[] levelTiles;
+	public GameObject[] levelObjects;  //list of collidable objects by tile.
 	public List<EncounterZone> encounterZones;
 	
 	private int nameDisplayLength = 150, nameDisplayCounter = 0;
@@ -187,8 +189,66 @@ public class BqMap
 	public String BGM() { return defaultBGM; }
 	public String displayName() { return displayName;}
 	public Point Size() { return mapSize; }	
-	public List<GameObject> Objects() { return objects; }	
-	public List<Tile> LevelTiles() { return levelTiles; }
+	public List<GameObject> Objects() { return objects; }
+	public List<GameObject> Objects(int l, int t, int r, int b) 
+	{
+		List<GameObject> out = new ArrayList<GameObject>();
+		for (int j = t; j != b; ++j)
+		{
+			if (j >= mapSize.y || j < 0) continue;
+			int idx= l + j * mapSize.x;
+			for (int i = l; i != r; ++i)
+			{
+				
+				if (i >= mapSize.x || i < 0)
+				{
+					++idx;
+					continue;
+				}
+
+					
+				GameObject iter = levelObjects[idx] ; 
+				while (iter != null)
+				{
+					out.add(iter);
+					iter = iter.nextCollidable;
+				}
+				++idx;				
+			}
+		}
+		return out; 
+	}
+	//not inclusive.
+	//left, right, top, bottom
+	public List<Tile> LevelTiles(int l, int t, int r, int b) 
+	{
+		List<Tile> out = new ArrayList<Tile>();
+		for (int j = t; j != b; ++j)
+		{
+			if (j >= mapSize.y || j < 0) continue;
+			int idx= l + j * mapSize.x;
+			for (int i = l; i != r; ++i)
+			{
+
+				if (i >= mapSize.x || i < 0)
+				{
+					++idx;
+					continue;
+				}
+				
+				if (levelTiles[idx] != null)
+				{
+					out.add(levelTiles[idx]);
+				}
+				++idx;
+			}
+		}
+		return out; 
+	}
+	public Tile levelTile(int x, int y)
+	{
+		return levelTiles[x + y * mapSize.x];
+	}
 	public void renderBackground(List<TilePlate> loadList){renderTiles(background, loadList);}	
 	public void renderForeground(List<TilePlate> loadList){renderTiles(foreground, loadList);}
 	
@@ -218,7 +278,8 @@ public class BqMap
 			for(int y = 0; y < plateCount.y; ++y)
 				foreground[(y*plateCount.x)+x] = new TilePlate(tileset, x, y, true);
 	
-		levelTiles = new ArrayList<Tile>();
+		levelTiles = new Tile[mapSize.x * mapSize.y];
+		levelObjects = new GameObject[mapSize.x * mapSize.y];
 	}
 	
 	public void renderObjects(TilePlate[] plates)
@@ -271,31 +332,55 @@ public class BqMap
 		boolean drawR2 = Global.vpGridPos.y - ((int)(Global.vpGridPos.y/10)*10) > 0;
 		boolean drawC3 = Global.vpGridPos.x - ((int)(Global.vpGridPos.x/10)*10) > 5;
 		
-		//always
-		plates[plateIndexFromVP(0,0)].render(loadList);
-		plates[plateIndexFromVP(1,0)].render(loadList);
 		
-		if(plateX > 0) plates[plateIndexFromVP(-1,0)].Unload();
-		if(plateY > 0)
+		
+
+		//valid tile plates - 
+		
+		//   xxxxx
+		//   x*xxx
+		//   xxxxx
+		//   xxxxx
+		
+		//5x4 = 20 tiles * 2 = 40 required for buffering.
+		//unload all on edge every time.  (perhaps we should be less brutal with this in cases where you jitter across the edge of a loading portal?)  
+		//fatter load zone than release?
+		
+		for (int y = plateY-2; y < plateY+4; ++y)
 		{
-			plates[plateIndexFromVP(0,-1)].Unload(); 
-			plates[plateIndexFromVP(1,-1)].Unload();
+			if (y < 0 || y >= plateCount.y) continue;
+			for (int x = plateX-2; x < plateX+5; ++x)
+			{
+				if (x < 0 || x >= plateCount.x) continue;
+				if (y == plateY-2 || y == plateY+3 ||
+					x == plateY-2 || x == plateX+4)
+				{
+					plates[x + y * plateCount.x].Unload();
+				}
+				else
+				{
+					//plate should be loadedededed.
+					if (plates[x + y * plateCount.x].tryLoad())
+					{
+						loadList.add(plates[x + y * plateCount.x]);
+					}
+				}
+			}				
 		}
+	
+		
+		//always
+		plates[plateIndexFromVP(0,0)].render();
+		plates[plateIndexFromVP(1,0)].render();
+		
 		
 		//row2
 		if(drawR2)
 		{
 			if(plateY + 1 < plateCount.y)
 			{
-				plates[plateIndexFromVP(0,1)].render(loadList);
-				plates[plateIndexFromVP(1,1)].render(loadList);
-				
-				if(plateX > 0) plates[plateIndexFromVP(-1,1)].Unload();
-				if(plateY < plateCount.y - 2)
-				{
-					plates[plateIndexFromVP(0,2)].Unload(); 
-					plates[plateIndexFromVP(1,2)].Unload();
-				}
+				plates[plateIndexFromVP(0,1)].render();
+				plates[plateIndexFromVP(1,1)].render();
 			}
 			
 		}
@@ -305,10 +390,7 @@ public class BqMap
 		{
 			if(plateX + 2 < plateCount.x)
 			{
-				plates[plateIndexFromVP(2,0)].render(loadList);
-				
-				if(plateY > 0) plates[plateIndexFromVP(2,-1)].Unload();
-				if(plateX < plateCount.x - 3) plates[plateIndexFromVP(3,0)].Unload();
+				plates[plateIndexFromVP(2,0)].render();
 			}
 			
 		}
@@ -319,11 +401,7 @@ public class BqMap
 			
 			if(plateY + 1 < plateCount.y && plateX + 2 < plateCount.x)
 			{
-				plates[plateIndexFromVP(2,1)].render(loadList);			
-				
-				if(plateX < plateCount.x - 3) plates[plateIndexFromVP(3,1)].Unload();
-				if(plateY < plateCount.y - 2) plates[plateIndexFromVP(2,2)].Unload();
-				
+				plates[plateIndexFromVP(2,1)].render();			
 			}			
 
 		}
@@ -355,17 +433,48 @@ public class BqMap
 		}
 		
 		if(t.hasCollision())
-			LevelTiles().add(t);
+		{
+			Point p = t.WorldPos();
+			levelTiles[p.x + p.y*mapSize.x] = t;  //overwrites this tile.  if this is bad behavior, please contact the management.
+		}
 	}
 	
 	public void addObject(GameObject go)
 	{
-		
-		
 		objects.add(go);
-		
+		moveObject(go, null);
 	}
-	
+	public void moveObject(GameObject go, Point prev)
+	{
+		//unlink
+		if (go.nextCollidable != null) go.nextCollidable.prevCollidable = go.prevCollidable;
+		if (go.prevCollidable != null) go.prevCollidable.nextCollidable = go.nextCollidable;
+		
+		if (prev != null && go.nextCollidable == null && go.prevCollidable == null)
+		{
+			//we're removing the last object from this tile, nuke the list.
+			levelObjects[prev.x + prev.y * mapSize.x] = null;
+		}
+		else
+		{
+			go.nextCollidable = null;
+			go.prevCollidable = null;	
+		}
+		
+		
+		
+		//kk, relink.
+		Point p = go.getGridPos();
+		int idx = p.x + p.y * mapSize.x;
+		GameObject first = levelObjects[idx];
+		if (first == null) levelObjects[idx] = go;
+		else
+		{
+			first.prevCollidable = go;
+			go.nextCollidable = first;
+			levelObjects[idx] = go;
+		}
+	}
 
 	
 	private void LoadDataLine(DataLine dl)
@@ -421,6 +530,7 @@ public class BqMap
 		boolean collBottom = dl.values.get(8).equals("1");
 		
 				
+		
 		Tile t = new Tile(x, y, bmpX, bmpY, layer);
 		t.setCollision(collLeft, collTop, collRight, collBottom);
 		

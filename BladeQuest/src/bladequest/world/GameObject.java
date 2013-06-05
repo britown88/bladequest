@@ -10,6 +10,11 @@ import bladequest.graphics.Shadow;
 import bladequest.graphics.Tile;
 
 public class GameObject {
+	
+	//intrusive linked list.
+	public GameObject nextCollidable, prevCollidable;
+	
+	
 	private String name;
 	private Point worldPos;
 	private Point gridPos;
@@ -47,6 +52,7 @@ public class GameObject {
 		states = new ArrayList<ObjectState>();
 		shadow = new Shadow(20, 10, 16, 200, 2.0f);
 		
+		nextCollidable = prevCollidable = null;
 	}
 	
 	public void setDefaultPath(ObjectPath path)
@@ -211,21 +217,15 @@ public class GameObject {
 		boolean collision = false;
 		
 		//check for object collision
-		for(GameObject gb : Global.map.Objects())
+		for(GameObject gb : Global.map.Objects(target.x, target.y, target.x+1, target.y+1))
 		{
 			if(gb.getGridPos().equals(target) && gb.getTarget().equals(target))
 				collision = true;
 		}
 		
 		//check for tile collision
-		Tile orig= null, dest = null;
-		for(Tile t : Global.map.LevelTiles())
-		{
-			if(t.WorldPos().equals(target))
-				dest = t;
-			if(t.WorldPos().equals(gridPos))
-				orig = t;
-		}
+		Tile orig =  Global.map.levelTile(gridPos.x, gridPos.y); 
+	    Tile dest = Global.map.levelTile(target.x, target.y);
 		
 		if(dest != null)
 			if(orig != null)collision = dest.isBlocked(orig);
@@ -336,7 +336,12 @@ public class GameObject {
 			}
 			else
 			{
+				Point prevPos = gridPos;
 				gridPos = target;
+				if (Global.map != null)
+				{
+					Global.map.moveObject(this, prevPos);
+				}
 				gridAligned = true;
 				if(blockedTarget == null)
 				{

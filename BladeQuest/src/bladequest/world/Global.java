@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.locks.ReentrantLock;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
@@ -53,9 +54,9 @@ import bladequest.bladescript.Parser;
 import bladequest.bladescript.Script;
 import bladequest.bladescript.ScriptVar;
 import bladequest.combat.Battle;
-import bladequest.combat.BattleEventBuilder;
 import bladequest.combat.BattleCalc.AccuracyType;
 import bladequest.combat.BattleCalc.DamageReturnType;
+import bladequest.combat.BattleEventBuilder;
 import bladequest.combat.triggers.Trigger;
 import bladequest.enemy.Enemy;
 import bladequest.graphics.AnimatedBitmap;
@@ -106,7 +107,7 @@ public class Global
 	
 	public static boolean loading = false;
 	
-	public static Lock lock = new Lock();
+	public static ReentrantLock lock = new ReentrantLock();
 	public static States GameState;
 	public static TitleScreen title;
 	
@@ -224,8 +225,36 @@ public class Global
 	
 	public static Scene showScene;
 	
-	public static TilePlateBitmap[] tilePlateBmps;	
-	public static int tilePlateBitmapCount = 24;
+	private static TilePlateBitmap[] tilePlateBmps;
+	
+	private static ReentrantLock tileLoaderLock;
+	
+	public static void freeTileBitmap(TilePlateBitmap bitmap)
+	{
+		tileLoaderLock.lock();
+		bitmap.used = false;
+		tileLoaderLock.unlock();
+	}
+	public static TilePlateBitmap getFreeTileBitmap()
+	{
+		TilePlateBitmap out = null;
+		tileLoaderLock.lock();
+		for (TilePlateBitmap bmp : tilePlateBmps)
+		{
+			if (bmp.used == false)
+			{
+				bmp.used = true;
+				out = bmp;
+				break;
+			}
+		}
+		tileLoaderLock.unlock();		
+		return out;
+	}
+	
+	
+	//needs at least 5x4x2... e.g. 40.  42 for good measure.
+	public static int tilePlateBitmapCount = 42;
 	
 	public static actExpectInput inputExpecter;
 	
@@ -2401,6 +2430,8 @@ public class Global
 		genWeaponSwings();
 		
 		//create shared tileplate bmp's
+		
+		tileLoaderLock = new ReentrantLock();
 		tilePlateBmps = new TilePlateBitmap[tilePlateBitmapCount];
 		for(int i = 0; i < tilePlateBitmapCount; ++i)
 			tilePlateBmps[i] = new TilePlateBitmap();

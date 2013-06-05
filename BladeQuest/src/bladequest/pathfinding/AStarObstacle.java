@@ -20,7 +20,10 @@ public class AStarObstacle
 	{
 		return blockLeft && blockTop && blockRight && blockBottom;
 	}
-	
+	public Point getPoint()
+	{
+		return pos;
+	}
 	public boolean equals(Point other)
 	{
 		return this.pos.equals(other);

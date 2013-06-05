@@ -22,30 +22,20 @@ import bladequest.world.Global;
 
 public class Renderer 
 {
-	private List<DrawObject> frontBuffer, backBuffer;
-	private List<DrawObject> updateBuffer, renderBuffer;
+	List<DrawObject> updateBuffer, renderBuffer;
 	
 	public Renderer()
 	{
-
-		frontBuffer = new ArrayList<DrawObject>();
-		backBuffer = new ArrayList<DrawObject>();
-		
-		updateBuffer = frontBuffer;
-		renderBuffer = backBuffer;
+		updateBuffer = new ArrayList<DrawObject>();
+		renderBuffer = new ArrayList<DrawObject>();
 	}	
 
 	public void swap()
 	{
-		if(updateBuffer.equals(frontBuffer)) updateBuffer = backBuffer;
-		else
-		if(updateBuffer.equals(backBuffer)) updateBuffer = frontBuffer;
-
-		if(renderBuffer.equals(frontBuffer)) renderBuffer = backBuffer;
-		else
-		if(renderBuffer.equals(backBuffer)) renderBuffer = frontBuffer;
-		
-		updateBuffer.clear();
+    	Global.lock.lock();
+		renderBuffer = updateBuffer;
+    	Global.lock.unlock();
+		updateBuffer = new ArrayList<DrawObject>();
 	}
 	
 	public void drawRect(float left, float top, float right, float bottom, Paint paint)
@@ -170,17 +160,17 @@ public class Renderer
 	
 	public void render(Canvas canvas)
 	{
+		Global.lock.lock();
+		List<DrawObject> currentBuffer = renderBuffer;
+		Global.lock.unlock();
+		
 		canvas.scale(Global.baseScale + Global.imageScale, Global.baseScale + Global.imageScale, canvas.getWidth() / 2, canvas.getHeight() / 2);
 
-		
-		for(DrawObject dob : renderBuffer)
+		for(DrawObject dob : currentBuffer)
 		{
 			dob.render(canvas);
 
 		}
-			
-		
-		
 	}
 
 }

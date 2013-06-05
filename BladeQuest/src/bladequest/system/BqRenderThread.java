@@ -49,12 +49,8 @@ public class BqRenderThread extends Thread
 				//canvas.setBitmap(bmp);
 				synchronized (surfaceHolder) 
 				{					
-			    	Global.lock.lock();
-			    	
 			    	startTime = System.currentTimeMillis();
-			    	Global.renderer.render(canvas);
-			    	
-			    	Global.lock.unlock();
+			    	Global.renderer.render(canvas);  //locked internally now.
 
 					frameTime = System.currentTimeMillis() - startTime;
 					sleepTime = (int)(Global.FRAME_PERIOD - frameTime);					

@@ -608,7 +608,7 @@ public class Party
 	private boolean stepActivate()
 	{
 		boolean executes = false;
-		for(GameObject b : Global.map.Objects())
+		for(GameObject b : Global.map.Objects(gridPos.x, gridPos.y, gridPos.x+1, gridPos.y+1))
 		{
 			if(gridPos.equals(b.getGridPos()))
 			{				
@@ -631,7 +631,7 @@ public class Party
 		gridaligned = true;
 		gridPos = movePath.get(0);
 		
-		List<String> SERan = new ArrayList<String>();;		
+		List<String> SERan = new ArrayList<String>();		
 		
 		for(PlayerCharacter c : partyMembers)
 			if(c != null)
@@ -715,7 +715,17 @@ public class Party
 		}
 			
 	}
-	
+	private void retarget()
+	{
+		//update path when target changes
+		if(Global.newTarget && gridaligned && allowMovement)
+		{
+			Global.newTarget = false;			
+			originalTarget = Global.mouseGridPos;
+			pathingStartPoint = new Point(gridPos);
+			mapPath();
+		}	
+	}
  	public void update()
 	{
  		updateElevation();
@@ -732,42 +742,78 @@ public class Party
 			
 		}
 		
-		//update path when target changes
-		if(Global.newTarget && gridaligned && allowMovement)
+		int velocity = Global.moveSpeed;
+		//run repeatedly until we've run out of velocity.  avoids chugs.
+		while (velocity != 0)
 		{
-			Global.newTarget = false;			
-			originalTarget = Global.mouseGridPos;
-			pathingStartPoint = new Point(gridPos);
-			mapPath();
-		}	
-		else if(!gridPos.equals(target) && (movePath != null && movePath.size() > 0))
-		{
+			retarget();
+			if (gridPos.equals(target) || (movePath == null || movePath.isEmpty())) break;
+			
 			Point p = movePath.get(0);
 			Point vect = new Point(p.x - gridPos.x, p.y - gridPos.y);
 			Point dest = new Point(p.x*32, p.y*32);
 			
-			//snap-in:  checks to see if you moved over your destination and snaps back
-			if(vect.x > 0)worldPos.x = (worldPos.x > dest.x) ? dest.x : worldPos.x;
-			if(vect.x < 0)worldPos.x = (worldPos.x < dest.x) ? dest.x : worldPos.x;
-			if(vect.y > 0)worldPos.y = (worldPos.y > dest.y) ? dest.y : worldPos.y;
-			if(vect.y < 0)worldPos.y = (worldPos.y < dest.y) ? dest.y : worldPos.y;
 			
+			int spillVelocity = 0;
 			if(!worldPos.equals(dest))
 			{
 				//move toward target
 				gridaligned = false;
-				worldPos.x += vect.x*Global.moveSpeed;
-				worldPos.y += vect.y*Global.moveSpeed;
+				worldPos.x += vect.x*velocity;
+				worldPos.y += vect.y*velocity;
 				
 				if(!faceLocked)
 					vectorFace(vect);
+				
+
+				if(vect.x > 0)
+				{
+					if (worldPos.x > dest.x) 
+					{
+						spillVelocity = worldPos.x - dest.x;
+						worldPos.x = dest.x;
+					}
+				}
+				else if(vect.x < 0)
+				{
+					if (worldPos.x < dest.x) 
+					{
+						spillVelocity = dest.x - worldPos.x;
+						worldPos.x = dest.x; 
+					}
+				}
+				
+				if(vect.y > 0)
+				{
+					if (worldPos.y > dest.y) 
+					{
+						spillVelocity = worldPos.y - dest.y;
+						worldPos.y = dest.y;
+					}
+				}
+				else if(vect.y < 0)
+				{
+					if (worldPos.y < dest.y) 
+					{
+						spillVelocity = dest.y - worldPos.y;
+						worldPos.y = dest.y; 
+					}
+				}
 			}
 			else
-			{	
-				//run next piece of the path
-				step();
-			}
+			{
+				spillVelocity = velocity;
+				
 
+				if(worldPos.equals(dest))
+				{	
+					//run next piece of the path
+					step();
+				}				
+			}
+			
+			
+			velocity = spillVelocity;
 		}
 	}	
 	
@@ -785,9 +831,9 @@ public class Party
 		
 		List<Point> addedObjs = new ArrayList<Point>();
 		
-		for(GameObject b : Global.map.Objects())
+		for(GameObject b : Global.map.Objects(pathArea.left, pathArea.top, pathArea.right+1, pathArea.bottom+1))
 		{
-			if(b.hasCollision() && pathArea.contains(b.getGridPos().x, b.getGridPos().y))		
+			if(b.hasCollision())		
 			{	
 				boolean[] collSides = b.getCollision();
 				obs.add(new AStarObstacle(b.getTarget(), collSides[0], collSides[1], collSides[2], collSides[3]));
@@ -800,15 +846,13 @@ public class Party
 				}
 			}
 		}
-		for(Tile t : Global.map.LevelTiles())
+		for(Tile t : Global.map.LevelTiles(pathArea.left, pathArea.top, pathArea.right+1, pathArea.bottom+1))
 		{
-			if(pathArea.contains(t.WorldPos().x, t.WorldPos().y))
-			{
-				boolean[] collSides = t.getCollision();
+			boolean[] collSides = t.getCollision();
 
-				if(!addedObjs.contains(t.WorldPos()))
-					obs.add(new AStarObstacle(t.WorldPos(), collSides[0], collSides[1], collSides[2], collSides[3]));
-			}			
+			//if(!addedObjs.contains(t.WorldPos()))
+			//shoot 'em all and let god sort 'em out
+				obs.add(new AStarObstacle(t.WorldPos(), collSides[0], collSides[1], collSides[2], collSides[3]));			
 		}
 	}
 	

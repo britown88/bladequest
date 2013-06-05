@@ -21,6 +21,7 @@ implements SurfaceHolder.Callback
 {
 	private BqRenderThread renderThread;
 	public BqThread updateThread;
+	private PlateLoadThread plateLoader;
 	private static final String TAG = BqPanel.class.getSimpleName();
 	private Paint blackpaint, logText;
 	
@@ -36,6 +37,8 @@ implements SurfaceHolder.Callback
 		getHolder().addCallback(this);	
 		renderThread = new BqRenderThread(getHolder());	
 		updateThread = new BqThread(this);
+		plateLoader = new PlateLoadThread();
+		plateLoader.start();
 		setFocusable(true);	
 		blackpaint = new Paint();
 		blackpaint.setColor(Color.BLACK);
@@ -258,7 +261,9 @@ implements SurfaceHolder.Callback
     	
     	//load plates
     	if(loadList.size() >0)
-    		(new PlateLoadThread(loadList)).start();
+    	{
+    		plateLoader.addPlates(loadList);
+    	}
     	
     	//draw msgbox
     	if(Global.worldMsgBox != null)

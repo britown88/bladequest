@@ -9,6 +9,11 @@ public class AStarNode {
 	public int heuristic;
 	public int cost;
 	public AStarNode parent;
+	public boolean closed;
+	
+	
+	//if the first node, prev->child == this.
+	public AStarNode next, prev, child;
 	
 	public AStarNode(Point point, int cost, int heuristic, int score, AStarNode parent)
 	{
@@ -17,5 +22,10 @@ public class AStarNode {
 		this.heuristic = heuristic;
 		this.score = score;
 		this.parent = parent;
+		this.closed = false;
+	}
+	boolean opened(AStarHeap heap)
+	{
+		return next != null || prev != null || child != null || heap.peek() == this;
 	}
 }

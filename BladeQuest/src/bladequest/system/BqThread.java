@@ -37,9 +37,8 @@ public class BqThread extends Thread
 	    	Global.update();	
 	    	gamePanel.draw();
 	    	
-	    	Global.lock.lock();
-	    	Global.renderer.swap();	    	
-	    	Global.lock.unlock();
+	    	Global.renderer.swap();	//locked internally now.    	
+
 
 			frameTime = System.currentTimeMillis() - startTime;
 			sleepTime = (int)(Global.FRAME_PERIOD - frameTime);					
