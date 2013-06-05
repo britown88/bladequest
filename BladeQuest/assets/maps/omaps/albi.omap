@@ -2,13 +2,22 @@
 
 
 
+
+
+
+
+
+
 #!OBJ 4 14
 \objName$4x14$ <- "name"
 \name$4x14$ <- newObject objName$4x14$ 4 14
 
 state1$4x14$ 0
 name$4x14$ > createState >
-setSpriteFromTile 6 4
+setSpriteFromTile 6 4 >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$4x14$ 9 23 "albiinside") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
 
 \runstate1$4x14$ <- state1$4x14$ 0
 #!OBJ 23 23
@@ -59,7 +68,7 @@ name$1x8$ > createState >
 addSwitchCondition "hidekidtalked" >
 setSprite "child1" >
 setCollisionData true true true true >
-addAction (message "Kid \nNow it's your turn to hide!")
+addAction (message "Henry: \nNow it's your turn to hide!")
 
 
 \runstate2$1x8$ <- state2$1x8$ 0
@@ -72,7 +81,7 @@ name$19x11$ > createState >
 setSprite "child2" >
 setCollisionData true true true true >
 setDefaultPath "R3D2L3U2" >
-addAction (message "Girl: \nWhere's Henry? He's always hiding.")
+addAction (message "Alice: \nWhere's Henry? He's always hiding.")
 
 
 
@@ -87,7 +96,7 @@ setCollisionData true true true true >
 setSprite "woman1" >
 setDefaultPath "R3L3" >
 setMoveOptions 1 1000 >
-addAction (message "Woman: \nOh, hello |party1|!") >
+addAction (message "Agnes: \nOh, hello |party1|!") >
 addAction (message "I think I might pick a few of these for dinner tonight.") >
 addAction (message "But only if your mother promises to cook!")
 
@@ -103,7 +112,7 @@ setCollisionData true true true true >
 setSprite "man3" > 
 setMovement 3 100 >
 setMoveOptions 1 0 >
-addAction (message "Man: \nAhoy there, |party1|!") >
+addAction (message "Arthur: \nAhoy there, |party1|!") >
 addAction (message "You going to be around later?") >
 addAction (message "Need some help moving furniture.") >
 addAction (message "|party1|: \nSure thing!")
@@ -119,7 +128,7 @@ setCollisionData true true true true >
 setSprite "woman1" >
 setFace "right" >
 setOptions true false false > 
-addAction (message "Woman: \nThe summers are so pretty here!")
+addAction (message "Amy: \nThe summers are so pretty here!")
 
 \runstate1$34x6$ <- state1$34x6$ 0
 #!OBJ 12 7
@@ -131,9 +140,7 @@ name$12x7$ > createState >
 setCollisionData true true true true >
 setSprite "child1" >
 setFace "right" >
-addAction (message "Hi |luc|!") >
-addAction (message "We're trying to find Henry.") >
-addAction (message "He said if we found him, he'd tell us a secret!") >
+addAction (message "Timmy: \nWe're planning our search party!") >
 addAction (createPath "kidlooking1" false "r")
 
 \runstate1$12x7$ <- state1$12x7$ 0
@@ -146,7 +153,13 @@ name$13x7$ > createState >
 setCollisionData true true true true >
 setSprite "child1" >
 setFace "left" >
-addAction (message "We're planning our search party!") >
+setOptions true true false >
+addAction (message "Tommy: \nOk we've looked here and here.") >
+addAction (message "Timmy: \nWhat about behind the Inn?") >
+addAction (createPath "kidlooking2" true "dW") >
+addAction (openBubble "exclam" "kidlooking2" 1.0 false true) >
+addAction (message "Tommy: \nOh, hi |luc|!") >
+addAction (message "We're looking for Henry, he said if we find him he'll tell us a secret!") >
 addAction (createPath "kidlooking2" false "l")
 
 
@@ -159,7 +172,7 @@ state1$25x8$ 0
 name$25x8$ > createState >
 setSprite "man1" >
 setCollisionData true true true true >
-addAction (messageWithYesNo "Are you excited about the circus?!" >
+addAction (messageWithYesNo "Bruno: \nAre you excited about the circus?!" >
 addToBranch 0 (message "Of course you are, how could you not!?") >
 addToBranch 0 (message "They're set up over near the mountain pass!") >
 addToBranch 0 (message "I heard they have real live bears!!!") >
@@ -169,3 +182,101 @@ addToBranch 1 (message "You're no fun!"))
 
 \runstate1$25x8$ <- state1$25x8$ 0
 
+#!OBJ 7 9
+\objName$7x9$ <- "name"
+\name$7x9$ <- newObject objName$7x9$ 7 9
+
+state1$7x9$ 0
+name$7x9$ > createState >
+setSpriteFromTile 6 4 >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$7x9$ 6 8 "albiinside") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$7x9$ <- state1$7x9$ 0
+
+#!OBJ 11 6
+\objName$11x6$ <- "name"
+\name$11x6$ <- newObject objName$11x6$ 11 6
+
+state1$11x6$ 0
+name$11x6$ > createState >
+setSpriteFromTile 6 4 >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$11x6$ 22 8 "albiinside") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$11x6$ <- state1$11x6$ 0
+
+#!OBJ 15 6
+\objName$15x6$ <- "name"
+\name$15x6$ <- newObject objName$15x6$ 15 6
+
+state1$15x6$ 0
+name$15x6$ > createState >
+setSpriteFromTile 6 4 >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$15x6$ 28 8 "albiinside") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$15x6$ <- state1$15x6$ 0
+#!OBJ 13 16
+\objName$13x16$ <- "name"
+\name$13x16$ <- newObject objName$13x16$ 13 16
+
+state1$13x16$ 0
+name$13x16$ > createState >
+setSpriteFromTile 6 4 >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$13x16$ 31 23 "albiinside") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$13x16$ <- state1$13x16$ 0
+#!OBJ 17 21
+\objName$17x21$ <- "name"
+\name$17x21$ <- newObject objName$17x21$ 17 21
+
+state1$17x21$ 0
+name$17x21$ > createState >
+setSpriteFromTile 6 4 >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$17x21$ 8 38 "albiinside") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$17x21$ <- state1$17x21$ 0
+#!OBJ 32 14
+\objName$32x14$ <- "name"
+\name$32x14$ <- newObject objName$32x14$ 32 14
+
+state1$32x14$ 0
+name$32x14$ > createState >
+setSpriteFromTile 6 4 >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$32x14$ 22 38 "albiinside") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$32x14$ <- state1$32x14$ 0
+#!OBJ 28 6
+\objName$28x6$ <- "name"
+\name$28x6$ <- newObject objName$28x6$ 28 6
+
+state1$28x6$ 0
+name$28x6$ > createState >
+setSpriteFromTile 6 4 >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$28x6$ 43 26 "albiinside") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$28x6$ <- state1$28x6$ 0
+#!OBJ 22 3
+\objName$22x3$ <- "name"
+\name$22x3$ <- newObject objName$22x3$ 22 3
+
+state1$22x3$ 0
+name$22x3$ > createState >
+setSpriteFromTile 6 4 >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$22x3$ 43 8 "albiinside") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$22x3$ <- state1$22x3$ 0

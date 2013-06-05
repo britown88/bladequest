@@ -227,7 +227,7 @@ public class ObjectState {
 		}
 			
 	}
-	private boolean facing;
+
 	
 	private void HandleObjectPath()
 	{		
@@ -259,19 +259,23 @@ public class ObjectState {
 				break;
 			case FaceLeft:
 				parent.Face("left");
-				facing = true;
+				moveWait = defaultMoveWait;
+				objPathWaiting = true;
 				break;
 			case FaceUp:
 				parent.Face("up");
-				facing = true;
+				moveWait = defaultMoveWait;
+				objPathWaiting = true;
 				break;
 			case FaceRight:
 				parent.Face("right");
-				facing = true;
+				moveWait = defaultMoveWait;
+				objPathWaiting = true;
 				break;
 			case FaceDown:
 				parent.Face("down");
-				facing = true;
+				moveWait = defaultMoveWait;
+				objPathWaiting = true;
 				break;
 			case IncreaseMoveSpeed:
 				if(moveSpeed < 6)
@@ -307,7 +311,7 @@ public class ObjectState {
 				break;	
 			case Wait:
 				objPathWaitStart = System.currentTimeMillis();
-				moveWait = 1000;
+				moveWait = 100;
 				objPathWaiting = true;
 				break;
 			}
@@ -372,14 +376,6 @@ public class ObjectState {
 				HandleObjectPath();
 			}			
 		}
-		
-		if(facing)
-		{
-			objPath.advanceActions();
-			HandleObjectPath();
-			facing = false;
-		}
-		
 
 		if(objPath == null && !isRunning && moveRange > 0 && parent.isGridAligned() && Global.GameState == States.GS_WORLDMOVEMENT)
 		{

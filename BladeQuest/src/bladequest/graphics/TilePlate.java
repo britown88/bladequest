@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.Rect;
 import bladequest.world.GameObject;
 import bladequest.world.Global;
 
@@ -38,7 +39,11 @@ public class TilePlate
 		unloadAfterLoadFlag = false;
 		//this.foreground = foreground;
 	}
-	
+	//in vp grid tiles
+	public Rect getRect()
+	{
+		return new Rect(platePos.x*10, platePos.y*10, platePos.x*10 + 10, platePos.y*10 * 10);
+	}
 	
 	public boolean tryLoad()
 	{

@@ -253,8 +253,11 @@ public class Global
 	}
 	
 	
-	//needs at least 5x4x2... e.g. 40.  42 for good measure.
-	public static int tilePlateBitmapCount = 42;
+	//needs at least 5x4x2... e.g. 40.  
+	//to be safe for multithreaded loading, do 6x5, 30 * 2 = 60.
+	//60*320*320*4  == 24MB.  evil, but not *too* evil, this is probably the main RAM sink in BQ
+	//
+	public static int tilePlateBitmapCount = 60;
 	
 	public static actExpectInput inputExpecter;
 	

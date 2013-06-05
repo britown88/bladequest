@@ -113,7 +113,6 @@ namespace BladeCraft.Forms
          if (tsbForeground.Checked)
          {
             btnDraw.Checked = true;
-            btnFill.Checked = false;
          }         
          tsbBackground.Checked = !tsbForeground.Checked;
          mapPanel.Invalidate();
@@ -407,7 +406,7 @@ namespace BladeCraft.Forms
          gridPoint.X = (int)(e.X / (tileSize * mapScale));
          gridPoint.Y = (int)(e.Y / (tileSize * mapScale));
 
-         if (!tsbObjectLayer.Checked)
+         if (!tsbObjectLayer.Checked && Form.ModifierKeys != Keys.Control)
          {
             if (e.Button == System.Windows.Forms.MouseButtons.Left && btnDraw.Checked)
             {
@@ -437,7 +436,7 @@ namespace BladeCraft.Forms
          gridPoint.X = (int)(e.X / (tileSize * mapScale));
          gridPoint.Y = (int)(e.Y / (tileSize * mapScale));
 
-         if (!tsbObjectLayer.Checked)
+         if (!tsbObjectLayer.Checked && Form.ModifierKeys != Keys.Control)
          {
             if (e.Button == System.Windows.Forms.MouseButtons.Left && btnDraw.Checked)
             {
@@ -475,7 +474,8 @@ namespace BladeCraft.Forms
             if (e.Button == System.Windows.Forms.MouseButtons.Left)
             {
                mouseDown = false;
-               if (btnFill.Checked)
+
+               if (Form.ModifierKeys == Keys.Control)
                {
                   map.fill(gridPoint.X, gridPoint.Y, selectedTile, tsbFrameTwo.Checked, tsbForeground.Checked);
                   mapPanel.Invalidate();
@@ -576,7 +576,7 @@ namespace BladeCraft.Forms
                   else
                   {
                      erase = false;
-                     selectedTile = copyTile;
+                     selectedTile = new Tile(copyTile);
                   }
                }
                else
@@ -665,30 +665,12 @@ namespace BladeCraft.Forms
          
 
       }
-
-      private void btnFill_CheckedChanged(object sender, EventArgs e)
-      {
-         if (tsbForeground.Checked && btnFill.Checked)
-         {
-            btnDraw.Checked = true;
-            btnFill.Checked = false;
-         }
-         else
-         {
-            btnDraw.Checked = !btnFill.Checked;
-         }
-         
-      }
-
       private void btnDraw_CheckedChanged(object sender, EventArgs e)
       {
          if (tsbForeground.Checked)
          {
             btnDraw.Checked = true;
-            btnFill.Checked = false;
          }
-         else
-            btnFill.Checked = !btnDraw.Checked;
       }
 
       private void newObjectToolStripMenuItem_Click(object sender, EventArgs e)

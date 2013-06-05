@@ -201,7 +201,7 @@ public class GameObject {
 	
 	
 	public boolean setTarget(String face, boolean ignoreParty)
-	{
+	{		
 		if(!faceLocked)
 			states.get(currentState).face(face);
 		
@@ -216,24 +216,28 @@ public class GameObject {
 
 		boolean collision = false;
 		
-		//check for object collision
-		for(GameObject gb : Global.map.Objects(target.x, target.y, target.x+1, target.y+1))
+
+
+
+		if(Global.map.isLoaded())
 		{
-			if(gb.getGridPos().equals(target) && gb.getTarget().equals(target))
-				collision = true;
+			//check for object collision
+			for(GameObject gb : Global.map.Objects(target.x, target.y, target.x+1, target.y+1))
+			{
+				if(gb.getGridPos().equals(target) && gb.getTarget().equals(target))
+					collision = true;
+			}
+
+			//check for tile collision
+			Tile orig =  Global.map.levelTile(gridPos.x, gridPos.y); 
+		    Tile dest = Global.map.levelTile(target.x, target.y);
+			if(dest != null)
+				if(orig != null)collision = dest.isBlocked(orig);
+				else collision = !dest.allowEntryFrom(gridPos);		
+			else
+				if(orig != null)collision = !orig.allowEntryFrom(target);	
+				else collision = false;
 		}
-		
-		//check for tile collision
-		Tile orig =  Global.map.levelTile(gridPos.x, gridPos.y); 
-	    Tile dest = Global.map.levelTile(target.x, target.y);
-		
-		if(dest != null)
-			if(orig != null)collision = dest.isBlocked(orig);
-			else collision = !dest.allowEntryFrom(gridPos);		
-		else
-			if(orig != null)collision = !orig.allowEntryFrom(target);	
-			else collision = false;
-		
 		if(!ignoreParty)
 		{
 			//check for party collision
@@ -271,7 +275,9 @@ public class GameObject {
 			target = gridPos;			
 		}
 		else
+		{
 			blockedTarget = null;
+		}
 		
 		return !collision;
 			

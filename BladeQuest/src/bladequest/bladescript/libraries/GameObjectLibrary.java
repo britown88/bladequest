@@ -13,6 +13,7 @@ import bladequest.actions.actFadeControl;
 import bladequest.actions.actFlash;
 import bladequest.actions.actFloat;
 import bladequest.actions.actGameOver;
+import bladequest.actions.actGoldTransaction;
 import bladequest.actions.actMerchant;
 import bladequest.actions.actMessage;
 import bladequest.actions.actModifyGold;
@@ -149,7 +150,6 @@ public class GameObjectLibrary
 		return state;
 	}
 	
-	
 	public static Action addToBranch(Action action, int index, Action actToAdd)
 	{
 		action.addToBranch(index, actToAdd);
@@ -159,6 +159,10 @@ public class GameObjectLibrary
 	{
 		action.setBranchLoop(index, loop);
 		return action;
+	}
+	public static Action startGoldTransaction(int gold)
+	{
+		return new actGoldTransaction(gold);
 	}
 	public static Action fadeControl(float fadeTime, int a, int r, int g, int b, boolean fadeOut, boolean wait)
 	{		
