@@ -195,10 +195,7 @@ public class GameObject {
 	
 	
 	public boolean setTarget(String face, boolean ignoreParty)
-	{
-		if(!Global.map.isLoaded())
-			return true;
-		
+	{		
 		if(!faceLocked)
 			states.get(currentState).face(face);
 		
@@ -221,21 +218,25 @@ public class GameObject {
 		}
 		
 		//check for tile collision
-		Tile orig= null, dest = null;
-		for(Tile t : Global.map.LevelTiles())
+		if(Global.map.isLoaded())
 		{
-			if(t.WorldPos().equals(target))
-				dest = t;
-			if(t.WorldPos().equals(gridPos))
-				orig = t;
+			Tile orig= null, dest = null;
+			for(Tile t : Global.map.LevelTiles())
+			{
+				if(t.WorldPos().equals(target))
+					dest = t;
+				if(t.WorldPos().equals(gridPos))
+					orig = t;
+			}
+			
+			if(dest != null)
+				if(orig != null)collision = dest.isBlocked(orig);
+				else collision = !dest.allowEntryFrom(gridPos);		
+			else
+				if(orig != null)collision = !orig.allowEntryFrom(target);	
+				else collision = false;		
+			
 		}
-		
-		if(dest != null)
-			if(orig != null)collision = dest.isBlocked(orig);
-			else collision = !dest.allowEntryFrom(gridPos);		
-		else
-			if(orig != null)collision = !orig.allowEntryFrom(target);	
-			else collision = false;
 		
 		if(!ignoreParty)
 		{

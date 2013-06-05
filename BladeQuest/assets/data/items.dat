@@ -16,20 +16,6 @@ swingSlash 0 128 128 128 >
 swingSlash 1 186 186 186 >
 swingSlash 2 255 255 255)
 
-\quickknife <- (addItem "qknife" "Quick Knife" "Weapon" "dagger" "A small and simple dagger." >
-setPower 7 >
-setValue 10 >
-setUsableBy "aramis" >
-swing "dagger" "slice1" >
-swingBase 0 186 186 186 >
-swingBase 1 255 255 255 >
-swingBase 2 138 68 0 >
-swingSlash 0 128 128 128 >
-swingSlash 1 186 186 186 >
-swingSlash 2 255 255 255 >
-modStat "Agility" 200)
-
-
 \woodensword <- (addItem "woodensword" "Wooden Sword" "Weapon" "sword" "A practice sword." >
 setPower 6 >
 setValue 25 >
@@ -83,46 +69,6 @@ swingSlash 0 128 0 0 >
 swingSlash 1 186 0 0 >
 swingSlash 2 255 0 0)
 
-\windstaff <- (addItem "windstaff" "Wind Staff" "Weapon" "staff" "Staff endowed with the wind element." >
-setPower 5 >
-setValue 500 >
-usableByMagicPeople >
-addDamageComp "Wind" 1.0 >
-swing "staff" "slice1" >
-swingBase 0 0 186 186 >
-swingBase 1 0 255 255 >
-swingBase 2 0 0 186 >
-swingBase 3 0 0 255 >
-swingSlash 0 0 128 128 >
-swingSlash 1 0 186 186 >
-swingSlash 2 0 255 255 >
-swingSlash 3 0 0 128 >
-swingSlash 4 0 0 186 >
-swingSlash 5 0 0 255)
-
-\earthsword <- (addItem "earthsword" "Earth sword" "Weapon" "sword" "sword endowed with the earth element." >
-setPower 10 >
-setValue 123 >
-usableByAll >
-addDamageComp "Earth" 1.0 >
-swing "sword" "slice1" >
-swingBase 0 186 186 136 >
-swingBase 1 255 255 205 >
-swingSlash 0 128 128 78 >
-swingSlash 1 186 186 136 >
-swingSlash 2 255 255 205)
-
-\icesword <- (addItem "icesword" "Ice sword" "Weapon" "sword" "sword endowed with the ice element." >
-setPower 10 >
-setValue 123 >
-usableByAll >
-addDamageComp "Water" 1.0 >
-swing "sword" "slice1" >
-swingBase 0 0 0 186 >
-swingBase 1 0 0 255 >
-swingSlash 0 0 0 128 >
-swingSlash 1 0 0 186 >
-swingSlash 2 0 0 255)
 
 \felthat <- (addItem "felthat" "Felt Hat" "Helmet" "lhelmet" "Most basic of headwear." >
 setPower 3 >
