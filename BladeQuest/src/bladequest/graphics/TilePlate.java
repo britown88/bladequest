@@ -137,7 +137,7 @@ public class TilePlate
 		if(loaded)
 		{
 			Global.freeTileBitmap(bmp);
-			if(animated)
+			if(animated && animBmp != null)
 			{
 				Global.freeTileBitmap(animBmp);
 			}

@@ -344,7 +344,7 @@ public class GameObject {
 			{
 				Point prevPos = gridPos;
 				gridPos = target;
-				if (Global.map != null)
+				if (Global.map != null && Global.map.isLoaded())
 				{
 					Global.map.moveObject(this, prevPos);
 				}
