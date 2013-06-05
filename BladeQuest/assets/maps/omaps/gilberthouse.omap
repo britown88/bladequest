@@ -1,0 +1,98 @@
+#!HEAD
+
+#!OBJ 13 19
+\objName$13x19$ <- "name"
+\name$13x19$ <- newObject objName$13x19$ 13 19
+
+state1$13x19$ 0
+name$13x19$ > createState >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$13x19$ 35 28 "albi") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$13x19$ <- state1$13x19$ 0
+#!OBJ 18 5
+\objName$18x5$ <- "name"
+\name$18x5$ <- newObject objName$18x5$ 18 5
+
+state1$18x5$ 0
+name$18x5$ > createState >
+setSpriteFromTile 0 23
+
+
+\runstate1$18x5$ <- state1$18x5$ 0
+#!OBJ 16 4
+\objName$16x4$ <- "name"
+\name$16x4$ <- newObject objName$16x4$ 16 4
+
+state1$16x4$ 0
+name$16x4$ > createState >
+setSpriteFromTile 6 22
+
+\runstate1$16x4$ <- state1$16x4$ 0
+#!OBJ 13 11
+\objName$13x11$ <- "name"
+\name$13x11$ <- newObject objName$13x11$ 13 11
+
+state1$13x11$ 0
+name$13x11$ > createState >
+setSpriteFromTile 7 23
+
+
+
+\runstate1$13x11$ <- state1$13x11$ 0
+#!OBJ 12 11
+\objName$12x11$ <- "name"
+\name$12x11$ <- newObject objName$12x11$ 12 11
+
+state1$12x11$ 0
+name$12x11$ > createState >
+setSpriteFromTile 7 23
+
+
+
+\runstate1$12x11$ <- state1$12x11$ 0
+#!OBJ 11 11
+\objName$11x11$ <- "name"
+\name$11x11$ <- newObject objName$11x11$ 11 11
+
+state1$11x11$ 0
+name$11x11$ > createState >
+setSpriteFromTile 7 23
+
+
+
+\runstate1$11x11$ <- state1$11x11$ 0
+#!OBJ 10 11
+\objName$10x11$ <- "name"
+\name$10x11$ <- newObject objName$10x11$ 10 11
+
+state1$10x11$ 0
+name$10x11$ > createState >
+setSpriteFromTile 7 23
+
+
+
+\runstate1$10x11$ <- state1$10x11$ 0
+#!OBJ 9 11
+\objName$9x11$ <- "name"
+\name$9x11$ <- newObject objName$9x11$ 9 11
+
+state1$9x11$ 0
+name$9x11$ > createState >
+setSpriteFromTile 7 23
+
+
+
+\runstate1$9x11$ <- state1$9x11$ 0
+#!OBJ 8 11
+\objName$8x11$ <- "name"
+\name$8x11$ <- newObject objName$8x11$ 8 11
+
+state1$8x11$ 0
+name$8x11$ > createState >
+setSpriteFromTile 7 23
+
+
+
+\runstate1$8x11$ <- state1$8x11$ 0
