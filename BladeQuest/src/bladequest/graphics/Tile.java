@@ -14,13 +14,16 @@ public class Tile
 	private boolean animated;
 	private Rect animSrc; 
 	
-	public Tile(int x, int y, int bmpX, int bmpY, Layer layer)
+	int layerNumber;
+	
+	public Tile(int x, int y, int bmpX, int bmpY, Layer layer, int layerNumber)
 	{
 		this.worldPos = new Point(x, y);
 		this.src = new Rect(bmpX*16, bmpY*16, bmpX*16+16, bmpY*16+16);
 		this.layer = layer;
 		collSides = new boolean[4];
 		animated = false;
+		this.layerNumber = layerNumber; 
 	}
 	
 	public boolean animated() { return animated; }

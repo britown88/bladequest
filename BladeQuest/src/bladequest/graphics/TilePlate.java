@@ -15,9 +15,11 @@ import bladequest.world.Global;
 
 public class TilePlate 
 {
+	final int layerCount = 4;
+	
 	private Lock lock;
 	private boolean loaded,loading, empty, unloadAfterLoadFlag/*, foreground*/;
-	private List<Tile> tiles;
+	private List<List<Tile>> tiles;
 	private List<GameObject> objects;
 	private Bitmap tileset;
 	private Point platePos;
@@ -30,7 +32,11 @@ public class TilePlate
 	public TilePlate(Bitmap tileset, int x, int y, boolean foreground)
 	{
 	    lock = new ReentrantLock();
-		tiles = new ArrayList<Tile>();
+		tiles = new ArrayList<List<Tile>>();
+		for (int i = 0; i < layerCount; ++i)
+		{
+			tiles.add(new ArrayList<Tile>());
+		}
 		objects = new ArrayList<GameObject>();
 		this.tileset = tileset;
 		loaded = false;
@@ -72,7 +78,9 @@ public class TilePlate
 	
 	public void addTile(Tile t)
 	{
-		tiles.add(t);	
+		int layer = t.layerNumber;
+		if (layer >= layerCount) layer -= layerCount;
+		tiles.get(layer).add(t);	
 		if(t.animated())
 			animated = true;
 	}
@@ -91,10 +99,13 @@ public class TilePlate
 		empty = tiles.size() == 0;
 		Canvas canvas = new Canvas(bmp.bmp);
 		
-		for(Tile t : tiles)
+		for (int i = 0; i < layerCount; ++i)
 		{
-			if(unloadAfterLoadFlag) break;
-			t.render(canvas, tileset, false);
+			for(Tile t : tiles.get(i))
+			{
+				if(unloadAfterLoadFlag) break;
+				t.render(canvas, tileset, false);
+			}	
 		}
 		
 		if(animated && !unloadAfterLoadFlag)
@@ -123,11 +134,15 @@ public class TilePlate
 		if(!empty)
 		{
 			Canvas canvas = new Canvas(animBmp.bmp);		
-			for(Tile t : tiles)
+			
+			for (int i = 0; i < layerCount; ++i)
 			{
-				if(unloadAfterLoadFlag) return;
-				t.render(canvas, tileset, true);
-			}
+				for(Tile t : tiles.get(i))
+				{
+					if(unloadAfterLoadFlag) return;
+					t.render(canvas, tileset, true);
+				}	
+			}			
 		}		
 	}
 	

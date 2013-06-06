@@ -144,7 +144,7 @@ public class ObjectState {
 		if(spr.contains("tile"))
 		{
 			DataLine line = new DataLine(spr);
-			tileSprite = new Tile(0,0,Integer.parseInt(line.values.get(0)), Integer.parseInt(line.values.get(1)), Layer.Level);
+			tileSprite = new Tile(0,0,Integer.parseInt(line.values.get(0)), Integer.parseInt(line.values.get(1)), Layer.Level, 0);
 			animated = false;
 		}
 		else

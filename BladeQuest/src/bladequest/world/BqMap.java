@@ -538,7 +538,7 @@ public class BqMap
 		int y = Integer.parseInt(dl.values.get(1));
 		int bmpX = Integer.parseInt(dl.values.get(2));
 		int bmpY = Integer.parseInt(dl.values.get(3));
-		Layer layer = dl.values.get(4).equals("a") ? Layer.Above : Layer.Under;
+		int layer = Integer.parseInt(dl.values.get(4));
 		boolean collLeft = dl.values.get(5).equals("1");
 		boolean collTop = dl.values.get(6).equals("1");
 		boolean collRight = dl.values.get(7).equals("1");
@@ -546,7 +546,7 @@ public class BqMap
 		
 				
 		
-		Tile t = new Tile(x, y, bmpX, bmpY, layer);
+		Tile t = new Tile(x, y, bmpX, bmpY, layer > 4 ? Layer.Above : Layer.Under, layer%4);
 		t.setCollision(collLeft, collTop, collRight, collBottom);
 		
 		if(dl.values.get(9) != null && dl.values.get(9).equals("t"))
