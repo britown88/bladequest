@@ -43,7 +43,12 @@ public class Tile
 		collSides[3] = bottom;		
 	}
 	public boolean[] getCollision(){return collSides;}
-	public boolean hasCollision() { return collSides[0] || collSides[1] || collSides[2] || collSides[3]; }
+	public boolean hasCollision() 
+	{
+		if (layerNumber != 0) return false;
+		if (layer != Layer.Under) return false;
+		return collSides[0] || collSides[1] || collSides[2] || collSides[3]; 
+	}
 	
 	public void render(Canvas canvas, Bitmap bitmap, boolean animated)
 	{		

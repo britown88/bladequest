@@ -158,6 +158,7 @@ public class Battle
 						stateMachine.setState(getCharStatusState());
 						return;
 					}
+				selectFirstChar();
 				if (!getCharacterBattleAction()) nextChar = true;
 			}
 		};
@@ -177,6 +178,7 @@ public class Battle
 						return;
 					}
 				
+				selectFirstChar();
 				if (!getCharacterBattleAction()) nextChar = true;
 			}
 			
@@ -605,7 +607,6 @@ public class Battle
 				}
 				else
 				{
-					clearBattleOnlyEffects();
 					resetEscapeState();
 					
 					for (Enemy e : this.encounter.Enemies())
@@ -902,7 +903,7 @@ public class Battle
 		messageQueue.clear();
 		//play victory music
 		BladeSong.instance().play("victory", true, true, 0);
-		
+		clearBattleOnlyEffects();
 		//get characters still in the battle 
 		List<PlayerCharacter> aliveChars = new ArrayList<PlayerCharacter>();
 		for(PlayerCharacter c : partyList)
@@ -1001,7 +1002,7 @@ public class Battle
 		Global.screenFader.setFadeColor(255, 0, 0, 0);
 		Global.screenFader.fadeOut(2.0f);
 		BladeSong.instance().fadeOut(2.0f);
-
+		clearBattleOnlyEffects();
 	}
 	
 	//act state functions
@@ -1499,6 +1500,7 @@ public class Battle
 	private void selectFirstChar()
 	{
 		currentChar = null;
+		currentCharIndex = partyList.size();
 		
 		//determine first nondead character
 		for(int i = 0; i < partyList.size(); ++i)
@@ -1624,6 +1626,7 @@ public class Battle
 	}
 	private boolean getCharacterBattleAction()
 	{
+		if (currentChar == null) return false;
 		boolean turnOver = processActionSelector(currentChar);
 		if (!turnOver)
 		{

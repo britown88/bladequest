@@ -16,7 +16,6 @@ import bladequest.pathfinding.AStarObstacle;
 import bladequest.pathfinding.AStarPath;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.world.Item.Type;
-import bladequest.world.Item.UseTypes;
 
 public class Party 
 {

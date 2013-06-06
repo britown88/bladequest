@@ -60,9 +60,11 @@ public class sePoisonWeapon extends StatusEffect
 				@Override
 				protected void buildEvents(BattleEventBuilder builder) {
 					//roololololololol
-					if (Global.rand.nextInt(100) < 50 && BattleAction.getTarget(builder).isInBattle()) //half-chance of poison, hardcode for now
+					PlayerCharacter target = BattleAction.getTarget(builder);
+					if (Global.rand.nextInt(100) < 50 && target.isInBattle() && !target.hasStatus("poison")) //half-chance of poison, hardcode for now
 					{
-						builder.addEventObject(new bactInflictStatus(new sePoison(10.0f)));
+						builder.addEventObject(new bactWait(200));
+						builder.addEventObject(new bactInflictStatus(new sePoison(10.0f)).addDependency(builder.getLast()));
 					}
 				}
 			});

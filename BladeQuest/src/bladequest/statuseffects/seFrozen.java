@@ -8,12 +8,18 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import bladequest.battleactions.DamageBuilder;
 import bladequest.battleactions.bactDamage;
+import bladequest.battleactions.bactRunAnimation;
 import bladequest.battleactions.bactWait;
 import bladequest.combat.Battle;
 import bladequest.combat.BattleCalc;
 import bladequest.combat.BattleEventBuilder;
 import bladequest.combat.DamageComponent;
 import bladequest.combat.triggers.Trigger;
+import bladequest.graphics.BattleAnim;
+import bladequest.graphics.BattleAnimObjState;
+import bladequest.graphics.BattleAnimObjState.PosTypes;
+import bladequest.graphics.BattleAnimObject;
+import bladequest.graphics.BattleAnimObject.Types;
 import bladequest.graphics.BattleSprite.faces;
 import bladequest.system.Recyclable;
 import bladequest.world.DamageTypes;
@@ -26,6 +32,57 @@ public class seFrozen extends StatusEffect
 	int duration;
 	List<Recyclable> disposeTriggers;
 	PlayerCharacter affected;
+	
+	BattleAnim getSnowImplosion(PlayerCharacter target)
+	{
+		BattleAnim anim = new BattleAnim(1000.0f);
+		
+		Bitmap icePoof = Global.bitmaps.get("particles");
+		Rect poofRect = new Rect(1,13,13,24);
+		
+		final int poofs = 50;
+		final float minVel = 4.0f;
+		final float maxVel = 72.0f;
+		final int life = 450;
+		
+		for (int i = 0; i < poofs; ++i)
+		{
+			//add a poof at this point that's fairly long-lived.
+			BattleAnimObject poofAnim = new BattleAnimObject(Types.Bitmap, false, icePoof);
+			
+			float initialOffsetX = Global.rand.nextFloat() * 32.0f -  16.0f;
+			float initialOffsetY = Global.rand.nextFloat() * 32.0f -  16.0f;
+			
+			float angle = (float)(Global.rand.nextFloat() * Math.PI);
+			float velocity = Global.rand.nextFloat() * (maxVel - minVel) + minVel;
+			float x = initialOffsetX + ((float)Math.cos(angle)) * velocity;
+			float y = initialOffsetY + ((float)Math.sin(angle)) * velocity;
+			
+			float rnd = Global.rand.nextFloat() * 360.0f;
+			BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Source);
+			state.size = new Point((int)(poofRect.width()*4.5f), (int)(poofRect.height()*4.5f));
+			state.pos1 = new Point((int)initialOffsetX,(int)initialOffsetY);
+			state.argb(196, 255, 255, 255);
+			state.rotation = rnd;
+			state.setBmpSrcRect(poofRect.left, poofRect.top, poofRect.right, poofRect.bottom);
+			poofAnim.addState(state);
+			
+			state = new BattleAnimObjState(life, PosTypes.Source);
+			state.size = new Point(poofRect.width()*3, poofRect.height()*3);
+			state.pos1 = new Point((int)x,(int)y);
+			state.argb(0, 255, 255, 255);
+			state.rotation = rnd;
+			state.setBmpSrcRect(poofRect.left, poofRect.top, poofRect.right, poofRect.bottom);
+			poofAnim.addState(state);
+			
+			anim.addObject(poofAnim);
+		}
+		
+
+		
+		return anim;
+	}
+	
 	
 	public seFrozen(int duration)
 	{
@@ -115,6 +172,8 @@ public class seFrozen extends StatusEffect
 				{
 					if (component.getAffinity() == Stats.Fire) //FIRE SPELL YAY YAY
 					{
+						Global.playAnimation(getSnowImplosion(builder.getDefender()), builder.getDefender().getPosition(true), builder.getDefender().getPosition(true));
+						builder.setDamage(0);
 						dispels = true;
 						break;
 					}
@@ -126,6 +185,11 @@ public class seFrozen extends StatusEffect
 				}
 			}
 		}.initialize(c));
+		
+		if (!c.isEnemy())
+		{
+			c.setFace(faces.Weak);
+		}
 	}
 	
 	@Override
@@ -137,6 +201,7 @@ public class seFrozen extends StatusEffect
 			Global.battle.setInfoBarText(poorFrozenSap.getDisplayName() + "thawed out!");
 			poorFrozenSap.removeStatusEffect(this);
 			poorFrozenSap.clearDamaged();
+			builder.addEventObject(new bactRunAnimation(getSnowImplosion(poorFrozenSap)));
 			builder.addEventObject(new bactWait(450));
 			return;
 		}

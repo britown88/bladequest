@@ -100,7 +100,7 @@ public class combEmpowerFire extends CombatAction {
 				battleOnly = true;
 				hidden = false; //show name for status switch!
 				
-				duration = 4;
+				duration = 6;
 				statShift = 0;
 			}
 			StatusEffect initialize(int shift)
@@ -159,7 +159,7 @@ public class combEmpowerFire extends CombatAction {
 					builder.addEventObject(new bactChangeVisibility(false).addDependency(builder.getLast()));
 					builder.addEventObject(new bactFlashColorize(255,255,0,0,450,1.0f).addDependency(builder.getLast()));
 					builder.addEventObject(new bactChangeVisibility(true).addDependency(builder.getLast()));
-					builder.addEventObject(new bactInflictStatus(getEmpowerFireStatus(builder.getSource().getLevel()*2)).addDependency(builder.getLast()));
+					builder.addEventObject(new bactInflictStatus(getEmpowerFireStatus(builder.getSource().getLevel()*3)).addDependency(builder.getLast()));
 					builder.addEventObject(new bactRunAnimation(Global.battleAnims.get("fire")).addDependency(builder.getLast()));
 				}
 				protected BattleEventBuilder getAdaptedBuilder(BattleEventBuilder builder)
