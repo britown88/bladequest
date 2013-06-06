@@ -30,7 +30,7 @@
         {
          this.components = new System.ComponentModel.Container();
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapForm));
-         this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+         this.toolstrip = new System.Windows.Forms.ToolStrip();
          this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
          this.tscbTilesetName = new System.Windows.Forms.ToolStripComboBox();
          this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -59,9 +59,7 @@
          this.tsbOptions = new System.Windows.Forms.ToolStripButton();
          this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
          this.tilesetPanel = new System.Windows.Forms.Panel();
-         this.tsPanel = new BladeCraft.Classes.DBPanel();
          this.mapFrame = new System.Windows.Forms.Panel();
-         this.mapPanel = new BladeCraft.Classes.DBPanel();
          this.numMapZoom = new System.Windows.Forms.NumericUpDown();
          this.label1 = new System.Windows.Forms.Label();
          this.rightClickMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -73,10 +71,12 @@
          this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.panel1 = new System.Windows.Forms.Panel();
-         this.matPanel = new BladeCraft.Classes.DBPanel();
          this.btnAddMat = new System.Windows.Forms.Button();
          this.btnRemoveMat = new System.Windows.Forms.Button();
-         this.toolStrip1.SuspendLayout();
+         this.matPanel = new BladeCraft.Classes.DBPanel();
+         this.mapPanel = new BladeCraft.Classes.DBPanel();
+         this.tsPanel = new BladeCraft.Classes.DBPanel();
+         this.toolstrip.SuspendLayout();
          this.tilesetPanel.SuspendLayout();
          this.mapFrame.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.numMapZoom)).BeginInit();
@@ -84,9 +84,9 @@
          this.panel1.SuspendLayout();
          this.SuspendLayout();
          // 
-         // toolStrip1
+         // toolstrip
          // 
-         this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+         this.toolstrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel1,
             this.tscbTilesetName,
             this.toolStripSeparator1,
@@ -107,11 +107,11 @@
             this.tsbEncounters,
             this.tsbOptions,
             this.toolStripButton1});
-         this.toolStrip1.Location = new System.Drawing.Point(0, 0);
-         this.toolStrip1.Name = "toolStrip1";
-         this.toolStrip1.Size = new System.Drawing.Size(717, 25);
-         this.toolStrip1.TabIndex = 0;
-         this.toolStrip1.Text = "toolStrip1";
+         this.toolstrip.Location = new System.Drawing.Point(0, 0);
+         this.toolstrip.Name = "toolstrip";
+         this.toolstrip.Size = new System.Drawing.Size(717, 25);
+         this.toolstrip.TabIndex = 0;
+         this.toolstrip.Text = "toolStrip1";
          // 
          // toolStripLabel1
          // 
@@ -167,6 +167,7 @@
          this.tsbLayer.MaxLength = 1;
          this.tsbLayer.Name = "tsbLayer";
          this.tsbLayer.Size = new System.Drawing.Size(25, 25);
+         this.tsbLayer.Text = "0";
          this.tsbLayer.TextChanged += new System.EventHandler(this.tsbLayer_TextChanged);
          // 
          // tsbSwapLayers
@@ -185,6 +186,8 @@
          this.tsbLayerSwapTo.MaxLength = 1;
          this.tsbLayerSwapTo.Name = "tsbLayerSwapTo";
          this.tsbLayerSwapTo.Size = new System.Drawing.Size(25, 25);
+         this.tsbLayerSwapTo.Text = "0";
+         this.tsbLayerSwapTo.TextChanged += new System.EventHandler(this.tsbLayerSwapTo_TextChanged);
          // 
          // toolStripSeparator2
          // 
@@ -359,15 +362,6 @@
          this.tilesetPanel.Size = new System.Drawing.Size(282, 250);
          this.tilesetPanel.TabIndex = 1;
          // 
-         // tsPanel
-         // 
-         this.tsPanel.Location = new System.Drawing.Point(4, 5);
-         this.tsPanel.Name = "tsPanel";
-         this.tsPanel.Size = new System.Drawing.Size(200, 100);
-         this.tsPanel.TabIndex = 0;
-         this.tsPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.tsPanel_Paint);
-         this.tsPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tsPanel_MouseClick);
-         // 
          // mapFrame
          // 
          this.mapFrame.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -382,19 +376,6 @@
          this.mapFrame.TabIndex = 2;
          this.mapFrame.Scroll += new System.Windows.Forms.ScrollEventHandler(this.mapFrame_Scroll);
          this.mapFrame.Resize += new System.EventHandler(this.mapFrame_Resize);
-         // 
-         // mapPanel
-         // 
-         this.mapPanel.Location = new System.Drawing.Point(4, 4);
-         this.mapPanel.Name = "mapPanel";
-         this.mapPanel.Size = new System.Drawing.Size(200, 100);
-         this.mapPanel.TabIndex = 0;
-         this.mapPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.mapPanel_Paint);
-         this.mapPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.mapPanel_MouseClick);
-         this.mapPanel.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.mapPanel_MouseDoubleClick);
-         this.mapPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mapPanel_MouseDown);
-         this.mapPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mapPanel_MouseMove);
-         this.mapPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.mapPanel_MouseUp);
          // 
          // numMapZoom
          // 
@@ -506,16 +487,6 @@
          this.panel1.Size = new System.Drawing.Size(254, 57);
          this.panel1.TabIndex = 5;
          // 
-         // matPanel
-         // 
-         this.matPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-         this.matPanel.Location = new System.Drawing.Point(4, 4);
-         this.matPanel.Name = "matPanel";
-         this.matPanel.Size = new System.Drawing.Size(243, 46);
-         this.matPanel.TabIndex = 0;
-         this.matPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.matPanel_Paint);
-         this.matPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.matPanel_MouseClick);
-         // 
          // btnAddMat
          // 
          this.btnAddMat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -537,6 +508,38 @@
          this.btnRemoveMat.TabIndex = 7;
          this.btnRemoveMat.UseVisualStyleBackColor = true;
          // 
+         // matPanel
+         // 
+         this.matPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+         this.matPanel.Location = new System.Drawing.Point(4, 4);
+         this.matPanel.Name = "matPanel";
+         this.matPanel.Size = new System.Drawing.Size(243, 46);
+         this.matPanel.TabIndex = 0;
+         this.matPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.matPanel_Paint);
+         this.matPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.matPanel_MouseClick);
+         // 
+         // mapPanel
+         // 
+         this.mapPanel.Location = new System.Drawing.Point(4, 4);
+         this.mapPanel.Name = "mapPanel";
+         this.mapPanel.Size = new System.Drawing.Size(200, 100);
+         this.mapPanel.TabIndex = 0;
+         this.mapPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.mapPanel_Paint);
+         this.mapPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.mapPanel_MouseClick);
+         this.mapPanel.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.mapPanel_MouseDoubleClick);
+         this.mapPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mapPanel_MouseDown);
+         this.mapPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mapPanel_MouseMove);
+         this.mapPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.mapPanel_MouseUp);
+         // 
+         // tsPanel
+         // 
+         this.tsPanel.Location = new System.Drawing.Point(4, 5);
+         this.tsPanel.Name = "tsPanel";
+         this.tsPanel.Size = new System.Drawing.Size(200, 100);
+         this.tsPanel.TabIndex = 0;
+         this.tsPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.tsPanel_Paint);
+         this.tsPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tsPanel_MouseClick);
+         // 
          // MapForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -549,7 +552,7 @@
          this.Controls.Add(this.numMapZoom);
          this.Controls.Add(this.mapFrame);
          this.Controls.Add(this.tilesetPanel);
-         this.Controls.Add(this.toolStrip1);
+         this.Controls.Add(this.toolstrip);
          this.DoubleBuffered = true;
          this.KeyPreview = true;
          this.Name = "MapForm";
@@ -559,8 +562,8 @@
          this.Text = "Map Editor";
          this.Load += new System.EventHandler(this.MapForm_Load);
          this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.MapForm_KeyPress);
-         this.toolStrip1.ResumeLayout(false);
-         this.toolStrip1.PerformLayout();
+         this.toolstrip.ResumeLayout(false);
+         this.toolstrip.PerformLayout();
          this.tilesetPanel.ResumeLayout(false);
          this.mapFrame.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.numMapZoom)).EndInit();
@@ -573,7 +576,7 @@
 
         #endregion
 
-        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStrip toolstrip;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.ToolStripComboBox tscbTilesetName;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;

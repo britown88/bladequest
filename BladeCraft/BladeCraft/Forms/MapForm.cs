@@ -339,7 +339,7 @@ namespace BladeCraft.Forms
 
       private void swapLayer(int x, int y)
       {
-         //map.swapLayer(x, y, tsbForeground.Checked);
+         map.swapLayer(x, y, currentLayer, swapToLayer);
          lastPointAdded = new Point(x, y);
          mapPanel.Invalidate();
       }
@@ -547,28 +547,35 @@ namespace BladeCraft.Forms
          {
             if (e.Button == System.Windows.Forms.MouseButtons.Right)
             {
-               Tile copyTile = map.getTile(gridPoint.X, gridPoint.Y, currentLayer);
-               if (copyTile != null)
+               if (tsbCollision.Checked)
                {
-                  if (tsbCollision.Checked)
+                  Tile copyColTile = map.getTile(gridPoint.X, gridPoint.Y, 0);
+                  if (copyColTile != null)
                   {
-                     topToolStripMenuItem.Checked = copyTile.collSides[sideTop];
-                     leftToolStripMenuItem.Checked = copyTile.collSides[sideLeft];
-                     bottomToolStripMenuItem.Checked = copyTile.collSides[sideBottom];
-                     rightToolStripMenuItem.Checked = copyTile.collSides[sideRight];
+                     topToolStripMenuItem.Checked = copyColTile.collSides[sideTop];
+                     leftToolStripMenuItem.Checked = copyColTile.collSides[sideLeft];
+                     bottomToolStripMenuItem.Checked = copyColTile.collSides[sideBottom];
+                     rightToolStripMenuItem.Checked = copyColTile.collSides[sideRight];
                   }
-                  else
-                  {
-                     erase = false;
-                     selectedTile = new Tile(copyTile);
-                  }
+
                }
                else
                {
-                  erase = true;
-                  selectedTile = new Tile(0, 0, 0, 0, 0);
-               }
+                  Tile copyTile = map.getTile(gridPoint.X, gridPoint.Y, currentLayer);
+                  if (copyTile != null)
+                  {
+
+                     erase = false;
+                     selectedTile = new Tile(copyTile);
+
+                  }
+                  else
+                  {
+                     erase = true;
+                     selectedTile = new Tile(0, 0, 0, 0, 0);
+                  }
                   
+               }
 
                tsPanel.Invalidate();
 
@@ -789,6 +796,8 @@ namespace BladeCraft.Forms
       private void tsbSwapLayers_CheckStateChanged(object sender, EventArgs e)
       {
          tsbLayerSwapTo.Enabled = tsbSwapLayers.Checked;
+         if (tsbSwapLayers.Checked)
+            tsbLayerSwapTo.Text = tsbLayer.Text;
       }
 
       private void tsbLayer_TextChanged(object sender, EventArgs e)
@@ -814,10 +823,34 @@ namespace BladeCraft.Forms
 
       private void MapForm_KeyPress(object sender, KeyPressEventArgs e)
       {
-         if (e.KeyChar >= '0' && e.KeyChar <= '7')
+         if (e.KeyChar >= '1' && e.KeyChar <= '7')
          {
             tsbLayer.Text = e.KeyChar.ToString();
          }
+
+         if (e.KeyChar == '`')
+         {
+            tsbLayer.Text = "0";
+         }
+      }
+
+      private void tsbLayerSwapTo_TextChanged(object sender, EventArgs e)
+      {
+         try
+         {
+            swapToLayer = Convert.ToInt32(tsbLayerSwapTo.Text);
+         }
+         catch (Exception e2)
+         {
+            tsbLayerSwapTo.Text = swapToLayer.ToString();
+            return;
+         }
+
+         if (swapToLayer > 7)
+            tsbLayerSwapTo.Text = "7";
+
+         if (swapToLayer < 0)
+            tsbLayerSwapTo.Text = "0";
       }
       
    }
