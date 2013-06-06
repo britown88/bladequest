@@ -256,7 +256,7 @@ public class Global
 	//24 - 3 * 2 * 2 * 2.
 	//x * y * back/fore * animation frames
 	
-	public static int tilePlateBitmapCount = 24;
+	public static int tilePlateBitmapCount = 26;
 	
 	public static actExpectInput inputExpecter;
 	
