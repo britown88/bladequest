@@ -115,6 +115,7 @@ public class seFrozen extends StatusEffect
 				{
 					if (component.getAffinity() == Stats.Fire) //FIRE SPELL YAY YAY
 					{
+						builder.setDamage(0);
 						dispels = true;
 						break;
 					}
