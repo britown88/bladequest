@@ -16,7 +16,7 @@ public class ObjectState {
 	private Tile tileSprite;
 	private int currentAction;
 	private boolean isRunning;
-	private boolean autoStart, animated, faceOnMove, faceOnActivate, waitOnActivate;	
+	private boolean autoStart, animated, faceOnMove, ignorePartyOnMove, faceOnActivate, waitOnActivate;	
 	
 	private Layer layer; 
 	private boolean[] collSides;
@@ -94,6 +94,11 @@ public class ObjectState {
 		defaultPath = new ObjectPath("");
 		defaultPath.deserialize(serializedPath);
 		defaultPath.setLooping(true);
+	}
+	
+	public void setIgnorePartyOnMove(boolean ignore)
+	{
+		ignorePartyOnMove = ignore;
 	}
 	
 	public boolean[] getCollision() { return collSides; }
@@ -246,68 +251,78 @@ public class ObjectState {
 			switch(objPath.getCurrentAction())
 			{
 			case MoveLeft:
-				move("left", false);
+				move("left", ignorePartyOnMove);
 				break;
 			case MoveUp:
-				move("up", false);
+				move("up", ignorePartyOnMove);
 				break;
 			case MoveRight:
-				move("right", false);
+				move("right", ignorePartyOnMove);
 				break;
 			case MoveDown:
-				move("down", false);
+				move("down", ignorePartyOnMove);
 				break;
 			case FaceLeft:
 				parent.Face("left");
+				objPathWaitStart = System.currentTimeMillis();
 				moveWait = defaultMoveWait;
 				objPathWaiting = true;
 				break;
 			case FaceUp:
 				parent.Face("up");
+				objPathWaitStart = System.currentTimeMillis();
 				moveWait = defaultMoveWait;
 				objPathWaiting = true;
 				break;
 			case FaceRight:
 				parent.Face("right");
+				objPathWaitStart = System.currentTimeMillis();
 				moveWait = defaultMoveWait;
 				objPathWaiting = true;
 				break;
 			case FaceDown:
 				parent.Face("down");
+				objPathWaitStart = System.currentTimeMillis();
 				moveWait = defaultMoveWait;
 				objPathWaiting = true;
 				break;
 			case IncreaseMoveSpeed:
 				if(moveSpeed < 6)
 					moveSpeed++;
-				objPath.advanceActions();
-				HandleObjectPath();
+				objPathWaitStart = System.currentTimeMillis();
+				moveWait = defaultMoveWait;
+				objPathWaiting = true;
 				break;
 			case DecreaseMoveSpeed:
 				if(moveSpeed > 1)
 					moveSpeed--;
-				objPath.advanceActions();
-				HandleObjectPath();
+				objPathWaitStart = System.currentTimeMillis();
+				moveWait = defaultMoveWait;
+				objPathWaiting = true;
 				break;
 			case Hide:
 				parent.hide = true;
-				objPath.advanceActions();
-				HandleObjectPath();
+				objPathWaitStart = System.currentTimeMillis();
+				moveWait = defaultMoveWait;
+				objPathWaiting = true;
 				break;
 			case Show:
 				parent.hide = false;
-				objPath.advanceActions();
-				HandleObjectPath();
+				objPathWaitStart = System.currentTimeMillis();
+				moveWait = defaultMoveWait;
+				objPathWaiting = true;
 				break;
 			case LockFacing:
 				parent.faceLocked = true;
-				objPath.advanceActions();
-				HandleObjectPath();
+				objPathWaitStart = System.currentTimeMillis();
+				moveWait = defaultMoveWait;
+				objPathWaiting = true;
 				break;
 			case UnlockFacing:
 				parent.faceLocked = false;
-				objPath.advanceActions();
-				HandleObjectPath();
+				objPathWaitStart = System.currentTimeMillis();
+				moveWait = defaultMoveWait;
+				objPathWaiting = true;
 				break;	
 			case Wait:
 				objPathWaitStart = System.currentTimeMillis();
@@ -387,16 +402,16 @@ public class ObjectState {
 				switch(ri)
 				{
 				case 0:
-					move("up", false);
+					move("up", ignorePartyOnMove);
 					break;
 				case 1:
-					move("down", false);
+					move("down", ignorePartyOnMove);
 					break;
 				case 2:
-					move("left", false);
+					move("left", ignorePartyOnMove);
 					break;
 				case 3:
-					move("right", false);
+					move("right", ignorePartyOnMove);
 					break;					
 				}
 			}

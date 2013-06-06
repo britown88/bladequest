@@ -42,7 +42,7 @@ setAbilityName "Ice Magic" >
 setCombatAction "combDragonForm" >
 setBaseStats 3 7 3 10 >
 setLevel 99 >
-mapBound equip {"icesword", "felthat", "cottonshirt"} >
+mapBound equip {"felthat", "cottonshirt"} >
 mapBound addAbility {"frostwish", "entomb", "shatter"}) >
 setDefaultShadow
 

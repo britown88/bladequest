@@ -2404,6 +2404,20 @@ public class Global
 		icons.put("stun", new Icon(0,6));	
 		
 		icons.put("arrow", new Icon(1, 6));	
+		
+		icons.put("2swords", new Icon(0, 7));	
+		
+		icons.put("ice", new Icon(3, 7));	
+		icons.put("icedown", new Icon(4, 7));	
+		icons.put("iceup", new Icon(5, 7));	
+		
+		icons.put("fire", new Icon(3, 8));	
+		icons.put("firedown", new Icon(4, 8));	
+		icons.put("fireup", new Icon(5, 8));	
+		
+		icons.put("wind", new Icon(3, 9));	
+		icons.put("winddown", new Icon(4, 9));	
+		icons.put("windup", new Icon(5, 9));	
 	}
 	
 	private static void genWeaponSwings()

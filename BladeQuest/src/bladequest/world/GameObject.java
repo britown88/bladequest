@@ -36,7 +36,6 @@ public class GameObject {
 
 	private int floatIndex, floatPeriod, floatIntensity;
 	
-	private ObjectPath defaultPath;
 	
 	public GameObject(String name, int x, int y)
 	{
@@ -55,10 +54,6 @@ public class GameObject {
 		nextCollidable = prevCollidable = null;
 	}
 	
-	public void setDefaultPath(ObjectPath path)
-	{
-		this.defaultPath = path;
-	}
 	
 	public String Name() { return name; }
 	public void makeStateSolid(int index) {states.get(index).makeSolid();}
