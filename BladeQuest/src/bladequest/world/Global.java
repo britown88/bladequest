@@ -225,7 +225,7 @@ public class Global
 	
 	public static Scene showScene;
 	
-	private static TilePlateBitmap[] tilePlateBmps;
+	private static List<TilePlateBitmap> tilePlateBmps;
 	
 	private static ReentrantLock tileLoaderLock;
 	
@@ -248,7 +248,13 @@ public class Global
 				break;
 			}
 		}
-		tileLoaderLock.unlock();		
+		if (out == null)
+		{
+			tilePlateBmps.add(new TilePlateBitmap());
+			out = tilePlateBmps.get(tilePlateBmps.size()-1);
+			out.used = true;
+		}		
+		tileLoaderLock.unlock();
 		return out;
 	}
 	
@@ -256,7 +262,7 @@ public class Global
 	//24 - 3 * 2 * 2 * 2.
 	//x * y * back/fore * animation frames
 	
-	public static int tilePlateBitmapCount = 24;
+	//public static int tilePlateBitmapCount = 24;
 	
 	public static actExpectInput inputExpecter;
 	
@@ -2434,9 +2440,7 @@ public class Global
 		//create shared tileplate bmp's
 		
 		tileLoaderLock = new ReentrantLock();
-		tilePlateBmps = new TilePlateBitmap[tilePlateBitmapCount];
-		for(int i = 0; i < tilePlateBitmapCount; ++i)
-			tilePlateBmps[i] = new TilePlateBitmap();
+		tilePlateBmps = new ArrayList<TilePlateBitmap>();
 		
 		soundPool = new SoundPool(100, AudioManager.STREAM_MUSIC, 0);		
 		streamVolume = audioMgr.getStreamVolume(AudioManager.STREAM_MUSIC);
