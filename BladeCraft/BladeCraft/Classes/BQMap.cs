@@ -473,6 +473,7 @@ namespace BladeCraft.Classes
          if(fromList[index] != null)
          {
             toList[index] = fromList[index];
+            toList[index].layer = tolayer;
             fromList[index] = null;
          }
          
@@ -619,7 +620,7 @@ namespace BladeCraft.Classes
                            Convert.ToInt32(r.GetAttribute("Y"))));
                         break;
                      case "Layer":
-                        newTile.layer = r.ReadElementContentAsInt();
+                        newTile.layer = Convert.ToInt32(r.ReadString());
                         break;
                      case "CollisionData":
                         newTile.collSides[0] = Convert.ToBoolean(r.GetAttribute("Left"));

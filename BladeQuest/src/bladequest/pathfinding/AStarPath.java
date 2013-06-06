@@ -35,7 +35,10 @@ public class AStarPath {
 		
 		for (AStarObstacle obs : obstacles)
 		{
-			this.obstacles.put(obs.getPoint(), obs);
+			if (this.obstacles.get(obs.getPoint()) == null)
+			{
+				this.obstacles.put(obs.getPoint(), obs);
+			}
 		}
 		
 		
