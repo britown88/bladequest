@@ -82,6 +82,7 @@ addSwitchCondition "guardsturned"
 
 
 
+
 #!OBJ 3 15
 \name$3x15$ <- newObject "name" 3 15
 
@@ -192,42 +193,6 @@ addAction (fadeControl 1.0 255 0 0 0 false true)
 
 
 \runstate1$10x4$ <- state1$10x4$ 0
-#!OBJ 8 4
-\objName$8x4$ <- "name"
-\name$8x4$ <- newObject "name" 8 4
-
-state1$8x4$ 0
-name$8x4$ > createState >
-setSpriteFromTile 7 1
-
-\runstate1$8x4$ <- state1$8x4$ 0
-#!OBJ 8 5
-\objName$8x5$ <- "name"
-\name$8x5$ <- newObject "name" 8 5
-
-state1$8x5$ 0
-name$8x5$ > createState >
-setSpriteFromTile 7 2
-
-\runstate1$8x5$ <- state1$8x5$ 0
-#!OBJ 3 4
-\objName$3x4$ <- "name"
-\name$3x4$ <- newObject "name" 3 4
-
-state1$3x4$ 0
-name$3x4$ > createState >
-setSpriteFromTile 7 1
-
-\runstate1$3x4$ <- state1$3x4$ 0
-#!OBJ 3 5
-\objName$3x5$ <- "name"
-\name$3x5$ <- newObject "name" 3 5
-
-state1$3x5$ 0
-name$3x5$ > createState >
-setSpriteFromTile 7 2
-
-\runstate1$3x5$ <- state1$3x5$ 0
 #!OBJ 5 5
 \objName$5x5$ <- "turnguard1"
 \name$5x5$ <- newObject objName$5x5$ 5 5

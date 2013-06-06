@@ -1,6 +1,8 @@
 #!HEAD
 
 
+
+
 #!OBJ 0 0
 \name$0x0$ <- newObject "start" 0 0
 
@@ -283,21 +285,11 @@ addSwitchCondition "pdoor1"
 \runstate3$3x9$ <- state3$3x9$ 0
 
 
-#!OBJ 16 6
-\name$16x6$ <- newObject "name" 16 6
-
-state1$16x6$ 0
-name$16x6$ > createState >
-setSpriteFromTile 7 2
-
-\runstate1$16x6$ <- state1$16x6$ 0
-
 #!OBJ 16 5
 \name$16x5$ <- newObject "name" 16 5
 
 state1$16x5$ 0
 name$16x5$ > createState >
-setSpriteFromTile 7 1 >
 setOptions true false false
 
 \runstate1$16x5$ <- state1$16x5$ 0
@@ -305,7 +297,6 @@ setOptions true false false
 state2$16x5$ 0
 name$16x5$ > createState >
 addSwitchCondition "prisonguardtalked" >
-setSpriteFromTile 7 1 >
 setOptions true false false >
 addAction (message "?????: \nNo getting around this guy.  Guess I'll catch a nap.") >
 addAction (fadeControl 2.0 255 0 0 0 true true) >
@@ -319,7 +310,6 @@ addAction (fadeControl 1.0 255 0 0 0 false true)
 state3$16x5$ 0
 name$16x5$ > createState >
 addSwitchCondition "guardasleep" >
-setSpriteFromTile 7 1 >
 setOptions true false false >
 addAction (fadeControl 1.0 255 0 0 0 true true) >
 addAction (restoreParty 0) >

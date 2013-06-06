@@ -88,6 +88,11 @@ public class GameObjectLibrary
 		state.setAnimated(animated);
 		return state;
 	}	
+	public static ObjectState setIgnorePartyOnMove(ObjectState state, boolean ignore)
+	{
+		state.setIgnorePartyOnMove(ignore);
+		return state;
+	}
 	public static ObjectState setFace(ObjectState state, String face)
 	{
 		state.setFace(face);
