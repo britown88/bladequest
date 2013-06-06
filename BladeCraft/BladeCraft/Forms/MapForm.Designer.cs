@@ -36,9 +36,10 @@
          this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
          this.btnDraw = new System.Windows.Forms.ToolStripButton();
          this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-         this.tsbForeground = new System.Windows.Forms.ToolStripButton();
-         this.tsbBackground = new System.Windows.Forms.ToolStripButton();
+         this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
+         this.tsbLayer = new System.Windows.Forms.ToolStripTextBox();
          this.tsbSwapLayers = new System.Windows.Forms.ToolStripButton();
+         this.tsbLayerSwapTo = new System.Windows.Forms.ToolStripTextBox();
          this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
          this.tsbFrameTwo = new System.Windows.Forms.ToolStripButton();
          this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
@@ -91,9 +92,10 @@
             this.toolStripSeparator1,
             this.btnDraw,
             this.toolStripSeparator5,
-            this.tsbForeground,
-            this.tsbBackground,
+            this.toolStripLabel2,
+            this.tsbLayer,
             this.tsbSwapLayers,
+            this.tsbLayerSwapTo,
             this.toolStripSeparator2,
             this.tsbFrameTwo,
             this.toolStripSeparator8,
@@ -107,7 +109,7 @@
             this.toolStripButton1});
          this.toolStrip1.Location = new System.Drawing.Point(0, 0);
          this.toolStrip1.Name = "toolStrip1";
-         this.toolStrip1.Size = new System.Drawing.Size(692, 25);
+         this.toolStrip1.Size = new System.Drawing.Size(717, 25);
          this.toolStrip1.TabIndex = 0;
          this.toolStrip1.Text = "toolStrip1";
          // 
@@ -148,36 +150,24 @@
          this.btnDraw.Name = "btnDraw";
          this.btnDraw.Size = new System.Drawing.Size(23, 22);
          this.btnDraw.Text = "btnDraw";
-         this.btnDraw.CheckedChanged += new System.EventHandler(this.btnDraw_CheckedChanged);
          // 
          // toolStripSeparator5
          // 
          this.toolStripSeparator5.Name = "toolStripSeparator5";
          this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
          // 
-         // tsbForeground
+         // toolStripLabel2
          // 
-         this.tsbForeground.CheckOnClick = true;
-         this.tsbForeground.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-         this.tsbForeground.Image = ((System.Drawing.Image)(resources.GetObject("tsbForeground.Image")));
-         this.tsbForeground.ImageTransparentColor = System.Drawing.Color.Magenta;
-         this.tsbForeground.Name = "tsbForeground";
-         this.tsbForeground.Size = new System.Drawing.Size(73, 22);
-         this.tsbForeground.Text = "Foreground";
-         this.tsbForeground.Click += new System.EventHandler(this.tsbAbove_Click);
+         this.toolStripLabel2.Name = "toolStripLabel2";
+         this.toolStripLabel2.Size = new System.Drawing.Size(35, 22);
+         this.toolStripLabel2.Text = "Layer";
          // 
-         // tsbBackground
+         // tsbLayer
          // 
-         this.tsbBackground.Checked = true;
-         this.tsbBackground.CheckOnClick = true;
-         this.tsbBackground.CheckState = System.Windows.Forms.CheckState.Checked;
-         this.tsbBackground.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-         this.tsbBackground.Image = ((System.Drawing.Image)(resources.GetObject("tsbBackground.Image")));
-         this.tsbBackground.ImageTransparentColor = System.Drawing.Color.Magenta;
-         this.tsbBackground.Name = "tsbBackground";
-         this.tsbBackground.Size = new System.Drawing.Size(75, 22);
-         this.tsbBackground.Text = "Background";
-         this.tsbBackground.Click += new System.EventHandler(this.tsbBelow_Click);
+         this.tsbLayer.MaxLength = 1;
+         this.tsbLayer.Name = "tsbLayer";
+         this.tsbLayer.Size = new System.Drawing.Size(25, 25);
+         this.tsbLayer.TextChanged += new System.EventHandler(this.tsbLayer_TextChanged);
          // 
          // tsbSwapLayers
          // 
@@ -188,6 +178,13 @@
          this.tsbSwapLayers.Name = "tsbSwapLayers";
          this.tsbSwapLayers.Size = new System.Drawing.Size(23, 22);
          this.tsbSwapLayers.Text = "tsbSwapLayer";
+         this.tsbSwapLayers.CheckStateChanged += new System.EventHandler(this.tsbSwapLayers_CheckStateChanged);
+         // 
+         // tsbLayerSwapTo
+         // 
+         this.tsbLayerSwapTo.MaxLength = 1;
+         this.tsbLayerSwapTo.Name = "tsbLayerSwapTo";
+         this.tsbLayerSwapTo.Size = new System.Drawing.Size(25, 25);
          // 
          // toolStripSeparator2
          // 
@@ -381,7 +378,7 @@
          this.mapFrame.Controls.Add(this.mapPanel);
          this.mapFrame.Location = new System.Drawing.Point(302, 29);
          this.mapFrame.Name = "mapFrame";
-         this.mapFrame.Size = new System.Drawing.Size(378, 286);
+         this.mapFrame.Size = new System.Drawing.Size(403, 286);
          this.mapFrame.TabIndex = 2;
          this.mapFrame.Scroll += new System.Windows.Forms.ScrollEventHandler(this.mapFrame_Scroll);
          this.mapFrame.Resize += new System.EventHandler(this.mapFrame_Resize);
@@ -407,7 +404,7 @@
             0,
             0,
             0});
-         this.numMapZoom.Location = new System.Drawing.Point(633, 321);
+         this.numMapZoom.Location = new System.Drawing.Point(658, 321);
          this.numMapZoom.Maximum = new decimal(new int[] {
             300,
             0,
@@ -434,7 +431,7 @@
          // 
          this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
          this.label1.AutoSize = true;
-         this.label1.Location = new System.Drawing.Point(593, 323);
+         this.label1.Location = new System.Drawing.Point(618, 323);
          this.label1.Name = "label1";
          this.label1.Size = new System.Drawing.Size(34, 13);
          this.label1.TabIndex = 4;
@@ -544,7 +541,7 @@
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(692, 353);
+         this.ClientSize = new System.Drawing.Size(717, 353);
          this.Controls.Add(this.btnRemoveMat);
          this.Controls.Add(this.btnAddMat);
          this.Controls.Add(this.panel1);
@@ -554,12 +551,14 @@
          this.Controls.Add(this.tilesetPanel);
          this.Controls.Add(this.toolStrip1);
          this.DoubleBuffered = true;
+         this.KeyPreview = true;
          this.Name = "MapForm";
          this.ShowIcon = false;
          this.ShowInTaskbar = false;
          this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
          this.Text = "Map Editor";
          this.Load += new System.EventHandler(this.MapForm_Load);
+         this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.MapForm_KeyPress);
          this.toolStrip1.ResumeLayout(false);
          this.toolStrip1.PerformLayout();
          this.tilesetPanel.ResumeLayout(false);
@@ -578,9 +577,7 @@
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.ToolStripComboBox tscbTilesetName;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripButton tsbForeground;
         private System.Windows.Forms.ToolStripButton tsbCollision;
-        private System.Windows.Forms.ToolStripButton tsbBackground;
         private System.Windows.Forms.Panel tilesetPanel;
         private System.Windows.Forms.Panel mapFrame;
         private Classes.DBPanel tsPanel;
@@ -619,5 +616,8 @@
         private System.Windows.Forms.Button btnAddMat;
         private System.Windows.Forms.Button btnRemoveMat;
         private System.Windows.Forms.ToolStripButton tsbSwapLayers;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel2;
+        private System.Windows.Forms.ToolStripTextBox tsbLayer;
+        private System.Windows.Forms.ToolStripTextBox tsbLayerSwapTo;
     }
 }

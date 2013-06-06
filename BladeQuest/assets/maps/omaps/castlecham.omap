@@ -2,6 +2,7 @@
 
 
 
+
 #!OBJ 12 0
 createWindowObj x y
 \obj <- newObject "window" (12 > add x) y
