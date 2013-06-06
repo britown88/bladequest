@@ -7,6 +7,7 @@
 
 
 
+
 #!OBJ 22 3
 \objName$22x3$ <- "name"
 \name$22x3$ <- newObject objName$22x3$ 22 3
@@ -263,3 +264,17 @@ addAction (message "George: \nNot a lot happens way up here in the mountains.") 
 addAction (message "But we get along all right.")
 
 \runstate1$23x35$ <- state1$23x35$ 0
+#!OBJ 6 34
+\objName$6x34$ <- "harriet"
+\name$6x34$ <- newObject objName$6x34$ 6 34
+
+state1$6x34$ 0
+name$6x34$ > createState >
+setCollisionData true true true true >
+setSprite "oldwoman" >
+addAction (message "Harriet: \nHave you seen my husband, Louis?") >
+addAction (message "If hes' over at that inn again he's going to get it!") >
+addAction (openBubble "angry" "harriet" 1.0 true false)
+
+
+\runstate1$6x34$ <- state1$6x34$ 0
