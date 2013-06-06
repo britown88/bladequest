@@ -329,31 +329,46 @@ public class BqMap
 		int plateX = Global.vpGridPos.x / 10;
 		int plateY = Global.vpGridPos.y / 10;
 		
-		boolean drawR2 = Global.vpGridPos.y - ((int)(Global.vpGridPos.y/10)*10) > 0;
-		boolean drawC3 = Global.vpGridPos.x - ((int)(Global.vpGridPos.x/10)*10) > 5;
+		//position relative to the current tile plate
+		int yInTile = Global.vpGridPos.y - ((int)(Global.vpGridPos.y/10)*10);
+		int xInTile = Global.vpGridPos.x - ((int)(Global.vpGridPos.x/10)*10);
 		
 		
+		boolean drawR2 =  yInTile > 0;
+		boolean drawC3 =  xInTile > 5;
+		
+		boolean prevXLoaded = xInTile < 3;
+		boolean nextXLoaded = !prevXLoaded;
+		
+		boolean prevYLoaded = yInTile < 1;
+		boolean nextYLoaded = !prevYLoaded;
 		
 
 		//valid tile plates - 
 		
-		//   xxxxx
-		//   x*xxx
-		//   xxxxx
-		//   xxxxx
+		//   loaded at 0-3
+		//   |  loaded at 4-9
+		//   v  v
+		//   xxxx <- loaded at 0>1
+		//   x*xx
+		//   xxxx <-loaded at 2-9
 		
 		//5x4 = 20 tiles * 2 = 40 required for buffering.
 		//unload all on edge every time.  (perhaps we should be less brutal with this in cases where you jitter across the edge of a loading portal?)  
 		//fatter load zone than release?
 		
-		for (int y = plateY-2; y < plateY+4; ++y)
+		for (int y = plateY-2; y < plateY+3; ++y)
 		{
 			if (y < 0 || y >= plateCount.y) continue;
 			for (int x = plateX-2; x < plateX+5; ++x)
 			{
 				if (x < 0 || x >= plateCount.x) continue;
-				if (y == plateY-2 || y == plateY+3 ||
-					x == plateY-2 || x == plateX+4)
+				if (y == plateY-2 || y == plateY+2 ||
+					x == plateX-2 || x == plateX+4 ||
+					(x == plateX-1 && !prevXLoaded) || 
+					(y == plateY-1 && !prevYLoaded) || 
+					(x == plateX+2 && !nextXLoaded) || 
+					(y == plateY+1 && !nextYLoaded))
 				{
 					plates[x + y * plateCount.x].Unload();
 				}
