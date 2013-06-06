@@ -31,7 +31,7 @@ setAbilityName "Swordplay" >
 setCombatAction "combStance" >
 setBaseStats 10 4 7 2 >
 setLevel 10 >
-mapBound equip {"silversword", "felthat", "cottonshirt"} >
+mapBound equip {"silversword", "felthat", "cottonshirt", "runningshoes"} >
 mapBound addAbility {"assault", "redcard"} >
 addLearnableAbility "zornhau" 6) >
 setDefaultShadow

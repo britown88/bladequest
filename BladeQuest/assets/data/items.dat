@@ -56,7 +56,7 @@ swingSlash 4 0 0 186 >
 swingSlash 5 0 0 255)
 
 
-\fireknife <- (addItem "fireknife" "Fire Knife" "Weapon" "dagger" "Knife endowed with the fire element." >
+\fireknife <- (addItem "fireknife" "Flame Dagger" "Weapon" "dagger" "A dagger that does burning damage." >
 setPower 9 >
 setValue 10 >
 setUsableBy "aramis" >
@@ -80,6 +80,13 @@ usableByAll)
 setPower 4 >
 setValue 100 >
 usableByAll)
+
+\runningshoes <- (addItem "runningshoes" "Running Shoes" "Accessory" "boot" "Shoes that allow you to move faster." >
+setPower 0 >
+modStat "Speed" 3 >
+setValue 800 >
+usableByAll)
+
 
 addDefaultWait item
   add item (waitAction 450)
