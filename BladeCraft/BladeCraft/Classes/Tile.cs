@@ -6,7 +6,7 @@ namespace BladeCraft.Classes
     public class Tile
     {
         public int x, y, bmpX, bmpY, animBmpX, animBmpY;
-        //private string layer;
+        public int layer;
         public bool[] collSides;
 
         public bool isMaterial;
@@ -20,12 +20,13 @@ namespace BladeCraft.Classes
            animated = false;
         }
 
-        public Tile(int x, int y, int bmpX, int bmpY)
+        public Tile(int x, int y, int bmpX, int bmpY, int layer)
         {
             this.x = x;
             this.y = y;
             this.bmpX = bmpX;
             this.bmpY = bmpY;
+            this.layer = layer;
            // this.layer = layer;
             collSides = new bool[4];
             for (int i = 0; i < 4; ++i)
@@ -68,7 +69,7 @@ namespace BladeCraft.Classes
             this.matX = t.matX;
             this.matY = t.matY;
             this.isMaterial = t.isMaterial;
-           // this.layer = t.layer;
+            this.layer = t.layer;
             collSides = new bool[4];
             for (int i = 0; i < 4; ++i)
                 collSides[i] = t.collSides[i];

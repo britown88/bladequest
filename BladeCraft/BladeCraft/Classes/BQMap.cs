@@ -37,8 +37,9 @@ namespace BladeCraft.Classes
       private string name, path, tileset, displayName, BGM;
       private bool save;
 
-      private Tile[] bgtileList;
-      private Tile[] fgtileList;
+      public int layerCount = 8;
+
+      private Tile[][] tileList;
 
       public List<EncounterZone> zones;
       public List<GameObject> objects;
@@ -74,8 +75,10 @@ namespace BladeCraft.Classes
          this.displayName = displayName;
          this.save = save;
          this.BGM = BGM;
-         bgtileList = new Tile[x * y];
-         fgtileList = new Tile[x * y];
+
+         tileList = new Tile[layerCount][];
+         for (int i = 0; i < layerCount; ++i)
+            tileList[i] = new Tile[x * y];
 
          zones = new List<EncounterZone>();
          objects = new List<GameObject>();
@@ -252,24 +255,18 @@ namespace BladeCraft.Classes
 
       public void updateSize(int x, int y)
       {
-         Tile[] newbgTileList = new Tile[x * y];
-         Tile[] newfgTileList = new Tile[x * y]; 
+         for (int i = 0; i < layerCount; ++i)
+         {
+            Tile[] newTileList = new Tile[x * y];
 
-         for(int i = 0; i < x; ++i)
-            for (int j = 0; j < y; ++j)
-            {
-               if (i < sizeX && j < sizeY)
-               {
-                  newbgTileList[j * x + i] = bgtileList[j * sizeX + i];
-                  newfgTileList[j * x + i] = fgtileList[j * sizeX + i];
+            for (int j = 0; j < sizeX * sizeY && j < x * y; ++j)
+               newTileList[j] = tileList[i][j];
 
-               }
-            }
+            tileList[i] = newTileList;
+         }
 
          sizeX = x;
          sizeY = y;
-         bgtileList = newbgTileList;
-         fgtileList = newfgTileList;
 
       }
 
@@ -277,66 +274,56 @@ namespace BladeCraft.Classes
       {
          sizeX = x;
          sizeY = y;
-         bgtileList = new Tile[x * y];
-         fgtileList = new Tile[x * y];
+         tileList = new Tile[layerCount][];
+         for (int i = 0; i < layerCount; ++i)
+            tileList[i] = new Tile[x * y];
       }
 
-      public Tile addTile(Tile tile, bool foreground)
+      public Tile addTile(Tile tile)
       {
          int index = tile.y * sizeX + tile.x;
 
-         if(tile.x >= 0 && tile.x < sizeX && tile.y >= 0 && tile.y < sizeY)
-            if(foreground)
-               fgtileList[index] = tile;
-            else
-               bgtileList[index] = tile;
+         if (tile.x >= 0 && tile.x < sizeX && tile.y >= 0 && tile.y < sizeY)
+            tileList[tile.layer][index] = tile;
 
          return tile;
       }
 
-      public Tile animateTile(int x, int y, int bmpX, int bmpY, bool foreground)
+      public Tile animateTile(int x, int y, int bmpX, int bmpY, int layer)
       {
          int index = y * sizeX + x;
          if (x >= 0 && x < sizeX && y >= 0 && y < sizeY)
-            if (foreground && fgtileList[index] != null)
+            if (tileList[layer][index] != null)
             {
-               fgtileList[index].animate(bmpX, bmpY);
-               return fgtileList[index];
-            }
-            else if (bgtileList[index] != null)
-            {
-               bgtileList[index].animate(bmpX, bmpY);
-               return bgtileList[index];
+               tileList[layer][index].animate(bmpX, bmpY);
+               return tileList[layer][index];
             }
 
          return null;
                
       }
 
-      public void deleteTile(int x, int y, bool foreground)
+      public void deleteTile(int x, int y, int layer)
       {
          int index = y * sizeX + x;
 
          if (x >= 0 && x < sizeX && y >= 0 && y < sizeY)
-            if (foreground)
-               fgtileList[index] = null;
-            else
-               bgtileList[index] = null;
+            tileList[layer][index] = null;
       }
 
-      public Tile getTile(int x, int y, bool foreground) 
+      public Tile getTile(int x, int y, int layer) 
       { 
          if (x >= 0 && x < sizeX && y >= 0 && y < sizeY)
-            return foreground ? fgtileList[y * sizeX + x] : bgtileList[y * sizeX + x]; 
+            return tileList[layer][y*sizeX+x]; 
          else 
             return null;
       }
 
       private bool[] fillChecked;
 
-      public void fill(int x, int y, Tile t, bool frameTwo, bool foreground)
+      public void fill(int x, int y, Tile t, bool frameTwo, int layer)
       {
-         Tile[] tlist = foreground ? fgtileList : bgtileList;
+         Tile[] tlist = tileList[layer];
          Tile fillingTile = tlist[y * sizeX + x];
          if (fillingTile != null)
             fillingTile = new Tile(fillingTile);
@@ -351,14 +338,14 @@ namespace BladeCraft.Classes
             Point p = pList[pList.Count - 1];
             pList.RemoveAt(pList.Count - 1);
 
-            fillStep(fillingTile, p.X, p.Y, t, frameTwo, foreground, pList);
+            fillStep(fillingTile, p.X, p.Y, t, frameTwo, layer, pList);
             
          }
       }
 
-      private void fillStep(Tile fillingTile, int x, int y, Tile fillTo, bool frameTwo, bool foreground, List<Point> pList)
+      private void fillStep(Tile fillingTile, int x, int y, Tile fillTo, bool frameTwo, int layer, List<Point> pList)
       {
-         Tile[] tlist = foreground ? fgtileList : bgtileList;
+         Tile[] tlist = tileList[layer];
          Tile t = tlist[y * sizeX + x];
          bool fill = false;
 
@@ -366,12 +353,12 @@ namespace BladeCraft.Classes
 
          if (fillingTile == null && t == null)
          {
-            tlist[y * sizeX + x] = new Tile(x, y, fillTo.bmpX, fillTo.bmpY);
+            tlist[y * sizeX + x] = new Tile(x, y, fillTo.bmpX, fillTo.bmpY, layer);
 
             t = tlist[y * sizeX + x];            
 
             if (fillTo.isMaterial)
-               addMaterial(t.x, t.y, fillTo.matX, fillTo.matY, frameTwo, foreground);
+               addMaterial(t.x, t.y, fillTo.matX, fillTo.matY, frameTwo, layer);
             else if (frameTwo)
                t.animate(fillTo.bmpX, fillTo.animBmpY);
 
@@ -380,7 +367,7 @@ namespace BladeCraft.Classes
          else if (fillingTile != null && fillingTile.isMaterial && t.isMaterial && fillingTile.matX == t.matX && fillingTile.matY == t.matY)
          {
             if (fillTo.isMaterial)
-               addMaterial(t.x, t.y, fillTo.matX, fillTo.matY, frameTwo, foreground);
+               addMaterial(t.x, t.y, fillTo.matX, fillTo.matY, frameTwo, layer);
             else
             {
                if (frameTwo)
@@ -390,7 +377,7 @@ namespace BladeCraft.Classes
                }
                else
                {
-                  tlist[y * sizeX + x] = new Tile(t.x, t.y, fillTo.bmpX, fillTo.bmpY); 
+                  tlist[y * sizeX + x] = new Tile(t.x, t.y, fillTo.bmpX, fillTo.bmpY, layer); 
                }
                
             }
@@ -400,7 +387,7 @@ namespace BladeCraft.Classes
             t.bmpX == fillingTile.bmpX && t.bmpY == fillingTile.bmpY)
          {
             if (fillTo.isMaterial)
-               addMaterial(t.x, t.y, fillTo.matX, fillTo.matY, frameTwo, foreground);
+               addMaterial(t.x, t.y, fillTo.matX, fillTo.matY, frameTwo, layer);
             else
             {
                if (frameTwo)
@@ -410,7 +397,7 @@ namespace BladeCraft.Classes
                }
                else
                {
-                  tlist[y * sizeX + x] = new Tile(t.x, t.y, fillTo.bmpX, fillTo.bmpY); 
+                  tlist[y * sizeX + x] = new Tile(t.x, t.y, fillTo.bmpX, fillTo.bmpY, layer); 
                }
             }
             
@@ -443,45 +430,45 @@ namespace BladeCraft.Classes
       public String getBGM() { return BGM; }
 
 
-      public void addMaterial(int x, int y, int matX, int matY, bool frameTwo, bool foreground)
+      public void addMaterial(int x, int y, int matX, int matY, bool frameTwo, int layer)
       {
          int index = y * sizeX + x;
-         Tile[] tlist = foreground ? fgtileList : bgtileList;
+         Tile[] tlist = tileList[layer];
 
          if (tlist[index] == null)
-            addTile(new Tile(x, y, 0, 0), foreground);
+            addTile(new Tile(x, y, 0, 0, layer));
                   
          tlist[index].addToMaterial(matX, matY);
 
-         updateMaterialTile(x - 1, y - 1, matX, matY, foreground, frameTwo);
-         updateMaterialTile(x, y - 1, matX, matY, foreground, frameTwo);
-         updateMaterialTile(x + 1, y - 1, matX, matY, foreground, frameTwo);
-         updateMaterialTile(x - 1, y, matX, matY, foreground, frameTwo);
-         updateMaterialTile(x, y, matX, matY, foreground, frameTwo);
-         updateMaterialTile(x + 1, y, matX, matY, foreground, frameTwo);
-         updateMaterialTile(x - 1, y + 1, matX, matY, foreground, frameTwo);
-         updateMaterialTile(x, y + 1, matX, matY, foreground, frameTwo);
-         updateMaterialTile(x + 1, y + 1, matX, matY, foreground, frameTwo);
+         updateMaterialTile(x - 1, y - 1, matX, matY, layer, frameTwo);
+         updateMaterialTile(x, y - 1, matX, matY, layer, frameTwo);
+         updateMaterialTile(x + 1, y - 1, matX, matY, layer, frameTwo);
+         updateMaterialTile(x - 1, y, matX, matY, layer, frameTwo);
+         updateMaterialTile(x, y, matX, matY, layer, frameTwo);
+         updateMaterialTile(x + 1, y, matX, matY, layer, frameTwo);
+         updateMaterialTile(x - 1, y + 1, matX, matY, layer, frameTwo);
+         updateMaterialTile(x, y + 1, matX, matY, layer, frameTwo);
+         updateMaterialTile(x + 1, y + 1, matX, matY, layer, frameTwo);
 
       }
 
-      private bool hasSameMaterial(int x, int y, int matX, int matY, bool foreground)
+      private bool hasSameMaterial(int x, int y, int matX, int matY, int layer)
       {
          if (x < 0 || x >= sizeX || y < 0 || y >= sizeY)
             return true;
 
          int index = y * sizeX + x;
-         Tile[] tlist = foreground ? fgtileList : bgtileList;
+         Tile[] tlist = tileList[layer];
          if (tlist[index] != null)
             return tlist[index].hasSameMaterial(matX,  matY);
          else
             return false;
       }
 
-      public void swapLayer(int x, int y, bool foreground)
+      public void swapLayer(int x, int y, int fromLayer, int tolayer)
       {
-         Tile[] fromList = foreground ? fgtileList : bgtileList;
-         Tile[] toList = foreground ? bgtileList : fgtileList;
+         Tile[] fromList = tileList[fromLayer];
+         Tile[] toList = tileList[tolayer];
          int index = y * sizeX + x;
          if(fromList[index] != null)
          {
@@ -493,23 +480,23 @@ namespace BladeCraft.Classes
          //fromList[index].
       }
 
-      private void updateMaterialTile(int x, int y, int matX, int matY, bool foreground, bool frameTwo)
+      private void updateMaterialTile(int x, int y, int matX, int matY, int layer, bool frameTwo)
       {
          int index = y * sizeX + x;
-         Tile[] tlist = foreground ? fgtileList : bgtileList;
+         Tile[] tlist = tileList[layer];
 
          if (x < 0 || y < 0 || x >= sizeX || y >= sizeY || tlist[index] == null || !tlist[index].hasSameMaterial(matX, matY))
             return;
 
-         bool top = y > 0 ? hasSameMaterial(x, y - 1, matX, matY, foreground) : true;
-         bool left = x > 0 ? hasSameMaterial(x - 1, y, matX, matY, foreground) : true;
-         bool right = x < sizeX - 1 ? hasSameMaterial(x + 1, y, matX, matY, foreground) : true;
-         bool bottom = y < sizeY - 1 ? hasSameMaterial(x, y + 1, matX, matY, foreground) : true;
+         bool top = y > 0 ? hasSameMaterial(x, y - 1, matX, matY, layer) : true;
+         bool left = x > 0 ? hasSameMaterial(x - 1, y, matX, matY, layer) : true;
+         bool right = x < sizeX - 1 ? hasSameMaterial(x + 1, y, matX, matY, layer) : true;
+         bool bottom = y < sizeY - 1 ? hasSameMaterial(x, y + 1, matX, matY, layer) : true;
 
-         bool topLeft = top && left && hasSameMaterial(x - 1, y - 1, matX, matY, foreground);
-         bool bottomLeft = bottom && left && hasSameMaterial(x - 1, y + 1, matX, matY, foreground);
-         bool bottomRight = bottom && right && hasSameMaterial(x + 1, y + 1, matX, matY, foreground);
-         bool topRight = top && right && hasSameMaterial(x + 1, y - 1, matX, matY, foreground);
+         bool topLeft = top && left && hasSameMaterial(x - 1, y - 1, matX, matY, layer);
+         bool bottomLeft = bottom && left && hasSameMaterial(x - 1, y + 1, matX, matY, layer);
+         bool bottomRight = bottom && right && hasSameMaterial(x + 1, y + 1, matX, matY, layer);
+         bool topRight = top && right && hasSameMaterial(x + 1, y - 1, matX, matY, layer);
 
          char flags = (char)((top ? (char)corners.Top : (char)0) | (bottom ? (char)corners.Bottom : (char)0) |
                   (right ? (char)corners.Right : (char)0) | (left ? (char)corners.Left : (char)0) |
@@ -523,7 +510,7 @@ namespace BladeCraft.Classes
          p.Y += matY;
 
          if (frameTwo)
-            animateTile(x, y, p.X, p.Y, foreground);
+            animateTile(x, y, p.X, p.Y, layer);
          else
          {
             tlist[index].bmpX = p.X;
@@ -547,7 +534,7 @@ namespace BladeCraft.Classes
          
       }
 
-      private void writeTile(Tile t, XmlTextWriter xwriter, string layer)
+      private void writeTile(Tile t, XmlTextWriter xwriter)
       {
          xwriter.WriteStartElement("Tile");
 
@@ -561,7 +548,7 @@ namespace BladeCraft.Classes
          xwriter.WriteAttributeString("Y", t.bmpY.ToString());
          xwriter.WriteEndElement();
 
-         xwriter.WriteElementString("Layer", layer);
+         xwriter.WriteElementString("Layer", t.layer.ToString());
 
          xwriter.WriteStartElement("CollisionData");
          xwriter.WriteAttributeString("Left", t.collSides[0].ToString());
@@ -595,7 +582,6 @@ namespace BladeCraft.Classes
          XmlTextReader r = new XmlTextReader(path);
          Tile newTile = new Tile();
          EncounterZone newZone = new EncounterZone();
-         string layer = "";
 
          while (r.Read())
          {
@@ -612,8 +598,9 @@ namespace BladeCraft.Classes
                         sizeX = Convert.ToInt32(r.GetAttribute("Width"));
                         sizeY = Convert.ToInt32(r.GetAttribute("Height"));
 
-                        bgtileList = new Tile[sizeX * sizeY];
-                        fgtileList = new Tile[sizeX * sizeY];
+                        tileList = new Tile[layerCount][];
+                        for (int i = 0; i < layerCount; ++i)
+                           tileList[i] = new Tile[sizeX * sizeY];
                         break;
                      case "Tile":
                         newTile = new Tile();
@@ -632,7 +619,7 @@ namespace BladeCraft.Classes
                            Convert.ToInt32(r.GetAttribute("Y"))));
                         break;
                      case "Layer":
-                        layer = r.ReadString();
+                        newTile.layer = r.ReadElementContentAsInt();
                         break;
                      case "CollisionData":
                         newTile.collSides[0] = Convert.ToBoolean(r.GetAttribute("Left"));
@@ -663,7 +650,7 @@ namespace BladeCraft.Classes
                   switch (r.LocalName)
                   {
                      case "Tile":
-                        addTile(newTile, layer == "Above");
+                        addTile(newTile);
                         break;
                      case "EncounterZone":
                         zones.Add(newZone);
@@ -689,8 +676,11 @@ namespace BladeCraft.Classes
          xwriter.WriteAttributeString("TileSet", tileset);
          xwriter.WriteAttributeString("DisplayName", displayName);
          xwriter.WriteAttributeString("BGM", BGM);
-         foreach (Tile t in bgtileList) if (t != null) writeTile(t, xwriter, "Below");
-         foreach (Tile t in fgtileList) if (t != null) writeTile(t, xwriter, "Above");
+
+         foreach(Tile[] tList in tileList)
+            foreach (Tile t in tList) 
+               if (t != null) 
+                  writeTile(t, xwriter);
          foreach (EncounterZone ez in zones)
             ez.write(xwriter);
          if (MatList.Count > 0)
@@ -710,35 +700,25 @@ namespace BladeCraft.Classes
          writer.WriteLine("[header]");
          writer.WriteLine("size " + sizeX + " " + sizeY);
          writer.WriteLine("tileset " + tileset);
-         writer.WriteLine("displayname \"" + displayName +"\"");
-         writer.WriteLine("BGM " + BGM);         
+         writer.WriteLine("displayname \"" + displayName + "\"");
+         writer.WriteLine("BGM " + BGM);
 
 
          //write map file
          writer.WriteLine("[tiles]");
-         foreach (Tile t in bgtileList)
-            if(t != null)
-               if(t.animated)
-                  writer.WriteLine("t " + t.x + " " + t.y + " " + t.bmpX + " " + t.bmpY + " b " +
-                  Convert.ToInt32(t.collSides[0]).ToString() + " " + Convert.ToInt32(t.collSides[1]).ToString() + " " +
-                  Convert.ToInt32(t.collSides[2]).ToString() + " " + Convert.ToInt32(t.collSides[3]).ToString() + " " + 
-                  "t " + t.animBmpX + " " + t.animBmpY);
-               else
-                  writer.WriteLine("t " + t.x + " " + t.y + " " + t.bmpX + " " + t.bmpY + " b " +
-                  Convert.ToInt32(t.collSides[0]).ToString() + " " + Convert.ToInt32(t.collSides[1]).ToString() + " " +
-                  Convert.ToInt32(t.collSides[2]).ToString() + " " + Convert.ToInt32(t.collSides[3]).ToString() + " ");
-               
-         foreach (Tile t in fgtileList)
+         foreach(Tile[] tList in tileList)
+         foreach (Tile t in tList)
             if (t != null)
-               if(t.animated)
-                  writer.WriteLine("t " + t.x + " " + t.y + " " + t.bmpX + " " + t.bmpY + " a " +
+               if (t.animated)
+                  writer.WriteLine("t " + t.x + " " + t.y + " " + t.bmpX + " " + t.bmpY + " " + t.layer.ToString() + " " +
                   Convert.ToInt32(t.collSides[0]).ToString() + " " + Convert.ToInt32(t.collSides[1]).ToString() + " " +
                   Convert.ToInt32(t.collSides[2]).ToString() + " " + Convert.ToInt32(t.collSides[3]).ToString() + " " +
                   "t " + t.animBmpX + " " + t.animBmpY);
                else
-                  writer.WriteLine("t " + t.x + " " + t.y + " " + t.bmpX + " " + t.bmpY + " a " +
+                  writer.WriteLine("t " + t.x + " " + t.y + " " + t.bmpX + " " + t.bmpY + " " + t.layer.ToString() + " " +
                   Convert.ToInt32(t.collSides[0]).ToString() + " " + Convert.ToInt32(t.collSides[1]).ToString() + " " +
-                  Convert.ToInt32(t.collSides[2]).ToString() + " " + Convert.ToInt32(t.collSides[3]).ToString() + " ");               
+                  Convert.ToInt32(t.collSides[2]).ToString() + " " + Convert.ToInt32(t.collSides[3]).ToString() + " ");
+
 
          writer.WriteLine("[encounters]");
          foreach (EncounterZone ez in zones)

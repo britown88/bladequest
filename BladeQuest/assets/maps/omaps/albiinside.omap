@@ -2,6 +2,7 @@
 
 
 
+
 #!OBJ 2 3
 \objName$2x3$ <- "name"
 \name$2x3$ <- newObject objName$2x3$ 2 3

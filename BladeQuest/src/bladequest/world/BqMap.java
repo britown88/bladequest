@@ -546,7 +546,7 @@ public class BqMap
 		
 				
 		
-		Tile t = new Tile(x, y, bmpX, bmpY, layer > 4 ? Layer.Above : Layer.Under, layer%4);
+		Tile t = new Tile(x, y, bmpX, bmpY, layer > 3 ? Layer.Above : Layer.Under, layer%4);
 		t.setCollision(collLeft, collTop, collRight, collBottom);
 		
 		if(dl.values.get(9) != null && dl.values.get(9).equals("t"))
