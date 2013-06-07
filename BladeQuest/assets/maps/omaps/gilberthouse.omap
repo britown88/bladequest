@@ -1,6 +1,7 @@
 #!HEAD
 
 
+
 #!OBJ 13 19
 \objName$13x19$ <- "name"
 \name$13x19$ <- newObject objName$13x19$ 13 19
@@ -12,88 +13,333 @@ addAction (teleportParty name$13x19$ 35 28 "albi") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
 \runstate1$13x19$ <- state1$13x19$ 0
-#!OBJ 18 5
-\objName$18x5$ <- "name"
-\name$18x5$ <- newObject objName$18x5$ 18 5
+#!OBJ 6 12
+\objName$6x12$ <- "gilbert1"
+\name$6x12$ <- newObject objName$6x12$ 6 12
 
-state1$18x5$ 0
-name$18x5$ > createState >
-setSpriteFromTile 0 23
-
-
-\runstate1$18x5$ <- state1$18x5$ 0
-#!OBJ 16 4
-\objName$16x4$ <- "name"
-\name$16x4$ <- newObject objName$16x4$ 16 4
-
-state1$16x4$ 0
-name$16x4$ > createState >
-setSpriteFromTile 6 22
-
-\runstate1$16x4$ <- state1$16x4$ 0
-#!OBJ 13 11
-\objName$13x11$ <- "name"
-\name$13x11$ <- newObject objName$13x11$ 13 11
-
-state1$13x11$ 0
-name$13x11$ > createState >
-setSpriteFromTile 7 23
+state1$6x12$ 0
+name$6x12$ > createState >
+setCollisionData true true true true >
+setSprite "oldman"
 
 
-
-\runstate1$13x11$ <- state1$13x11$ 0
-#!OBJ 12 11
-\objName$12x11$ <- "name"
-\name$12x11$ <- newObject objName$12x11$ 12 11
-
-state1$12x11$ 0
-name$12x11$ > createState >
-setSpriteFromTile 7 23
+\runstate1$6x12$ <- state1$6x12$ 0
 
 
+state2$6x12$ 0
+name$6x12$ > createState >
+addSwitchCondition "gilbert1" 
 
-\runstate1$12x11$ <- state1$12x11$ 0
-#!OBJ 11 11
-\objName$11x11$ <- "name"
-\name$11x11$ <- newObject objName$11x11$ 11 11
+\runstate2$6x12$ <- state2$6x12$ 0
+#!OBJ 13 17
+\objName$13x17$ <- "name"
+\name$13x17$ <- newObject objName$13x17$ 13 17
 
-state1$11x11$ 0
-name$11x11$ > createState >
-setSpriteFromTile 7 23
+state1$13x17$ 0
+name$13x17$ > createState >
+setOptions true false false >
+addAction (messageTop "|luc|: \nMr. Gilbert?  Is anyone home?") >
+addAction (createPath "gilbert1" true "S2R6DRD3") >
+addAction (messageTop "Ignacious Gilbert VII: \nYes yes hello hello! Welcome welcome!") >
+addAction (messageTop "What do you want?!") >
+addAction (messageTop "|luc|: \nI just came by to say hello.") >
+addAction (messageTop "How have you been?") >
+addAction (wait 1.0) >
+addAction (createPath "gilbert1" true "lurdlrud") >
+addAction (openBubble "exclam" "gilbert1" 1.0 false true) >
+addAction (messageTop "Ignacious Gilbert VII: \nHow have I been?") >
+addAction (createPath "gilbert1" true "l") >
+addAction (messageTop "How have I been...") >
+addAction (createPath "gilbert1" true "r") >
+addAction (messageTop "How have I been...") >
+addAction (createPath "gilbert1" true "lurdlrud") >
+addAction (openBubble "exclam" "gilbert1" 1.0 false true) >
+addAction (messageTop "WHAT KIND OF QUESTION IS THAT!?") >
+addAction (openBubble "sweat" "party" 1.0 false true) >
+addAction (messageTop "|luc|: \nUmmm... what?") >
+addAction (messageTop "Ignacious Gilbert VII: \nHow have YOU been!?") >
+addAction (messageTop "It's more important!  Yes, yes, important indeed, it's your time now!") >
+addAction (messageTop "|luc|: \nI'm sorry, I don't understand.") >
+addAction (messageTop "Ignacious Gilbert VII: \nYou will see you will see!") >
+addAction (createPath "gilbert1" true "U4L7s2") >
+addAction (messageTop "|luc|: \nOh, Mr. Gilbert...") >
+addAction (switchControl "gilbert1" true)
+
+\runstate1$13x17$ <- state1$13x17$ 0
+
+state2$13x17$ 0
+name$13x17$ > createState >
+addSwitchCondition "gilbert1" 
+
+\runstate2$13x17$ <- state2$13x17$ 0
+
+#!OBJ 8 10
+\objName$8x10$ <- "name"
+\name$8x10$ <- newObject objName$8x10$ 8 10
+
+state1$8x10$ 0
+name$8x10$ > createState >
+setCollisionData true true true true >
+addAction (message "Ignacious Gilbert I")
+
+\runstate1$8x10$ <- state1$8x10$ 0
+#!OBJ 9 10
+\objName$9x10$ <- "name"
+\name$9x10$ <- newObject objName$9x10$ 9 10
+
+state1$9x10$ 0
+name$9x10$ > createState >
+setCollisionData true true true true >
+addAction (message "Ignacious Gilbert II")
+
+\runstate1$9x10$ <- state1$9x10$ 0
+#!OBJ 10 10
+\objName$10x10$ <- "name"
+\name$10x10$ <- newObject objName$10x10$ 10 10
+
+state1$10x10$ 0
+name$10x10$ > createState >
+setCollisionData true true true true >
+addAction (message "Ignacious Gilbert III")
+
+\runstate1$10x10$ <- state1$10x10$ 0
+#!OBJ 11 10
+\objName$11x10$ <- "name"
+\name$11x10$ <- newObject objName$11x10$ 11 10
+
+state1$11x10$ 0
+name$11x10$ > createState >
+setCollisionData true true true true >
+addAction (message "Ignacious Gilbert IV")
+
+\runstate1$11x10$ <- state1$11x10$ 0
+#!OBJ 12 10
+\objName$12x10$ <- "name"
+\name$12x10$ <- newObject objName$12x10$ 12 10
+
+state1$12x10$ 0
+name$12x10$ > createState >
+setCollisionData true true true true >
+addAction (message "Ignacious Gilbert V")
+
+\runstate1$12x10$ <- state1$12x10$ 0
+#!OBJ 13 10
+\objName$13x10$ <- "name"
+\name$13x10$ <- newObject objName$13x10$ 13 10
+
+state1$13x10$ 0
+name$13x10$ > createState >
+setCollisionData true true true true >
+addAction (message "Ignacious Gilbert VI")
+
+\runstate1$13x10$ <- state1$13x10$ 0
+#!OBJ 17 17
+\objName$17x17$ <- "gilbert2"
+\name$17x17$ <- newObject objName$17x17$ 17 17
+
+state1$17x17$ 0
+name$17x17$ > createState
+
+\runstate1$17x17$ <- state1$17x17$ 0
+
+state2$17x17$ 0
+name$17x17$ > createState >
+addSwitchCondition "gilbert2" >
+setCollisionData true true true true >
+setSprite "oldman"
+
+
+\runstate2$17x17$ <- state2$17x17$ 0
+
+
+#!OBJ 17 12
+\objName$17x12$ <- "name"
+\name$17x12$ <- newObject objName$17x12$ 17 12
+
+state1$17x12$ 0
+name$17x12$ > createState >
+setOptions true false false >
+addAction (createPath "party" true "d") >
+addAction (wait 1.0) >
+addAction (switchControl "gilbert2" true) >
+addAction (createPath "gilbert2" true "S2U4") >
+addAction (openBubble "exclam" "gilbert2" 1.0 false true) >
+addAction (message "Ignacious Gilbert VII: \nAll these red chairs...") >
+addAction (createPath "gilbert2" true "d") >
+addAction (wait 1.0) >
+addAction (message "But only one blue chair!") >
+addAction (message "Heehee!") >
+addAction (createPath "gilbert2" true "D4s2") >
+addAction (switchControl "gilbert2" false)
+
+\runstate1$17x12$ <- state1$17x12$ 0
+#!OBJ 6 6
+\objName$6x6$ <- "name"
+\name$6x6$ <- newObject objName$6x6$ 6 6
+
+state1$6x6$ 0
+name$6x6$ > createState >
+setOptions true false false >
+addAction (createPath "party" true "d") >
+addAction (switchControl "gilbert1" false) >
+addAction (createPath "gilbert1" true "S2U5") >
+addAction (message "Ignacious Gilbert VII: \nFire hot yes yes!!") >
+addAction (message "Speaking of which...") >
+addAction (wait 1.0) >
+addAction (pauseMusic 2.0) >
+addAction (openBubble "dots" "gilbert1" 2.0 true true) >
+addAction (wait 1.0) >
+addAction (openBubble "sleep" "gilbert1" 5.0 true true) >
+addAction (createPath "gilbert1" true "rdlurdlurdlurdlurdlurdlu") >
+addAction (playMusic "goofy" true true 0.0) >
+addAction (openBubble "exclam" "gilbert1" 1.0 false true) >
+addAction (message "Ignacious Gilbert VII: \nIf you long-tap on options during battle,") >
+addAction (message "It will show you more info!") >
+addAction (message "Haha! \nI bet you didn't know that!") >
+addAction (createPath "gilbert1" true "D5s2") >
+addAction (switchControl "gilbert1" true)
+
+\runstate1$6x6$ <- state1$6x6$ 0
+#!OBJ 12 6
+\objName$12x6$ <- "name"
+\name$12x6$ <- newObject objName$12x6$ 12 6
+
+state1$12x6$ 0
+name$12x6$ > createState >
+setCollisionData true true true true >
+addAction (message "You hear something moving from inside the pot.") >
+addAction (message "Better to leave it alone...")
+
+
+\runstate1$12x6$ <- state1$12x6$ 0
+#!OBJ 15 12
+\objName$15x12$ <- "gilbert3"
+\name$15x12$ <- newObject objName$15x12$ 15 12
+
+state1$15x12$ 0
+name$15x12$ > createState
+
+\runstate1$15x12$ <- state1$15x12$ 0
+
+state2$15x12$ 0
+name$15x12$ > createState >
+addSwitchCondition "gilbert3" >
+setCollisionData true true true true >
+setSprite "oldman"
+
+\runstate2$15x12$ <- state2$15x12$ 0
+
+
+#!OBJ 14 7
+\objName$14x7$ <- "name"
+\name$14x7$ <- newObject objName$14x7$ 14 7
+
+state1$14x7$ 0
+name$14x7$ > createState >
+addAction (switchControl "gilbert3" true) >
+addAction (createPath "gilbert3" true "S2U2") >
+addAction (openBubble "exclam" "gilbert3" 1.0 false true) >
+addAction (createPath "gilbert3" true "D2s2") >
+addAction (switchControl "gilbert3" false)
 
 
 
-\runstate1$11x11$ <- state1$11x11$ 0
-#!OBJ 10 11
-\objName$10x11$ <- "name"
-\name$10x11$ <- newObject objName$10x11$ 10 11
+\runstate1$14x7$ <- state1$14x7$ 0
+#!OBJ 16 7
+\objName$16x7$ <- "gilbert4"
+\name$16x7$ <- newObject objName$16x7$ 16 7
 
-state1$10x11$ 0
-name$10x11$ > createState >
-setSpriteFromTile 7 23
+state1$16x7$ 0
+name$16x7$ > createState
+
+\runstate1$16x7$ <- state1$16x7$ 0
+
+state2$16x7$ 0
+name$16x7$ > createState >
+addSwitchCondition "gilbert4" >
+setSprite "oldman"
+
+\runstate2$16x7$ <- state2$16x7$ 0
+
+#!OBJ 16 3
+\objName$16x3$ <- "name"
+\name$16x3$ <- newObject objName$16x3$ 16 3
+
+state1$16x3$ 0
+name$16x3$ > createState >
+setCollisionData true true true true >
+addAction (message "|luc|: \nI Don't need to go through Mr. Gilbert's books...") >
+addAction (message "They're probably really weird!")
+
+\runstate1$16x3$ <- state1$16x3$ 0
+
+state2$16x3$ 0
+name$16x3$ > createState >
+addSwitchCondition "hidekidtalked" >
+setCollisionData true true true true >
+addAction (message "You move some of the books aside...") >
+addAction (message "Found a Life Root!") >
+addAction (modifyInventory "liferoot" 1 false) >
+addAction (switchControl "gilbert4" true) >
+addAction (createPath "party" true "d") >
+addAction (switchControl "gilbert4" true) >
+addAction (createPath "gilbert4" true "S2U2") >
+addAction (message "Ignacious Gilbert VII: \nHoho! You found it!") >
+addAction (message "We all know you need it more than me!") >
+addAction (message "*wink*") >
+addAction (createPath "gilbert4" true "D2s2") >
+addAction (switchControl "gilbert4" false) >
+addAction (switchControl "albiliferoot1" true)
+
+\runstate2$16x3$ <- state2$16x3$ 0
+
+state3$16x3$ 0
+name$16x3$ > createState >
+addSwitchCondition "albiliferoot1"
+
+\runstate3$16x3$ <- state3$16x3$ 0
+#!OBJ 18 4
+\objName$18x4$ <- "name"
+\name$18x4$ <- newObject objName$18x4$ 18 4
+
+state1$18x4$ 0
+name$18x4$ > createState >
+addAction (message "|luc|: \nThese blankets smell weird!")
 
 
+\runstate1$18x4$ <- state1$18x4$ 0
+#!OBJ 27 12
+\objName$27x12$ <- "gilbert5"
+\name$27x12$ <- newObject objName$27x12$ 27 12
 
-\runstate1$10x11$ <- state1$10x11$ 0
-#!OBJ 9 11
-\objName$9x11$ <- "name"
-\name$9x11$ <- newObject objName$9x11$ 9 11
+state1$27x12$ 0
+name$27x12$ > createState
 
-state1$9x11$ 0
-name$9x11$ > createState >
-setSpriteFromTile 7 23
+\runstate1$27x12$ <- state1$27x12$ 0
 
-
-
-\runstate1$9x11$ <- state1$9x11$ 0
-#!OBJ 8 11
-\objName$8x11$ <- "name"
-\name$8x11$ <- newObject objName$8x11$ 8 11
-
-state1$8x11$ 0
-name$8x11$ > createState >
-setSpriteFromTile 7 23
+state2$27x12$ 0
+name$27x12$ > createState >
+addSwitchCondition "gilbert5" >
+setSprite "oldman"
 
 
+\runstate2$27x12$ <- state2$27x12$ 0
 
-\runstate1$8x11$ <- state1$8x11$ 0
+#!OBJ 29 11
+\objName$29x11$ <- "name"
+\name$29x11$ <- newObject objName$29x11$ 29 11
+
+state1$29x11$ 0
+name$29x11$ > createState >
+addAction (switchControl "gilbert5" true) >
+addAction (createPath "party" true "l") >
+addAction (wait 1.0) >
+addAction (createPath "gilbert5" true "S2RUr") >
+addAction (openBubble "exclam" "gilbert5" 1.0 false true) >
+addAction (message "Ignacious Gilbert VII: \nYou found my secret room!") >
+addAction (message "Good work! \nShame I don't keep anything in here!") >
+addAction (message "Heehee!") >
+addAction (createPath "gilbert5" true "dlurdlurDLs2") >
+addAction (switchControl "gilbert5" false)
+
+\runstate1$29x11$ <- state1$29x11$ 0

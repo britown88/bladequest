@@ -14,6 +14,7 @@
 
 
 
+
 #!OBJ 4 14
 \objName$4x14$ <- "name"
 \name$4x14$ <- newObject objName$4x14$ 4 14
@@ -76,8 +77,18 @@ setSprite "child1" >
 setCollisionData true true true true >
 addAction (message "Henry: \nNow it's your turn to hide!")
 
-
 \runstate2$1x8$ <- state2$1x8$ 0
+
+state3$1x8$ 0
+name$1x8$ > createState >
+addSwitchCondition "hidekidtalked" >
+addSwitchCondition "henrygoldstolen" >
+setSprite "child1" >
+setCollisionData true true true true >
+addAction (message "Henry: \nI'm saving up my allowance to join the circus!")
+
+
+\runstate3$1x8$ <- state3$1x8$ 0
 #!OBJ 19 11
 \objName$19x11$ <- "name"
 \name$19x11$ <- newObject objName$19x11$ 19 11
@@ -298,3 +309,48 @@ addAction (teleportParty name$35x27$ 13 18 "gilberthouse") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
 \runstate1$35x27$ <- state1$35x27$ 0
+#!OBJ 19 2
+\objName$19x2$ <- "name"
+\name$19x2$ <- newObject objName$19x2$ 19 2
+
+state1$19x2$ 0
+name$19x2$ > createState >
+setCollisionData true true true true >
+addAction (message "You found a Potion!") >
+addAction (modifyInventory "potion" 1 false) >
+addAction (switchControl "albipotion1" true)
+
+\runstate1$19x2$ <- state1$19x2$ 0
+
+state2$19x2$ 0
+name$19x2$ > createState >
+addSwitchCondition "albipotion1"
+
+\runstate2$19x2$ <- state2$19x2$ 0
+
+
+#!OBJ 36 28
+\objName$36x28$ <- "name"
+\name$36x28$ <- newObject objName$36x28$ 36 28
+
+state1$36x28$ 0
+name$36x28$ > createState >
+setCollisionData true true true true >
+addAction (message "No Trespassing!")
+
+\runstate1$36x28$ <- state1$36x28$ 0
+#!OBJ 20 12
+\objName$20x12$ <- "name"
+\name$20x12$ <- newObject objName$20x12$ 20 12
+
+state1$20x12$ 0
+name$20x12$ > createState >
+setCollisionData true true true true >
+addAction (messageWithYesNo "Throw a coin in the well and make a wish?" >
+	addToBranch 0 (startGoldTransaction 1 >
+		addToBranch 0 (message "A calm breeze kicks up as you make your wish and listen to your coin clink down the well.") >
+		addToBranch 0 (message "Maybe it will come true!") >
+		addToBranch 1 (message "You don't have any!")))
+
+
+\runstate1$20x12$ <- state1$20x12$ 0

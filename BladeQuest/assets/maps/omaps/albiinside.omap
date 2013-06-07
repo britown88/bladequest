@@ -8,6 +8,9 @@
 
 
 
+
+
+
 #!OBJ 22 3
 \objName$22x3$ <- "name"
 \name$22x3$ <- newObject objName$22x3$ 22 3
@@ -196,8 +199,8 @@ name$41x19$ > createState >
 setCollisionData true true true true >
 setSprite "oldman" >
 setFace "right" >
-addAction (message "Louis: \nI have my own house but stay here to watch Sarah work.") >
-addAction (message "Hehehe")
+addAction (message "Louis: \nI have my own house.") >
+addAction (message "But I stay here to watch Sarah work. \nHehehe")
 
 
 \runstate1$41x19$ <- state1$41x19$ 0
@@ -273,8 +276,132 @@ name$6x34$ > createState >
 setCollisionData true true true true >
 setSprite "oldwoman" >
 addAction (message "Harriet: \nHave you seen my husband, Louis?") >
-addAction (message "If hes' over at that inn again he's going to get it!") >
+addAction (message "If he's over at that inn again he's going to get it!") >
 addAction (openBubble "angry" "harriet" 1.0 true false)
 
 
 \runstate1$6x34$ <- state1$6x34$ 0
+#!OBJ 1 17
+\objName$1x17$ <- "name"
+\name$1x17$ <- newObject objName$1x17$ 1 17
+
+state1$1x17$ 0
+name$1x17$ > createState >
+setCollisionData true true true true >
+setSprite "man3" >
+setBubble "sleep" >
+setFace "left" >
+setOptions true false false >
+addAction (message "Sean: \nNnnnnng...") >
+addAction (message "Need to... work more...") >
+addAction (message "....") >
+addAction (switchControl "albiseantalked" true)
+
+\runstate1$1x17$ <- state1$1x17$ 0
+
+state2$1x17$ 0
+name$1x17$ > createState >
+addSwitchCondition "albiseantalked" >
+setCollisionData true true true true >
+setSprite "man3" >
+setBubble "sleep" >
+setFace "left" >
+setOptions true false false >
+addAction (message "Sean: \n...It's ok...") >
+addAction (message "...I'm dreaming of Bee Splines...") >
+addAction (message "....") >
+addAction (switchControl "albiseantalked" false)
+
+\runstate2$1x17$ <- state2$1x17$ 0
+
+
+
+#!OBJ 8 19
+\objName$8x19$ <- "name"
+\name$8x19$ <- newObject objName$8x19$ 8 19
+
+state1$8x19$ 0
+name$8x19$ > createState >
+setCollisionData true true true true >
+setSprite "woman1" >
+addAction (message "Bella: \nGoing into the forest?") >
+addAction (message "Be careful! There's talk of a monster prowling around at night!")
+
+
+
+\runstate1$8x19$ <- state1$8x19$ 0
+#!OBJ 30 19
+\objName$30x19$ <- "name"
+\name$30x19$ <- newObject objName$30x19$ 30 19
+
+state1$30x19$ 0
+name$30x19$ > createState >
+setCollisionData true true true true >
+setSprite "woman1" >
+addAction (message "|luc|'s Mom: \nOh, you're awake! \nIt's so late in the day!") >
+addAction (message "I need you to go and fetch some herbs for me in the forest today.")
+
+
+\runstate1$30x19$ <- state1$30x19$ 0
+#!OBJ 3 16
+\objName$3x16$ <- "name"
+\name$3x16$ <- newObject objName$3x16$ 3 16
+
+state1$3x16$ 0
+name$3x16$ > createState >
+setCollisionData true true true true >
+addAction (message "You found a Sleeping Bag!") >
+addAction (modifyInventory "sleepingbag" 1 false) >
+addAction (switchControl "albisleepingbag1" true)
+
+\runstate1$3x16$ <- state1$3x16$ 0
+
+state2$3x16$ 0
+name$3x16$ > createState >
+addSwitchCondition "albisleepingbag1"
+
+\runstate2$3x16$ <- state2$3x16$ 0
+#!OBJ 21 16
+\objName$21x16$ <- "name"
+\name$21x16$ <- newObject objName$21x16$ 21 16
+
+state1$21x16$ 0
+name$21x16$ > createState >
+setCollisionData true true true true >
+addAction (message "You found you savings!") >
+addAction (message "You got 150G!") >
+addAction (modifyGold 150) >
+addAction (switchControl "albigold1" true)
+
+\runstate1$21x16$ <- state1$21x16$ 0
+
+state2$21x16$ 0
+name$21x16$ > createState >
+addSwitchCondition "albigold1" 
+
+\runstate2$21x16$ <- state2$21x16$ 0
+
+#!OBJ 3 31
+\objName$3x31$ <- "name"
+\name$3x31$ <- newObject objName$3x31$ 3 31
+
+state1$3x31$ 0
+name$3x31$ > createState >
+setCollisionData true true true true >
+addAction (message "What's this?  \nIt's Henry's allowance!") >
+addAction (messageWithYesNo "Take it?" >
+	addToBranch 0 (message "You got 10G!") >
+	addToBranch 0 (modifyGold 10) >
+	addToBranch 0 (switchControl "henrygoldstolen" true) >
+	addToBranch 1 (message "Way to do the right thing!"))
+
+\runstate1$3x31$ <- state1$3x31$ 0
+
+state2$3x31$ 0
+name$3x31$ > createState >
+addSwitchCondition "henrygoldstolen" >
+setCollisionData true true true true >
+addAction (message "It's empty...")
+
+\runstate2$3x31$ <- state2$3x31$ 0
+
