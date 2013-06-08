@@ -3165,3 +3165,7 @@ t 23 49 0 51 4 0 0 0 0
 t 26 49 0 51 4 0 0 0 0 
 t 28 49 0 51 4 0 0 0 0 
 [encounters]
+zone 0 0 30 50 1
+encounter bunnyandspud
+encounter 1hawk
+endzone
