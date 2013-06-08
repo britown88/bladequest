@@ -63,6 +63,8 @@ public class Party
 
 	private int floatIndex, floatPeriod, floatIntensity;
 	
+	private int defaultMoveWait = 0;
+	private int moveWait;	
 
 	
 	public Party(int x, int y) 
@@ -547,58 +549,69 @@ public class Party
 				break;
 			case FaceLeft:
 				vectorFace(new Point(-1, 0));
-				objPath.advanceActions();
-				HandleObjectPath();
+				objPathWaitStart = System.currentTimeMillis();
+				moveWait = defaultMoveWait;
+				objPathWaiting = true;
 				break;
 			case FaceUp:
 				vectorFace(new Point(0, -1));
-				objPath.advanceActions();
-				HandleObjectPath();
+				objPathWaitStart = System.currentTimeMillis();
+				moveWait = defaultMoveWait;
+				objPathWaiting = true;
 				break;
 			case FaceRight:
 				vectorFace(new Point(1, 0));
-				objPath.advanceActions();
-				HandleObjectPath();
+				objPathWaitStart = System.currentTimeMillis();
+				moveWait = defaultMoveWait;
+				objPathWaiting = true;
 				break;
 			case FaceDown:
 				vectorFace(new Point(0, 1));
-				objPath.advanceActions();
-				HandleObjectPath();
+				objPathWaitStart = System.currentTimeMillis();
+				moveWait = defaultMoveWait;
+				objPathWaiting = true;
 				break;
 			case IncreaseMoveSpeed:
 				if(Global.moveSpeed < 6)
 					Global.moveSpeed++;
-				objPath.advanceActions();
-				HandleObjectPath();
+				objPathWaitStart = System.currentTimeMillis();
+				moveWait = defaultMoveWait;
+				objPathWaiting = true;
 				break;
 			case DecreaseMoveSpeed:
 				if(Global.moveSpeed > 1)
 					Global.moveSpeed--;
-				objPath.advanceActions();
-				HandleObjectPath();
+				objPathWaitStart = System.currentTimeMillis();
+				moveWait = defaultMoveWait;
+				objPathWaiting = true;
 				break;
 			case Hide:
 				hide = true;
-				objPath.advanceActions();
-				HandleObjectPath();
+				objPathWaitStart = System.currentTimeMillis();
+				moveWait = defaultMoveWait;
+				objPathWaiting = true;
 				break;
 			case Show:
 				hide = false;
-				objPath.advanceActions();
-				HandleObjectPath();
+				objPathWaitStart = System.currentTimeMillis();
+				moveWait = defaultMoveWait;
+				objPathWaiting = true;
 				break;
 			case LockFacing:
 				faceLocked = true;
-				objPath.advanceActions();
-				HandleObjectPath();
+				objPathWaitStart = System.currentTimeMillis();
+				moveWait = defaultMoveWait;
+				objPathWaiting = true;
 				break;
 			case UnlockFacing:
 				faceLocked = false;
-				objPath.advanceActions();
-				HandleObjectPath();
+				objPathWaitStart = System.currentTimeMillis();
+				moveWait = defaultMoveWait;
+				objPathWaiting = true;
 				break;	
 			case Wait:
 				objPathWaitStart = System.currentTimeMillis();
+				moveWait = 100;
 				objPathWaiting = true;
 				break;
 			}
@@ -647,8 +660,9 @@ public class Party
 
 		if(objPath != null)
 		{
-			objPath.advanceActions();
-			HandleObjectPath();
+			objPathWaitStart = System.currentTimeMillis();
+			moveWait = defaultMoveWait;
+			objPathWaiting = true;
 		}			
 		else
 		{
@@ -733,7 +747,7 @@ public class Party
 		//handle path waiting
 		if(objPathWaiting)
 		{
-			if(System.currentTimeMillis() - objPathWaitStart >= 1000)
+			if(System.currentTimeMillis() - objPathWaitStart >= moveWait)
 			{
 				objPathWaiting = false;
 				objPath.advanceActions();

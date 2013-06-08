@@ -15,6 +15,7 @@
 
 
 
+
 #!OBJ 4 14
 \objName$4x14$ <- "name"
 \name$4x14$ <- newObject objName$4x14$ 4 14
@@ -354,3 +355,47 @@ addAction (messageWithYesNo "Throw a coin in the well and make a wish?" >
 
 
 \runstate1$20x12$ <- state1$20x12$ 0
+#!OBJ 22 29
+\objName$22x29$ <- "name"
+\name$22x29$ <- newObject objName$22x29$ 22 29
+
+state1$22x29$ 0
+name$22x29$ > createState >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$22x29$ 6 1 "albiforest") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$22x29$ <- state1$22x29$ 0
+#!OBJ 23 29
+\objName$23x29$ <- "name"
+\name$23x29$ <- newObject objName$23x29$ 23 29
+
+state1$23x29$ 0
+name$23x29$ > createState >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$23x29$ 6 1 "albiforest") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$23x29$ <- state1$23x29$ 0
+#!OBJ 24 29
+\objName$24x29$ <- "name"
+\name$24x29$ <- newObject objName$24x29$ 24 29
+
+state1$24x29$ 0
+name$24x29$ > createState >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$24x29$ 6 1 "albiforest") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$24x29$ <- state1$24x29$ 0
+#!OBJ 25 29
+\objName$25x29$ <- "name"
+\name$25x29$ <- newObject objName$25x29$ 25 29
+
+state1$25x29$ 0
+name$25x29$ > createState >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$25x29$ 6 1 "albiforest") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$25x29$ <- state1$25x29$ 0

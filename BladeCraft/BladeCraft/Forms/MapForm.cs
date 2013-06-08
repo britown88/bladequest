@@ -209,15 +209,19 @@ namespace BladeCraft.Forms
 
       private void drawGrid(Graphics g, Rectangle frame, Pen pen)
       {
-         for (int x = frame.Left; x < Math.Min(map.width(), frame.Right); ++x)
-            for (int y = frame.Top; y < Math.Min(map.height(), frame.Bottom); ++y)
-            {
-               g.DrawRectangle(pen,
-                  x * tileSize * mapScale,
-                  y * tileSize * mapScale,
-                  tileSize * mapScale,
-                  tileSize * mapScale);
-            }
+         if (tsbShowGrid.Checked)
+         {
+            for (int x = frame.Left; x < Math.Min(map.width(), frame.Right); ++x)
+               for (int y = frame.Top; y < Math.Min(map.height(), frame.Bottom); ++y)
+               {
+                  g.DrawRectangle(pen,
+                     x * tileSize * mapScale,
+                     y * tileSize * mapScale,
+                     tileSize * mapScale,
+                     tileSize * mapScale);
+               }
+         }
+         
       }
 
       private void drawObjects(Graphics g, Rectangle Frame)
@@ -851,6 +855,11 @@ namespace BladeCraft.Forms
 
          if (swapToLayer < 0)
             tsbLayerSwapTo.Text = "0";
+      }
+
+      private void tsbShowGrid_CheckStateChanged(object sender, EventArgs e)
+      {
+         mapPanel.Invalidate();
       }
       
    }
