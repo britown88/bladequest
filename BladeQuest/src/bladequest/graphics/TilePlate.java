@@ -8,6 +8,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import bladequest.world.GameObject;
@@ -23,6 +24,7 @@ public class TilePlate
 	private List<GameObject> objects;
 	private Bitmap tileset;
 	private Point platePos;
+	private Paint p;
 	
 	private TilePlateBitmap bmp, animBmp;
 	
@@ -48,15 +50,19 @@ public class TilePlate
 	//in vp grid tiles
 	public Rect getRect()
 	{
-		return new Rect(platePos.x*10, platePos.y*10, platePos.x*10 + 10, platePos.y*10 * 10);
+		return new Rect(platePos.x*Global.tilePlateSize.x, 
+						platePos.y*Global.tilePlateSize.y, 
+						platePos.x*Global.tilePlateSize.x+ Global.tilePlateSize.x, 
+						platePos.y*Global.tilePlateSize.y* Global.tilePlateSize.y);
 	}
 	
-	public boolean tryLoad()
+	public boolean tryLoad(Paint p )
 	{
 		if (loading) return false;
 		if (loaded) return false;
 		if(tiles.size() == 0) return false;
 		loading = true;
+		this.p = p;
 		return true;
 	}
 	
@@ -65,8 +71,8 @@ public class TilePlate
 		if(!loading && loaded && !empty)
 		{
 			Global.renderer.drawBitmap((Global.animateTiles && animated) ? (animBmp != null ? animBmp.bmp : bmp.bmp): bmp.bmp,
-				Global.worldToScreenX(platePos.x*320),
-				Global.worldToScreenY(platePos.y*320), null	);
+				Global.worldToScreenX(platePos.x*32*Global.tilePlateSize.x),
+				Global.worldToScreenY(platePos.y*32*Global.tilePlateSize.y), null	);
 		}
 	}
 	
@@ -104,7 +110,7 @@ public class TilePlate
 			for(Tile t : tiles.get(i))
 			{
 				if(unloadAfterLoadFlag) break;
-				t.render(canvas, tileset, false);
+				t.render(canvas, tileset, false, p);
 			}	
 		}
 		
@@ -140,7 +146,7 @@ public class TilePlate
 				for(Tile t : tiles.get(i))
 				{
 					if(unloadAfterLoadFlag) return;
-					t.render(canvas, tileset, true);
+					t.render(canvas, tileset, true, p);
 				}	
 			}			
 		}		

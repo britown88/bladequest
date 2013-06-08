@@ -50,16 +50,16 @@ public class Tile
 		return collSides[0] || collSides[1] || collSides[2] || collSides[3]; 
 	}
 	
-	public void render(Canvas canvas, Bitmap bitmap, boolean animated)
+	public void render(Canvas canvas, Bitmap bitmap, boolean animated, Paint p)
 	{		
 		Rect dest = new Rect(
-				(worldPos.x%10)*32,
-				(worldPos.y%10)*32,
-				(worldPos.x%10)*32 + 32,
-				(worldPos.y%10)*32 + 32);
+				(worldPos.x%Global.tilePlateSize.x)*32,
+				(worldPos.y%Global.tilePlateSize.y)*32,
+				(worldPos.x%Global.tilePlateSize.x)*32 + 32,
+				(worldPos.y%Global.tilePlateSize.y)*32 + 32);
 		
 		if(bitmap != null && !bitmap.isRecycled())		
-			canvas.drawBitmap(bitmap, (animated && this.animated) ? animSrc : src, dest, null);	
+			canvas.drawBitmap(bitmap, (animated && this.animated) ? animSrc : src, dest, p);	
 		
 	}
 	

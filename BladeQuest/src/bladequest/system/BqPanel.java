@@ -11,6 +11,7 @@ import android.graphics.Paint.Align;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import bladequest.graphics.ScreenFilter;
 import bladequest.graphics.TilePlate;
 import bladequest.sound.BladeSong;
 import bladequest.world.Global;
@@ -157,48 +158,75 @@ implements SurfaceHolder.Callback
     		if(Global.map != null)
     			drawWorld();
     		
+    		
+    		ScreenFilter.instance().save();
+    		ScreenFilter.instance().clear();
     		if(!Global.menuButton.Closed())
     			Global.menuButton.render();
 
     		if(Global.debugButton != null)
     			Global.debugButton.render();
-    		
+    		ScreenFilter.instance().restore();
     		
     		break;
     	case GS_BATTLE:
     		Global.battle.render();
     		break;
     	case GS_MAINMENU:
+    		ScreenFilter.instance().save();
+    		ScreenFilter.instance().clear();
     		Global.menu.render();
+    		ScreenFilter.instance().restore();
     		Global.screenFader.render();
     		
     		break;
     	case GS_SAVELOADMENU:
+    		ScreenFilter.instance().save();
+    		ScreenFilter.instance().clear();
     		Global.saveLoadMenu.render();
     		Global.screenFader.render();
+    		ScreenFilter.instance().restore();
 			break;
     	case GS_LOADING:
     		Global.loadingScreen.render();
     		break;
     	case GS_NAMESELECT:
+    		
+    		ScreenFilter.instance().save();
+    		ScreenFilter.instance().clear();
     		Global.nameSelect.render();
     		Global.screenFader.render();
+    		
+    		ScreenFilter.instance().restore();
     		break;
     	case GS_MERCHANT:
     		if(Global.map != null)
     			drawWorld();
+    		
+    		ScreenFilter.instance().save();
+    		ScreenFilter.instance().clear();    		
     		Global.merchantScreen.render();
+    		
+    		ScreenFilter.instance().restore();
     		break;
     	case GS_DEBUG:
     		if(Global.map != null)
     			drawWorld();
+    		
+    		ScreenFilter.instance().save();
+    		ScreenFilter.instance().clear();
     		Global.debugScreen.render();
+    		ScreenFilter.instance().restore();
     		break;
     	}	
     	
+		ScreenFilter.instance().save();
+		ScreenFilter.instance().clear();
+		
     	drawForeground();
     	drawLog();
     	
+		ScreenFilter.instance().restore();
     }
     
 
@@ -242,7 +270,14 @@ implements SurfaceHolder.Callback
     	{    		     	 
         	Global.map.renderForeground(loadList);
         	Global.party.render(); 
-    	}    	
+    	}
+    	
+    	//load plates
+    	if(loadList.size() >0)
+    	{
+    		plateLoader.addPlates(loadList);
+    	}
+    	
     	Global.map.renderForegroundObjs();
     	Global.renderReactionBubbles();    	
     	
@@ -251,25 +286,18 @@ implements SurfaceHolder.Callback
     	
     	Global.renderAnimations();
     	
+		ScreenFilter.instance().save();
+		ScreenFilter.instance().clear();
+		
     	Global.map.renderDisplayName(); 
     	
     	Global.screenFader.render();
-    	
-    	//test elipses
-    	//Global.renderer.drawElipse(new Rect(0,0,50,50), blackpaint);
-    	
-    	
-    	//load plates
-    	if(loadList.size() >0)
-    	{
-    		plateLoader.addPlates(loadList);
-    	}
     	
     	//draw msgbox
     	if(Global.worldMsgBox != null)
     		Global.worldMsgBox.render();
     	
-    	
+		ScreenFilter.instance().restore();
 
     }
     

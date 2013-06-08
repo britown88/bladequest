@@ -123,6 +123,7 @@ addDefaultDaggerHit >
 setEBaseStats 3 3 3 3 >
 setELevel 7 >
 HawkAI >
+setItems "potion" 25 "potion" 75 true >
 modStat "MaxHP" -30 >
 modStat "Speed" 6 >
 modStat "BattlePower" -2 >
@@ -135,6 +136,7 @@ setEShadow (createShadow 44 14 40 > addElevation 16))
 \spud <- (addEnemy "spud" "Spud" "spud" >
 addDefaultDaggerHit >
 setEBaseStats 3 3 3 3 >
+setItems "potion" 10 " " 0 true >
 setELevel 5 >
 modStat "BattlePower" -1 >
 addAttackOnlyState >
@@ -161,6 +163,7 @@ setEBaseStats 3 3 3 3 >
 setELevel 6 >
 LeafyBunnyAI >
 setGold 52 >
+setItems "tranquilizer" 50 "tranquilizer" 85 true >
 modStat "MaxHP" -14 >
 modStat "BattlePower" -2 >
 addEAbility "leafygreens" >
@@ -197,6 +200,7 @@ SatyrAI >
 setBoss >
 addEStatusImmunity "confuse" >
 setGold 864 >
+setItems "potion" 100 "runningshoes" 100 true >
 addEAbility "satyrreversal" >
 addEAbility "provoke" >
 addEAbility "trickery" >

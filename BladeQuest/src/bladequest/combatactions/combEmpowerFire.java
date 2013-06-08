@@ -93,7 +93,7 @@ public class combEmpowerFire extends CombatAction {
 			int statShift;
 			int duration;
 			{
-				icon = ""; //shouldn't show.
+				icon = "fireup"; 
 				negative = false;
 				removeOnDeath = true;
 				curable = false;

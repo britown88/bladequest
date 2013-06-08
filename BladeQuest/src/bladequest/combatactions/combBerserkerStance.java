@@ -24,26 +24,26 @@ import bladequest.world.PlayerCharacter;
 import bladequest.world.Stats;
 import bladequest.world.TargetTypes;
 
-public class combBeserkerStance extends Stance {
+public class combBerserkerStance extends Stance {
 	
 	boolean broken;
 	
-	public combBeserkerStance()
+	public combBerserkerStance()
 	{
-		name = "Beserker Stance";
+		name = "Berserker Stance";
 		type = DamageTypes.Magic; //ignored
 		targetType = TargetTypes.Self;
 		
-		actionText = " shifted to beserker stance."; ///?????
+		actionText = " shifted to berserker stance."; ///?????
 		broken = false;
 	}
 	public String getShortName()
 	{
-		return "Beserker";
+		return "Berserker";
 	}
 	public boolean equalTo(Stance rhs)
 	{
-		return (combBeserkerStance)(rhs) != null;
+		return (combBerserkerStance)(rhs) != null;
 	}
 	@Override
 	public String getDescription() { return "Attack furiously, increasing your attack damage but decreasing your defense.";}
@@ -51,7 +51,7 @@ public class combBeserkerStance extends Stance {
 	@Override
 	public String getStatusName()
 	{
-		return "Beserker";	
+		return "Berserker";	
 	}
 	
 	static BattleAnim makeBeserkerAnim()
@@ -108,7 +108,7 @@ public class combBeserkerStance extends Stance {
 		
 		return out;
 	}
-	StatusEffect getBeserkStatus()
+	StatusEffect getBerserkStatus()
 	{
 		return new StatusEffect(getStatusName(), false)
 		{
@@ -116,7 +116,7 @@ public class combBeserkerStance extends Stance {
 			int statShift;
 			
 			{
-				icon = ""; //shouldn't show.
+				icon = "2swords";
 				negative = false;
 				removeOnDeath = true;
 				curable = false;
@@ -176,9 +176,9 @@ public class combBeserkerStance extends Stance {
 		
 		builder.addEventObject(new bactRunAnimation(anim).addDependency(builder.getLast()));
 		
-		//actual implementation of the beserk
+		//actual implementation of the berserk
 		builder.addEventObject(new bactLeaveStance().addDependency(builder.getLast()));
-		builder.addEventObject(new bactInflictStatus(getBeserkStatus()).addDependency(builder.getLast()));
+		builder.addEventObject(new bactInflictStatus(getBerserkStatus()).addDependency(builder.getLast()));
 		
 		builder.addEventObject(new bactSetFace(faces.Cast, 0).addDependency(builder.getLast()));
 		

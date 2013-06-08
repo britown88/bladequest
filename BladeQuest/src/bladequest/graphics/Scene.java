@@ -6,7 +6,9 @@ package bladequest.graphics;
 import java.io.InputStream;
 
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Rect;
 import bladequest.graphics.drawobjects.DrawScaledBmp;
 import bladequest.world.Global;
@@ -31,6 +33,14 @@ public class Scene
 	public void load()
 	{
 		bmp = BitmapFactory.decodeStream(stream);
+		if (ScreenFilter.instance().isFiltering())
+		{
+			Bitmap unfiltered = bmp;
+			bmp = Bitmap.createBitmap(unfiltered.getWidth(), unfiltered.getHeight(), Config.ARGB_8888);
+			Canvas c = new Canvas(bmp);
+			c.drawBitmap(unfiltered, 0.0f, 0.0f, ScreenFilter.instance().defaultPaint());
+			unfiltered.recycle();
+		}
 		loaded = true;
 	}	
 	public void unload()
@@ -58,7 +68,11 @@ public class Scene
 					Global.vpToScreenY(0),
 					Global.vpToScreenX(Global.vpWidth),
 					Global.vpToScreenY(Global.vpHeight));
+			
+			ScreenFilter.instance().save();
+			ScreenFilter.instance().clear();
 			dro = (DrawScaledBmp)Global.renderer.drawBitmap(bmp, src, dest, null);
+			ScreenFilter.instance().restore();
 		}
 	}
 	

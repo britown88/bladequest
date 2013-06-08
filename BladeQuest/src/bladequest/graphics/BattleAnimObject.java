@@ -27,6 +27,7 @@ public class BattleAnimObject
 	private Rect objRect, drawRect;
 	private Bitmap customBmp;
 	
+	float[] colorTransform;
 	private boolean alwaysDraw, linearInterp;
 	
 	public BattleAnimObject(Types type, boolean outlineOnly, String bmpName)
@@ -196,7 +197,8 @@ public class BattleAnimObject
 	public int getEndFrame() { genStartAndEndFrame();return endFrame; }
 	public int getStartFrame() { genStartAndEndFrame();return startFrame; }
 	
-	
+
+	//~= 0.2126 R + 0.7152 G + 0.0722 B
 	
 	public float progress;
 	public void update(int frame)
@@ -247,13 +249,14 @@ public class BattleAnimObject
 				if(type == Types.Bitmap)
 				{
 					float t= workingState.colorize= BattleAnim.cosineInterpolation(currentState.colorize, nextState.colorize, progress);
-					float[] colorTransform = {
+					float[] newColorTransform = {
 				            1-t, 0, 0, 0, workingState.r*t, 
 				            0, 1-t, 0, 0, workingState.g*t,
 				            0, 0, 1-t, 0, workingState.b*t, 
-				            0, 0, 0, 1, 0};					
+				            0, 0, 0, 1, 0};
+					colorTransform = newColorTransform.clone();
 					
-					objPaint.setColorFilter(new ColorMatrixColorFilter(colorTransform));
+					//objPaint.setColorFilter(new ColorMatrixColorFilter(colorTransform));
 				}
 					
 				updatePaint();
@@ -337,6 +340,11 @@ public class BattleAnimObject
 				Rect draw = drawRect;
 				if (srcRect != null) srcRect = new Rect(srcRect);
 				if (draw != null) draw = new Rect(drawRect);
+				
+				if (colorTransform != null)
+				{
+					ScreenFilter.instance().pushFilter(colorTransform);	
+				}
 				if (currentState.mirrored)
 				{
 					Global.renderer.drawMirroredBitmap(customBmp == null ? Global.bitmaps.get(bmpName) : customBmp, workingState.rotation, srcRect, draw, new Paint(objPaint));					
@@ -344,6 +352,10 @@ public class BattleAnimObject
 				else
 				{
 					Global.renderer.drawBitmap(customBmp == null ? Global.bitmaps.get(bmpName) : customBmp, workingState.rotation, srcRect, draw, new Paint(objPaint));
+				}
+				if (colorTransform != null)
+				{				
+					ScreenFilter.instance().popFilter();
 				}
 				break;
 			case Line:

@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -24,6 +25,19 @@ public class Renderer
 {
 	List<DrawObject> updateBuffer, renderBuffer;
 	
+	Paint filterPaint(Paint p)
+	{
+		if (ScreenFilter.instance().isFiltering())
+		{
+			if (p == null)
+			{
+				return ScreenFilter.instance().defaultPaint();
+			}
+			p.setColorFilter( new ColorMatrixColorFilter(ScreenFilter.instance().currentFilter()));
+		}
+		return p;
+	}
+	
 	public Renderer()
 	{
 		updateBuffer = new ArrayList<DrawObject>();
@@ -40,21 +54,25 @@ public class Renderer
 	
 	public void drawRect(float left, float top, float right, float bottom, Paint paint)
 	{
+		paint = filterPaint(paint);
 		updateBuffer.add(new DrawRectF(left+Global.screenShaker.drawDelta.x, top, right+Global.screenShaker.drawDelta.x, bottom, paint));
 	}
 	
 	public void drawElipse(float left, float top, float right, float bottom, Paint paint)
 	{
+		paint = filterPaint(paint);
 		updateBuffer.add(new DrawEllipse(left+Global.screenShaker.drawDelta.x, top, right+Global.screenShaker.drawDelta.x, bottom, paint));
 	}
 	
 	public void drawLine(float startX, float startY, float stopX, float stopY, Paint paint)
 	{
+		paint = filterPaint(paint);
 		updateBuffer.add(new DrawLine(startX+Global.screenShaker.drawDelta.x, startY, stopX+Global.screenShaker.drawDelta.x, stopY, paint));
 	}
 
 	public DrawObject drawBitmap(Bitmap bitmap, float left, float top, Paint paint)
 	{
+		paint = filterPaint(paint);
 		DrawObject dro = new DrawUnscaledBmp(bitmap, left+Global.screenShaker.drawDelta.x, top, paint);
 		updateBuffer.add(dro);	
 		return dro;
@@ -72,6 +90,7 @@ public class Renderer
 	}
 	public DrawObject drawMirroredBitmap(Bitmap bitmap, float rotation, Rect src, Rect dest, Paint paint)
 	{
+		paint = filterPaint(paint);
 		dest.offset(Global.screenShaker.drawDelta.x, 0);
 		
 		Matrix m = new Matrix();
@@ -88,6 +107,7 @@ public class Renderer
 	}
 	public DrawObject drawBitmap(Bitmap bitmap, float rotation, Rect src, Rect dest, Paint paint)
 	{
+		paint = filterPaint(paint);
 		dest.offset(Global.screenShaker.drawDelta.x, 0);
 		
 		Matrix m = new Matrix();
@@ -101,6 +121,7 @@ public class Renderer
 	}	
 	public DrawObject drawBitmap(Bitmap bitmap, Rect src, Rect dest, Paint paint)
 	{
+		paint = filterPaint(paint);
 		dest.offset(Global.screenShaker.drawDelta.x, 0);
 		DrawObject dro = new DrawScaledBmp(bitmap, src, dest, paint);		
 		updateBuffer.add(dro);		
@@ -108,6 +129,7 @@ public class Renderer
 	}
 	public void drawText(String text, float x, float y, Paint paint)
 	{
+		paint = filterPaint(paint);
 		updateBuffer.add(new DrawText(text, x, y, paint));	
 	}
 	public void drawColor(int color)
@@ -121,6 +143,7 @@ public class Renderer
 	
 	public void drawRect(float left, float top, float right, float bottom, Paint paint, boolean ignoreShake)
 	{
+		paint = filterPaint(paint);
 		if(ignoreShake)
 			updateBuffer.add(new DrawRectF(left, top, right, bottom, paint));
 		else
@@ -128,6 +151,7 @@ public class Renderer
 	}
 	public void drawRect(Rect r, Paint paint, boolean ignoreShake)
 	{
+		paint = filterPaint(paint);
 		if(!ignoreShake)
 			r.offset(Global.screenShaker.drawDelta.x, 0);
 		
@@ -136,6 +160,7 @@ public class Renderer
 	
 	public void drawElipse(Rect r, Paint paint)
 	{		
+		paint = filterPaint(paint);
 		r.offset(Global.screenShaker.drawDelta.x, 0);
 		
 		updateBuffer.add(new DrawEllipse(r, paint));		
@@ -143,6 +168,7 @@ public class Renderer
 	
 	public void drawBitmap(Bitmap bitmap, float left, float top, Paint paint, boolean ignoreShake)
 	{
+		paint = filterPaint(paint);
 		if(ignoreShake)
 			updateBuffer.add(new DrawUnscaledBmp(bitmap, left, top, paint));		
 		else
@@ -150,6 +176,7 @@ public class Renderer
 	}
 	public void drawBitmap(Bitmap bitmap, Rect src, Rect dest, Paint paint, boolean ignoreShake)
 	{
+		paint = filterPaint(paint);
 		if(!ignoreShake)
 			dest.offset(Global.screenShaker.drawDelta.x, 0);
 		
