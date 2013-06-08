@@ -2,6 +2,7 @@
 
 
 
+
 #!OBJ 13 19
 \objName$13x19$ <- "name"
 \name$13x19$ <- newObject objName$13x19$ 13 19
@@ -268,7 +269,7 @@ setSprite "oldman"
 state1$16x3$ 0
 name$16x3$ > createState >
 setCollisionData true true true true >
-addAction (message "|luc|: \nI Don't need to go through Mr. Gilbert's books...") >
+addAction (message "|luc|: \nI don't need to go through Mr. Gilbert's books...") >
 addAction (message "They're probably really weird!")
 
 \runstate1$16x3$ <- state1$16x3$ 0

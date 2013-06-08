@@ -11,6 +11,7 @@
 
 
 
+
 #!OBJ 22 3
 \objName$22x3$ <- "name"
 \name$22x3$ <- newObject objName$22x3$ 22 3
@@ -174,6 +175,9 @@ addAction (messageWithYesNo "Bed for the night is 10G, yould you like to stay?" 
 		addToBranch 0 (fadeControl 1.0 255 0 0 0 true true) >
 		addToBranch 0 (restoreParty 0) >
 		addToBranch 0 (teleportParty name$43x24$ 48 17 "albiinside") >
+		addToBranch 0 (pushSong 0) >
+		addToBranch 0 (playMusic "sleep" false false 0.0) >
+		addToBranch 0 (popSong 0) >
 		addToBranch 0 (fadeControl 1.0 255 0 0 0 false true) >
 		addToBranch 1 (message "Oh no, you dont have enough!")) >
 	addToBranch 1 (message "Ok, see you around!"))
@@ -368,7 +372,7 @@ addSwitchCondition "albisleepingbag1"
 state1$21x16$ 0
 name$21x16$ > createState >
 setCollisionData true true true true >
-addAction (message "You found you savings!") >
+addAction (message "You found your savings!") >
 addAction (message "You got 150G!") >
 addAction (modifyGold 150) >
 addAction (switchControl "albigold1" true)
