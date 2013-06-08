@@ -895,23 +895,32 @@ public class Global
 	public static Point getVPCoordsFromObject(String name)
 	{
 		Point targetP = null;
-		if(target.equals("party"))
-			targetP = Global.party.getGridPos();
+		if(name.equals("party"))
+		{
+			targetP = party.getWorldPos();
+			targetP.y -= party.getElevation();
+		}			
 		else
 			for(GameObject go : Global.map.Objects())
-				if(go.Name().equals(target))
+				if(go.Name().equals(name))
 				{
-					targetP = go.getGridPos();
+					targetP = go.getWorldPos();
+					targetP.y -= go.getElevation();
 					break;
 				}						
 
 		if(targetP != null)
-		{
-			targetP = new Point(targetP.x * 32 + 16, targetP.y * 32 + 16);
-			targetP = Global.worldToVP(targetP);				
-		}
-		
+			targetP = gridPosToVP(targetP);
+
+			
+	
 		return targetP;
+	}
+	
+	public static Point gridPosToVP(Point p)
+	{
+		Point targetP = new Point(p.x + 16, p.y + 16);
+		return Global.worldToVP(targetP);	
 	}
 	
 	public static Rect screenToVP(Rect r)

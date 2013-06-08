@@ -136,15 +136,15 @@ public class WorldAnimations
 			{
 				BattleAnim anim = new BattleAnim(1000.0f);
 				BattleAnimObject obj = new BattleAnimObject(Types.Elipse, false, "");
-				BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Screen);
-				state.pos1 = start;
+				BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Source);
+				state.pos1 = new Point();
 				state.size = new Point();
 				state.argb(Color.alpha(c), Color.red(c), Color.green(c), Color.blue(c));
 				state.colorize = 1.0f;
 				obj.addState(state);				
 				
-				state = new BattleAnimObjState((int)(time*1000), PosTypes.Screen);
-				state.pos1 = start;
+				state = new BattleAnimObjState((int)(time*1000), PosTypes.Source);
+				state.pos1 = new Point();
 				state.size = new Point(radius*2, radius*2);
 				state.argb(Color.alpha(c), Color.red(c), Color.green(c), Color.blue(c));
 				state.colorize = 1.0f;

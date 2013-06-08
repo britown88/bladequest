@@ -117,14 +117,7 @@ public class BattleAnimObject
 		this.animPos = pos;
 		
 		genStartAndEndFrame();
-		
-		for(BattleAnimObjState state : states)
-			state.randomized = false;
-		
-		states.get(0).randomize(this);
-		setState(0);
-		if(nextState != null && !nextState.randomized) nextState.randomize(this);
-		
+		setState(0);		
 		
 	}
 	
@@ -136,6 +129,7 @@ public class BattleAnimObject
 			
 			currentState = states.get(index);
 			workingState.copyFrom(currentState);
+			workingState.offset(this);
 			
 			y0 = index == 0 ? currentState : states.get(index - 1);
 			
@@ -144,10 +138,13 @@ public class BattleAnimObject
 			else
 				nextState = null;
 			
-			y3 = index < states.size() - 2 ? states.get(index + 2) : nextState;
-				
-			//nextState = index < states.size() - 1 ? states.get(index+1) : null;
-			if(y3 != null && !y3.randomized) y3.randomize(this);
+			if(index < states.size() - 2)
+			{
+				y3 = states.get(index + 2);
+			}
+			else
+				y3 = nextState;
+
 
 			updatePaint();
 			updateRect();
@@ -221,6 +218,17 @@ public class BattleAnimObject
 				progress = (float)(frame - currentState.frame) / (float)stateLength;
 				
 				
+				
+				currentState.offset(this);
+				nextState.offset(this);
+				
+				if(y0 != null && !y0.equals(currentState))
+					y0.offset(this);
+				
+				if(y3 != null && !y3.equals(nextState))
+					y3.offset(this);
+				
+				
 				//injected interface.
 				if (type == Types.Interpolatable)
 				{
@@ -270,40 +278,31 @@ public class BattleAnimObject
 
 				if(linearInterp)
 				{
-					if(currentState.pos1.x != nextState.pos1.x)
-					{
-						workingState.pos1.x = BattleAnim.linearInterpolation(currentState.pos1.x, nextState.pos1.x, progress);
-						workingState.pos2.x = BattleAnim.linearInterpolation(currentState.pos2.x, nextState.pos2.x, progress);
-					}
-					
-					if(currentState.pos1.y != nextState.pos1.y)
-					{
-						workingState.pos1.y = BattleAnim.linearInterpolation(currentState.pos1.y, nextState.pos1.y, progress);
-						workingState.pos2.y = BattleAnim.linearInterpolation(currentState.pos2.y, nextState.pos2.y, progress);
-					}						
+
+					workingState.pos1.x = BattleAnim.linearInterpolation(currentState.pos1.x, nextState.pos1.x, progress);
+					workingState.pos2.x = BattleAnim.linearInterpolation(currentState.pos2.x, nextState.pos2.x, progress);
+
+					workingState.pos1.y = BattleAnim.linearInterpolation(currentState.pos1.y, nextState.pos1.y, progress);
+					workingState.pos2.y = BattleAnim.linearInterpolation(currentState.pos2.y, nextState.pos2.y, progress);
+				
 				}
 				else
 				{
-					if(currentState.pos1.x != nextState.pos1.x)
-					{
-						workingState.pos1.x = BattleAnim.cubicInterpolation(y0.pos1.x, currentState.pos1.x, nextState.pos1.x, y3.pos1.x, progress);
-					}
-					
-					if(currentState.pos1.y != nextState.pos1.y)
-					{
-						workingState.pos1.y = BattleAnim.cubicInterpolation(y0.pos1.y, currentState.pos1.y, nextState.pos1.y, y3.pos1.y, progress);
-					}
-					if(currentState.pos2.x != nextState.pos2.x)
-					{
-						workingState.pos2.x = BattleAnim.cubicInterpolation(y0.pos2.x, currentState.pos2.x, nextState.pos2.x, y3.pos2.x, progress);
-					}
-					
-					if(currentState.pos2.y != nextState.pos2.y)
-					{
-						workingState.pos2.y = BattleAnim.cubicInterpolation(y0.pos2.y, currentState.pos2.y, nextState.pos2.y, y3.pos2.y, progress);
-
-					}					
+					workingState.pos1.x = BattleAnim.cubicInterpolation(y0.pos1.x, currentState.pos1.x, nextState.pos1.x, y3.pos1.x, progress);
+					workingState.pos1.y = BattleAnim.cubicInterpolation(y0.pos1.y, currentState.pos1.y, nextState.pos1.y, y3.pos1.y, progress);
+					workingState.pos2.x = BattleAnim.cubicInterpolation(y0.pos2.x, currentState.pos2.x, nextState.pos2.x, y3.pos2.x, progress);
+					workingState.pos2.y = BattleAnim.cubicInterpolation(y0.pos2.y, currentState.pos2.y, nextState.pos2.y, y3.pos2.y, progress);
+				
 				}
+				
+				currentState.unOffset(this);
+				nextState.unOffset(this);
+				
+				if(y0 != null && !y0.equals(currentState))
+					y0.unOffset(this);
+				
+				if(y3 != null && !y3.equals(nextState))
+					y3.unOffset(this);
 				
 				//build final rect
 				updateRect();

@@ -3,6 +3,7 @@
 
 
 
+
 #!OBJ 0 0
 \name$0x0$ <- newObject "start" 0 0
 
@@ -54,7 +55,8 @@ state1$3x5$ 0
 name$3x5$ > createState >
 setSpriteFromTile 1 2 >
 setCollisionData true true true true >
-addAction (playAnimation (genTitleSequence 0) "party" "party" true)
+addAction (panControl 5 5 1.0 false) >
+addAction (playAnimation (genGrowingCircle (point 208 80) 150 255 0 0 1.0 32) "party" "party" true)
 
 
 \runstate1$3x5$ <- state1$3x5$ 0

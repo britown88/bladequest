@@ -10,6 +10,7 @@ public class actAnimation extends Action
 {
 	AnimationBuilder animBuilder;
 	String source, target;
+	Point gridSrc, gridTar;
 	BattleAnim playingAnim;
 	boolean wait, stoppingShort;
 	float stopShortTime;
@@ -20,6 +21,15 @@ public class actAnimation extends Action
 		this.animBuilder = animBuilder;
 		this.target = target;
 		this.source = source;
+		this.wait = wait;
+		this.stoppingShort = false;
+	}
+	
+	public actAnimation(AnimationBuilder animBuilder, Point source, Point target, boolean wait)
+	{
+		this.animBuilder = animBuilder;
+		this.gridTar = target;
+		this.gridSrc = source;
 		this.wait = wait;
 		this.stoppingShort = false;
 	}
@@ -39,29 +49,62 @@ public class actAnimation extends Action
 	public void run()
 	{
 		if (playingAnim == null)
-		{			
-			playingAnim = Global.playAnimation(
-					animBuilder.buildAnimation(null), 
-					new AnimationPosition() {
-						private String src, tar;
-						
-						public AnimationPosition init(String source, String target)
-						{
-							this.src = source;
-							this.tar = target;					
-							return this;
-						}			
-						
-						@Override
-						public Point getTarget() {
-							return Global.getVPCoordsFromObject(tar);
-						}
-						
-						@Override
-						public Point getSource() {
-							return Global.getVPCoordsFromObject(src);
-						}
-					}.init(source, target));
+		{		
+			//grid position
+			if(gridTar != null)
+			{
+				playingAnim = Global.playAnimation(
+						animBuilder.buildAnimation(null), 
+						new AnimationPosition() {
+							private Point src, tar;
+							
+							public AnimationPosition init(Point source, Point target)
+							{
+								this.src = source;
+								this.tar = target;					
+								return this;
+							}			
+							
+							@Override
+							public Point getTarget() {
+								return Global.gridPosToVP(tar);
+							}
+							
+							@Override
+							public Point getSource() {
+								return Global.gridPosToVP(src);
+							}
+						}.init(gridSrc, gridTar));
+				
+			}
+			//object position
+			else
+			{
+				playingAnim = Global.playAnimation(
+						animBuilder.buildAnimation(null), 
+						new AnimationPosition() {
+							private String src, tar;
+							
+							public AnimationPosition init(String source, String target)
+							{
+								this.src = source;
+								this.tar = target;					
+								return this;
+							}			
+							
+							@Override
+							public Point getTarget() {
+								return Global.getVPCoordsFromObject(tar);
+							}
+							
+							@Override
+							public Point getSource() {
+								return Global.getVPCoordsFromObject(src);
+							}
+						}.init(source, target));
+				
+			}
+			
 			
 			duration = playingAnim.getDuration();
 			startTime = System.currentTimeMillis();

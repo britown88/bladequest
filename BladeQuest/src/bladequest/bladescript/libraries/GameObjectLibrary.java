@@ -1,5 +1,6 @@
 package bladequest.bladescript.libraries;
 
+import android.graphics.Point;
 import bladequest.actions.Action;
 import bladequest.actions.actAllowSaving;
 import bladequest.actions.actAnimation;
@@ -201,6 +202,11 @@ public class GameObjectLibrary
 		return act;
 	}
 	public static Action playAnimation(AnimationBuilder builder, String source, String target, boolean wait)
+	{		
+		Action act = new actAnimation(builder, source, target, wait);
+		return act;
+	}
+	public static Action playAnimation(AnimationBuilder builder, Point source, Point target, boolean wait)
 	{		
 		Action act = new actAnimation(builder, source, target, wait);
 		return act;
