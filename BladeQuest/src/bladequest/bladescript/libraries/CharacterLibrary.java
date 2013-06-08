@@ -1,8 +1,10 @@
 package bladequest.bladescript.libraries;
 
+import android.util.Log;
 import bladequest.bladescript.LibraryWriter;
+import bladequest.bladescript.ParserException;
+import bladequest.bladescript.ScriptVar;
 import bladequest.combatactions.CombatAction;
-import bladequest.enemy.Enemy;
 import bladequest.graphics.Shadow;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
@@ -20,6 +22,23 @@ public class CharacterLibrary
 	public static boolean hasStatus(PlayerCharacter character, String statusName)
 	{
 		return character.hasStatus(statusName);
+	}
+	public static ScriptVar getPlayersWithStatus(String statusName)
+	{
+		ScriptVar out = new ScriptVar.EmptyList();
+		for (PlayerCharacter p : Global.battle.getParty())
+		{
+			if (p.hasStatus(statusName))
+			{
+				try {
+					out = new ScriptVar.ListNode(ScriptVar.toScriptVar(p), out);
+				} catch (ParserException e) {
+					e.printStackTrace();
+					Log.d("Parser", e.what());
+				}
+			}
+		}
+		return out;
 	}
 	public static PlayerCharacter createCharacter(String name, String displayName, String battleSprite, String worldSprite)
 	{

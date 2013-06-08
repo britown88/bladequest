@@ -4,6 +4,7 @@ import android.util.Log;
 import bladequest.bladescript.LibraryWriter;
 import bladequest.bladescript.ParserException;
 import bladequest.bladescript.ScriptVar;
+import bladequest.bladescript.ScriptVar.BadTypeException;
 
 public class HigherOrderLibrary {
 
@@ -20,6 +21,32 @@ public class HigherOrderLibrary {
 		}
 		return bound;
 	}
+	
+	public static ScriptVar head(ScriptVar list)
+	{
+		try {
+			return list.head();
+		} catch (BadTypeException e) {
+			e.printStackTrace();
+			Log.d("Parser", e.what());
+		}
+		return null;
+	}
+	public static ScriptVar tail(ScriptVar list)
+	{
+		try {
+			return list.tail();
+		} catch (BadTypeException e) {
+			e.printStackTrace();
+			Log.d("Parser", e.what());
+		}
+		return null;
+	}
+	public static boolean isEmpty(ScriptVar list)
+	{
+		return list.isEmptyList();
+	}	
+	
 	
 	public static ScriptVar iterateBetween(ScriptVar fn, int begin, int end)
 	{

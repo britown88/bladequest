@@ -100,7 +100,10 @@ public class ObjectState {
 	{
 		ignorePartyOnMove = ignore;
 	}
-	
+	public boolean getIgnorePartyOnMove()
+	{
+		return ignorePartyOnMove;
+	}
 	public boolean[] getCollision() { return collSides; }
 	public boolean hasCollision() { return collSides[0] || collSides[1] || collSides[2] || collSides[3]; }
 	
@@ -185,8 +188,7 @@ public class ObjectState {
 			FaceOnActivate();
 			Global.party.setAllowMovement(!waitOnActivate);
 			isRunning = true;
-			if(!parent.isGridAligned())
-				parent.clearMovement();
+			parent.clearMovement();
 			objPath = null;
 			actionList.get(currentAction).run();
 
@@ -434,9 +436,11 @@ public class ObjectState {
 					if(defaultPath != null)
 					{
 						applyPath(defaultPath);
-						
-					
 					}				
+					else if (!parent.isGridAligned())
+					{
+						parent.restorePath();
+					}
 				}
 				else
 				{

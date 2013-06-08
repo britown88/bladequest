@@ -703,19 +703,47 @@ public class Parser {
 			Statement matchingStatement;
 			List<Statement> conditionalStatements;
 			List<Statement> outputStatements;
+			List<Statement> conditionalSubstatements;
+			
 			
 			StatementParser initialize(Statement matchingStatement, List<Statement> conditionalStatements, List<Statement> outputStatements)
 			{
 				this.matchingStatement = matchingStatement;
 				this.conditionalStatements = conditionalStatements;
 				this.outputStatements = outputStatements;
+				conditionalSubstatements = new ArrayList<Statement>();
 				return this;
+			}
+			
+			Statement compile( ) throws ParserException 
+			{
+				endLine();
+				return new Statement()
+				{
+					List<Statement> statements;
+					Statement initialize(List<Statement> statements)
+					{
+						this.statements = statements;
+						return this;
+					}
+					public ScriptVar invoke(ExecutionState state)
+							throws ParserException {
+
+						ScriptVar var = null;
+						for (Statement statement : statements)
+						{
+							var = statement.invoke(state);
+						}
+						return var;
+					}
+					
+				}.initialize(conditionalSubstatements);
 			}
 			
 			@Override
 			public void patternMatch() throws ParserException 
 			{
-				outputStatements.add(compileSubstatements());
+				outputStatements.add(compile());
 				popState();
 				pushState(getPatternConditionalState(argNames, locals, matchingStatement, conditionalStatements, outputStatements));
 			}
@@ -723,7 +751,7 @@ public class Parser {
 			@Override
 			public void endParen() throws ParserException 
 			{
-				outputStatements.add(compileSubstatements());
+				outputStatements.add(compile());
 				publishStatement(getPatternMatchStatement(matchingStatement, conditionalStatements, outputStatements));
 				popState();
 			}			
@@ -731,7 +759,11 @@ public class Parser {
 			@Override
 			public void endLine() throws ParserException
 			{
-				//ignore end lines.  It's common form for the pattern match to be on the other side.
+				if (!substatements.isEmpty())
+				{
+					conditionalSubstatements.add(compileSubstatements());
+					this.substatements = new ArrayList<Statement>();
+				}
 			}			
 		}.initialize(matchingStatement, conditionalStatements, outputStatements);		
 	}

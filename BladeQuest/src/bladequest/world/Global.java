@@ -84,7 +84,6 @@ import bladequest.statuseffects.StatusEffect;
 import bladequest.system.BqActivity;
 import bladequest.system.BqPanel;
 import bladequest.system.GameSaveLoader;
-import bladequest.system.Lock;
 import bladequest.system.MapLoadThread;
 import bladequest.system.Recyclable;
 
@@ -228,6 +227,21 @@ public class Global
 	private static List<TilePlateBitmap> tilePlateBmps;
 	
 	private static ReentrantLock tileLoaderLock;
+	
+	
+	private static List<String> songStack = new ArrayList<String>();
+	
+	public static void pushSong()
+	{
+		songStack.add(BladeSong.instance().getCurrentSong());
+	}
+	public static void popSong()
+	{
+		if (!songStack.isEmpty())
+		{
+			BladeSong.instance().fadeInto(1.0f, songStack.get(songStack.size()-1), 1.0f);
+		}
+	}
 	
 	public static void freeTileBitmap(TilePlateBitmap bitmap)
 	{
@@ -932,18 +946,18 @@ public class Global
         {
         	appRunning = true;
         	
+        	saveLoader = new GameSaveLoader();
         	
         	loadResources(); 
         	//createWorld();
         	
-        	title= new TitleScreen();
-        	saveLoader = new GameSaveLoader();
+        	title = new TitleScreen();
+
         	saveLoadMenu = new SaveLoadMenu();
         	playingAnims = new ArrayList<BattleAnim>();
         	GameState = States.GS_TITLE;
         	title.titleStart();
         	BladeSong.instance().play("", false, true, 0);
-        	
         	
         	Paint paint = textFactory.getTextPaint(13, Color.WHITE, Align.CENTER);
         	menuButton = new ListBox(vpWidth, vpHeight, 0, 40, 1, 1, paint);

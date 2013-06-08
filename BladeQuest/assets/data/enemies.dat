@@ -269,18 +269,32 @@ RolandRoundOne e decision
 	 |greater 80 :  RolandEntomb "base" RolandShatter e decision
 	 |greater 100 : "")    
     
-RolandRoundTwo e decision
+    
+TryFrozenGrasp returnstate e decision otherwise
+	\frozenPlayers <- (getPlayersWithStatus "frozen")
+  	(|isEmpty frozenPlayers
+  	 |equals false : RolandFrozenGrip returnstate (head frozenPlayers) e decision
+  	 |equals true : otherwise e decision
+    )
+    
+RandomRoundTwoDecision e decision
     (|randomRoll 100   
 	 |greater 30 :  ""  #basic attack
      |greater 100 : RolandEntomb "base2" RolandFrozenGrip e decision)
      
-RolandRoundThree e decision
+RolandRoundTwo e decision
+	TryFrozenGrasp "base2" e decision RandomRoundTwoDecision
+     
+RandomRoundThreeDecision e decision
     (|randomRoll 100   
 	 |greater 20 : RolandEntomb "base3" RolandShatter e decision
      |greater 50 : RolandEntomb "base3" RolandFrozenGrip e decision
      |greater 80 : decision > setAbility (e > getEnemyAbility "icebarrage")
      |greater 100 : "" #basic attack
      )     
+     
+RolandRoundThree e decision
+	TryFrozenGrasp "base3" e decision RandomRoundThreeDecision     
     
 RolandAI enemy
    enemy > setEnemyAI (
@@ -289,6 +303,9 @@ RolandAI enemy
            addAIState "base3" (createAIState RolandRoundThree) >           
            addAIState "attackFn" (createAIState ([e dec] ""))
       ) 
+      
+      
+      
       
 RolandTriggers roland      
 	onHPFraction roland 3 4 ([e]  #at 3/4ths hp...

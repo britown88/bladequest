@@ -1,34 +1,131 @@
 package bladequest.graphics;
 
+import bladequest.serialize.DeserializeFactory;
+import bladequest.serialize.Deserializer;
+import bladequest.serialize.Serializable;
+import bladequest.serialize.Serializer;
+
 import bladequest.world.Global;
 
-public class ScreenFader 
+public class ScreenFader extends Serializable
 {
-	private int red, green, blue;
-	private int alpha, finalAlpha;
+	private static class ColorARGB  extends Serializable
+	{
+		private static final String ColorTag = "ColorARGB";
+		ColorARGB() 
+		{
+			super(ColorTag);
+			a = r = g = b = 0;
+		}
+		ColorARGB(ColorARGB rhs) 
+		{
+			super(ColorTag);
+			this.a = rhs.a;
+			this.r = rhs.r;
+			this.g = rhs.g;
+			this.b = rhs.b;			
+		}
+		ColorARGB(int a, int r, int g, int b) 
+		{
+			super(ColorTag);
+			this.a = a;
+			this.r = r;
+			this.g = g;
+			this.b = b;
+		}
+		void set (int a,int r,int g, int b)
+		{
+			this.a = a;
+			this.r = r;
+			this.g = g;
+			this.b = b;
+		}
+		ColorARGB interpolate(ColorARGB rhs, float t)
+		{
+			return new ColorARGB(BattleAnim.linearInterpolation(a, rhs.a, t),
+			BattleAnim.linearInterpolation(r, rhs.r, t),
+			BattleAnim.linearInterpolation(g, rhs.g, t),
+			BattleAnim.linearInterpolation(b, rhs.b, t));
+		}
+
+		static class ColorDeserialize extends DeserializeFactory{
+
+			public  ColorDeserialize() {
+				super(ColorTag);
+			}
+
+			@Override
+			public Object deserialize(Deserializer deserializer) {
+				int a = deserializer.readInt();
+				int r = deserializer.readInt();
+				int g = deserializer.readInt();
+				int b = deserializer.readInt();
+				
+				return new ColorARGB(a,r,g,b);
+			}
+			
+		}
+		@Override
+		public void onSerialize(Serializer serializer)
+		{
+			serializer.write(a);
+			serializer.write(r);
+			serializer.write(g);
+			serializer.write(b);
+		}
+		
+		int a,r,g,b;
+	}
+	
+	ColorARGB from, to, current;
 	private float fadeTime;
 	private long startTime;
 	private boolean fading, fadeIn, done, flashing;
 	
+	private static final String ScreenFaderTag = "screenfader";
+	
+	private class ScreenDeserialize extends DeserializeFactory{
+
+		public ScreenDeserialize() {
+			super(ScreenFaderTag);
+		}
+
+		@Override
+		public Object deserialize(Deserializer deserializer) {
+			ColorARGB to = (ColorARGB) new ColorARGB.ColorDeserialize().deserialize(deserializer);
+
+			Global.screenFader.setFadeToColor(to.a, to.r, to.g, to.b);
+			
+			return Global.screenFader;
+		}
+		
+	}
+	
 	public ScreenFader()
 	{
+		super(ScreenFaderTag);
 		fading = false;
 		fadeIn = true;
-		finalAlpha = 0;
 		done = true;
+		new ScreenDeserialize();
+		new ColorARGB.ColorDeserialize();
+		from = new ColorARGB();
+		to = new ColorARGB();
+		current = new ColorARGB();
+	}
+	
+	public void setFadeToColor(int a, int r, int g, int b)
+	{
+		to.set(a, r, g, b);
 	}
 	
 	public void setFadeColor(int a, int r, int g, int b)
 	{
-		red = r;
-		green = g;
-		blue = b;
-		finalAlpha = Math.min(255, a);		
+		from.set(a, r, g, b);
 	}
 	
 	public void fadeIn(float fadeTime)
 	{
-		alpha = finalAlpha;
 		fading = true;
 		this.fadeTime = fadeTime;
 		fadeIn = true;
@@ -38,7 +135,6 @@ public class ScreenFader
 	
 	public void fadeOut(float fadeTime)
 	{
-		alpha = 0;
 		fading = true;
 		this.fadeTime = fadeTime;
 		fadeIn = false;
@@ -59,7 +155,7 @@ public class ScreenFader
 	
 	public void setFaded()
 	{
-		alpha = finalAlpha;
+		current = to;
 		fading = false;
 		done = true;
 	}
@@ -67,7 +163,7 @@ public class ScreenFader
 	public void clear()
 	{
 		flashing = false;
-		alpha = 0;
+		current = to;
 		fading = false;
 		done = true;
 	}
@@ -87,7 +183,6 @@ public class ScreenFader
 						flashing = false;
 						fading = false;
 						done = true;		
-						alpha = 0;
 					}
 					else
 					{
@@ -99,16 +194,17 @@ public class ScreenFader
 				{
 					fading = false;
 					done = true;	
-					alpha = fadeIn ? 0 : finalAlpha;
+					current = fadeIn ? to : from;
 				}
 			}
 			
 			if(fading)
 			{
-				if(fadeIn)
-					alpha = (int)(finalAlpha*(1.0f-delta));
-				else
-					alpha = (int)(finalAlpha*delta);
+				float t = delta;
+				if(!fadeIn)
+					t = 1.0f-delta;
+				
+				current = from.interpolate(to, t);
 			}
 			
 			
@@ -117,8 +213,15 @@ public class ScreenFader
 	
 	public void render()
 	{
-		Global.renderer.drawColor(alpha, red, green, blue);
-		
+		if (current.a > 0)
+		{
+			Global.renderer.drawColor(current.a, current.r, current.g, current.b);			
+		}
+	}
+
+	@Override
+	public void onSerialize(Serializer serializer) {
+		to.onSerialize(serializer);
 	}
 
 }

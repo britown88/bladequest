@@ -15,10 +15,10 @@ public class GameObject {
 	public GameObject nextCollidable, prevCollidable;
 	
 	
-	private String name;
+	private String name, prevMove;
 	private Point worldPos;
 	private Point gridPos;
-	private Point target, origin;
+	private Point  target, origin;
 	private boolean gridAligned;	
 
 	private int currentState;	
@@ -193,10 +193,15 @@ public class GameObject {
 	{
 		target = gridPos;
 	}
+	public void restorePath()
+	{
+		setTarget(prevMove, states.get(currentState).getIgnorePartyOnMove());
+	}
 	
 	
 	public boolean setTarget(String face, boolean ignoreParty)
-	{		
+	{	
+		prevMove = face;
 		if(!faceLocked)
 			states.get(currentState).face(face);
 		
@@ -319,7 +324,9 @@ public class GameObject {
 			Point dest = new Point (target.x*32, target.y*32);
 			int speed = states.get(currentState).getMoveSpeed();
 			
-					
+			worldPos.x += vect.x*speed;
+			worldPos.y += vect.y*speed;
+			
 			if(vect.x > 0)
 				worldPos.x = (worldPos.x > dest.x) ? dest.x : worldPos.x;
 			if(vect.x < 0)
@@ -332,8 +339,6 @@ public class GameObject {
 			if(!worldPos.equals(dest))
 			{
 				gridAligned = false;
-				worldPos.x += vect.x*speed;
-				worldPos.y += vect.y*speed;
 			}
 			else
 			{
