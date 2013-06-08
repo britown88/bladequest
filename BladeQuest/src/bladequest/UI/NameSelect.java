@@ -97,8 +97,7 @@ public class NameSelect
 		{
 			closed = true;
 			Global.GameState = States.GS_WORLDMOVEMENT;
-			Global.delay();
-			Global.screenFader.fadeIn(0.5f);			
+			Global.delay();		
 		}
 	}	
 	public boolean isClosed() { return closed; }

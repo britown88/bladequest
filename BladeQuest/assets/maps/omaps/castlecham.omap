@@ -4,6 +4,7 @@
 
 
 
+
 #!OBJ 12 0
 createWindowObj x y
 \obj <- newObject "window" (12 > add x) y
@@ -134,23 +135,25 @@ state$0x0$ > addAction (fadeControl 5.0 255 0 0 0 false false)
 state$0x0$ > addAction (wait 4.0)
 state$0x0$ > addAction (playAnimationStoppedShort (genTitleSequence 0) "party" "party" 5.0)
 state$0x0$ > addAction (pauseMusic 5.0)
-state$0x0$ > addAction (fadeControl 5.0 255 255 255 255 true true)
+state$0x0$ > addAction (fadeControl 5.0 255 0 0 0 true true)
 state$0x0$ > addAction (unloadScene 0)
-state$0x0$ > addAction (resetGame 0)
-state$0x0$ > addAction (createPath "party" true "V")
+state$0x0$ > addAction (createPath "party" true "Vl")
 state$0x0$ > addAction (setFloating "party" false 0 0)
 state$0x0$ > addAction (changeElevation "party" 0 0.0 true)
-state$0x0$ > addAction (teleportParty name$0x0$ 1 3 "test")
-state$0x0$ > addAction (fadeControl 1.0 255 0 0 0 false true)
-state$0x0$ > addAction (switchControl "orbscene" true)
+state$0x0$ > addAction (showScene "albi")
+state$0x0$ > addAction (fadeControl 3.0 255 0 0 0 false true)
+state$0x0$ > addAction (wait 3.0)
+state$0x0$ > addAction (fadeControl 3.0 255 0 0 0 true true)
+state$0x0$ > addAction (unloadScene 0)
+state$0x0$ > addAction (wait 2.0)
+state$0x0$ > addAction (message "Hey!")
+state$0x0$ > addAction (message "Wake up!")
+state$0x0$ > addAction (openNameSelect "luc")
+state$0x0$ > addAction (teleportParty name$0x0$ 20 17 "albiinside")
+state$0x0$ > addAction (fadeControl 5.0 255 0 0 0 false true)
 
 \runstate1$0x0$ <- state1$0x0$ 0
 
-state2$0x0$ 0
-name$0x0$ > createState >
-addSwitchCondition "orbscene"
-
-\runstate2$0x0$ <- state2$0x0$ 0
 
 #!OBJ 12 6
 \objName$12x6$ <- "robeUL"

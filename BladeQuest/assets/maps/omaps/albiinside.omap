@@ -12,6 +12,7 @@
 
 
 
+
 #!OBJ 22 3
 \objName$22x3$ <- "name"
 \name$22x3$ <- newObject objName$22x3$ 22 3

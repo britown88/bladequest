@@ -511,7 +511,8 @@ public class Global
 			nameSelect = new NameSelect();
 		
 		nameSelect.open(c);
-		transition(States.GS_NAMESELECT);
+		screenFader.fadeIn(0.5f);
+		GameState = States.GS_NAMESELECT;
 	}
 	
 	public static void openSaveLoadMenu(int mode)
