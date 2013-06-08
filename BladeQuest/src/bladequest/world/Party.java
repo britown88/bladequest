@@ -407,6 +407,7 @@ public class Party
 				
 	}
 	public Point getGridPos(){return gridPos;}	
+	public Point getWorldPos(){return worldPos;}	
 	public Point getTarget(){return target;}	
 	public void addGold(int gold){this.gold =Math.min(999999, this.gold+gold);}	
 	public int getGold(){return gold;}	

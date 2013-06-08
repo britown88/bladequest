@@ -554,6 +554,8 @@ public class Global
 		panStartTime = System.currentTimeMillis();
 	}
 	
+	
+	
 	public static void setPanned(int x, int y)
 	{
 		vpPan = new Point(x*32, y*32);
