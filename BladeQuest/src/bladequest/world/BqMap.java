@@ -26,6 +26,7 @@ import bladequest.bladescript.libraries.HigherOrderLibrary;
 import bladequest.bladescript.libraries.MathLibrary;
 import bladequest.bladescript.libraries.WorldAnimLibrary;
 import bladequest.graphics.Scene;
+import bladequest.graphics.ScreenFilter;
 import bladequest.graphics.Tile;
 import bladequest.graphics.TilePlate;
 import bladequest.sound.BladeSong;
@@ -150,12 +151,6 @@ public class BqMap
 			//add objs to necessary tileplates
 			for(GameObject go : objects)
 			{
-				int index = ((go.getGridPos().y/10)*plateCount.x)+(go.getGridPos().x/10);			
-				if(go.getLayer() == Layer.Above)
-					foreground[index].addObject(go);
-				else
-					background[index].addObject(go);
-				
 				go.postCreate();
 
 			}
@@ -252,8 +247,8 @@ public class BqMap
 	public void renderBackground(List<TilePlate> loadList){renderTiles(background, loadList);}	
 	public void renderForeground(List<TilePlate> loadList){renderTiles(foreground, loadList);}
 	
-	public void renderBackgroundObjs(){renderObjects(background);}	
-	public void renderForegroundObjs(){renderObjects(foreground);}
+	public void renderBackgroundObjs(){renderObjects(Layer.Under); renderObjects(Layer.Level);}	
+	public void renderForegroundObjs(){renderObjects(Layer.Above);}
 	
 	public Scene getBackdrop(){return backdrop;}	
 	public void setBGM(String bgm){defaultBGM = bgm;}	
@@ -264,7 +259,8 @@ public class BqMap
 	
 	private void initTilePlates()
 	{
-		plateCount = new Point((mapSize.x/10)+(mapSize.x%10>0?1:0), (mapSize.y/10)+(mapSize.y%10>0?1:0));
+		plateCount = new Point((mapSize.x/Global.tilePlateSize.x)+(mapSize.x%Global.tilePlateSize.x>0?1:0), 
+							   (mapSize.y/Global.tilePlateSize.y)+(mapSize.y%Global.tilePlateSize.y>0?1:0));
 		
 		tileset = Global.bitmaps.get(tilesetName);
 		
@@ -282,13 +278,20 @@ public class BqMap
 		levelObjects = new GameObject[mapSize.x * mapSize.y];
 	}
 	
-	public void renderObjects(TilePlate[] plates)
+	public void renderObjects(Layer layer)
 	{		
 		
-		for(TilePlate plate : plates)
+		for (GameObject obj : Objects(Global.vpGridPos.x-1, Global.vpGridPos.y-1, Global.vpGridPos.x+2+Global.vpGridSize.x, Global.vpGridPos.y+2+Global.vpGridSize.y))
 		{
-			plate.renderObjects();
+			if (obj.getLayer().equals(layer))
+			{
+				obj.render();	
+			}
 		}
+//		for(TilePlate plate : plates)
+//		{
+//			plate.renderObjects();
+//		}
 	}
 	
 	public void clearObjectAction()
@@ -326,21 +329,26 @@ public class BqMap
 	
 	private void renderTiles(TilePlate[] plates, List<TilePlate> loadList)
 	{
-		int plateX = Global.vpGridPos.x / 10;
-		int plateY = Global.vpGridPos.y / 10;
+		int plateX = Global.vpGridPos.x / Global.tilePlateSize.x;
+		int plateY = Global.vpGridPos.y / Global.tilePlateSize.y;
 		
 		//position relative to the current tile plate
-		int yInTile = Global.vpGridPos.y - ((int)(Global.vpGridPos.y/10)*10);
-		int xInTile = Global.vpGridPos.x - ((int)(Global.vpGridPos.x/10)*10);
+		int xInTile = Global.vpGridPos.x - (plateX*Global.tilePlateSize.x);
+		int yInTile = Global.vpGridPos.y - (plateY*Global.tilePlateSize.y);
 		
+		int xCols =  1 + (Global.vpGridSize.x+xInTile)/Global.tilePlateSize.x;
+		int yCols =  1 + (Global.vpGridSize.y+yInTile)/Global.tilePlateSize.y;
 		
-		boolean drawR2 =  yInTile > 0;
-		boolean drawC3 =  xInTile > 5;
+		int xDefaultCols = 1 + Global.vpGridSize.x/Global.tilePlateSize.x;
+		int yDefaultCols = 1 + Global.vpGridSize.y/Global.tilePlateSize.y;
 		
-		boolean prevXLoaded = xInTile < 3;
+		int bufferTilesX = (Global.tilePlateSize.x*xDefaultCols)%Global.vpGridSize.x;
+		int bufferTilesY = (Global.tilePlateSize.y*yDefaultCols)%Global.vpGridSize.y;
+		
+		boolean prevXLoaded = xInTile < (bufferTilesX/2);
 		boolean nextXLoaded = !prevXLoaded;
 		
-		boolean prevYLoaded = yInTile < 1;
+		boolean prevYLoaded = yInTile < (bufferTilesY/2);
 		boolean nextYLoaded = !prevYLoaded;
 		
 
@@ -353,29 +361,25 @@ public class BqMap
 		//   x*xx
 		//   xxxx <-loaded at 2-9
 		
-		//5x4 = 20 tiles * 2 = 40 required for buffering.
-		//unload all on edge every time.  (perhaps we should be less brutal with this in cases where you jitter across the edge of a loading portal?)  
-		//fatter load zone than release?
-		
-		for (int y = plateY-2; y < plateY+3; ++y)
+		for (int y = plateY-2; y < plateY+yDefaultCols+2; ++y)
 		{
 			if (y < 0 || y >= plateCount.y) continue;
-			for (int x = plateX-2; x < plateX+5; ++x)
+			for (int x = plateX-2; x < plateX+xDefaultCols+2; ++x)
 			{
 				if (x < 0 || x >= plateCount.x) continue;
-				if (y == plateY-2 || y == plateY+2 ||
-					x == plateX-2 || x == plateX+4 ||
+				if (y == plateY-2 || y == plateY+yDefaultCols+1 ||
+					x == plateX-2 || x == plateX+xDefaultCols+1 ||
 					(x == plateX-1 && !prevXLoaded) || 
 					(y == plateY-1 && !prevYLoaded) || 
-					(x == plateX+2 && !nextXLoaded) || 
-					(y == plateY+1 && !nextYLoaded))
+					(x == plateX+xDefaultCols && !nextXLoaded) || 
+					(y == plateY+yDefaultCols && !nextYLoaded))
 				{
 					plates[x + y * plateCount.x].Unload();
 				}
 				else
 				{
 					//plate should be loadedededed.
-					if (plates[x + y * plateCount.x].tryLoad())
+					if (plates[x + y * plateCount.x].tryLoad(ScreenFilter.instance().defaultPaint()))
 					{
 						loadList.add(plates[x + y * plateCount.x]);
 					}
@@ -383,49 +387,24 @@ public class BqMap
 			}				
 		}
 	
+		ScreenFilter.instance().save();
+		ScreenFilter.instance().clear();
 		
-		//always
-		plates[plateIndexFromVP(0,0)].render();
-		plates[plateIndexFromVP(1,0)].render();
-		
-		
-		//row2
-		if(drawR2)
+		for (int y = 0; y < yCols; y++)
 		{
-			if(plateY + 1 < plateCount.y)
+			if (y + plateY >= plateCount.y) break;
+			for (int x = 0; x < xCols; x++)
 			{
-				plates[plateIndexFromVP(0,1)].render();
-				plates[plateIndexFromVP(1,1)].render();
+				if (x + plateX >= plateCount.x) break;
+				plates[plateIndexFromVP(x,y)].render();				
 			}
-			
 		}
-		
-		//column3
-		if(drawC3)
-		{
-			if(plateX + 2 < plateCount.x)
-			{
-				plates[plateIndexFromVP(2,0)].render();
-			}
-			
-		}
-		
-		//row2 and column3
-		if(drawR2 && drawC3)
-		{
-			
-			if(plateY + 1 < plateCount.y && plateX + 2 < plateCount.x)
-			{
-				plates[plateIndexFromVP(2,1)].render();			
-			}			
-
-		}
-
+		ScreenFilter.instance().restore();
 	}
 	
 	private int plateIndexFromVP(int x, int y)
 	{
-		return (((Global.vpGridPos.y / 10) + y)*plateCount.x)+(Global.vpGridPos.x/10) + x;
+		return (((Global.vpGridPos.y / Global.tilePlateSize.y) + y)*plateCount.x)+(Global.vpGridPos.x/Global.tilePlateSize.x) + x;
 	}
 	
 	private int plateIndex(int x, int y)
@@ -435,7 +414,7 @@ public class BqMap
 	
 	public void addTile(Tile t)
 	{
-		int index = ((t.WorldPos().y/10)*plateCount.x)+(t.WorldPos().x/10);
+		int index = ((t.WorldPos().y/Global.tilePlateSize.y)*plateCount.x)+(t.WorldPos().x/Global.tilePlateSize.x);
 		
 		switch(t.Layer())
 		{

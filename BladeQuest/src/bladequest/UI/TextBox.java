@@ -23,7 +23,7 @@ public class TextBox
 	
 	public void render(int x, int y)
 	{
-		Global.renderer.drawText(text, x + this.x, y + this.y, textPaint);
+		Global.renderer.drawText(text, x + this.x, y + this.y, new Paint(textPaint));
 	}
 	
 	

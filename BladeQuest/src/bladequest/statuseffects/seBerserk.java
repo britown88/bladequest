@@ -24,15 +24,15 @@ import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
 import bladequest.world.TargetTypes;
 
-public class seBeserk extends StatusEffect
+public class seBerserk extends StatusEffect
 {
 	int duration;
 	List<Recyclable> disposeTriggers;
 	PlayerCharacter affected;
 	
-	public seBeserk(int duration)
+	public seBerserk(int duration)
 	{
-		super("beserk", true);
+		super("berserk", true);
 		this.duration = duration;
 		icon = "axe";
 		curable = true;
@@ -43,12 +43,12 @@ public class seBeserk extends StatusEffect
 	}
 	public StatusEffect clone() 
 	{
-		return new seBeserk(duration);
+		return new seBerserk(duration);
 	}
 	@Override
 	public String saveLine() 
 	{ 
-		return "status " + seBeserk.class.getSimpleName() + " " + duration; 
+		return "status " + seBerserk.class.getSimpleName() + " " + duration; 
 	}
 	public boolean mutes() {return true;}
 	void setToBeserkState(Battle.PlayerBattleActionSelect actionSelector)
@@ -171,7 +171,7 @@ public class seBeserk extends StatusEffect
 			return;
 		}
 		
-		Global.battle.setInfoBarText(target.getDisplayName() + " is going beserk!");
+		Global.battle.setInfoBarText(target.getDisplayName() + " is going berserk!");
 		
 		builder.addEventObject(new bactRunAnimation(getAngerAnim()));
 		

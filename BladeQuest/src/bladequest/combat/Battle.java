@@ -22,6 +22,7 @@ import bladequest.combat.triggers.Condition;
 import bladequest.combat.triggers.Event;
 import bladequest.combatactions.CombatActionBuilder;
 import bladequest.enemy.Enemy;
+import bladequest.graphics.ScreenFilter;
 import bladequest.graphics.BattleSprite.faces;
 import bladequest.observer.ObserverUpdatePool;
 import bladequest.sound.BladeSong;
@@ -1741,6 +1742,8 @@ public class Battle
 	
 	private void drawActors()
 	{
+		ScreenFilter.instance().save();
+		ScreenFilter.instance().clear();
 		for(PlayerCharacter c : partyList)
 		{
 			c.renderShadow();
@@ -1749,15 +1752,24 @@ public class Battle
 		{
 			e.renderShadow();
 		}
+		
+		ScreenFilter.instance().restore();
 		for(PlayerCharacter c : partyList)
 		{
 			c.battleRender();
-			characterPanes[c.Index()].render();
 		}
-			
-		
+
 		for(Enemy e : encounter.Enemies())
 			e.battleRender();
+		
+		ScreenFilter.instance().save();
+		ScreenFilter.instance().clear();
+		for(PlayerCharacter c : partyList)
+		{
+			characterPanes[c.Index()].render();
+		}
+		ScreenFilter.instance().restore();	
+		
 		
 			
 	}
@@ -1854,7 +1866,10 @@ public class Battle
 			
 			
 			handleCharAdvancing();
-			updateCharacterPositions();
+			if (!isBattleOver())
+			{
+				updateCharacterPositions();	
+			}
 			updateDamageMarkers();
 			
 			handleNextPrev();
@@ -1868,20 +1883,39 @@ public class Battle
 	public void render()
 	{
 		Global.map.getBackdrop().render();
+		
 		drawActors();
-		drawPanels();
-		drawSelect();
+
 		
 		Global.renderAnimations();
+		
+		ScreenFilter.instance().save();
+		ScreenFilter.instance().clear();
+		
 		drawDamageMarkers();
+		
+		if (Global.screenFader.isDone())
+		{
+			Global.screenFader.render();			
+		}
+
+		
+
+		drawPanels();
+		drawSelect();
 		
 		if(!msgBox.Closed())
 			msgBox.render();
 		
 		
 		
-		Global.screenFader.render();
+		if (!Global.screenFader.isDone())
+		{
+			Global.screenFader.render();			
+		}		
 		
+		
+		ScreenFilter.instance().restore();
 	}
 	
 	public void backButtonPressed()

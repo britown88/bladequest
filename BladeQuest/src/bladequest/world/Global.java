@@ -73,6 +73,7 @@ import bladequest.graphics.ReactionBubble;
 import bladequest.graphics.Renderer;
 import bladequest.graphics.Scene;
 import bladequest.graphics.ScreenFader;
+import bladequest.graphics.ScreenFilter;
 import bladequest.graphics.Sprite;
 import bladequest.graphics.TextFactory;
 import bladequest.graphics.TilePlateBitmap;
@@ -164,7 +165,8 @@ public class Global
 
 	public static boolean originalTargetValid = false;
 	
-	public static Point vpGridSize = new Point( 14, 9);	
+	public static Point vpGridSize = new Point( 14, 9);
+	public static Point tilePlateSize = new Point( 9, 12);	
 	
 	public static int vpWidth = vpGridSize.x*32;
 	public static int vpHeight = vpGridSize.y*32;	
@@ -362,9 +364,9 @@ public class Global
 		
 		insetBorder.inset(inset, inset);
 		if(thick)
-			renderer.drawRect(insetBorder, frameBorderThick, true);
+			renderer.drawRect(insetBorder, new Paint(frameBorderThick), true);
 		else			
-			renderer.drawRect(insetBorder, frameBorderPaint, true);
+			renderer.drawRect(insetBorder, new Paint(frameBorderPaint), true);
 	}
 	
 	public static void drawFrameBorder(Rect r, boolean thick)
@@ -374,9 +376,9 @@ public class Global
 		
 		insetBorder.inset(inset, inset);
 		if(thick)
-			renderer.drawRect(insetBorder, frameBorderThick, true);
+			renderer.drawRect(insetBorder, new Paint(frameBorderThick), true);
 		else			
-			renderer.drawRect(insetBorder, frameBorderPaint, true);
+			renderer.drawRect(insetBorder, new Paint(frameBorderPaint), true);
 	}
 
 	public static void updateMousePosition(int x, int y, boolean autoNewTarget)
@@ -952,6 +954,10 @@ public class Global
         	
         	loadResources(); 
         	//createWorld();
+        	
+        	//screenFader.setFadeToColor(a, r, g, b)
+        	
+        	//ScreenFilter.instance().pushFilter(ScreenFilter.darknessFilter(0.8f));
         	
         	title = new TitleScreen();
 
@@ -2000,6 +2006,62 @@ public class Global
 			}
 		};
 	}	
+	
+	public static AnimationBuilder getTranquilizerAnim()
+	{
+		return new AnimationBuilder()
+		{
+			public BattleAnim buildAnimation(BattleEventBuilder builder) {
+				BattleAnim out = new BattleAnim(1000.0f);
+				
+				
+				//nananananananananananananananananana DART GUN
+
+				final int flyTime = 100;
+				final int stickTime = 250;
+
+				Rect r = new Rect(26,0,34,3);
+				Bitmap dartBmp = Global.bitmaps.get("particles");
+				
+				Point start = builder.getSource().getPosition(true);
+				Point end =   BattleAction.getTarget(builder).getPosition(true);
+				
+				BattleAnimObject dart = new BattleAnimObject(Types.Bitmap, false, dartBmp);
+				float angle = PointMath.angleBetween(start, end);
+				
+				BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Screen);
+				state.size = new Point(r.width()*2, r.height()*2);
+				state.pos1 = start;
+				state.argb(255, 255, 255, 255);
+				state.rotation = (float)(angle *180.0/Math.PI);
+				state.setBmpSrcRect(r.left, r.top, r.right, r.bottom);
+				dart.addState(state);
+				
+				
+				state = new BattleAnimObjState(flyTime, PosTypes.Screen);
+				state.size = new Point(r.width()*2, r.height()*2);
+				state.pos1 = end;
+				state.argb(255, 255, 255, 255);
+				state.rotation = (float)(angle *180.0/Math.PI);
+				state.setBmpSrcRect(r.left, r.top, r.right, r.bottom);
+				dart.addState(state);
+				
+				
+				state = new BattleAnimObjState(flyTime+stickTime, PosTypes.Screen);
+				state.size = new Point(r.width()*2, r.height()*2);
+				state.pos1 = end;
+				state.argb(255, 255, 255, 255);
+				state.rotation = (float)(angle *180.0/Math.PI);
+				state.setBmpSrcRect(r.left, r.top, r.right, r.bottom);
+				dart.addState(state);
+				
+				out.addObject(dart);
+				
+				return out;
+			}
+		};
+	}
+	
 	public static AnimationBuilder getPotionAnim()
 	{
 		return new AnimationBuilder()
@@ -2497,6 +2559,8 @@ public class Global
 		animationBuilders.put("gale", getGaleAnim());
 		animationBuilders.put("trickery", getTrickeryAnim());
 		animationBuilders.put("provoke", getProvokeAnim());
+		animationBuilders.put("tranquilizer", getTranquilizerAnim());
+		
 	}
 	
 	

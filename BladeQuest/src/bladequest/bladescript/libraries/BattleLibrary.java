@@ -48,7 +48,7 @@ import bladequest.graphics.BattleSprite.faces;
 import bladequest.observer.Observer;
 import bladequest.observer.ObserverList;
 import bladequest.statuseffects.StatusEffect;
-import bladequest.statuseffects.seBeserk;
+import bladequest.statuseffects.seBerserk;
 import bladequest.statuseffects.seConfuse;
 import bladequest.statuseffects.seFrozen;
 import bladequest.statuseffects.sePoison;
@@ -152,7 +152,7 @@ public class BattleLibrary {
 	
 	public static StatusEffect beserkStatus(int duration)
 	{
-		return new seBeserk(duration);
+		return new seBerserk(duration);
 	}
 	
 	

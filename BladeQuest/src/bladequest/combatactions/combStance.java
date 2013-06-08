@@ -20,7 +20,7 @@ public class combStance extends CombatAction
 		actionText = " assumes a combat stance.";
 		
 		stances = new ArrayList<Stance>();
-		stances.add(new combBeserkerStance());		
+		stances.add(new combBerserkerStance());		
 	}
 	
 	@Override
