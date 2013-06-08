@@ -61,6 +61,7 @@ import bladequest.combat.triggers.Trigger;
 import bladequest.enemy.Enemy;
 import bladequest.graphics.AnimatedBitmap;
 import bladequest.graphics.AnimationBuilder;
+import bladequest.graphics.AnimationPosition;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleAnimObjState;
 import bladequest.graphics.BattleAnimObjState.PosTypes;
@@ -73,7 +74,6 @@ import bladequest.graphics.ReactionBubble;
 import bladequest.graphics.Renderer;
 import bladequest.graphics.Scene;
 import bladequest.graphics.ScreenFader;
-import bladequest.graphics.ScreenFilter;
 import bladequest.graphics.Sprite;
 import bladequest.graphics.TextFactory;
 import bladequest.graphics.TilePlateBitmap;
@@ -661,6 +661,16 @@ public class Global
 		else playingAnims.add(animCopy);
 		
 		animCopy.play(source, target);	
+		
+		return animCopy;
+	}
+	
+	public static BattleAnim playAnimation(BattleAnim anim, AnimationPosition pos)
+	{
+		BattleAnim animCopy = new BattleAnim(anim);
+		playingAnims.add(animCopy);
+		
+		animCopy.play(pos);	
 		
 		return animCopy;
 	}

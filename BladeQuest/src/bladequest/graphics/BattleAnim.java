@@ -14,9 +14,8 @@ public class BattleAnim
 	
 	private boolean playing, done, loops;
 	
-	private Point src, tar;
-	
 	private long startTime, frameTime;
+	private AnimationPosition animPos;
 	//private Paint text;
 	
 	
@@ -88,10 +87,9 @@ public class BattleAnim
 		return (long)(getFinalFrame() * framePeriod); 
 	}
 	
-	public void play(Point source, Point target)
-	{
-		this.src = source; this.tar = target;
-		
+	public void play(AnimationPosition pos)
+	{		
+		this.animPos = pos;
 		playing = true;
 		done = false;
 		
@@ -99,7 +97,7 @@ public class BattleAnim
 		
 		//start all bojects
 		for(BattleAnimObject obj : objects)
-			obj.start(source, target);
+			obj.start(pos);
 		
 		//find finalFrame
 		findFinalFrame();
@@ -108,6 +106,32 @@ public class BattleAnim
 		for(BattleAnimObject obj : objects)
 			if(obj.getStartFrame() == 0 && obj.getEndFrame() == finalFrame)
 				obj.alwaysDraw();
+	}
+	
+	public void play(Point source, Point target)
+	{
+		
+		play(new AnimationPosition() {
+			private Point src, tar;
+			
+			public AnimationPosition init(Point source, Point target)
+			{
+				this.src = source;
+				this.tar = target;
+				
+				return this;
+			}			
+			
+			@Override
+			public Point getTarget() {
+				return src;
+			}
+			
+			@Override
+			public Point getSource() {
+				return tar;
+			}
+		}.init(source, target));
 
 			
 	}
@@ -149,7 +173,7 @@ public class BattleAnim
 						//animation is over
 						if(loops)
 						{
-							play(src, tar);
+							play(animPos);
 							for(BattleAnimObject obj : objects)								
 							{
 								obj.update(frame);

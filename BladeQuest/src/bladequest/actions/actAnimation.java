@@ -2,6 +2,7 @@ package bladequest.actions;
 
 import android.graphics.Point;
 import bladequest.graphics.AnimationBuilder;
+import bladequest.graphics.AnimationPosition;
 import bladequest.graphics.BattleAnim;
 import bladequest.world.Global;
 
@@ -38,11 +39,30 @@ public class actAnimation extends Action
 	public void run()
 	{
 		if (playingAnim == null)
-		{
-			Point sourceP = Global.getVPCoordsFromObject(source);
-			Point targetP = Global.getVPCoordsFromObject(target);
+		{			
+			playingAnim = Global.playAnimation(
+					animBuilder.buildAnimation(null), 
+					new AnimationPosition() {
+						private String src, tar;
+						
+						public AnimationPosition init(String source, String target)
+						{
+							this.src = source;
+							this.tar = target;					
+							return this;
+						}			
+						
+						@Override
+						public Point getTarget() {
+							return Global.getVPCoordsFromObject(tar);
+						}
+						
+						@Override
+						public Point getSource() {
+							return Global.getVPCoordsFromObject(src);
+						}
+					}.init(source, target));
 			
-			playingAnim = Global.playAnimation(animBuilder.buildAnimation(null), sourceP, targetP);
 			duration = playingAnim.getDuration();
 			startTime = System.currentTimeMillis();
 		}

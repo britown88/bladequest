@@ -18,7 +18,8 @@ public class BattleAnimObject
 	private String bmpName;
 	private Types type;
 	private boolean outlineOnly;
-	public Point source, target, lineDrawPos1, lineDrawPos2;
+	public Point lineDrawPos1, lineDrawPos2;
+	public AnimationPosition animPos;
 	
 	private BattleAnimObjState workingState, currentState, nextState, y0, y3;
 
@@ -29,6 +30,7 @@ public class BattleAnimObject
 	
 	float[] colorTransform;
 	private boolean alwaysDraw, linearInterp;
+	
 	
 	public BattleAnimObject(Types type, boolean outlineOnly, String bmpName)
 	{
@@ -110,10 +112,9 @@ public class BattleAnimObject
 	}
 	
 	
-	public void start(Point source, Point target)
+	public void start(AnimationPosition pos)
 	{
-		this.source = source;
-		this.target = target;
+		this.animPos = pos;
 		
 		genStartAndEndFrame();
 		
