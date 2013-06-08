@@ -1,0 +1,142 @@
+#!HEAD
+createCliffJumpObj x y face path
+newObject "cjump" x y > createState >
+addAction (createPath "party" true face) >
+addAction (messageWithYesNo "Jump down?" >
+	addToBranch 0  (switchControl "cliffjump" true) >
+	addToBranch 0  (createPath "party" false path) >
+	addToBranch 0  (changeElevation "party" 16 0.25 true) >
+	addToBranch 0  (changeElevation "party" 0 0.25 true) >
+	addToBranch 0  (switchControl "cliffjump" false))
+
+createCliffJumpBarrier x y
+\obj <- newObject "cbar" x y 
+obj > createState > 
+setCollisionData true true true true
+obj > createState >
+addSwitchCondition "cliffjump"
+obj
+
+cliffJumpLeft x y
+createCliffJumpObj x y "l" "L2"
+createCliffJumpBarrier (x > subtract 1) y
+
+cliffJumpUp x y
+createCliffJumpObj x y "u" "U2"
+createCliffJumpBarrier x (y > subtract 1)
+
+cliffJumpRight x y
+createCliffJumpObj x y "r" "R2"
+createCliffJumpBarrier (x > add 1) y
+
+cliffJumpDown x y
+createCliffJumpObj x y "d" "D2"
+createCliffJumpBarrier x (y > add 1)
+#!OBJ 10 5
+\name$10x5$ <- cliffJumpLeft 10 5
+#!OBJ 10 4
+\name$10x4$ <- cliffJumpLeft 10 4
+#!OBJ 10 6
+\name$10x6$ <- cliffJumpLeft 10 6
+#!OBJ 20 21
+\name$20x21$ <- cliffJumpLeft 20 21
+#!OBJ 20 22
+\name$20x22$ <- cliffJumpLeft 20 22
+#!OBJ 21 27
+\name$21x27$ <- cliffJumpLeft 21 27
+#!OBJ 19 29
+\name$19x29$ <- cliffJumpUp 19 29
+#!OBJ 18 39
+\name$18x39$ <- cliffJumpLeft 18 39
+#!OBJ 18 40
+\name$18x40$ <- cliffJumpLeft 18 40
+#!OBJ 20 43
+\name$20x43$ <- cliffJumpDown 20 43
+#!OBJ 19 43
+\objName$19x43$ <- "name"
+\name$19x43$ <- newObject objName$19x43$ 19 43
+
+state1$19x43$ 0
+name$19x43$ > createState >
+setSprite "chest" >
+setAnimated false
+
+
+\runstate1$19x43$ <- state1$19x43$ 0
+#!OBJ 13 37
+\objName$13x37$ <- "name"
+\name$13x37$ <- newObject objName$13x37$ 13 37
+
+state1$13x37$ 0
+name$13x37$ > createState >
+setSprite "chest" >
+setAnimated false
+
+
+\runstate1$13x37$ <- state1$13x37$ 0
+#!OBJ 3 21
+\objName$3x21$ <- "name"
+\name$3x21$ <- newObject objName$3x21$ 3 21
+
+state1$3x21$ 0
+name$3x21$ > createState >
+setSprite "chest" >
+setAnimated false
+
+
+\runstate1$3x21$ <- state1$3x21$ 0
+#!OBJ 4 0
+\objName$4x0$ <- "name"
+\name$4x0$ <- newObject objName$4x0$ 4 0
+
+state1$4x0$ 0
+name$4x0$ > createState >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$4x0$ 23 28 "albi") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$4x0$ <- state1$4x0$ 0
+#!OBJ 5 0
+\objName$5x0$ <- "name"
+\name$5x0$ <- newObject objName$5x0$ 5 0
+
+state1$5x0$ 0
+name$5x0$ > createState >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$5x0$ 23 28 "albi") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$5x0$ <- state1$5x0$ 0
+#!OBJ 6 0
+\objName$6x0$ <- "name"
+\name$6x0$ <- newObject objName$6x0$ 6 0
+
+state1$6x0$ 0
+name$6x0$ > createState >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$6x0$ 23 28 "albi") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$6x0$ <- state1$6x0$ 0
+#!OBJ 7 0
+\objName$7x0$ <- "name"
+\name$7x0$ <- newObject objName$7x0$ 7 0
+
+state1$7x0$ 0
+name$7x0$ > createState >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$7x0$ 23 28 "albi") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$7x0$ <- state1$7x0$ 0
+#!OBJ 8 0
+\objName$8x0$ <- "name"
+\name$8x0$ <- newObject objName$8x0$ 8 0
+
+state1$8x0$ 0
+name$8x0$ > createState >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$8x0$ 23 28 "albi") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$8x0$ <- state1$8x0$ 0

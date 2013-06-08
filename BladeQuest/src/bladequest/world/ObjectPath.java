@@ -63,6 +63,8 @@ public class ObjectPath
 		index += 1;
 		if(index >= actionList.size())
 			done = true;
+
+			
 	}
 	
 	public void deserialize(String cmds)
@@ -118,6 +120,7 @@ public class ObjectPath
 	
 	public void attachPath()
 	{
+		reset();
 		if(target.equals("party"))
 		{
 			Global.party.applyPath(this);

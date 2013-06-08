@@ -73,6 +73,7 @@
          this.panel1 = new System.Windows.Forms.Panel();
          this.btnAddMat = new System.Windows.Forms.Button();
          this.btnRemoveMat = new System.Windows.Forms.Button();
+         this.tsbShowGrid = new System.Windows.Forms.ToolStripButton();
          this.matPanel = new BladeCraft.Classes.DBPanel();
          this.mapPanel = new BladeCraft.Classes.DBPanel();
          this.tsPanel = new BladeCraft.Classes.DBPanel();
@@ -91,6 +92,7 @@
             this.tscbTilesetName,
             this.toolStripSeparator1,
             this.btnDraw,
+            this.tsbShowGrid,
             this.toolStripSeparator5,
             this.toolStripLabel2,
             this.tsbLayer,
@@ -359,7 +361,7 @@
          this.tilesetPanel.Controls.Add(this.tsPanel);
          this.tilesetPanel.Location = new System.Drawing.Point(13, 28);
          this.tilesetPanel.Name = "tilesetPanel";
-         this.tilesetPanel.Size = new System.Drawing.Size(282, 250);
+         this.tilesetPanel.Size = new System.Drawing.Size(326, 250);
          this.tilesetPanel.TabIndex = 1;
          // 
          // mapFrame
@@ -370,9 +372,9 @@
          this.mapFrame.AutoScroll = true;
          this.mapFrame.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
          this.mapFrame.Controls.Add(this.mapPanel);
-         this.mapFrame.Location = new System.Drawing.Point(302, 29);
+         this.mapFrame.Location = new System.Drawing.Point(345, 29);
          this.mapFrame.Name = "mapFrame";
-         this.mapFrame.Size = new System.Drawing.Size(403, 286);
+         this.mapFrame.Size = new System.Drawing.Size(360, 286);
          this.mapFrame.TabIndex = 2;
          this.mapFrame.Scroll += new System.Windows.Forms.ScrollEventHandler(this.mapFrame_Scroll);
          this.mapFrame.Resize += new System.EventHandler(this.mapFrame_Resize);
@@ -484,14 +486,14 @@
          this.panel1.Controls.Add(this.matPanel);
          this.panel1.Location = new System.Drawing.Point(12, 284);
          this.panel1.Name = "panel1";
-         this.panel1.Size = new System.Drawing.Size(254, 57);
+         this.panel1.Size = new System.Drawing.Size(298, 57);
          this.panel1.TabIndex = 5;
          // 
          // btnAddMat
          // 
          this.btnAddMat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
          this.btnAddMat.Image = ((System.Drawing.Image)(resources.GetObject("btnAddMat.Image")));
-         this.btnAddMat.Location = new System.Drawing.Point(272, 284);
+         this.btnAddMat.Location = new System.Drawing.Point(316, 284);
          this.btnAddMat.Name = "btnAddMat";
          this.btnAddMat.Size = new System.Drawing.Size(23, 23);
          this.btnAddMat.TabIndex = 6;
@@ -502,18 +504,31 @@
          // 
          this.btnRemoveMat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
          this.btnRemoveMat.Image = ((System.Drawing.Image)(resources.GetObject("btnRemoveMat.Image")));
-         this.btnRemoveMat.Location = new System.Drawing.Point(272, 313);
+         this.btnRemoveMat.Location = new System.Drawing.Point(316, 313);
          this.btnRemoveMat.Name = "btnRemoveMat";
          this.btnRemoveMat.Size = new System.Drawing.Size(23, 23);
          this.btnRemoveMat.TabIndex = 7;
          this.btnRemoveMat.UseVisualStyleBackColor = true;
+         // 
+         // tsbShowGrid
+         // 
+         this.tsbShowGrid.Checked = true;
+         this.tsbShowGrid.CheckOnClick = true;
+         this.tsbShowGrid.CheckState = System.Windows.Forms.CheckState.Checked;
+         this.tsbShowGrid.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+         this.tsbShowGrid.Image = ((System.Drawing.Image)(resources.GetObject("tsbShowGrid.Image")));
+         this.tsbShowGrid.ImageTransparentColor = System.Drawing.Color.Magenta;
+         this.tsbShowGrid.Name = "tsbShowGrid";
+         this.tsbShowGrid.Size = new System.Drawing.Size(23, 22);
+         this.tsbShowGrid.Text = "Show/Hide Grid";
+         this.tsbShowGrid.CheckStateChanged += new System.EventHandler(this.tsbShowGrid_CheckStateChanged);
          // 
          // matPanel
          // 
          this.matPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
          this.matPanel.Location = new System.Drawing.Point(4, 4);
          this.matPanel.Name = "matPanel";
-         this.matPanel.Size = new System.Drawing.Size(243, 46);
+         this.matPanel.Size = new System.Drawing.Size(287, 46);
          this.matPanel.TabIndex = 0;
          this.matPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.matPanel_Paint);
          this.matPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.matPanel_MouseClick);
@@ -622,5 +637,6 @@
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
         private System.Windows.Forms.ToolStripTextBox tsbLayer;
         private System.Windows.Forms.ToolStripTextBox tsbLayerSwapTo;
+        private System.Windows.Forms.ToolStripButton tsbShowGrid;
     }
 }
