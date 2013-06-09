@@ -1237,7 +1237,15 @@ public class PlayerCharacter
 		{
 			Point centeredPosition = getPosition(true);
 			shadow.setPosition(centeredPosition.x, centeredPosition.y);
+			if (battleSpr.getMirrored())
+			{
+				shadow.setXNudge(-shadow.getXNudge());
+			}
 			shadow.render();
+			if (battleSpr.getMirrored())
+			{
+				shadow.setXNudge(-shadow.getXNudge());
+			}			
 		}
 	}
 	

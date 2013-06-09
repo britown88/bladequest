@@ -117,6 +117,10 @@ public class Shadow implements Interpolatable {
 	{
 		return xNudge;
 	}
+	public void setXNudge(int xNudge)
+	{
+		this.xNudge = xNudge;
+	}	
 	public Point getPosition()
 	{
 		return new Point(position);
