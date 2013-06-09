@@ -176,6 +176,7 @@ public class Global
 	private static Point vpPan = new Point(0, 0);
 	private static Point vpPanTarget = new Point(0, 0);
 	private static Point vpPanStart = new Point(0, 0);
+	private static Point vpPanWorld = new Point(0, 0);
 	private static float vpPanLength;
 	private static long panStartTime;
 	
@@ -556,6 +557,7 @@ public class Global
 		vpPanStart = new Point(vpPan);
 		vpPanLength = length;
 		panStartTime = System.currentTimeMillis();
+		vpPanWorld = new Point(vpWorldPos);
 	}
 	
 	
@@ -565,6 +567,7 @@ public class Global
 		vpPan = new Point(x*32, y*32);
 		vpPanTarget = new Point(x*32, y*32);
 		vpPanLength = 0.0f;
+		vpPanWorld = new Point(vpWorldPos);
 	}
 	
 	public static boolean isPanned()
@@ -609,9 +612,11 @@ public class Global
 				}
 			}
 			
-			//apply pan
-			vpWorldPos.x += vpPan.x;
-			vpWorldPos.y += vpPan.y;
+			if (!vpPanStart.equals(new Point(0,0)) || 
+			    !vpPanTarget.equals(new Point(0,0)))
+			{
+				vpWorldPos = PointMath.add(vpPanWorld, vpPan);
+			}
 			
 			vpGridPos.x = vpWorldPos.x/32;
 			vpGridPos.y = vpWorldPos.y/32;	
