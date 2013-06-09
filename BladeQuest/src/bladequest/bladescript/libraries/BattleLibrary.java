@@ -31,6 +31,7 @@ import bladequest.battleactions.bactScript;
 import bladequest.battleactions.bactSetFace;
 import bladequest.battleactions.bactSetRevive;
 import bladequest.battleactions.bactShatter;
+import bladequest.battleactions.bactShowDamagedFaces;
 import bladequest.battleactions.bactSneakToTarget;
 import bladequest.battleactions.bactSpecialMirrored;
 import bladequest.battleactions.bactSpecialPosition;
@@ -289,6 +290,11 @@ public class BattleLibrary {
 	public static BattleAction attackRandomlyAction(float power, String damageType, int attacks, float speedFactor)
 	{
 		return new bactAttackRandomTargets(power, DamageTypes.valueOf(damageType), attacks, speedFactor);
+	}
+	
+	public static BattleAction showDamagedFacesAction(int time)
+	{
+		return new bactShowDamagedFaces(time);
 	}
 	
 	public static BattleAction damageAction(float power, String damageType)

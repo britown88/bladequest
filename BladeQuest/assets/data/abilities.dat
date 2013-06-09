@@ -118,7 +118,8 @@ addDep (scriptAction ([builder]
 
 \leafygreens <- (addAbility "leafygreens" "Leafy Greens" "SingleAlly" 2 >
 add (\defWait <- waitAction 450) >
-addDep (inflictStatusAction (regenStatus 4 10 4)))
+addDep (inflictStatusAction (regenStatus 4 10 4))) >
+addDep (waitAction 500)
 
 
 \maddeningeyes <- (addAbility "maddeningeyes" "Maddening Eyes" "Single" 2 >
@@ -208,6 +209,8 @@ addDep (rolandSpecialFrozenGripAction 0))
 
 \icebarrage <- (addAbility "icebarrage" "Ice Barrage" "AllEnemies" 0 >
 setDisabled >
+add (waitAction 450) >
+addDep (showDamagedFacesAction 2500) >
 add (waitAction 450) >
 addDep (animBuildAction "icebarrage") >
 addDep (damageGroupAction 1.2 "Magic" "NoMiss" 0.0))

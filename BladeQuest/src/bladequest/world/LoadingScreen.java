@@ -54,7 +54,7 @@ public class LoadingScreen
 		
 		Global.renderer.drawText("Loading!", 
 				Global.vpToScreenX(Global.vpWidth - 120), 
-				Global.vpToScreenY(Global.vpHeight - 22), txtPaint);
+				Global.vpToScreenY(Global.vpHeight - 22), new Paint(txtPaint));
 		
 		spr.renderFromVP(Global.vpWidth - 152, Global.vpHeight - 45, imageIndex);
 		

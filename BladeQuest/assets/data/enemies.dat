@@ -314,6 +314,12 @@ RolandAI enemy
            addAIState "attackFn" (createAIState ([e dec] ""))
       ) 
       
+
+RolandIceBarrageAI enemy
+   enemy > setEnemyAI (
+           createAI "base" (createAIState ([e dec]
+           dec > setAbility (e > getEnemyAbility "icebarrage")
+           )))
       
 RolandTriggers roland      
 	onHPFraction roland 4 5 ([e]  #at 4/5ths hp...

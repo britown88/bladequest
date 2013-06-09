@@ -553,6 +553,8 @@ public class Global
 	
 	public static void pan(int x, int y, float length)
 	{
+		updateVpWorldPos();
+		
 		vpPanTarget = new Point(x*32, y*32);
 		vpPanStart = new Point(vpPan);
 		vpPanLength = length;
@@ -564,6 +566,8 @@ public class Global
 	
 	public static void setPanned(int x, int y)
 	{
+		updateVpWorldPos();
+		
 		vpPan = new Point(x*32, y*32);
 		vpPanTarget = new Point(x*32, y*32);
 		vpPanLength = 0.0f;
@@ -576,7 +580,8 @@ public class Global
 	}
 	
 	private static Point partyBuffer = new Point(6, 4);
-	public static void updateVpPos()
+	
+	public static void updateVpWorldPos()
 	{		
 		if(map != null && map.isLoaded())
 		{
@@ -593,7 +598,14 @@ public class Global
 				vpWorldPos.x = map.Size().x*32 - vpWidth;
 			
 			if(party.getY() > map.Size().y*32 - (vpHeight - partyBuffer.y*32))
-				vpWorldPos.y = map.Size().y*32 - vpHeight;		
+				vpWorldPos.y = map.Size().y*32 - vpHeight;	
+		}
+	}
+	public static void updateVpPos()
+	{		
+		if(map != null && map.isLoaded())
+		{
+			updateVpWorldPos();	
 			
 			//update pan
 			if(!vpPan.equals(vpPanTarget))

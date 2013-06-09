@@ -62,7 +62,14 @@ public class TilePlate
 		if (loaded) return false;
 		if(tiles.size() == 0) return false;
 		loading = true;
-		this.p = p;
+		if (p != null)
+		{
+			this.p = new Paint(p);	
+		}
+		else
+		{
+			this.p = null;
+		}
 		return true;
 	}
 	
