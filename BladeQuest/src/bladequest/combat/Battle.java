@@ -1324,7 +1324,7 @@ public class Battle
 					if(!actor.isEnemy())
 					{
 						currentChar = actor;
-						if ((action != Action.Guard && action != Action.Skipped) || prevSpecial)
+						if ((action != Action.Guard && action != Action.Skipped) && !currentEvent.interrupted())
 							advanceChar();
 					}
 					else

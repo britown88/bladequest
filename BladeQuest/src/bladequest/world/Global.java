@@ -51,6 +51,7 @@ import bladequest.battleactions.DelegatingAction;
 import bladequest.battleactions.bactBasicAttack;
 import bladequest.battleactions.bactDamage;
 import bladequest.battleactions.bactMessage;
+import bladequest.battleactions.bactWait;
 import bladequest.bladescript.FileTokenizer;
 import bladequest.bladescript.Parser;
 import bladequest.bladescript.Script;
@@ -1841,7 +1842,8 @@ public class Global
 					builder.addEventObject(new bactMessage("Satyr: \nAhahahaha!!"));
 					break;	
 				}
-				builder.addEventObject(new bactBasicAttack(1.65f, DamageTypes.Physical, 2.0f, AccuracyType.NoMiss, 1.0f));
+				builder.addEventObject(new bactBasicAttack(1.65f, DamageTypes.Physical, 2.0f, AccuracyType.NoMiss, 1.0f).addDependency(builder.getLast()));
+				builder.addEventObject(new bactWait(250).addDependency(builder.getLast()));
 			}
 		});
 		

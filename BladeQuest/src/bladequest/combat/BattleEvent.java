@@ -26,7 +26,7 @@ public class BattleEvent
 	
 	private BattleActionRunner actionRunner;
 	
-	private boolean running, done;
+	private boolean running, done, interrupted;
 	private long startTime;
 	
 	PlayerCharacter.Action action;
@@ -53,6 +53,7 @@ public class BattleEvent
 		this.markers = markers;
 		type = ActionType.Chosen;
 		dontRunStatus = false;
+		interrupted = false;
 	}
 	
 	public BattleEvent(PlayerCharacter.Action action, Ability ability, PlayerCharacter source, List<PlayerCharacter> targets, List<DamageMarker> markers, ActionType type)
@@ -64,6 +65,7 @@ public class BattleEvent
 		this.markers = markers;
 		this.type = type;
 		dontRunStatus = false;
+		interrupted = false;
 	}	
 	public Ability getAbility() {return ability;}
 	public PlayerCharacter.Action getAction() {return action;}
@@ -274,6 +276,11 @@ public class BattleEvent
 		{		
 			actionRunner.interrupt();
 		}
+		interrupted = true;
+	}
+	public boolean interrupted()
+	{
+		return interrupted;
 	}
 	public void update(Battle battle)
 	{
