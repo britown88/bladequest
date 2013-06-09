@@ -491,14 +491,7 @@ public class Party
 			else
 			{
 				partyMembers[pc.Index()] = null;
-				for(int i = 4; i<partyCount; ++i)
-					if(partyMembers[i] == null)
-					{
-						partyMembers[i] = pc;
-						partyMembers[i].setIndex(i);
-						partyMembers[i].isInParty = false;
-						break;
-					}
+				addCharacterAfter(4, pc);
 			}
 		}
 	}

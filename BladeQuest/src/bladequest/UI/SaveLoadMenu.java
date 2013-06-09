@@ -67,7 +67,7 @@ public class SaveLoadMenu
 			
 			int highestLevel = 0;			
 			for(PlayerCharacter c : save.characters)
-				if(c != null && c.getLevel() > highestLevel)
+				if(c != null && c.isInParty && c.getLevel() > highestLevel)
 					highestLevel = c.getLevel();
 			
 			entry.addTextBox(save.mapDisplayName, 8, 15, textPaint);
@@ -83,7 +83,7 @@ public class SaveLoadMenu
 			int portraitSize = (int)(menu.getRowHeight()*0.75f);
 			for(PlayerCharacter c : save.characters)
 			{
-				if(c != null) 
+				if(c != null && c.isInParty) 
 				{
 					Rect src = c.getPortraitSrcRect();
 					Rect dest = new Rect(

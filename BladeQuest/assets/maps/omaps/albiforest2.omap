@@ -37,6 +37,7 @@ createCliffJumpBarrier x (y > add 1)
 
 
 
+
 #!OBJ 17 15
 \objName$17x15$ <- "name"
 \name$17x15$ <- newObject objName$17x15$ 17 15
@@ -207,13 +208,16 @@ addAction (message "You any good with that sword?  Keep it close and let's go!")
 addAction (message "|luc|: \nB-but I...I don't even know your name!") >
 addAction (openBubble "sweat" "aramis" 1.0 false false) >
 addAction (message "|aramis|: \nRight, ok...") >
+addAction (fadeControl 1.0 255 0 0 0 true true) >
 addAction (openNameSelect "aramis") >
+addAction (fadeControl 1.0 255 0 0 0 false true) >
 addAction (message "|aramis|: \nJust call me |aramis|.") >
 addAction (message "|luc|: \nOk then, my name's |luc|.") >
 addAction (message "|aramis|: \nYeah yeah, ok...") >
 addAction (message "Now shut up and follow those footsteps!") >
 addAction (createPath "aramis" true "L") >
 addAction (switchControl "albiaramisjoined" true) >
+addAction (modifyParty "aramis" false) >
 addAction (message "|aramis| has joined your party!")
 
 \runstate1$4x5$ <- state1$4x5$ 0

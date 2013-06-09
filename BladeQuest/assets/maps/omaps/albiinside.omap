@@ -13,6 +13,8 @@
 
 
 
+
+
 #!OBJ 22 3
 \objName$22x3$ <- "name"
 \name$22x3$ <- newObject objName$22x3$ 22 3
@@ -110,11 +112,20 @@ addAction (fadeControl 0.5 255 0 0 0 false true)
 
 state1$31x24$ 0
 name$31x24$ > createState >
+addAction (message "|luc|'s Mom: \nHey!") >
+addAction (message "You're not getting away that easily!") >
+addAction (createPath "party" true "U")
+
+\runstate1$31x24$ <- state1$31x24$ 0
+
+state2$31x24$ 0
+name$31x24$ > createState >
+addSwitchCondition "albimomtalked" >
 addAction (fadeControl 0.5 255 0 0 0 true true) >
 addAction (teleportParty name$31x24$ 13 17 "albi") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
-\runstate1$31x24$ <- state1$31x24$ 0
+\runstate1$31x24$ <- state2$31x24$ 0
 #!OBJ 8 39
 \objName$8x39$ <- "name"
 \name$8x39$ <- newObject objName$8x39$ 8 39
@@ -313,7 +324,7 @@ setBubble "sleep" >
 setFace "left" >
 setOptions true false false >
 addAction (message "Sean: \n...It's ok...") >
-addAction (message "...I'm dreaming of Bee Splines...") >
+addAction (message "...I'm dreaming of B-Splines...") >
 addAction (message "....") >
 addAction (switchControl "albiseantalked" false)
 
@@ -344,10 +355,37 @@ name$30x19$ > createState >
 setCollisionData true true true true >
 setSprite "woman1" >
 addAction (message "|luc|'s Mom: \nOh, you're awake! \nIt's so late in the day!") >
-addAction (message "I need you to go and fetch some herbs for me in the forest today.")
-
+addAction (message "Agnes is out of the Goldenbush she uses in her potions.") >
+addAction (message "I need you to go into the forest today and fetch some more.") >
+addAction (message "|luc|: Why doesn't she just order them from the Item Shop?\n") >
+addAction (message "|luc|'s Mom: \nBecause we have you, dear.") >
+addAction (openBubble "sweat" "party" 1.0 false true) >
+addAction (message "|luc|: \nOk, I'll see what I can find...") >
+addAction (createPath "party" true "D") >
+addAction (wait 1.0) >
+addAction (createPath "party" true "u") >
+addAction (message "|luc|: \nYou do know there are monsters out there, right?") >
+addAction (message "|luc|'s Mom: \nI'm sure it's nothing you can't handle!") >
+addAction (wait 0.5) >
+addAction (createPath "party" true "d") >
+addAction (wait 0.5) >
+addAction (message "|luc|'s Mom: \nBe back by sundown!") >
+addAction (openBubble "sweat" "party" 1.0 false true) >
+addAction (switchControl "albimomtalked" true)
 
 \runstate1$30x19$ <- state1$30x19$ 0
+
+state2$30x19$ 0
+name$30x19$ > createState >
+addSwitchCondition "albimomtalked" >
+setCollisionData true true true true >
+setSprite "woman1" >
+addAction (message "|luc|'s Mom: \nYou know what Goldenbush looks like, right?") >
+addAction (message "|luc|: \nGolden? And... a bush?") >
+addAction (message "|luc|'s Mom: \nDon't get smart with me!")
+
+\runstate2$30x19$ <- state2$30x19$ 0
+
 #!OBJ 3 16
 \objName$3x16$ <- "name"
 \name$3x16$ <- newObject objName$3x16$ 3 16
@@ -409,4 +447,53 @@ setCollisionData true true true true >
 addAction (message "It's empty...")
 
 \runstate2$3x31$ <- state2$3x31$ 0
+
+#!OBJ 21 17
+\objName$21x17$ <- "mom"
+\name$21x17$ <- newObject objName$21x17$ 21 17
+
+state1$21x17$ 0
+name$21x17$ > createState >
+setSprite "woman1" >
+setFace "left"
+
+\runstate1$21x17$ <- state1$21x17$ 0
+
+state2$21x17$ 0
+name$21x17$ > createState >
+addSwitchCondition "albimomscene"
+
+\runstate2$21x17$ <- state2$21x17$ 0
+
+#!OBJ 31 19
+\objName$31x19$ <- "name"
+\name$31x19$ <- newObject objName$31x19$ 31 19
+
+state1$31x19$ 0
+name$31x19$ > createState >
+setCollisionData true true true true
+
+\runstate1$31x19$ <- state1$31x19$ 0
+
+state2$31x19$ 0
+name$31x19$ > createState >
+addSwitchCondition "albimomtalked"
+
+\runstate2$31x19$ <- state2$31x19$ 0
+
+#!OBJ 32 19
+\objName$32x19$ <- "name"
+\name$32x19$ <- newObject objName$32x19$ 32 19
+
+state1$32x19$ 0
+name$32x19$ > createState >
+setCollisionData true true true true
+
+\runstate1$32x19$ <- state1$32x19$ 0
+
+state2$32x19$ 0
+name$32x19$ > createState >
+addSwitchCondition "albimomtalked"
+
+\runstate2$32x19$ <- state2$32x19$ 0
 
