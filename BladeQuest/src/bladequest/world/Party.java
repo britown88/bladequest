@@ -383,28 +383,67 @@ public class Party
 	
 	public void addCharacter(String str)
 	{
-		for(int i = 0; i < partyCount; ++i)
-			if(partyMembers[i] == null)
+		//check for existing members first
+		PlayerCharacter pc = getCharacter(str);
+		
+		if(pc != null && !pc.isInParty)
+			partyMembers[pc.Index()] = null;
+		else
+			pc = new PlayerCharacter(Global.characters.get(str));
+		
+		pc.isInParty = true;
+		
+		List<PlayerCharacter> pList = getPartyList(false);		
+		
+		if(pList.size() == 0)
+			insertCharacter(pc, 1);
+		else
+		{
+			PlayerCharacter firstChar = pList.get(0);
+			int index = firstChar.index;
+			
+			if(firstChar.index >= 4 - pList.size())
 			{
-				partyMembers[i] = new PlayerCharacter(Global.characters.get(str));
-				return;
-			}
-				
+				movePartyUp();
+				++index;
+			}			
+			addCharacterAfter(index, pc);	
+		}
 	}	
 	
-	public void insertCharacter(String str, int index)
+	private void movePartyUp()
 	{
-		if(index < partyCount)
-			partyMembers[index] = new PlayerCharacter(Global.characters.get(str));
-
-				
+		List<PlayerCharacter> pList = getPartyList(false);		
+		
+		for(int i = 0; i < 4; ++i)
+			partyMembers[i] = null;
+		
+		for(PlayerCharacter pc : pList)
+		{
+			pc.index -= 1;
+			partyMembers[pc.index] = pc;
+		}			
 	}
+	
+	private void addCharacterAfter(int startIndex, PlayerCharacter pc)
+	{
+		for(int i = startIndex; i < 4; ++i)
+			if(partyMembers[i] == null)
+			{						
+				insertCharacter(pc, i);
+				return;
+			}
+	}
+	
+	
 	public void insertCharacter(PlayerCharacter c, int index)
 	{
 		if(index < partyCount)
+		{
+			c.index = index;
 			partyMembers[index] = c;
-
-				
+		}
+							
 	}
 	public Point getGridPos(){return gridPos;}	
 	public Point getWorldPos(){return worldPos;}	
@@ -432,6 +471,36 @@ public class Party
 				return c;
 		
 		return null;
+	}
+	
+	public void removeCharacter(String name)
+	{
+		PlayerCharacter pc = null;
+		
+		for(PlayerCharacter c : partyMembers)
+			if(c != null && c.getName().equals(name))
+			{
+				pc = c;
+				break;
+			}
+		
+		if(pc != null)
+		{
+			if(pc.Index() >= 4)
+				pc.isInParty = false;
+			else
+			{
+				partyMembers[pc.Index()] = null;
+				for(int i = 4; i<partyCount; ++i)
+					if(partyMembers[i] == null)
+					{
+						partyMembers[i] = pc;
+						partyMembers[i].setIndex(i);
+						partyMembers[i].isInParty = false;
+						break;
+					}
+			}
+		}
 	}
 	
 	public void teleport(int x, int y)

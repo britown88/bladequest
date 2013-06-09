@@ -26,6 +26,8 @@ public class PlayerCharacter
 	protected String displayName;
 	protected boolean isEnemy = false;
 	
+	public boolean isInParty;
+	
 	//equipment
 	private Item weapon, shield, helmet, torso, accessory;
 	

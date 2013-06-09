@@ -346,6 +346,7 @@ public class GameSaveLoader
 				if(c != null)
 				{
 					str += "character " + c.getName() + " \"" + c.getDisplayName() + "\" " + index + "\n";
+					str += "inparty " + c.isInParty + "\n";
 					str += "portrait " + c.portrait.x + " " + c.portrait.y + "\n";
 					str += "sprites " + c.getWorldSprite().name + " " + c.getBattleSprite().name + "\n";
 					str += "level " + c.getLevel() + "\n";
@@ -522,6 +523,10 @@ public class GameSaveLoader
 		else if(dl.item.equals("exp"))
 		{
 			c.setExp(Integer.parseInt(dl.values.get(0)));
+		}
+		else if(dl.item.equals("inparty"))
+		{
+			c.isInParty = Boolean.parseBoolean(dl.values.get(0));
 		}
 		else if(dl.item.equals("hpmp"))
 		{
