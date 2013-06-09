@@ -23,7 +23,7 @@ import bladequest.world.Item.Type;
 public class PlayerCharacter 
 {
 	protected String name;
-	protected String displayName;
+	protected String displayName, startingName;
 	protected boolean isEnemy = false;
 	
 	public boolean isInParty;
@@ -110,6 +110,7 @@ public class PlayerCharacter
 		escaped = false;
 		positionSpecial = false;
 		statusImmunities = new ArrayList<String>();
+		startingName = "";
 	}
 	
 	public PlayerCharacter(PlayerCharacter c)
@@ -122,6 +123,7 @@ public class PlayerCharacter
 		HP = c.HP;
 		MP = c.MP;
 		dead = c.dead;
+		startingName = c.startingName; 
 		
 		isInParty = c.isInParty;
 		index = c.index;
@@ -175,6 +177,9 @@ public class PlayerCharacter
 		
 		statusImmunities = c.statusImmunities;
 	}
+	
+	public void setStartingName(String name){startingName = name;}
+	public String getStartingName(){return startingName;}
 
 	public Event getOnAttackEvent()
 	{

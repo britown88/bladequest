@@ -18,6 +18,7 @@
 
 
 
+
 #!OBJ 4 14
 \objName$4x14$ <- "name"
 \name$4x14$ <- newObject objName$4x14$ 4 14
@@ -122,6 +123,21 @@ addAction (message "But only if your mother promises to cook!")
 
 
 \runstate1$7x19$ <- state1$7x19$ 0
+
+state2$7x19$ 0
+name$7x19$ > createState >
+addItemCondition "goldenbush" >
+setCollisionData true true true true >
+setSprite "woman1" >
+setDefaultPath "R3L3" >
+setMoveOptions 1 1000 >
+addAction (message "Agnes: \nOh, |luc|!") >
+addAction (message "Did you find me some Goldenbush?") >
+addAction (message "Thank you so much!") >
+addAction (message "|luc|: \nMy pleasure!") 
+
+\runstate2$7x19$ <- state2$7x19$ 0
+
 #!OBJ 26 17
 \objName$26x17$ <- "name"
 \name$26x17$ <- newObject objName$26x17$ 26 17

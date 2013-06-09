@@ -5,6 +5,7 @@
 
 
 
+
 #!OBJ 0 0
 \name$0x0$ <- newObject "start" 0 0
 
@@ -168,3 +169,15 @@ addAction (messageWithYesNo "Drop 10G in the skull?" >
 	addToBranch 1 (message "That is probably wise."))
 
 \runstate1$6x3$ <- state1$6x3$ 0
+#!OBJ 6 7
+\objName$6x7$ <- "name"
+\name$6x7$ <- newObject objName$6x7$ 6 7
+
+state1$6x7$ 0
+name$6x7$ > createState >
+setCollisionData true true true true >
+addAction (modifyParty "aramis" true) >
+addAction (modifyParty "luc" false)
+
+
+\runstate1$6x7$ <- state1$6x7$ 0

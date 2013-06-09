@@ -38,6 +38,7 @@ createCliffJumpBarrier x (y > add 1)
 
 
 
+
 #!OBJ 17 15
 \objName$17x15$ <- "name"
 \name$17x15$ <- newObject objName$17x15$ 17 15
@@ -303,10 +304,12 @@ addAction (message "Satyr: \nNo need to scream, little one.") >
 addAction (message "No one's coming for you!") >
 addAction (message "Heeheeheehee!!!") >
 addAction (message "|aramis|: Afraid you got that one wrong!") >
-addAction (createPath "aramis2" true "L5") >
-addAction (createPath "party" false "L5U2L2u") >
-addAction (createPath "aramis2" true "U2L2u")
-
+addAction (createPath "aramis2" true "S2L3") >
+addAction (createPath "party" false "SL5U2us") >
+addAction (createPath "aramis2" true "L2U2L2us2") >
+addAction (createPath "satyr" true "d") >
+addAction (openBubble "exclam" "satyr" 1.0 false true) >
+addAction (createPath "satyr" true "R2d")
 
 \runstate1$17x6$ <- state1$17x6$ 0
 
