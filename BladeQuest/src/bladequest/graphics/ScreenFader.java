@@ -155,7 +155,7 @@ public class ScreenFader extends Serializable
 	
 	public void setFaded()
 	{
-		current = to;
+		current = from;
 		fading = false;
 		done = true;
 	}
