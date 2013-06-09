@@ -588,6 +588,9 @@ addSwitchCondition "albinight" >
 setCollisionData true true true true >
 setSprite "woman1" >
 setFace "left" >
-setBubble "sleep"
+setBubble "sleep" >
+addAction (message "|luc|: \nHey, did you hear that??") >
+addAction (message "|luc|'s Mom: \n...it was only a little earthquake...") >
+addAction (message "...Go back to sleep...")
 
 \runstate2$24x17$ <- state2$24x17$ 0
