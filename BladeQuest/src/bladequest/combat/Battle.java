@@ -89,7 +89,7 @@ public class Battle
 	
 	//gfx
 	private Paint selectPaint;
-	private Paint statsText, nameText, battleText, grayBattleText, enemyBattleText,nameDisplayPaint;
+	private Paint statsText, smallNameText, nameText, battleText, grayBattleText, enemyBattleText,nameDisplayPaint;
 	
 	//menu panels
 	private MenuPanel infoPanel, displayNamePanel, mpWindow, charStatusPanel;
@@ -787,6 +787,7 @@ public class Battle
 		selectPaint.setAntiAlias(true);
 		
 		statsText = Global.textFactory.getTextPaint(8, Color.WHITE, Align.LEFT);
+		smallNameText = Global.textFactory.getTextPaint(7, Color.WHITE, Align.LEFT);
 		nameText = Global.textFactory.getTextPaint(10, Color.WHITE, Align.LEFT);
 		battleText = Global.textFactory.getTextPaint(13, Color.WHITE, Align.LEFT);
 		grayBattleText = Global.textFactory.getTextPaint(13, Color.GRAY, Align.LEFT);
@@ -810,7 +811,12 @@ public class Battle
 			characterPanes[i].clear();		
 			characterPanes[i].obj = c;
 			
-			characterPanes[i].addTextBox(c.getDisplayName(), 5, (int)((charPanelYSpacing - statFrameBuffer)*0.25f), nameText);
+			
+			if (c.getDisplayName().length() > 6)
+				characterPanes[i].addTextBox(c.getDisplayName(), 5, (int)((charPanelYSpacing - statFrameBuffer)*0.25f), smallNameText);
+			else
+				characterPanes[i].addTextBox(c.getDisplayName(), 5, (int)((charPanelYSpacing - statFrameBuffer)*0.25f), nameText);
+			
 			characterPanes[i].addTextBox("HP:" + c.getHP(), 7, (int)((charPanelYSpacing - statFrameBuffer)*0.50f), statsText);
 			characterPanes[i].addTextBox("MP:" + c.getMP(), 7, (int)((charPanelYSpacing - statFrameBuffer)*0.75f), statsText);
 			
