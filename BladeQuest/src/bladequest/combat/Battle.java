@@ -1080,6 +1080,7 @@ public class Battle
 	{
 		battleEvents.add(1,new BattleEvent(Action.Ability,ability, source, targets, markers));
 		battleEvents.get(1).setSpecial();
+		battleEvents.get(1).dontRunStatusEffects();
 	}
 	public BattleEvent currentBattleEvent()
 	{
