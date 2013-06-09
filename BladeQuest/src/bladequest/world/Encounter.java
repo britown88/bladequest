@@ -13,6 +13,7 @@ public class Encounter
 	private List<ScriptVar> scripts;
 	private String backdrop;
 	private String name;
+	private String music;
 	
 	public boolean disableRunning, isBossFight;
 	
@@ -22,6 +23,16 @@ public class Encounter
 		this.backdrop = backdrop;
 		enemies = new ArrayList<Enemy>();
 		scripts = new ArrayList<ScriptVar>();
+	}
+	
+	public void setMusic(String music)
+	{
+		this.music = music;
+	}
+	
+	public String getMusic()
+	{
+		return music;
 	}
 	
 	public Encounter(Encounter e)

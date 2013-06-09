@@ -284,6 +284,9 @@ TryFrozenGrasp returnstate e decision otherwise
 RandomRoundTwoDecision e decision
     (|randomRoll 100   
 	 |greater 30 :  ""  #basic attack
+	 |greater 55 : 
+	 	   decision > setAbility (e > getEnemyAbility "chill")
+		   decision > setTarget e
      |greater 100 : RolandEntomb "base2" RolandFrozenGrip e decision)
      
 RolandRoundTwo e decision
@@ -292,7 +295,10 @@ RolandRoundTwo e decision
 RandomRoundThreeDecision e decision
     (|randomRoll 100   
 	 |greater 20 : RolandEntomb "base3" RolandShatter e decision
-     |greater 50 : RolandEntomb "base3" RolandFrozenGrip e decision
+     |greater 40 : RolandEntomb "base3" RolandFrozenGrip e decision
+	 |greater 55 : 
+	 	   decision > setAbility (e > getEnemyAbility "chill")
+		   decision > setTarget e     
      |greater 80 : decision > setAbility (e > getEnemyAbility "icebarrage")
      |greater 100 : "" #basic attack
      )     
@@ -309,15 +315,13 @@ RolandAI enemy
       ) 
       
       
-      
-      
 RolandTriggers roland      
-	onHPFraction roland 3 4 ([e]  #at 3/4ths hp...
+	onHPFraction roland 4 5 ([e]  #at 4/5ths hp...
 		addNextAbility e e (temporaryAbility "" "" "Single" 0 > 
   		add  (messageAction "Roland: \nSo you're not completely useless.") >
   		add  (messageAction "Roland: \nBut can you pick up the pace?"))
   		switchEnemyState e "base2")
-	onHPFraction roland 1 4 ([e]  #at 2/5ths hp...
+	onHPFraction roland 1 4 ([e]  #at 1/4ths hp...
 		addNextAbility e e (temporaryAbility "" "" "Single" 0 > 
   		add  (messageAction "Roland: \nNot bad, but now witness true power!"))
   		switchEnemyState e "base3")
@@ -332,6 +336,7 @@ setEBaseStats 10 10 10 10 >
 setELevel 16 >
 modStat "BattlePower" -3 >
 modStat "Fire" -20 >
+modStat "Water" 155 >
 modStat "MaxHP" 3000 >
 setGold 2500 >
 setBoss >
@@ -340,5 +345,6 @@ addEAbility "shatter" >
 addEAbility "entomb"  >
 addEAbility "frozengrip"  >
 addEAbility "icebarrage" >
+addEAbility "chill" >
 onBattleStartRun RolandTriggers > 
-setEShadow (createShadow 76 30 50 > nudgeX 11))
+setEShadow (createShadow 74 30 43 > nudgeX 16))

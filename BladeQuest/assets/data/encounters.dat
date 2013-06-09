@@ -121,6 +121,7 @@ addEnemy "satyr" 128 128 >
 disableRunning)
 
 
-\RolandBattleOne <- (inheritEncounter "enemyroland1" >
+\RolandBattleOne <- (inheritEncounter "enemyroland1"  >
+setEncounterMusic "rolandbattle" >
 addEnemy "eroland" 128 128 >
 disableRunning)

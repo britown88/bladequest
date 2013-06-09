@@ -51,7 +51,7 @@ add (waitAction 450) >
 addDep (attackRandomlyAction 0.5 "PhysicalIgnoreDef" 15 0.1) >
 addDep (breakStanceAction 0))
 
-\redcard <- (addAbility "redcard" "Red Card" "Single" 3 >
+\redcard <- (addAbility "redcard" "Red Card" "Single" 4 >
 setDesc "Confuses an enemy." >
 add (waitAction 450) >
 addDep (inflictStatusAction (confuseStatus 4))) #4 == duration
@@ -211,3 +211,11 @@ setDisabled >
 add (waitAction 450) >
 addDep (animBuildAction "icebarrage") >
 addDep (damageGroupAction 1.2 "Magic" "NoMiss" 0.0))
+
+\chill <- (addAbility "chill" "Chill" "Single" 4 >
+add (waitAction 450) >
+addDep (sourcedAsTarget (flashColorizeAction 255 0 128 255 2400 0.8)) >
+add (waitAction 450) >
+addDep (animBuildAction "chilllasers") >
+addDep (damageAction 1.25 "Magic" > addDamageComponent "Water" 1.0)  >
+addDep (animBuildAction "chilliceblock"))
