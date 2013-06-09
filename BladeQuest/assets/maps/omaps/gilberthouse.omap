@@ -3,6 +3,7 @@
 
 
 
+
 #!OBJ 13 19
 \objName$13x19$ <- "name"
 \name$13x19$ <- newObject objName$13x19$ 13 19
@@ -344,3 +345,35 @@ addAction (createPath "gilbert5" true "dlurdlurDLs2") >
 addAction (switchControl "gilbert5" false)
 
 \runstate1$29x11$ <- state1$29x11$ 0
+#!OBJ 12 18
+\objName$12x18$ <- "name"
+\name$12x18$ <- newObject objName$12x18$ 12 18
+
+state1$12x18$ 0
+name$12x18$ > createState >
+setCollisionData true true true true
+
+\runstate1$12x18$ <- state1$12x18$ 0
+
+state2$12x18$ 0
+name$12x18$ > createState >
+addSwitchCondition "gilbert1"
+
+\runstate2$12x18$ <- state2$12x18$ 0
+
+#!OBJ 14 18
+\objName$14x18$ <- "name"
+\name$14x18$ <- newObject objName$14x18$ 14 18
+
+state1$14x18$ 0
+name$14x18$ > createState >
+setCollisionData true true true true
+
+\runstate1$14x18$ <- state1$14x18$ 0
+
+state2$14x18$ 0
+name$14x18$ > createState >
+addSwitchCondition "gilbert1"
+
+\runstate2$14x18$ <- state2$14x18$ 0
+

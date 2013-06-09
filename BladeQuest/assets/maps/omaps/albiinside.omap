@@ -13,6 +13,8 @@
 
 
 
+
+
 #!OBJ 22 3
 \objName$22x3$ <- "name"
 \name$22x3$ <- newObject objName$22x3$ 22 3
@@ -313,7 +315,7 @@ setBubble "sleep" >
 setFace "left" >
 setOptions true false false >
 addAction (message "Sean: \n...It's ok...") >
-addAction (message "...I'm dreaming of Bee Splines...") >
+addAction (message "...I'm dreaming of B-Splines...") >
 addAction (message "....") >
 addAction (switchControl "albiseantalked" false)
 
@@ -409,4 +411,21 @@ setCollisionData true true true true >
 addAction (message "It's empty...")
 
 \runstate2$3x31$ <- state2$3x31$ 0
+
+#!OBJ 21 17
+\objName$21x17$ <- "mom"
+\name$21x17$ <- newObject objName$21x17$ 21 17
+
+state1$21x17$ 0
+name$21x17$ > createState >
+setSprite "woman1" >
+setFace "left"
+
+\runstate1$21x17$ <- state1$21x17$ 0
+
+state2$21x17$ 0
+name$21x17$ > createState >
+addSwitchCondition "albimomscene"
+
+\runstate2$21x17$ <- state2$21x17$ 0
 

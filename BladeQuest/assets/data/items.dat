@@ -154,4 +154,4 @@ addDefaultWait >
 addDep (fullRestore 0))
 
 \prisonkey <- (addItem "prisonkey" "Prison Key" "Key" "orb" "Key to the castle prison cells.")
-
+\goldenbush <- (addItem "goldenbush" "Goldenbush" "Key" "orb" "A common mountain herb with healing properties.")

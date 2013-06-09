@@ -1,7 +1,7 @@
 [header]
 size 30 20
 tileset Interior
-displayname "Mr. Gilbert's House"
+displayname "Gilbert Hall"
 BGM goofy
 [tiles]
 t 0 0 1 16 0 0 0 0 0 

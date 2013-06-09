@@ -36,6 +36,10 @@ addSpriteFrame "" 32 48 48 64 >
 addSpriteFrame "" 48 48 64 64 >
 addSpriteFrame "" 32 48 48 64 >
 setFace ""
+createSprite "goldenbush" "misc" 32 32 >
+addSpriteFrame "" 16 64 32 80 >
+addSpriteFrame "" 32 64 48 80 >
+setFace ""
 createSprite "sword1" "misc" 32 32 >
 addSpriteFrame "" 32 16 48 32 >
 addSpriteFrame "" 48 16 64 32 >
