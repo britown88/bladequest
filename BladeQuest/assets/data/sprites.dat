@@ -71,7 +71,7 @@ createEnemySprite "bat" "enemies" (point 32 48) (point 32 40)
 createEnemySprite "rat" "enemies" (point 64 48) (point 32 32)
 createEnemySprite "leafbunny" "enemies" (point 96 48) (point 43 34)
 createEnemySprite "satyr" "enemies" (point 0 88) (point 75 76)
-createEnemySprite "eroland" "rolandbattle" (point 0 0) (point 88 73)
+createEnemySprite "eroland" "enemies" (point 75 82) (point 75 62)
 
 addBattleSprites 0
 createBattleSprite "broland" 0 0

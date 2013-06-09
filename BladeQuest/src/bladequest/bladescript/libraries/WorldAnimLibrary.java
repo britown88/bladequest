@@ -20,15 +20,15 @@ public class WorldAnimLibrary
 		}
 	}
 	
-	public static AnimationBuilder genGrowingCircle(Point start, int a, int r, int g, int b, float time, int radius)
+	public static AnimationBuilder genGrowingCircle(int a, int r, int g, int b, float time, int radius)
 	{
-		return WorldAnimations.buildGrowingCircle(start, Color.argb(a,  r,  g,  b), time, radius);
+		return WorldAnimations.buildGrowingCircle(Color.argb(a,  r,  g,  b), time, radius);
 		
 	}
 	
-	public static AnimationBuilder genCircle(Point start, int a, int r, int g, int b, int radius)
+	public static AnimationBuilder genCircle(int a, int r, int g, int b, int radius)
 	{
-		return WorldAnimations.buildCircle(start, Color.argb(a,  r,  g,  b), radius);
+		return WorldAnimations.buildCircle(Color.argb(a,  r,  g,  b), radius);
 		
 	}
 	

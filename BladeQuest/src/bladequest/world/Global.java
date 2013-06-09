@@ -62,6 +62,7 @@ import bladequest.combat.triggers.Trigger;
 import bladequest.enemy.Enemy;
 import bladequest.graphics.AnimatedBitmap;
 import bladequest.graphics.AnimationBuilder;
+import bladequest.graphics.AnimationPosition;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleAnimObjState;
 import bladequest.graphics.BattleAnimObjState.PosTypes;
@@ -74,7 +75,6 @@ import bladequest.graphics.ReactionBubble;
 import bladequest.graphics.Renderer;
 import bladequest.graphics.Scene;
 import bladequest.graphics.ScreenFader;
-import bladequest.graphics.ScreenFilter;
 import bladequest.graphics.Sprite;
 import bladequest.graphics.TextFactory;
 import bladequest.graphics.TilePlateBitmap;
@@ -512,7 +512,8 @@ public class Global
 			nameSelect = new NameSelect();
 		
 		nameSelect.open(c);
-		transition(States.GS_NAMESELECT);
+		screenFader.fadeIn(0.5f);
+		GameState = States.GS_NAMESELECT;
 	}
 	
 	public static void openSaveLoadMenu(int mode)
@@ -556,6 +557,8 @@ public class Global
 		vpPanLength = length;
 		panStartTime = System.currentTimeMillis();
 	}
+	
+	
 	
 	public static void setPanned(int x, int y)
 	{
@@ -659,6 +662,16 @@ public class Global
 		else playingAnims.add(animCopy);
 		
 		animCopy.play(source, target);	
+		
+		return animCopy;
+	}
+	
+	public static BattleAnim playAnimation(BattleAnim anim, AnimationPosition pos)
+	{
+		BattleAnim animCopy = new BattleAnim(anim);
+		playingAnims.add(animCopy);
+		
+		animCopy.play(pos);	
 		
 		return animCopy;
 	}
@@ -883,23 +896,32 @@ public class Global
 	public static Point getVPCoordsFromObject(String name)
 	{
 		Point targetP = null;
-		if(target.equals("party"))
-			targetP = Global.party.getGridPos();
+		if(name.equals("party"))
+		{
+			targetP = new Point(party.getWorldPos());
+			targetP.y -= party.getElevation();
+		}			
 		else
 			for(GameObject go : Global.map.Objects())
-				if(go.Name().equals(target))
+				if(go.Name().equals(name))
 				{
-					targetP = go.getGridPos();
+					targetP = new Point(go.getWorldPos());
+					targetP.y -= go.getElevation();
 					break;
 				}						
 
 		if(targetP != null)
-		{
-			targetP = new Point(targetP.x * 32 + 16, targetP.y * 32 + 16);
-			targetP = Global.worldToVP(targetP);				
-		}
-		
+			targetP = gridPosToVP(targetP);
+
+			
+	
 		return targetP;
+	}
+	
+	public static Point gridPosToVP(Point p)
+	{
+		Point targetP = new Point(p.x + 16, p.y + 16);
+		return Global.worldToVP(targetP);	
 	}
 	
 	public static Rect screenToVP(Rect r)

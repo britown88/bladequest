@@ -143,3 +143,14 @@ addAction (teleportParty name$8x0$ 23 28 "albi") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
 \runstate1$8x0$ <- state1$8x0$ 0
+#!OBJ 3 49
+\objName$3x49$ <- "name"
+\name$3x49$ <- newObject objName$3x49$ 3 49
+
+state1$3x49$ 0
+name$3x49$ > createState >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$3x49$ 3 1 "albiforest2") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$3x49$ <- state1$3x49$ 0

@@ -17,12 +17,9 @@ public class BattleAnimObjState
 	
 	public int frame;
 	
-	public boolean show, randomized, mirrored;
+	public boolean show, mirrored;
 	
 	public PosTypes posType;
-	
-	private boolean random;
-	private Rect randomRange;
 	
 	public Rect bmpSrcRect;
 	
@@ -62,43 +59,62 @@ public class BattleAnimObjState
 	}
 	
 	public void setBmpSrcRect(int left, int top, int right, int bottom){bmpSrcRect = new Rect(left, top, right, bottom);}
-	public void setRandomRange(Rect range){randomRange = range; random = true;}
-	public void randomize(BattleAnimObject parent)
+
+	
+	public void offset(BattleAnimObject parent)
 	{
-		if (interpObj != null) return;
+		if(interpObj != null) return;
 		
-		if(random)
-		{
-			int rx = randomRange.left, ry = randomRange.top;
-			if(randomRange.width() > 0)
-				rx += Global.rand.nextInt(randomRange.width());
-			if(randomRange.height() > 0)
-				ry += Global.rand.nextInt(randomRange.height());
-				
-			pos1 = new Point(rx, ry);
-		}
+		Point target = parent.animPos.getTarget();
+		Point source = parent.animPos.getSource();
 		
 		switch(posType)
 		{
 		case Source:
-			if(parent.source != null)
+			if(parent.animPos.getSource() != null)
 			{
-				pos1.offset(parent.source.x, parent.source.y);
-				pos2.offset(parent.source.x, parent.source.y);				
+				pos1.offset(source.x, source.y);
+				pos2.offset(source.x, source.y);				
 			}			
 			break;
 		case Target:
-			if(parent.target != null)
+			if(parent.animPos.getTarget() != null)
 			{
-				pos1.offset(parent.target.x, parent.target.y);
-				pos2.offset(parent.target.x, parent.target.y);
+				pos1.offset(target.x, target.y);
+				pos2.offset(target.x, target.y);
 			}			
 			break;
 		default:
 			break;
 		}
+	}
+	
+	public void unOffset(BattleAnimObject parent)
+	{
+		if(interpObj != null) return;
 		
-		randomized = true;
+		Point target = parent.animPos.getTarget();
+		Point source = parent.animPos.getSource();
+		
+		switch(posType)
+		{
+		case Source:
+			if(parent.animPos.getSource() != null)
+			{
+				pos1.offset(-source.x, -source.y);
+				pos2.offset(-source.x, -source.y);				
+			}			
+			break;
+		case Target:
+			if(parent.animPos.getTarget() != null)
+			{
+				pos1.offset(-target.x, -target.y);
+				pos2.offset(-target.x, -target.y);
+			}			
+			break;
+		default:
+			break;
+		}
 	}
 	
 	public BattleAnimObjState()
@@ -108,7 +124,6 @@ public class BattleAnimObjState
 	public BattleAnimObjState(int frame, PosTypes posType)
 	{
 		show = true;
-		random = false;
 		mirrored = false;
 		rotation = 0.0f;
 		
@@ -167,11 +182,7 @@ public class BattleAnimObjState
 		this.pos1 = new Point(other.pos1);
 		this.pos2 = new Point(other.pos2);
 
-		this.random = other.random;
 
-		if(other.randomRange != null)
-			this.randomRange = new Rect(other.randomRange);
-		this.randomized = other.randomized;
 		this.colorize = other.colorize;
 		
 		if(other.bmpSrcRect != null)

@@ -65,8 +65,8 @@ public class WorldAnimations
 							{
 								Point nextPt = next.p;
 								 
-						    	 BattleAnimObject obj = new BattleAnimObject(Types.Line, false, "");
-									
+						    	BattleAnimObject obj = new BattleAnimObject(Types.Line, false, "");
+						    	 
 								BattleAnimObjState state = new BattleAnimObjState((int)(index*frameLength), PosTypes.Screen);
 								state.pos1 = new Point(p);
 								state.pos2 = new Point(p);
@@ -114,16 +114,14 @@ public class WorldAnimations
 			}
 		}.initialize(start, targets, iterations, radius);
 	}
-	public static AnimationBuilder buildGrowingCircle(Point start, int c, float time, int radius)
+	public static AnimationBuilder buildGrowingCircle(int c, float time, int radius)
 	{
 		return new AnimationBuilder() {	
-			Point start;
 			int radius;
 			int c;
 			float time;
-			AnimationBuilder initialize(Point start, int c, float time, int radius)
+			AnimationBuilder initialize(int c, float time, int radius)
 			{
-				this.start = start;
 				this.radius = radius;
 				this.time = time;
 				this.c = c;
@@ -136,15 +134,15 @@ public class WorldAnimations
 			{
 				BattleAnim anim = new BattleAnim(1000.0f);
 				BattleAnimObject obj = new BattleAnimObject(Types.Elipse, false, "");
-				BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Screen);
-				state.pos1 = start;
+				BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Source);
+				state.pos1 = new Point();
 				state.size = new Point();
 				state.argb(Color.alpha(c), Color.red(c), Color.green(c), Color.blue(c));
 				state.colorize = 1.0f;
 				obj.addState(state);				
 				
-				state = new BattleAnimObjState((int)(time*1000), PosTypes.Screen);
-				state.pos1 = start;
+				state = new BattleAnimObjState((int)(time*1000), PosTypes.Source);
+				state.pos1 = new Point();
 				state.size = new Point(radius*2, radius*2);
 				state.argb(Color.alpha(c), Color.red(c), Color.green(c), Color.blue(c));
 				state.colorize = 1.0f;
@@ -153,17 +151,15 @@ public class WorldAnimations
 				
 				return anim;
 			}
-		}.initialize(start, c, time, radius);
+		}.initialize(c, time, radius);
 	}
-	public static AnimationBuilder buildCircle(Point start, int c, int radius)
+	public static AnimationBuilder buildCircle(int c, int radius)
 	{
 		return new AnimationBuilder() {	
-			Point start;
 			int radius;
 			int c;
-			AnimationBuilder initialize(Point start, int c, int radius)
+			AnimationBuilder initialize(int c, int radius)
 			{
-				this.start = start;
 				this.radius = radius;
 				this.c = c;
 				
@@ -176,14 +172,14 @@ public class WorldAnimations
 				BattleAnim anim = new BattleAnim(1000.0f);
 				anim.loop();
 				BattleAnimObject obj = new BattleAnimObject(Types.Elipse, false, "");
-				BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Screen);
-				state.pos1 = start;
+				BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Source);
+				state.pos1 = new Point();
 				state.size = new Point(radius*2, radius*2);
 				state.argb(Color.alpha(c), Color.red(c), Color.green(c), Color.blue(c));
 				obj.addState(state);				
 				
-				state = new BattleAnimObjState(1000, PosTypes.Screen);
-				state.pos1 = start;
+				state = new BattleAnimObjState(1000, PosTypes.Source);
+				state.pos1 = new Point();
 				state.size = new Point(radius*2, radius*2);
 				state.argb(Color.alpha(c), Color.red(c), Color.green(c), Color.blue(c));
 				obj.addState(state);	
@@ -191,7 +187,7 @@ public class WorldAnimations
 				
 				return anim;
 			}
-		}.initialize(start, c, radius);
+		}.initialize(c, radius);
 	}
 	public static AnimationBuilder buildSugoiMoon()
 	{
@@ -257,8 +253,8 @@ public class WorldAnimations
 				//anim.loop();
 				BattleAnimObject obj = new BattleAnimObject(Types.Bitmap, false, "twinkle");
 				
-				BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Screen);
-				state.pos1 = new Point(208,80);
+				BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Source);
+				state.pos1 = new Point(0,0);
 				state.size = new Point(27, 27);
 				state.argb(255, 0, 0, 0);
 				state.colorize = 0.0f;
@@ -272,8 +268,8 @@ public class WorldAnimations
 				
 				obj.addState(state);				
 				
-				state = new BattleAnimObjState(12000, PosTypes.Screen);
-				state.pos1 = new Point(208,80);
+				state = new BattleAnimObjState(12000, PosTypes.Source);
+				state.pos1 = new Point(0,0);
 				state.size = new Point(0, 0);
 				state.argb(255, 0, 0, 0);
 				state.colorize = 0.0f;

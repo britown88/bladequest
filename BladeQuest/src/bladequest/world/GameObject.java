@@ -71,7 +71,7 @@ public class GameObject {
 	public void setStateAutoStart(int index, boolean autoStart){states.get(index).setAutoStart(autoStart);}	
 	public Layer getLayer(){return states.get(currentState).getLayer();}
 	public void addState(ObjectState state){states.add(state);}
-	
+	public int getElevation(){return shadow.getElevation();}
 	
 	public void setElevation(int pixels)
 	{

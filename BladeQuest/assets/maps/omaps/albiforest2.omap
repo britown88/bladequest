@@ -1,0 +1,317 @@
+#!HEAD
+createCliffJumpObj x y face path
+newObject "cjump" x y > createState >
+addAction (createPath "party" true face) >
+addAction (messageWithYesNo "Jump down?" >
+	addToBranch 0  (switchControl "cliffjump" true) >
+	addToBranch 0  (createPath "party" false path) >
+	addToBranch 0  (changeElevation "party" 16 0.25 true) >
+	addToBranch 0  (changeElevation "party" 0 0.25 true) >
+	addToBranch 0  (switchControl "cliffjump" false))
+
+createCliffJumpBarrier x y
+\obj <- newObject "cbar" x y 
+obj > createState > 
+setCollisionData true true true true
+obj > createState >
+addSwitchCondition "cliffjump"
+obj
+
+cliffJumpLeft x y
+createCliffJumpObj x y "l" "L2"
+createCliffJumpBarrier (x > subtract 1) y
+
+cliffJumpUp x y
+createCliffJumpObj x y "u" "U2"
+createCliffJumpBarrier x (y > subtract 1)
+
+cliffJumpRight x y
+createCliffJumpObj x y "r" "R2"
+createCliffJumpBarrier (x > add 1) y
+
+cliffJumpDown x y
+createCliffJumpObj x y "d" "D2"
+createCliffJumpBarrier x (y > add 1)
+
+
+
+
+
+#!OBJ 17 15
+\objName$17x15$ <- "name"
+\name$17x15$ <- newObject objName$17x15$ 17 15
+
+state1$17x15$ 0
+name$17x15$ > createState >
+setSprite "savepoint" >
+setCollisionData true true true true >
+addAction (flash 1.0 255 0 250 200 true) >
+addAction (messageWithYesNo "Save your progress?" > 
+	addToBranch 0 (openSaveMenu 0)) >
+addAction (allowSaving 0)
+
+
+\runstate1$17x15$ <- state1$17x15$ 0
+#!OBJ 3 0
+\objName$3x0$ <- "name"
+\name$3x0$ <- newObject objName$3x0$ 3 0
+
+state1$3x0$ 0
+name$3x0$ > createState >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$3x0$ 3 48 "albiforest") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$3x0$ <- state1$3x0$ 0
+
+state2$3x0$ 0
+name$3x0$ > createState >
+addSwitchCondition "albiaramisjoined" >
+addAction (message "|aramis|: \nAre you even paying attention there, kid?") >
+addAction (message "Footsteps led the other way!") >
+addAction (createPath "party" true "D")
+
+
+\runstate2$3x0$ <- state2$3x0$ 0
+
+#!OBJ 5 1
+\name$5x1$ <- cliffJumpLeft 5 1
+#!OBJ 5 2
+\name$5x2$ <- cliffJumpLeft 5 2
+#!OBJ 5 3
+\name$5x3$ <- cliffJumpLeft 5 3
+#!OBJ 3 17
+\objName$3x17$ <- "name"
+\name$3x17$ <- newObject objName$3x17$ 3 17
+
+state1$3x17$ 0
+name$3x17$ > createState >
+setCollisionData true true true true >
+setSprite "chest" >
+setAnimated false
+
+
+\runstate1$3x17$ <- state1$3x17$ 0
+#!OBJ 7 11
+\objName$7x11$ <- "aramis"
+\name$7x11$ <- newObject objName$7x11$ 7 11
+
+state1$7x11$ 0
+name$7x11$ > createState >
+setCollisionData true true true true >
+setSprite "aramis" >
+setFace "up" >
+setIgnorePartyOnMove true
+
+\runstate1$7x11$ <- state1$7x11$ 0
+
+state2$7x11$ 0
+name$7x11$ > createState >
+addSwitchCondition "albiaramisjoined"
+
+
+\runstate2$7x11$ <- state2$7x11$ 0
+
+
+#!OBJ 10 11
+\objName$10x11$ <- "name"
+\name$10x11$ <- newObject objName$10x11$ 10 11
+
+state1$10x11$ 0
+name$10x11$ > createState >
+setSprite "footsteps"
+
+\runstate1$10x11$ <- state1$10x11$ 0
+#!OBJ 14 10
+\objName$14x10$ <- "name"
+\name$14x10$ <- newObject objName$14x10$ 14 10
+
+state1$14x10$ 0
+name$14x10$ > createState >
+setSprite "footsteps"
+
+\runstate1$14x10$ <- state1$14x10$ 0
+#!OBJ 17 16
+\objName$17x16$ <- "name"
+\name$17x16$ <- newObject objName$17x16$ 17 16
+
+state1$17x16$ 0
+name$17x16$ > createState >
+setSprite "footsteps"
+
+\runstate1$17x16$ <- state1$17x16$ 0
+#!OBJ 24 16
+\objName$24x16$ <- "name"
+\name$24x16$ <- newObject objName$24x16$ 24 16
+
+state1$24x16$ 0
+name$24x16$ > createState >
+setSprite "footsteps"
+
+\runstate1$24x16$ <- state1$24x16$ 0
+#!OBJ 4 5
+\objName$4x5$ <- "name"
+\name$4x5$ <- newObject objName$4x5$ 4 5
+
+state1$4x5$ 0
+name$4x5$ > createState >
+addAction (createPath "party" true "d") >
+addAction (wait 1.0) >
+addAction (openBubble "exclam" "party" 1.0 false true) >
+addAction (createPath "party" true "RD5RDr") >
+addAction (message "|luc|: \nHey, Mister! Are you alright??") >
+addAction (message "|aramis|: \n...nnng...") >
+addAction (openBubble "dots" "aramis" 1.0 false true) >
+addAction (createPath "aramis" true "dW5rW5l") >
+addAction (openBubble "exclam" "aramis" 1.0 false true) >
+addAction (message "|aramis|: \nWh...where the hell am I??") >
+addAction (message "|luc|: \nYou're in Albi Forest...") >
+addAction (message "Are you ok? \nAre you hurt? \nHow many fingers am I holding up?") >
+addAction (openBubble "sweat" "aramis" 1.0 false false) >
+addAction (message "|aramis|: \nI'm fine, kid, I'm fine. Cool it.") >
+addAction (wait 1.0) >
+addAction (createPath "aramis" true "s2U") >
+addAction (createPath "party" false "u") >
+addAction (createPath "aramis" true "W5lW5S2") >
+addAction (message "|aramis|: \nWhew...sure made a mess here, huh?") >
+addAction (message "|luc|: \nHow did you manage to make it all the way out here?") >
+addAction (message "And in the middle of the night???") >
+addAction (createPath "aramis" true "dW5") >
+addAction (message "|aramis|: \nThat's uuuh... a bit of a long story, I'm afraid..") >
+addAction (message "Lessee...") >
+addAction (openBubble "dots" "aramis" 1.0 false true) >
+addAction (openBubble "exclam" "aramis" 1.0 false true) >
+addAction (createPath "party" false "r") >
+addAction (createPath "aramis" true "Dl") >
+addAction (message "|aramis|: \nWas there anyone else around when you got here??") >
+addAction (message "A woman?  With white hair??") >
+addAction (message "|luc|: \nNo, you were the only one!") >
+addAction (createPath "aramis" true "r") >
+addAction (openBubble "exclam" "aramis" 1.0 false false) >
+addAction (message "|aramis|: \nWait!") >
+addAction (createPath "aramis" true "R2") >
+addAction (message "|aramis|: \nThese footsteps!") >
+addAction (createPath "aramis" true "L2") >
+addAction (message "|aramis|: \nListen, I don't really know what's going on right now...") >
+addAction (message "...but I'd be willing to bet those tracks belong to someone who does.") >
+addAction (message "Waddya say we take a look?") >
+addAction (openBubble "qmark" "party" 1.0 false false) >
+addAction (message "|luc|: \nWhat? No! This is crazy, I don't even know you!") >
+addAction (message "I just came to see what that red light was!") >
+addAction (message "|aramis|: \nOh, right.  Yeah, that was probably me.") >
+addAction (message "Sorry 'bout that, were you asleep?") >
+addAction (message "|luc|: \nAs a matter of fact...") >
+addAction (openBubble "angry" "aramis" 1.0 true false) >
+addAction (message "|aramis|: \nNo one cares, kid!") >
+addAction (message "You any good with that sword?  Keep it close and let's go!") >
+addAction (message "|luc|: \nB-but I...I don't even know your name!") >
+addAction (openBubble "sweat" "aramis" 1.0 false false) >
+addAction (message "|aramis|: \nRight, ok...") >
+addAction (openNameSelect "aramis") >
+addAction (message "|aramis|: \nJust call me |aramis|.") >
+addAction (message "|luc|: \nOk then, my name's |luc|.") >
+addAction (message "|aramis|: \nYeah yeah, ok...") >
+addAction (message "Now shut up and follow those footsteps!") >
+addAction (createPath "aramis" true "L") >
+addAction (switchControl "albiaramisjoined" true) >
+addAction (message "|aramis| has joined your party!")
+
+\runstate1$4x5$ <- state1$4x5$ 0
+
+state2$4x5$ 0
+name$4x5$ > createState >
+addSwitchCondition "albiaramisjoined"
+
+\runstate2$4x5$ <- state2$4x5$ 0
+
+
+#!OBJ 16 14
+\objName$16x14$ <- "name"
+\name$16x14$ <- newObject objName$16x14$ 16 14
+
+state1$16x14$ 0
+name$16x14$ > createState >
+addAction (switchControl "albiaramis1" true)
+
+\runstate1$16x14$ <- state1$16x14$ 0
+
+state2$16x14$ 0
+name$16x14$ > createState >
+addSwitchCondition "albiaramis1" >
+addAction (message "|aramis|: \nAre you even paying attention there, kid?") >
+addAction (message "Footsteps led the other way!") >
+addAction (createPath "party" true "D")
+
+
+\runstate2$16x14$ <- state2$16x14$ 0
+#!OBJ 8 2
+\objName$8x2$ <- "joy"
+\name$8x2$ <- newObject objName$8x2$ 8 2
+
+state1$8x2$ 0
+name$8x2$ > createState
+
+\runstate1$8x2$ <- state1$8x2$ 0
+
+state2$8x2$ 0
+name$8x2$ > createState >
+addSwitchCondition "albiaramis1" >
+setSprite "joy" >
+setFace "right"
+
+
+\runstate2$8x2$ <- state2$8x2$ 0
+#!OBJ 9 2
+\objName$9x2$ <- "satyr"
+\name$9x2$ <- newObject objName$9x2$ 9 2
+
+state1$9x2$ 0
+name$9x2$ > createState
+
+\runstate1$9x2$ <- state1$9x2$ 0
+
+state2$9x2$ 0
+name$9x2$ > createState >
+addSwitchCondition "albiaramis1" >
+setSprite "satyr" >
+setFace "left"
+
+
+\runstate2$9x2$ <- state2$9x2$ 0
+#!OBJ 17 6
+\objName$17x6$ <- "aramis2"
+\name$17x6$ <- newObject objName$17x6$ 17 6
+
+state1$17x6$ 0
+name$17x6$ > createState >
+addAction (message "Woman's Voice: \nAAAAAAAH!!! HEEEEELP!!!") >
+addAction (switchControl "albiaramis2" true) >
+addAction (createPath "aramis2" true "L") >
+addAction (openBubble "exclam" "aramis2" 1.0 false true) >
+addAction (message "|aramis|: \nOver there!") >
+addAction (panControl -7 -2 3.0 true) >
+addAction (wait 1.0) >
+addAction (message "Satyr: \nHeeheehee \nLittle girl all alone late at night.") >
+addAction (createPath "joy" true "KL") >
+addAction (message "Woman: \nS-Somebody, please! Help!") >
+addAction (createPath "satyr" true "L") >
+addAction (message "Satyr: \nNo need to scream, little one.") >
+addAction (message "No one's coming for you!") >
+addAction (message "Heeheeheehee!!!") >
+addAction (message "|aramis|: Afraid you got that one wrong!") >
+addAction (createPath "aramis2" true "L5") >
+addAction (createPath "party" false "L5U2L2u") >
+addAction (createPath "aramis2" true "U2L2u")
+
+
+\runstate1$17x6$ <- state1$17x6$ 0
+
+state2$17x6$ 0
+name$17x6$ > createState >
+addSwitchCondition "albiaramis2" >
+setSprite "aramis" >
+setFace "left" >
+setIgnorePartyOnMove true
+
+\runstate2$17x6$ <- state2$17x6$ 0
+

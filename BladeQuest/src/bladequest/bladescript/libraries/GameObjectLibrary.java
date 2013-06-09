@@ -1,8 +1,6 @@
 package bladequest.bladescript.libraries;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import android.graphics.Point;
 import bladequest.actions.Action;
 import bladequest.actions.actAllowSaving;
 import bladequest.actions.actAnimation;
@@ -10,12 +8,14 @@ import bladequest.actions.actClearAnimations;
 import bladequest.actions.actElevation;
 import bladequest.actions.actExpectInput;
 import bladequest.actions.actFadeControl;
+import bladequest.actions.actFilter;
 import bladequest.actions.actFlash;
 import bladequest.actions.actFloat;
 import bladequest.actions.actGameOver;
 import bladequest.actions.actGoldTransaction;
 import bladequest.actions.actMerchant;
 import bladequest.actions.actMessage;
+import bladequest.actions.actMessage.Position;
 import bladequest.actions.actModifyGold;
 import bladequest.actions.actModifyInventory;
 import bladequest.actions.actModifyParty;
@@ -24,7 +24,10 @@ import bladequest.actions.actPanControl;
 import bladequest.actions.actPath;
 import bladequest.actions.actPauseMusic;
 import bladequest.actions.actPlayMusic;
+import bladequest.actions.actPopSong;
+import bladequest.actions.actPushSong;
 import bladequest.actions.actReactionBubble;
+import bladequest.actions.actRemoveFilter;
 import bladequest.actions.actResetGame;
 import bladequest.actions.actRestoreParty;
 import bladequest.actions.actSaveMenu;
@@ -35,14 +38,12 @@ import bladequest.actions.actSwitch;
 import bladequest.actions.actTeleportParty;
 import bladequest.actions.actUnloadScene;
 import bladequest.actions.actWait;
-import bladequest.actions.actMessage.Position;
 import bladequest.bladescript.LibraryWriter;
 import bladequest.graphics.AnimationBuilder;
 import bladequest.world.GameObject;
 import bladequest.world.Global;
 import bladequest.world.Layer;
 import bladequest.world.ObjectPath;
-import bladequest.world.ObjectPath.Actions;
 import bladequest.world.ObjectState;
 
 public class GameObjectLibrary 
@@ -207,11 +208,27 @@ public class GameObjectLibrary
 		Action act = new actAnimation(builder, source, target, wait);
 		return act;
 	}
+	public static Action playAnimation(AnimationBuilder builder, Point source, Point target, boolean wait)
+	{		
+		Action act = new actAnimation(builder, source, target, wait);
+		return act;
+	}
 	public static Action playAnimationStoppedShort(AnimationBuilder builder, String source, String target, float secondsShort)
 	{		
 		Action act = new actAnimation(builder, source, target, secondsShort);
 		return act;
 	}
+	public static Action filter(float[] filter)
+	{		
+		Action act = new actFilter(filter);
+		return act;
+	}
+	public static Action removeFilter(int value)
+	{		
+		Action act = new actRemoveFilter();
+		return act;
+	}
+	
 	public static Action clearAnimations(int i)
 	{
 		return new actClearAnimations();
@@ -260,6 +277,14 @@ public class GameObjectLibrary
 	{		
 		Action act = new actPauseMusic(fadeTime);
 		return act;
+	}
+	public static Action pushSong(int value)
+	{
+		return new actPushSong();
+	}
+	public static Action popSong(int value)
+	{
+		return new actPopSong();
 	}
 	public static Action openBubble(String name, String target, float duration, boolean loop, boolean wait)
 	{		

@@ -14,9 +14,8 @@ public class BattleAnim
 	
 	private boolean playing, done, loops;
 	
-	private Point src, tar;
-	
 	private long startTime, frameTime;
+	private AnimationPosition animPos;
 	//private Paint text;
 	
 	
@@ -88,10 +87,9 @@ public class BattleAnim
 		return (long)(getFinalFrame() * framePeriod); 
 	}
 	
-	public void play(Point source, Point target)
-	{
-		this.src = source; this.tar = target;
-		
+	public void play(AnimationPosition pos)
+	{		
+		this.animPos = pos;
 		playing = true;
 		done = false;
 		
@@ -99,7 +97,7 @@ public class BattleAnim
 		
 		//start all bojects
 		for(BattleAnimObject obj : objects)
-			obj.start(source, target);
+			obj.start(pos);
 		
 		//find finalFrame
 		findFinalFrame();
@@ -108,6 +106,32 @@ public class BattleAnim
 		for(BattleAnimObject obj : objects)
 			if(obj.getStartFrame() == 0 && obj.getEndFrame() == finalFrame)
 				obj.alwaysDraw();
+	}
+	
+	public void play(Point source, Point target)
+	{
+		
+		play(new AnimationPosition() {
+			private Point src, tar;
+			
+			public AnimationPosition init(Point source, Point target)
+			{
+				this.src = source;
+				this.tar = target;
+				
+				return this;
+			}			
+			
+			@Override
+			public Point getTarget() {
+				return tar;
+			}
+			
+			@Override
+			public Point getSource() {
+				return src;
+			}
+		}.init(source, target));
 
 			
 	}
@@ -149,7 +173,7 @@ public class BattleAnim
 						//animation is over
 						if(loops)
 						{
-							play(src, tar);
+							play(animPos);
 							for(BattleAnimObject obj : objects)								
 							{
 								obj.update(frame);
@@ -200,17 +224,35 @@ public class BattleAnim
 		return new Point(linearInterpolation(p0.x, p1.x, mu),
 						 linearInterpolation(p0.y, p1.y, mu));
 	}
-	public static  int linearInterpolation(int x0, int x1, float mu){return (int)(x0 * (1.0f-mu) + x1*mu);}
-	public static  float linearInterpolation(float x0, float x1, float mu){return x0 * (1.0f-mu) + x1*mu;}
+	public static  int linearInterpolation(int x0, int x1, float mu)
+	{
+		if(x0 == x1)
+			return x0;
+	
+		return (int)(x0 * (1.0f-mu) + x1*mu);
+	}
+	public static  float linearInterpolation(float x0, float x1, float mu)
+	{
+		if(x0 == x1)
+			return x0;
+		
+		return x0 * (1.0f-mu) + x1*mu;
+	}
 	public static  int cubicInterpolation(int y0, int y1, int y2, int y3, float mu)
 	{
-		int a0,a1,a2,a3;
+		float a0,a1,a2,a3;
 		float mu2;
+		
+		if(mu < 0) mu = 0;
+		if(mu > 1) mu = 1;
+		
+		if((y0 == y1) && (y0 == y2) && (y0 == y3))
+			return y0;
 
 		mu2 = mu*mu;
-		a0 = (int)(-0.5f*y0 + 1.5f*y1 - 1.5f*y2 + 0.5f*y3);
-		a1 = (int)(y0 - 2.5f*y1 + 2.0f*y2 - 0.5f*y3);
-		a2 = (int)(-0.5f*y0 + 0.5f*y2);
+		a0 = (-0.5f*y0 + 1.5f*y1 - 1.5f*y2 + 0.5f*y3);
+		a1 = (y0 - 2.5f*y1 + 2.0f*y2 - 0.5f*y3);
+		a2 = (-0.5f*y0 + 0.5f*y2);
 		a3 = y1;
 	
 		return (int)(a0*mu*mu2 + a1*mu2 + a2*mu + a3);
@@ -220,6 +262,9 @@ public class BattleAnim
 	public static float cubicInterpolation(float y0, float y1, float y2, float y3, float mu)
 	{
 		float a0,a1,a2,a3,mu2;
+		
+		if((y0 == y1) && (y0 == y2) && (y0 == y3))
+			return y0;
 
 		mu2 = mu*mu;
 		a0 = -0.5f*y0 + 1.5f*y1 - 1.5f*y2 + 0.5f*y3;
