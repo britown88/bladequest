@@ -136,14 +136,11 @@ addDep (animBuildAction "antidote") >
 addDep (removeStatusAction "poison"))
 
 
-\tranquilizer <- (addItem "tranquilizer" "Tranqlizr" "Usable" "orb" "Cures Berserk." >
+\tranquilizer <- (addItem "tranquilizer" "Tranqlizr" "UsableBattleOnly" "orb" "Cures Berserk." >
 setValue 50 >
 setTargetType "Single" >
 addDefaultWait >
-addDep (sourcedAsTarget (flashColorizeAction 255 0 128 255 2400 0.8)) >
-addDefaultWait >
-addDep (animBuildAction "chilllasers") >
-addDep (animBuildAction "chilliceblock") >
+addDep (animBuildAction "tranquilizer") >
 addDep (removeStatusAction "berserk"))
 
 \sleepingbag <- (addItem "sleepingbag" "Sleeping Bag" "UsableSavePointOnly" "orb" "Use at a save point to fully restore one party member." >
