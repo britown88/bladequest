@@ -205,8 +205,13 @@ public class BattleAnimObject
 		if(nextState != null && frame >= startFrame && frame <= endFrame)
 		{
 			//update to most current state
-			if(frame >= nextState.frame)
+			while(frame >= nextState.frame)
+			{
 				setState(stateIndex+1);
+				if(nextState == null)
+					break;
+			}
+				
 			
 			workingState.updateSpriteAnimation();
 

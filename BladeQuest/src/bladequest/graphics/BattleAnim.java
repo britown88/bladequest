@@ -243,6 +243,9 @@ public class BattleAnim
 		float a0,a1,a2,a3;
 		float mu2;
 		
+		if(mu < 0) mu = 0;
+		if(mu > 1) mu = 1;
+		
 		if((y0 == y1) && (y0 == y2) && (y0 == y3))
 			return y0;
 

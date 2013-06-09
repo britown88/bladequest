@@ -897,14 +897,14 @@ public class Global
 		Point targetP = null;
 		if(name.equals("party"))
 		{
-			targetP = party.getWorldPos();
+			targetP = new Point(party.getWorldPos());
 			targetP.y -= party.getElevation();
 		}			
 		else
 			for(GameObject go : Global.map.Objects())
 				if(go.Name().equals(name))
 				{
-					targetP = go.getWorldPos();
+					targetP = new Point(go.getWorldPos());
 					targetP.y -= go.getElevation();
 					break;
 				}						

@@ -21,6 +21,7 @@ import bladequest.bladescript.LibraryWriter;
 import bladequest.bladescript.Script.BadSpecialization;
 import bladequest.bladescript.ScriptVar;
 import bladequest.bladescript.ScriptVar.BadTypeException;
+import bladequest.bladescript.libraries.FilterLibrary;
 import bladequest.bladescript.libraries.GameObjectLibrary;
 import bladequest.bladescript.libraries.HigherOrderLibrary;
 import bladequest.bladescript.libraries.MathLibrary;
@@ -176,6 +177,7 @@ public class BqMap
 		MathLibrary.publishLibrary(library);
 		GameObjectLibrary.publishLibrary(library);
 		WorldAnimLibrary.publishLibrary(library);
+		FilterLibrary.publishLibrary(library);
 		
 		return library.getLibrary();
 	}

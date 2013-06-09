@@ -8,6 +8,7 @@ import bladequest.actions.actClearAnimations;
 import bladequest.actions.actElevation;
 import bladequest.actions.actExpectInput;
 import bladequest.actions.actFadeControl;
+import bladequest.actions.actFilter;
 import bladequest.actions.actFlash;
 import bladequest.actions.actFloat;
 import bladequest.actions.actGameOver;
@@ -26,6 +27,7 @@ import bladequest.actions.actPlayMusic;
 import bladequest.actions.actPopSong;
 import bladequest.actions.actPushSong;
 import bladequest.actions.actReactionBubble;
+import bladequest.actions.actRemoveFilter;
 import bladequest.actions.actResetGame;
 import bladequest.actions.actRestoreParty;
 import bladequest.actions.actSaveMenu;
@@ -216,6 +218,17 @@ public class GameObjectLibrary
 		Action act = new actAnimation(builder, source, target, secondsShort);
 		return act;
 	}
+	public static Action filter(float[] filter)
+	{		
+		Action act = new actFilter(filter);
+		return act;
+	}
+	public static Action removeFilter(int value)
+	{		
+		Action act = new actRemoveFilter();
+		return act;
+	}
+	
 	public static Action clearAnimations(int i)
 	{
 		return new actClearAnimations();
