@@ -123,6 +123,9 @@ public class PlayerCharacter
 		MP = c.MP;
 		dead = c.dead;
 		
+		isInParty = c.isInParty;
+		index = c.index;
+		
 		//copy over stats
 		stats = new int[Stats.NUM_STATS.ordinal()];
 		statMods = new int[Stats.NUM_STATS.ordinal()];

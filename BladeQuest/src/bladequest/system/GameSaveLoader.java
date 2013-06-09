@@ -275,7 +275,8 @@ public class GameSaveLoader
 	
 		int i = 0;
 		for(PlayerCharacter c : save.characters)
-			Global.party.insertCharacter(c, i++);	
+			if(c != null)
+			Global.party.insertCharacter(c, c.Index());	
 		
 		SaveDeserializer deserializer = new SaveDeserializer(save.serializedString.toString());
 		
@@ -340,12 +341,11 @@ public class GameSaveLoader
 				str += "item " + i.idName + " " + i.getCount() + "\n";
 			
 			//characters
-			int index = 0;
 			for(PlayerCharacter c : gs.characters)
 			{
 				if(c != null)
 				{
-					str += "character " + c.getName() + " \"" + c.getDisplayName() + "\" " + index + "\n";
+					str += "character " + c.getName() + " \"" + c.getDisplayName() + "\" " + c.Index() + "\n";
 					str += "inparty " + c.isInParty + "\n";
 					str += "portrait " + c.portrait.x + " " + c.portrait.y + "\n";
 					str += "sprites " + c.getWorldSprite().name + " " + c.getBattleSprite().name + "\n";
@@ -369,7 +369,7 @@ public class GameSaveLoader
 					
 					str += "\nendcharacter\n";	
 				}
-				++index;							
+						
 			}		
 			str += "serializestring" + gs.serializedString.toString() + "\n";
 			str += "endsave\n";			
@@ -502,8 +502,10 @@ public class GameSaveLoader
 			c = new PlayerCharacter(Global.characters.get(dl.values.get(0)));
 			c.setDisplayName(dl.values.get(1));
 			int index = Integer.parseInt(dl.values.get(2));
-			while(index > tempSave.characters.size())
+			while(index >= tempSave.characters.size())
 				tempSave.characters.add(null);
+			
+			c.setIndex(index);
 			c.clearEquipment();
 			c.clearAbilities();
 		}
