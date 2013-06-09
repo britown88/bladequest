@@ -20,6 +20,7 @@ import android.graphics.Paint.Align;
 import android.graphics.Paint.Cap;
 import android.graphics.Paint.Style;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.Shader;
 import android.graphics.Typeface;
@@ -977,7 +978,7 @@ public class Global
         	
         	//screenFader.setFadeToColor(a, r, g, b)
         	
-        	//ScreenFilter.instance().pushFilter(ScreenFilter.darknessFilter(0.8f));
+        	//ScreenFilter.instance().pushFilter(ScreenFilter.darknessFilter(0.65f));
         	
         	title = new TitleScreen();
 
@@ -2397,6 +2398,118 @@ public class Global
 		};
 	}
 	
+    public static AnimationBuilder getChillLasers()
+    {
+		return new AnimationBuilder()
+		{
+			public BattleAnim buildAnimation(BattleEventBuilder builder) {
+				BattleAnim out = new BattleAnim(1000.0f);    	
+    	
+				
+				final int laserWait = 25;
+				final int laserCount = 35;
+				final int laserLength = 35;
+				final int laserRadius = 120;
+				
+				for (int i = 0; i < laserCount; ++i)
+				{
+					BattleAnimObject obj = new BattleAnimObject(Types.Line, false, "");
+					
+					PointF dir = PointMath.randomDirection();
+					Point p = new Point((int)(dir.x*laserRadius), (int)(dir.y*laserRadius));
+					Point pOffset = new Point((int)(dir.x*laserLength), (int)(dir.y*laserLength));
+					
+					int g = Global.rand.nextInt(96) + 96;
+					
+					//initial state.
+					BattleAnimObjState state = new BattleAnimObjState(laserWait*i, PosTypes.Target);
+					state.pos1 = p;
+					state.pos2 = PointMath.add(p, pOffset);
+					state.strokeWidth = 2;
+					state.argb(255, g/4, g, 255);
+					obj.addState(state);
+					
+					//hit state
+				
+					state = new BattleAnimObjState(laserWait*i + laserRadius, PosTypes.Target);
+					state.pos1 = new Point();
+					state.pos2 = pOffset;
+					state.strokeWidth = 2;
+					state.argb(255, g/8, g/2, 255);
+					obj.addState(state);
+					
+					//Final state		
+					
+					state = new BattleAnimObjState(laserWait*i + laserRadius + laserLength, PosTypes.Target);
+					state.pos1 = new Point();
+					state.pos2 = pOffset;
+					state.strokeWidth = 2;
+					state.argb(255, 0, g/4, 196);
+					obj.addState(state);	
+					
+					out.addObject(obj);
+				}
+				return out;
+			}
+		};
+    }
+    
+    
+    public static AnimationBuilder getChillIceBlock()
+    {
+		return new AnimationBuilder()
+		{
+			public BattleAnim buildAnimation(BattleEventBuilder builder) {
+				BattleAnim out = new BattleAnim(1000.0f);    	
+    	
+				final int iceCubeStayTime = 650;
+				final int iceCubeFadeTime = 250;
+				
+				Rect r = BattleAction.getTarget(builder).getRect();
+				
+				int size = r.width();
+				int height = r.height();
+				
+				if (height > size) size = height;
+				
+				size = (int)(size*1.2f);
+				
+				
+				
+				Bitmap iceCubeBmp = Global.bitmaps.get("icecube");		
+				Rect iceCubeRect = new Rect(0,0,26,29);
+				
+				BattleAnimObject iceCube = new BattleAnimObject(Types.Bitmap, false, iceCubeBmp);
+				
+				BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Target); 
+				state.size = new Point(size, size);
+				state.pos1 = new Point();
+				state.argb(255, 255, 255, 255);
+				state.setBmpSrcRect(iceCubeRect.left, iceCubeRect.top, iceCubeRect.right, iceCubeRect.bottom);
+				iceCube.addState(state);
+				
+				state = new BattleAnimObjState(iceCubeStayTime, PosTypes.Target); 
+				state.size = new Point(size, size);
+				state.pos1 = new Point();
+				state.argb(255, 255, 255, 255);
+				state.setBmpSrcRect(iceCubeRect.left, iceCubeRect.top, iceCubeRect.right, iceCubeRect.bottom);
+				iceCube.addState(state);				
+								
+				state = new BattleAnimObjState(iceCubeFadeTime + iceCubeStayTime, PosTypes.Target); 
+				state.size = new Point(size, size);
+				state.pos1 = new Point();
+				state.argb(0, 255, 255, 255);
+				state.setBmpSrcRect(iceCubeRect.left, iceCubeRect.top, iceCubeRect.right, iceCubeRect.bottom);
+				iceCube.addState(state);
+				
+				out.addObject(iceCube);
+								
+				
+				return out;
+			}
+		};
+    }
+	
 	private static void loadScenes(String path)
 	{
 		String[] files = null;
@@ -2580,6 +2693,8 @@ public class Global
 		animationBuilders.put("trickery", getTrickeryAnim());
 		animationBuilders.put("provoke", getProvokeAnim());
 		animationBuilders.put("tranquilizer", getTranquilizerAnim());
+		animationBuilders.put("chilllasers", getChillLasers());
+		animationBuilders.put("chilliceblock", getChillIceBlock());
 		
 	}
 	

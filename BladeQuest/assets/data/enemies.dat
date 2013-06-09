@@ -332,7 +332,7 @@ setEBaseStats 10 10 10 10 >
 setELevel 16 >
 modStat "BattlePower" -3 >
 modStat "Fire" -20 >
-modStat "MaxHP" 1350 >
+modStat "MaxHP" 3000 >
 setGold 2500 >
 setBoss >
 RolandAI >

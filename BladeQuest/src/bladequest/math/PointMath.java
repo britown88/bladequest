@@ -20,6 +20,14 @@ import bladequest.world.PlayerCharacter;
 
 public class PointMath {
 
+	public static PointF randomDirection()
+	{
+		float angle = (float)(Global.rand.nextFloat() * Math.PI * 2);
+		return new PointF(
+				(float)Math.cos(angle),
+				(float)Math.sin(angle)
+				);
+	}
 	public static Point subtract(Point lhs, Point rhs)
 	{
 	  return new Point(lhs.x - rhs.x, lhs.y - rhs.y);

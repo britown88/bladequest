@@ -41,7 +41,8 @@ public class BqRenderThread extends Thread
 		while (running) 
 		{
 			canvas = null;
-
+			startTime = System.currentTimeMillis();
+			
 			try 
 			{				
 				canvas = this.surfaceHolder.lockCanvas();
@@ -49,15 +50,8 @@ public class BqRenderThread extends Thread
 				//canvas.setBitmap(bmp);
 				synchronized (surfaceHolder) 
 				{					
-			    	startTime = System.currentTimeMillis();
-			    	Global.renderer.render(canvas);  //locked internally now.
-
-					frameTime = System.currentTimeMillis() - startTime;
-					sleepTime = (int)(Global.FRAME_PERIOD - frameTime);					
-					if(sleepTime > 0)
-						try{sleep(sleepTime);}
-							catch (InterruptedException e) {}							
-							
+			    	
+			    	Global.renderer.render(canvas);  //locked internally now.							
 				}
 			} 
 			finally 
@@ -65,7 +59,12 @@ public class BqRenderThread extends Thread
 				if (canvas != null)
 					surfaceHolder.unlockCanvasAndPost(canvas);
 			}
-				
+
+			frameTime = System.currentTimeMillis() - startTime;
+			sleepTime = (int)(Global.FRAME_PERIOD - frameTime);					
+			if(sleepTime > 0)
+				try{sleep(sleepTime);}
+					catch (InterruptedException e) {}
 
 		}
 	}

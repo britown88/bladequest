@@ -133,6 +133,7 @@ public class Battle
 		
 		msgBox = new MsgBox();
 		
+		Global.screenFader.clear();
 		
 		interruptedSong = BladeSong.instance().getCurrentSong();
 		BladeSong.instance().stop();
@@ -592,10 +593,10 @@ public class Battle
 	
 	private void endOfBattleUpdate()
 	{
-		if(messageQueue.size() == 1 && Global.screenFader.isFadedIn())
+		if(messageQueue.size() == 1 && Global.screenFader.isDone() && !battleOver)
 			triggerEndBattle();
 		else				
-			if(Global.screenFader.isFadedOut())
+			if(Global.screenFader.isFadedOut() && battleOver)
 			{				
 				Global.map.getBackdrop().unload();
 				
@@ -951,7 +952,6 @@ public class Battle
 		
 		addMsgToInfobar("Obtained " + gold + "G!");
 		addMsgToInfobar("Earned " + exp + " experience!");
-
 		
 		String newAbilities = "";
 		
@@ -998,8 +998,10 @@ public class Battle
 		
 
 	}
+	private boolean battleOver = false;
 	private void triggerEndBattle()
 	{
+		battleOver = true;
 		Global.screenFader.setFadeColor(255, 0, 0, 0);
 		Global.screenFader.fadeOut(2.0f);
 		BladeSong.instance().fadeOut(2.0f);

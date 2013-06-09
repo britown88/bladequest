@@ -14,6 +14,7 @@ import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import bladequest.world.Global;
@@ -53,6 +54,8 @@ implements OnGestureListener, AudioManager.OnAudioFocusChangeListener
         Global.startGame();
         
         panel = new BqPanel(this);
+        //panel.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+
         setContentView(panel);
         Global.panel = panel;
         

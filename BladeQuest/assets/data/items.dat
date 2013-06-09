@@ -140,7 +140,10 @@ addDep (removeStatusAction "poison"))
 setValue 50 >
 setTargetType "Single" >
 addDefaultWait >
-addDep (animBuildAction "tranquilizer") >
+addDep (sourcedAsTarget (flashColorizeAction 255 0 128 255 2400 0.8)) >
+addDefaultWait >
+addDep (animBuildAction "chilllasers") >
+addDep (animBuildAction "chilliceblock") >
 addDep (removeStatusAction "berserk"))
 
 \sleepingbag <- (addItem "sleepingbag" "Sleeping Bag" "UsableSavePointOnly" "orb" "Use at a save point to fully restore one party member." >
