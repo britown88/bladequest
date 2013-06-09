@@ -216,7 +216,8 @@ public class BladeSong extends Serializable {
 		void onSerialize(Serializer serializer)
 		{
 			parent.onSerialize(serializer);
-		}		
+		}
+		String playingSong(){return parent.playingSong();}
 	}	
 	
 	private class FadeIntoState extends BladeSongState
@@ -274,6 +275,7 @@ public class BladeSong extends Serializable {
 			serializer.write(nextSong);
 			//more info here....
 		}
+		String playingSong(){return parent.playingSong();}
 	}
 
 	public synchronized void stop()
@@ -288,7 +290,8 @@ public class BladeSong extends Serializable {
 	
 	public synchronized void play(String songName, boolean playIntro, boolean loop, float fadeTime)
 	{		
-		if(!songName.equals("") && (currentState.playingSong().equals(songName) || songName.equals("inherit")))
+		if(!songName.equals("") && 
+		  (currentState.playingSong().equals(songName) || songName.equals("inherit")))
 			return;
 		
 		Song song = Global.music.get(songName);

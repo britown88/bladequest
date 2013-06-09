@@ -38,6 +38,11 @@ public class EncounterLibrary {
 		encounter.disableRunning = true;
 		return encounter;
 	}	
+	public static Encounter setEncounterMusic(Encounter encounter, String music)
+	{
+		encounter.setMusic(music);
+		return encounter;
+	}
 	public static Encounter onEncounterBegin(Encounter encounter, ScriptVar script)
 	{
 		encounter.addScript(script);

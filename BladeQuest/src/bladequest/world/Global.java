@@ -960,12 +960,23 @@ public class Global
 		encounter = en;
 		GameState = States.GS_BATTLETRANSITION;
 		
+		
 		battle = new Battle();
 		
-		if(encounters.get(en).isBossFight)
-			BladeSong.instance().play("boss", true, true, 0);
+		Encounter e = encounters.get(en);
+		
+		
+		if (e.getMusic() != null)
+		{
+			BladeSong.instance().play(e.getMusic(), true, true, 0);
+		}
 		else
-			BladeSong.instance().play("battle", true, true, 0);		
+		{
+			if(e.isBossFight)
+				BladeSong.instance().play("boss", true, true, 0);
+			else
+				BladeSong.instance().play("battle", true, true, 0);
+		}		
 		
 		battle.startBattle(encounter, allowGameOver);
 	}
