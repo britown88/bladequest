@@ -1,25 +1,21 @@
 package bladequest.combatactions;
 
-import java.util.Collections;
 import java.util.List;
 
 import android.graphics.Point;
-import android.graphics.Rect;
 import bladequest.battleactions.BattleAction;
+import bladequest.battleactions.bactChangePosition;
 import bladequest.battleactions.bactChangeVisibility;
+import bladequest.battleactions.bactJumpHome;
 import bladequest.battleactions.bactRunAnimation;
 import bladequest.battleactions.bactSetFace;
+import bladequest.battleactions.bactSpecialPosition;
 import bladequest.battleactions.bactWait;
 import bladequest.combat.BattleEvent;
 import bladequest.combat.BattleEventBuilder;
 import bladequest.combat.DamageMarker;
 import bladequest.enemy.Enemy;
 import bladequest.graphics.BattleAnim;
-import bladequest.graphics.BattleAnimObjState;
-import bladequest.graphics.BattleAnimObjState.PosTypes;
-import bladequest.graphics.BattleAnimObject;
-import bladequest.graphics.BattleAnimObject.Types;
-import bladequest.graphics.BattleSprite;
 import bladequest.graphics.BattleSprite.faces;
 import bladequest.math.PointMath;
 import bladequest.world.DamageTypes;
@@ -98,15 +94,22 @@ public class combSteal extends CombatAction
 		PlayerCharacter target = targets.get(0);
 		
 		BattleAnim jumpAnim = PointMath.buildJumpAnimation(source, source.getPosition(true), target.getPosition(true), 1.0f/4.0f, 3);
-		BattleAnim jumpBack = PointMath.buildJumpAnimation(source, target.getPosition(true), source.getPosition(true), 1.0f/4.0f, 3);
 		
+		
+		
+		Point jumpToPoint = target.getPosition(true);
+		PointMath.toTopLeft(jumpToPoint, source);
+
+		
+		builder.addEventObject(new bactSpecialPosition(true));
 		builder.addEventObject(new bactSetFace(faces.Ready, 0));
 		builder.addEventObject(new bactWait(BattleEvent.frameFromActIndex(3)).addDependency(builder.getLast()));
 		BattleAction startSteal = builder.getLast();
 		builder.addEventObject(new bactChangeVisibility(false).addDependency(startSteal));		
 		builder.addEventObject(new bactRunAnimation(jumpAnim).addDependency(startSteal));
-		builder.addEventObject(new bactRunAnimation(jumpBack).addDependency(builder.getLast()));
-		builder.addEventObject(new bactChangeVisibility(true).addDependency(builder.getLast()));
+		builder.addEventObject(new bactChangePosition(jumpToPoint).addDependency(builder.getLast()));
+		builder.addEventObject(new bactJumpHome(4.0f, 3).addDependency(builder.getLast()));
+		builder.addEventObject(new bactSpecialPosition(false).addDependency(builder.getLast()));
 		
 		builder.addEventObject(new BattleAction()
 		{

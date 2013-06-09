@@ -3,6 +3,8 @@ package bladequest.graphics;
 import java.util.ArrayList;
 import java.util.List;
 
+import bladequest.world.Global;
+
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 
@@ -145,6 +147,7 @@ public class ScreenFilter {
 		p = new Paint();
 		p.setColorFilter( new ColorMatrixColorFilter(out));
 		//composited filters!
+		
 		return out;
 	}
 }

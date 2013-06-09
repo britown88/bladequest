@@ -413,7 +413,19 @@ public class BqMap
 	{
 		return (y*plateCount.x)+x;
 	}
-	
+	public void invalidateTiles()
+	{
+		int idx = 0;
+		for (int j = 0; j < plateCount.y; ++j)
+		{
+			for (int i = 0; i < plateCount.x; ++i)
+			{
+				foreground[idx].Unload();
+				background[idx].Unload();
+				++idx;
+			}			
+		}
+	}
 	public void addTile(Tile t)
 	{
 		int index = ((t.WorldPos().y/Global.tilePlateSize.y)*plateCount.x)+(t.WorldPos().x/Global.tilePlateSize.x);
