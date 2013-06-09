@@ -6,6 +6,7 @@
 
 
 
+
 #!OBJ 12 0
 createWindowObj x y
 \obj <- newObject "window" (12 > add x) y
@@ -143,6 +144,7 @@ state$0x0$ > addAction (createPath "party" true "Vl")
 state$0x0$ > addAction (changeElevation "party" 0 0.0 true)
 state$0x0$ > addAction (modifyParty "aramis" true)
 state$0x0$ > addAction (modifyParty "luc" false)
+state$0x0$ > addAction (wait 3.0)
 state$0x0$ > addAction (message "The town of Albi...")
 state$0x0$ > addAction (showScene "albi")
 state$0x0$ > addAction (fadeControl 4.0 255 0 0 0 false true)
@@ -154,12 +156,13 @@ state$0x0$ > addAction (message "Hey!")
 state$0x0$ > addAction (message "Wake up!")
 state$0x0$ > addAction (openNameSelect "luc")
 state$0x0$ > addAction (teleportParty name$0x0$ 20 17 "albiinside")
+state$0x0$ > addAction (playMusic "smalltown" true true 3.0)
 state$0x0$ > addAction (message "Come on, |luc|! It's past noon already!")
 state$0x0$ > addAction (message "Are you going to sleep all day??")
 state$0x0$ > addAction (fadeControl 5.0 255 0 0 0 false true)
 state$0x0$ > addAction (openBubble "angry" "mom" 1.0 true true)
 state$0x0$ > addAction (message "|luc|'s Mom: \nHmph!")
-state$0x0$ > addAction (message "If you join us while we're all still young, I have an errand for you to run!")
+state$0x0$ > addAction (message "If you decide join us while there's still daylight, I have an errand for you to run!")
 state$0x0$ > addAction (createPath "mom" true "s2D")
 state$0x0$ > addAction (openBubble "sweat" "mom" 1.0 false true)
 state$0x0$ > addAction (message "|luc|'s Mom: \nThe days are wasted on the young!")

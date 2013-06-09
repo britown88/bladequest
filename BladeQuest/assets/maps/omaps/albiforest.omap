@@ -36,6 +36,9 @@ createCliffJumpBarrier x (y > add 1)
 
 
 
+
+
+
 #!OBJ 10 5
 \name$10x5$ <- cliffJumpLeft 10 5
 #!OBJ 10 4
@@ -131,50 +134,6 @@ addAction (teleportParty name$4x0$ 23 28 "albi") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
 \runstate1$4x0$ <- state1$4x0$ 0
-#!OBJ 5 0
-\objName$5x0$ <- "name"
-\name$5x0$ <- newObject objName$5x0$ 5 0
-
-state1$5x0$ 0
-name$5x0$ > createState >
-addAction (fadeControl 0.5 255 0 0 0 true true) >
-addAction (teleportParty name$5x0$ 23 28 "albi") >
-addAction (fadeControl 0.5 255 0 0 0 false true)
-
-\runstate1$5x0$ <- state1$5x0$ 0
-#!OBJ 6 0
-\objName$6x0$ <- "name"
-\name$6x0$ <- newObject objName$6x0$ 6 0
-
-state1$6x0$ 0
-name$6x0$ > createState >
-addAction (fadeControl 0.5 255 0 0 0 true true) >
-addAction (teleportParty name$6x0$ 23 28 "albi") >
-addAction (fadeControl 0.5 255 0 0 0 false true)
-
-\runstate1$6x0$ <- state1$6x0$ 0
-#!OBJ 7 0
-\objName$7x0$ <- "name"
-\name$7x0$ <- newObject objName$7x0$ 7 0
-
-state1$7x0$ 0
-name$7x0$ > createState >
-addAction (fadeControl 0.5 255 0 0 0 true true) >
-addAction (teleportParty name$7x0$ 23 28 "albi") >
-addAction (fadeControl 0.5 255 0 0 0 false true)
-
-\runstate1$7x0$ <- state1$7x0$ 0
-#!OBJ 8 0
-\objName$8x0$ <- "name"
-\name$8x0$ <- newObject objName$8x0$ 8 0
-
-state1$8x0$ 0
-name$8x0$ > createState >
-addAction (fadeControl 0.5 255 0 0 0 true true) >
-addAction (teleportParty name$8x0$ 23 28 "albi") >
-addAction (fadeControl 0.5 255 0 0 0 false true)
-
-\runstate1$8x0$ <- state1$8x0$ 0
 #!OBJ 3 49
 \objName$3x49$ <- "name"
 \name$3x49$ <- newObject objName$3x49$ 3 49
@@ -273,3 +232,47 @@ addSwitchCondition "albigoldbushpicked"
 
 \runstate2$12x4$ <- state2$12x4$ 0
 
+#!OBJ 5 0
+\objName$5x0$ <- "name"
+\name$5x0$ <- newObject objName$5x0$ 5 0
+
+state1$5x0$ 0
+name$5x0$ > createState >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$5x0$ 23 28 "albi") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$5x0$ <- state1$5x0$ 0
+#!OBJ 6 0
+\objName$6x0$ <- "name"
+\name$6x0$ <- newObject objName$6x0$ 6 0
+
+state1$6x0$ 0
+name$6x0$ > createState >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$6x0$ 23 28 "albi") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$6x0$ <- state1$6x0$ 0
+#!OBJ 7 0
+\objName$7x0$ <- "name"
+\name$7x0$ <- newObject objName$7x0$ 7 0
+
+state1$7x0$ 0
+name$7x0$ > createState >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$7x0$ 23 28 "albi") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$7x0$ <- state1$7x0$ 0
+#!OBJ 8 0
+\objName$8x0$ <- "name"
+\name$8x0$ <- newObject objName$8x0$ 8 0
+
+state1$8x0$ 0
+name$8x0$ > createState >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$8x0$ 23 28 "albi") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$8x0$ <- state1$8x0$ 0
