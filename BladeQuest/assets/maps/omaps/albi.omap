@@ -16,6 +16,9 @@
 
 
 
+
+
+
 #!OBJ 4 14
 \objName$4x14$ <- "name"
 \name$4x14$ <- newObject objName$4x14$ 4 14
@@ -120,6 +123,21 @@ addAction (message "But only if your mother promises to cook!")
 
 
 \runstate1$7x19$ <- state1$7x19$ 0
+
+state2$7x19$ 0
+name$7x19$ > createState >
+addItemCondition "goldenbush" >
+setCollisionData true true true true >
+setSprite "woman1" >
+setDefaultPath "R3L3" >
+setMoveOptions 1 1000 >
+addAction (message "Agnes: \nOh, |luc|!") >
+addAction (message "Did you find me some Goldenbush?") >
+addAction (message "Thank you so much!") >
+addAction (message "|luc|: \nMy pleasure!") 
+
+\runstate2$7x19$ <- state2$7x19$ 0
+
 #!OBJ 26 17
 \objName$26x17$ <- "name"
 \name$26x17$ <- newObject objName$26x17$ 26 17
@@ -250,6 +268,36 @@ addAction (teleportParty name$13x16$ 31 23 "albiinside") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
 \runstate1$13x16$ <- state1$13x16$ 0
+
+state2$13x16$ 0
+name$13x16$ > createState >
+setSpriteFromTile 6 4 >
+addItemCondition "goldenbush" >
+addAction (message "It's getting late.") >
+addAction (messageWithYesNo "Ready to call it a night?" >
+	addToBranch 0 (pauseMusic 2.0) >
+	addToBranch 0 (fadeControl 2.0 255 0 0 0 true true) >
+	addToBranch 0 (wait 2.0) >
+	addToBranch 0 (message "Later that night...") >
+	addToBranch 0 (filter (darknessFilter 0.8)) >
+	addToBranch 0 (switchControl "albinight" true) >
+	addToBranch 0 (teleportParty name$13x16$ 20 17 "albiinside") >
+	addToBranch 0 (openBubble "sleep" "party" -1.0 true false) >
+	addToBranch 0 (fadeControl 3.0 255 0 0 0 false true) >
+	addToBranch 0 (wait 3.0) >
+	addToBranch 0 (flash 1.0 255 255 0 0 true) >
+	addToBranch 0 (openBubble "exclam" "party" 1.0 false true) >	
+	addToBranch 0 (wait 2.0) >
+	addToBranch 0 (shakeControl 6.0 3 false) >
+	addToBranch 0 (wait 1.0) >
+	addToBranch 0 (createPath "party" false "RD") >
+	addToBranch 0 (wait 1.0) >
+	addToBranch 0 (flash 4.0 255 255 0 0 true) >
+	addToBranch 1 (createPath "party" true "D"))
+
+\runstate2$13x16$ <- state2$13x16$ 0
+
+
 #!OBJ 17 21
 \objName$17x21$ <- "name"
 \name$17x21$ <- newObject objName$17x21$ 17 21

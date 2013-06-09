@@ -389,7 +389,12 @@ public class Party
 		if(pc != null && !pc.isInParty)
 			partyMembers[pc.Index()] = null;
 		else
+		{
 			pc = new PlayerCharacter(Global.characters.get(str));
+			if(pc.getStartingName().length() > 0)
+				pc.setDisplayName(pc.getStartingName());
+		}
+			
 		
 		pc.isInParty = true;
 		
@@ -427,7 +432,7 @@ public class Party
 	
 	private void addCharacterAfter(int startIndex, PlayerCharacter pc)
 	{
-		for(int i = startIndex; i < 4; ++i)
+		for(int i = startIndex; i < partyCount; ++i)
 			if(partyMembers[i] == null)
 			{						
 				insertCharacter(pc, i);
@@ -486,9 +491,9 @@ public class Party
 		
 		if(pc != null)
 		{
-			if(pc.Index() >= 4)
-				pc.isInParty = false;
-			else
+			pc.isInParty = false;
+			
+			if(pc.Index() < 4)
 			{
 				partyMembers[pc.Index()] = null;
 				addCharacterAfter(4, pc);

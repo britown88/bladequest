@@ -2,7 +2,7 @@
 size 60 50
 tileset Interior
 displayname "Albi"
-BGM smalltown
+BGM inherit
 [tiles]
 t 0 0 2 20 0 0 0 0 0 
 t 1 0 1 17 0 0 0 0 0 

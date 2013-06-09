@@ -15,6 +15,9 @@
 
 
 
+
+
+
 #!OBJ 22 3
 \objName$22x3$ <- "name"
 \name$22x3$ <- newObject objName$22x3$ 22 3
@@ -60,24 +63,40 @@ addAction (fadeControl 0.5 255 0 0 0 false true)
 
 \runstate1$22x9$ <- state1$22x9$ 0
 
-#!OBJ 28 9
-\objName$28x9$ <- "name"
-\name$28x9$ <- newObject objName$28x9$ 28 9
-
-state1$28x9$ 0
-name$28x9$ > createState >
+state2$22x9$ 0
+name$22x9$ > createState >
+addSwitchCondition "albinight" >
 addAction (fadeControl 0.5 255 0 0 0 true true) >
-addAction (teleportParty name$28x9$ 15 7 "albi") >
+addAction (filter (darknessFilter 0.8)) >
+addAction (teleportParty name$22x9$ 11 7 "albinight") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
-\runstate1$28x9$ <- state1$28x9$ 0
+\runstate2$22x9$ <- state2$22x9$ 0#!OBJ 28 9
+\objName$22x9$ <- "name"
+\name$22x9$ <- newObject objName$22x9$ 28 9
 
-#!OBJ 5 4
-\objName$5x4$ <- "spinman"
-\name$5x4$ <- newObject objName$5x4$ 5 4
+state1$22x9$ 0
+name$22x9$ > createState >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$22x9$ 15 7 "albi") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
 
-state1$5x4$ 0
-name$5x4$ > createState >
+\runstate1$22x9$ <- state1$22x9$ 0
+
+state2$22x9$ 0
+name$22x9$ > createState >
+addSwitchCondition "albinight" >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (filter (darknessFilter 0.8)) >
+addAction (teleportParty name$22x9$ 15 7 "albinight") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate2$22x9$ <- state2$22x9$ 0#!OBJ 5 4
+\objName$22x9$ <- "spinman"
+\name$22x9$ <- newObject objName$22x9$ 5 4
+
+state1$22x9$ 0
+name$22x9$ > createState >
 setCollisionData true true true true >
 setSprite "man1" >
 setFace "up" >
@@ -94,7 +113,7 @@ addAction (message "I was just...uuuh...cleaning!") >
 addAction (openBubble "sweat" "spinman" 1.0 false false) >
 addAction (createPath "spinman" true "uW")
 
-\runstate1$5x4$ <- state1$5x4$ 0
+\runstate1$22x9$ <- state1$22x9$ 0
 #!OBJ 9 24
 \objName$9x24$ <- "name"
 \name$9x24$ <- newObject objName$9x24$ 9 24
@@ -126,17 +145,25 @@ addAction (teleportParty name$31x24$ 13 17 "albi") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
 \runstate1$31x24$ <- state2$31x24$ 0
-#!OBJ 8 39
-\objName$8x39$ <- "name"
-\name$8x39$ <- newObject objName$8x39$ 8 39
 
-state1$8x39$ 0
-name$8x39$ > createState >
+state3$31x24$ 0
+name$31x24$ > createState >
+addSwitchCondition "albinight" >
 addAction (fadeControl 0.5 255 0 0 0 true true) >
-addAction (teleportParty name$8x39$ 17 22 "albi") >
+addAction (teleportParty name$31x24$ 13 17 "albinight") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
-\runstate1$8x39$ <- state1$8x39$ 0
+\runstate3$31x24$ <- state3$31x24$ 0#!OBJ 8 39
+\objName$31x24$ <- "name"
+\name$31x24$ <- newObject objName$31x24$ 8 39
+
+state1$31x24$ 0
+name$31x24$ > createState >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$31x24$ 17 22 "albi") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$31x24$ <- state1$31x24$ 0
 #!OBJ 22 39
 \objName$22x39$ <- "name"
 \name$22x39$ <- newObject objName$22x39$ 22 39
@@ -160,17 +187,36 @@ addAction (fadeControl 0.5 255 0 0 0 false true)
 
 \runstate1$43x9$ <- state1$43x9$ 0
 
-#!OBJ 43 27
-\objName$43x27$ <- "name"
-\name$43x27$ <- newObject objName$43x27$ 43 27
-
-state1$43x27$ 0
-name$43x27$ > createState >
+state2$43x9$ 0
+name$43x9$ > createState >
+addSwitchCondition "albinight" >
 addAction (fadeControl 0.5 255 0 0 0 true true) >
-addAction (teleportParty name$43x27$ 28 7 "albi") >
+addAction (filter (darknessFilter 0.8)) >
+addAction (teleportParty name$43x9$ 22 4 "albinight") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
-\runstate1$43x27$ <- state1$43x27$ 0
+\runstate2$43x9$ <- state2$43x9$ 0#!OBJ 43 27
+\objName$43x9$ <- "name"
+\name$43x9$ <- newObject objName$43x9$ 43 27
+
+state1$43x9$ 0
+name$43x9$ > createState >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$43x9$ 28 7 "albi") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate1$43x9$ <- state1$43x9$ 0
+
+state2$43x9$ 0
+name$43x9$ > createState >
+addSwitchCondition "albinight" >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (filter (darknessFilter 0.8)) >
+addAction (teleportParty name$43x9$ 28 7 "albinight") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate2$43x9$ <- state2$43x9$ 0
+
 
 #!OBJ 43 24
 \objName$43x24$ <- "name"
@@ -194,9 +240,17 @@ addAction (messageWithYesNo "Bed for the night is 10G, yould you like to stay?" 
 		addToBranch 1 (message "Oh no, you dont have enough!")) >
 	addToBranch 1 (message "Ok, see you around!"))
 
-
-
 \runstate1$43x24$ <- state1$43x24$ 0
+
+state2$43x24$ 0
+name$43x24$ > createState >
+addSwitchCondition "albinight" >
+setCollisionData true true true true >
+addAction (message "Innkeeper Sarah: \nWhat's going on out there, |luc|??") >
+addAction (message "|luc|: \nI'm not sure. Just stay inside.")
+
+\runstate2$43x24$ <- state2$43x24$ 0
+
 #!OBJ 43 23
 \objName$43x23$ <- "name"
 \name$43x23$ <- newObject objName$43x23$ 43 23
@@ -220,6 +274,13 @@ addAction (message "But I stay here to watch Sarah work. \nHehehe")
 
 
 \runstate1$41x19$ <- state1$41x19$ 0
+
+state2$41x19$ 0
+name$41x19$ > createState >
+addSwitchCondition "albinight"
+
+\runstate2$41x19$ <- state2$41x19$ 0
+
 
 #!OBJ 42 3
 \objName$42x3$ <- "name"
@@ -255,6 +316,14 @@ addAction (message "Oliver: \nThe price of potions has gotten ridiculous \nlatel
 
 
 \runstate1$42x6$ <- state1$42x6$ 0
+
+state2$42x6$ 0
+name$42x6$ > createState >
+addSwitchCondition "albinight"
+
+
+\runstate2$42x6$ <- state2$42x6$ 0
+
 
 #!OBJ 22 35
 \objName$22x35$ <- "name"
@@ -354,10 +423,10 @@ state1$30x19$ 0
 name$30x19$ > createState >
 setCollisionData true true true true >
 setSprite "woman1" >
-addAction (message "|luc|'s Mom: \nOh, you're awake! \nIt's so late in the day!") >
+addAction (message "|luc|'s Mom: \nFinally, you're awake! \nIt's so late in the day!") >
 addAction (message "Agnes is out of the Goldenbush she uses in her potions.") >
 addAction (message "I need you to go into the forest today and fetch some more.") >
-addAction (message "|luc|: Why doesn't she just order them from the Item Shop?\n") >
+addAction (message "|luc|: \nWhy doesn't she just order them from the Item Shop?\n") >
 addAction (message "|luc|'s Mom: \nBecause we have you, dear.") >
 addAction (openBubble "sweat" "party" 1.0 false true) >
 addAction (message "|luc|: \nOk, I'll see what I can find...") >
@@ -385,6 +454,14 @@ addAction (message "|luc|: \nGolden? And... a bush?") >
 addAction (message "|luc|'s Mom: \nDon't get smart with me!")
 
 \runstate2$30x19$ <- state2$30x19$ 0
+
+
+state3$30x19$ 0
+name$30x19$ > createState >
+addSwitchCondition "albinight"
+
+\runstate3$30x19$ <- state3$30x19$ 0
+
 
 #!OBJ 3 16
 \objName$3x16$ <- "name"
@@ -497,3 +574,24 @@ addSwitchCondition "albimomtalked"
 
 \runstate2$32x19$ <- state2$32x19$ 0
 
+#!OBJ 24 17
+\objName$24x17$ <- "name"
+\name$24x17$ <- newObject objName$24x17$ 24 17
+
+state1$24x17$ 0
+name$24x17$ > createState 
+
+\runstate1$24x17$ <- state1$24x17$ 0
+
+state2$24x17$ 0
+name$24x17$ > createState >
+addSwitchCondition "albinight" >
+setCollisionData true true true true >
+setSprite "woman1" >
+setFace "left" >
+setBubble "sleep" >
+addAction (message "|luc|: \nHey, did you hear that??") >
+addAction (message "|luc|'s Mom: \n...it was only a little earthquake...") >
+addAction (message "...Go back to sleep...")
+
+\runstate2$24x17$ <- state2$24x17$ 0

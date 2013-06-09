@@ -53,6 +53,12 @@ public class CharacterLibrary
 		return pc;
 	}
 	
+	public static PlayerCharacter setStartingName(PlayerCharacter pc, String name)
+	{
+		pc.setStartingName(name);
+		return pc;
+	}
+	
 	public static PlayerCharacter setAbilityName(PlayerCharacter pc, String name)
 	{
 		pc.setAbilitiesName(name);

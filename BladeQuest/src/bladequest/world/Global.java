@@ -40,6 +40,7 @@ import bladequest.actions.actExpectInput;
 import bladequest.actions.actFadeControl;
 import bladequest.actions.actPauseMusic;
 import bladequest.actions.actPlayMusic;
+import bladequest.actions.actRemoveFilter;
 import bladequest.actions.actResetGame;
 import bladequest.actions.actShowScene;
 import bladequest.actions.actUnloadScene;
@@ -75,6 +76,7 @@ import bladequest.graphics.ReactionBubble;
 import bladequest.graphics.Renderer;
 import bladequest.graphics.Scene;
 import bladequest.graphics.ScreenFader;
+import bladequest.graphics.ScreenFilter;
 import bladequest.graphics.Sprite;
 import bladequest.graphics.TextFactory;
 import bladequest.graphics.TilePlateBitmap;
@@ -1041,6 +1043,7 @@ public class Global
 		loadedSave = false;
 		screenFader.setFadeColor(255, 255, 255, 255);
 		screenFader.setFaded();
+		ScreenFilter.instance().clear();
 		
 		if(map != null)
 			map.unloadTiles();
@@ -2776,6 +2779,9 @@ public class Global
 		
 		GameDataLoader.loadNewGame(activity);
 		
+		party.removeCharacter("aramis");
+		party.addCharacter("luc");
+		
 //		for(PlayerCharacter pc : party.getPartyList(false))
 //		{
 //			pc.modifyLevel(99, false);
@@ -2877,6 +2883,7 @@ public class Global
 		gameOverObject = new GameObject("gameover", 0, 0);
 		gameOverObject.addState(new ObjectState(gameOverObject));
 		gameOverObject.setStateOpts(0, true, false, false);
+		gameOverObject.addAction(0, new actRemoveFilter());
 		gameOverObject.addAction(0, new actPlayMusic("annihilation", true, true,0.0f));
 		gameOverObject.addAction(0, new actShowScene("gameover"));
 		gameOverObject.addAction(0, new actFadeControl(3.0f, 255, 0, 0, 0, false, true));

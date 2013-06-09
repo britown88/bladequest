@@ -1,7 +1,7 @@
 #newgame start info for demo
 #Always do setmap last!
 startgame 0
-addStartCharacter "aramis" > setCharacterStartName "?????"
+addStartCharacter "aramis"
 setStartPosition 16 5
 setStartMap "prisonb2"
 
