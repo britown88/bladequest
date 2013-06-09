@@ -30,12 +30,7 @@ public class GameStartLibrary
 		Global.party.addCharacter(name);
 		return Global.party.getCharacter(name);
 	}
-	
-	public static PlayerCharacter insertStartCharacter(String name, int pos)
-	{
-		Global.party.insertCharacter(name, pos);
-		return Global.party.getCharacter(name);
-	}	
+		
 	
 	public static PlayerCharacter setCharacterStartName(PlayerCharacter pc, String name)
 	{

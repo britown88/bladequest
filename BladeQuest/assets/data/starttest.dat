@@ -1,7 +1,7 @@
 #newgame start info for testing
 #Always do setmap last!
 startgame 0
-map addStartCharacter {"luc", "aramis", "joy"}
+map addStartCharacter {"aramis"}
 setStartPosition 20 10
 setStartMap "albi"
 

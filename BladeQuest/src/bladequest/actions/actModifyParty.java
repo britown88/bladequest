@@ -19,7 +19,7 @@ public class actModifyParty extends Action
 	{
 		if(remove)
 		{
-			//TODO: remove character
+			Global.party.removeCharacter(charName);
 		}
 		else
 		{
