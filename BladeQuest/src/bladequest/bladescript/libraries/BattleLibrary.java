@@ -5,6 +5,8 @@ import java.util.List;
 
 import android.util.Log;
 import bladequest.battleactions.BattleAction;
+import bladequest.battleactions.DelegatingAction;
+import bladequest.battleactions.SourcedAction;
 import bladequest.battleactions.bactAttackClose;
 import bladequest.battleactions.bactAttackRandomTargets;
 import bladequest.battleactions.bactBarrelRoll;
@@ -13,6 +15,7 @@ import bladequest.battleactions.bactBreakStance;
 import bladequest.battleactions.bactDamage;
 import bladequest.battleactions.bactDamageGroup;
 import bladequest.battleactions.bactFlash;
+import bladequest.battleactions.bactFlashColorize;
 import bladequest.battleactions.bactFrozenGrip;
 import bladequest.battleactions.bactFullRestore;
 import bladequest.battleactions.bactInflictStatus;
@@ -243,6 +246,41 @@ public class BattleLibrary {
 		return new bactTargetingSelf(retarget);
 	}
 	
+	public static BattleAction sourcedAsTarget(BattleAction retarget)
+	{
+		return new DelegatingAction()
+		{
+			BattleAction retarget;
+			
+			DelegatingAction initialize(BattleAction retarget)
+			{
+				this.retarget = retarget;
+				return this;
+			}
+			
+			@Override
+			protected void buildEvents(BattleEventBuilder builder) {
+			
+				builder.addEventObject(new SourcedAction(BattleAction.getTarget(builder)) {
+
+					BattleAction retarget;
+					
+					DelegatingAction initialize(BattleAction retarget)
+					{
+						this.retarget = retarget;
+						return this;
+					}					
+					@Override
+					protected void buildEvents(BattleEventBuilder builder) {
+						builder.addEventObject(retarget);
+					}
+					
+					
+				}.initialize(retarget));
+			}
+		}.initialize(retarget);
+	}
+	
 	public static BattleAction attackCloseAction(float power, String damageType)
 	{
 		return new bactAttackClose(power, DamageTypes.valueOf(damageType));
@@ -386,6 +424,12 @@ public class BattleLibrary {
 	{
 		return new bactSpecialMirrored(mirrored);
 	}
+	
+	public static BattleAction flashColorizeAction(int a, int r, int g, int b, int timeMS, float factor)
+	{
+		return new bactFlashColorize(a, r, g, b, timeMS, factor);
+	}
+	
 	
 	public static Ability addDep(Ability ability, BattleAction action)
 	{

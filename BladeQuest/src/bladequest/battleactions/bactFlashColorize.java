@@ -25,7 +25,15 @@ public class bactFlashColorize extends DelegatingAction {
 		BattleSprite playerSprite = character.getBattleSprite();
 		
 		BattleAnimObject baObj = new BattleAnimObject(Types.Bitmap, false, playerSprite.getBmpName());
-		Rect srcRect = playerSprite.getFrameRect(faces.Ready, 0);
+		Rect srcRect = null;
+		if (character.isEnemy())
+		{
+			srcRect = playerSprite.getFrameRect(faces.Idle, 0);
+		}
+		else
+		{
+			srcRect = playerSprite.getFrameRect(playerSprite.getFace(), 0);	
+		}
 		
         BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Source);
 		
@@ -33,6 +41,7 @@ public class bactFlashColorize extends DelegatingAction {
 		state.argb(255, 255, 255, 255);
 		state.pos1 = new Point(0, 0);
 		state.size = new Point(playerSprite.getWidth(), playerSprite.getHeight());
+		state.mirrored = playerSprite.getMirrored();
 		baObj.addState(state);		
 		
         state = new BattleAnimObjState(time/2, PosTypes.Source);
@@ -42,6 +51,7 @@ public class bactFlashColorize extends DelegatingAction {
 		state.colorize = factor;
 		state.pos1 = new Point(0, 0);
 		state.size = new Point(playerSprite.getWidth(), playerSprite.getHeight());
+		state.mirrored = playerSprite.getMirrored();
 		baObj.addState(state);		
 		
 		state = new BattleAnimObjState(time, PosTypes.Source);
@@ -50,6 +60,7 @@ public class bactFlashColorize extends DelegatingAction {
 		state.argb(255, 255, 255, 255);
 		state.pos1 = new Point(0, 0);
 		state.size = new Point(playerSprite.getWidth(), playerSprite.getHeight());
+		state.mirrored = playerSprite.getMirrored();
 		baObj.addState(state);		
 		
 		anim.addObject(baObj);

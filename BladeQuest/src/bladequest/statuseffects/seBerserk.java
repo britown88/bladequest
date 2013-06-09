@@ -151,6 +151,11 @@ public class seBerserk extends StatusEffect
 	@Override
 	public void onRemove(PlayerCharacter c)
 	{
+		if (!Global.battle.getPlayerHasGone(c))
+		{
+			Global.battle.resetPlayerAction(c).skipPlayerInput();
+		}
+		
 		for (Recyclable disposeTrigger : disposeTriggers)
 		{
 			if (disposeTrigger != null)

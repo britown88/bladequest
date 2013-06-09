@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Point;
 import android.graphics.Rect;
+import bladequest.graphics.BattleAnimObject.Types;
 import bladequest.world.Global;
 
 public class BattleAnimObject 
@@ -96,6 +97,11 @@ public class BattleAnimObject
 
 	
 	
+	public BattleAnimObject(Types bitmap, boolean outlineOnly2,
+			BattleAnimObject iceCube) {
+		// TODO Auto-generated constructor stub
+	}
+
 	public void alwaysDraw() { alwaysDraw = true; }
 	public void interpolateLinearly() { linearInterp = true; }
 	public int getCurrentStateIndex() { return stateIndex; }
