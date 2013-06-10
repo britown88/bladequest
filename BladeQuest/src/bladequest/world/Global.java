@@ -838,7 +838,10 @@ public class Global
     		if(mapLoadThread != null && mapLoadThread.isDone() && map != null)
     		{    			
     			if(loadedSave)
+    			{
+    				screenFader.setFaded();
     				screenFader.fadeIn(2.0f);
+    			}
     			else
     				map.playBGM(true);
     			loadedSave = false;
@@ -1023,6 +1026,8 @@ public class Global
         	//ScreenFilter.instance().pushFilter(ScreenFilter.darknessFilter(0.65f));
         	
         	title = new TitleScreen();
+        	
+        	ScreenFilter.instance();
 
         	saveLoadMenu = new SaveLoadMenu();
         	playingAnims = new ArrayList<BattleAnim>();
