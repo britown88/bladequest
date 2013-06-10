@@ -827,7 +827,10 @@ public class Global
     		if(mapLoadThread != null && mapLoadThread.isDone() && map != null)
     		{    			
     			if(loadedSave)
+    			{
+    				screenFader.setFaded();
     				screenFader.fadeIn(2.0f);
+    			}
     			else
     				map.playBGM(true);
     			loadedSave = false;
