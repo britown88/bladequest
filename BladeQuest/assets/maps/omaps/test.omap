@@ -6,6 +6,7 @@
 
 
 
+
 #!OBJ 0 0
 \name$0x0$ <- newObject "start" 0 0
 
@@ -176,8 +177,44 @@ addAction (messageWithYesNo "Drop 10G in the skull?" >
 state1$6x7$ 0
 name$6x7$ > createState >
 setCollisionData true true true true >
+setSpriteFromTile 1 2 >
 addAction (modifyParty "aramis" true) >
 addAction (modifyParty "luc" false)
 
 
 \runstate1$6x7$ <- state1$6x7$ 0
+#!OBJ 10 5
+\objName$10x5$ <- "movetest1"
+\name$10x5$ <- newObject objName$10x5$ 10 5
+
+state1$10x5$ 0
+name$10x5$ > createState >
+setSpriteFromTile 1 2  >
+setIgnorePartyOnMove true
+
+\runstate1$10x5$ <- state1$10x5$ 0
+
+#!OBJ 12 5
+\objName$12x5$ <- "movetest2"
+\name$12x5$ <- newObject objName$12x5$ 12 5
+
+state1$12x5$ 0
+name$12x5$ > createState >
+setSpriteFromTile 1 2 >
+setIgnorePartyOnMove true
+
+\runstate1$12x5$ <- state1$12x5$ 0
+
+#!OBJ 8 5
+\objName$8x5$ <- "name"
+\name$8x5$ <- newObject objName$8x5$ 8 5
+
+state1$8x5$ 0
+name$8x5$ > createState >
+setSpriteFromTile 1 2 >
+setCollisionData true true true true >
+addAction (createPath "movetest1" false "L") >
+addAction (createPath "movetest2" true "L3")
+
+
+\runstate1$8x5$ <- state1$8x5$ 0

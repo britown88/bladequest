@@ -40,6 +40,7 @@ createCliffJumpBarrier x (y > add 1)
 
 
 
+
 #!OBJ 17 15
 \objName$17x15$ <- "name"
 \name$17x15$ <- newObject objName$17x15$ 17 15
@@ -303,9 +304,11 @@ addSwitchCondition "albisatyrfought"
 
 state1$17x6$ 0
 name$17x6$ > createState >
+setIgnorePartyOnMove true >
 addAction (message "Woman's Voice: \nAAAAAAAH!!! HEEEEELP!!!") >
 addAction (playMusic "boss" true true 0.0) >
 addAction (switchControl "albiaramis2" true) >
+addAction (wait 1.0) >
 addAction (createPath "aramis2" true "L") >
 addAction (openBubble "exclam" "aramis2" 1.0 false true) >
 addAction (message "|aramis|: \nOver there!") >
@@ -341,7 +344,7 @@ addAction (message "|aramis|: \nWell ok then!") >
 addAction (message "|joy| has joined your party!") >
 addAction (createPath "aramis2" false "u") >
 addAction (createPath "party" true "u") >
-addAction (wait 1.0) >
+addAction (wait 0.5) >
 addAction (message "Satyr: If you're all done chatting, I've got a blade for you to meet!") >
 addAction (startBattle "satyrboss" true) >
 addAction (pauseMusic 0.0) >
@@ -376,7 +379,7 @@ addAction (createPath "joy" true "s2R3") >
 addAction (createPath "party" false "r") >
 addAction (createPath "aramis2" true "DR") >
 addAction (message "|aramis|: \nHey where you goin?") >
-addAction (message "|joy|: \nI'm sorry I...don't remember...") >
+addAction (message "|joy|: \nI'm sorry I...don't remember any of that...") >
 addAction (openBubble "exclam" "party" 1.0 false true) >
 addAction (message "|luc|: \nAmnesia??") >
 addAction (wait 1.0) >
@@ -393,7 +396,7 @@ addAction (createPath "party" true "R2d") >
 addAction (message "|aramis|: \nHey, it's ok...") >
 addAction (message "Don't worry.  We'll get this figured out.") >
 addAction (message "My name's |aramis| and this is... uuh... |luc|ersomething...") >
-addAction (openBubble "angry" "party" 1.0 true true) >
+addAction (openBubble "angry" "party" 1.0 true false) >
 addAction (message "|luc|: \nIt's |luc|!!!") >
 addAction (createPath "joy" true "u") >
 addAction (message "|joy|: \nThank you both so much for helping me!") >
@@ -403,10 +406,11 @@ addAction (message "|luc|: \nYes, let's head back to the village.") >
 addAction (message "We'll figure something out in the morning.") >
 addAction (createPath "joy" false "U2") >
 addAction (createPath "aramis2" true "U2R") >
-addAction (switchControl "albijoyscenedone" true)
-
+addAction (switchControl "albijoyscenedone" true) >
+addAction (panControl 0 0 1.0 true)
 
 \runstate1$17x6$ <- state1$17x6$ 0
+
 
 state2$17x6$ 0
 name$17x6$ > createState >
@@ -415,6 +419,7 @@ setSprite "aramis" >
 setFace "left" >
 setIgnorePartyOnMove true
 
+
 \runstate2$17x6$ <- state2$17x6$ 0
 
 state3$17x6$ 0
@@ -422,7 +427,6 @@ name$17x6$ > createState >
 addSwitchCondition "albijoyscenedone"
 
 \runstate3$17x6$ <- state3$17x6$ 0
-
 
 
 
