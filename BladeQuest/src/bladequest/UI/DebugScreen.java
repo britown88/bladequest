@@ -125,7 +125,7 @@ public class DebugScreen
 		Global.map.clearAutoStarters();
 		Global.screenFader.clear();
 		Global.map.clearObjectAction();
-		Global.setPanned(0, 0);
+		Global.clearPan();
 		Global.party.setAllowMovement(true);
 	}
 	

@@ -29,7 +29,6 @@ setDefaultShadow
 
 \luc <- (createCharacter "luc" "Luc" "bluc" "luc" >
 setPortrait 1 0 >
-setDisplayName "FagBallz" >
 setAbilityName "Swordplay" >
 setCombatAction "combStance" >
 setBaseStats 10 4 7 2 >

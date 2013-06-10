@@ -20,6 +20,7 @@ public class MapLoadThread extends Thread
 		done = false;
 		
 		map.load();
+		Global.clearPan();
 		Global.playTimer.start();
 		done = true;
 		

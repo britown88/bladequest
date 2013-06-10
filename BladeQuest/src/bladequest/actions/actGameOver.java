@@ -10,7 +10,7 @@ public class actGameOver extends Action
 	public void run()
 	{
 		Global.party.setAllowMovement(true);
-		Global.setPanned(0, 0);				
+		Global.clearPan();				
 		Global.executeGameOver();
 	}
 	

@@ -402,6 +402,8 @@ public class Party
 		
 		if(pList.size() == 0)
 			insertCharacter(pc, 1);
+		else if(pList.size() >= 4)
+			insertCharacter(pc, 4);
 		else
 		{
 			PlayerCharacter firstChar = pList.get(0);
@@ -510,7 +512,7 @@ public class Party
 		
 		if(Global.map != null && Global.map.isLoaded())
 			Global.map.unloadTiles();
-		Global.setPanned(0, 0);
+		Global.clearPan();
 		worldPos = new Point(x*32, y*32);
 		gridPos = new Point(x, y);
 		clearMovementPath();

@@ -205,26 +205,37 @@ public class GameObject {
 		if(!faceLocked)
 			states.get(currentState).face(face);
 		
+		int direction = 0;
 		if(face.equals("up"))
+		{
+			direction = 1;
 			target = new Point(gridPos.x, gridPos.y - 1);
+		}			
 		else if(face.equals("down"))
+		{
+			direction = 3;
 			target = new Point(gridPos.x, gridPos.y + 1);
+		}			
 		else if(face.equals("left"))
+		{
+			direction = 0;
 			target = new Point(gridPos.x - 1, gridPos.y);
+		}			
 		else if(face.equals("right"))
-			target = new Point(gridPos.x + 1, gridPos.y);			
+		{
+			direction = 2;
+			target = new Point(gridPos.x + 1, gridPos.y);	
+		}
+					
 
 		boolean collision = false;
-		
-
-
 
 		if(Global.map.isLoaded())
 		{
 			//check for object collision
 			for(GameObject gb : Global.map.Objects(target.x, target.y, target.x+1, target.y+1))
 			{
-				if(gb.getGridPos().equals(target) && gb.getTarget().equals(target))
+				if(gb.getGridPos().equals(target) && gb.getTarget().equals(target) && gb.getCollision()[direction])
 					collision = true;
 			}
 

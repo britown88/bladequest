@@ -2,22 +2,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #!OBJ 22 3
 \objName$22x3$ <- "name"
 \name$22x3$ <- newObject objName$22x3$ 22 3
@@ -71,32 +55,36 @@ addAction (filter (darknessFilter 0.8)) >
 addAction (teleportParty name$22x9$ 11 7 "albinight") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
-\runstate2$22x9$ <- state2$22x9$ 0#!OBJ 28 9
-\objName$22x9$ <- "name"
-\name$22x9$ <- newObject objName$22x9$ 28 9
+\runstate2$22x9$ <- state2$22x9$ 0
 
-state1$22x9$ 0
-name$22x9$ > createState >
+#!OBJ 28 9
+\objName$28x9$ <- "name"
+\name$28x9$ <- newObject objName$28x9$ 28 9
+
+state1$28x9$ 0
+name$28x9$ > createState >
 addAction (fadeControl 0.5 255 0 0 0 true true) >
-addAction (teleportParty name$22x9$ 15 7 "albi") >
+addAction (teleportParty name$28x9$ 15 7 "albi") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
-\runstate1$22x9$ <- state1$22x9$ 0
+\runstate1$28x9$ <- state1$28x9$ 0
 
-state2$22x9$ 0
-name$22x9$ > createState >
+state2$28x9$ 0
+name$28x9$ > createState >
 addSwitchCondition "albinight" >
 addAction (fadeControl 0.5 255 0 0 0 true true) >
 addAction (filter (darknessFilter 0.8)) >
-addAction (teleportParty name$22x9$ 15 7 "albinight") >
+addAction (teleportParty name$28x9$ 15 7 "albinight") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
-\runstate2$22x9$ <- state2$22x9$ 0#!OBJ 5 4
-\objName$22x9$ <- "spinman"
-\name$22x9$ <- newObject objName$22x9$ 5 4
+\runstate2$28x9$ <- state2$28x9$ 0
 
-state1$22x9$ 0
-name$22x9$ > createState >
+#!OBJ 5 4
+\objName$5x4$ <- "spinman"
+\name$5x4$ <- newObject objName$5x4$ 5 4
+
+state1$5x4$ 0
+name$5x4$ > createState >
 setCollisionData true true true true >
 setSprite "man1" >
 setFace "up" >
@@ -113,7 +101,7 @@ addAction (message "I was just...uuuh...cleaning!") >
 addAction (openBubble "sweat" "spinman" 1.0 false false) >
 addAction (createPath "spinman" true "uW")
 
-\runstate1$22x9$ <- state1$22x9$ 0
+\runstate1$5x4$ <- state1$5x4$ 0
 #!OBJ 9 24
 \objName$9x24$ <- "name"
 \name$9x24$ <- newObject objName$9x24$ 9 24
@@ -153,17 +141,19 @@ addAction (fadeControl 0.5 255 0 0 0 true true) >
 addAction (teleportParty name$31x24$ 13 17 "albinight") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
-\runstate3$31x24$ <- state3$31x24$ 0#!OBJ 8 39
-\objName$31x24$ <- "name"
-\name$31x24$ <- newObject objName$31x24$ 8 39
+\runstate3$31x24$ <- state3$31x24$ 0
 
-state1$31x24$ 0
-name$31x24$ > createState >
+#!OBJ 8 39
+\objName$8x39$ <- "name"
+\name$8x39$ <- newObject objName$8x39$ 8 39
+
+state1$8x39$ 0
+name$8x39$ > createState >
 addAction (fadeControl 0.5 255 0 0 0 true true) >
-addAction (teleportParty name$31x24$ 17 22 "albi") >
+addAction (teleportParty name$8x39$ 17 22 "albi") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
-\runstate1$31x24$ <- state1$31x24$ 0
+\runstate1$8x39$ <- state1$8x39$ 0
 #!OBJ 22 39
 \objName$22x39$ <- "name"
 \name$22x39$ <- newObject objName$22x39$ 22 39
@@ -195,27 +185,29 @@ addAction (filter (darknessFilter 0.8)) >
 addAction (teleportParty name$43x9$ 22 4 "albinight") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
-\runstate2$43x9$ <- state2$43x9$ 0#!OBJ 43 27
-\objName$43x9$ <- "name"
-\name$43x9$ <- newObject objName$43x9$ 43 27
+\runstate2$43x9$ <- state2$43x9$ 0
 
-state1$43x9$ 0
-name$43x9$ > createState >
+#!OBJ 43 27
+\objName$43x27$ <- "name"
+\name$43x27$ <- newObject objName$43x27$ 43 27
+
+state1$43x27$ 0
+name$43x27$ > createState >
 addAction (fadeControl 0.5 255 0 0 0 true true) >
-addAction (teleportParty name$43x9$ 28 7 "albi") >
+addAction (teleportParty name$43x27$ 28 7 "albi") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
-\runstate1$43x9$ <- state1$43x9$ 0
+\runstate1$43x27$ <- state1$43x27$ 0
 
-state2$43x9$ 0
-name$43x9$ > createState >
+state2$43x27$ 0
+name$43x27$ > createState >
 addSwitchCondition "albinight" >
 addAction (fadeControl 0.5 255 0 0 0 true true) >
 addAction (filter (darknessFilter 0.8)) >
-addAction (teleportParty name$43x9$ 28 7 "albinight") >
+addAction (teleportParty name$43x27$ 28 7 "albinight") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
-\runstate2$43x9$ <- state2$43x9$ 0
+\runstate2$43x27$ <- state2$43x27$ 0
 
 
 #!OBJ 43 24

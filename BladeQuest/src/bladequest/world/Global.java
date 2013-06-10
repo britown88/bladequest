@@ -176,10 +176,9 @@ public class Global
 	public static int vpHeight = vpGridSize.y*32;	
 	public static Point vpWorldPos = new Point(0, 0);
 	public static Point vpGridPos = new Point(0, 0);
-	private static Point vpPan = new Point(0, 0);
-	private static Point vpPanTarget = new Point(0, 0);
-	private static Point vpPanStart = new Point(0, 0);
-	private static Point vpPanWorld = new Point(0, 0);
+	private static Point vpTarget = new Point(0, 0);
+	private static Point vpStart = new Point(0, 0);
+	private static boolean vpTrackParty = true;
 	private static float vpPanLength;
 	private static long panStartTime;
 	
@@ -553,85 +552,97 @@ public class Global
 	{
 		menu.close();
 	}
-	
+		
 	public static void pan(int x, int y, float length)
 	{
-		updateVpWorldPos();
-		
-		vpPanTarget = new Point(x*32, y*32);
-		vpPanStart = new Point(vpPan);
+		vpStart = new Point(vpWorldPos);		
+		vpTarget = PointMath.add(getVPPosRelativeToParty(), new Point(x*32, y*32));
+				
 		vpPanLength = length;
 		panStartTime = System.currentTimeMillis();
-		vpPanWorld = new Point(vpWorldPos);
+		
+		vpTrackParty = false;
 	}
 	
 	
-	
-	public static void setPanned(int x, int y)
-	{
-		updateVpWorldPos();
+	public static void clearPan()
+	{		
+		vpWorldPos = getVPPosRelativeToParty();
+		vpTarget = new Point(vpWorldPos);
 		
-		vpPan = new Point(x*32, y*32);
-		vpPanTarget = new Point(x*32, y*32);
+		panStartTime = System.currentTimeMillis();
 		vpPanLength = 0.0f;
-		vpPanWorld = new Point(vpWorldPos);
+		vpTrackParty = true;
+
 	}
 	
 	public static boolean isPanned()
 	{
-		return vpPan.equals(vpPanTarget);
+		return vpWorldPos.equals(vpTarget);
 	}
 	
 	private static Point partyBuffer = new Point(6, 4);
 	
-	public static void updateVpWorldPos()
-	{		
+	private static Point getVPPosRelativeToParty()
+	{
 		if(map != null && map.isLoaded())
 		{
-			vpWorldPos.x = party.getX() - partyBuffer.x*32;
-			vpWorldPos.y = party.getY() - partyBuffer.y*32;		
+			Point p = party.getWorldPos();
+			Point vpPos = new Point();
 			
-			if(party.getX() < partyBuffer.x*32)
-				vpWorldPos.x = 0;
+			vpPos.x = p.x - partyBuffer.x*32;
+			vpPos.y = p.y - partyBuffer.y*32;		
+					
+		
+			if(p.x < partyBuffer.x*32)
+				vpPos.x = 0;
 			
-			if(party.getY() < partyBuffer.y*32)
-				vpWorldPos.y = 0;
+			if(p.y < partyBuffer.y*32)
+				vpPos.y = 0;
 			
-			if(party.getX() > map.Size().x*32 - (vpWidth - partyBuffer.x*32))
-				vpWorldPos.x = map.Size().x*32 - vpWidth;
+			if(p.x > map.Size().x*32 - (vpWidth - partyBuffer.x*32))
+				vpPos.x = map.Size().x*32 - vpWidth;
 			
-			if(party.getY() > map.Size().y*32 - (vpHeight - partyBuffer.y*32))
-				vpWorldPos.y = map.Size().y*32 - vpHeight;	
+			if(p.y > map.Size().y*32 - (vpHeight - partyBuffer.y*32))
+				vpPos.y = map.Size().y*32 - vpHeight;	
+			
+			return vpPos;
 		}
+		else 
+			return new Point(0,0);
+		
 	}
+	
+
 	public static void updateVpPos()
 	{		
 		if(map != null && map.isLoaded())
 		{
-			updateVpWorldPos();	
-			
-			//update pan
-			if(!vpPan.equals(vpPanTarget))
+			if(vpTrackParty)
+				vpWorldPos = getVPPosRelativeToParty();
+			else
 			{
-				float delta = (System.currentTimeMillis() - panStartTime) / (vpPanLength * 1000.0f);
-				
-				if(delta < 1.0)
-				{					
-					vpPan.x = (int)(vpPanStart.x + (vpPanTarget.x - vpPanStart.x) * delta);
-					vpPan.y = (int)(vpPanStart.y + (vpPanTarget.y - vpPanStart.y) * delta);
-				}
-				else
+				//update pan
+				if(!vpWorldPos.equals(vpTarget))
 				{
-					vpPan.x = vpPanTarget.x;
-					vpPan.y = vpPanTarget.y;
+					float delta = (System.currentTimeMillis() - panStartTime) / (vpPanLength * 1000.0f);
+					
+					if(delta < 1.0)
+					{					
+						vpWorldPos.x = (int)(vpStart.x + (vpTarget.x - vpStart.x) * delta);
+						vpWorldPos.y = (int)(vpStart.y + (vpTarget.y - vpStart.y) * delta);
+					}
+					else
+					{
+						vpWorldPos.x = vpTarget.x;
+						vpWorldPos.y = vpTarget.y;						
+					}					
 				}
 			}
 			
-			if (!vpPanStart.equals(new Point(0,0)) || 
-			    !vpPanTarget.equals(new Point(0,0)))
-			{
-				vpWorldPos = PointMath.add(vpPanWorld, vpPan);
-			}
+			//automatically start tracking the party again at pan(0,0)			
+			if(vpWorldPos.equals(vpTarget) && vpWorldPos.equals(getVPPosRelativeToParty()))
+				vpTrackParty = true;
 			
 			vpGridPos.x = vpWorldPos.x/32;
 			vpGridPos.y = vpWorldPos.y/32;	
@@ -2759,7 +2770,7 @@ public class Global
 		abilities.put("satyrreversal", getSatyrReversal());
 		
 		//reset pan
-		setPanned(0, 0);	
+		clearPan();	
 		
 		//create party
 		party = new Party(0, 0);	

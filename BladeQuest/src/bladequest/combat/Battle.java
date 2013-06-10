@@ -604,7 +604,7 @@ public class Battle
 				if(allowGameOver && isDefeated())
 				{	
 					Global.party.setAllowMovement(true);
-					Global.setPanned(0, 0);				
+					Global.clearPan();			
 					Global.executeGameOver();
 				}
 				else
