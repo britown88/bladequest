@@ -3,12 +3,15 @@ package bladequest.graphics;
 import java.util.ArrayList;
 import java.util.List;
 
-import bladequest.world.Global;
-
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
+import bladequest.serialize.DeserializeFactory;
+import bladequest.serialize.Deserializer;
+import bladequest.serialize.Serializable;
+import bladequest.serialize.Serializer;
+import bladequest.world.Global;
 
-public class ScreenFilter {
+public class ScreenFilter extends Serializable {
 	
 	private class FilterSet
 	{
@@ -28,7 +31,64 @@ public class ScreenFilter {
 		}
 		
 		float[][] filters;
-		int activeFilters;		
+		int activeFilters;	
+		void serialize(Serializer serializer)
+		{
+			serializer.write(activeFilters);
+			for (int i = 0; i < activeFilters; ++i)
+			{
+				for (int j = 0; j < 20; ++j)
+				{
+					serializer.write(filters[i][j]);
+				}
+			}
+		}
+	}
+	
+	
+	private static final String tag = "ScreenFilter";
+	
+	private class ScreenFilterDeserializer extends DeserializeFactory
+	{
+
+		ScreenFilterDeserializer()
+		{
+			super(tag);
+		}
+		FilterSet deserializeFilterSet(Deserializer deserializer)
+		{
+			FilterSet out = new FilterSet();
+			out.activeFilters = deserializer.readInt();
+			for (int i = 0; i < out.activeFilters; ++i)
+			{
+				out.filters[i] = new float[20];
+				for (int j = 0; j < 20; ++i)
+				{
+					out.filters[i][j] = deserializer.readFloat();	
+				}
+			}
+			return out;
+		}
+		@Override
+		public Object deserialize(Deserializer deserializer) {
+			activeFilterSet = deserializeFilterSet(deserializer);
+			
+			int storedFilters = deserializer.readInt();
+			
+			storedFilterSets.clear();
+			
+			for (int i = 0; i < storedFilters; ++i)
+			{
+				storedFilterSets.add(deserializeFilterSet(deserializer));
+			}
+			calculateFilter();
+			if (Global.map != null && Global.map.isLoaded())
+			{
+				Global.map.invalidateTiles();	
+			}
+			return null;
+		}
+		
 	}
 	
 	FilterSet activeFilterSet;
@@ -40,8 +100,10 @@ public class ScreenFilter {
 	Paint p;
 	
 	private ScreenFilter() {
+		super(tag);
 		activeFilterSet = new FilterSet();
-		storedFilterSets = new ArrayList<FilterSet>(); 
+		storedFilterSets = new ArrayList<FilterSet>();
+		Global.saveLoader.registerFactory(tag, new ScreenFilterDeserializer()); 
 	}
 	
 	private static ScreenFilter filter;
@@ -50,6 +112,7 @@ public class ScreenFilter {
 		if (filter == null)
 		{
 			filter = new ScreenFilter();
+			Global.saveLoader.register(filter);
 		}
 		return filter;
 	}
@@ -110,6 +173,7 @@ public class ScreenFilter {
 	{
 		if (activeFilterSet.activeFilters == 0)
 		{
+			p = new Paint();
 			return null;
 		}
 		float [] out = new float[20];
@@ -149,5 +213,16 @@ public class ScreenFilter {
 		//composited filters!
 		
 		return out;
+	}
+	@Override
+	public void onSerialize(Serializer serializer) {
+		activeFilterSet.serialize(serializer);
+		
+		serializer.write(storedFilterSets.size());
+		for (int i = 0; i < storedFilterSets.size(); ++i)
+		{
+			storedFilterSets.get(i).serialize(serializer);
+		}
+		
 	}
 }

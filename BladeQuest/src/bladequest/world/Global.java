@@ -1012,6 +1012,8 @@ public class Global
         	//ScreenFilter.instance().pushFilter(ScreenFilter.darknessFilter(0.65f));
         	
         	title = new TitleScreen();
+        	
+        	ScreenFilter.instance();
 
         	saveLoadMenu = new SaveLoadMenu();
         	playingAnims = new ArrayList<BattleAnim>();
