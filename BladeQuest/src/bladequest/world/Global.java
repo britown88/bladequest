@@ -1586,9 +1586,9 @@ public class Global
 		
 		GameDataLoader.loadNewGame(activity);
 		
-		party.removeCharacter("aramis");
-		party.addCharacter("luc");
-		
+//		party.removeCharacter("aramis");
+//		party.addCharacter("luc");
+//		
 //		for(PlayerCharacter pc : party.getPartyList(false))
 //		{
 //			pc.modifyLevel(99, false);

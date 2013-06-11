@@ -2,7 +2,6 @@ package bladequest.battleactions;
 
 import java.util.List;
 
-import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
 import bladequest.combat.Battle;
@@ -15,8 +14,10 @@ import bladequest.graphics.BattleAnimObject;
 import bladequest.graphics.BattleAnimObject.Types;
 import bladequest.graphics.BattleSprite;
 import bladequest.graphics.BattleSprite.faces;
+import bladequest.graphics.BitmapFrame;
 import bladequest.graphics.Shadow;
 import bladequest.math.PointMath;
+import bladequest.world.BattleAnimations;
 import bladequest.world.DamageTypes;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
@@ -32,14 +33,9 @@ public class bactFrozenGrip extends DelegatingAction {
 
 	BattleAnim getFrozenGripAnimation(PlayerCharacter target, PlayerCharacter throwLocation)
 	{
-		int width = (int)(target.getWidth()/2.1);
-		int height =(int)(target.getHeight()/2.1);
-		
 		Point drawPoint = target.getPosition(true);
 		Point targetPoint = throwLocation.getPosition(true);
-		Rect r = new Rect(drawPoint.x -width, drawPoint.y-height,
-						  drawPoint.x +width, drawPoint.y+height);
-		
+		Rect r = BattleAnimations.getCharacterIceCube(target);
 		
 		BattleAnim anim = new BattleAnim(1000.0f);
 		
@@ -95,38 +91,37 @@ public class bactFrozenGrip extends DelegatingAction {
 		
 		//next the icecube!
 		
-		Bitmap iceCube = Global.bitmaps.get("icecube");		
-		Rect iceCubeRect = new Rect(0,0,26,29);
+		BitmapFrame iceblock = BattleAnimations.getIceBlock();
 		
 		
-		BattleAnimObject iceCubeHack = new BattleAnimObject(Types.Bitmap, false, iceCube);
+		BattleAnimObject iceCubeHack = new BattleAnimObject(Types.Bitmap, false, iceblock.bitmap);
 		
 		state = new BattleAnimObjState(0, PosTypes.Screen); 
 		state.size = new Point(r.width(), r.height());
 		state.pos1 = drawPoint;
 		state.argb(255, 255, 255, 255);
-		state.setBmpSrcRect(iceCubeRect.left, iceCubeRect.top, iceCubeRect.right, iceCubeRect.bottom);
+		state.setBmpSrcRect(iceblock.srcRect.left, iceblock.srcRect.top, iceblock.srcRect.right, iceblock.srcRect.bottom);
 		iceCubeHack.addState(state);
 				
 		state = new BattleAnimObjState(pullInTime, PosTypes.Screen); 
 		state.size = new Point(r.width(), r.height());
 		state.pos1 = PointMath.add(drawPoint, new Point(-pullDist, -elevation));
 		state.argb(255, 255, 255, 255);
-		state.setBmpSrcRect(iceCubeRect.left, iceCubeRect.top, iceCubeRect.right, iceCubeRect.bottom);
+		state.setBmpSrcRect(iceblock.srcRect.left, iceblock.srcRect.top, iceblock.srcRect.right, iceblock.srcRect.bottom);
 		iceCubeHack.addState(state);
 		
 		state = new BattleAnimObjState(waitTime, PosTypes.Screen); 
 		state.size = new Point(r.width(), r.height());
 		state.pos1 = PointMath.add(drawPoint, new Point(-pullDist, -elevation));
 		state.argb(255, 255, 255, 255);
-		state.setBmpSrcRect(iceCubeRect.left, iceCubeRect.top, iceCubeRect.right, iceCubeRect.bottom);
+		state.setBmpSrcRect(iceblock.srcRect.left, iceblock.srcRect.top, iceblock.srcRect.right, iceblock.srcRect.bottom);
 		iceCubeHack.addState(state);
 		
 		state = new BattleAnimObjState(waitTime, PosTypes.Screen); 
 		state.size = new Point(r.width(), r.height());
 		state.pos1 = targetPoint;
 		state.argb(255, 255, 255, 255);
-		state.setBmpSrcRect(iceCubeRect.left, iceCubeRect.top, iceCubeRect.right, iceCubeRect.bottom);
+		state.setBmpSrcRect(iceblock.srcRect.left, iceblock.srcRect.top, iceblock.srcRect.right, iceblock.srcRect.bottom);
 		iceCubeHack.addState(state);		
 		
 		anim.addObject(iceCubeHack);
@@ -182,13 +177,9 @@ public class bactFrozenGrip extends DelegatingAction {
 	
 	BattleAnim getFrozenGripInstantKill(PlayerCharacter target)
 	{
-		int width = (int)(target.getWidth()/2.1);
-		int height =(int)(target.getHeight()/2.1);
-		
+
 		Point drawPoint = target.getPosition(true);
-		
-		Rect r = new Rect(drawPoint.x -width, drawPoint.y-height,
-						  drawPoint.x +width, drawPoint.y+height);
+		Rect r = BattleAnimations.getCharacterIceCube(target);
 
 
 		BattleAnim anim = new BattleAnim(1000.0f);
@@ -246,38 +237,36 @@ public class bactFrozenGrip extends DelegatingAction {
 		
 		//next the icecube!
 		
-		Bitmap iceCube = Global.bitmaps.get("icecube");		
-		Rect iceCubeRect = new Rect(0,0,26,29);
+		BitmapFrame iceblock = BattleAnimations.getIceBlock();
 		
-		
-		BattleAnimObject iceCubeHack = new BattleAnimObject(Types.Bitmap, false, iceCube);
+		BattleAnimObject iceCubeHack = new BattleAnimObject(Types.Bitmap, false, iceblock.bitmap);
 		
 		state = new BattleAnimObjState(0, PosTypes.Screen); 
 		state.size = new Point(r.width(), r.height());
 		state.pos1 = drawPoint;
 		state.argb(255, 255, 255, 255);
-		state.setBmpSrcRect(iceCubeRect.left, iceCubeRect.top, iceCubeRect.right, iceCubeRect.bottom);
+		state.setBmpSrcRect(iceblock.srcRect.left, iceblock.srcRect.top, iceblock.srcRect.right, iceblock.srcRect.bottom);
 		iceCubeHack.addState(state);
 				
 		state = new BattleAnimObjState(pullInTime, PosTypes.Screen); 
 		state.size = new Point(r.width(), r.height());
 		state.pos1 = PointMath.add(drawPoint, new Point(0, -elevation));
 		state.argb(255, 255, 255, 255);
-		state.setBmpSrcRect(iceCubeRect.left, iceCubeRect.top, iceCubeRect.right, iceCubeRect.bottom);
+		state.setBmpSrcRect(iceblock.srcRect.left, iceblock.srcRect.top, iceblock.srcRect.right, iceblock.srcRect.bottom);
 		iceCubeHack.addState(state);
 		
 		state = new BattleAnimObjState(waitTime, PosTypes.Screen); 
 		state.size = new Point(r.width(), r.height());
 		state.pos1 = PointMath.add(drawPoint, new Point(0, -elevation));
 		state.argb(255, 255, 255, 255);
-		state.setBmpSrcRect(iceCubeRect.left, iceCubeRect.top, iceCubeRect.right, iceCubeRect.bottom);
+		state.setBmpSrcRect(iceblock.srcRect.left, iceblock.srcRect.top, iceblock.srcRect.right, iceblock.srcRect.bottom);
 		iceCubeHack.addState(state);
 		
 		state = new BattleAnimObjState(waitTime, PosTypes.Screen); 
 		state.size = new Point(r.width(), r.height());
 		state.pos1 = drawPoint;
 		state.argb(255, 255, 255, 255);
-		state.setBmpSrcRect(iceCubeRect.left, iceCubeRect.top, iceCubeRect.right, iceCubeRect.bottom);
+		state.setBmpSrcRect(iceblock.srcRect.left, iceblock.srcRect.top, iceblock.srcRect.right, iceblock.srcRect.bottom);
 		iceCubeHack.addState(state);		
 		
 		anim.addObject(iceCubeHack);
@@ -383,63 +372,6 @@ public class bactFrozenGrip extends DelegatingAction {
 	}
 	
 	
-	BattleAnim getSnowImplosion(PlayerCharacter target, float minAngle, float maxAngle)
-	{
-		BattleAnim anim = new BattleAnim(1000.0f);
-		
-		
-		Point position = target.getPosition();
-		
-		Bitmap icePoof = Global.bitmaps.get("particles");
-		Rect poofRect = new Rect(1,13,13,24);
-		
-		//to radian
-		minAngle = (float)(Math.PI/180.0f * minAngle);
-		maxAngle = (float)(Math.PI/180.0f * maxAngle);
-		
-		final int poofs = 50;
-		final float minVel = 4.0f;
-		final float maxVel = 72.0f;
-		final int life = 450;
-		
-		for (int i = 0; i < poofs; ++i)
-		{
-			//add a poof at this point that's fairly long-lived.
-			BattleAnimObject poofAnim = new BattleAnimObject(Types.Bitmap, false, icePoof);
-			
-			float initialOffsetX = Global.rand.nextFloat() * 32.0f -  16.0f;
-			float initialOffsetY = Global.rand.nextFloat() * 32.0f -  16.0f;
-			
-			float angle = minAngle + (float)(Global.rand.nextFloat()* (minAngle-maxAngle));
-			float velocity = Global.rand.nextFloat() * (maxVel - minVel) + minVel;
-			float x = initialOffsetX + ((float)Math.cos(angle)) * velocity;
-			float y = initialOffsetY + ((float)Math.sin(angle)) * velocity;
-			
-			
-			float rnd = Global.rand.nextFloat() * 360.0f;
-			BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Screen);
-			state.size = new Point((int)(poofRect.width()*4.5f), (int)(poofRect.height()*4.5f));
-			state.pos1 = PointMath.add(position, new Point((int)initialOffsetX,(int)initialOffsetY));
-			state.argb(196, 255, 255, 255);
-			state.rotation = rnd;
-			state.setBmpSrcRect(poofRect.left, poofRect.top, poofRect.right, poofRect.bottom);
-			poofAnim.addState(state);
-			
-			state = new BattleAnimObjState(life, PosTypes.Screen);
-			state.size = new Point(poofRect.width()*3, poofRect.height()*3);
-			state.pos1 = PointMath.add(position, new Point((int)x,(int)y));
-			state.argb(0, 255, 255, 255);
-			state.rotation = rnd;
-			state.setBmpSrcRect(poofRect.left, poofRect.top, poofRect.right, poofRect.bottom);
-			poofAnim.addState(state);
-			
-			anim.addObject(poofAnim);
-		}
-		
-
-		
-		return anim;
-	}
 	
 	@Override
 	protected void buildEvents(BattleEventBuilder builder) {
@@ -505,7 +437,7 @@ public class bactFrozenGrip extends DelegatingAction {
 			}.addDependency(builder.getLast()));
 			
 			
-			builder.addEventObject(new bactRunAnimation(getSnowImplosion(target, 0.0f, 180.0f)).addDependency(builder.getLast()));
+			builder.addEventObject(new bactRunAnimation(BattleAnimations.getSnowImplosion(target, 0.0f, 180.0f)).addDependency(builder.getLast()));
 		}
 		else
 		{
@@ -535,7 +467,7 @@ public class bactFrozenGrip extends DelegatingAction {
 			
 			BattleAction damageAction = builder.getLast();
 			
-			builder.addEventObject(new bactRunAnimation(getSnowImplosion(hitPlayer, 0.0f, 60.0f)).addDependency(damageAction));
+			builder.addEventObject(new bactRunAnimation(BattleAnimations.getSnowImplosion(hitPlayer, 0.0f, 60.0f)).addDependency(damageAction));
 			
 			builder.addEventObject(new SourcedAction(target){
 				

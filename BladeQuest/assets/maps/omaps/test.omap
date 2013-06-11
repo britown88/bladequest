@@ -34,7 +34,7 @@ state1$2x3$ 0
 name$2x3$ > createState >
 setSpriteFromTile 1 2 >
 setCollisionData true true true true >
-addAction (startBattle "satyrboss" true >
+addAction (startBattle "enemyroland1" true >
 	addToBranch 0 (message "You won, congrats.") >
 	addToBranch 1 (message "You lost, bahahahaha") >
 	addToBranch 2 (message "You ran! What a bitch!"))

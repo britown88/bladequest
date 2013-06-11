@@ -41,7 +41,85 @@ public class BattleAnimations
 		Global.animationBuilders.put("trickery", getTrickeryAnim());
 	}
 	
+	
 
+	public static BattleAnim getSnowImplosion(PlayerCharacter target, float minAngle, float maxAngle)
+	{
+		BattleAnim anim = new BattleAnim(1000.0f);
+		
+		
+		Point position = target.getPosition();
+		
+		Bitmap icePoof = Global.bitmaps.get("particles");
+		Rect poofRect = new Rect(1,13,13,24);
+		
+		//to radian
+		minAngle = (float)(Math.PI/180.0f * minAngle);
+		maxAngle = (float)(Math.PI/180.0f * maxAngle);
+		
+		final int poofs = 50;
+		final float minVel = 4.0f;
+		final float maxVel = 72.0f;
+		final int life = 450;
+		
+		for (int i = 0; i < poofs; ++i)
+		{
+			//add a poof at this point that's fairly long-lived.
+			BattleAnimObject poofAnim = new BattleAnimObject(Types.Bitmap, false, icePoof);
+			
+			float initialOffsetX = Global.rand.nextFloat() * 32.0f -  16.0f;
+			float initialOffsetY = Global.rand.nextFloat() * 32.0f -  16.0f;
+			
+			float angle = minAngle + (float)(Global.rand.nextFloat()* (minAngle-maxAngle));
+			float velocity = Global.rand.nextFloat() * (maxVel - minVel) + minVel;
+			float x = initialOffsetX + ((float)Math.cos(angle)) * velocity;
+			float y = initialOffsetY + ((float)Math.sin(angle)) * velocity;
+			
+			
+			float rnd = Global.rand.nextFloat() * 360.0f;
+			BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Screen);
+			state.size = new Point((int)(poofRect.width()*4.5f), (int)(poofRect.height()*4.5f));
+			state.pos1 = PointMath.add(position, new Point((int)initialOffsetX,(int)initialOffsetY));
+			state.argb(196, 255, 255, 255);
+			state.rotation = rnd;
+			state.setBmpSrcRect(poofRect.left, poofRect.top, poofRect.right, poofRect.bottom);
+			poofAnim.addState(state);
+			
+			state = new BattleAnimObjState(life, PosTypes.Screen);
+			state.size = new Point(poofRect.width()*3, poofRect.height()*3);
+			state.pos1 = PointMath.add(position, new Point((int)x,(int)y));
+			state.argb(0, 255, 255, 255);
+			state.rotation = rnd;
+			state.setBmpSrcRect(poofRect.left, poofRect.top, poofRect.right, poofRect.bottom);
+			poofAnim.addState(state);
+			
+			anim.addObject(poofAnim);
+		}
+		
+
+		
+		return anim;
+	}
+	
+	public static BitmapFrame getIceBlock()
+	{
+		return new BitmapFrame(Global.bitmaps.get("iceblock"), new Rect(0,0,25,38));
+	}
+	
+
+	public static Rect getCharacterIceCube(PlayerCharacter c)
+	{
+		int width = (int)(c.getWidth()/2.94);
+		int height =(int)(c.getHeight()/2.1);
+		
+		Point drawPoint = c.getPosition(true);
+		Rect r = new Rect(drawPoint.x -width, drawPoint.y-height,
+						  drawPoint.x +width, drawPoint.y+height);
+		
+		return r;
+	}
+	
+	
 	public static AnimatedBitmap getRedCard()
 	{
 		return new AnimatedBitmap()	
@@ -392,14 +470,15 @@ public class BattleAnimations
 			public BattleAnim buildAnimation(BattleEventBuilder builder) {
 				BattleAnim out = new BattleAnim(1000.0f); //working in milliseconds
 				
-				final int icicleCount = 20;
-				final int icicleStrikeWait = 1250;
-				final int icicleStrikeTime = 205;
-				final int icicleSpawnGap = 60;
+				final int icicleCount = 16;
+				final int icicleStrikeWait = 650;
+				final int icicleStrikeTime = 105;
+				final int icicleSpawnGap = 8;
+				final int icicleStartWait = 1250;
 				final int strikeGap = 40;
 				final int iciclePoofLife = 750;
 			//	final int icicleAdvanceTime = 100;
-				final float icicleRadius = 80.0f;
+				final float icicleRadius = 60.0f;
 				
 				Bitmap icicleBitmap = Global.bitmaps.get("icicle"); 
 				Rect icicleRect = new Rect(0,0,30,80);	
@@ -413,7 +492,7 @@ public class BattleAnimations
 				{
 					BattleAnimObject icicle = new BattleAnimObject(Types.Bitmap, false, icicleBitmap);
 					
-					int startTime = Global.rand.nextInt(strikeGap * icicleCount);
+					int startTime = Global.rand.nextInt(strikeGap * icicleCount) + icicleStartWait;
 					
 					float radius = icicleRadius + Global.rand.nextFloat() * 16.0f;
 					
@@ -422,8 +501,28 @@ public class BattleAnimations
 					float y = (float)(Math.sin(angle) * radius) + 16.0f;  //offset down slightly to feel a bit more entomb-y
 										
 					float drawAngle =(float)(90  + (angle * 180/Math.PI));
+					float randAngle = Global.rand.nextFloat()*360.0f;
+					
+					
+					int rndX = (int)x - 24 + Global.rand.nextInt(48);
 					
 					BattleAnimObjState state = new BattleAnimObjState(i * icicleSpawnGap, PosTypes.Target);
+					state.pos1 = new Point(rndX, 18);
+					state.size = new Point(icicleRect.width()/3, icicleRect.height()/3);
+					state.argb(255, 255, 255, 255);
+					state.rotation = randAngle;  //angle += 270
+					state.setBmpSrcRect(icicleRect.left, icicleRect.top, icicleRect.right, icicleRect.bottom);
+					icicle.addState(state);	
+					
+					state = new BattleAnimObjState(i * icicleSpawnGap+350, PosTypes.Target);
+					state.pos1 = new Point(rndX, 18);
+					state.size = new Point(icicleRect.width()/3, icicleRect.height()/3);
+					state.argb(255, 255, 255, 255);
+					state.rotation = randAngle;  //angle += 270
+					state.setBmpSrcRect(icicleRect.left, icicleRect.top, icicleRect.right, icicleRect.bottom);
+					icicle.addState(state);	
+					
+					state = new BattleAnimObjState(icicleStartWait, PosTypes.Target);
 					state.pos1 = new Point((int)x, (int)y);
 					state.size = new Point(icicleRect.width()/3, icicleRect.height()/3);
 					state.argb(255, 255, 255, 255);
@@ -668,8 +767,7 @@ public class BattleAnimations
 				final int frameWaitTime = 100;
 				
 				//now, to add the explosion.
-				
-
+			
 				BattleAnimObject explosion = new BattleAnimObject(Types.Bitmap, false, frames[0].bitmap);
 				for (int i = 0; i < frames.length+1; ++i)
 				{
@@ -1344,32 +1442,33 @@ public class BattleAnimations
 				
 				size = (int)(size*1.2f);
 				
+				BitmapFrame iceblock = getIceBlock();
 				
+				Point p = new Point(0, (height-size)/2);
 				
-				Bitmap iceCubeBmp = Global.bitmaps.get("icecube");		
-				Rect iceCubeRect = new Rect(0,0,26,29);
+				height = (int)((iceblock.srcRect.height()/((float)iceblock.srcRect.width())) * size);
 				
-				BattleAnimObject iceCube = new BattleAnimObject(Types.Bitmap, false, iceCubeBmp);
+				BattleAnimObject iceCube = new BattleAnimObject(Types.Bitmap, false, iceblock.bitmap);
 				
 				BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Target); 
-				state.size = new Point(size, size);
-				state.pos1 = new Point();
+				state.size = new Point(size, height);
+				state.pos1 = p;
 				state.argb(255, 255, 255, 255);
-				state.setBmpSrcRect(iceCubeRect.left, iceCubeRect.top, iceCubeRect.right, iceCubeRect.bottom);
+				state.setBmpSrcRect(iceblock.srcRect.left, iceblock.srcRect.top, iceblock.srcRect.right, iceblock.srcRect.bottom);
 				iceCube.addState(state);
 				
 				state = new BattleAnimObjState(iceCubeStayTime, PosTypes.Target); 
-				state.size = new Point(size, size);
-				state.pos1 = new Point();
+				state.size = new Point(size, height);
+				state.pos1 = p;
 				state.argb(255, 255, 255, 255);
-				state.setBmpSrcRect(iceCubeRect.left, iceCubeRect.top, iceCubeRect.right, iceCubeRect.bottom);
+				state.setBmpSrcRect(iceblock.srcRect.left, iceblock.srcRect.top, iceblock.srcRect.right, iceblock.srcRect.bottom);
 				iceCube.addState(state);				
 								
 				state = new BattleAnimObjState(iceCubeFadeTime + iceCubeStayTime, PosTypes.Target); 
-				state.size = new Point(size, size);
-				state.pos1 = new Point();
+				state.size = new Point(size, height);
+				state.pos1 = p;
 				state.argb(0, 255, 255, 255);
-				state.setBmpSrcRect(iceCubeRect.left, iceCubeRect.top, iceCubeRect.right, iceCubeRect.bottom);
+				state.setBmpSrcRect(iceblock.srcRect.left, iceblock.srcRect.top, iceblock.srcRect.right, iceblock.srcRect.bottom);
 				iceCube.addState(state);
 				
 				out.addObject(iceCube);

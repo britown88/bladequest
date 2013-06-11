@@ -36,7 +36,8 @@ public class bactRevive extends DelegatingAction {
 			int startTime = lightShaftWait * i;
 			BattleAnimObject obj = new BattleAnimObject(Types.Line, false, "");
 			
-		 
+			obj.interpolateLinearly();
+			
 			//start and some random circular offset.
 			Point pt = PointMath.randomPointInRadius(24.0f);
 			pt.y /= 2; //lol perspective 

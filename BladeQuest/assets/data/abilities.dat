@@ -193,7 +193,7 @@ addDep (inflictStatusAction (beserkStatus 2)))
 setDisabled >
 add (waitAction 450) >
 addDep (animBuildAction "entomb") >
-add (waitAction 2150) > 
+add (waitAction 3050) > 
 addDep (inflictStatusAction (frozenStatus 4)))
 
 \shatter <- (addAbility "shatter" "Shatter" "Single" 0 >

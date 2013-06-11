@@ -343,7 +343,7 @@ setELevel 16 >
 modStat "BattlePower" -3 >
 modStat "Fire" -20 >
 modStat "Water" 155 >
-modStat "MaxHP" 3000 >
+modStat "MaxHP" 2500 >
 setGold 2500 >
 setBoss >
 RolandAI >

@@ -21,7 +21,9 @@ import bladequest.graphics.BattleAnimObjState.PosTypes;
 import bladequest.graphics.BattleAnimObject;
 import bladequest.graphics.BattleAnimObject.Types;
 import bladequest.graphics.BattleSprite.faces;
+import bladequest.graphics.BitmapFrame;
 import bladequest.system.Recyclable;
+import bladequest.world.BattleAnimations;
 import bladequest.world.DamageTypes;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
@@ -227,22 +229,13 @@ public class seFrozen extends StatusEffect
 	}
 	public void onRender(PlayerCharacter c)
 	{
-		
-		// full size is a bit big... scale it a bit.
-		int width = (int)(c.getWidth()/2.1);
-		int height =(int)(c.getHeight()/2.1);
-		
-		Point drawPoint = c.getPosition(true);
-		Rect r = new Rect(drawPoint.x -width, drawPoint.y-height,
-						  drawPoint.x +width, drawPoint.y+height);
-		
+		Rect r = BattleAnimations.getCharacterIceCube(c);
 		//bitch, you frozen
-		Bitmap iceCube = Global.bitmaps.get("icecube");		
-		Rect iceCubeRect = new Rect(0,0,26,29);
+		BitmapFrame iceblock = BattleAnimations.getIceBlock();
 		
 		Global.setvpToScreen(r);
 		
-		Global.renderer.drawBitmap(iceCube, iceCubeRect, r, null, false);
+		Global.renderer.drawBitmap(iceblock.bitmap, iceblock.srcRect, r, null, false);
 	}
 
 }
