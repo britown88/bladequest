@@ -28,7 +28,7 @@ public class actDisableBattleMusic extends Action {
 		@Override
 		public Object deserialize(Deserializer deserializer) {
 			Global.battleMusicListener = new DisabledBattleMusicListener();
-			return null;
+			return Global.battleMusicListener;
 		}
 		
 	}
@@ -64,6 +64,11 @@ public class actDisableBattleMusic extends Action {
 		@Override
 		public void onSerialize(Serializer serializer) {
 			//XD LOL OMG
+		}
+		@Override
+		public void onBattleUnload() {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 	

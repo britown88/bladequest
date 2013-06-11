@@ -1032,10 +1032,15 @@ public class Global
 				BladeSong.instance().play("victory", true, true, 0);
 			}
 
+			
+			@Override
+			public void onBattleUnload() {
+				BladeSong.instance().fadeOut(2.0f);
+			}			
+			
 			@Override
 			public void onBattleEnd() {
 				BladeSong.instance().play(interruptedSong, true, true, 1.0f);
-				Global.screenFader.fadeIn(1.0f);
 			}
 
 			@Override

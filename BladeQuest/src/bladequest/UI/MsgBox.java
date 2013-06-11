@@ -15,7 +15,7 @@ public class MsgBox extends MenuPanel
 	private String msg;
 
 	private Paint txtPaint, txtPaintCenter;	
-	private static int buffer = 6;
+	private static int buffer = 8;
 	public static int msgBoxHeight = 96;
 	
 	private List<String> rowList, msgQueue;

@@ -622,7 +622,8 @@ public class Battle
 						p.endBattle();
 					}				
 
-					musicListener.onBattleEnd();
+					musicListener.onBattleUnload();
+					Global.screenFader.fadeIn(1.0f);
 					
 					Global.GameState = States.GS_WORLDMOVEMENT;	
 				}		
@@ -1014,7 +1015,7 @@ public class Battle
 		battleOver = true;
 		Global.screenFader.setFadeColor(255, 0, 0, 0);
 		Global.screenFader.fadeOut(2.0f);
-		BladeSong.instance().fadeOut(2.0f);
+		musicListener.onBattleEnd();
 		clearBattleOnlyEffects();
 	}
 	

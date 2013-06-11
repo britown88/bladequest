@@ -61,6 +61,12 @@ public class actSetBattleMusic extends Action {
 			public void onRemove() {
 				//serialization bullshit
 			}
+
+			@Override
+			public void onBattleUnload() {
+				// TODO Auto-generated method stub
+				
+			}
 		};
 	}
 
