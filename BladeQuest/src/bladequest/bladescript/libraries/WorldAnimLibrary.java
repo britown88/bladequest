@@ -84,5 +84,11 @@ public class WorldAnimLibrary
 		
 		return WorldAnimations.buildShatter(new Point(32*4+80, 80), pList, 4, 30.0f);
 	}
-
+	
+	
+	public static AnimationBuilder genIceBarrage(int value)
+	{
+		return WorldAnimations.buildIceBarrage();
+	}
+	
 }

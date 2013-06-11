@@ -3,6 +3,7 @@ package bladequest.world;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -414,4 +415,112 @@ public class WorldAnimations
 		}.initialize();
 	}
 
+	public static AnimationBuilder buildIceBarrage()
+	{
+		return new AnimationBuilder()
+		{
+			public BattleAnim buildAnimation(BattleEventBuilder builder) {
+
+				//everything is at a -45 degree angle, give or take a couple degrees.
+				//generate more and more and more icicles, and make them poof into small snow clouds on impact that fade gracefully up at an angle.
+				
+				BattleAnim out = new BattleAnim(1000.0f); //working in milliseconds
+				
+				final int icicleCount = 50;
+				final float iceStormLength = 2500;
+				final float icicleLife = 500;  
+				
+				Bitmap icicleBitmap = Global.bitmaps.get("icicle"); 
+				Rect icicleRect = new Rect(0,0,30,80);	
+				
+				Bitmap icePoof = Global.bitmaps.get("particles");
+				Rect poofRect = new Rect(1,13,13,24);
+				
+				for (int i = 0; i < icicleCount; ++i) 
+				{
+					BattleAnimObject icicle = new BattleAnimObject(Types.Bitmap, false, icicleBitmap);
+					BattleAnimObject poofObj = new BattleAnimObject(Types.Bitmap, false, icePoof);
+					
+					
+					float angle = Global.rand.nextFloat() * 10.0f + 65.0f;
+					double angRad = (angle) * (Math.PI/180.0f);
+					
+					float xDir = (float)Math.cos(angRad);
+					float yDir = (float)Math.sin(angRad);
+					
+					float reflY = yDir * -1;
+					
+					final int perspectiveSize = 80;
+					final int hitBuffer = 300;
+					//a bit of buffer on the end so as to not mess with the UI
+					float targetX = (float)(hitBuffer + Global.rand.nextInt(Global.vpWidth-hitBuffer-64));
+					float targetY = perspectiveSize + Global.rand.nextInt(Global.vpHeight - perspectiveSize-32);
+					
+					float startX = targetX - (xDir * 400.0f);
+					float startY = targetY - (yDir * 400.0f);
+					
+					
+					
+					
+					float t = ((float)i)/(icicleCount-1);
+
+					//start state
+					BattleAnimObjState state = new BattleAnimObjState((int)(t * iceStormLength), PosTypes.Screen);
+					state.size = new Point(icicleRect.width()/3, icicleRect.height()/3);
+					state.pos1 = new Point((int)startX, (int)startY);
+					state.argb(255, 255, 255, 255);
+					state.rotation = 270+angle;  //angle += 270
+					state.setBmpSrcRect(icicleRect.left, icicleRect.top, icicleRect.right, icicleRect.bottom);
+					icicle.addState(state);
+					//end state
+					int hitTime = (int)(t * iceStormLength+ icicleLife);
+					state = new BattleAnimObjState((int)(hitTime), PosTypes.Screen);
+					state.size = new Point(icicleRect.width()/3, icicleRect.height()/3);
+					state.pos1 = new Point((int)targetX, (int)targetY);
+					state.argb(255, 255, 255, 255);
+					state.rotation = 270+angle;
+					state.setBmpSrcRect(icicleRect.left, icicleRect.top, icicleRect.right, icicleRect.bottom);
+					icicle.addState(state);					
+
+					icicle.interpolateLinearly();
+					
+					int poofCount = Global.rand.nextInt(2) + 1;
+					
+					for (int j = 0; j < poofCount; ++j)
+					{
+						
+						float endX = targetX + xDir * 8.0f + Global.rand.nextFloat() * 3.0f - 1.5f;
+						float endY = targetY + reflY * 8.0f + Global.rand.nextFloat() * 3.0f - 1.5f;
+
+						int rot = Global.rand.nextInt(360);
+						state = new BattleAnimObjState(hitTime, PosTypes.Screen);
+						state.size = new Point(poofRect.width(), poofRect.height());
+						state.pos1 = new Point((int)targetX, (int)targetY);
+						state.argb(196, 255, 255, 255);
+						state.rotation = rot;
+						state.setBmpSrcRect(poofRect.left, poofRect.top, poofRect.right, poofRect.bottom);
+						
+						poofObj.addState(state);
+						
+						int left = 200 + Global.rand.nextInt(100);
+						
+						state = new BattleAnimObjState(hitTime + left, PosTypes.Screen);
+						state.size = new Point(poofRect.width(), poofRect.height());
+						state.pos1 = new Point((int)endX, (int)endY);
+						state.argb(0, 255, 255, 255);
+						state.rotation = rot + Global.rand.nextInt(10) - 5;
+						state.setBmpSrcRect(poofRect.left, poofRect.top, poofRect.right, poofRect.bottom);						
+						
+						poofObj.addState(state);
+					}
+					
+					out.addObject(icicle);
+					out.addObject(poofObj);
+				}				
+				
+				return out;
+			}
+		};
+	}
+	
 }

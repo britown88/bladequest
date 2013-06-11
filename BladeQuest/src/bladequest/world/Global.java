@@ -1234,10 +1234,6 @@ public class Global
 	}
 	
 	
-	
-	//TODO: Script this.
-	
-	
 	public static Ability getSaytrReversalActualAttack()
 	{
 		Ability a = new Ability("reversal", "Reversal", TargetTypes.Single, 0, false);

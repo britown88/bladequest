@@ -62,7 +62,7 @@ public class ScreenFilter extends Serializable {
 			for (int i = 0; i < out.activeFilters; ++i)
 			{
 				out.filters[i] = new float[20];
-				for (int j = 0; j < 20; ++i)
+				for (int j = 0; j < 20; ++j)
 				{
 					out.filters[i][j] = deserializer.readFloat();	
 				}
@@ -81,7 +81,7 @@ public class ScreenFilter extends Serializable {
 			{
 				storedFilterSets.add(deserializeFilterSet(deserializer));
 			}
-			calculateFilter();
+			current = calculateFilter();
 			if (Global.map != null && Global.map.isLoaded())
 			{
 				Global.map.invalidateTiles();	
