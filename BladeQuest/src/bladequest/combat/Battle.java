@@ -22,8 +22,8 @@ import bladequest.combat.triggers.Condition;
 import bladequest.combat.triggers.Event;
 import bladequest.combatactions.CombatActionBuilder;
 import bladequest.enemy.Enemy;
-import bladequest.graphics.ScreenFilter;
 import bladequest.graphics.BattleSprite.faces;
+import bladequest.graphics.ScreenFilter;
 import bladequest.observer.ObserverUpdatePool;
 import bladequest.sound.BladeSong;
 import bladequest.statuseffects.StatusEffect;
@@ -87,6 +87,8 @@ public class Battle
 	
 	private Rect enemyArea;
 	
+	private BattleMusicListener musicListener;
+	
 	//gfx
 	private Paint selectPaint;
 	private Paint statsText, smallNameText, nameText, battleText, grayBattleText, enemyBattleText,nameDisplayPaint;
@@ -122,7 +124,7 @@ public class Battle
 	}
 	
 	
-	public Battle()
+	public Battle(BattleMusicListener musicListener)
 	{
 		stateMachine = new BattleStateMachine();
 		enemyArea = Global.vpToScreen(new Rect(0,0,partyPos.x-partyFrameBuffer, Global.vpHeight-frameMinHeight));
@@ -135,8 +137,9 @@ public class Battle
 		
 		Global.screenFader.clear();
 		
-		interruptedSong = BladeSong.instance().getCurrentSong();
-		BladeSong.instance().stop();
+		this.musicListener = musicListener;
+		
+		this.musicListener.onStart();
 		
 		updatePool = new ObserverUpdatePool<Condition>();		
 		
@@ -621,8 +624,7 @@ public class Battle
 						p.endBattle();
 					}				
 
-					BladeSong.instance().play(interruptedSong, false, true, 1.0f);
-					Global.screenFader.fadeIn(1.0f);
+					musicListener.onBattleEnd();
 					
 					Global.GameState = States.GS_WORLDMOVEMENT;	
 				}		
@@ -909,8 +911,9 @@ public class Battle
 	{
 		outcome = Outcome.Victory;
 		messageQueue.clear();
-		//play victory music
-		BladeSong.instance().play("victory", true, true, 0);
+		
+		musicListener.onVictory();
+
 		clearBattleOnlyEffects();
 		//get characters still in the battle 
 		List<PlayerCharacter> aliveChars = new ArrayList<PlayerCharacter>();

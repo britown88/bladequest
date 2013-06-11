@@ -60,6 +60,7 @@ import bladequest.combat.Battle;
 import bladequest.combat.BattleCalc.AccuracyType;
 import bladequest.combat.BattleCalc.DamageReturnType;
 import bladequest.combat.BattleEventBuilder;
+import bladequest.combat.BattleMusicListener;
 import bladequest.combat.triggers.Trigger;
 import bladequest.enemy.Enemy;
 import bladequest.graphics.AnimatedBitmap;
@@ -986,27 +987,58 @@ public class Global
 	
 	public static void beginBattle(String en, boolean allowGameOver)
 	{
+		Encounter e = Global.encounters.get(en);
+		
+		beginBattle(en, allowGameOver, new BattleMusicListener()
+		{
+			Encounter e;
+			String interruptedSong;
+			
+			BattleMusicListener initialize(Encounter e)
+			{
+				this.e = e;
+				return this;
+			}
+			
+			@Override
+			public void onStart() {
+				interruptedSong = BladeSong.instance().getCurrentSong();
+				
+				if (e.getMusic() != null)
+				{
+					BladeSong.instance().play(e.getMusic(), true, true, 0);
+				}
+				else
+				{
+					if(e.isBossFight)
+						BladeSong.instance().play("boss", true, true, 0);
+					else
+						BladeSong.instance().play("battle", true, true, 0);
+				}						
+			}
+
+			@Override
+			public void onVictory() {
+				//play victory music
+				BladeSong.instance().play("victory", true, true, 0);
+			}
+
+			@Override
+			public void onBattleEnd() {
+				BladeSong.instance().play(interruptedSong, false, true, 1.0f);
+				Global.screenFader.fadeIn(1.0f);
+			}
+			
+		}.initialize(e));
+		
+	}
+	public static void beginBattle(String en, boolean allowGameOver, BattleMusicListener musicListener)
+	{
 		encounter = en;
 		GameState = States.GS_BATTLETRANSITION;
 		
 		
-		battle = new Battle();
-		
-		Encounter e = encounters.get(en);
-		
-		
-		if (e.getMusic() != null)
-		{
-			BladeSong.instance().play(e.getMusic(), true, true, 0);
-		}
-		else
-		{
-			if(e.isBossFight)
-				BladeSong.instance().play("boss", true, true, 0);
-			else
-				BladeSong.instance().play("battle", true, true, 0);
-		}		
-		
+		battle = new Battle(musicListener);
 		battle.startBattle(encounter, allowGameOver);
 	}
 	
