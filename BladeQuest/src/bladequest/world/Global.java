@@ -1035,12 +1035,12 @@ public class Global
 			
 			@Override
 			public void onBattleUnload() {
-				BladeSong.instance().fadeOut(2.0f);
+				BladeSong.instance().play(interruptedSong, true, true, 1.0f);
 			}			
 			
 			@Override
 			public void onBattleEnd() {
-				BladeSong.instance().play(interruptedSong, true, true, 1.0f);
+				BladeSong.instance().fadeOut(2.0f);				
 			}
 
 			@Override

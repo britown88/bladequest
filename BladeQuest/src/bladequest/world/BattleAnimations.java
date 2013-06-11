@@ -24,22 +24,46 @@ public class BattleAnimations
 	public static void createAnimationBuilders()
 	{
 		Global.animationBuilders = new HashMap<String, AnimationBuilder>();
-		Global.animationBuilders.put("icebarrage", getIceBarrage());
 		Global.animationBuilders.put("antidote", getAntidoteAnim());
-		Global.animationBuilders.put("potion", getPotionAnim());
-		Global.animationBuilders.put("drain", getDrainAnim());
-		Global.animationBuilders.put("heal", getHealAnim());
-		Global.animationBuilders.put("ignite", getIgniteAnim());
-		Global.animationBuilders.put("igniteSmoke", getIgniteSmokeAnim());
-		Global.animationBuilders.put("entomb", getEntombAnim());
-		Global.animationBuilders.put("gale", getGaleAnim());
-		Global.animationBuilders.put("trickery", getTrickeryAnim());
-		Global.animationBuilders.put("provoke", getProvokeAnim());
-		Global.animationBuilders.put("tranquilizer", getTranquilizerAnim());
 		Global.animationBuilders.put("chilllasers", getChillLasers());
-		Global.animationBuilders.put("chilliceblock", getChillIceBlock());
-		
+		Global.animationBuilders.put("chilliceblock", getChillIceBlock());		
+		Global.animationBuilders.put("drain", getDrainAnim());
+		Global.animationBuilders.put("entomb", getEntombAnim());
+		Global.animationBuilders.put("gale", getGaleAnim());		
+		Global.animationBuilders.put("heal", getHealAnim());
+		Global.animationBuilders.put("icebarrage", getIceBarrage());
+		Global.animationBuilders.put("ignite", getIgniteAnim());
+		Global.animationBuilders.put("igniteSmoke", getIgniteSmokeAnim());		
+		Global.animationBuilders.put("potion", getPotionAnim());
+		Global.animationBuilders.put("provoke", getProvokeAnim());
+		Global.animationBuilders.put("redcard", getRedCardAnim());
+		Global.animationBuilders.put("tranquilizer", getTranquilizerAnim());
+		Global.animationBuilders.put("trickery", getTrickeryAnim());
 	}
+	
+
+	public static AnimatedBitmap getRedCard()
+	{
+		return new AnimatedBitmap()	
+		{
+			BitmapFrame[] frames;
+			{
+				final int height = 20;
+				final int width = 10;
+				
+				frames = new BitmapFrame[6];
+				for (int i = 0; i < 6; ++i)
+				{
+					frames[i] = new BitmapFrame(Global.bitmaps.get("redCard"),new Rect(i*width, 0, (i+1)*width, height));
+				}
+			}
+			@Override
+			public BitmapFrame[] getFrames() {
+				return frames;
+			}
+			
+		};
+	}	
 	
 	public static AnimatedBitmap getBeserkerBase()
 	{
@@ -179,7 +203,79 @@ public class BattleAnimations
 			
 		};
 	}
+
 	
+	public static AnimationBuilder getRedCardAnim()
+	{
+		return new AnimationBuilder()
+		{
+
+			@Override
+			public BattleAnim buildAnimation(BattleEventBuilder builder) {
+				BitmapFrame [] frames = getRedCard().getFrames();
+				
+				Bitmap bmp = frames[0].bitmap;
+				
+				final int spins = 5;
+				final int frameTime = 45;
+				final int fadeTime = 250;
+				final int cardHeight = -55;
+				final int cardOffsetX = -24;
+				
+				BattleAnim out = new BattleAnim(1000.0f);
+				
+				BattleAnimObject redCard = new BattleAnimObject(Types.Bitmap, false, bmp);
+				
+				int time = 0;
+				
+				for (int i = 0; i < spins; ++i)
+				{
+					for (BitmapFrame frame : frames)
+					{
+						Rect r = frame.srcRect;
+						BattleAnimObjState state = new BattleAnimObjState(time, PosTypes.Source);
+						time += frameTime;
+						state.size = new Point(r.width(), r.height());
+						state.pos1 = new Point(cardOffsetX, cardHeight);
+						state.argb(255, 255, 255, 255);
+						state.rotation = 0;  //angle += 270
+						state.setBmpSrcRect(r.left, r.top, r.right, r.bottom);
+						redCard.addState(state);
+					}
+				}
+				
+				Rect r = frames[0].srcRect;
+				BattleAnimObjState state = new BattleAnimObjState(time, PosTypes.Source);
+				state.size = new Point(r.width(), r.height());
+				state.pos1 = new Point(cardOffsetX, cardHeight);
+				state.argb(255, 255, 255, 255);
+				state.rotation = 0;  //angle += 270
+				state.setBmpSrcRect(r.left, r.top, r.right, r.bottom);
+				redCard.addState(state);
+				
+				state = new BattleAnimObjState(time + fadeTime, PosTypes.Source);
+				state.size = new Point(r.width(), r.height());
+				state.pos1 = new Point(cardOffsetX, cardHeight);
+				state.argb(255, 255, 255, 255);
+				state.rotation = 0;  //angle += 270
+				state.setBmpSrcRect(r.left, r.top, r.right, r.bottom);
+				redCard.addState(state);				
+				
+				state = new BattleAnimObjState(time + fadeTime*2, PosTypes.Source);
+				state.size = new Point(0, 0);
+				state.pos1 = new Point(cardOffsetX, cardHeight);
+				state.argb(255, 255, 255, 255);
+				state.rotation = 0;  //angle += 270
+				state.setBmpSrcRect(r.left, r.top, r.right, r.bottom);
+				redCard.addState(state);				
+				
+				out.addObject(redCard);
+				
+				return out;
+			}
+			
+		};
+	}
 	public static AnimationBuilder getIceBarrage()
 	{
 		return new AnimationBuilder()

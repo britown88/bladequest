@@ -16,7 +16,6 @@ public interface AnimatedBitmap {
 			BitmapFrame[] frames = animBitmap.getFrames();
 			BattleAnimObject baobj = new BattleAnimObject(Types.Bitmap, false, frames[0].bitmap);
 			
-			
 			//hard-code to repeat last....
 			for(int i = 0; i < frames.length+1; ++i)
 			{
