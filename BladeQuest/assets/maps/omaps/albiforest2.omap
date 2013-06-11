@@ -41,6 +41,8 @@ createCliffJumpBarrier x (y > add 1)
 
 
 
+
+
 #!OBJ 17 15
 \objName$17x15$ <- "name"
 \name$17x15$ <- newObject objName$17x15$ 17 15
@@ -63,7 +65,7 @@ addAction (allowSaving 0)
 state1$3x0$ 0
 name$3x0$ > createState >
 addAction (fadeControl 0.5 255 0 0 0 true true) >
-addAction (teleportParty name$3x0$ 3 48 "albiforest") >
+addAction (teleportParty name$3x0$ 3 48 "albiforestnight") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
 \runstate1$3x0$ <- state1$3x0$ 0
@@ -75,8 +77,17 @@ addAction (message "|aramis|: \nAre you even paying attention there, kid?") >
 addAction (message "Footsteps led the other way!") >
 addAction (createPath "party" true "D")
 
-
 \runstate2$3x0$ <- state2$3x0$ 0
+
+state3$3x0$ 0
+name$3x0$ > createState >
+addSwitchCondition "albijoyscenedone" >
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$3x0$ 3 48 "albiforestnight") >
+addAction (fadeControl 0.5 255 0 0 0 false true)
+
+\runstate3$3x0$ <- state3$3x0$ 0
+
 
 #!OBJ 5 1
 \name$5x1$ <- cliffJumpLeft 5 1
@@ -92,11 +103,24 @@ state1$3x17$ 0
 name$3x17$ > createState >
 setCollisionData true true true true >
 setSprite "chest" >
-setAnimated false
-
+setAnimated false >
+setImageIndex 0 >
+addAction (switchControl "albiforestchest3" true) >
+addAction (message "Found a 500G!") >
+addAction (modifyGold 500)
 
 \runstate1$3x17$ <- state1$3x17$ 0
-#!OBJ 7 11
+
+state2$3x17$ 0
+name$3x17$ > createState >
+addSwitchCondition "albiforestchest3" >
+setCollisionData true true true true >
+setSprite "chest" >
+setAnimated false >
+setImageIndex 1
+
+
+\runstate2$3x17$ <- state2$3x17$ 0#!OBJ 7 11
 \objName$7x11$ <- "aramis"
 \name$7x11$ <- newObject objName$7x11$ 7 11
 
@@ -251,6 +275,14 @@ addAction (createPath "party" true "D")
 
 
 \runstate2$16x14$ <- state2$16x14$ 0
+
+state3$16x14$ 0
+name$16x14$ > createState >
+addSwitchCondition "albijoyscenedone"
+
+
+\runstate3$16x14$ <- state3$16x14$ 0
+
 #!OBJ 8 2
 \objName$8x2$ <- "joy"
 \name$8x2$ <- newObject objName$8x2$ 8 2
@@ -308,7 +340,6 @@ setIgnorePartyOnMove true >
 addAction (message "Woman's Voice: \nAAAAAAAH!!! HEEEEELP!!!") >
 addAction (playMusic "boss" true true 0.0) >
 addAction (switchControl "albiaramis2" true) >
-addAction (wait 1.0) >
 addAction (createPath "aramis2" true "L") >
 addAction (openBubble "exclam" "aramis2" 1.0 false true) >
 addAction (message "|aramis|: \nOver there!") >
@@ -346,8 +377,9 @@ addAction (createPath "aramis2" false "u") >
 addAction (createPath "party" true "u") >
 addAction (wait 0.5) >
 addAction (message "Satyr: If you're all done chatting, I've got a blade for you to meet!") >
+addAction (setBattleMusic ([x] "") ([x] playSong "victory" true true 0.0) ([x] fadeMusic 2.0)) >
 addAction (startBattle "satyrboss" true) >
-addAction (pauseMusic 0.0) >
+addAction (disableBattleMusic 0) >
 addAction (switchControl "albisatyrfought" true) >
 addAction (restoreParty 0) >
 addAction (wait 1.0) >

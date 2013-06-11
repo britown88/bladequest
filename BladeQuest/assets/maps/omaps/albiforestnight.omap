@@ -42,6 +42,7 @@ createCliffJumpBarrier x (y > add 1)
 
 
 
+
 #!OBJ 10 5
 \name$10x5$ <- cliffJumpLeft 10 5
 #!OBJ 10 4
@@ -133,7 +134,7 @@ setAnimated false
 state1$4x0$ 0
 name$4x0$ > createState >
 addAction (fadeControl 0.5 255 0 0 0 true true) >
-addAction (teleportParty name$4x0$ 23 28 "albi") >
+addAction (teleportParty name$4x0$ 23 28 "albinight") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
 \runstate1$4x0$ <- state1$4x0$ 0
@@ -143,11 +144,14 @@ addAction (fadeControl 0.5 255 0 0 0 false true)
 
 state1$3x49$ 0
 name$3x49$ > createState >
-addAction (message "|luc|: \nGoldenbush is pretty common.") >
-addAction (message "I don't need to go this deep into the forest to find some!") >
-addAction (createPath "party" true "U")
+addAction (fadeControl 0.5 255 0 0 0 true true) >
+addAction (teleportParty name$3x49$ 3 1 "albiforest2") >
+addAction (pauseMusic 3.0) >
+addAction (fadeControl 0.5 255 0 0 0 false true)
 
 \runstate1$3x49$ <- state1$3x49$ 0
+
+
 #!OBJ 4 5
 \objName$4x5$ <- "name"
 \name$4x5$ <- newObject objName$4x5$ 4 5
@@ -163,29 +167,6 @@ addAction (allowSaving 0)
 
 
 \runstate1$4x5$ <- state1$4x5$ 0
-#!OBJ 5 5
-\objName$5x5$ <- "name"
-\name$5x5$ <- newObject objName$5x5$ 5 5
-
-state1$5x5$ 0
-name$5x5$ > createState >
-setCollisionData true true true true >
-setSprite "man3" >
-setFace "left" >
-addAction (message "John: \nHey, there |luc|!") >
-addAction (message "Just tending to the World Sprout, here.") >
-addAction (messageWithYesNo "Do you want to hear about the World Tree?" >
-	addToBranch 0 (message "Oh, you don't know?") >
-	addToBranch 0 (message "The World Tree is the source of all life!") >
-	addToBranch 0 (message "It's a giant tree in the middle of the ocean!") >
-	addToBranch 0 (message "This plant here is a World Sprout, an actual piece of the World Tree's roots!") >
-	addToBranch 0 (message "They spring up all over the place and have magical powers!") >
-	addToBranch 0 (message "If you meditate at a World Sprout, you can record your memories in the Tree!") >
-	addToBranch 0 (message "Always be sure to stop and meditate at any World Sprouts you find!") >
-	addToBranch 1 (message "Oh, you probably already know all about it!"))
-
-
-\runstate1$5x5$ <- state1$5x5$ 0
 #!OBJ 27 40
 \objName$27x40$ <- "name"
 \name$27x40$ <- newObject objName$27x40$ 27 40
@@ -205,26 +186,6 @@ addSwitchCondition "albiforestchest3"
 
 
 \runstate2$27x40$ <- state2$27x40$ 0
-#!OBJ 12 4
-\objName$12x4$ <- "name"
-\name$12x4$ <- newObject objName$12x4$ 12 4
-
-state1$12x4$ 0
-name$12x4$ > createState >
-setCollisionData true true true true >
-setSprite "goldenbush" >
-addAction (message "Picked some Goldenbush!") >
-addAction (modifyInventory "goldenbush" 1 false) >
-addAction (switchControl "albigoldbushpicked" true)
-
-\runstate1$12x4$ <- state1$12x4$ 0
-
-state2$12x4$ 0
-name$12x4$ > createState >
-addSwitchCondition "albigoldbushpicked"
-
-\runstate2$12x4$ <- state2$12x4$ 0
-
 #!OBJ 5 0
 \objName$5x0$ <- "name"
 \name$5x0$ <- newObject objName$5x0$ 5 0
@@ -232,7 +193,7 @@ addSwitchCondition "albigoldbushpicked"
 state1$5x0$ 0
 name$5x0$ > createState >
 addAction (fadeControl 0.5 255 0 0 0 true true) >
-addAction (teleportParty name$5x0$ 23 28 "albi") >
+addAction (teleportParty name$5x0$ 23 28 "albinight") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
 \runstate1$5x0$ <- state1$5x0$ 0
@@ -243,7 +204,7 @@ addAction (fadeControl 0.5 255 0 0 0 false true)
 state1$6x0$ 0
 name$6x0$ > createState >
 addAction (fadeControl 0.5 255 0 0 0 true true) >
-addAction (teleportParty name$6x0$ 23 28 "albi") >
+addAction (teleportParty name$6x0$ 23 28 "albinight") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
 \runstate1$6x0$ <- state1$6x0$ 0
@@ -254,7 +215,7 @@ addAction (fadeControl 0.5 255 0 0 0 false true)
 state1$7x0$ 0
 name$7x0$ > createState >
 addAction (fadeControl 0.5 255 0 0 0 true true) >
-addAction (teleportParty name$7x0$ 23 28 "albi") >
+addAction (teleportParty name$7x0$ 23 28 "albinight") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
 \runstate1$7x0$ <- state1$7x0$ 0
@@ -265,7 +226,7 @@ addAction (fadeControl 0.5 255 0 0 0 false true)
 state1$8x0$ 0
 name$8x0$ > createState >
 addAction (fadeControl 0.5 255 0 0 0 true true) >
-addAction (teleportParty name$8x0$ 23 28 "albi") >
+addAction (teleportParty name$8x0$ 23 28 "albinight") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
 \runstate1$8x0$ <- state1$8x0$ 0

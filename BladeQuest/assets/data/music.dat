@@ -7,7 +7,7 @@ addSong "battle" "sound/music/battle.mid" > addIntro "sound/music/intro/battle.m
 addSong "backinblack" "sound/music/blah.ogg"
 addSong "boss" "sound/music/boss.mid" > addIntro "sound/music/intro/boss.mid"
 addSong "carle" "sound/music/carle.mid" > addIntro "sound/music/intro/carle.mid"
-addSong "darkforest" "sound/music/forest.mid" > addIntro "sound/music/intro/darkforest.mid"
+addSong "darkforest" "sound/music/darkforest.mid" > addIntro "sound/music/intro/darkforest.mid"
 addSong "desert" "sound/music/desert.mid" > addIntro "sound/music/intro/desert.mid"
 addSong "fanfare" "sound/music/fanfare.mid"
 addSong "finalbattle" "sound/music/finalbattle.mid" > addIntro "sound/music/intro/finalbattle.mid"

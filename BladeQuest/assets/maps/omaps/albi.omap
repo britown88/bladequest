@@ -19,6 +19,9 @@
 
 
 
+
+
+
 #!OBJ 4 14
 \objName$4x14$ <- "name"
 \name$4x14$ <- newObject objName$4x14$ 4 14
@@ -293,7 +296,8 @@ addAction (messageWithYesNo "Ready to call it a night?" >
 	addToBranch 0 (createPath "party" false "RD") >
 	addToBranch 0 (wait 1.0) >
 	addToBranch 0 (flash 4.0 255 255 0 0 true) >
-	addToBranch 1 (createPath "party" true "D"))
+	addToBranch 0 (disableBattleMusic 0) >
+	addToBranch 1 (createPath "party" true "D") )
 
 \runstate2$13x16$ <- state2$13x16$ 0
 

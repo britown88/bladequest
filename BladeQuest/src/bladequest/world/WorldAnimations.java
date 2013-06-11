@@ -415,10 +415,19 @@ public class WorldAnimations
 		}.initialize();
 	}
 
-	public static AnimationBuilder buildIceBarrage()
+	public static AnimationBuilder buildIceBarrage(int width, int height)
 	{
 		return new AnimationBuilder()
 		{
+			private int width, height;
+			public AnimationBuilder init(int width, int height)
+			{
+				this.width = width;
+				this.height = height;
+				
+				return this;
+			}
+			
 			public BattleAnim buildAnimation(BattleEventBuilder builder) {
 
 				//everything is at a -45 degree angle, give or take a couple degrees.
@@ -431,7 +440,7 @@ public class WorldAnimations
 				final float icicleLife = 500;  
 				
 				Bitmap icicleBitmap = Global.bitmaps.get("icicle"); 
-				Rect icicleRect = new Rect(0,0,30,80);	
+				Rect icicleRect = new Rect(0,0,width*32,height*32);	
 				
 				Bitmap icePoof = Global.bitmaps.get("particles");
 				Rect poofRect = new Rect(1,13,13,24);
@@ -457,9 +466,7 @@ public class WorldAnimations
 					float targetY = perspectiveSize + Global.rand.nextInt(Global.vpHeight - perspectiveSize-32);
 					
 					float startX = targetX - (xDir * 400.0f);
-					float startY = targetY - (yDir * 400.0f);
-					
-					
+					float startY = targetY - (yDir * 400.0f);				
 					
 					
 					float t = ((float)i)/(icicleCount-1);
@@ -520,7 +527,7 @@ public class WorldAnimations
 				
 				return out;
 			}
-		};
+		}.init(width, height);
 	}
 	
 }
