@@ -43,6 +43,8 @@ createCliffJumpBarrier x (y > add 1)
 
 
 
+
+
 #!OBJ 17 15
 \objName$17x15$ <- "name"
 \name$17x15$ <- newObject objName$17x15$ 17 15
@@ -84,9 +86,71 @@ name$3x0$ > createState >
 addSwitchCondition "albijoyscenedone" >
 addAction (fadeControl 0.5 255 0 0 0 true true) >
 addAction (teleportParty name$3x0$ 3 48 "albiforestnight") >
-addAction (fadeControl 0.5 255 0 0 0 false true)
+addAction (createPath "party" true "v") >
+addAction (pauseMusic 2.0) >
+addAction (fadeControl 4.0 255 0 0 0 false false) >
+addAction (panControl 0 -8 4.0 false) >
+addAction (createPath "luc" false "s2RU3LUd") >
+addAction (createPath "joy" false "s2RU2R2U3") >
+addAction (createPath "aramis" true "s2U3RUR2U3l") >
+addAction (wait 0.5) >
+addAction (openBubble "exclam" "aramis" 1.0 false true) >
+addAction (message "|aramis|: \nSomething up?") >
+addAction (createPath "luc" true "r") >
+addAction (message "|luc|: \nI'm not sure if I'm imagining things...") >
+addAction (message "...but it feels like it just got really cold out here...") >
+addAction (createPath "joy" true "r") >
+addAction (message "|joy|: \nI feel it too!") >
+addAction (message "|aramis|: \nYou're both just coming off of a fight.") >
+addAction (message "Of course it's gonna be cold!") >
+addAction (message "|luc|: \nHmmm... maybe...") >
+addAction (wait 0.5) >
+addAction (createPath "luc" false "U4") >
+addAction (panControl 0 -10 2.0 true) >
+addAction (wait 0.5) >
+addAction (flash 1.0 255 150 225 255 true) >
+addAction (playMusic "roland" true true 0.0) >
+addAction (createPath "luc" true "d") >
+addAction (openBubble "exclam" "luc" 1.0 false false) >
+addAction (openBubble "exclam" "aramis" 1.0 false false) >
+addAction (openBubble "exclam" "joy" 1.0 false true) >
+addAction (panControl 0 -11 1.0 false) >
+addAction (createPath "joy" true "S2L") >
+addAction (createPath "aramis" false "S2L2U3") >
+addAction (createPath "joy" true "U4RUl") >
+addAction (message "|joy|: \nWhat on earth was that?!") >
+addAction (openBubble "dots" "aramis" 1.0 false true) >
+addAction (createPath "joy" true "d") >
+addAction (wait 0.5) >
+addAction (message "|aramis|: \nYou know now that you mention it...") >
+addAction (message "It's downright freezing out here!") >
+addAction (wait 0.5) >
+addAction (flash 1.0 255 150 225 255 true) >
+addAction (wait 0.5) >
+addAction (createPath "joy" true "u") >
+addAction (openBubble "exclam" "joy" 1.0 false false) >
+addAction (message "|joy|: Look!!! ") >
+addAction (panControl 1 -14 3.0 false) >
+addAction (createPath "luc" false "W5S2R3U2") >
+addAction (createPath "joy" false "R2URu") >
+addAction (createPath "aramis" true "W8URUR2U") >
+addAction (flash 0.5 255 150 225 255 false) >
+addAction (wait 1.0) >
+addAction (panControl 1 -16 3.0 false) >
+addAction (flash 0.5 255 150 225 255 false) >
+addAction (flash 0.5 255 150 225 255 false) >
+addAction (createPath "luc" true "s2U3") >
+addAction (wait 1.5) >
+addAction (openBubble "exclam" "luc" 1.0 false false) >
+addAction (wait 0.5) >
+addAction (message "|luc|: By Gods...") >
+addAction (message "The village!") >
+addAction (fadeControl 3.0 255 0 0 0 true true)
+
+
 
 \runstate3$3x0$ <- state3$3x0$ 0
+
 
 
 #!OBJ 5 1
@@ -120,7 +184,9 @@ setAnimated false >
 setImageIndex 1
 
 
-\runstate2$3x17$ <- state2$3x17$ 0#!OBJ 7 11
+\runstate2$3x17$ <- state2$3x17$ 0
+
+#!OBJ 7 11
 \objName$7x11$ <- "aramis"
 \name$7x11$ <- newObject objName$7x11$ 7 11
 

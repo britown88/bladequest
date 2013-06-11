@@ -2,7 +2,7 @@
 size 30 50
 tileset Forest
 displayname "Albi Forest"
-BGM darkforest
+BGM inherit
 [tiles]
 t 0 0 0 0 0 0 0 0 0 
 t 1 0 0 0 0 0 0 0 0 

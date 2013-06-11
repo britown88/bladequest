@@ -2,6 +2,7 @@
 
 
 
+
 #!OBJ 22 3
 \objName$22x3$ <- "name"
 \name$22x3$ <- newObject objName$22x3$ 22 3
@@ -139,6 +140,7 @@ name$31x24$ > createState >
 addSwitchCondition "albinight" >
 addAction (fadeControl 0.5 255 0 0 0 true true) >
 addAction (teleportParty name$31x24$ 13 17 "albinight") >
+addAction (playMusic "darkforest" true true 3.0) >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
 \runstate3$31x24$ <- state3$31x24$ 0

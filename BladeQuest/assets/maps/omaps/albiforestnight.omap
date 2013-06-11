@@ -43,6 +43,7 @@ createCliffJumpBarrier x (y > add 1)
 
 
 
+
 #!OBJ 10 5
 \name$10x5$ <- cliffJumpLeft 10 5
 #!OBJ 10 4
@@ -230,3 +231,52 @@ addAction (teleportParty name$8x0$ 23 28 "albinight") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
 \runstate1$8x0$ <- state1$8x0$ 0
+#!OBJ 2 43
+\objName$2x43$ <- "joy"
+\name$2x43$ <- newObject objName$2x43$ 2 43
+
+state1$2x43$ 0
+name$2x43$ > createState
+
+\runstate1$2x43$ <- state1$2x43$ 0
+
+state2$2x43$ 0
+name$2x43$ > createState >
+addSwitchCondition "albijoyscenedone" >
+setSprite "joy"
+
+
+\runstate2$2x43$ <- state2$2x43$ 0
+
+#!OBJ 3 45
+\objName$3x45$ <- "aramis"
+\name$3x45$ <- newObject objName$3x45$ 3 45
+
+state1$3x45$ 0
+name$3x45$ > createState
+
+\runstate1$3x45$ <- state1$3x45$ 0
+
+state2$3x45$ 0
+name$3x45$ > createState >
+addSwitchCondition "albijoyscenedone" >
+setSprite "aramis"
+
+
+\runstate2$3x45$ <- state2$3x45$ 0
+#!OBJ 4 41
+\objName$4x41$ <- "luc"
+\name$4x41$ <- newObject objName$4x41$ 4 41
+
+state1$4x41$ 0
+name$4x41$ > createState
+
+\runstate1$4x41$ <- state1$4x41$ 0
+
+state2$4x41$ 0
+name$4x41$ > createState >
+addSwitchCondition "albijoyscenedone" >
+setSprite "luc"
+
+
+\runstate2$4x41$ <- state2$4x41$ 0
