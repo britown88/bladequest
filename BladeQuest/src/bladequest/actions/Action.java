@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Action 
+public abstract class Action 
 {
 	protected enum YesNoResult{Yes, No, Unknown}
 	
@@ -128,14 +128,8 @@ public class Action
 		loopBranches = new ArrayList<Boolean>();
 	}
 	
-	public boolean isDone()
-	{
-		return done;
-	}
-	
-	public void run()
-	{
-	}
+	public abstract boolean isDone();
+	public abstract void run();
 	
 	public void reset()
 	{

@@ -1,6 +1,7 @@
 package bladequest.bladescript.libraries;
 
 import bladequest.bladescript.LibraryWriter;
+import bladequest.sound.BladeSong;
 import bladequest.sound.Song;
 import bladequest.world.Global;
 
@@ -29,4 +30,22 @@ public class SoundLibrary
 		return song;
 	}
 
+	
+	public int playSong(String songName, boolean playIntro, boolean loop, float fadeTime)
+	{
+		BladeSong.instance().play(songName, playIntro, loop, fadeTime);
+		return 0;
+	}
+	
+	public static String pushSong() 
+	{
+		Global.pushSong();
+		return BladeSong.instance().getCurrentSong();
+	}
+	public static String popSong() 
+	{
+		Global.popSong();
+		return BladeSong.instance().getCurrentSong();
+	}	
+	
 }

@@ -6,4 +6,5 @@ public interface BattleMusicListener {
    void onVictory();
    void onBattleEnd();
 	
+   void onRemove();
 }

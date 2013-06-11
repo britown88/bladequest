@@ -36,6 +36,7 @@ import bladequest.UI.SaveLoadMenu;
 import bladequest.UI.MainMenu.MainMenu;
 import bladequest.UI.MerchantScreen.MerchantScreen;
 import bladequest.actions.Action;
+import bladequest.actions.actDisableBattleMusic;
 import bladequest.actions.actExpectInput;
 import bladequest.actions.actFadeControl;
 import bladequest.actions.actPauseMusic;
@@ -985,9 +986,17 @@ public class Global
 		return y - ((screenHeight-vpHeight) / 2) + vpWorldPos.y;
 	}
 	
+	public static BattleMusicListener battleMusicListener;
+	
 	public static void beginBattle(String en, boolean allowGameOver)
 	{
 		Encounter e = Global.encounters.get(en);
+		
+		if (battleMusicListener != null)
+		{
+			beginBattle(en, allowGameOver, battleMusicListener); 
+			return;
+		}
 		
 		beginBattle(en, allowGameOver, new BattleMusicListener()
 		{
@@ -1025,8 +1034,13 @@ public class Global
 
 			@Override
 			public void onBattleEnd() {
-				BladeSong.instance().play(interruptedSong, false, true, 1.0f);
+				BladeSong.instance().play(interruptedSong, true, true, 1.0f);
 				Global.screenFader.fadeIn(1.0f);
+			}
+
+			@Override
+			public void onRemove() {
+				
 			}
 			
 		}.initialize(e));
@@ -1049,6 +1063,8 @@ public class Global
         	appRunning = true;
         	
         	saveLoader = new GameSaveLoader();
+        	
+        	saveLoader.registerFactory(actDisableBattleMusic.DisabledBattleMusicListener.tag, new actDisableBattleMusic.DisabledBattleMusicListenerDeserializer());
         	
         	loadResources(); 
         	//createWorld();

@@ -139,8 +139,6 @@ public class Battle
 		
 		this.musicListener = musicListener;
 		
-		this.musicListener.onStart();
-		
 		updatePool = new ObserverUpdatePool<Condition>();		
 		
 		graphicalBattleActionRunner = new BattleActionRunner();
@@ -661,6 +659,9 @@ public class Battle
 	
 	public void startBattle(String encounter, boolean allowGameOver)
 	{	
+		
+		this.musicListener.onStart();
+		
 		battleEnding = false;
 		this.allowGameOver = allowGameOver;
 		startTurn = new Event();
