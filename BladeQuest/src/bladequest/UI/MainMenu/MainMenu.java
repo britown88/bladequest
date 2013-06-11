@@ -174,7 +174,12 @@ public class MainMenu
 				
 				selectedPanel = rootCharPlates.touchActionUp(x, y);				
 				//update party order based on charplates order
-				for(int i = 0; i < 4; ++i) Global.party.partyMembers[i] = (PlayerCharacter)rootCharPlates.panels[i].obj;
+				for(int i = 0; i < 4; ++i) 
+				{
+					Global.party.partyMembers[i] = (PlayerCharacter)rootCharPlates.panels[i].obj;
+					if(Global.party.partyMembers[i] != null) Global.party.partyMembers[i].setIndex(i);
+					
+				}
 				if(selectedPanel != null)
 				{
 					selectedChar = (PlayerCharacter)selectedPanel.obj;
@@ -698,7 +703,13 @@ public class MainMenu
 			public void touchActionUp(int x, int y) {
 				MenuPanel selectedPanel = rootCharPlates.touchActionUp(x, y);	
 				//update party order based on charplates order
-				for(int i = 0; i < 4; ++i) Global.party.partyMembers[i] = (PlayerCharacter)rootCharPlates.panels[i].obj;
+				for(int i = 0; i < 4; ++i) 
+				{
+					Global.party.partyMembers[i] = (PlayerCharacter)rootCharPlates.panels[i].obj;
+					if(Global.party.partyMembers[i] != null) Global.party.partyMembers[i].setIndex(i);
+					
+				}
+				
 				//open equip screen with selected character
 				if(selectedPanel != null)
 				{
@@ -946,7 +957,13 @@ public class MainMenu
 			public void touchActionUp(int x, int y) {
 				MenuPanel selectedPanel = rootCharPlates.touchActionUp(x, y);	
 				//update party order based on charplates order
-				for(int i = 0; i < 4; ++i) Global.party.partyMembers[i] = (PlayerCharacter)rootCharPlates.panels[i].obj;
+				for(int i = 0; i < 4; ++i) 
+				{
+					Global.party.partyMembers[i] = (PlayerCharacter)rootCharPlates.panels[i].obj;
+					if(Global.party.partyMembers[i] != null) Global.party.partyMembers[i].setIndex(i);
+					
+				}
+				
 				//open equip screen with selected character
 				if(selectedPanel != null)
 				{

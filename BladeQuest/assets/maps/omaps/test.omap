@@ -7,6 +7,7 @@
 
 
 
+
 #!OBJ 0 0
 \name$0x0$ <- newObject "start" 0 0
 
@@ -58,7 +59,7 @@ state1$3x5$ 0
 name$3x5$ > createState >
 setSpriteFromTile 1 2 >
 setCollisionData true true true true >
-addAction (playAnimationStoppedShort (genWindowShatter 0) "party" "party" 4.0)
+addAction (playAnimation (genIceBarrage 0) "party" "party" false)
 
 \runstate1$3x5$ <- state1$3x5$ 0
 #!OBJ 2 7
