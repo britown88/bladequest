@@ -5,6 +5,8 @@ import bladequest.actions.Action;
 import bladequest.actions.actAllowSaving;
 import bladequest.actions.actAnimation;
 import bladequest.actions.actClearAnimations;
+import bladequest.actions.actDefaultBattleMusic;
+import bladequest.actions.actDisableBattleMusic;
 import bladequest.actions.actElevation;
 import bladequest.actions.actExpectInput;
 import bladequest.actions.actFadeControl;
@@ -31,6 +33,7 @@ import bladequest.actions.actRemoveFilter;
 import bladequest.actions.actResetGame;
 import bladequest.actions.actRestoreParty;
 import bladequest.actions.actSaveMenu;
+import bladequest.actions.actSetBattleMusic;
 import bladequest.actions.actShake;
 import bladequest.actions.actShowScene;
 import bladequest.actions.actStartBattle;
@@ -39,6 +42,7 @@ import bladequest.actions.actTeleportParty;
 import bladequest.actions.actUnloadScene;
 import bladequest.actions.actWait;
 import bladequest.bladescript.LibraryWriter;
+import bladequest.bladescript.ScriptVar;
 import bladequest.graphics.AnimationBuilder;
 import bladequest.world.GameObject;
 import bladequest.world.Global;
@@ -229,7 +233,21 @@ public class GameObjectLibrary
 		return act;
 	}
 	
-	public static Action clearAnimations(int i)
+	
+	public static Action setBattleMusic(ScriptVar onInit, ScriptVar onVictory, ScriptVar onBattleEnd)
+	{
+		return new actSetBattleMusic(onInit, onVictory, onBattleEnd);
+	}
+	
+	public static Action disableBattleMusic(int i)
+	{
+		return new actDisableBattleMusic();
+	}
+	public static Action defaultBattleMusic(int i)
+	{
+		return new actDefaultBattleMusic();
+	}
+ 	public static Action clearAnimations(int i)
 	{
 		return new actClearAnimations();
 	}

@@ -25,6 +25,7 @@ import bladequest.bladescript.libraries.FilterLibrary;
 import bladequest.bladescript.libraries.GameObjectLibrary;
 import bladequest.bladescript.libraries.HigherOrderLibrary;
 import bladequest.bladescript.libraries.MathLibrary;
+import bladequest.bladescript.libraries.SoundLibrary;
 import bladequest.bladescript.libraries.WorldAnimLibrary;
 import bladequest.graphics.Scene;
 import bladequest.graphics.ScreenFilter;
@@ -178,6 +179,7 @@ public class BqMap
 		GameObjectLibrary.publishLibrary(library);
 		WorldAnimLibrary.publishLibrary(library);
 		FilterLibrary.publishLibrary(library);
+		SoundLibrary.publishLibrary(library);
 		
 		return library.getLibrary();
 	}

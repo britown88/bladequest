@@ -1,24 +1,5 @@
 #!HEAD
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #!OBJ 4 14
 \objName$4x14$ <- "name"
 \name$4x14$ <- newObject objName$4x14$ 4 14
@@ -115,7 +96,9 @@ addAction (removeFilter 0) >
 addAction (teleportParty name$15x6$ 28 8 "albiinside") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
-\runstate2$15x6$ <- state2$15x6$ 0#!OBJ 13 16
+\runstate2$15x6$ <- state2$15x6$ 0
+
+#!OBJ 13 16
 \objName$13x16$ <- "name"
 \name$13x16$ <- newObject objName$13x16$ 13 16
 
@@ -179,7 +162,9 @@ addAction (removeFilter 0) >
 addAction (teleportParty name$28x6$ 43 26 "albiinside") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
-\runstate2$28x6$ <- state2$28x6$ 0#!OBJ 22 3
+\runstate2$28x6$ <- state2$28x6$ 0
+
+#!OBJ 22 3
 \objName$22x3$ <- "name"
 \name$22x3$ <- newObject objName$22x3$ 22 3
 
@@ -253,7 +238,7 @@ addAction (messageWithYesNo "Throw a coin in the well and make a wish?" >
 state1$22x29$ 0
 name$22x29$ > createState >
 addAction (fadeControl 0.5 255 0 0 0 true true) >
-addAction (teleportParty name$22x29$ 6 1 "albiforest") >
+addAction (teleportParty name$22x29$ 6 1 "albiforestnight") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
 \runstate1$22x29$ <- state1$22x29$ 0
@@ -264,7 +249,7 @@ addAction (fadeControl 0.5 255 0 0 0 false true)
 state1$23x29$ 0
 name$23x29$ > createState >
 addAction (fadeControl 0.5 255 0 0 0 true true) >
-addAction (teleportParty name$23x29$ 6 1 "albiforest") >
+addAction (teleportParty name$23x29$ 6 1 "albiforestnight") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
 \runstate1$23x29$ <- state1$23x29$ 0
@@ -275,7 +260,7 @@ addAction (fadeControl 0.5 255 0 0 0 false true)
 state1$24x29$ 0
 name$24x29$ > createState >
 addAction (fadeControl 0.5 255 0 0 0 true true) >
-addAction (teleportParty name$24x29$ 6 1 "albiforest") >
+addAction (teleportParty name$24x29$ 6 1 "albiforestnight") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
 \runstate1$24x29$ <- state1$24x29$ 0
@@ -286,7 +271,7 @@ addAction (fadeControl 0.5 255 0 0 0 false true)
 state1$25x29$ 0
 name$25x29$ > createState >
 addAction (fadeControl 0.5 255 0 0 0 true true) >
-addAction (teleportParty name$25x29$ 6 1 "albiforest") >
+addAction (teleportParty name$25x29$ 6 1 "albiforestnight") >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
 \runstate1$25x29$ <- state1$25x29$ 0

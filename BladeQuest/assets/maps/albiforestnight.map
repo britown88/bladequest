@@ -2,7 +2,7 @@
 size 30 50
 tileset Forest
 displayname "Albi Forest"
-BGM forest
+BGM darkforest
 [tiles]
 t 0 0 0 0 0 0 0 0 0 
 t 1 0 0 0 0 0 0 0 0 

@@ -31,9 +31,15 @@ public class SoundLibrary
 	}
 
 	
-	public int playSong(String songName, boolean playIntro, boolean loop, float fadeTime)
+	public static int playSong(String songName, boolean playIntro, boolean loop, float fadeTime)
 	{
 		BladeSong.instance().play(songName, playIntro, loop, fadeTime);
+		return 0;
+	}
+	
+	public static int fadeMusic(float fadeTime)
+	{
+		BladeSong.instance().fadeOut(fadeTime);
 		return 0;
 	}
 	
