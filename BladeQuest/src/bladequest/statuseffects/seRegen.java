@@ -16,6 +16,7 @@ import bladequest.graphics.BattleAnimObjState.PosTypes;
 import bladequest.graphics.BattleAnimObject;
 import bladequest.graphics.BattleAnimObject.Types;
 import bladequest.graphics.BitmapFrame;
+import bladequest.world.BattleAnimations;
 import bladequest.world.DamageTypes;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
@@ -39,7 +40,7 @@ public class seRegen extends StatusEffect {
 	public StatusEffect clone() {return new seRegen(minHeal, maxHeal, duration);}
 	static BattleAnim makeSparkleFairyBullshit(int particleCount)
 	{
-		BitmapFrame[] frames = Global.getSparkleParticle().getFrames();
+		BitmapFrame[] frames = BattleAnimations.getSparkleParticle().getFrames();
 		BattleAnim out = new BattleAnim(60.0f);
 		
 		int particleDelay = 2;

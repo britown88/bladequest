@@ -11,13 +11,14 @@ import bladequest.combat.BattleEvent;
 import bladequest.combat.BattleEventBuilder;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleAnimObjState;
-import bladequest.graphics.BattleAnimObject;
-import bladequest.graphics.BitmapFrame;
 import bladequest.graphics.BattleAnimObjState.PosTypes;
+import bladequest.graphics.BattleAnimObject;
 import bladequest.graphics.BattleAnimObject.Types;
 import bladequest.graphics.BattleSprite.faces;
+import bladequest.graphics.BitmapFrame;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.world.Ability;
+import bladequest.world.BattleAnimations;
 import bladequest.world.DamageTypes;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
@@ -57,7 +58,7 @@ public class combBerserkerStance extends Stance {
 	static BattleAnim makeBeserkerAnim()
 	{
 		final int particleCount= 40;
-		BitmapFrame[] frames = Global.getBeserkerSwords().getFrames();
+		BitmapFrame[] frames = BattleAnimations.getBeserkerSwords().getFrames();
 		BattleAnim out = new BattleAnim(60.0f);
 		
 		int particleDelay = 2;
@@ -84,7 +85,7 @@ public class combBerserkerStance extends Stance {
 		}
 		
 		
-		frames = Global.getBeserkerBase().getFrames();
+		frames = BattleAnimations.getBeserkerBase().getFrames();
 		
 		int baseStart = particleDelay * particleCount + sparkleDelay * frames.length;
 		int baseDelay = 8;

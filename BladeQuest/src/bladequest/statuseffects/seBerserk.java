@@ -19,6 +19,7 @@ import bladequest.graphics.BattleAnimObject;
 import bladequest.graphics.BattleAnimObject.Types;
 import bladequest.graphics.BitmapFrame;
 import bladequest.system.Recyclable;
+import bladequest.world.BattleAnimations;
 import bladequest.world.DamageTypes;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
@@ -75,7 +76,7 @@ public class seBerserk extends StatusEffect
 	}
 	BattleAnim getAngerAnim()
 	{
-		BitmapFrame[] frames = Global.getReactionAnger().getFrames();
+		BitmapFrame[] frames = BattleAnimations.getReactionAnger().getFrames();
 		BattleAnim out = new BattleAnim(1000.0f);
 		BattleAnimObject angerBubble = new BattleAnimObject(Types.Bitmap, false, frames[0].bitmap);
 		int frameCount = 0;
