@@ -89,7 +89,8 @@ usableByAll)
 
 
 addDefaultWait item
-  add item (waitAction 450)
+  add item (waitAction 450) >
+  add (setFaceAction "Use" 0)
  
  addDefaultAnimation item
   addDep item (animAction "movetest")
