@@ -22,19 +22,23 @@ public class ScreenShaker
 	
 	public void shake(int intensity, float duration, boolean vibrate)
 	{
-		this.intensity = intensity;
-		this.duration = duration;
-		done = false;
-		shaking = true;
-		startTime = System.currentTimeMillis();
-		
-			
-		
+		if(duration == 0)
+			stopShaking();
+		else
+		{
+			this.intensity = intensity;
+			this.duration = duration;
+			done = false;
+			shaking = true;
+			startTime = System.currentTimeMillis();
+		}
 	}
 	
 	public void stopShaking()
 	{
-		
+		drawDelta.x = 0;
+		shaking = false;
+		done = true;
 	}
 	
 	public boolean isDone()
@@ -44,7 +48,7 @@ public class ScreenShaker
 	
 	public void update()
 	{
-		if(drawDelta.x == 0 && System.currentTimeMillis() - startTime >= duration * 1000.0f)
+		if(duration != -1 && drawDelta.x == 0 && System.currentTimeMillis() - startTime >= duration * 1000.0f)
 		{
 			shaking = false;
 			done = true;

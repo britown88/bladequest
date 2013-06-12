@@ -1,5 +1,6 @@
 #!HEAD
 
+
 #!OBJ 4 14
 \objName$4x14$ <- "name"
 \name$4x14$ <- newObject objName$4x14$ 4 14
@@ -36,7 +37,7 @@ addAction (message "Wishing Well")
 
 \runstate1$21x12$ <- state1$21x12$ 0
 #!OBJ 24 23
-\objName$24x23$ <- "name"
+\objName$24x23$ <- "arthur"
 \name$24x23$ <- newObject objName$24x23$ 24 23
 
 state1$24x23$ 0
@@ -49,6 +50,22 @@ addAction (message "|luc|: \nI'm going to go check it out.") >
 addAction (message "Arthur: \nBe careful!")
 
 \runstate1$24x23$ <- state1$24x23$ 0
+
+state2$24x23$ 0
+name$24x23$ > createState >
+addSwitchCondition "albidesarthurfrozen" >
+setSprite "man3" > 
+setAnimated false >
+setFace "up"
+
+\runstate2$24x23$ <- state2$24x23$ 0
+
+state3$24x23$ 0
+name$24x23$ > createState >
+addSwitchCondition "albidesarthurdead"
+
+\runstate3$24x23$ <- state3$24x23$ 0
+
 #!OBJ 11 6
 \objName$11x6$ <- "name"
 \name$11x6$ <- newObject objName$11x6$ 11 6
@@ -288,18 +305,66 @@ addAction (message "It's locked.")
 
 \runstate1$7x9$ <- state1$7x9$ 0
 #!OBJ 32 14
-\objName$32x14$ <- "name"
-\name$32x14$ <- newObject objName$32x14$ 32 14
+\door$32x14$ <- newObject "door" 32 14
 
 state1$32x14$ 0
-name$32x14$ > createState >
+door$32x14$ > createState >
 setSpriteFromTile 6 4 >
 setCollisionData true true true true >
 addAction (message "It's locked.")
 
-
 \runstate1$32x14$ <- state1$32x14$ 0
-#!OBJ 35 27
+
+
+#-------------ANNE----------------
+\anne$32x14$ <- newObject "anne" 32 14
+
+state2$32x14$ 0
+anne$32x14$ > createState
+
+\runstate2$32x14$ <- state2$32x14$ 0
+
+state3$32x14$ 0
+anne$32x14$ > createState >
+addSwitchCondition "albidesanne" >
+setSprite "woman1"
+
+\runstate3$32x14$ <- state3$32x14$ 0
+
+state4$32x14$ 0
+anne$32x14$ > createState >
+addSwitchCondition "albidesannefrozen" >
+setSprite "woman1" >
+setAnimated false >
+setFace "up"
+
+\runstate4$32x14$ <- state4$32x14$ 0
+
+
+
+#-------------GEORGE----------------
+\george$32x14$ <- newObject "george" 32 14
+
+state5$32x14$ 0
+george$32x14$ > createState
+
+\runstate5$32x14$ <- state5$32x14$ 0
+
+state6$32x14$ 0
+george$32x14$ > createState >
+addSwitchCondition "albidesgeorge" >
+setSprite "man1"
+
+\runstate6$32x14$ <- state6$32x14$ 0
+
+state7$32x14$ 0
+george$32x14$ > createState >
+addSwitchCondition "albidesgeorgefrozen" >
+setSprite "man1" >
+setAnimated false >
+setFace "up"
+
+\runstate7$32x14$ <- state7$32x14$ 0#!OBJ 35 27
 \objName$35x27$ <- "name"
 \name$35x27$ <- newObject objName$35x27$ 35 27
 
@@ -323,3 +388,132 @@ addAction (message "It's locked.")
 
 
 \runstate1$17x21$ <- state1$17x21$ 0
+#!OBJ 24 24
+\objName$24x24$ <- "albi.destroy()"
+\name$24x24$ <- newObject objName$24x24$ 24 24
+
+state1$24x24$ 0
+name$24x24$ > createState >
+addAction (openBubble "qmark" "arthur" 1.0 false false) >
+addAction (createPath "arthur" true "rW3lW3rW3lW3d") >
+addAction (wait 0.5) >
+addAction (openBubble "exclam" "arthur" 0.5 false true) >
+addAction (playAnimation (genIceShot 0) (point 0 0) (point 24 23) false) >
+addAction (createPath "arthur" true "S2lKR") >
+addAction (wait 0.5) >
+addAction (createPath "arthur" false "XrW3lW3") >
+addAction (setFloating "arthur" true 90 4) >
+addAction (changeElevation "arthur" 64 3.0 true) >
+addAction (wait 3.0) >
+addAction (createPath "arthur" false "u") >
+addAction (switchControl "albidesarthurfrozen" true) >
+addAction (flash 0.25 255 150 225 255 true) >
+addAction (wait 2.0) >
+addAction (changeElevation "arthur" 72 0.25 true) >
+addAction (changeElevation "arthur" 0 0.25 true) >
+addAction (setFloating "arthur" false 0 0) >
+addAction (switchControl "albidesarthurdead" true) >
+addAction (wait 1.0) >
+addAction (panControl 5 -8 4.0 false) > #FIRST PAN---------------
+addAction (wait 1.0) >
+addAction (switchControl "albidesgeorge" true) >
+addAction (createPath "george" false "s2D2u") >
+addAction (wait 0.5) >
+addAction (switchControl "albidesanne" true) >
+addAction (createPath "anne" false "s2D") >
+addAction (wait 1.0) >
+addAction (createPath "anne" false "L4") >
+addAction (createPath "george" false "SL5") >
+addAction (wait 0.5) >
+addAction (createPath "anne" false "XrW4lW4") >
+addAction (createPath "george" false "XrW2lW2") >
+addAction (setFloating "anne" true 90 4) >
+addAction (setFloating "george" true 90 4) >
+addAction (changeElevation "anne" 72 0.75 false) >
+addAction (changeElevation "george" 56 0.75 false) >
+addAction (wait 0.5) >
+addAction (flash 0.25 255 150 225 255 true) >
+addAction (switchControl "albidesgeorgefrozen" true) >
+addAction (createPath "george" false "u") >
+addAction (flash 0.25 255 150 225 255 true) >
+addAction (switchControl "albidesannefrozen" true) >
+addAction (createPath "anne" false "u") >
+addAction (panControl 5 -17 4.0 false) > #INN PAN----------------
+addAction (setFloating "anne" false 0 0) >
+addAction (setFloating "george" false 0 0) >
+addAction (changeElevation "anne" 0 0.25 false) >
+addAction (changeElevation "george" 0 0.25 true) >
+addAction (switchControl "albidesgeorge" false) >
+addAction (switchControl "albidesanne" false) >
+addAction (switchControl "albidessarah" true) >
+addAction (switchControl "albideshenry" true) >
+addAction (wait 0.75) >
+addAction (createPath "sarah" false "s2D2lS") >
+addAction (createPath "henry" false "sR4") >
+addAction (wait 1.0) >
+addAction (flash 0.25 255 150 225 255 true) >
+addAction (switchControl "albideshenryfrozen" true) >
+addAction (wait 0.25) >
+addAction (openBubble "exclam" "sarah" 0.5 false true) >
+addAction (createPath "sarah" false "UL3DL5") >
+addAction (wait 1.0) >
+addAction (panControl -18 -17 12.0 false) > #CROSSTOWN PAN-------
+addAction (wait 12.0) >
+addAction (panControl -7 -2 8.0 false) > #LASTHOUSES PAN---------
+addAction (wait 8.0) >
+addAction (panControl 0 0 5.0 false) >#LAST PAN------------------
+addAction (fadeControl 5.0 255 0 0 0 true true)
+
+
+
+\runstate1$24x24$ <- state1$24x24$ 0
+#!OBJ 28 7
+\objName$28x7$ <- "sarah"
+\name$28x7$ <- newObject objName$28x7$ 28 7
+
+state1$28x7$ 0
+name$28x7$ > createState
+
+\runstate1$28x7$ <- state1$28x7$ 0
+
+state2$28x7$ 0
+name$28x7$ > createState >
+addSwitchCondition "albidessarah" >
+setSprite "woman1"
+
+\runstate2$28x7$ <- state2$28x7$ 0
+
+state3$28x7$ 0
+name$28x7$ > createState >
+addSwitchCondition "albidessarahfrozen" >
+setSprite "woman1" >
+setAnimated false >
+setFace "up"
+
+\runstate3$28x7$ <- state3$28x7$ 0
+
+
+#!OBJ 22 9
+\objName$22x9$ <- "henry"
+\name$22x9$ <- newObject objName$22x9$ 22 9
+
+state1$22x9$ 0
+name$22x9$ > createState
+
+\runstate1$22x9$ <- state1$22x9$ 0
+
+state2$22x9$ 0
+name$22x9$ > createState >
+addSwitchCondition "albideshenry" >
+setSprite "child1"
+
+\runstate2$22x9$ <- state2$22x9$ 0
+
+state3$22x9$ 0
+name$22x9$ > createState >
+addSwitchCondition "albideshenryfrozen" >
+setSprite "child1" >
+setAnimated false >
+setFace "right"
+
+\runstate3$22x9$ <- state3$22x9$ 0

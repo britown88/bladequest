@@ -87,6 +87,8 @@ public class ObjectPath
 					addAction(pathActions.get(c));			
 
 			}
+			else if(c == 'X')
+				setLooping(true);
 		}
 	}
 	

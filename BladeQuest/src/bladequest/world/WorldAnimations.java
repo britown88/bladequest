@@ -415,7 +415,7 @@ public class WorldAnimations
 		}.initialize();
 	}
 	
-	public static AnimationBuilder buildIceShot(int x, int y)
+	public static AnimationBuilder buildIceShot()
 	{
 		return new AnimationBuilder()
 		{

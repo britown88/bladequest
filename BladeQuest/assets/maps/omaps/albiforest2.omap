@@ -140,6 +140,7 @@ addAction (flash 0.5 255 150 225 255 false) >
 addAction (wait 1.0) >
 addAction (panControl 1 -16 3.0 false) >
 addAction (flash 0.5 255 150 225 255 false) >
+addAction (wait 0.5) >
 addAction (flash 0.5 255 150 225 255 false) >
 addAction (createPath "luc" true "s2U3") >
 addAction (wait 1.5) >
@@ -147,8 +148,21 @@ addAction (openBubble "exclam" "luc" 1.0 false false) >
 addAction (wait 0.5) >
 addAction (message "|luc|: By Gods...") >
 addAction (message "The village!") >
-addAction (fadeControl 3.0 255 0 0 0 true true)
-
+addAction (fadeControl 3.0 255 0 0 0 true true) >
+addAction (showScene "albi") >
+addAction (fadeControl 3.0 255 0 0 0 false true) >
+addAction (wait 1.0) >
+addAction (flash 1.0 255 150 225 255 true) >
+addAction (wait 1.5) >
+addAction (flash 0.25 255 150 225 255 true) >
+addAction (flash 0.25 255 150 225 255 true) >
+addAction (shakeControl -1.0 2 false) >
+addAction (wait 1.0) >
+addAction (fadeControl 3.0 255 0 0 0 true true) >
+addAction (unloadScene 0) >
+addAction (teleportParty name$3x0$ 24 24 "albinight") >
+addAction (fadeControl 2.0 255 0 0 0 false false) >
+addAction (wait 1.0)
 
 
 \runstate3$3x0$ <- state3$3x0$ 0
