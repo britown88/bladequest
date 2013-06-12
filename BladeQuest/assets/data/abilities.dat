@@ -53,6 +53,7 @@ addDep (breakStanceAction 0))
 
 \redcard <- (addAbility "redcard" "Red Card" "Single" 4 >
 setDesc "Confuses an enemy." >
+add (setFaceAction "Cast" 0) >
 add (waitAction 450) >
 addDep (animBuildAction "redcard") >
 addDep (inflictStatusAction (confuseStatus 4))) #4 == duration
@@ -69,6 +70,7 @@ add (damageAction -1.0 "Magic" > addDamageComponent "Water" 1.0))
 \heal <- (addAbility "heal" "Heal" "Single" 3 >
 useOutsideBattle >
 setDesc "Heal allies with restorative magic." >
+add (setFaceAction "Cast" 0) >
 add (waitAction 450) >
 addDep (animBuildAction "heal") >
 addDep (damageAction -1.0 "Magic"))
@@ -76,6 +78,7 @@ addDep (damageAction -1.0 "Magic"))
 
 \ignite <- (addAbility "ignite" "Ignite" "Single" 4 >
 setDesc "Hits an enemy with an explosive fireball." >
+add (setFaceAction "Cast" 0) >
 add (waitAction 450) >
 addDep (animBuildAction "igniteSmoke") >
 add (waitAction 450) >

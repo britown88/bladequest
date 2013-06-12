@@ -121,6 +121,7 @@ public class Item
 	public Type getType(){return type;}
 	public void addUsableBy(String name){usableBy.add(name);}
 	public List<String> getUsableChars() { return usableBy; }
+	public void clearUseCount() {useCount = 0;}
 	public boolean isUsable(UseTypes useType)
 	{
 		switch(type)

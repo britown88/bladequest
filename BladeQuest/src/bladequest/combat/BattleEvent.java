@@ -108,7 +108,7 @@ public class BattleEvent
 	
 	public void setActionType(PlayerCharacter.Action action)
 	{
-		//mainly to reset to skipped, possibly for beserk??/
+		//mainly to reset to skipped, possibly for berserk??/
 		this.action = action;
 	}
 	

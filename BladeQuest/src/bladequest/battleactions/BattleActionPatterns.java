@@ -1,12 +1,8 @@
 package bladequest.battleactions;
 
 import bladequest.combat.BattleCalc;
-import bladequest.combat.BattleEvent;
 import bladequest.combat.BattleEventBuilder;
 import bladequest.combat.DamageComponent;
-import bladequest.combat.SyncronizableAction;
-import bladequest.graphics.BattleAnim;
-import bladequest.graphics.BattleSprite.faces;
 import bladequest.world.DamageTypes;
 import bladequest.world.Item;
 import bladequest.world.PlayerCharacter;
@@ -21,7 +17,7 @@ public class BattleActionPatterns {
 		{
 			builder.addEventObject(action);
 		}
-		
+		builder.addEventObject(new bactUseItem().addDependency(builder.getLast()));
 		return builder.getLast();
 	}
 	

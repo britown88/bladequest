@@ -25,7 +25,6 @@ import bladequest.enemy.Enemy;
 import bladequest.graphics.BattleSprite.faces;
 import bladequest.graphics.ScreenFilter;
 import bladequest.observer.ObserverUpdatePool;
-import bladequest.sound.BladeSong;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.world.Ability;
 import bladequest.world.Encounter;
@@ -1219,6 +1218,7 @@ public class Battle
 		battleEnding = true;
 		if (!graphicsCleared()) return;
 		
+		clearItemUses();
 		
 		if(isVictory())
 		{
@@ -1234,6 +1234,13 @@ public class Battle
 		}	
 		
 		battleEnding = false;
+	}
+	private void clearItemUses()
+	{
+		for (Item i : Global.party.getInventory())
+		{
+			i.clearUseCount();
+		}
 	}
 	private void nextActor(boolean firstActor)
 	{	
@@ -1262,6 +1269,7 @@ public class Battle
 				selectFirstChar();
 				startTurn.trigger();
 				stateMachine.setState(getWaitingForInputState());
+				clearItemUses();
 				return;
 			}
 			else
