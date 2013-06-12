@@ -91,9 +91,9 @@ public class WorldAnimLibrary
 	}
 	
 	
-	public static AnimationBuilder genIceBarrage(int width, int height)
+	public static AnimationBuilder genIceBarrage(int width, int height, int icicleCount, int stormLength)
 	{
-		return WorldAnimations.buildIceBarrage(width, height);
+		return WorldAnimations.buildIceBarrage(width, height, icicleCount, stormLength);
 	}
 	
 }

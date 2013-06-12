@@ -450,13 +450,11 @@ public class WorldAnimations
 		
 		BattleAnimObject icicle = new BattleAnimObject(Types.Bitmap, false, icicleBitmap);
 		
-		
-		
 		float startX = x - (xDir * 400.0f);
 		float startY = y - (yDir * 400.0f);				
 		
 		//start state
-		BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Target);
+		BattleAnimObjState state = new BattleAnimObjState(time, PosTypes.Target);
 		state.size = new Point(icicleRect.width()/3, icicleRect.height()/3);
 		state.pos1 = new Point((int)startX, (int)startY);
 		state.argb(255, 255, 255, 255);
@@ -464,7 +462,7 @@ public class WorldAnimations
 		state.setBmpSrcRect(icicleRect.left, icicleRect.top, icicleRect.right, icicleRect.bottom);
 		icicle.addState(state);
 		//end state
-		state = new BattleAnimObjState(icicleLife, PosTypes.Target);
+		state = new BattleAnimObjState(time+ icicleLife, PosTypes.Target);
 		state.size = new Point(icicleRect.width()/3, icicleRect.height()/3);
 		state.pos1 = new Point((int)x,(int)y);
 		state.argb(255, 255, 255, 255);
@@ -473,7 +471,7 @@ public class WorldAnimations
 		icicle.addState(state);					
 
 		icicle.interpolateLinearly();
-		
+						
 		anim.addObject(icicle);
 	}
 	
@@ -490,12 +488,12 @@ public class WorldAnimations
 		{
 			BattleAnimObject poofObj = new BattleAnimObject(Types.Bitmap, false, icePoof);
 			
-			float endX = x + xDir * 8.0f + Global.rand.nextFloat() * 3.0f - 1.5f;
-			float endY = y + reflY * 8.0f + Global.rand.nextFloat() * 3.0f - 1.5f;
+			float endX = x + xDir * 14.0f + Global.rand.nextFloat() * 8.0f - 4.0f;
+			float endY = y + reflY * 14.0f + Global.rand.nextFloat() * 8.0f - 4.0f;
 
 			int rot = Global.rand.nextInt(360);
-			BattleAnimObjState state = new BattleAnimObjState(time, PosTypes.Screen);
-			state.size = new Point(poofRect.width(), poofRect.height());
+			BattleAnimObjState state = new BattleAnimObjState(time, PosTypes.Target);
+			state.size = new Point(poofRect.width() * 2, poofRect.height() * 2);
 			state.pos1 = new Point((int)x, (int)y);
 			state.argb(196, 255, 255, 255);
 			state.rotation = rot;
@@ -506,10 +504,10 @@ public class WorldAnimations
 			int left = 200 + Global.rand.nextInt(100);
 			
 			state = new BattleAnimObjState(time + left, PosTypes.Target);
-			state.size = new Point(poofRect.width(), poofRect.height());
+			state.size = new Point(poofRect.width() * 2, poofRect.height() * 2);
 			state.pos1 = new Point((int)endX, (int)endY);
 			state.argb(0, 255, 255, 255);
-			state.rotation = rot + Global.rand.nextInt(10) - 5;
+			state.rotation = rot + Global.rand.nextInt(16) - 8;
 			state.setBmpSrcRect(poofRect.left, poofRect.top, poofRect.right, poofRect.bottom);						
 			
 			poofObj.addState(state);
@@ -518,86 +516,56 @@ public class WorldAnimations
 		}
 	}
 
-	public static AnimationBuilder buildIceBarrage(int width, int height)
+	//generates a storm centered at a target with a specified width and height.
+	//drops the specified number of icicles in that time, to modify the intensity of the storm.
+	//the very last icicle hit with at the time passed in as "iceStormLength" for timing, blocking, etc.
+	public static AnimationBuilder buildIceBarrage(int width, int height, int icicleCount, int iceStormLength)
 	{
 		return new AnimationBuilder()
 		{
-			private int width, height;
-			public AnimationBuilder init(int width, int height)
+			private int width, height, icicleCount, iceStormLength;
+			public AnimationBuilder init(int width, int height, int icicleCount, int iceStormLength)
 			{
 				this.width = width;
 				this.height = height;
+				this.icicleCount = icicleCount;
+				this.iceStormLength = iceStormLength;
 				
 				return this;
 			}
 			
 			public BattleAnim buildAnimation(BattleEventBuilder builder) {
 
-				//everything is at a -45 degree angle, give or take a couple degrees.
 				//generate more and more and more icicles, and make them poof into small snow clouds on impact that fade gracefully up at an angle.
 				
 				BattleAnim out = new BattleAnim(1000.0f); //working in milliseconds
 				
-				final int icicleCount = 50;
-				final float iceStormLength = 2500;
-				final float icicleLife = 500;  
-				
-				Bitmap icicleBitmap = Global.bitmaps.get("icicle"); 
-				Rect icicleRect = new Rect(0,0,width*32,height*32);	
-				
+				final int icicleLife = 500;				
 				for (int i = 0; i < icicleCount; ++i) 
 				{
-					BattleAnimObject icicle = new BattleAnimObject(Types.Bitmap, false, icicleBitmap);
-					
-					
 					float angle = Global.rand.nextFloat() * 10.0f + 65.0f;
 					double angRad = (angle) * (Math.PI/180.0f);
+					
+					int t = 0;
+					if (icicleCount > 1)
+					{
+						t = (i*(iceStormLength-icicleLife)) / (icicleCount-1);	
+					}
 					
 					float xDir = (float)Math.cos(angRad);
 					float yDir = (float)Math.sin(angRad);
 					
-					
-					final int perspectiveSize = 80;
-					final int hitBuffer = 300;
-					//a bit of buffer on the end so as to not mess with the UI
-					float targetX = (float)(hitBuffer + Global.rand.nextInt(Global.vpWidth-hitBuffer-64));
-					float targetY = perspectiveSize + Global.rand.nextInt(Global.vpHeight - perspectiveSize-32);
-					
-					float startX = targetX - (xDir * 400.0f);
-					float startY = targetY - (yDir * 400.0f);				
-					
-					
-					float t = ((float)i)/(icicleCount-1);
-
-					//start state
-					BattleAnimObjState state = new BattleAnimObjState((int)(t * iceStormLength), PosTypes.Screen);
-					state.size = new Point(icicleRect.width()/3, icicleRect.height()/3);
-					state.pos1 = new Point((int)startX, (int)startY);
-					state.argb(255, 255, 255, 255);
-					state.rotation = 270+angle;  //angle += 270
-					state.setBmpSrcRect(icicleRect.left, icicleRect.top, icicleRect.right, icicleRect.bottom);
-					icicle.addState(state);
-					//end state
-					int hitTime = (int)(t * iceStormLength+ icicleLife);
-					state = new BattleAnimObjState((int)(hitTime), PosTypes.Screen);
-					state.size = new Point(icicleRect.width()/3, icicleRect.height()/3);
-					state.pos1 = new Point((int)targetX, (int)targetY);
-					state.argb(255, 255, 255, 255);
-					state.rotation = 270+angle;
-					state.setBmpSrcRect(icicleRect.left, icicleRect.top, icicleRect.right, icicleRect.bottom);
-					icicle.addState(state);					
-
-					icicle.interpolateLinearly();
-					
-					out.addObject(icicle);					
-					addPoof(out, hitTime, targetX, targetY, xDir, yDir);
+					float x = Global.rand.nextFloat() * width - width/2;
+					float y = Global.rand.nextFloat() * height - height/2;
 					
 
+					addIcicle(out, t, x, y, angle, xDir, yDir);
+					addPoof(out, t+icicleLife, x, y, xDir, yDir);
 				}				
 				
 				return out;
 			}
-		}.init(width, height);
+		}.init(width, height, icicleCount, iceStormLength);
 	}
 	
 }

@@ -54,14 +54,14 @@ addAction (message "You've been fully healed bro.")
 \runstate1$2x5$ <- state1$2x5$ 0
 
 #!OBJ 3 5
-\name$3x5$ <- newObject "heals" 3 5
+\name$3x5$ <- newObject "animtester" 3 5
 
 state1$3x5$ 0
 name$3x5$ > createState >
 setSpriteFromTile 1 2 >
 setCollisionData true true true true >
 addAction (playAnimation (genIceShot 0) "party" "party" true) >
-addAction (playAnimation (genIceBarrage 100 100) "party" "party" false)
+addAction (playAnimation (genIceBarrage 320 400 250 12500) "animtester" "animtester" false)  #250 icicles in a 12.5s time window in a 320x400 area focused on this object
 
 \runstate1$3x5$ <- state1$3x5$ 0
 #!OBJ 2 7
