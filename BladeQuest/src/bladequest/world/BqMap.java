@@ -467,6 +467,10 @@ public class BqMap
 		}
 		else
 		{
+			if (go.prevCollidable == null && go.nextCollidable != null)
+			{
+				levelObjects[prev.x + prev.y * mapSize.x] = go.nextCollidable;	
+			}
 			go.nextCollidable = null;
 			go.prevCollidable = null;	
 		}
@@ -477,13 +481,12 @@ public class BqMap
 		Point p = go.getGridPos();
 		int idx = p.x + p.y * mapSize.x;
 		GameObject first = levelObjects[idx];
-		if (first == null) levelObjects[idx] = go;
-		else
+		if (first != null)
 		{
 			first.prevCollidable = go;
 			go.nextCollidable = first;
-			levelObjects[idx] = go;
 		}
+		levelObjects[idx] = go;		
 	}
 
 	

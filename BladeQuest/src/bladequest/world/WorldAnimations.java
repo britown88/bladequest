@@ -414,6 +414,109 @@ public class WorldAnimations
 			}
 		}.initialize();
 	}
+	
+	public static AnimationBuilder buildIceShot(int x, int y)
+	{
+		return new AnimationBuilder()
+		{
+		
+			@Override
+			public BattleAnim buildAnimation(BattleEventBuilder builder) {
+				BattleAnim out = new BattleAnim(1000.0f);
+				
+				final int icicleLife = 500;  
+				
+				float angle = Global.rand.nextFloat() * 10.0f + 65.0f;
+				double angRad = (angle) * (Math.PI/180.0f);
+				
+				float xDir = (float)Math.cos(angRad);
+				float yDir = (float)Math.sin(angRad);
+				
+				addIcicle(out, 0, 0.0f, 0.0f, angle, xDir, yDir);
+				addPoof(out, icicleLife, 0.0f, 0.0f, xDir, yDir);
+				
+				return out;
+			}	
+		};
+	}
+	public static void addIcicle(BattleAnim anim, int time, float x, float y, float angle, float xDir, float yDir)
+	{
+		
+		final int icicleLife = 500;  
+		
+		Bitmap icicleBitmap = Global.bitmaps.get("icicle"); 
+		Rect icicleRect = new Rect(0,0,30, 80);
+		
+		
+		BattleAnimObject icicle = new BattleAnimObject(Types.Bitmap, false, icicleBitmap);
+		
+		
+		
+		float startX = x - (xDir * 400.0f);
+		float startY = y - (yDir * 400.0f);				
+		
+		//start state
+		BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Target);
+		state.size = new Point(icicleRect.width()/3, icicleRect.height()/3);
+		state.pos1 = new Point((int)startX, (int)startY);
+		state.argb(255, 255, 255, 255);
+		state.rotation = 270+angle;  //angle += 270
+		state.setBmpSrcRect(icicleRect.left, icicleRect.top, icicleRect.right, icicleRect.bottom);
+		icicle.addState(state);
+		//end state
+		state = new BattleAnimObjState(icicleLife, PosTypes.Target);
+		state.size = new Point(icicleRect.width()/3, icicleRect.height()/3);
+		state.pos1 = new Point((int)x,(int)y);
+		state.argb(255, 255, 255, 255);
+		state.rotation = 270+angle;
+		state.setBmpSrcRect(icicleRect.left, icicleRect.top, icicleRect.right, icicleRect.bottom);
+		icicle.addState(state);					
+
+		icicle.interpolateLinearly();
+		
+		anim.addObject(icicle);
+	}
+	
+	public static void addPoof(BattleAnim anim, int time, float x, float y, float xDir, float yDir)
+	{
+		Bitmap icePoof = Global.bitmaps.get("particles");
+		Rect poofRect = new Rect(1,13,13,24);
+		
+		int poofCount = Global.rand.nextInt(2) + 1;
+		
+		float reflY = yDir * -1; 
+		
+		for (int j = 0; j < poofCount; ++j)
+		{
+			BattleAnimObject poofObj = new BattleAnimObject(Types.Bitmap, false, icePoof);
+			
+			float endX = x + xDir * 8.0f + Global.rand.nextFloat() * 3.0f - 1.5f;
+			float endY = y + reflY * 8.0f + Global.rand.nextFloat() * 3.0f - 1.5f;
+
+			int rot = Global.rand.nextInt(360);
+			BattleAnimObjState state = new BattleAnimObjState(time, PosTypes.Screen);
+			state.size = new Point(poofRect.width(), poofRect.height());
+			state.pos1 = new Point((int)x, (int)y);
+			state.argb(196, 255, 255, 255);
+			state.rotation = rot;
+			state.setBmpSrcRect(poofRect.left, poofRect.top, poofRect.right, poofRect.bottom);
+			
+			poofObj.addState(state);
+			
+			int left = 200 + Global.rand.nextInt(100);
+			
+			state = new BattleAnimObjState(time + left, PosTypes.Target);
+			state.size = new Point(poofRect.width(), poofRect.height());
+			state.pos1 = new Point((int)endX, (int)endY);
+			state.argb(0, 255, 255, 255);
+			state.rotation = rot + Global.rand.nextInt(10) - 5;
+			state.setBmpSrcRect(poofRect.left, poofRect.top, poofRect.right, poofRect.bottom);						
+			
+			poofObj.addState(state);
+			
+			anim.addObject(poofObj);
+		}
+	}
 
 	public static AnimationBuilder buildIceBarrage(int width, int height)
 	{
@@ -442,13 +545,9 @@ public class WorldAnimations
 				Bitmap icicleBitmap = Global.bitmaps.get("icicle"); 
 				Rect icicleRect = new Rect(0,0,width*32,height*32);	
 				
-				Bitmap icePoof = Global.bitmaps.get("particles");
-				Rect poofRect = new Rect(1,13,13,24);
-				
 				for (int i = 0; i < icicleCount; ++i) 
 				{
 					BattleAnimObject icicle = new BattleAnimObject(Types.Bitmap, false, icicleBitmap);
-					BattleAnimObject poofObj = new BattleAnimObject(Types.Bitmap, false, icePoof);
 					
 					
 					float angle = Global.rand.nextFloat() * 10.0f + 65.0f;
@@ -457,7 +556,6 @@ public class WorldAnimations
 					float xDir = (float)Math.cos(angRad);
 					float yDir = (float)Math.sin(angRad);
 					
-					float reflY = yDir * -1;
 					
 					final int perspectiveSize = 80;
 					final int hitBuffer = 300;
@@ -491,38 +589,10 @@ public class WorldAnimations
 
 					icicle.interpolateLinearly();
 					
-					int poofCount = Global.rand.nextInt(2) + 1;
+					out.addObject(icicle);					
+					addPoof(out, hitTime, targetX, targetY, xDir, yDir);
 					
-					for (int j = 0; j < poofCount; ++j)
-					{
-						
-						float endX = targetX + xDir * 8.0f + Global.rand.nextFloat() * 3.0f - 1.5f;
-						float endY = targetY + reflY * 8.0f + Global.rand.nextFloat() * 3.0f - 1.5f;
 
-						int rot = Global.rand.nextInt(360);
-						state = new BattleAnimObjState(hitTime, PosTypes.Screen);
-						state.size = new Point(poofRect.width(), poofRect.height());
-						state.pos1 = new Point((int)targetX, (int)targetY);
-						state.argb(196, 255, 255, 255);
-						state.rotation = rot;
-						state.setBmpSrcRect(poofRect.left, poofRect.top, poofRect.right, poofRect.bottom);
-						
-						poofObj.addState(state);
-						
-						int left = 200 + Global.rand.nextInt(100);
-						
-						state = new BattleAnimObjState(hitTime + left, PosTypes.Screen);
-						state.size = new Point(poofRect.width(), poofRect.height());
-						state.pos1 = new Point((int)endX, (int)endY);
-						state.argb(0, 255, 255, 255);
-						state.rotation = rot + Global.rand.nextInt(10) - 5;
-						state.setBmpSrcRect(poofRect.left, poofRect.top, poofRect.right, poofRect.bottom);						
-						
-						poofObj.addState(state);
-					}
-					
-					out.addObject(icicle);
-					out.addObject(poofObj);
 				}				
 				
 				return out;

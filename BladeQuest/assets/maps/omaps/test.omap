@@ -219,3 +219,32 @@ addAction (createPath "movetest2" true "L3")
 
 
 \runstate1$8x5$ <- state1$8x5$ 0
+
+
+
+\objName$8x5$2 <- "name"
+\name$8x5$2 <- newObject objName$8x5$2 8 5
+
+state1$8x5$2 0
+name$8x5$2 > createState >
+setSpriteFromTile 2 1 >
+setCollisionData true true true true >
+addAction (createPath "movetest1" false "L") >
+addAction (createPath "movetest2" true "L3")
+
+
+\runstate1$8x5$2 <- state1$8x5$2 0
+
+
+\objName$8x5$3 <- "name"
+\name$8x5$3 <- newObject objName$8x5$3 8 5
+
+state1$8x5$3 0
+name$8x5$3 > createState >
+setSpriteFromTile 1 1>
+setCollisionData true true true true >
+addAction (createPath "movetest1" false "L") >
+addAction (createPath "movetest2" true "L3")
+
+
+\runstate1$8x5$3 <- state1$8x5$3 0
