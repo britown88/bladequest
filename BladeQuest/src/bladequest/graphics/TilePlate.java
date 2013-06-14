@@ -10,6 +10,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import bladequest.world.GameObject;
 import bladequest.world.Global;
@@ -108,9 +109,11 @@ public class TilePlate
 	{
 		bmp = Global.getFreeTileBitmap();
 		
-		bmp.bmp.eraseColor(Color.TRANSPARENT);
+		
 		empty = tiles.size() == 0;
 		Canvas canvas = new Canvas(bmp.bmp);
+		
+		canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 		
 		for (int i = 0; i < layerCount; ++i)
 		{
@@ -141,12 +144,13 @@ public class TilePlate
 	{
 		animBmp = Global.getFreeTileBitmap();
 		
-		animBmp.bmp.eraseColor(Color.TRANSPARENT);
 		empty = tiles.size() == 0;
 		
 		if(!empty)
 		{
-			Canvas canvas = new Canvas(animBmp.bmp);		
+			Canvas canvas = new Canvas(animBmp.bmp);	
+			
+			canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 			
 			for (int i = 0; i < layerCount; ++i)
 			{

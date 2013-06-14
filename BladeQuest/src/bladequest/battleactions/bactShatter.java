@@ -37,6 +37,7 @@ public class bactShatter extends DelegatingAction {
 		final int shatterPoints = 24;
 		final int frameLength = 4;
 		int finalFrames = 2 << iterations;
+		final int finalLength = 1200;
 		
 		
 		BitmapFrame iceblock = BattleAnimations.getIceBlock();
@@ -52,7 +53,7 @@ public class bactShatter extends DelegatingAction {
 		state.setBmpSrcRect(iceblock.srcRect.left, iceblock.srcRect.top, iceblock.srcRect.right, iceblock.srcRect.bottom);
 		iceCubeHack.addState(state);
 				
-		state = new BattleAnimObjState(finalFrames * frameLength + 400, PosTypes.Screen); 
+		state = new BattleAnimObjState(finalFrames * frameLength + finalLength, PosTypes.Screen); 
 		state.size = new Point(r.width(), r.height());
 		state.pos1 = new Point(r.centerX(), r.centerY());
 		state.argb(255, 255, 255, 255);
@@ -124,7 +125,7 @@ public class bactShatter extends DelegatingAction {
 						state.argb(255, 255, 255, 255);
 						obj.addState(state);
 						
-						state = new BattleAnimObjState((int)(finalFrames*frameLength + 400), PosTypes.Screen);
+						state = new BattleAnimObjState((int)(finalFrames*frameLength + finalLength), PosTypes.Screen);
 						state.pos1 = new Point(p);
 						state.pos2 = new Point(nextPt);
 						state.strokeWidth = 1.0f;								

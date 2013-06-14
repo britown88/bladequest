@@ -16,7 +16,7 @@ public class TextBox
 		this.text = text;
 		this.x = x;
 		this.y = y;
-		this.textPaint = textPaint;
+		this.textPaint = new Paint(textPaint);
 		
 
 	}
