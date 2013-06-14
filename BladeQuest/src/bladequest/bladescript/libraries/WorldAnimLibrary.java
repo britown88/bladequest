@@ -96,4 +96,10 @@ public class WorldAnimLibrary
 		return WorldAnimations.buildIceBarrage(width, height, icicleCount, stormLength);
 	}
 	
+	
+	public static AnimationBuilder genIceShatterPoof(float xDir, float yDir)
+	{
+		return WorldAnimations.buildIceShatterPoof(xDir, yDir);
+	}
+	
 }

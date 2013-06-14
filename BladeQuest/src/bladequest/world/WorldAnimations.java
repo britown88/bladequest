@@ -515,6 +515,69 @@ public class WorldAnimations
 			anim.addObject(poofObj);
 		}
 	}
+	
+
+	public static AnimationBuilder buildIceShatterPoof(float xDir, float yDir)
+	{
+		return new AnimationBuilder()
+		{
+			float xDir;
+			float yDir;
+			AnimationBuilder initialize(float xDir, float yDir)
+			{
+				this.xDir = xDir;
+				this.yDir = yDir;
+				return this;
+			}
+			@Override
+			public BattleAnim buildAnimation(BattleEventBuilder builder) {
+				BattleAnim out = new BattleAnim(1000.0f);
+				addShatterPoof(out, 0, xDir, yDir);
+				return out;
+			}
+		}.initialize(xDir, yDir);
+	}
+	
+	public static void addShatterPoof(BattleAnim anim, int time, float xDir, float yDir)
+	{
+		Bitmap icePoof = Global.bitmaps.get("particles");
+		Rect poofRect = new Rect(1,13,13,24);
+		
+		int poofCount = Global.rand.nextInt(3) + 3;
+		
+		float reflY = yDir * -1; 
+		
+		for (int j = 0; j < poofCount; ++j)
+		{
+			BattleAnimObject poofObj = new BattleAnimObject(Types.Bitmap, false, icePoof);
+			
+			float endX = xDir * 28.0f + Global.rand.nextFloat() * 16.0f - 8.0f;
+			float endY = reflY * 28.0f + Global.rand.nextFloat() * 16.0f  - 8.0f;
+
+			int rot = Global.rand.nextInt(360);
+			BattleAnimObjState state = new BattleAnimObjState(time, PosTypes.Target);
+			state.size = new Point(poofRect.width() * 2, poofRect.height() * 2);
+			state.pos1 = new Point(Global.rand.nextInt(8) - 4, Global.rand.nextInt(8) - 4);
+			state.argb(196, 255, 255, 255);
+			state.rotation = rot;
+			state.setBmpSrcRect(poofRect.left, poofRect.top, poofRect.right, poofRect.bottom);
+			
+			poofObj.addState(state);
+			
+			int left = 200 + Global.rand.nextInt(100);
+			
+			state = new BattleAnimObjState(time + left, PosTypes.Target);
+			state.size = new Point(poofRect.width() * 2, poofRect.height() * 2);
+			state.pos1 = new Point((int)endX, (int)endY);
+			state.argb(0, 255, 255, 255);
+			state.rotation = rot + Global.rand.nextInt(16) - 8;
+			state.setBmpSrcRect(poofRect.left, poofRect.top, poofRect.right, poofRect.bottom);						
+			
+			poofObj.addState(state);
+			
+			anim.addObject(poofObj);
+		}
+	}
 
 	//generates a storm centered at a target with a specified width and height.
 	//drops the specified number of icicles in that time, to modify the intensity of the storm.
