@@ -967,12 +967,13 @@ public class Party
 		else 
 		{				
 			if(!gridPos.equals(originalTarget))
-			{
-				originalTarget = new Point(gridPos);
+			{			
 				
 				//if we stopped short because we were blocked
 				if(!faceLocked)
 					face(originalTarget);
+				
+				originalTarget = new Point(gridPos);
 				
 				//if you clicked an object and were 2 or less blocks away
 				if(objectAtDestination && path.calculateHeuristic(pathingStartPoint) <= 1 && !selectedObject.AutoStarts())

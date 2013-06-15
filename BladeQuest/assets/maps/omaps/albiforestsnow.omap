@@ -45,13 +45,6 @@ setLayer "Above"
 
 
 
-
-
-
-
-
-
-
 #!OBJ 10 5
 \name$10x5$ <- cliffJumpLeft 10 5
 #!OBJ 10 4
@@ -185,19 +178,109 @@ addSwitchCondition "albiforestchest3"
 \runstate2$27x40$ <- state2$27x40$ 0
 #!OBJ 5 0
 \name$5x0$ <- createIcePillar 5 0
+
 #!OBJ 7 0
 \name$7x0$ <- createIcePillar 7 0
+
 #!OBJ 4 1
 \name$4x1$ <- createIcePillar 4 1
+
 #!OBJ 6 1
 \name$6x1$ <- createIcePillar 6 1
+
 #!OBJ 8 1
 \name$8x1$ <- createIcePillar 8 1
+
 #!OBJ 7 25
 \name$7x25$ <- createIcePillar 7 25
+
 #!OBJ 15 15
 \name$15x15$ <- createIcePillar 15 15
+
 #!OBJ 13 38
 \name$13x38$ <- createIcePillar 13 38
+
 #!OBJ 3 49
 \name$3x49$ <- createIcePillar 3 49
+
+#!OBJ 7 30
+\objName$7x30$ <- "luc"
+\name$7x30$ <- newObject objName$7x30$ 7 30
+
+state1$7x30$ 0
+name$7x30$ > createState >
+setSprite "snowpile" >
+setIgnorePartyOnMove true
+
+\runstate1$7x30$ <- state1$7x30$ 0
+
+state2$7x30$ 0
+name$7x30$ > createState >
+addSwitchCondition "albideslucsnow" >
+setSprite "luc" >
+setFace "down" >
+setIgnorePartyOnMove true
+
+
+\runstate2$7x30$ <- state2$7x30$ 0
+
+state3$7x30$ 0
+name$7x30$ > createState >
+addSwitchCondition "albiforestsnowscenedone"
+
+\runstate3$7x30$ <- state3$7x30$ 0
+
+#!OBJ 9 32
+\objName$9x32$ <- "joy"
+\name$9x32$ <- newObject objName$9x32$ 9 32
+
+state1$9x32$ 0
+name$9x32$ > createState >
+setSprite "snowpile" >
+setIgnorePartyOnMove true
+
+\runstate1$9x32$ <- state1$9x32$ 0
+
+state2$9x32$ 0
+name$9x32$ > createState >
+addSwitchCondition "albidesjoysnow" >
+setSprite "joy" >
+setFace "left" >
+setIgnorePartyOnMove true
+
+
+\runstate2$9x32$ <- state2$9x32$ 0
+
+state3$9x32$ 0
+name$9x32$ > createState >
+addSwitchCondition "albiforestsnowscenedone"
+
+\runstate3$9x32$ <- state3$9x32$ 0
+
+#!OBJ 6 33
+\objName$6x33$ <- "aramis"
+\name$6x33$ <- newObject objName$6x33$ 6 33
+
+state1$6x33$ 0
+name$6x33$ > createState >
+setSprite "snowpile" >
+setIgnorePartyOnMove true
+
+\runstate1$6x33$ <- state1$6x33$ 0
+
+state2$6x33$ 0
+name$6x33$ > createState >
+addSwitchCondition "albidesaramissnow" >
+setSprite "aramis" >
+setFace "down" >
+setIgnorePartyOnMove true
+
+
+\runstate2$6x33$ <- state2$6x33$ 0
+
+state3$6x33$ 0
+name$6x33$ > createState >
+addSwitchCondition "albiforestsnowscenedone"
+
+\runstate3$6x33$ <- state3$6x33$ 0
+
