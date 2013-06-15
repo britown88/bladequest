@@ -1499,7 +1499,7 @@ public class Global
 		renderer = new Renderer();
 		screenFader = new ScreenFader();
 		screenShaker = new ScreenShaker();
-		target = new TargetReticle();
+		
 		textFactory = new TextFactory(Typeface.createFromAsset(activity.getAssets(),"fonts/pressstart.ttf"));
 		playingReactions = new HashMap<String,ReactionBubble>();
 		
@@ -1530,6 +1530,7 @@ public class Global
 		loadSound("sound");
 		
 		menu = new MainMenu();
+		
 		createGameOverObject();
 		
 	}	
@@ -1570,7 +1571,9 @@ public class Global
 		party = new Party(0, 0);	
 		
 		//load game data
-		GameDataLoader.load();			
+		GameDataLoader.load();		
+		
+		target = new TargetReticle();
 		
 		return true;		
 	}

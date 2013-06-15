@@ -1,21 +1,29 @@
 package bladequest.world;
 
+import android.graphics.Point;
+import bladequest.graphics.Sprite;
+
 public class TargetReticle 
 {
 	private boolean show;
+	private Sprite spr;
 	
-	private int duration, timer;
+	private static final float animFrameDuration = 0.15f;
+	private long startTime, animStartTime;
+	private int imageIndex;
+	
 	
 	public TargetReticle()
 	{
-		show = false;
-		timer = 0;
-		duration = 25;
+		show = false;		
+		
+		spr = new Sprite(Global.sprites.get("target"));
 	}
 	
 	public void show()
 	{
-		timer = 0;
+		startTime = animStartTime = System.currentTimeMillis();
+		imageIndex = 0;
 		show = true;
 	}
 	
@@ -23,19 +31,36 @@ public class TargetReticle
 	{
 		if(show)
 		{
-			if(timer++ >= duration)
+			long currTime = System.currentTimeMillis();
+			
+			//check for animUpdatefirst
+			if(currTime - animStartTime > animFrameDuration*1000.0f)
 			{
-				show = false;
-				timer = 0;
+				++imageIndex;
+				
+				if(imageIndex >= spr.getNumFrames())
+					imageIndex = 0;
+				
+				animStartTime = currTime;
 			}
+			
+			
+			
+			if(currTime - startTime > 250)
+				show = Global.party.isTraveling();
+			
 		}
 		
 	}
 	
 	public void render()
 	{
+		Point pos = new Point((32 - spr.getWidth())/2, (32 - spr.getHeight())/2);
+		
 		if(show)
-			Global.sprites.get("target").render(Global.mouseGridPos.x*32, Global.mouseGridPos.y*32, 0);
+			spr.render(
+					Global.mouseGridPos.x*32 + pos.x, 
+					Global.mouseGridPos.y*32 + pos.y, imageIndex);
 	}
 	
 	

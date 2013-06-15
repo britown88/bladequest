@@ -86,240 +86,240 @@ addAction (createPath "party" true "D")
 \runstate2$3x0$ <- state2$3x0$ 0
 
 state3$3x0$ 0
-\state <- (name$3x0$ > createState)
-state > addSwitchCondition "albijoyscenedone" 
-state > addAction (fadeControl 0.5 255 0 0 0 true true) 
-state > addAction (teleportParty name$3x0$ 3 48 "albiforestnight") 
-state > addAction (createPath "party" true "v") 
-state > addAction (pauseMusic 2.0) 
-state > addAction (fadeControl 4.0 255 0 0 0 false false) 
-state > addAction (panControl 0 -8 4.0 false) 
-state > addAction (createPath "luc" false "s2RU3LUd") 
-state > addAction (createPath "joy" false "s2RU2R2U3") 
-state > addAction (createPath "aramis" true "s2U3RUR2U3l") 
-state > addAction (wait 0.5) 
-state > addAction (openBubble "exclam" "aramis" 1.0 false true) 
-state > addAction (message "|aramis|: \nSomething up?") 
-state > addAction (createPath "luc" true "r") 
-state > addAction (message "|luc|: \nI'm not sure if I'm imagining things...") 
-state > addAction (message "...but it feels like it just got really cold out here...") 
-state > addAction (createPath "joy" true "r") 
-state > addAction (message "|joy|: \nI feel it too!") 
-state > addAction (message "|aramis|: \nYou're both just coming off of a fight.") 
-state > addAction (message "Of course it's gonna be cold!") 
-state > addAction (message "|luc|: \nHmmm... maybe...") 
-state > addAction (wait 0.5) 
-state > addAction (createPath "luc" false "U4") 
-state > addAction (panControl 0 -10 2.0 true) 
-state > addAction (wait 0.5) 
-state > addAction (flash 1.0 255 150 225 255 true) 
-state > addAction (playMusic "roland" true true 0.0) 
-state > addAction (createPath "luc" true "d") 
-state > addAction (openBubble "exclam" "luc" 1.0 false false) 
-state > addAction (openBubble "exclam" "aramis" 1.0 false false) 
-state > addAction (openBubble "exclam" "joy" 1.0 false true) 
-state > addAction (panControl 0 -11 1.0 false) 
-state > addAction (createPath "joy" true "S2L") 
-state > addAction (createPath "aramis" false "S2L2U3") 
-state > addAction (createPath "joy" true "U4RUl") 
-state > addAction (message "|joy|: \nWhat on earth was that?!") 
-state > addAction (openBubble "dots" "aramis" 1.0 false true) 
-state > addAction (createPath "joy" true "d") 
-state > addAction (wait 0.5) 
-state > addAction (message "|aramis|: \nYou know now that you mention it...") 
-state > addAction (message "It's downright freezing out here!") 
-state > addAction (wait 0.5) 
-state > addAction (flash 1.0 255 150 225 255 true) 
-state > addAction (wait 0.5) 
-state > addAction (createPath "joy" true "u") 
-state > addAction (openBubble "exclam" "joy" 1.0 false false) 
-state > addAction (message "|joy|: Look!!! ") 
-state > addAction (panControl 1 -14 3.0 false) 
-state > addAction (createPath "luc" false "W5S2R3U2") 
-state > addAction (createPath "joy" false "R2URu") 
-state > addAction (createPath "aramis" true "W8URUR2U") 
-state > addAction (flash 0.5 255 150 225 255 false) 
-state > addAction (wait 1.0) 
-state > addAction (panControl 1 -16 3.0 false) 
-state > addAction (flash 0.5 255 150 225 255 false) 
-state > addAction (wait 0.5) 
-state > addAction (flash 0.5 255 150 225 255 false) 
-state > addAction (createPath "luc" true "s2U3") 
-state > addAction (wait 1.5) 
-state > addAction (openBubble "exclam" "luc" 1.0 false false) 
-state > addAction (wait 0.5) 
-state > addAction (message "|luc|: By Gods...") 
-state > addAction (message "The village!") 
-state > addAction (fadeControl 3.0 255 0 0 0 true true) 
-state > addAction (showScene "albi") 
-state > addAction (fadeControl 3.0 255 0 0 0 false true) 
-state > addAction (wait 1.0) 
-state > addAction (flash 1.0 255 150 225 255 true) 
-state > addAction (wait 1.5) 
-state > addAction (flash 0.25 255 150 225 255 true) 
-state > addAction (flash 0.25 255 150 225 255 true) 
-state > addAction (shakeControl -1.0 2 false) 
-state > addAction (wait 1.0) 
-state > addAction (fadeControl 3.0 255 0 0 0 true true) 
-state > addAction (unloadScene 0) 
-state > addAction (teleportParty name$3x0$ 24 24 "albinight") 
-state > addAction (fadeControl 2.0 255 0 0 0 false false) 
-state > addAction (wait 1.0) 
-state > addAction (openBubble "qmark" "arthur" 1.0 false false) 
-state > addAction (createPath "arthur" true "rW3lW3rW3lW3d") 
-state > addAction (wait 0.5) 
-state > addAction (openBubble "exclam" "arthur" 0.5 false false) 
-state > addAction (wait 0.25) 
-state > addAction (playAnimation (genIceShot 0) (point 0 0) (point 24 23) false) 
-state > addAction (wait 0.25) 
-state > addAction (createPath "arthur" true "S2lKR") 
-state > addAction (wait 0.5) 
-state > addAction (createPath "arthur" false "XrW3lW3") 
-state > addAction (setFloating "arthur" true 90 4) 
-state > addAction (playAnimation (genIceBarrage 384 288 10 10000) (point 0 0) (point 24 23) false) 
-state > addAction (changeElevation "arthur" 64 3.0 true) 
-state > addAction (wait 3.0) 
-state > addAction (createPath "arthur" false "u") 
-state > addAction (switchControl "albidesarthurfrozen" true) 
-state > addAction (playAnimation (genIceCube 2750) "" "arthur" false) 
-state > addAction (flash 0.25 255 150 225 255 true) 
-state > addAction (wait 2.0) 
-state > addAction (changeElevation "arthur" 72 0.25 true) 
-state > addAction (changeElevation "arthur" 0 0.25 true) 
-state > addAction (setFloating "arthur" false 0 0) 
-state > addAction (switchControl "albidesarthurdead" true) 
-state > addAction (playAnimation (genIceShatterPoof 1.0 0.0) "party" "arthur" false) 
-state > addAction (playAnimation (genIceShatterPoof -1.0 0.0) "party" "arthur" false) 
-state > addAction (wait 1.0) 
-state > addAction (flash 0.5 255 150 225 255 false) 
-state > addAction (playAnimation (genIcePillar 0) (point 0 0) (point 26 20) false) 
-state > addAction (playAnimation (genIceBarrage 384 288 100 10000) (point 0 0) (point 29 18) false) 
-state > addAction (panControl 5 -8 4.0 false)  #FIRST PAN--------------
-state > addAction (wait 1.0) 
-state > addAction (switchControl "albidesgeorge" true) 
-state > addAction (createPath "george" false "s2D2u") 
-state > addAction (wait 0.5) 
-state > addAction (switchControl "albidesanne" true) 
-state > addAction (createPath "anne" false "s2D") 
-state > addAction (wait 1.0) 
-state > addAction (flash 0.5 255 150 225 255 false) 
-state > addAction (createPath "anne" false "L4") 
-state > addAction (createPath "george" false "SL5") 
-state > addAction (wait 0.5) 
-state > addAction (createPath "anne" false "XrW4lW4") 
-state > addAction (createPath "george" false "XrW2lW2") 
-state > addAction (setFloating "anne" true 90 4) 
-state > addAction (setFloating "george" true 90 4) 
-state > addAction (changeElevation "anne" 72 0.75 false) 
-state > addAction (changeElevation "george" 56 0.75 false) 
-state > addAction (playAnimation (genIceBarrage 384 288 100 10000) (point 0 0) (point 29 12) false) 
-state > addAction (wait 0.5) 
-state > addAction (playAnimation (genIceCube 750) "" "george" false) 
-state > addAction (flash 0.25 255 150 225 255 true) 
-state > addAction (switchControl "albidesgeorgefrozen" true) 
-state > addAction (playAnimation (genIceCube 500) "" "anne" false) 
-state > addAction (flash 0.25 255 150 225 255 true) 
-state > addAction (switchControl "albidesannefrozen" true) 
-state > addAction (panControl 5 -17 4.0 false) #INN PAN----------------
-state > addAction (setFloating "anne" false 0 0) 
-state > addAction (setFloating "george" false 0 0) 
-state > addAction (changeElevation "anne" 0 0.25 false) 
-state > addAction (changeElevation "george" 0 0.25 true) 
-state > addAction (switchControl "albidesgeorge" false) 
-state > addAction (switchControl "albidesanne" false) 
-state > addAction (playAnimation (genIceShatterPoof 1.0 0.0) "party" "george" false) 
-state > addAction (playAnimation (genIceShatterPoof -1.0 0.0) "party" "george" false) 
-state > addAction (playAnimation (genIceShatterPoof 1.0 0.0) "party" "anne" false) 
-state > addAction (playAnimation (genIceShatterPoof -1.0 0.0) "party" "anne" false) 
-state > addAction (switchControl "albidessarah" true) 
-state > addAction (switchControl "albideshenry" true) 
-state > addAction (wait 0.75) 
-state > addAction (flash 0.5 255 150 225 255 false) 
-state > addAction (createPath "sarah" false "s2D2lS") 
-state > addAction (createPath "henry" false "sR4") 
-state > addAction (wait 1.0) 
-state > addAction (playAnimation (genIceCube 10000) "" "henry" false) 
-state > addAction (flash 0.25 255 150 225 255 true) 
-state > addAction (playAnimation (genIceBarrage 384 288 100 10000) (point 0 0) (point 25 7) false) 
-state > addAction (switchControl "albideshenryfrozen" true) 
-state > addAction (wait 0.25) 
-state > addAction (playAnimation (genIcePillar 0) (point 0 0) (point 30 8) false) 
-state > addAction (openBubble "exclam" "sarah" 0.5 false true) 
-state > addAction (createPath "sarah" false "UL3DL5") 
-state > addAction (wait 1.0) 
-state > addAction (panControl -18 -17 10.0 false)  #CROSSTOWN PAN-------
-state > addAction (wait 1.0) 
-state > addAction (switchControl "albidesbruno" true) 
-state > addAction (switchControl "albideskids" true) 
-state > addAction (setFloating "bruno" true 90 4) 
-state > addAction (changeElevation "bruno" 56 0.0 false) 
-state > addAction (playAnimation (genIceBarrage 384 288 100 10000) (point 0 0) (point 15 7) false) 
-state > addAction (setFloating "sarah" true 90 4) 
-state > addAction (changeElevation "sarah" 56 1.0 true) 
-state > addAction (playAnimation (genIcePillar 0) (point 0 0) (point 20 6) false) 
-state > addAction (playAnimation (genIceCube 1000) "" "sarah" false) 
-state > addAction (playAnimation (genIceCube 3500) "" "bruno" false) 
-state > addAction (playAnimation (genIceCube 20000) "" "alice" false) 
-state > addAction (playAnimation (genIceCube 20000) "" "timmy" false) 
-state > addAction (playAnimation (genIceCube 20000) "" "tommy" false) 
-state > addAction (flash 0.25 255 150 225 255 false) 
-state > addAction (switchControl "albidessarahfrozen" true) 
-state > addAction (wait 0.5) 
-state > addAction (flash 0.5 255 150 225 255 false) 
-state > addAction (changeElevation "sarah" 64 0.25 true) 
-state > addAction (setFloating "sarah" false 0 0) 
-state > addAction (changeElevation "sarah" 0 0.25 true) 
-state > addAction (switchControl "albidessarah" false) 
-state > addAction (playAnimation (genIceShatterPoof 1.0 0.0) "party" "sarah" false) 
-state > addAction (playAnimation (genIceShatterPoof -1.0 0.0) "party" "sarah" false) 
-state > addAction (wait 2.0) 
-state > addAction (flash 0.5 255 150 225 255 false) 
-state > addAction (changeElevation "bruno" 64 0.25 true) 
-state > addAction (setFloating "bruno" false 0 0) 
-state > addAction (changeElevation "bruno" 0 0.25 true) 
-state > addAction (switchControl "albidesbruno" false) 
-state > addAction (playAnimation (genIceBarrage 384 288 100 10000) (point 0 0) (point 7 11) false) 
-state > addAction (playAnimation (genIceShatterPoof 1.0 0.0) "party" "bruno" false) 
-state > addAction (playAnimation (genIceShatterPoof -1.0 0.0) "party" "bruno" false) 
-state > addAction (playAnimation (genIcePillar 0) (point 0 0) (point 10 8) false) 
-state > addAction (wait 2.0) 
-state > addAction (flash 0.5 255 150 225 255 false) 
-state > addAction (wait 2.0) 
-state > addAction (flash 0.5 255 150 225 255 false) 
-state > addAction (panControl -7 -2 8.0 false)  #LASTHOUSES PAN--------
-state > addAction (switchControl "albidesagnes" true) 
-state > addAction (createPath "agnes" true "sDR2") 
-state > addAction (openBubble "exclam" "agnes" 0.5 false true) 
-state > addAction (flash 0.5 255 150 225 255 false) 
-state > addAction (createPath "agnes" true "LD2") 
-state > addAction (playAnimation (genIcePillar 0) (point 0 0) (point 8 14) false) 
-state > addAction (openBubble "exclam" "agnes" 0.5 false true) 
-state > addAction (flash 0.5 255 150 225 255 false) 
-state > addAction (createPath "agnes" true "DR2UR6D3") 
-state > addAction (switchControl "albidesagnesfrozen" true) 
-state > addAction (playAnimation (genIceCube 1000) "" "agnes" false) 
-state > addAction (playAnimation (genIceBarrage 384 288 100 10000) (point 0 0) (point 12 15) false) 
-state > addAction (flash 0.5 255 150 225 255 false) 
-state > addAction (playAnimation (genIceBarrage 384 288 100 10000) (point 0 0) (point 17 20) false) 
-state > addAction (playAnimation (genIcePillar 0) (point 0 0) (point 14 19) false) 
-state > addAction (wait 2.0) 
-state > addAction (flash 0.5 255 150 225 255 false) 
-state > addAction (playAnimation (genIcePillar 0) (point 0 0) (point 17 23) false) 
-state > addAction (wait 2.0) 
-state > addAction (flash 0.5 255 150 225 255 true) 
-state > addAction (panControl 0 0 5.0 false) #LAST PAN------------------
-state > addAction (fadeControl 5.0 255 0 0 0 true true)
-state > addAction (showScene "albi") 
-state > addAction (fadeControl 2.0 255 0 0 0 false true)
-state > addAction (fadeControl 1.0 255 150 225 255 true true)
-state > addAction (shakeControl 0.0 0 false) 
-state > addAction (unloadScene 0) 
-state > addAction (wait 2.0) 
-state > addAction (showScene "albifrozen") 
-state > addAction (fadeControl 5.0 255 150 225 255 false true)
-state > addAction (wait 2.0) 
-state > addAction (pauseMusic 5.0) 
-state > addAction (fadeControl 5.0 255 0 0 0 true true)
+\state$3x0$ <- (name$3x0$ > createState)
+state$3x0$ > addSwitchCondition "albijoyscenedone" 
+state$3x0$ > addAction (fadeControl 0.5 255 0 0 0 true true) 
+state$3x0$ > addAction (teleportParty name$3x0$ 3 48 "albiforestnight") 
+state$3x0$ > addAction (createPath "party" true "v") 
+state$3x0$ > addAction (pauseMusic 2.0) 
+state$3x0$ > addAction (fadeControl 4.0 255 0 0 0 false false) 
+state$3x0$ > addAction (panControl 0 -8 4.0 false) 
+state$3x0$ > addAction (createPath "luc" false "s2RU3LUd") 
+state$3x0$ > addAction (createPath "joy" false "s2RU2R2U3") 
+state$3x0$ > addAction (createPath "aramis" true "s2U3RUR2U3l") 
+state$3x0$ > addAction (wait 0.5) 
+state$3x0$ > addAction (openBubble "exclam" "aramis" 1.0 false true) 
+state$3x0$ > addAction (message "|aramis|: \nSomething up?") 
+state$3x0$ > addAction (createPath "luc" true "r") 
+state$3x0$ > addAction (message "|luc|: \nI'm not sure if I'm imagining things...") 
+state$3x0$ > addAction (message "...but it feels like it just got really cold out here...") 
+state$3x0$ > addAction (createPath "joy" true "r") 
+state$3x0$ > addAction (message "|joy|: \nI feel it too!") 
+state$3x0$ > addAction (message "|aramis|: \nYou're both just coming off of a fight.") 
+state$3x0$ > addAction (message "Of course it's gonna be cold!") 
+state$3x0$ > addAction (message "|luc|: \nHmmm... maybe...") 
+state$3x0$ > addAction (wait 0.5) 
+state$3x0$ > addAction (createPath "luc" false "U4") 
+state$3x0$ > addAction (panControl 0 -10 2.0 true) 
+state$3x0$ > addAction (wait 0.5) 
+state$3x0$ > addAction (flash 1.0 255 150 225 255 true) 
+state$3x0$ > addAction (playMusic "roland" true true 0.0) 
+state$3x0$ > addAction (createPath "luc" true "d") 
+state$3x0$ > addAction (openBubble "exclam" "luc" 1.0 false false) 
+state$3x0$ > addAction (openBubble "exclam" "aramis" 1.0 false false) 
+state$3x0$ > addAction (openBubble "exclam" "joy" 1.0 false true) 
+state$3x0$ > addAction (panControl 0 -11 1.0 false) 
+state$3x0$ > addAction (createPath "joy" true "S2L") 
+state$3x0$ > addAction (createPath "aramis" false "S2L2U3") 
+state$3x0$ > addAction (createPath "joy" true "U4RUl") 
+state$3x0$ > addAction (message "|joy|: \nWhat on earth was that?!") 
+state$3x0$ > addAction (openBubble "dots" "aramis" 1.0 false true) 
+state$3x0$ > addAction (createPath "joy" true "d") 
+state$3x0$ > addAction (wait 0.5) 
+state$3x0$ > addAction (message "|aramis|: \nYou know now that you mention it...") 
+state$3x0$ > addAction (message "It's downright freezing out here!") 
+state$3x0$ > addAction (wait 0.5) 
+state$3x0$ > addAction (flash 1.0 255 150 225 255 true) 
+state$3x0$ > addAction (wait 0.5) 
+state$3x0$ > addAction (createPath "joy" true "u") 
+state$3x0$ > addAction (openBubble "exclam" "joy" 1.0 false false) 
+state$3x0$ > addAction (message "|joy|: Look!!! ") 
+state$3x0$ > addAction (panControl 1 -14 3.0 false) 
+state$3x0$ > addAction (createPath "luc" false "W5S2R3U2") 
+state$3x0$ > addAction (createPath "joy" false "R2URu") 
+state$3x0$ > addAction (createPath "aramis" true "W8URUR2U") 
+state$3x0$ > addAction (flash 0.5 255 150 225 255 false) 
+state$3x0$ > addAction (wait 1.0) 
+state$3x0$ > addAction (panControl 1 -16 3.0 false) 
+state$3x0$ > addAction (flash 0.5 255 150 225 255 false) 
+state$3x0$ > addAction (wait 0.5) 
+state$3x0$ > addAction (flash 0.5 255 150 225 255 false) 
+state$3x0$ > addAction (createPath "luc" true "s2U3") 
+state$3x0$ > addAction (wait 1.5) 
+state$3x0$ > addAction (openBubble "exclam" "luc" 1.0 false false) 
+state$3x0$ > addAction (wait 0.5) 
+state$3x0$ > addAction (message "|luc|: By Gods...") 
+state$3x0$ > addAction (message "The village!") 
+state$3x0$ > addAction (fadeControl 3.0 255 0 0 0 true true) 
+state$3x0$ > addAction (showScene "albi") 
+state$3x0$ > addAction (fadeControl 3.0 255 0 0 0 false true) 
+state$3x0$ > addAction (wait 1.0) 
+state$3x0$ > addAction (flash 1.0 255 150 225 255 true) 
+state$3x0$ > addAction (wait 1.5) 
+state$3x0$ > addAction (flash 0.25 255 150 225 255 true) 
+state$3x0$ > addAction (flash 0.25 255 150 225 255 true) 
+state$3x0$ > addAction (shakeControl -1.0 2 false) 
+state$3x0$ > addAction (wait 1.0) 
+state$3x0$ > addAction (fadeControl 3.0 255 0 0 0 true true) 
+state$3x0$ > addAction (unloadScene 0) 
+state$3x0$ > addAction (teleportParty name$3x0$ 24 24 "albinight") 
+state$3x0$ > addAction (fadeControl 2.0 255 0 0 0 false false) 
+state$3x0$ > addAction (wait 1.0) 
+state$3x0$ > addAction (openBubble "qmark" "arthur" 1.0 false false) 
+state$3x0$ > addAction (createPath "arthur" true "rW3lW3rW3lW3d") 
+state$3x0$ > addAction (wait 0.5) 
+state$3x0$ > addAction (openBubble "exclam" "arthur" 0.5 false false) 
+state$3x0$ > addAction (wait 0.25) 
+state$3x0$ > addAction (playAnimation (genIceShot 0) (point 0 0) (point 24 23) false) 
+state$3x0$ > addAction (wait 0.25) 
+state$3x0$ > addAction (createPath "arthur" true "S2lKR") 
+state$3x0$ > addAction (wait 0.5) 
+state$3x0$ > addAction (createPath "arthur" false "XrW3lW3") 
+state$3x0$ > addAction (setFloating "arthur" true 90 4) 
+state$3x0$ > addAction (playAnimation (genIceBarrage 384 288 10 10000) (point 0 0) (point 24 23) false) 
+state$3x0$ > addAction (changeElevation "arthur" 64 3.0 true) 
+state$3x0$ > addAction (wait 3.0) 
+state$3x0$ > addAction (createPath "arthur" false "u") 
+state$3x0$ > addAction (switchControl "albidesarthurfrozen" true) 
+state$3x0$ > addAction (playAnimation (genIceCube 2750) "" "arthur" false) 
+state$3x0$ > addAction (flash 0.25 255 150 225 255 true) 
+state$3x0$ > addAction (wait 2.0) 
+state$3x0$ > addAction (changeElevation "arthur" 72 0.25 true) 
+state$3x0$ > addAction (changeElevation "arthur" 0 0.25 true) 
+state$3x0$ > addAction (setFloating "arthur" false 0 0) 
+state$3x0$ > addAction (switchControl "albidesarthurdead" true) 
+state$3x0$ > addAction (playAnimation (genIceShatterPoof 1.0 0.0) "party" "arthur" false) 
+state$3x0$ > addAction (playAnimation (genIceShatterPoof -1.0 0.0) "party" "arthur" false) 
+state$3x0$ > addAction (wait 1.0) 
+state$3x0$ > addAction (flash 0.5 255 150 225 255 false) 
+state$3x0$ > addAction (playAnimation (genIcePillar 0) (point 0 0) (point 26 20) false) 
+state$3x0$ > addAction (playAnimation (genIceBarrage 384 288 100 10000) (point 0 0) (point 29 18) false) 
+state$3x0$ > addAction (panControl 5 -8 4.0 false)  #FIRST PAN--------------
+state$3x0$ > addAction (wait 1.0) 
+state$3x0$ > addAction (switchControl "albidesgeorge" true) 
+state$3x0$ > addAction (createPath "george" false "s2D2u") 
+state$3x0$ > addAction (wait 0.5) 
+state$3x0$ > addAction (switchControl "albidesanne" true) 
+state$3x0$ > addAction (createPath "anne" false "s2D") 
+state$3x0$ > addAction (wait 1.0) 
+state$3x0$ > addAction (flash 0.5 255 150 225 255 false) 
+state$3x0$ > addAction (createPath "anne" false "L4") 
+state$3x0$ > addAction (createPath "george" false "SL5") 
+state$3x0$ > addAction (wait 0.5) 
+state$3x0$ > addAction (createPath "anne" false "XrW4lW4") 
+state$3x0$ > addAction (createPath "george" false "XrW2lW2") 
+state$3x0$ > addAction (setFloating "anne" true 90 4) 
+state$3x0$ > addAction (setFloating "george" true 90 4) 
+state$3x0$ > addAction (changeElevation "anne" 72 0.75 false) 
+state$3x0$ > addAction (changeElevation "george" 56 0.75 false) 
+state$3x0$ > addAction (playAnimation (genIceBarrage 384 288 100 10000) (point 0 0) (point 29 12) false) 
+state$3x0$ > addAction (wait 0.5) 
+state$3x0$ > addAction (playAnimation (genIceCube 750) "" "george" false) 
+state$3x0$ > addAction (flash 0.25 255 150 225 255 true) 
+state$3x0$ > addAction (switchControl "albidesgeorgefrozen" true) 
+state$3x0$ > addAction (playAnimation (genIceCube 500) "" "anne" false) 
+state$3x0$ > addAction (flash 0.25 255 150 225 255 true) 
+state$3x0$ > addAction (switchControl "albidesannefrozen" true) 
+state$3x0$ > addAction (panControl 5 -17 4.0 false) #INN PAN----------------
+state$3x0$ > addAction (setFloating "anne" false 0 0) 
+state$3x0$ > addAction (setFloating "george" false 0 0) 
+state$3x0$ > addAction (changeElevation "anne" 0 0.25 false) 
+state$3x0$ > addAction (changeElevation "george" 0 0.25 true) 
+state$3x0$ > addAction (switchControl "albidesgeorge" false) 
+state$3x0$ > addAction (switchControl "albidesanne" false) 
+state$3x0$ > addAction (playAnimation (genIceShatterPoof 1.0 0.0) "party" "george" false) 
+state$3x0$ > addAction (playAnimation (genIceShatterPoof -1.0 0.0) "party" "george" false) 
+state$3x0$ > addAction (playAnimation (genIceShatterPoof 1.0 0.0) "party" "anne" false) 
+state$3x0$ > addAction (playAnimation (genIceShatterPoof -1.0 0.0) "party" "anne" false) 
+state$3x0$ > addAction (switchControl "albidessarah" true) 
+state$3x0$ > addAction (switchControl "albideshenry" true) 
+state$3x0$ > addAction (wait 0.75) 
+state$3x0$ > addAction (flash 0.5 255 150 225 255 false) 
+state$3x0$ > addAction (createPath "sarah" false "s2D2lS") 
+state$3x0$ > addAction (createPath "henry" false "sR4") 
+state$3x0$ > addAction (wait 1.0) 
+state$3x0$ > addAction (playAnimation (genIceCube 10000) "" "henry" false) 
+state$3x0$ > addAction (flash 0.25 255 150 225 255 true) 
+state$3x0$ > addAction (playAnimation (genIceBarrage 384 288 100 10000) (point 0 0) (point 25 7) false) 
+state$3x0$ > addAction (switchControl "albideshenryfrozen" true) 
+state$3x0$ > addAction (wait 0.25) 
+state$3x0$ > addAction (playAnimation (genIcePillar 0) (point 0 0) (point 30 8) false) 
+state$3x0$ > addAction (openBubble "exclam" "sarah" 0.5 false true) 
+state$3x0$ > addAction (createPath "sarah" false "UL3DL5") 
+state$3x0$ > addAction (wait 1.0) 
+state$3x0$ > addAction (panControl -18 -17 10.0 false)  #CROSSTOWN PAN-------
+state$3x0$ > addAction (wait 1.0) 
+state$3x0$ > addAction (switchControl "albidesbruno" true) 
+state$3x0$ > addAction (switchControl "albideskids" true) 
+state$3x0$ > addAction (setFloating "bruno" true 90 4) 
+state$3x0$ > addAction (changeElevation "bruno" 56 0.0 false) 
+state$3x0$ > addAction (playAnimation (genIceBarrage 384 288 100 10000) (point 0 0) (point 15 7) false) 
+state$3x0$ > addAction (setFloating "sarah" true 90 4) 
+state$3x0$ > addAction (changeElevation "sarah" 56 1.0 true) 
+state$3x0$ > addAction (playAnimation (genIcePillar 0) (point 0 0) (point 20 6) false) 
+state$3x0$ > addAction (playAnimation (genIceCube 1000) "" "sarah" false) 
+state$3x0$ > addAction (playAnimation (genIceCube 3500) "" "bruno" false) 
+state$3x0$ > addAction (playAnimation (genIceCube 20000) "" "alice" false) 
+state$3x0$ > addAction (playAnimation (genIceCube 20000) "" "timmy" false) 
+state$3x0$ > addAction (playAnimation (genIceCube 20000) "" "tommy" false) 
+state$3x0$ > addAction (flash 0.25 255 150 225 255 false) 
+state$3x0$ > addAction (switchControl "albidessarahfrozen" true) 
+state$3x0$ > addAction (wait 0.5) 
+state$3x0$ > addAction (flash 0.5 255 150 225 255 false) 
+state$3x0$ > addAction (changeElevation "sarah" 64 0.25 true) 
+state$3x0$ > addAction (setFloating "sarah" false 0 0) 
+state$3x0$ > addAction (changeElevation "sarah" 0 0.25 true) 
+state$3x0$ > addAction (switchControl "albidessarah" false) 
+state$3x0$ > addAction (playAnimation (genIceShatterPoof 1.0 0.0) "party" "sarah" false) 
+state$3x0$ > addAction (playAnimation (genIceShatterPoof -1.0 0.0) "party" "sarah" false) 
+state$3x0$ > addAction (wait 2.0) 
+state$3x0$ > addAction (flash 0.5 255 150 225 255 false) 
+state$3x0$ > addAction (changeElevation "bruno" 64 0.25 true) 
+state$3x0$ > addAction (setFloating "bruno" false 0 0) 
+state$3x0$ > addAction (changeElevation "bruno" 0 0.25 true) 
+state$3x0$ > addAction (switchControl "albidesbruno" false) 
+state$3x0$ > addAction (playAnimation (genIceBarrage 384 288 100 10000) (point 0 0) (point 7 11) false) 
+state$3x0$ > addAction (playAnimation (genIceShatterPoof 1.0 0.0) "party" "bruno" false) 
+state$3x0$ > addAction (playAnimation (genIceShatterPoof -1.0 0.0) "party" "bruno" false) 
+state$3x0$ > addAction (playAnimation (genIcePillar 0) (point 0 0) (point 10 8) false) 
+state$3x0$ > addAction (wait 2.0) 
+state$3x0$ > addAction (flash 0.5 255 150 225 255 false) 
+state$3x0$ > addAction (wait 2.0) 
+state$3x0$ > addAction (flash 0.5 255 150 225 255 false) 
+state$3x0$ > addAction (panControl -7 -2 8.0 false)  #LASTHOUSES PAN--------
+state$3x0$ > addAction (switchControl "albidesagnes" true) 
+state$3x0$ > addAction (createPath "agnes" true "sDR2") 
+state$3x0$ > addAction (openBubble "exclam" "agnes" 0.5 false true) 
+state$3x0$ > addAction (flash 0.5 255 150 225 255 false) 
+state$3x0$ > addAction (createPath "agnes" true "LD2") 
+state$3x0$ > addAction (playAnimation (genIcePillar 0) (point 0 0) (point 8 14) false) 
+state$3x0$ > addAction (openBubble "exclam" "agnes" 0.5 false true) 
+state$3x0$ > addAction (flash 0.5 255 150 225 255 false) 
+state$3x0$ > addAction (createPath "agnes" true "DR2UR6D3") 
+state$3x0$ > addAction (switchControl "albidesagnesfrozen" true) 
+state$3x0$ > addAction (playAnimation (genIceCube 1000) "" "agnes" false) 
+state$3x0$ > addAction (playAnimation (genIceBarrage 384 288 100 10000) (point 0 0) (point 12 15) false) 
+state$3x0$ > addAction (flash 0.5 255 150 225 255 false) 
+state$3x0$ > addAction (playAnimation (genIceBarrage 384 288 100 10000) (point 0 0) (point 17 20) false) 
+state$3x0$ > addAction (playAnimation (genIcePillar 0) (point 0 0) (point 14 19) false) 
+state$3x0$ > addAction (wait 2.0) 
+state$3x0$ > addAction (flash 0.5 255 150 225 255 false) 
+state$3x0$ > addAction (playAnimation (genIcePillar 0) (point 0 0) (point 17 23) false) 
+state$3x0$ > addAction (wait 2.0) 
+state$3x0$ > addAction (flash 0.5 255 150 225 255 true) 
+state$3x0$ > addAction (panControl 0 0 5.0 false) #LAST PAN------------------
+state$3x0$ > addAction (fadeControl 5.0 255 0 0 0 true true)
+state$3x0$ > addAction (showScene "albi") 
+state$3x0$ > addAction (fadeControl 2.0 255 0 0 0 false true)
+state$3x0$ > addAction (fadeControl 1.0 255 150 225 255 true true)
+state$3x0$ > addAction (shakeControl 0.0 0 false) 
+state$3x0$ > addAction (unloadScene 0) 
+state$3x0$ > addAction (wait 2.0) 
+state$3x0$ > addAction (showScene "albifrozen") 
+state$3x0$ > addAction (fadeControl 5.0 255 150 225 255 false true)
+state$3x0$ > addAction (wait 2.0) 
+state$3x0$ > addAction (pauseMusic 5.0) 
+state$3x0$ > addAction (fadeControl 5.0 255 0 0 0 true true)
 
 
 
@@ -422,70 +422,70 @@ setSprite "footsteps"
 \name$4x5$ <- newObject objName$4x5$ 4 5
 
 state1$4x5$ 0
-name$4x5$ > createState >
-addAction (createPath "party" true "d") >
-addAction (wait 1.0) >
-addAction (openBubble "exclam" "party" 1.0 false true) >
-addAction (createPath "party" true "RD5RDr") >
-addAction (message "|luc|: \nHey, Mister! Are you alright??") >
-addAction (message "|aramis|: \n...nnng...") >
-addAction (openBubble "dots" "aramis" 1.0 false true) >
-addAction (createPath "aramis" true "dW5rW5l") >
-addAction (openBubble "exclam" "aramis" 1.0 false true) >
-addAction (message "|aramis|: \nWh...where the hell am I??") >
-addAction (message "|luc|: \nYou're in Albi Forest...") >
-addAction (message "Are you ok? \nAre you hurt? \nHow many fingers am I holding up?") >
-addAction (openBubble "sweat" "aramis" 1.0 false false) >
-addAction (message "|aramis|: \nI'm fine, kid, I'm fine. Cool it.") >
-addAction (wait 1.0) >
-addAction (createPath "aramis" true "s2U") >
-addAction (createPath "party" false "u") >
-addAction (createPath "aramis" true "W5lW5S2") >
-addAction (message "|aramis|: \nWhew...sure made a mess here, huh?") >
-addAction (message "|luc|: \nHow did you manage to make it all the way out here?") >
-addAction (message "And in the middle of the night???") >
-addAction (createPath "aramis" true "dW5") >
-addAction (message "|aramis|: \nThat's uuuh... a bit of a long story, I'm afraid..") >
-addAction (message "Lessee...") >
-addAction (openBubble "dots" "aramis" 1.0 false true) >
-addAction (openBubble "exclam" "aramis" 1.0 false true) >
-addAction (createPath "party" false "r") >
-addAction (createPath "aramis" true "Dl") >
-addAction (message "|aramis|: \nWas there anyone else around when you got here??") >
-addAction (message "A woman?  With white hair??") >
-addAction (message "|luc|: \nNo, you were the only one!") >
-addAction (createPath "aramis" true "r") >
-addAction (openBubble "exclam" "aramis" 1.0 false false) >
-addAction (message "|aramis|: \nWait!") >
-addAction (createPath "aramis" true "R2") >
-addAction (message "|aramis|: \nThese footsteps!") >
-addAction (createPath "aramis" true "L2") >
-addAction (message "|aramis|: \nListen, I don't really know what's going on right now...") >
-addAction (message "...but I'd be willing to bet those tracks belong to someone who does.") >
-addAction (message "Waddya say we take a look?") >
-addAction (openBubble "qmark" "party" 1.0 false false) >
-addAction (message "|luc|: \nWhat? No! This is crazy, I don't even know you!") >
-addAction (message "I just came to see what that red light was!") >
-addAction (message "|aramis|: \nOh, right.  Yeah, that was probably me.") >
-addAction (message "Sorry 'bout that, were you asleep?") >
-addAction (message "|luc|: \nAs a matter of fact...") >
-addAction (openBubble "angry" "aramis" 1.0 true false) >
-addAction (message "|aramis|: \nNo one cares, kid!") >
-addAction (message "You any good with that sword?  Keep it close and let's go!") >
-addAction (message "|luc|: \nB-but I...I don't even know your name!") >
-addAction (openBubble "sweat" "aramis" 1.0 false false) >
-addAction (message "|aramis|: \nRight, ok...") >
-addAction (fadeControl 1.0 255 0 0 0 true true) >
-addAction (openNameSelect "aramis") >
-addAction (fadeControl 1.0 255 0 0 0 false true) >
-addAction (message "|aramis|: \nJust call me |aramis|.") >
-addAction (message "|luc|: \nOk then, my name's |luc|.") >
-addAction (message "|aramis|: \nYeah yeah, ok...") >
-addAction (message "Now shut up and follow those footsteps!") >
-addAction (createPath "aramis" true "L") >
-addAction (switchControl "albiaramisjoined" true) >
-addAction (modifyParty "aramis" false) >
-addAction (message "|aramis| has joined your party!")
+\state$4x5$ <- (name$4x5$ > createState)
+state$4x5$ > addAction (createPath "party" true "d") 
+state$4x5$ > addAction (wait 1.0) 
+state$4x5$ > addAction (openBubble "exclam" "party" 1.0 false true) 
+state$4x5$ > addAction (createPath "party" true "RD5RDr") 
+state$4x5$ > addAction (message "|luc|: \nHey, Mister! Are you alright??") 
+state$4x5$ > addAction (message "|aramis|: \n...nnng...") 
+state$4x5$ > addAction (openBubble "dots" "aramis" 1.0 false true) 
+state$4x5$ > addAction (createPath "aramis" true "dW5rW5l") 
+state$4x5$ > addAction (openBubble "exclam" "aramis" 1.0 false true) 
+state$4x5$ > addAction (message "|aramis|: \nWh...where the hell am I??") 
+state$4x5$ > addAction (message "|luc|: \nYou're in Albi Forest...") 
+state$4x5$ > addAction (message "Are you ok? \nAre you hurt? \nHow many fingers am I holding up?") 
+state$4x5$ > addAction (openBubble "sweat" "aramis" 1.0 false false) 
+state$4x5$ > addAction (message "|aramis|: \nI'm fine, kid, I'm fine. Cool it.") 
+state$4x5$ > addAction (wait 1.0) 
+state$4x5$ > addAction (createPath "aramis" true "s2U") 
+state$4x5$ > addAction (createPath "party" false "u") 
+state$4x5$ > addAction (createPath "aramis" true "W5lW5S2") 
+state$4x5$ > addAction (message "|aramis|: \nWhew...sure made a mess here, huh?") 
+state$4x5$ > addAction (message "|luc|: \nHow did you manage to make it all the way out here?") 
+state$4x5$ > addAction (message "And in the middle of the night???") 
+state$4x5$ > addAction (createPath "aramis" true "dW5") 
+state$4x5$ > addAction (message "|aramis|: \nThat's uuuh... a bit of a long story, I'm afraid..") 
+state$4x5$ > addAction (message "Lessee...") 
+state$4x5$ > addAction (openBubble "dots" "aramis" 1.0 false true) 
+state$4x5$ > addAction (openBubble "exclam" "aramis" 1.0 false true) 
+state$4x5$ > addAction (createPath "party" false "r") 
+state$4x5$ > addAction (createPath "aramis" true "Dl") 
+state$4x5$ > addAction (message "|aramis|: \nWas there anyone else around when you got here??") 
+state$4x5$ > addAction (message "A woman?  With white hair??") 
+state$4x5$ > addAction (message "|luc|: \nNo, you were the only one!") 
+state$4x5$ > addAction (createPath "aramis" true "r") 
+state$4x5$ > addAction (openBubble "exclam" "aramis" 1.0 false false) 
+state$4x5$ > addAction (message "|aramis|: \nWait!") 
+state$4x5$ > addAction (createPath "aramis" true "R2") 
+state$4x5$ > addAction (message "|aramis|: \nThese footsteps!") 
+state$4x5$ > addAction (createPath "aramis" true "L2") 
+state$4x5$ > addAction (message "|aramis|: \nListen, I don't really know what's going on right now...") 
+state$4x5$ > addAction (message "...but I'd be willing to bet those tracks belong to someone who does.") 
+state$4x5$ > addAction (message "Waddya say we take a look?") 
+state$4x5$ > addAction (openBubble "qmark" "party" 1.0 false false) 
+state$4x5$ > addAction (message "|luc|: \nWhat? No! This is crazy, I don't even know you!") 
+state$4x5$ > addAction (message "I just came to see what that red light was!") 
+state$4x5$ > addAction (message "|aramis|: \nOh, right.  Yeah, that was probably me.") 
+state$4x5$ > addAction (message "Sorry 'bout that, were you asleep?") 
+state$4x5$ > addAction (message "|luc|: \nAs a matter of fact...") 
+state$4x5$ > addAction (openBubble "angry" "aramis" 1.0 true false) 
+state$4x5$ > addAction (message "|aramis|: \nNo one cares, kid!") 
+state$4x5$ > addAction (message "You any good with that sword?  Keep it close and let's go!") 
+state$4x5$ > addAction (message "|luc|: \nB-but I...I don't even know your name!") 
+state$4x5$ > addAction (openBubble "sweat" "aramis" 1.0 false false) 
+state$4x5$ > addAction (message "|aramis|: \nRight, ok...") 
+state$4x5$ > addAction (fadeControl 1.0 255 0 0 0 true true) 
+state$4x5$ > addAction (openNameSelect "aramis") 
+state$4x5$ > addAction (fadeControl 1.0 255 0 0 0 false true) 
+state$4x5$ > addAction (message "|aramis|: \nJust call me |aramis|.") 
+state$4x5$ > addAction (message "|luc|: \nOk then, my name's |luc|.") 
+state$4x5$ > addAction (message "|aramis|: \nYeah yeah, ok...") 
+state$4x5$ > addAction (message "Now shut up and follow those footsteps!") 
+state$4x5$ > addAction (createPath "aramis" true "L") 
+state$4x5$ > addAction (switchControl "albiaramisjoined" true) 
+state$4x5$ > addAction (modifyParty "aramis" false) 
+state$4x5$ > addAction (message "|aramis| has joined your party!")
 
 \runstate1$4x5$ <- state1$4x5$ 0
 
@@ -575,116 +575,116 @@ addSwitchCondition "albisatyrfought"
 \name$17x6$ <- newObject objName$17x6$ 17 6
 
 state1$17x6$ 0
-name$17x6$ > createState >
-setIgnorePartyOnMove true >
-addAction (message "Woman's Voice: \nAAAAAAAH!!! HEEEEELP!!!") >
-addAction (playMusic "boss" true true 0.0) >
-addAction (switchControl "albiaramis2" true) >
-addAction (createPath "party" true "v") >
-addAction (createPath "aramis2" true "L") >
-addAction (openBubble "exclam" "aramis2" 1.0 false true) >
-addAction (message "|aramis|: \nOver there!") >
-addAction (panControl -7 -2 3.0 true) >
-addAction (wait 1.0) >
-addAction (message "Satyr: \nHeeheehee \nLittle girl all alone late at night.") >
-addAction (modifyParty "joy" false) >
-addAction (createPath "joy" true "KLk") >
-addAction (message "|joy|: \nS-Somebody, please! Help!") >
-addAction (createPath "satyr" true "L") >
-addAction (message "Satyr: \nNo need to scream, little one.") >
-addAction (message "No one's coming for you!") >
-addAction (message "Heeheeheehee!!!") >
-addAction (message "|aramis|: \nThat's where you're wrong!") >
-addAction (createPath "aramis2" true "S2L3") >
-addAction (createPath "luc" false "SL5U2us") >
-addAction (createPath "aramis2" true "L2U2L2us2") >
-addAction (createPath "satyr" true "d") >
-addAction (openBubble "exclam" "satyr" 1.0 false true) >
-addAction (createPath "satyr" true "R2d") >
-addAction (panControl -6 -2 0.5 true) >
-addAction (message "Satyr: \nOh look!  More little pretties to join  the fun!") >
-addAction (message "|aramis|: \nPicking on pretty ladies... What a rotten thing to do!") >
-addAction (wait 0.5) >
-addAction (createPath "joy" true "SDR3D2usW5") >
-addAction (createPath "aramis2" false "d") >
-addAction (createPath "luc" true "d") >
-addAction (openBubble "exclam" "aramis2" 1.0 false true) >
-addAction (message "|aramis|: \nStay back, lady! It's dangerous!") >
-addAction (message "|joy|: \n...I...I can fight too!!") >
-addAction (openBubble "qmark" "aramis2" 1.0 false true) >
-addAction (message "|aramis|: \nWell ok then!") >
-addAction (message "|joy| has joined your party!") >
-addAction (createPath "aramis2" false "u") >
-addAction (createPath "luc" true "u") >
-addAction (wait 0.5) >
-addAction (message "Satyr: If you're all done chatting, I've got a blade for you to meet!") >
-addAction (setBattleMusic ([x] "") ([x] playSong "victory" true true 0.0) ([x] fadeMusic 2.0)) >
-addAction (startBattle "satyrboss" true) >
-addAction (disableBattleMusic 0) >
-addAction (switchControl "albisatyrfought" true) >
-addAction (restoreParty 0) >
-addAction (wait 1.0) >
-addAction (createPath "aramis2" false "r") >
-addAction (createPath "luc" true "l") >
-addAction (message "|luc|: \nIs everyone all right?") >
-addAction (message "|joy|: \nI think so...") >
-addAction (playMusic "joy" true true 10.0) >
-addAction (createPath "aramis2" true "d") >
-addAction (message "|aramis|: \nHey, you really handled yourself well back there!") >
-addAction (message "Was that magic I saw??") >
-addAction (openBubble "dots" "joy" 1.0 true true) >
-addAction (wait 1.0) >
-addAction (openBubble "exclam" "aramis2" 1.0 false true) >
-addAction (message "|aramis|: \nWait a second!") >
-addAction (createPath "aramis2" true "Rd") >
-addAction (message "|aramis|: \nIt's you!") >
-addAction (message "You're the woman I saw back at that castle!") >
-addAction (openBubble "qmark" "luc" 1.0 false true) >
-addAction (message "|luc|: \nWhat castle?  What's going on??") >
-addAction (createPath "aramis2" true "r") >
-addAction (message "|aramis|: \nThere were these robed people and these big flashes of light!") >
-addAction (message "And a sword!") >
-addAction (openBubble "dots" "luc" 1.0 true true) >
-addAction (message "|aramis|: \nListen, I'm not crazy!  I saw this lady!") >
-addAction (message "Right before everything went red, and I woke up here.") >
-addAction (panControl -4 0 1.0 false) >
-addAction (createPath "joy" true "s2R3") >
-addAction (createPath "luc" false "r") >
-addAction (createPath "aramis2" true "DR") >
-addAction (message "|aramis|: \nHey where you goin?") >
-addAction (message "|joy|: \nI'm sorry I...don't remember any of that...") >
-addAction (openBubble "exclam" "luc" 1.0 false true) >
-addAction (message "|luc|: \nAmnesia??") >
-addAction (wait 1.0) >
-addAction (createPath "joy" true "l") >
-addAction (message "|joy|: \nThe last thing I remember is waking up in that crater...") >
-addAction (wait 0.5) >
-addAction (message "|luc|: \nWhat's your name?") >
-addAction (message "|joy|: \nIt's...") >
-addAction (openBubble "dots" "joy" 1.0 true true) >
-addAction (createPath "joy" true "S2D") >
-addAction (message "|joy|: \nI don't remember!") >
-addAction (createPath "aramis2" false "RDr") >
-addAction (createPath "luc" true "R2d") >
-addAction (message "|aramis|: \nHey, it's ok...") >
-addAction (message "Don't worry.  We'll get this figured out.") >
-addAction (message "My name's |aramis| and this is... uuh... |luc|ersomething...") >
-addAction (openBubble "angry" "luc" 1.0 true false) >
-addAction (message "|luc|: \nIt's |luc|!!!") >
-addAction (createPath "joy" true "u") >
-addAction (message "|joy|: \nThank you both so much for helping me!") >
-addAction (createPath "aramis2" true "u") >
-addAction (message "|aramis|: \nHey, kid, do you have a place for us to stay?") >
-addAction (message "|luc|: \nYes, let's head back to the village.") >
-addAction (message "We'll figure something out in the morning.") >
-addAction (panControl -4 -2 1.0 false) >
-addAction (createPath "joy" false "U2") >
-addAction (createPath "aramis2" false "U2R") >
-addAction (fadeControl 1.0 255 0 0 0 true true) >
-addAction (switchControl "albijoyscenedone" true) >
-addAction (teleportParty name$17x6$ 13 4 "albiforest2") >
-addAction (createPath "party" true "Vd") >
-addAction (fadeControl 1.0 255 0 0 0 false true)
+\state$17x6$ <- (name$17x6$ > createState)
+state$17x6$ > setIgnorePartyOnMove true
+state$17x6$ > addAction (message "Woman's Voice: \nAAAAAAAH!!! HEEEEELP!!!") 
+state$17x6$ > addAction (playMusic "boss" true true 0.0) 
+state$17x6$ > addAction (switchControl "albiaramis2" true) 
+state$17x6$ > addAction (createPath "party" true "v") 
+state$17x6$ > addAction (createPath "aramis2" true "L") 
+state$17x6$ > addAction (openBubble "exclam" "aramis2" 1.0 false true) 
+state$17x6$ > addAction (message "|aramis|: \nOver there!") 
+state$17x6$ > addAction (panControl -7 -2 3.0 true) 
+state$17x6$ > addAction (wait 1.0) 
+state$17x6$ > addAction (message "Satyr: \nHeeheehee \nLittle girl all alone late at night.") 
+state$17x6$ > addAction (modifyParty "joy" false) 
+state$17x6$ > addAction (createPath "joy" true "KLk") 
+state$17x6$ > addAction (message "|joy|: \nS-Somebody, please! Help!") 
+state$17x6$ > addAction (createPath "satyr" true "L") 
+state$17x6$ > addAction (message "Satyr: \nNo need to scream, little one.") 
+state$17x6$ > addAction (message "No one's coming for you!") 
+state$17x6$ > addAction (message "Heeheeheehee!!!") 
+state$17x6$ > addAction (message "|aramis|: \nThat's where you're wrong!") 
+state$17x6$ > addAction (createPath "aramis2" true "S2L3") 
+state$17x6$ > addAction (createPath "luc" false "SL5U2us") 
+state$17x6$ > addAction (createPath "aramis2" true "L2U2L2us2") 
+state$17x6$ > addAction (createPath "satyr" true "d") 
+state$17x6$ > addAction (openBubble "exclam" "satyr" 1.0 false true) 
+state$17x6$ > addAction (createPath "satyr" true "R2d") 
+state$17x6$ > addAction (panControl -6 -2 0.5 true) 
+state$17x6$ > addAction (message "Satyr: \nOh look!  More little pretties to join  the fun!") 
+state$17x6$ > addAction (message "|aramis|: \nPicking on pretty ladies... What a rotten thing to do!") 
+state$17x6$ > addAction (wait 0.5) 
+state$17x6$ > addAction (createPath "joy" true "SDR3D2usW5") 
+state$17x6$ > addAction (createPath "aramis2" false "d") 
+state$17x6$ > addAction (createPath "luc" true "d") 
+state$17x6$ > addAction (openBubble "exclam" "aramis2" 1.0 false true) 
+state$17x6$ > addAction (message "|aramis|: \nStay back, lady! It's dangerous!") 
+state$17x6$ > addAction (message "|joy|: \n...I...I can fight too!!") 
+state$17x6$ > addAction (openBubble "qmark" "aramis2" 1.0 false true) 
+state$17x6$ > addAction (message "|aramis|: \nWell ok then!") 
+state$17x6$ > addAction (message "|joy| has joined your party!") 
+state$17x6$ > addAction (createPath "aramis2" false "u") 
+state$17x6$ > addAction (createPath "luc" true "u") 
+state$17x6$ > addAction (wait 0.5) 
+state$17x6$ > addAction (message "Satyr: If you're all done chatting, I've got a blade for you to meet!") 
+state$17x6$ > addAction (setBattleMusic ([x] "") ([x] playSong "victory" true true 0.0) ([x] fadeMusic 2.0)) 
+state$17x6$ > addAction (startBattle "satyrboss" true) 
+state$17x6$ > addAction (disableBattleMusic 0) 
+state$17x6$ > addAction (switchControl "albisatyrfought" true) 
+state$17x6$ > addAction (restoreParty 0) 
+state$17x6$ > addAction (wait 1.0) 
+state$17x6$ > addAction (createPath "aramis2" false "r") 
+state$17x6$ > addAction (createPath "luc" true "l") 
+state$17x6$ > addAction (message "|luc|: \nIs everyone all right?") 
+state$17x6$ > addAction (message "|joy|: \nI think so...") 
+state$17x6$ > addAction (playMusic "joy" true true 10.0) 
+state$17x6$ > addAction (createPath "aramis2" true "d") 
+state$17x6$ > addAction (message "|aramis|: \nHey, you really handled yourself well back there!") 
+state$17x6$ > addAction (message "Was that magic I saw??") 
+state$17x6$ > addAction (openBubble "dots" "joy" 1.0 true true) 
+state$17x6$ > addAction (wait 1.0) 
+state$17x6$ > addAction (openBubble "exclam" "aramis2" 1.0 false true) 
+state$17x6$ > addAction (message "|aramis|: \nWait a second!") 
+state$17x6$ > addAction (createPath "aramis2" true "Rd") 
+state$17x6$ > addAction (message "|aramis|: \nIt's you!") 
+state$17x6$ > addAction (message "You're the woman I saw back at that castle!") 
+state$17x6$ > addAction (openBubble "qmark" "luc" 1.0 false true) 
+state$17x6$ > addAction (message "|luc|: \nWhat castle?  What's going on??") 
+state$17x6$ > addAction (createPath "aramis2" true "r") 
+state$17x6$ > addAction (message "|aramis|: \nThere were these robed people and these big flashes of light!") 
+state$17x6$ > addAction (message "And a sword!") 
+state$17x6$ > addAction (openBubble "dots" "luc" 1.0 true true) 
+state$17x6$ > addAction (message "|aramis|: \nListen, I'm not crazy!  I saw this lady!") 
+state$17x6$ > addAction (message "Right before everything went red, and I woke up here.") 
+state$17x6$ > addAction (panControl -4 0 1.0 false) 
+state$17x6$ > addAction (createPath "joy" true "s2R3") 
+state$17x6$ > addAction (createPath "luc" false "r") 
+state$17x6$ > addAction (createPath "aramis2" true "DR") 
+state$17x6$ > addAction (message "|aramis|: \nHey where you goin?") 
+state$17x6$ > addAction (message "|joy|: \nI'm sorry I...don't remember any of that...") 
+state$17x6$ > addAction (openBubble "exclam" "luc" 1.0 false true) 
+state$17x6$ > addAction (message "|luc|: \nAmnesia??") 
+state$17x6$ > addAction (wait 1.0) 
+state$17x6$ > addAction (createPath "joy" true "l") 
+state$17x6$ > addAction (message "|joy|: \nThe last thing I remember is waking up in that crater...") 
+state$17x6$ > addAction (wait 0.5) 
+state$17x6$ > addAction (message "|luc|: \nWhat's your name?") 
+state$17x6$ > addAction (message "|joy|: \nIt's...") 
+state$17x6$ > addAction (openBubble "dots" "joy" 1.0 true true) 
+state$17x6$ > addAction (createPath "joy" true "S2D") 
+state$17x6$ > addAction (message "|joy|: \nI don't remember!") 
+state$17x6$ > addAction (createPath "aramis2" false "RDr") 
+state$17x6$ > addAction (createPath "luc" true "R2d") 
+state$17x6$ > addAction (message "|aramis|: \nHey, it's ok...") 
+state$17x6$ > addAction (message "Don't worry.  We'll get this figured out.") 
+state$17x6$ > addAction (message "My name's |aramis| and this is... uuh... |luc|ersomething...") 
+state$17x6$ > addAction (openBubble "angry" "luc" 1.0 true false) 
+state$17x6$ > addAction (message "|luc|: \nIt's |luc|!!!") 
+state$17x6$ > addAction (createPath "joy" true "u") 
+state$17x6$ > addAction (message "|joy|: \nThank you both so much for helping me!") 
+state$17x6$ > addAction (createPath "aramis2" true "u") 
+state$17x6$ > addAction (message "|aramis|: \nHey, kid, do you have a place for us to stay?") 
+state$17x6$ > addAction (message "|luc|: \nYes, let's head back to the village.") 
+state$17x6$ > addAction (message "We'll figure something out in the morning.") 
+state$17x6$ > addAction (panControl -4 -2 1.0 false) 
+state$17x6$ > addAction (createPath "joy" false "U2") 
+state$17x6$ > addAction (createPath "aramis2" false "U2R") 
+state$17x6$ > addAction (fadeControl 1.0 255 0 0 0 true true) 
+state$17x6$ > addAction (switchControl "albijoyscenedone" true) 
+state$17x6$ > addAction (teleportParty name$17x6$ 13 4 "albiforest2") 
+state$17x6$ > addAction (createPath "party" true "Vd") 
+state$17x6$ > addAction (fadeControl 1.0 255 0 0 0 false true)
 
 \runstate1$17x6$ <- state1$17x6$ 0
 

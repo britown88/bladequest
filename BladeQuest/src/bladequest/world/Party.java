@@ -940,6 +940,11 @@ public class Party
 		}
 	}
 	
+	public boolean isTraveling()
+	{
+		return !gridPos.equals(originalTarget);
+	}
+	
 	private void mapPath()
 	{
 		buildObsMap();		
