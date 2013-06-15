@@ -71,8 +71,8 @@ public class bactShatter extends DelegatingAction {
 		for (int i = 0; i < shatterPoints; ++i)
 		{
 			Point p = new Point();
-			p.x = r.left + (int)radius + Global.rand.nextInt((int)(r.width()-radius));
-			p.y = r.bottom - (int)radius - Global.rand.nextInt((int)(r.height()/1.1-radius));
+			p.x = r.left + (int)radius*2 + Global.rand.nextInt((int)(r.width()-radius*2));
+			p.y = r.bottom - (int)radius*2 - Global.rand.nextInt((int)(r.height()/1.1-radius*2));
 			
 			pts.add(p);
 		}

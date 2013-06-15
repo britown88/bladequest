@@ -48,7 +48,7 @@ public class BattleAnimations
 		BattleAnim anim = new BattleAnim(1000.0f);
 		
 		
-		Point position = target.getPosition();
+		Point position = target.getPosition(true);
 		
 		Bitmap icePoof = Global.bitmaps.get("particles");
 		Rect poofRect = new Rect(1,13,13,24);
@@ -109,8 +109,14 @@ public class BattleAnimations
 
 	public static Rect getCharacterIceCube(PlayerCharacter c)
 	{
-		int width = (int)(c.getWidth()/2.94);
-		int height =(int)(c.getHeight()/2.1);
+		
+		Rect iceRect = getIceBlock().srcRect;
+		
+		int x = (int) (c.getWidth() * (((float)iceRect.width()) / iceRect.height()));
+		int y = c.getHeight(); 
+		
+		int width = x/2;
+		int height = y/2;
 		
 		Point drawPoint = c.getPosition(true);
 		Rect r = new Rect(drawPoint.x -width, drawPoint.y-height,
