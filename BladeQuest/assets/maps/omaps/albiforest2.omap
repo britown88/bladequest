@@ -47,6 +47,8 @@ createCliffJumpBarrier x (y > add 1)
 
 
 
+
+
 #!OBJ 17 15
 \objName$17x15$ <- "name"
 \name$17x15$ <- newObject objName$17x15$ 17 15
@@ -84,85 +86,241 @@ addAction (createPath "party" true "D")
 \runstate2$3x0$ <- state2$3x0$ 0
 
 state3$3x0$ 0
-name$3x0$ > createState >
-addSwitchCondition "albijoyscenedone" >
-addAction (fadeControl 0.5 255 0 0 0 true true) >
-addAction (teleportParty name$3x0$ 3 48 "albiforestnight") >
-addAction (createPath "party" true "v") >
-addAction (pauseMusic 2.0) >
-addAction (fadeControl 4.0 255 0 0 0 false false) >
-addAction (panControl 0 -8 4.0 false) >
-addAction (createPath "luc" false "s2RU3LUd") >
-addAction (createPath "joy" false "s2RU2R2U3") >
-addAction (createPath "aramis" true "s2U3RUR2U3l") >
-addAction (wait 0.5) >
-addAction (openBubble "exclam" "aramis" 1.0 false true) >
-addAction (message "|aramis|: \nSomething up?") >
-addAction (createPath "luc" true "r") >
-addAction (message "|luc|: \nI'm not sure if I'm imagining things...") >
-addAction (message "...but it feels like it just got really cold out here...") >
-addAction (createPath "joy" true "r") >
-addAction (message "|joy|: \nI feel it too!") >
-addAction (message "|aramis|: \nYou're both just coming off of a fight.") >
-addAction (message "Of course it's gonna be cold!") >
-addAction (message "|luc|: \nHmmm... maybe...") >
-addAction (wait 0.5) >
-addAction (createPath "luc" false "U4") >
-addAction (panControl 0 -10 2.0 true) >
-addAction (wait 0.5) >
-addAction (flash 1.0 255 150 225 255 true) >
-addAction (playMusic "roland" true true 0.0) >
-addAction (createPath "luc" true "d") >
-addAction (openBubble "exclam" "luc" 1.0 false false) >
-addAction (openBubble "exclam" "aramis" 1.0 false false) >
-addAction (openBubble "exclam" "joy" 1.0 false true) >
-addAction (panControl 0 -11 1.0 false) >
-addAction (createPath "joy" true "S2L") >
-addAction (createPath "aramis" false "S2L2U3") >
-addAction (createPath "joy" true "U4RUl") >
-addAction (message "|joy|: \nWhat on earth was that?!") >
-addAction (openBubble "dots" "aramis" 1.0 false true) >
-addAction (createPath "joy" true "d") >
-addAction (wait 0.5) >
-addAction (message "|aramis|: \nYou know now that you mention it...") >
-addAction (message "It's downright freezing out here!") >
-addAction (wait 0.5) >
-addAction (flash 1.0 255 150 225 255 true) >
-addAction (wait 0.5) >
-addAction (createPath "joy" true "u") >
-addAction (openBubble "exclam" "joy" 1.0 false false) >
-addAction (message "|joy|: Look!!! ") >
-addAction (panControl 1 -14 3.0 false) >
-addAction (createPath "luc" false "W5S2R3U2") >
-addAction (createPath "joy" false "R2URu") >
-addAction (createPath "aramis" true "W8URUR2U") >
-addAction (flash 0.5 255 150 225 255 false) >
-addAction (wait 1.0) >
-addAction (panControl 1 -16 3.0 false) >
-addAction (flash 0.5 255 150 225 255 false) >
-addAction (wait 0.5) >
-addAction (flash 0.5 255 150 225 255 false) >
-addAction (createPath "luc" true "s2U3") >
-addAction (wait 1.5) >
-addAction (openBubble "exclam" "luc" 1.0 false false) >
-addAction (wait 0.5) >
-addAction (message "|luc|: By Gods...") >
-addAction (message "The village!") >
-addAction (fadeControl 3.0 255 0 0 0 true true) >
-addAction (showScene "albi") >
-addAction (fadeControl 3.0 255 0 0 0 false true) >
-addAction (wait 1.0) >
-addAction (flash 1.0 255 150 225 255 true) >
-addAction (wait 1.5) >
-addAction (flash 0.25 255 150 225 255 true) >
-addAction (flash 0.25 255 150 225 255 true) >
-addAction (shakeControl -1.0 2 false) >
-addAction (wait 1.0) >
-addAction (fadeControl 3.0 255 0 0 0 true true) >
-addAction (unloadScene 0) >
-addAction (teleportParty name$3x0$ 24 24 "albinight") >
-addAction (fadeControl 2.0 255 0 0 0 false false) >
-addAction (wait 1.0)
+\state <- (name$3x0$ > createState)
+state > addSwitchCondition "albijoyscenedone" 
+state > addAction (fadeControl 0.5 255 0 0 0 true true) 
+state > addAction (teleportParty name$3x0$ 3 48 "albiforestnight") 
+state > addAction (createPath "party" true "v") 
+state > addAction (pauseMusic 2.0) 
+state > addAction (fadeControl 4.0 255 0 0 0 false false) 
+state > addAction (panControl 0 -8 4.0 false) 
+state > addAction (createPath "luc" false "s2RU3LUd") 
+state > addAction (createPath "joy" false "s2RU2R2U3") 
+state > addAction (createPath "aramis" true "s2U3RUR2U3l") 
+state > addAction (wait 0.5) 
+state > addAction (openBubble "exclam" "aramis" 1.0 false true) 
+state > addAction (message "|aramis|: \nSomething up?") 
+state > addAction (createPath "luc" true "r") 
+state > addAction (message "|luc|: \nI'm not sure if I'm imagining things...") 
+state > addAction (message "...but it feels like it just got really cold out here...") 
+state > addAction (createPath "joy" true "r") 
+state > addAction (message "|joy|: \nI feel it too!") 
+state > addAction (message "|aramis|: \nYou're both just coming off of a fight.") 
+state > addAction (message "Of course it's gonna be cold!") 
+state > addAction (message "|luc|: \nHmmm... maybe...") 
+state > addAction (wait 0.5) 
+state > addAction (createPath "luc" false "U4") 
+state > addAction (panControl 0 -10 2.0 true) 
+state > addAction (wait 0.5) 
+state > addAction (flash 1.0 255 150 225 255 true) 
+state > addAction (playMusic "roland" true true 0.0) 
+state > addAction (createPath "luc" true "d") 
+state > addAction (openBubble "exclam" "luc" 1.0 false false) 
+state > addAction (openBubble "exclam" "aramis" 1.0 false false) 
+state > addAction (openBubble "exclam" "joy" 1.0 false true) 
+state > addAction (panControl 0 -11 1.0 false) 
+state > addAction (createPath "joy" true "S2L") 
+state > addAction (createPath "aramis" false "S2L2U3") 
+state > addAction (createPath "joy" true "U4RUl") 
+state > addAction (message "|joy|: \nWhat on earth was that?!") 
+state > addAction (openBubble "dots" "aramis" 1.0 false true) 
+state > addAction (createPath "joy" true "d") 
+state > addAction (wait 0.5) 
+state > addAction (message "|aramis|: \nYou know now that you mention it...") 
+state > addAction (message "It's downright freezing out here!") 
+state > addAction (wait 0.5) 
+state > addAction (flash 1.0 255 150 225 255 true) 
+state > addAction (wait 0.5) 
+state > addAction (createPath "joy" true "u") 
+state > addAction (openBubble "exclam" "joy" 1.0 false false) 
+state > addAction (message "|joy|: Look!!! ") 
+state > addAction (panControl 1 -14 3.0 false) 
+state > addAction (createPath "luc" false "W5S2R3U2") 
+state > addAction (createPath "joy" false "R2URu") 
+state > addAction (createPath "aramis" true "W8URUR2U") 
+state > addAction (flash 0.5 255 150 225 255 false) 
+state > addAction (wait 1.0) 
+state > addAction (panControl 1 -16 3.0 false) 
+state > addAction (flash 0.5 255 150 225 255 false) 
+state > addAction (wait 0.5) 
+state > addAction (flash 0.5 255 150 225 255 false) 
+state > addAction (createPath "luc" true "s2U3") 
+state > addAction (wait 1.5) 
+state > addAction (openBubble "exclam" "luc" 1.0 false false) 
+state > addAction (wait 0.5) 
+state > addAction (message "|luc|: By Gods...") 
+state > addAction (message "The village!") 
+state > addAction (fadeControl 3.0 255 0 0 0 true true) 
+state > addAction (showScene "albi") 
+state > addAction (fadeControl 3.0 255 0 0 0 false true) 
+state > addAction (wait 1.0) 
+state > addAction (flash 1.0 255 150 225 255 true) 
+state > addAction (wait 1.5) 
+state > addAction (flash 0.25 255 150 225 255 true) 
+state > addAction (flash 0.25 255 150 225 255 true) 
+state > addAction (shakeControl -1.0 2 false) 
+state > addAction (wait 1.0) 
+state > addAction (fadeControl 3.0 255 0 0 0 true true) 
+state > addAction (unloadScene 0) 
+state > addAction (teleportParty name$3x0$ 24 24 "albinight") 
+state > addAction (fadeControl 2.0 255 0 0 0 false false) 
+state > addAction (wait 1.0) 
+state > addAction (openBubble "qmark" "arthur" 1.0 false false) 
+state > addAction (createPath "arthur" true "rW3lW3rW3lW3d") 
+state > addAction (wait 0.5) 
+state > addAction (openBubble "exclam" "arthur" 0.5 false false) 
+state > addAction (wait 0.25) 
+state > addAction (playAnimation (genIceShot 0) (point 0 0) (point 24 23) false) 
+state > addAction (wait 0.25) 
+state > addAction (createPath "arthur" true "S2lKR") 
+state > addAction (wait 0.5) 
+state > addAction (createPath "arthur" false "XrW3lW3") 
+state > addAction (setFloating "arthur" true 90 4) 
+state > addAction (playAnimation (genIceBarrage 384 288 10 10000) (point 0 0) (point 24 23) false) 
+state > addAction (changeElevation "arthur" 64 3.0 true) 
+state > addAction (wait 3.0) 
+state > addAction (createPath "arthur" false "u") 
+state > addAction (switchControl "albidesarthurfrozen" true) 
+state > addAction (playAnimation (genIceCube 2750) "" "arthur" false) 
+state > addAction (flash 0.25 255 150 225 255 true) 
+state > addAction (wait 2.0) 
+state > addAction (changeElevation "arthur" 72 0.25 true) 
+state > addAction (changeElevation "arthur" 0 0.25 true) 
+state > addAction (setFloating "arthur" false 0 0) 
+state > addAction (switchControl "albidesarthurdead" true) 
+state > addAction (playAnimation (genIceShatterPoof 1.0 0.0) "party" "arthur" false) 
+state > addAction (playAnimation (genIceShatterPoof -1.0 0.0) "party" "arthur" false) 
+state > addAction (wait 1.0) 
+state > addAction (flash 0.5 255 150 225 255 false) 
+state > addAction (playAnimation (genIcePillar 0) (point 0 0) (point 26 20) false) 
+state > addAction (playAnimation (genIceBarrage 384 288 100 10000) (point 0 0) (point 29 18) false) 
+state > addAction (panControl 5 -8 4.0 false)  #FIRST PAN--------------
+state > addAction (wait 1.0) 
+state > addAction (switchControl "albidesgeorge" true) 
+state > addAction (createPath "george" false "s2D2u") 
+state > addAction (wait 0.5) 
+state > addAction (switchControl "albidesanne" true) 
+state > addAction (createPath "anne" false "s2D") 
+state > addAction (wait 1.0) 
+state > addAction (flash 0.5 255 150 225 255 false) 
+state > addAction (createPath "anne" false "L4") 
+state > addAction (createPath "george" false "SL5") 
+state > addAction (wait 0.5) 
+state > addAction (createPath "anne" false "XrW4lW4") 
+state > addAction (createPath "george" false "XrW2lW2") 
+state > addAction (setFloating "anne" true 90 4) 
+state > addAction (setFloating "george" true 90 4) 
+state > addAction (changeElevation "anne" 72 0.75 false) 
+state > addAction (changeElevation "george" 56 0.75 false) 
+state > addAction (playAnimation (genIceBarrage 384 288 100 10000) (point 0 0) (point 29 12) false) 
+state > addAction (wait 0.5) 
+state > addAction (playAnimation (genIceCube 750) "" "george" false) 
+state > addAction (flash 0.25 255 150 225 255 true) 
+state > addAction (switchControl "albidesgeorgefrozen" true) 
+state > addAction (playAnimation (genIceCube 500) "" "anne" false) 
+state > addAction (flash 0.25 255 150 225 255 true) 
+state > addAction (switchControl "albidesannefrozen" true) 
+state > addAction (panControl 5 -17 4.0 false) #INN PAN----------------
+state > addAction (setFloating "anne" false 0 0) 
+state > addAction (setFloating "george" false 0 0) 
+state > addAction (changeElevation "anne" 0 0.25 false) 
+state > addAction (changeElevation "george" 0 0.25 true) 
+state > addAction (switchControl "albidesgeorge" false) 
+state > addAction (switchControl "albidesanne" false) 
+state > addAction (playAnimation (genIceShatterPoof 1.0 0.0) "party" "george" false) 
+state > addAction (playAnimation (genIceShatterPoof -1.0 0.0) "party" "george" false) 
+state > addAction (playAnimation (genIceShatterPoof 1.0 0.0) "party" "anne" false) 
+state > addAction (playAnimation (genIceShatterPoof -1.0 0.0) "party" "anne" false) 
+state > addAction (switchControl "albidessarah" true) 
+state > addAction (switchControl "albideshenry" true) 
+state > addAction (wait 0.75) 
+state > addAction (flash 0.5 255 150 225 255 false) 
+state > addAction (createPath "sarah" false "s2D2lS") 
+state > addAction (createPath "henry" false "sR4") 
+state > addAction (wait 1.0) 
+state > addAction (playAnimation (genIceCube 10000) "" "henry" false) 
+state > addAction (flash 0.25 255 150 225 255 true) 
+state > addAction (playAnimation (genIceBarrage 384 288 100 10000) (point 0 0) (point 25 7) false) 
+state > addAction (switchControl "albideshenryfrozen" true) 
+state > addAction (wait 0.25) 
+state > addAction (playAnimation (genIcePillar 0) (point 0 0) (point 30 8) false) 
+state > addAction (openBubble "exclam" "sarah" 0.5 false true) 
+state > addAction (createPath "sarah" false "UL3DL5") 
+state > addAction (wait 1.0) 
+state > addAction (panControl -18 -17 10.0 false)  #CROSSTOWN PAN-------
+state > addAction (wait 1.0) 
+state > addAction (switchControl "albidesbruno" true) 
+state > addAction (switchControl "albideskids" true) 
+state > addAction (setFloating "bruno" true 90 4) 
+state > addAction (changeElevation "bruno" 56 0.0 false) 
+state > addAction (playAnimation (genIceBarrage 384 288 100 10000) (point 0 0) (point 15 7) false) 
+state > addAction (setFloating "sarah" true 90 4) 
+state > addAction (changeElevation "sarah" 56 1.0 true) 
+state > addAction (playAnimation (genIcePillar 0) (point 0 0) (point 20 6) false) 
+state > addAction (playAnimation (genIceCube 1000) "" "sarah" false) 
+state > addAction (playAnimation (genIceCube 3500) "" "bruno" false) 
+state > addAction (playAnimation (genIceCube 20000) "" "alice" false) 
+state > addAction (playAnimation (genIceCube 20000) "" "timmy" false) 
+state > addAction (playAnimation (genIceCube 20000) "" "tommy" false) 
+state > addAction (flash 0.25 255 150 225 255 false) 
+state > addAction (switchControl "albidessarahfrozen" true) 
+state > addAction (wait 0.5) 
+state > addAction (flash 0.5 255 150 225 255 false) 
+state > addAction (changeElevation "sarah" 64 0.25 true) 
+state > addAction (setFloating "sarah" false 0 0) 
+state > addAction (changeElevation "sarah" 0 0.25 true) 
+state > addAction (switchControl "albidessarah" false) 
+state > addAction (playAnimation (genIceShatterPoof 1.0 0.0) "party" "sarah" false) 
+state > addAction (playAnimation (genIceShatterPoof -1.0 0.0) "party" "sarah" false) 
+state > addAction (wait 2.0) 
+state > addAction (flash 0.5 255 150 225 255 false) 
+state > addAction (changeElevation "bruno" 64 0.25 true) 
+state > addAction (setFloating "bruno" false 0 0) 
+state > addAction (changeElevation "bruno" 0 0.25 true) 
+state > addAction (switchControl "albidesbruno" false) 
+state > addAction (playAnimation (genIceBarrage 384 288 100 10000) (point 0 0) (point 7 11) false) 
+state > addAction (playAnimation (genIceShatterPoof 1.0 0.0) "party" "bruno" false) 
+state > addAction (playAnimation (genIceShatterPoof -1.0 0.0) "party" "bruno" false) 
+state > addAction (playAnimation (genIcePillar 0) (point 0 0) (point 10 8) false) 
+state > addAction (wait 2.0) 
+state > addAction (flash 0.5 255 150 225 255 false) 
+state > addAction (wait 2.0) 
+state > addAction (flash 0.5 255 150 225 255 false) 
+state > addAction (panControl -7 -2 8.0 false)  #LASTHOUSES PAN--------
+state > addAction (switchControl "albidesagnes" true) 
+state > addAction (createPath "agnes" true "sDR2") 
+state > addAction (openBubble "exclam" "agnes" 0.5 false true) 
+state > addAction (flash 0.5 255 150 225 255 false) 
+state > addAction (createPath "agnes" true "LD2") 
+state > addAction (playAnimation (genIcePillar 0) (point 0 0) (point 8 14) false) 
+state > addAction (openBubble "exclam" "agnes" 0.5 false true) 
+state > addAction (flash 0.5 255 150 225 255 false) 
+state > addAction (createPath "agnes" true "DR2UR6D3") 
+state > addAction (switchControl "albidesagnesfrozen" true) 
+state > addAction (playAnimation (genIceCube 1000) "" "agnes" false) 
+state > addAction (playAnimation (genIceBarrage 384 288 100 10000) (point 0 0) (point 12 15) false) 
+state > addAction (flash 0.5 255 150 225 255 false) 
+state > addAction (playAnimation (genIceBarrage 384 288 100 10000) (point 0 0) (point 17 20) false) 
+state > addAction (playAnimation (genIcePillar 0) (point 0 0) (point 14 19) false) 
+state > addAction (wait 2.0) 
+state > addAction (flash 0.5 255 150 225 255 false) 
+state > addAction (playAnimation (genIcePillar 0) (point 0 0) (point 17 23) false) 
+state > addAction (wait 2.0) 
+state > addAction (flash 0.5 255 150 225 255 true) 
+state > addAction (panControl 0 0 5.0 false) #LAST PAN------------------
+state > addAction (fadeControl 5.0 255 0 0 0 true true)
+state > addAction (showScene "albi") 
+state > addAction (fadeControl 2.0 255 0 0 0 false true)
+state > addAction (fadeControl 1.0 255 150 225 255 true true)
+state > addAction (shakeControl 0.0 0 false) 
+state > addAction (unloadScene 0) 
+state > addAction (wait 2.0) 
+state > addAction (showScene "albifrozen") 
+state > addAction (fadeControl 5.0 255 150 225 255 false true)
+state > addAction (wait 2.0) 
+state > addAction (pauseMusic 5.0) 
+state > addAction (fadeControl 5.0 255 0 0 0 true true)
+
 
 
 \runstate3$3x0$ <- state3$3x0$ 0

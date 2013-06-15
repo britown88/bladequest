@@ -415,6 +415,87 @@ public class WorldAnimations
 		}.initialize();
 	}
 	
+	public static AnimationBuilder buildIceCube(int length)
+	{
+		return new AnimationBuilder() {	
+			int length;
+			
+			AnimationBuilder initialize(int length)
+			{			
+				this.length = length;
+				return this;
+			}
+			
+			@Override
+			public BattleAnim buildAnimation(BattleEventBuilder builder) 
+			{
+				BattleAnim anim = new BattleAnim(1000.0f);
+				//anim.loop();
+				BattleAnimObject obj = new BattleAnimObject(Types.Bitmap, false, "icecube");
+				
+				BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Target);
+				state.pos1 = new Point(0,0);
+				state.size = new Point(48, 48);
+				state.argb(255, 0, 0, 0);
+				state.colorize = 0.0f;
+				obj.addState(state);				
+				
+				state = new BattleAnimObjState(length, PosTypes.Target);
+				state.pos1 = new Point(0,0);
+				state.size = new Point(48, 48);
+				state.argb(255, 0, 0, 0);
+				state.colorize = 0.0f;
+				obj.addState(state);	
+				anim.addObject(obj);
+				
+				return anim;
+			}
+		}.initialize(length);
+	}
+	
+	public static AnimationBuilder buildIcePillar()
+	{
+		return new AnimationBuilder() {	
+			
+			AnimationBuilder initialize()
+			{			
+				return this;
+			}
+			
+			@Override
+			public BattleAnim buildAnimation(BattleEventBuilder builder) 
+			{
+				BattleAnim anim = new BattleAnim(1000.0f);
+				//anim.loop();
+				BattleAnimObject obj = new BattleAnimObject(Types.Bitmap, false, "iceblock");
+				
+				BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Target);
+				state.pos1 = new Point(0,0);
+				state.size = new Point(50, 76);
+				state.argb(255, 150, 225, 255);
+				state.colorize = 1.0f;
+				obj.addState(state);	
+				
+				state = new BattleAnimObjState(2000, PosTypes.Target);
+				state.pos1 = new Point(0,0);
+				state.size = new Point(50, 76);
+				state.argb(255, 0, 0, 0);
+				state.colorize = 0.0f;
+				obj.addState(state);
+				
+				state = new BattleAnimObjState(20000, PosTypes.Target);
+				state.pos1 = new Point(0,0);
+				state.size = new Point(50, 76);
+				state.argb(255, 0, 0, 0);
+				state.colorize = 0.0f;
+				obj.addState(state);	
+				anim.addObject(obj);
+				
+				return anim;
+			}
+		}.initialize();
+	}
+	
 	public static AnimationBuilder buildIceShot()
 	{
 		return new AnimationBuilder()

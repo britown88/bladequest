@@ -90,6 +90,17 @@ public class WorldAnimLibrary
 		return WorldAnimations.buildIceShot();
 	}
 	
+	public static AnimationBuilder genIceCube(int length)
+	{
+		return WorldAnimations.buildIceCube(length);
+	}
+	
+	public static AnimationBuilder genIcePillar(int i)
+	{
+		return WorldAnimations.buildIcePillar();
+	}
+	
+	
 	
 	public static AnimationBuilder genIceBarrage(int width, int height, int icicleCount, int stormLength)
 	{

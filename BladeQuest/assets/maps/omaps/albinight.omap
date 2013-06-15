@@ -3,6 +3,10 @@
 
 
 
+
+
+
+
 #!OBJ 4 14
 \objName$4x14$ <- "name"
 \name$4x14$ <- newObject objName$4x14$ 4 14
@@ -306,6 +310,34 @@ addAction (message "It's locked.")
 
 
 \runstate1$7x9$ <- state1$7x9$ 0
+
+
+\agnes$7x9$ <- newObject "agnes" 7 9
+
+state2$7x9$ 0
+agnes$7x9$ > createState
+
+\runstate2$7x9$ <- state2$7x9$ 0
+
+state3$7x9$ 0
+agnes$7x9$ > createState >
+addSwitchCondition "albidesagnes" >
+setSprite "woman1" >
+setFace "down"
+
+\runstate3$7x9$ <- state3$7x9$ 0
+
+state4$7x9$ 0
+agnes$7x9$ > createState >
+addSwitchCondition "albidesagnesfrozen" >
+setSprite "woman1" >
+setFace "up" >
+setAnimated false
+
+\runstate4$7x9$ <- state4$7x9$ 0
+
+
+
 #!OBJ 32 14
 \door$32x14$ <- newObject "door" 32 14
 
@@ -397,96 +429,9 @@ addAction (message "It's locked.")
 \name$24x24$ <- newObject objName$24x24$ 24 24
 
 state1$24x24$ 0
-name$24x24$ > createState >
-addAction (openBubble "qmark" "arthur" 1.0 false false) >
-addAction (createPath "arthur" true "rW3lW3rW3lW3d") >
-addAction (wait 0.5) >
-addAction (openBubble "exclam" "arthur" 0.5 false false) >
-addAction (wait 0.25) >
-addAction (playAnimation (genIceShot 0) (point 0 0) (point 24 23) false) >
-addAction (wait 0.25) >
-addAction (createPath "arthur" true "S2lKR") >
-addAction (wait 0.5) >
-addAction (createPath "arthur" false "XrW3lW3") >
-addAction (setFloating "arthur" true 90 4) >
-addAction (changeElevation "arthur" 64 3.0 true) >
-addAction (wait 3.0) >
-addAction (createPath "arthur" false "u") >
-addAction (switchControl "albidesarthurfrozen" true) >
-addAction (flash 0.25 255 150 225 255 true) >
-addAction (wait 2.0) >
-addAction (changeElevation "arthur" 72 0.25 true) >
-addAction (changeElevation "arthur" 0 0.25 true) >
-addAction (setFloating "arthur" false 0 0) >
-addAction (switchControl "albidesarthurdead" true) >
-addAction (wait 1.0) >
-addAction (panControl 5 -8 4.0 false) > #FIRST PAN---------------
-addAction (wait 1.0) >
-addAction (switchControl "albidesgeorge" true) >
-addAction (createPath "george" false "s2D2u") >
-addAction (wait 0.5) >
-addAction (switchControl "albidesanne" true) >
-addAction (createPath "anne" false "s2D") >
-addAction (wait 1.0) >
-addAction (createPath "anne" false "L4") >
-addAction (createPath "george" false "SL5") >
-addAction (wait 0.5) >
-addAction (createPath "anne" false "XrW4lW4") >
-addAction (createPath "george" false "XrW2lW2") >
-addAction (setFloating "anne" true 90 4) >
-addAction (setFloating "george" true 90 4) >
-addAction (changeElevation "anne" 72 0.75 false) >
-addAction (changeElevation "george" 56 0.75 false) >
-addAction (wait 0.5) >
-addAction (flash 0.25 255 150 225 255 true) >
-addAction (switchControl "albidesgeorgefrozen" true) >
-addAction (createPath "george" false "u") >
-addAction (flash 0.25 255 150 225 255 true) >
-addAction (switchControl "albidesannefrozen" true) >
-addAction (createPath "anne" false "u") >
-addAction (panControl 5 -17 4.0 false) > #INN PAN----------------
-addAction (setFloating "anne" false 0 0) >
-addAction (setFloating "george" false 0 0) >
-addAction (changeElevation "anne" 0 0.25 false) >
-addAction (changeElevation "george" 0 0.25 true) >
-addAction (switchControl "albidesgeorge" false) >
-addAction (switchControl "albidesanne" false) >
-addAction (switchControl "albidessarah" true) >
-addAction (switchControl "albideshenry" true) >
-addAction (wait 0.75) >
-addAction (createPath "sarah" false "s2D2lS") >
-addAction (createPath "henry" false "sR4") >
-addAction (wait 1.0) >
-addAction (flash 0.25 255 150 225 255 true) >
-addAction (switchControl "albideshenryfrozen" true) >
-addAction (wait 0.25) >
-addAction (openBubble "exclam" "sarah" 0.5 false true) >
-addAction (createPath "sarah" false "UL3DL5") >
-addAction (wait 1.0) >
-addAction (panControl -18 -17 12.0 false) > #CROSSTOWN PAN-------
-addAction (wait 1.0) >
-addAction (switchControl "albidesbruno" true) >
-addAction (setFloating "bruno" true 90 4) >
-addAction (changeElevation "bruno" 56 0.0 false) >
-addAction (setFloating "sarah" true 90 4) >
-addAction (changeElevation "sarah" 56 1.0 true) >
-addAction (flash 0.25 255 150 225 255 false) >
-addAction (switchControl "albidessarahfrozen" true) >
-addAction (wait 0.5) >
-addAction (changeElevation "sarah" 64 0.25 true) >
-addAction (setFloating "sarah" false 0 0) >
-addAction (changeElevation "sarah" 0 0.25 true) >
-addAction (switchControl "albidessarah" false) >
-addAction (wait 1.0) >
-addAction (changeElevation "bruno" 64 0.25 true) >
-addAction (setFloating "bruno" false 0 0) >
-addAction (changeElevation "bruno" 0 0.25 true) >
-addAction (switchControl "albidesbruno" false) >
-addAction (wait 7.5) >
-addAction (panControl -7 -2 8.0 false) > #LASTHOUSES PAN---------
-addAction (wait 8.0) >
-addAction (panControl 0 0 5.0 false) >#LAST PAN------------------
-addAction (fadeControl 5.0 255 0 0 0 true true)
+\state <- (name$24x24$ > createState)
+
+
 
 
 
@@ -558,4 +503,61 @@ setFace "up" >
 setAnimated false
 
 \runstate2$17x10$ <- state2$17x10$ 0
+
+#!OBJ 11 10
+\objName$11x10$ <- "timmy"
+\name$11x10$ <- newObject objName$11x10$ 11 10
+
+state2$11x10$ 0
+name$11x10$ > createState
+
+\runstate2$11x10$ <- state2$11x10$ 0
+
+state3$11x10$ 0
+name$11x10$ > createState >
+addSwitchCondition "albideskids" >
+setSprite "child1" >
+setFace "right" >
+setAnimated false
+
+
+\runstate3$11x10$ <- state3$11x10$ 0
+
+#!OBJ 13 10
+\objName$13x10$ <- "tommy"
+\name$13x10$ <- newObject objName$13x10$ 13 10
+
+state2$13x10$ 0
+name$13x10$ > createState
+
+\runstate2$13x10$ <- state2$13x10$ 0
+
+state3$13x10$ 0
+name$13x10$ > createState >
+addSwitchCondition "albideskids" >
+setSprite "child1" >
+setFace "left" >
+setAnimated false
+
+
+\runstate3$13x10$ <- state3$13x10$ 0
+
+#!OBJ 12 9
+\objName$12x9$ <- "alice"
+\name$12x9$ <- newObject objName$12x9$ 12 9
+
+state2$12x9$ 0
+name$12x9$ > createState
+
+\runstate2$12x9$ <- state2$12x9$ 0
+
+state3$12x9$ 0
+name$12x9$ > createState >
+addSwitchCondition "albideskids" >
+setSprite "child2" >
+setFace "down" >
+setAnimated false
+
+
+\runstate3$12x9$ <- state3$12x9$ 0
 

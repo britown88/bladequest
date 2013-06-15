@@ -97,6 +97,9 @@ public class BqMap
 		for(DataLine dl : lines)
 			LoadDataLine(dl);
 		
+		buildDisplayName();
+		nameDisplayCounter = 0;
+		
 		loadGameObjects();
 
 		for(GameObject go : objects)
@@ -104,8 +107,7 @@ public class BqMap
 				go.execute();
 		
 		loaded = true;
-		buildDisplayName();
-		nameDisplayCounter = 0;
+		
 	}
 	
 	public void clearAutoStarters()
@@ -316,11 +318,15 @@ public class BqMap
 	
 	public void update()
 	{
-		displayNamePanel.update();
-		
-		if(displayNamePanel.isShown())
-			if(nameDisplayCounter++ >= nameDisplayLength)
-				displayNamePanel.hide();				
+		if(displayNamePanel != null)
+		{
+			displayNamePanel.update();
+			
+			if(displayNamePanel.isShown())
+				if(nameDisplayCounter++ >= nameDisplayLength)
+					displayNamePanel.hide();	
+		}
+					
 			
 		for(GameObject b : objects) 
 			b.update();   
