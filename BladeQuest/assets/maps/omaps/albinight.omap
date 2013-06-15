@@ -7,6 +7,7 @@
 
 
 
+
 #!OBJ 4 14
 \objName$4x14$ <- "name"
 \name$4x14$ <- newObject objName$4x14$ 4 14
@@ -68,7 +69,9 @@ setFace "up"
 
 state3$24x23$ 0
 name$24x23$ > createState >
-addSwitchCondition "albidesarthurdead"
+addSwitchCondition "albidesarthurdead" >
+setSprite "brokenice" > 
+setFace ""
 
 \runstate3$24x23$ <- state3$24x23$ 0
 
@@ -374,6 +377,14 @@ setFace "up"
 
 \runstate4$32x14$ <- state4$32x14$ 0
 
+state9$32x14$ 0
+anne$32x14$ > createState >
+addSwitchCondition "albidesannedead" >
+setSprite "brokenice" > 
+setFace ""
+
+\runstate9$32x14$ <- state9$32x14$ 0
+
 
 
 #-------------GEORGE----------------
@@ -399,6 +410,15 @@ setAnimated false >
 setFace "up"
 
 \runstate7$32x14$ <- state7$32x14$ 0
+
+state8$32x14$ 0
+george$32x14$ > createState >
+addSwitchCondition "albidesgeorgedead" >
+setSprite "brokenice" > 
+setFace ""
+
+\runstate8$32x14$ <- state8$32x14$ 0
+
 
 #!OBJ 35 27
 \objName$35x27$ <- "name"
@@ -461,6 +481,14 @@ setFace "up"
 
 \runstate3$28x7$ <- state3$28x7$ 0
 
+state4$28x7$ 0
+name$28x7$ > createState >
+addSwitchCondition "albidessarahdead" >
+setSprite "brokenice" > 
+setFace ""
+
+\runstate4$28x7$ <- state4$28x7$ 0
+
 
 #!OBJ 22 9
 \objName$22x9$ <- "henry"
@@ -503,6 +531,14 @@ setFace "up" >
 setAnimated false
 
 \runstate2$17x10$ <- state2$17x10$ 0
+
+state3$17x10$ 0
+name$17x10$ > createState >
+addSwitchCondition "albidesbrunodead" >
+setSprite "brokenice" > 
+setFace ""
+
+\runstate3$17x10$ <- state3$17x10$ 0
 
 #!OBJ 11 10
 \objName$11x10$ <- "timmy"

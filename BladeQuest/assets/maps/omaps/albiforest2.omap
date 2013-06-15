@@ -49,6 +49,7 @@ createCliffJumpBarrier x (y > add 1)
 
 
 
+
 #!OBJ 17 15
 \objName$17x15$ <- "name"
 \name$17x15$ <- newObject objName$17x15$ 17 15
@@ -225,8 +226,8 @@ state$3x0$ > addAction (setFloating "anne" false 0 0)
 state$3x0$ > addAction (setFloating "george" false 0 0) 
 state$3x0$ > addAction (changeElevation "anne" 0 0.25 false) 
 state$3x0$ > addAction (changeElevation "george" 0 0.25 true) 
-state$3x0$ > addAction (switchControl "albidesgeorge" false) 
-state$3x0$ > addAction (switchControl "albidesanne" false) 
+state$3x0$ > addAction (switchControl "albidesgeorgedead" true) 
+state$3x0$ > addAction (switchControl "albidesannedead" true) 
 state$3x0$ > addAction (playAnimation (genIceShatterPoof 1.0 0.0) "party" "george" false) 
 state$3x0$ > addAction (playAnimation (genIceShatterPoof -1.0 0.0) "party" "george" false) 
 state$3x0$ > addAction (playAnimation (genIceShatterPoof 1.0 0.0) "party" "anne" false) 
@@ -269,7 +270,7 @@ state$3x0$ > addAction (flash 0.5 255 150 225 255 false)
 state$3x0$ > addAction (changeElevation "sarah" 64 0.25 true) 
 state$3x0$ > addAction (setFloating "sarah" false 0 0) 
 state$3x0$ > addAction (changeElevation "sarah" 0 0.25 true) 
-state$3x0$ > addAction (switchControl "albidessarah" false) 
+state$3x0$ > addAction (switchControl "albidessarahdead" true) 
 state$3x0$ > addAction (playAnimation (genIceShatterPoof 1.0 0.0) "party" "sarah" false) 
 state$3x0$ > addAction (playAnimation (genIceShatterPoof -1.0 0.0) "party" "sarah" false) 
 state$3x0$ > addAction (wait 2.0) 
@@ -277,7 +278,7 @@ state$3x0$ > addAction (flash 0.5 255 150 225 255 false)
 state$3x0$ > addAction (changeElevation "bruno" 64 0.25 true) 
 state$3x0$ > addAction (setFloating "bruno" false 0 0) 
 state$3x0$ > addAction (changeElevation "bruno" 0 0.25 true) 
-state$3x0$ > addAction (switchControl "albidesbruno" false) 
+state$3x0$ > addAction (switchControl "albidesbrunodead" true) 
 state$3x0$ > addAction (playAnimation (genIceBarrage 384 288 100 10000) (point 0 0) (point 7 11) false) 
 state$3x0$ > addAction (playAnimation (genIceShatterPoof 1.0 0.0) "party" "bruno" false) 
 state$3x0$ > addAction (playAnimation (genIceShatterPoof -1.0 0.0) "party" "bruno" false) 
