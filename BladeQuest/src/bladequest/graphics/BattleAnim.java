@@ -274,14 +274,18 @@ public class BattleAnim
 	
 		return a0*mu*mu2 + a1*mu2 + a2*mu + a3 ;
 	}
+	public static float cosineInterpolator(float t)
+	{
+		return (1.0f - (float)(Math.cos(t*Math.PI)))/2.0f;
+	}
 	public static  int cosineInterpolation(int y1, int y2, float t)
 	{
-		float t2 = (1.0f - (float)(Math.cos(t*Math.PI)))/2.0f;
+		float t2 = cosineInterpolator(t);
 		return y1 == y2 ? y1 : (int)(y1*(1-t2)+y2*t2);
 	}
 	public static float cosineInterpolation(float y1, float y2, float t)
 	{
-		float t2 = (1.0f - (float)(Math.cos(t*Math.PI)))/2.0f;
+		float t2 = cosineInterpolator(t);
 		return y1 == y2 ? y1 : y1*(1-t2)+y2*t2;
 	}
 

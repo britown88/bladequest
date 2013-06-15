@@ -4,7 +4,6 @@ import bladequest.serialize.DeserializeFactory;
 import bladequest.serialize.Deserializer;
 import bladequest.serialize.Serializable;
 import bladequest.serialize.Serializer;
-
 import bladequest.world.Global;
 
 public class ScreenFader extends Serializable

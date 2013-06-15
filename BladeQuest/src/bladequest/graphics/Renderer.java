@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import bladequest.graphics.drawobjects.DrawColorARGB;
 import bladequest.graphics.drawobjects.DrawColorPacked;
@@ -140,6 +141,12 @@ public class Renderer
 	{
 		updateBuffer.add(new DrawColorARGB(a, r, g, b));
 	}
+	
+	public void drawColor(int a, int r, int g, int b, PorterDuff.Mode porterDuffMode)
+	{
+		updateBuffer.add(new DrawColorARGB(a, r, g, b, porterDuffMode));
+	}
+		
 	
 	public void drawRect(float left, float top, float right, float bottom, Paint paint, boolean ignoreShake)
 	{

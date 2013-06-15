@@ -152,8 +152,8 @@ public class BattleAnimObject
 				y3 = nextState;
 
 
-			updatePaint();
-			updateRect();
+			//updatePaint();
+		//	updateRect();
 		}
 		
 	}
@@ -176,11 +176,28 @@ public class BattleAnimObject
 	{
 		if (type == Types.Interpolatable) return;
 		
-		objRect.set(
-				workingState.pos1.x - (int)(workingState.size.x/2),
-				workingState.pos1.y - (int)(workingState.size.y/2),
-				workingState.pos1.x + (int)(workingState.size.x/2),
-				workingState.pos1.y + (int)(workingState.size.y/2));	
+		if (type != Types.Line)
+		{
+			float x = workingState.size.x/2.0f;
+			float y = workingState.size.y/2.0f;
+			
+			objRect.set(
+					workingState.pos1.x - (int)(x),
+					workingState.pos1.y - (int)(y),
+					workingState.pos1.x + (int)(x),
+					workingState.pos1.y + (int)(y));	
+		}
+		else
+		{
+			int l,r,t,b;
+			l = Math.min(workingState.pos1.x, workingState.pos2.x);
+			r = Math.max(workingState.pos1.x, workingState.pos2.x);
+			t = Math.min(workingState.pos1.y, workingState.pos2.y);
+			b = Math.max(workingState.pos1.y, workingState.pos2.y);
+			
+			objRect.set(l, t, r, b);
+		}
+			
 	
 	}
 	
@@ -201,8 +218,6 @@ public class BattleAnimObject
 	public int getEndFrame() { genStartAndEndFrame();return endFrame; }
 	public int getStartFrame() { genStartAndEndFrame();return startFrame; }
 	
-
-	//~= 0.2126 R + 0.7152 G + 0.0722 B
 	
 	public float progress;
 	public void update(int frame)
@@ -215,7 +230,9 @@ public class BattleAnimObject
 			{
 				setState(stateIndex+1);
 				if(nextState == null)
+				{
 					break;
+				}
 			}
 				
 			
@@ -227,7 +244,7 @@ public class BattleAnimObject
 				int stateLength = nextState.frame - currentState.frame;
 				if (stateLength <=0) stateLength = 1;
 				progress = (float)(frame - currentState.frame) / (float)stateLength;
-				
+				float cosProgress = BattleAnim.cosineInterpolator(progress);
 				
 				
 				currentState.offset(this);
@@ -247,43 +264,6 @@ public class BattleAnimObject
 					return;
 				}
 				//interpolation			
-				//---size
-				if(currentState.size.x != nextState.size.x || currentState.size.y != nextState.size.y)
-				{
-					workingState.size.x = BattleAnim.cosineInterpolation(currentState.size.x, nextState.size.x, progress);
-					workingState.size.y = BattleAnim.cosineInterpolation(currentState.size.y, nextState.size.y, progress);
-					
-				}
-				
-				//---color
-				
-				workingState.a = BattleAnim.cosineInterpolation(currentState.a, nextState.a, progress);
-				workingState.r = BattleAnim.cosineInterpolation(currentState.r, nextState.r, progress);
-				workingState.g = BattleAnim.cosineInterpolation(currentState.g, nextState.g, progress);
-				workingState.b = BattleAnim.cosineInterpolation(currentState.b, nextState.b, progress);
-
-				if((type == Types.Line || outlineOnly) && currentState.strokeWidth != nextState.strokeWidth)
-					workingState.strokeWidth = BattleAnim.linearInterpolation(currentState.strokeWidth, nextState.strokeWidth, progress);
-				
-				//bitmap colorization
-				if(type == Types.Bitmap)
-				{
-					float t= workingState.colorize= BattleAnim.cosineInterpolation(currentState.colorize, nextState.colorize, progress);
-					float[] newColorTransform = {
-				            1-t, 0, 0, 0, workingState.r*t, 
-				            0, 1-t, 0, 0, workingState.g*t,
-				            0, 0, 1-t, 0, workingState.b*t, 
-				            0, 0, 0, 1, 0};
-					colorTransform = newColorTransform.clone();
-					
-					//objPaint.setColorFilter(new ColorMatrixColorFilter(colorTransform));
-				}
-					
-				updatePaint();
-				
-				//---rotation (lerp rotation)
-				
-				workingState.rotation = BattleAnim.linearInterpolation(currentState.rotation, nextState.rotation, progress);
 				
 				//---position (including lines)
 
@@ -315,12 +295,90 @@ public class BattleAnimObject
 				if(y3 != null && !y3.equals(nextState))
 					y3.unOffset(this);
 				
+				
+				//---size
+				if(currentState.size.x != nextState.size.x || currentState.size.y != nextState.size.y)
+				{
+					workingState.size.x = BattleAnim.linearInterpolation(currentState.size.x, nextState.size.x, cosProgress);
+					workingState.size.y = BattleAnim.linearInterpolation(currentState.size.y, nextState.size.y, cosProgress);
+					
+				}
+				
 				//build final rect
 				updateRect();
+				
+				if (!visibleInViewport()) return;  //don't interpolate what we don't have to!
+				
+				//---size
+				if(currentState.size.x != nextState.size.x || currentState.size.y != nextState.size.y)
+				{
+					workingState.size.x = BattleAnim.linearInterpolation(currentState.size.x, nextState.size.x, cosProgress);
+					workingState.size.y = BattleAnim.linearInterpolation(currentState.size.y, nextState.size.y, cosProgress);
+					
+				}				
+				
+				//---color
+				
+				workingState.a = BattleAnim.linearInterpolation(currentState.a, nextState.a, cosProgress);
+				workingState.r = BattleAnim.linearInterpolation(currentState.r, nextState.r, cosProgress);
+				workingState.g = BattleAnim.linearInterpolation(currentState.g, nextState.g, cosProgress);
+				workingState.b = BattleAnim.linearInterpolation(currentState.b, nextState.b, cosProgress);
+
+				if((type == Types.Line || outlineOnly) && currentState.strokeWidth != nextState.strokeWidth)
+					workingState.strokeWidth = BattleAnim.linearInterpolation(currentState.strokeWidth, nextState.strokeWidth, progress);
+				
+				//bitmap colorization
+				if(type == Types.Bitmap)
+				{
+					float t = workingState.colorize= BattleAnim.linearInterpolation(currentState.colorize, nextState.colorize, cosProgress);
+					if (t != 0.0f)
+					{
+						float[] newColorTransform = {
+					            1-t, 0, 0, 0, workingState.r*t, 
+					            0, 1-t, 0, 0, workingState.g*t,
+					            0, 0, 1-t, 0, workingState.b*t, 
+					            0, 0, 0, 1, 0};
+						colorTransform = newColorTransform;	
+					}
+				}
+					
+				
+				//---rotation (lerp rotation)
+				
+				workingState.rotation = BattleAnim.linearInterpolation(currentState.rotation, nextState.rotation, progress);
 			}				
 			
 		}
 		
+	}
+	
+	private boolean visibleInViewport()
+	{
+		if (workingState.rotation != 0.0f)
+		{
+			int size = Math.max(objRect.width(), objRect.height())/2;
+			int x = objRect.centerX();
+			int y = objRect.centerY();
+			
+			if (x - size > Global.vpWidth ||
+					x + size < 0 ||
+					y - size > Global.vpHeight ||
+					x + size < 0)
+				{
+					return false;  //this object isn't on the gosh darn screen.
+				}			
+		}
+		else
+		{
+			if (objRect.left > Global.vpWidth ||
+					objRect.right < 0 ||
+					objRect.top > Global.vpHeight ||
+					objRect.bottom < 0)
+				{
+					return false;  //this object isn't on the gosh darn screen.
+				}
+		}
+		return true;		
 	}
 	
 	//takes target location
@@ -335,6 +393,10 @@ public class BattleAnimObject
 				return;
 			}
 			
+			updateRect();
+			if (!visibleInViewport()) return;
+			
+			updatePaint();			
 			updateDrawPos();
 			
 			//render based on current state
