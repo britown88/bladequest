@@ -28,8 +28,8 @@ public class actAnimation extends Action
 	public actAnimation(AnimationBuilder animBuilder, Point source, Point target, boolean wait)
 	{
 		this.animBuilder = animBuilder;
-		this.gridTar = target;
-		this.gridSrc = source;
+		this.gridTar = new Point(target.x*32, target.y*32);
+		this.gridSrc = new Point(source.x*32, source.y*32);
 		this.wait = wait;
 		this.stoppingShort = false;
 	}

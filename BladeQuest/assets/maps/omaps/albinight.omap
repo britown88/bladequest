@@ -1,6 +1,8 @@
 #!HEAD
 
 
+
+
 #!OBJ 4 14
 \objName$4x14$ <- "name"
 \name$4x14$ <- newObject objName$4x14$ 4 14
@@ -364,7 +366,9 @@ setSprite "man1" >
 setAnimated false >
 setFace "up"
 
-\runstate7$32x14$ <- state7$32x14$ 0#!OBJ 35 27
+\runstate7$32x14$ <- state7$32x14$ 0
+
+#!OBJ 35 27
 \objName$35x27$ <- "name"
 \name$35x27$ <- newObject objName$35x27$ 35 27
 
@@ -397,8 +401,10 @@ name$24x24$ > createState >
 addAction (openBubble "qmark" "arthur" 1.0 false false) >
 addAction (createPath "arthur" true "rW3lW3rW3lW3d") >
 addAction (wait 0.5) >
-addAction (openBubble "exclam" "arthur" 0.5 false true) >
+addAction (openBubble "exclam" "arthur" 0.5 false false) >
+addAction (wait 0.25) >
 addAction (playAnimation (genIceShot 0) (point 0 0) (point 24 23) false) >
+addAction (wait 0.25) >
 addAction (createPath "arthur" true "S2lKR") >
 addAction (wait 0.5) >
 addAction (createPath "arthur" false "XrW3lW3") >
@@ -458,7 +464,25 @@ addAction (openBubble "exclam" "sarah" 0.5 false true) >
 addAction (createPath "sarah" false "UL3DL5") >
 addAction (wait 1.0) >
 addAction (panControl -18 -17 12.0 false) > #CROSSTOWN PAN-------
-addAction (wait 12.0) >
+addAction (wait 1.0) >
+addAction (switchControl "albidesbruno" true) >
+addAction (setFloating "bruno" true 90 4) >
+addAction (changeElevation "bruno" 56 0.0 false) >
+addAction (setFloating "sarah" true 90 4) >
+addAction (changeElevation "sarah" 56 1.0 true) >
+addAction (flash 0.25 255 150 225 255 false) >
+addAction (switchControl "albidessarahfrozen" true) >
+addAction (wait 0.5) >
+addAction (changeElevation "sarah" 64 0.25 true) >
+addAction (setFloating "sarah" false 0 0) >
+addAction (changeElevation "sarah" 0 0.25 true) >
+addAction (switchControl "albidessarah" false) >
+addAction (wait 1.0) >
+addAction (changeElevation "bruno" 64 0.25 true) >
+addAction (setFloating "bruno" false 0 0) >
+addAction (changeElevation "bruno" 0 0.25 true) >
+addAction (switchControl "albidesbruno" false) >
+addAction (wait 7.5) >
 addAction (panControl -7 -2 8.0 false) > #LASTHOUSES PAN---------
 addAction (wait 8.0) >
 addAction (panControl 0 0 5.0 false) >#LAST PAN------------------
@@ -517,3 +541,21 @@ setAnimated false >
 setFace "right"
 
 \runstate3$22x9$ <- state3$22x9$ 0
+#!OBJ 17 10
+\objName$17x10$ <- "bruno"
+\name$17x10$ <- newObject objName$17x10$ 17 10
+
+state1$17x10$ 0
+name$17x10$ > createState
+
+\runstate1$17x10$ <- state1$17x10$ 0
+
+state2$17x10$ 0
+name$17x10$ > createState >
+addSwitchCondition "albidesbruno" >
+setSprite "man1" >
+setFace "up" >
+setAnimated false
+
+\runstate2$17x10$ <- state2$17x10$ 0
+
