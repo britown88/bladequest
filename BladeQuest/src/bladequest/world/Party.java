@@ -968,6 +968,8 @@ public class Party
 		{				
 			if(!gridPos.equals(originalTarget))
 			{
+				originalTarget = new Point(gridPos);
+				
 				//if we stopped short because we were blocked
 				if(!faceLocked)
 					face(originalTarget);
