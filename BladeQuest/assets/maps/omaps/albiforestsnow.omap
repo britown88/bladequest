@@ -45,6 +45,10 @@ setLayer "Above"
 
 
 
+
+
+
+
 #!OBJ 10 5
 \name$10x5$ <- cliffJumpLeft 10 5
 #!OBJ 10 4
@@ -142,12 +146,12 @@ setImageIndex 1
 
 
 \runstate2$3x21$ <- state2$3x21$ 0
-#!OBJ 4 5
-\objName$4x5$ <- "name"
-\name$4x5$ <- newObject objName$4x5$ 4 5
+#!OBJ 12 4
+\objName$12x4$ <- "name"
+\name$12x4$ <- newObject objName$12x4$ 12 4
 
-state1$4x5$ 0
-name$4x5$ > createState >
+state1$12x4$ 0
+name$12x4$ > createState >
 setSprite "savepoint" >
 setCollisionData true true true true >
 addAction (flash 1.0 255 0 250 200 true) >
@@ -156,7 +160,10 @@ addAction (messageWithYesNo "Save your progress?" >
 addAction (allowSaving 0)
 
 
-\runstate1$4x5$ <- state1$4x5$ 0
+\runstate1$12x4$ <- state1$12x4$ 0
+
+
+
 #!OBJ 27 40
 \objName$27x40$ <- "name"
 \name$27x40$ <- newObject objName$27x40$ 27 40
@@ -177,19 +184,57 @@ addSwitchCondition "albiforestchest3"
 
 \runstate2$27x40$ <- state2$27x40$ 0
 #!OBJ 5 0
-\name$5x0$ <- createIcePillar 5 0
+\objName$5x0$ <- "name"
+\name$5x0$ <- newObject objName$5x0$ 5 0
+
+state1$5x0$ 0
+name$5x0$ > createState >
+setSprite "icepillar"
+
+\runstate1$5x0$ <- state1$5x0$ 0
+
 
 #!OBJ 7 0
-\name$7x0$ <- createIcePillar 7 0
+\objName$7x0$ <- "name"
+\name$7x0$ <- newObject objName$7x0$ 7 0
+
+state1$7x0$ 0
+name$7x0$ > createState >
+setSprite "icepillar"
+
+\runstate1$7x0$ <- state1$7x0$ 0
+
 
 #!OBJ 4 1
-\name$4x1$ <- createIcePillar 4 1
+\objName$4x1$ <- "name"
+\name$4x1$ <- newObject objName$4x1$ 4 1
+
+state1$4x1$ 0
+name$4x1$ > createState >
+setSprite "icepillar"
+
+\runstate1$4x1$ <- state1$4x1$ 0
 
 #!OBJ 6 1
-\name$6x1$ <- createIcePillar 6 1
+\objName$6x1$ <- "name"
+\name$6x1$ <- newObject objName$6x1$ 6 1
+
+state1$6x1$ 0
+name$6x1$ > createState >
+setSprite "icepillar"
+
+\runstate1$6x1$ <- state1$6x1$ 0
+
 
 #!OBJ 8 1
-\name$8x1$ <- createIcePillar 8 1
+\objName$8x1$ <- "name"
+\name$8x1$ <- newObject objName$8x1$ 8 1
+
+state1$8x1$ 0
+name$8x1$ > createState >
+setSprite "icepillar"
+
+\runstate1$8x1$ <- state1$8x1$ 0
 
 #!OBJ 7 25
 \name$7x25$ <- createIcePillar 7 25
@@ -283,4 +328,206 @@ name$6x33$ > createState >
 addSwitchCondition "albiforestsnowscenedone"
 
 \runstate3$6x33$ <- state3$6x33$ 0
+
+#!OBJ 7 3
+\objName$7x3$ <- "name"
+\name$7x3$ <- newObject objName$7x3$ 7 3
+
+state1$7x3$ 0
+name$7x3$ > createState >
+setSprite "icepillar"
+
+\runstate1$7x3$ <- state1$7x3$ 0
+
+#!OBJ 5 3
+\objName$5x3$ <- "name"
+\name$5x3$ <- newObject objName$5x3$ 5 3
+
+state1$5x3$ 0
+name$5x3$ > createState >
+setSprite "icepillar"
+
+\runstate1$5x3$ <- state1$5x3$ 0
+
+#!OBJ 3 4
+\name$3x4$ <- createIcePillar 3 4
+
+
+
+#!OBJ 6 4
+\objName$6x4$ <- "name"
+\name$6x4$ <- newObject objName$6x4$ 6 4
+
+state1$6x4$ 0
+name$6x4$ > createState >
+addAction (fadeControl 2.0 255 0 0 0 true true) >
+addAction (createPath "party" true "v") >
+addAction (switchControl "albidragonscenestart" true) >
+addAction (panControl 0 1 2.0 false) >
+addAction (fadeControl 2.0 255 0 0 0 false true) >
+addAction (wait 1.0) >
+addAction (message "|luc|: \nNo!!!") >
+addAction (message "I can't get through!") >
+addAction (wait 0.5) >
+addAction (openBubble "exclam" "luc2" 0.5 false true) >
+addAction (createPath "luc2" true "RD") >
+addAction (message "|luc|: \nYou can burn through this, can't you?") >
+addAction (message "With your magic??") >
+addAction (message "|joy|: \nI-I don't know if I can!") >
+addAction (message "|luc|: \nYou have to! \nPlease!") >
+addAction (createPath "aramis2" true "Ur") >
+addAction (message "|aramis|: \nLeave her alone, kid.") >
+addAction (message "It's too late!") >
+addAction (createPath "luc2" true "l") >
+addAction (message "|luc|: \nNo! \nWe have to try!!!") >
+addAction (pauseMusic 1.0) >
+addAction (wait 2.0) >
+addAction (flash 1.0 255 150 225 255 true) >
+addAction (openBubble "exclam" "luc2" 1.0 false false) >
+addAction (openBubble "exclam" "aramis2" 1.0 false false) >
+addAction (openBubble "exclam" "joy2" 1.0 false true) >
+addAction (createPath "aramis2" true "u") >
+addAction (message "|aramis|: \nLook over there!!!") >
+addAction (message "What the hell IS that thing?!") >
+addAction (createPath "aramis2" true "d") >
+addAction (message "|aramis|: \nEveryone! Get back!") >
+addAction (createPath "aramis2" false "D2Lu") >
+addAction (createPath "joy2" false "Du") >
+addAction (wait 0.5) >
+addAction (createPath "luc2" true "u") >
+addAction (openBubble "exclam" "luc2" 0.5 false true) >
+addAction (createPath "luc2" true "LD2u") >
+addAction (wait 1.0) >
+addAction (changeElevation "roland" 64 0.0 true) >
+addAction (switchControl "albirolandascend" true) >
+addAction (createPath "roland" true "s4D5") >
+addAction (flash 5.0 255 150 225 255 false) >
+addAction (changeElevation "roland" 0 5.0 true) >
+addAction (wait 1.0) >
+addAction (switchControl "albirolandland" true) >
+addAction (createPath "roland" true "uW3rW3d")
+
+
+
+
+\runstate1$6x4$ <- state1$6x4$ 0
+
+
+#--------------LUC---------------
+
+\luc$6x4$ <- newObject "luc2" 6 4
+
+state2$6x4$ 0
+luc$6x4$ > createState >
+setIgnorePartyOnMove true
+
+\runstate2$6x4$ <- state2$6x4$ 0
+
+state3$6x4$ 0
+luc$6x4$ > createState >
+addSwitchCondition "albidragonscenestart" >
+setSprite "luc" >
+setFace "up" >
+setIgnorePartyOnMove true
+
+\runstate3$6x4$ <- state3$6x4$ 0
+
+#!OBJ 7 6
+\objName$7x6$ <- "joy2"
+\name$7x6$ <- newObject objName$7x6$ 7 6
+
+state1$7x6$ 0
+name$7x6$ > createState
+
+\runstate1$7x6$ <- state1$7x6$ 0
+
+state2$7x6$ 0
+name$7x6$ > createState >
+addSwitchCondition "albidragonscenestart" >
+setSprite "joy" >
+setFace "up"
+
+\runstate2$7x6$ <- state2$7x6$ 0
+
+#!OBJ 6 6
+\objName$6x6$ <- "aramis2"
+\name$6x6$ <- newObject objName$6x6$ 6 6
+
+state1$6x6$ 0
+name$6x6$ > createState
+
+\runstate1$6x6$ <- state1$6x6$ 0
+
+state2$6x6$ 0
+name$6x6$ > createState >
+addSwitchCondition "albidragonscenestart" >
+setSprite "aramis" >
+setFace "up"
+
+\runstate2$6x6$ <- state2$6x6$ 0
+#!OBJ 6 0
+\objName$6x0$ <- "roland"
+\name$6x0$ <- newObject objName$6x0$ 6 0
+
+state1$6x0$ 0
+name$6x0$ > createState >
+setLayer "Above" >
+setIgnorePartyOnMove true
+
+\runstate1$6x0$ <- state1$6x0$ 0
+
+state2$6x0$ 0
+name$6x0$ > createState >
+addSwitchCondition "albirolandascend" >
+setSprite "rdflying">
+setLayer "Above" >
+setIgnorePartyOnMove true
+
+\runstate2$6x0$ <- state2$6x0$ 0
+
+state3$6x0$ 0
+name$6x0$ > createState >
+addSwitchCondition "albirolandland" >
+setSprite "rdlanding" >
+setFace "left" >
+setLayer "Above" >
+setIgnorePartyOnMove true
+
+\runstate3$6x0$ <- state3$6x0$ 0
+
+state4$6x0$ 0
+name$6x0$ > createState >
+addSwitchCondition "albirolandroar" >
+setSprite "rdroaring" >
+setFace "left" >
+setLayer "Above" >
+setIgnorePartyOnMove true
+
+\runstate4$6x0$ <- state4$6x0$ 0
+
+state5$6x0$ 0
+name$6x0$ > createState >
+addSwitchCondition "albirolandrobed" >
+setSprite "robe" >
+setFace "down" >
+setLayer "Above" >
+setIgnorePartyOnMove true
+
+\runstate5$6x0$ <- state5$6x0$ 0
+
+state6$6x0$ 0
+name$6x0$ > createState >
+addSwitchCondition "albirolanddisrobed" >
+setSprite "roland" >
+setFace "down" >
+setLayer "Above" >
+setIgnorePartyOnMove true
+
+\runstate6$6x0$ <- state6$6x0$ 0
+
+
+
+
+
+
 

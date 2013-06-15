@@ -51,6 +51,7 @@ createCliffJumpBarrier x (y > add 1)
 
 
 
+
 #!OBJ 17 15
 \objName$17x15$ <- "name"
 \name$17x15$ <- newObject objName$17x15$ 17 15
@@ -389,7 +390,7 @@ setCollisionData true true true true >
 setSprite "chest" >
 setAnimated false >
 setImageIndex 0 >
-addAction (switchControl "albiforestchest3" true) >
+addAction (switchControl "albiforestchestgold" true) >
 addAction (message "Found a 500G!") >
 addAction (modifyGold 500)
 
@@ -397,7 +398,7 @@ addAction (modifyGold 500)
 
 state2$3x17$ 0
 name$3x17$ > createState >
-addSwitchCondition "albiforestchest3" >
+addSwitchCondition "albiforestchestgold" >
 setCollisionData true true true true >
 setSprite "chest" >
 setAnimated false >
