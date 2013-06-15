@@ -1,0 +1,203 @@
+#!HEAD
+createCliffJumpObj x y face path
+newObject "cjump" x y > createState >
+addAction (createPath "party" true face) >
+addAction (messageWithYesNo "Jump down?" >
+	addToBranch 0  (switchControl "cliffjump" true) >
+	addToBranch 0  (createPath "party" false path) >
+	addToBranch 0  (changeElevation "party" 16 0.25 true) >
+	addToBranch 0  (changeElevation "party" 0 0.25 true) >
+	addToBranch 0  (switchControl "cliffjump" false))
+
+createCliffJumpBarrier x y
+\obj <- newObject "cbar" x y 
+obj > createState > 
+setCollisionData true true true true
+obj > createState >
+addSwitchCondition "cliffjump"
+obj
+
+cliffJumpLeft x y
+createCliffJumpObj x y "l" "L2"
+createCliffJumpBarrier (x > subtract 1) y
+
+cliffJumpUp x y
+createCliffJumpObj x y "u" "U2"
+createCliffJumpBarrier x (y > subtract 1)
+
+cliffJumpRight x y
+createCliffJumpObj x y "r" "R2"
+createCliffJumpBarrier (x > add 1) y
+
+cliffJumpDown x y
+createCliffJumpObj x y "d" "D2"
+createCliffJumpBarrier x (y > add 1)
+
+
+createIcePillar x y
+\obj <- (newObject "pillar" x y)
+obj > createState >
+setCollisionData true true true true >
+setSprite "icepillar" >
+setLayer "Above"
+
+
+
+
+
+
+
+
+
+
+
+
+#!OBJ 10 5
+\name$10x5$ <- cliffJumpLeft 10 5
+#!OBJ 10 4
+\name$10x4$ <- cliffJumpLeft 10 4
+#!OBJ 10 6
+\name$10x6$ <- cliffJumpLeft 10 6
+#!OBJ 20 21
+\name$20x21$ <- cliffJumpLeft 20 21
+#!OBJ 20 22
+\name$20x22$ <- cliffJumpLeft 20 22
+#!OBJ 21 27
+\name$21x27$ <- cliffJumpLeft 21 27
+#!OBJ 18 39
+\name$18x39$ <- cliffJumpLeft 18 39
+#!OBJ 18 40
+\name$18x40$ <- cliffJumpLeft 18 40
+#!OBJ 20 43
+\name$20x43$ <- cliffJumpDown 20 43
+#!OBJ 19 43
+\objName$19x43$ <- "name"
+\name$19x43$ <- newObject objName$19x43$ 19 43
+
+state1$19x43$ 0
+name$19x43$ > createState >
+setCollisionData true true true true >
+setSprite "chest" >
+setAnimated false >
+setImageIndex 0 >
+addAction (switchControl "albiforestchest2" true) >
+addAction (message "Found a Sleeping Bag!") >
+addAction (modifyInventory "sleepingbag" 1 false)
+
+\runstate1$19x43$ <- state1$19x43$ 0
+
+state2$19x43$ 0
+name$19x43$ > createState >
+addSwitchCondition "albiforestchest2" >
+setCollisionData true true true true >
+setSprite "chest" >
+setAnimated false >
+setImageIndex 1
+
+
+\runstate2$19x43$ <- state2$19x43$ 0
+#!OBJ 13 37
+\objName$13x37$ <- "name"
+\name$13x37$ <- newObject objName$13x37$ 13 37
+
+state1$13x37$ 0
+name$13x37$ > createState >
+setCollisionData true true true true >
+setSprite "chest" >
+setAnimated false >
+setImageIndex 0 >
+addAction (switchControl "albiforestchest1" true) >
+addAction (message "Found a Potion!") >
+addAction (modifyInventory "potion" 1 false)
+
+\runstate1$13x37$ <- state1$13x37$ 0
+
+state2$13x37$ 0
+name$13x37$ > createState >
+addSwitchCondition "albiforestchest1" >
+setCollisionData true true true true >
+setSprite "chest" >
+setAnimated false >
+setImageIndex 1
+
+
+\runstate2$13x37$ <- state2$13x37$ 0
+
+#!OBJ 3 21
+\objName$3x21$ <- "name"
+\name$3x21$ <- newObject objName$3x21$ 3 21
+
+state1$3x21$ 0
+name$3x21$ > createState >
+setCollisionData true true true true >
+setSprite "chest" >
+setAnimated false >
+setImageIndex 0 >
+addAction (switchControl "albiforestchestdagger" true) >
+addAction (message "Found a Flame Dagger!") >
+addAction (modifyInventory "fireknife" 1 false)
+
+\runstate1$3x21$ <- state1$3x21$ 0
+
+state2$3x21$ 0
+name$3x21$ > createState >
+addSwitchCondition "albiforestchestdagger" >
+setCollisionData true true true true >
+setSprite "chest" >
+setAnimated false >
+setImageIndex 1
+
+
+\runstate2$3x21$ <- state2$3x21$ 0
+#!OBJ 4 5
+\objName$4x5$ <- "name"
+\name$4x5$ <- newObject objName$4x5$ 4 5
+
+state1$4x5$ 0
+name$4x5$ > createState >
+setSprite "savepoint" >
+setCollisionData true true true true >
+addAction (flash 1.0 255 0 250 200 true) >
+addAction (messageWithYesNo "Save your progress?" > 
+	addToBranch 0 (openSaveMenu 0)) >
+addAction (allowSaving 0)
+
+
+\runstate1$4x5$ <- state1$4x5$ 0
+#!OBJ 27 40
+\objName$27x40$ <- "name"
+\name$27x40$ <- newObject objName$27x40$ 27 40
+
+state1$27x40$ 0
+name$27x40$ > createState >
+setCollisionData true true true true >
+addAction (switchControl "albiforestchest3" true) >
+addAction (message "Found a Tranqlizr!") >
+addAction (modifyInventory "tranquilizer" 1 false)
+
+\runstate1$27x40$ <- state1$27x40$ 0
+
+state2$27x40$ 0
+name$27x40$ > createState >
+addSwitchCondition "albiforestchest3" 
+
+
+\runstate2$27x40$ <- state2$27x40$ 0
+#!OBJ 5 0
+\name$5x0$ <- createIcePillar 5 0
+#!OBJ 7 0
+\name$7x0$ <- createIcePillar 7 0
+#!OBJ 4 1
+\name$4x1$ <- createIcePillar 4 1
+#!OBJ 6 1
+\name$6x1$ <- createIcePillar 6 1
+#!OBJ 8 1
+\name$8x1$ <- createIcePillar 8 1
+#!OBJ 7 25
+\name$7x25$ <- createIcePillar 7 25
+#!OBJ 15 15
+\name$15x15$ <- createIcePillar 15 15
+#!OBJ 13 38
+\name$13x38$ <- createIcePillar 13 38
+#!OBJ 3 49
+\name$3x49$ <- createIcePillar 3 49

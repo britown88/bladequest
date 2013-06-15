@@ -975,7 +975,7 @@ public class Party
 					face(originalTarget);
 				
 				//if you clicked an object and were 2 or less blocks away
-				if(objectAtDestination && path.calculateHeuristic(pathingStartPoint) <= 2 && !selectedObject.AutoStarts())
+				if(objectAtDestination && path.calculateHeuristic(pathingStartPoint) <= 1 && !selectedObject.AutoStarts())
 				{
 					//execute the object's script
 					if(selectedObject.execute())

@@ -36,6 +36,9 @@ addSpriteFrame "" 32 48 48 64 >
 addSpriteFrame "" 48 48 64 64 >
 addSpriteFrame "" 32 48 48 64 >
 setFace ""
+createSprite "brokenice" "misc" 32 32 >
+addSpriteFrame "" 0 64 16 80 >
+setFace ""
 createSprite "goldenbush" "misc" 32 32 >
 addSpriteFrame "" 16 64 32 80 >
 addSpriteFrame "" 32 64 48 80 >
@@ -64,6 +67,9 @@ addSpriteFrame "" 16 16 32 32 >
 setFace ""
 createSprite "door" "misc" 32 32 >
 addSpriteFrame "" 0 32 16 48 >
+setFace ""
+createSprite "icepillar" "iceblock" 50 76 >
+addSpriteFrame "" 0 0 25 38 >
 setFace ""
 
 addEnemySprites 0

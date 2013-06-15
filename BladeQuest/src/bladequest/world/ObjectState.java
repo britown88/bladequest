@@ -492,7 +492,7 @@ public class ObjectState {
 		{
 			if(animated)
 					updateAnimation();
-			spr.render(x - spr.getWidth()/2 + 16, y - spr.getHeight()/2 + 16, imageIndex);				
+			spr.render(x - spr.getWidth()/2 + 16, y - spr.getHeight() + 32, imageIndex);				
 		}
 		else
 			if(tileSprite != null)
