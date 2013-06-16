@@ -53,6 +53,7 @@ createCliffJumpBarrier x (y > add 1)
 
 
 
+
 #!OBJ 17 15
 \objName$17x15$ <- "name"
 \name$17x15$ <- newObject objName$17x15$ 17 15
@@ -149,7 +150,9 @@ state$3x0$ > addAction (flash 0.5 255 150 225 255 false)
 state$3x0$ > addAction (wait 0.5) 
 state$3x0$ > addAction (flash 0.5 255 150 225 255 false) 
 state$3x0$ > addAction (createPath "luc" true "s2U3") 
-state$3x0$ > addAction (wait 1.5) 
+state$3x0$ > addAction (wait 0.75) 
+state$3x0$ > addAction (flash 0.5 255 150 225 255 false) 
+state$3x0$ > addAction (wait 0.75) 
 state$3x0$ > addAction (openBubble "exclam" "luc" 1.0 false false) 
 state$3x0$ > addAction (wait 0.5) 
 state$3x0$ > addAction (message "|luc|: \nBy Gods...") 
@@ -368,12 +371,14 @@ state$3x0$ > addAction (message "It's too dangerous! We have no idea what happen
 state$3x0$ > addAction (message "|luc|: \nNO! \nSHUT UP!") 
 state$3x0$ > addAction (message "We're going back! Now!") 
 state$3x0$ > addAction (message "|joy|: \n|luc|...") 
+state$3x0$ > addAction (pauseMusic 2.0)
 state$3x0$ > addAction (createPath "aramis" false "U2") 
 state$3x0$ > addAction (createPath "joy" false "U3L") 
 state$3x0$ > addAction (fadeControl 2.0 255 0 0 0 true true) 
 state$3x0$ > addAction (teleportParty name$3x0$ 7 28 "albiforestsnow") 
 state$3x0$ > addAction (switchControl "albiforestsnowscenedone" true) 
 state$3x0$ > addAction (createPath "party" true "Vd") 
+state$3x0$ > addAction (playMusic "darkforest" true true 1.0)
 state$3x0$ > addAction (fadeControl 1.0 255 0 0 0 false true)
 
 
