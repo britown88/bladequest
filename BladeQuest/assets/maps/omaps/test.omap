@@ -14,6 +14,7 @@
 
 
 
+
 #!OBJ 0 0
 \name$0x0$ <- newObject "start" 0 0
 
@@ -42,8 +43,6 @@ setSpriteFromTile 1 2 >
 setCollisionData true true true true >
 addAction (setBattleMusic ([x] "") ([x] "") ([x] fadeMusic 2.0)) >
 addAction (\endfight <- (startBattle "enemyroland1" false))
-endfight > addToBranch 0 (wait 2.0) 
-endfight > addToBranch 0 (fadeControl 5.0 255 0 0 0 true true) 
 endfight > addToBranch 0 (wait 2.0) 
 endfight > addToBranch 0 (showScene "albifrozen") 
 endfight > addToBranch 0 (fadeControl 5.0 255 0 0 0 false true) 
@@ -87,8 +86,6 @@ endfight > addToBranch 0 (message "And come say hi on the Facebook page.  We lov
 endfight > addToBranch 0 (message "Till next time!") 
 endfight > addToBranch 0 (fadeControl 5.0 255 255 255 255 true true) 
 endfight > addToBranch 0 (resetGame 0) 
-endfight > addToBranch 1 (wait 2.0) 
-endfight > addToBranch 1 (fadeControl 5.0 255 0 0 0 true true) 
 endfight > addToBranch 1 (wait 2.0) 
 endfight > addToBranch 1 (showScene "albifrozen") 
 endfight > addToBranch 1 (fadeControl 5.0 255 0 0 0 false true) 

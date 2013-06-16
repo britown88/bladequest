@@ -1,9 +1,23 @@
 [merchants]
-merchant itemshop
+merchant albiitemshop
 item potion
 item antidote
-item felthat
+item tranquilizer
+item sleepingbag
+endmerchant
+#
+merchant albiweaponshop
+item knife
+item woodensword
 item silversword
-item tommygun 1
+item silverstaff
+endmerchant
+#
+merchant albiarmorshop
+item felthat
+item cottonshirt
+item woodenshield
+item volcanicrock
+item safetyring
 endmerchant
 #
