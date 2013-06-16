@@ -179,4 +179,7 @@ disableRunning)
 \RolandBattleOne <- (inheritEncounter "enemyroland1"  >
 setEncounterMusic "rolandbattle" >
 addEnemy "eroland" 128 128 >
-disableRunning)
+disableRunning > 
+onEncounterBegin ([battle] 
+  setBattleEndHandler ([derp] "")
+))

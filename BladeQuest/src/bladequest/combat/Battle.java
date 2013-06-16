@@ -39,6 +39,19 @@ import bladequest.world.TargetTypes;
 
 public class Battle 
 {	
+	public interface BattleEndHandler
+	{
+		void onBattleEnd();
+	};
+	
+	
+	BattleEndHandler battleEndHandler = new BattleEndHandler() {
+		public void onBattleEnd()
+		{
+			Global.screenFader.fadeIn(1.0f);
+		}
+	};
+	
 	private final int frameMaxHeight = 96;
 	private final int frameMinHeight = 32;
 	private final int partyFrameBuffer = 32;
@@ -673,7 +686,7 @@ public class Battle
 					}				
 
 					musicListener.onBattleUnload();
-					Global.screenFader.fadeIn(1.0f);
+					battleEndHandler.onBattleEnd();
 					
 					Global.GameState = States.GS_WORLDMOVEMENT;	
 				}		
@@ -2143,7 +2156,10 @@ public class Battle
 	{
 		return encounter;
 	}
-	
+	public void setBattleEndHandler(BattleEndHandler battleEndHandler)
+	{
+		this.battleEndHandler = battleEndHandler;
+	}
 	public Point getPlayerDefaultPosition(PlayerCharacter p)
 	{
 		if (p == currentChar)
