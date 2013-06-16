@@ -6,6 +6,9 @@ usableByAll item
 usableByMagicPeople item
   mapBound item setUsableBy {"joy", "roland"}
   
+usableBySwordPeople item
+  mapBound item setUsableBy {"joy", "luc"}
+  
   
   ###############################Super awesome triggers##################
 
@@ -39,7 +42,7 @@ swingSlash 2 255 255 255)
 \woodensword <- (addItem "woodensword" "Wooden Sword" "Weapon" "sword" "A practice sword." >
 setPower 6 >
 setValue 25 >
-usableByAll >
+usableBySwordPeople >
 swing "sword" "slice1" >
 swingBase 0 139 69 19 >
 swingBase 1 222 184 134 >
@@ -50,13 +53,25 @@ swingSlash 2 222 184 134)
 \silversword <- (addItem "silversword" "Silver Sword" "Weapon" "sword" "Some believe the silver inlay wards off the undead." >
 setPower 10 >
 setValue 125 >
-usableByAll >
+usableBySwordPeople >
 swing "sword" "slice1" >
 swingBase 0 186 186 186 >
 swingBase 1 255 255 255 >
 swingSlash 0 128 128 128 >
 swingSlash 1 186 186 186 >
-swingSlash 2 255 255 255)     
+swingSlash 2 255 255 255)   
+
+
+\frostrapier <- (addItem "frostrapier" "Frost Rapier" "Weapon" "sword" "A sword imbued with the power of ice." >
+setPower 12 >
+setValue 525 >
+usableBySwordPeople >
+swing "sword" "slice1" >
+swingBase 0 105 212 213 >
+swingBase 1 165 242 243 >
+swingSlash 0 105 212 213 >
+swingSlash 1 136 227 228 >
+swingSlash 2 165 242 243)     
 
 \silverstaff <- (addItem "silverstaff" "Silver Staff" "Weapon" "staff" "A magical staff." >
 setPower 1 >

@@ -11,13 +11,17 @@ public class EncounterZone
 	private float currentChance;
 	private Rect zone;
 	
+	private int graceSteps;
 	private List<String> encounters;
+	
+	
 	
 	public EncounterZone(int x, int y, int width, int height, float rate)
 	{
 		this.encounterRate = rate;
 		this.zone = new Rect(x, y, x+width, y+height);
 		encounters = new ArrayList<String>();
+		graceSteps = 0;
 	}
 	
 	public String getEncounter()
@@ -33,8 +37,17 @@ public class EncounterZone
 		float roll = Global.rand.nextFloat();
 		boolean encounter = roll < currentChance;
 		
+		if (graceSteps > 0)
+		{
+			--graceSteps;
+			encounter = false;
+		}
+		
 		if(encounter)
+		{
+			graceSteps = 3;
 			currentChance = 0;
+		}
 		else
 			if(currentChance == 0)
 				currentChance = encounterRate / 100.0f;
@@ -47,6 +60,7 @@ public class EncounterZone
 	public void reset()
 	{
 		currentChance = 0;
+		graceSteps = 0;
 	}
 	
 	public Rect getZone() { return zone; }

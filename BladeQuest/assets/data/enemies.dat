@@ -376,5 +376,6 @@ addEAbility "entomb"  >
 addEAbility "frozengrip"  >
 addEAbility "icebarrage" >
 addEAbility "chill" >
+setItems "potion" 100 "frostrapier" 100 true >
 onBattleStartRun RolandTriggers > 
 setEShadow (createShadow 74 30 43 > nudgeX 16))
