@@ -82,7 +82,9 @@ public class PlayerCharacter
 			      onPhysicalHitLandsEvent,  //you've been hit
 			      onPhysicalHitSuccessEvent,  //you've successfully hit someone
 			      
-				  onDamagedEvent, onAttackEvent;
+				  onDamagedEvent,  //you're being attacked! 
+				  onDamageReceivedEvent,  //you've been successfully attacked, ouch.  Damage is already dealt here. 
+				  onAttackEvent;
 	
 	private Shadow shadow;
 	
@@ -172,6 +174,7 @@ public class PlayerCharacter
 			onPhysicalHitSuccessEvent = new Event();
 			
 			onDamagedEvent = new Event();
+			onDamageReceivedEvent = new Event();
 			onAttackEvent = new Event();
 		}
 		
@@ -218,6 +221,11 @@ public class PlayerCharacter
 	{
 		return onDamagedEvent;
 	}	
+	
+	public Event getOnDamageReceivedEvent()
+	{
+		return onDamageReceivedEvent;
+	}		
 	public void setExp(int exp){this.exp = exp;}
 	public void setDisplayName(String str){displayName = str;}
 	public void setSprites(String world, String battle)
@@ -238,7 +246,14 @@ public class PlayerCharacter
 		onPhysicalHitDamageCalcEvent = new Event();
 		onPhysicalHitSuccessEvent = new Event();
 		onDamagedEvent = new Event();
+		onDamageReceivedEvent = new Event();
 		onAttackEvent = new Event();
+		
+		for (Item i : getEquippedItems())
+		{
+			i.runStartBattleScripts(this);
+		}
+		
 	}
 	public void endBattle()
 	{
@@ -247,6 +262,7 @@ public class PlayerCharacter
 		onPhysicalHitLandsEvent = null;
 		onPhysicalHitSuccessEvent = null;
 		onDamagedEvent = null;
+		onDamageReceivedEvent = null;
 		onAttackEvent = null;
 	}
 	

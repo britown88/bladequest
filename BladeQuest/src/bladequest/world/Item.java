@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.graphics.Point;
+import android.util.Log;
 import bladequest.battleactions.BattleAction;
+import bladequest.bladescript.ParserException;
+import bladequest.bladescript.ScriptVar;
 import bladequest.combat.DamageComponent;
 import bladequest.combat.DamageMarker;
 import bladequest.graphics.BattleAnim;
@@ -37,6 +40,8 @@ public class Item
 	
 	private List<DamageComponent> damageComponents;
 	
+	private  List<ScriptVar> onEquippedBattleStart;
+	
 	public Item(String idName, String name, Type type, String icon, String description)
 	{
 		this.idName = idName;
@@ -54,7 +59,7 @@ public class Item
 		equipped = false;
 		useCount = 0;
 		sellable = true;		
-		
+		onEquippedBattleStart = new ArrayList<ScriptVar>();
 	}
 	
 	public Item(Item i)
@@ -98,6 +103,7 @@ public class Item
 			statMods[j] = i.statMods[j];
 		
 		this.useCount = 0;
+		this.onEquippedBattleStart = i.onEquippedBattleStart;
 	}
 	
 	//merchant
@@ -225,6 +231,23 @@ public class Item
 				return false;
 		
 		return true;
+	}
+	
+	public void addStartBattleEquippedScript(ScriptVar fn)
+	{
+		onEquippedBattleStart.add(fn);
+	}
+	public void runStartBattleScripts(PlayerCharacter c)
+	{
+		for (ScriptVar fn : onEquippedBattleStart)
+		{
+			try {
+				fn.apply(ScriptVar.toScriptVar(Global.battle)).apply(ScriptVar.toScriptVar(c));
+			} catch (ParserException e) {
+				e.printStackTrace();
+				Log.d("Parser", e.what());
+			}
+		}
 	}
 	
 	public void modifyCount(int i)

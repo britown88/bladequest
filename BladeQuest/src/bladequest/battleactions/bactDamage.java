@@ -167,7 +167,6 @@ public class bactDamage extends DelegatingAction
 			Global.screenFader.setFadeColor(255, 255, 255, 255);
 			Global.screenFader.flash(0.25f);
 		case Hit:
-			//TODO: another trigger here?
 			target.modifyHP(-triggerSettings.getDamage(), false);
 			if (!target.isEnemy() && !target.isDead())
 			{
@@ -186,6 +185,9 @@ public class bactDamage extends DelegatingAction
 			{
 				builder.addEventObject(onHit);
 			}
+			
+			//EVEN MORE TRIGGERS BECAUSE WE NEED MORE TRIGGERS NOT LESS TRIGGERS MORE
+			target.getOnDamageReceivedEvent().trigger();			
 			break;
 		case Miss:
 			builder.addMarker(new DamageMarker("MISS", target));	

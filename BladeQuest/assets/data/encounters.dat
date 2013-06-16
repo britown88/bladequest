@@ -10,7 +10,7 @@ fireSwitchedTrigger trigger enemy fn
 
 onHPFraction enemy numer denom fn 
   \triggerRun <- (createSwitchCondition true)
-  createTrigger {triggerRun, getOnDamagedEvent enemy} (
+  createTrigger {triggerRun, getOnDamageReceivedEvent enemy} (
   [trigger] (|(enemy > getHP) > less (enemy > getStat "MaxHP" > multiply numer > divide denom)
   | equals true : fireSwitchedTrigger triggerRun enemy fn
   | equals false : ""

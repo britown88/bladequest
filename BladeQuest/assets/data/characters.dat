@@ -10,7 +10,7 @@ setAbilityName "Tricks" >
 setCombatAction "combSteal" >
 setBaseStats 7 10 4 2 >
 setLevel 7 >
-mapBound equip {"knife", "felthat", "cottonshirt"} >
+mapBound equip {"knife", "felthat", "cottonshirt", "volcanicrock"} >
 mapBound addAbility {"coatweapon", "dblattack", "backstab"} >
 addLearnableAbility "dblattack" 6 > 
 addLearnableAbility "backstab" 8 > 
@@ -24,7 +24,7 @@ setCombatAction "combAuras" >
 setBaseStats 3 3 6 10 >
 setLevel 7 >
 mapBound addAbility {"heal", "ignite"} >
-mapBound equip {"silverstaff", "felthat", "cottonshirt"}) > 
+mapBound equip {"silverstaff", "felthat", "cottonshirt", "safetyring"}) > 
 setDefaultShadow
 
 \luc <- (createCharacter "luc" "Luc" "bluc" "luc" >

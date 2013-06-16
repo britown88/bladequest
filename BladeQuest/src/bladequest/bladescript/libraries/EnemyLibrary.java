@@ -88,6 +88,10 @@ public class EnemyLibrary {
 	{
 		return character.getOnDamagedEvent();
 	}
+	public static Event getOnDamageReceivedEvent(PlayerCharacter character)
+	{
+		return character.getOnDamageReceivedEvent();
+	}
 		
 	
 	

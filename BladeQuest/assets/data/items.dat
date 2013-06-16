@@ -1,8 +1,28 @@
+#################################COMMON FUNCTIONS#######################
+
 usableByAll item
  mapBound item setUsableBy {"aramis", "luc", "joy", "roland"}
  
 usableByMagicPeople item
   mapBound item setUsableBy {"joy", "roland"}
+  
+  
+  ###############################Super awesome triggers##################
+
+fireSwitchedTrigger trigger enemy fn
+  setSwitchCondition trigger false
+  fn enemy
+
+onHPFraction enemy numer denom fn 
+  \triggerRun <- (createSwitchCondition true)
+  createTrigger {triggerRun, getOnDamageReceivedEvent enemy} (
+  [trigger] (|(enemy > getHP) > less (enemy > getStat "MaxHP" > multiply numer > divide denom)
+  | equals true : fireSwitchedTrigger triggerRun enemy fn
+  | equals false : ""
+  ))
+  
+  
+  ######################################################################
 
 \knife <- (addItem "knife" "Knife" "Weapon" "dagger" "A small and simple dagger." >
 setPower 5 >
@@ -101,6 +121,10 @@ usableByAll)
 \safetyring <- (addItem "safetyring" "Safety Ring" "Accessory" "ring" "A ring that causes regen status when weakened." >
 setPower 0 >
 setValue 300 >
+onEquippedBattleStart ([battle wearer] 
+   onHPFraction wearer 1 4 ([healme]
+   addNextAbility healme healme (getAbility "safetyheal")
+))>
 usableByAll)
 
 

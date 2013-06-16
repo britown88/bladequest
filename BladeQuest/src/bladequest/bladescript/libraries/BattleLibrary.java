@@ -89,6 +89,11 @@ public class BattleLibrary {
 		return newAbility;
 	}
 	
+	public static Ability getAbility(String name)
+	{
+		return Global.abilities.get(name);
+	}
+	
 	//for creating abilities on-the-fly.
 	public static Ability temporaryAbility(String name, String displayName, String targetType, int mpcost)
 	{
