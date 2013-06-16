@@ -14,6 +14,7 @@ import bladequest.graphics.BattleAnimObjState;
 import bladequest.graphics.BattleAnimObjState.PosTypes;
 import bladequest.graphics.BattleAnimObject;
 import bladequest.graphics.BattleAnimObject.Types;
+import bladequest.graphics.BitmapFrame;
 import bladequest.math.PointMath;
 import bladequest.math.PointMath.ForkingPath;
 
@@ -525,30 +526,29 @@ public class WorldAnimations
 		
 		final int icicleLife = 500;  
 		
-		Bitmap icicleBitmap = Global.bitmaps.get("icicle"); 
-		Rect icicleRect = new Rect(0,0,30, 80);
+		BitmapFrame icicleFrame = BattleAnimations.getIcicle();
 		
 		
-		BattleAnimObject icicle = new BattleAnimObject(Types.Bitmap, false, icicleBitmap);
+		BattleAnimObject icicle = new BattleAnimObject(Types.Bitmap, false, icicleFrame.bitmap);
 		
 		float startX = x - (xDir * 400.0f);
 		float startY = y - (yDir * 400.0f);				
 		
 		//start state
 		BattleAnimObjState state = new BattleAnimObjState(time, PosTypes.Target);
-		state.size = new Point(icicleRect.width()/3, icicleRect.height()/3);
+		state.size = new Point(icicleFrame.srcRect.width()*2, icicleFrame.srcRect.height()*2);
 		state.pos1 = new Point((int)startX, (int)startY);
 		state.argb(255, 255, 255, 255);
-		state.rotation = 270+angle;  //angle += 270
-		state.setBmpSrcRect(icicleRect.left, icicleRect.top, icicleRect.right, icicleRect.bottom);
+		state.rotation = angle;  //angle += 270
+		state.setBmpSrcRect(icicleFrame.srcRect.left, icicleFrame.srcRect.top, icicleFrame.srcRect.right, icicleFrame.srcRect.bottom);
 		icicle.addState(state);
 		//end state
 		state = new BattleAnimObjState(time+ icicleLife, PosTypes.Target);
-		state.size = new Point(icicleRect.width()/3, icicleRect.height()/3);
+		state.size = new Point(icicleFrame.srcRect.width()*2, icicleFrame.srcRect.height()*2);
 		state.pos1 = new Point((int)x,(int)y);
 		state.argb(255, 255, 255, 255);
-		state.rotation = 270+angle;
-		state.setBmpSrcRect(icicleRect.left, icicleRect.top, icicleRect.right, icicleRect.bottom);
+		state.rotation = angle;
+		state.setBmpSrcRect(icicleFrame.srcRect.left, icicleFrame.srcRect.top, icicleFrame.srcRect.right, icicleFrame.srcRect.bottom);
 		icicle.addState(state);					
 
 		icicle.interpolateLinearly();

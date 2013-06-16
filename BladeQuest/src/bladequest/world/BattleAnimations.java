@@ -53,7 +53,7 @@ public class BattleAnimations
 		Bitmap icePoof = Global.bitmaps.get("particles");
 		Rect poofRect = new Rect(1,13,13,24);
 		
-		//to radian
+		//to radians
 		minAngle = (float)(Math.PI/180.0f * minAngle);
 		maxAngle = (float)(Math.PI/180.0f * maxAngle);
 		
@@ -104,6 +104,10 @@ public class BattleAnimations
 	public static BitmapFrame getIceBlock()
 	{
 		return new BitmapFrame(Global.bitmaps.get("iceblock"), new Rect(0,0,25,38));
+	}
+	public static BitmapFrame getIcicle()
+	{
+		return new BitmapFrame(Global.bitmaps.get("particles"), new Rect(37, 0, 52, 6));
 	}
 	
 
@@ -375,15 +379,14 @@ public class BattleAnimations
 				final float iceStormLength = 2500;
 				final float icicleLife = 500;  
 				
-				Bitmap icicleBitmap = Global.bitmaps.get("icicle"); 
-				Rect icicleRect = new Rect(0,0,30,80);	
+				BitmapFrame icicleFrame = getIcicle(); 
 				
 				Bitmap icePoof = Global.bitmaps.get("particles");
 				Rect poofRect = new Rect(1,13,13,24);
 				
 				for (int i = 0; i < icicleCount; ++i) 
 				{
-					BattleAnimObject icicle = new BattleAnimObject(Types.Bitmap, false, icicleBitmap);
+					BattleAnimObject icicle = new BattleAnimObject(Types.Bitmap, false, icicleFrame.bitmap);
 					BattleAnimObject poofObj = new BattleAnimObject(Types.Bitmap, false, icePoof);
 					
 					
@@ -405,26 +408,26 @@ public class BattleAnimations
 					float startY = targetY - (yDir * 400.0f);
 					
 					
-					
+					// 10 x 80/3 ~19
 					
 					float t = ((float)i)/(icicleCount-1);
 
 					//start state
 					BattleAnimObjState state = new BattleAnimObjState((int)(t * iceStormLength), PosTypes.Screen);
-					state.size = new Point(icicleRect.width()/3, icicleRect.height()/3);
+					state.size = new Point(icicleFrame.srcRect.width()*2, icicleFrame.srcRect.height()*2);
 					state.pos1 = new Point((int)startX, (int)startY);
 					state.argb(255, 255, 255, 255);
-					state.rotation = 270+angle;  //angle += 270
-					state.setBmpSrcRect(icicleRect.left, icicleRect.top, icicleRect.right, icicleRect.bottom);
+					state.rotation = angle + 180.0f;  //angle += 270
+					state.setBmpSrcRect(icicleFrame.srcRect.left, icicleFrame.srcRect.top, icicleFrame.srcRect.right, icicleFrame.srcRect.bottom);
 					icicle.addState(state);
 					//end state
 					int hitTime = (int)(t * iceStormLength+ icicleLife);
 					state = new BattleAnimObjState((int)(hitTime), PosTypes.Screen);
-					state.size = new Point(icicleRect.width()/3, icicleRect.height()/3);
+					state.size = new Point(icicleFrame.srcRect.width()*2, icicleFrame.srcRect.height()*2);
 					state.pos1 = new Point((int)targetX, (int)targetY);
 					state.argb(255, 255, 255, 255);
-					state.rotation = 270+angle;
-					state.setBmpSrcRect(icicleRect.left, icicleRect.top, icicleRect.right, icicleRect.bottom);
+					state.rotation = angle + 180.0f;
+					state.setBmpSrcRect(icicleFrame.srcRect.left, icicleFrame.srcRect.top, icicleFrame.srcRect.right, icicleFrame.srcRect.bottom);
 					icicle.addState(state);					
 
 					icicle.interpolateLinearly();
@@ -476,18 +479,17 @@ public class BattleAnimations
 			public BattleAnim buildAnimation(BattleEventBuilder builder) {
 				BattleAnim out = new BattleAnim(1000.0f); //working in milliseconds
 				
-				final int icicleCount = 16;
+				final int icicleCount = 32;
 				final int icicleStrikeWait = 650;
 				final int icicleStrikeTime = 105;
-				final int icicleSpawnGap = 8;
+				final int icicleSpawnGap = 2;
 				final int icicleStartWait = 1250;
-				final int strikeGap = 40;
+				final int strikeGap = 20;
 				final int iciclePoofLife = 750;
 			//	final int icicleAdvanceTime = 100;
-				final float icicleRadius = 60.0f;
+				final float icicleRadius = 40.0f;
 				
-				Bitmap icicleBitmap = Global.bitmaps.get("icicle"); 
-				Rect icicleRect = new Rect(0,0,30,80);	
+				BitmapFrame icicleFrame = getIcicle(); 	
 				
 				Bitmap icePoof = Global.bitmaps.get("particles");
 				Rect poofRect = new Rect(1,13,13,24);
@@ -496,17 +498,17 @@ public class BattleAnimations
 				
 				for (int i = 0; i < icicleCount; ++i)
 				{
-					BattleAnimObject icicle = new BattleAnimObject(Types.Bitmap, false, icicleBitmap);
+					BattleAnimObject icicle = new BattleAnimObject(Types.Bitmap, false, icicleFrame.bitmap);
 					
 					int startTime = Global.rand.nextInt(strikeGap * icicleCount) + icicleStartWait;
 					
-					float radius = icicleRadius + Global.rand.nextFloat() * 16.0f;
+					float radius = icicleRadius + Global.rand.nextFloat() * 36.0f;
 					
 					float angle =  (float)(Math.PI - (((float)i)/icicleCount-1) * Math.PI);
 					float x = (float)(Math.cos(angle) * radius);
 					float y = (float)(Math.sin(angle) * radius) + 16.0f;  //offset down slightly to feel a bit more entomb-y
 										
-					float drawAngle =(float)(90  + (angle * 180/Math.PI));
+					float drawAngle =(float)((angle * 180/Math.PI) + 180.0f);
 					float randAngle = Global.rand.nextFloat()*360.0f;
 					
 					
@@ -514,44 +516,44 @@ public class BattleAnimations
 					
 					BattleAnimObjState state = new BattleAnimObjState(i * icicleSpawnGap, PosTypes.Target);
 					state.pos1 = new Point(rndX, 18);
-					state.size = new Point(icicleRect.width()/3, icicleRect.height()/3);
+					state.size = new Point(icicleFrame.srcRect.width(), icicleFrame.srcRect.height());
 					state.argb(255, 255, 255, 255);
 					state.rotation = randAngle;  //angle += 270
-					state.setBmpSrcRect(icicleRect.left, icicleRect.top, icicleRect.right, icicleRect.bottom);
+					state.setBmpSrcRect(icicleFrame.srcRect.left, icicleFrame.srcRect.top, icicleFrame.srcRect.right, icicleFrame.srcRect.bottom);
 					icicle.addState(state);	
 					
 					state = new BattleAnimObjState(i * icicleSpawnGap+350, PosTypes.Target);
 					state.pos1 = new Point(rndX, 18);
-					state.size = new Point(icicleRect.width()/3, icicleRect.height()/3);
+					state.size = new Point(icicleFrame.srcRect.width(), icicleFrame.srcRect.height());
 					state.argb(255, 255, 255, 255);
 					state.rotation = randAngle;  //angle += 270
-					state.setBmpSrcRect(icicleRect.left, icicleRect.top, icicleRect.right, icicleRect.bottom);
+					state.setBmpSrcRect(icicleFrame.srcRect.left, icicleFrame.srcRect.top, icicleFrame.srcRect.right, icicleFrame.srcRect.bottom);
 					icicle.addState(state);	
 					
 					state = new BattleAnimObjState(icicleStartWait, PosTypes.Target);
 					state.pos1 = new Point((int)x, (int)y);
-					state.size = new Point(icicleRect.width()/3, icicleRect.height()/3);
+					state.size = new Point(icicleFrame.srcRect.width(), icicleFrame.srcRect.height());
 					state.argb(255, 255, 255, 255);
 					state.rotation = drawAngle;  //angle += 270
-					state.setBmpSrcRect(icicleRect.left, icicleRect.top, icicleRect.right, icicleRect.bottom);
+					state.setBmpSrcRect(icicleFrame.srcRect.left, icicleFrame.srcRect.top, icicleFrame.srcRect.right, icicleFrame.srcRect.bottom);
 					icicle.addState(state);		
 
 					//hang in the air a bit.....
 					state = new BattleAnimObjState(startTime + icicleStrikeWait, PosTypes.Target);
 					state.pos1 = new Point((int)x, (int)y);
-					state.size = new Point(icicleRect.width()/3, icicleRect.height()/3);
+					state.size = new Point(icicleFrame.srcRect.width(), icicleFrame.srcRect.height());
 					state.argb(255, 255, 255, 255);
 					state.rotation = drawAngle;  //angle += 270
-					state.setBmpSrcRect(icicleRect.left, icicleRect.top, icicleRect.right, icicleRect.bottom);
+					state.setBmpSrcRect(icicleFrame.srcRect.left, icicleFrame.srcRect.top, icicleFrame.srcRect.right, icicleFrame.srcRect.bottom);
 					icicle.addState(state);		
 					
 					//Strike!  This should be pretty fast
 					state = new BattleAnimObjState(startTime + icicleStrikeWait + icicleStrikeTime, PosTypes.Target);
 					state.pos1 = new Point(0,0);
-					state.size = new Point(icicleRect.width()/3, icicleRect.height()/3);
+					state.size = new Point(icicleFrame.srcRect.width(), icicleFrame.srcRect.height());
 					state.argb(255, 255, 255, 255);
 					state.rotation = drawAngle;
-					state.setBmpSrcRect(icicleRect.left, icicleRect.top, icicleRect.right, icicleRect.bottom);
+					state.setBmpSrcRect(icicleFrame.srcRect.left, icicleFrame.srcRect.top, icicleFrame.srcRect.right, icicleFrame.srcRect.bottom);
 					icicle.addState(state);		
 					
 					out.addObject(icicle);
