@@ -15,7 +15,7 @@ public class Encounter
 	private String name;
 	private String music;
 	
-	public boolean disableRunning, isBossFight;
+	public boolean disableRunning, isBossFight, slidesIn;
 	
 	public Encounter(String name, String backdrop)
 	{
@@ -23,6 +23,7 @@ public class Encounter
 		this.backdrop = backdrop;
 		enemies = new ArrayList<Enemy>();
 		scripts = new ArrayList<ScriptVar>();
+		slidesIn = false;
 	}
 	
 	public void setMusic(String music)
@@ -46,6 +47,7 @@ public class Encounter
 			this.enemies.add(new Enemy(en));
 
 		this.scripts = e.scripts;
+		slidesIn = e.slidesIn;
 	}
 	
 	public void addEnemy(String enemy, int x, int y)

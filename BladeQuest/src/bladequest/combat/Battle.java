@@ -23,6 +23,7 @@ import bladequest.combat.triggers.Event;
 import bladequest.combatactions.CombatActionBuilder;
 import bladequest.enemy.Enemy;
 import bladequest.graphics.BattleSprite.faces;
+import bladequest.graphics.BattleAnim;
 import bladequest.graphics.ScreenFilter;
 import bladequest.observer.ObserverUpdatePool;
 import bladequest.statuseffects.StatusEffect;
@@ -165,6 +166,56 @@ public class Battle
 			}
 		};
 	}
+	
+	
+	private BattleState getSlideInState()
+	{
+		return new BattleState()
+		{
+			final static int slideTime = 300;
+			final static int enemyWait = 150;
+			final static int slideDistance = 400;
+			final static int startWait = 250;
+			
+			boolean called = false;
+			long startTime;
+			List<Integer> xPos;
+			@Override
+			public void onSwitchedTo(BattleState prevState)
+			{
+
+			}			
+			public void update() 
+			{
+				if (!called)
+				{
+					startTime = System.currentTimeMillis();
+					xPos = new ArrayList<Integer>();
+					for (Enemy e : encounter.Enemies())
+					{
+						xPos.add(e.getPosition().x);
+					}
+					called = true;
+				}
+				
+				int time = (int)(System.currentTimeMillis()-startTime);
+				for (int i = 0; i < encounter.Enemies().size();  ++i)
+				{
+					float t = (time - (startWait+enemyWait *(encounter.Enemies().size()-i)))/ ((float)slideTime);
+					if (t > 1.0f) t = 1.0f;
+					if (t < 0.0f) t = 0.0f;
+					encounter.Enemies().get(i).setPosition(new Point(
+							BattleAnim.linearInterpolation(xPos.get(i)-slideDistance, xPos.get(i), t), 
+							encounter.Enemies().get(i).getPosition().y));
+				}
+				if (time > (encounter.Enemies().size()+1)*enemyWait + slideTime + startWait)
+				{
+					stateMachine.setState(getStartState());
+				}
+			}
+		};
+	}	
+	
 	private BattleState getWaitingForInputState()
 	{
 		return new BattleState()
@@ -668,8 +719,17 @@ public class Battle
 		onSelectStart = new Event();
 		damageDealt = new Event();
 		
-		stateMachine.setState(getStartState());
+		
 		this.encounter = new Encounter(Global.encounters.get(encounter));
+		
+		if (this.encounter.slidesIn)
+		{
+			stateMachine.setState(getSlideInState());
+		}
+		else
+		{
+			stateMachine.setState(getStartState());	
+		}
 		
 		
 		for (Enemy e : this.encounter.Enemies())

@@ -43,6 +43,11 @@ public class EncounterLibrary {
 		encounter.setMusic(music);
 		return encounter;
 	}
+	public static Encounter slidesIn(Encounter encounter)
+	{
+		encounter.slidesIn = true;
+		return encounter;
+	}	
 	public static Encounter onEncounterBegin(Encounter encounter, ScriptVar script)
 	{
 		encounter.addScript(script);

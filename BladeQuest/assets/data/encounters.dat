@@ -21,6 +21,7 @@ onHPFraction enemy numer denom fn
   
 
 \errybodyEncounter <- (inheritEncounter "errybody" >
+slidesIn >
 addEnemy "rat" 150 96 >
 addEnemy "bat" 100 96 >
 addEnemy "guard" 50 96 >
@@ -32,6 +33,7 @@ addEnemy "satyr" 200 158)
 
 #
 \SPUDSEncounter <- (inheritEncounter "SPUDS" >
+slidesIn >
 addEnemy "spud" 0 100  >
 addEnemy "spud" 50 100 >
 addEnemy "spud" 100 100 >
@@ -72,17 +74,21 @@ addEnemy "spud" 250 200 >
 addEnemy "spud" 300 200)
 
 \TwoRatsEncounter <- (inheritEncounter "2rats" >
+slidesIn >
 addEnemy "rat" 150 96 >
 addEnemy "rat" 100 158)
 
 
 \RatEncounter <- (inheritEncounter "rat" >
+slidesIn >
 addEnemy "rat" 128 128)
 
 \BatEncounter <- (inheritEncounter "bat" >
+slidesIn >
 addEnemy "bat" 128 128)
 
 \guardEncounter <- (inheritEncounter "guard" >
+slidesIn >
 addEnemy "guard" 128 128 >
 disableRunning)
 
@@ -103,6 +109,7 @@ onEncounterBegin onRecruitBattleStart >
 disableRunning)
 
 \ThreeGuardsEncounter <- (inheritEncounter "3guards" >
+slidesIn >
 addEnemy "guard" 128 78 >
 addEnemy "guard" 68 128 >
 addEnemy "guard" 128 178 >
@@ -110,20 +117,24 @@ disableRunning)
 
 
 \BunnyAndSpud <- (inheritEncounter "bunnyandspud" >
+slidesIn >
 addEnemy "leafbunny" 68 128 >
 addEnemy "spud" 158 158)
 
 \OneHawk <- (inheritEncounter "1hawk" >
+slidesIn >
 addEnemy "hawk" 128 128)
 
 #For nighttime...probably keep BunnyAndSpud as well.
 
 \BatAndSpud <- (inheritEncounter "batandspud" >
+slidesIn >
 addEnemy "bat" 68 128 >
 addEnemy "spud" 158 158)
 
 
 \TwoBats <- (inheritEncounter "twobats" >
+slidesIn >
 addEnemy "bat" 68 128 >
 addEnemy "bat" 98 158)
 
@@ -133,6 +144,7 @@ addEnemy "bat" 98 158)
 
 #slightly stronger bats!
 \FiveBats <- (inheritEncounter "fivebats" >
+slidesIn >
 addEnemy "bat2" 58 78 >
 addEnemy "bat2" 138 78 >
 addEnemy "bat2" 98 118 >
@@ -142,6 +154,7 @@ addEnemy "bat2" 138 158
 
 
 \BunnyAndHawks <- (inheritEncounter "bunnyandhawks" >
+slidesIn >
 addEnemy "leafbunny" 58 88 >
 addEnemy "leafbunny" 98 148 >
 addEnemy "hawk" 148 88 >
@@ -149,6 +162,7 @@ addEnemy "hawk" 188 148
 )
 
 \LineOfSpuds <- (inheritEncounter "lineofspuds" >
+slidesIn >
 addEnemy "spud2" 38 148 >
 addEnemy "spud2" 68 148 >
 addEnemy "spud2" 98 148 >
