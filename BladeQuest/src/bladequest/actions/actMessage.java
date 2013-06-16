@@ -13,8 +13,9 @@ public class actMessage extends Action
 	}
 	
 	String msg;
-	boolean yesNoOpt;
+	boolean yesNoOpt, timed;
 	Position pos;
+	float duration;
 
 	
 	public actMessage(String str)
@@ -23,6 +24,17 @@ public class actMessage extends Action
 		msg = str;
 		this.yesNoOpt = false;
 		pos = Position.Bottom;
+
+	}
+	
+	public actMessage(String str, float seconds)
+	{
+		super();
+		msg = str;
+		this.yesNoOpt = false;
+		pos = Position.Bottom;
+		duration = seconds;
+		timed = true;
 
 	}
 	
@@ -49,16 +61,21 @@ public class actMessage extends Action
 	@Override
 	public void run()
 	{
-		switch(pos)
+		if(timed)
+			Global.showMessage(msg, duration);
+		else
 		{
-		case Top:
-			Global.showMessageTop(msg, yesNoOpt);
-			break;
-		case Bottom:
-			Global.showMessage(msg, yesNoOpt);
-			break;
-		default:
-			break;
+			switch(pos)
+			{
+			case Top:
+				Global.showMessageTop(msg, yesNoOpt);
+				break;
+			case Bottom:
+				Global.showMessage(msg, yesNoOpt);
+				break;
+			default:
+				break;
+			}			
 		}
 		
 	}

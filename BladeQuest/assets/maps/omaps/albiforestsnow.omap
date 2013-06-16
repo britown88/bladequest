@@ -50,6 +50,7 @@ setLayer "Above"
 
 
 
+
 #!OBJ 10 5
 \name$10x5$ <- cliffJumpLeft 10 5
 #!OBJ 10 4
@@ -360,70 +361,142 @@ setSprite "icepillar"
 \name$6x4$ <- newObject objName$6x4$ 6 4
 
 state1$6x4$ 0
-name$6x4$ > createState >
-addAction (fadeControl 2.0 255 0 0 0 true true) >
-addAction (createPath "party" true "v") >
-addAction (switchControl "albidragonscenestart" true) >
-addAction (panControl 0 1 2.0 false) >
-addAction (fadeControl 2.0 255 0 0 0 false true) >
-addAction (wait 1.0) >
-addAction (message "|luc|: \nNo!!!") >
-addAction (message "I can't get through!") >
-addAction (wait 0.5) >
-addAction (openBubble "exclam" "luc2" 0.5 false true) >
-addAction (createPath "luc2" true "RD") >
-addAction (message "|luc|: \nYou can burn through this, can't you?") >
-addAction (message "With your magic??") >
-addAction (message "|joy|: \nI-I don't know if I can!") >
-addAction (message "|luc|: \nYou have to! \nPlease!") >
-addAction (createPath "aramis2" true "Ur") >
-addAction (message "|aramis|: \nLeave her alone, kid.") >
-addAction (message "It's too late!") >
-addAction (createPath "luc2" true "l") >
-addAction (message "|luc|: \nNo! \nWe have to try!!!") >
-addAction (pauseMusic 1.0) >
-addAction (wait 2.0) >
-addAction (flash 1.0 255 150 225 255 true) >
-addAction (openBubble "exclam" "luc2" 1.0 false false) >
-addAction (openBubble "exclam" "aramis2" 1.0 false false) >
-addAction (openBubble "exclam" "joy2" 1.0 false true) >
-addAction (createPath "aramis2" true "u") >
-addAction (message "|aramis|: \nLook over there!!!") >
-addAction (message "What the hell IS that thing?!") >
-addAction (createPath "aramis2" true "d") >
-addAction (message "|aramis|: \nEveryone! Get back!") >
-addAction (createPath "aramis2" false "D2Lu") >
-addAction (createPath "joy2" false "Du") >
-addAction (wait 0.5) >
-addAction (createPath "luc2" true "u") >
-addAction (openBubble "exclam" "luc2" 0.5 false true) >
-addAction (createPath "luc2" true "LD2u") >
-addAction (wait 1.0) >
-addAction (changeElevation "roland" 144 0.0 true) >
-addAction (switchControl "albirolandascend" true) >
-addAction (createPath "roland" true "s4D5") >
-addAction (wait 1.0) >
-addAction (flash 2.0 255 150 225 255 false) >
-addAction (createPath "aramis2" false "KWDW3k") >
-addAction (createPath "luc2" false "KWDW3k") >
-addAction (createPath "joy2" false "KWDW3k") >
-addAction (changeElevation "roland" 32 8.0 true) >
-addAction (wait 1.0) >
-addAction (switchControl "albirolandland" true) >
-addAction (changeElevation "roland" 0 0.5 true) >
-addAction (shakeControl 0.25 2 false) >
-addAction (wait 0.5) >
-addAction (createPath "roland" true "uW3r") >
-addAction (shakeControl 1.5 2 true) >
-addAction (wait 0.5) >
-addAction (createPath "roland" true "d") >
-addAction (wait 3.0) >
-addAction (switchControl "albirolandroar" true) >
-addAction (createPath "roland" true "u") >
-addAction (wait 1.0) >
-addAction (createPath "roland" true "r") >
-addAction (panControl 0 3 2.0 false) >
-addAction (shakeControl 2.0 3 true)
+\state <- (name$6x4$ > createState)
+state > addAction (disableBattleMusic 0) 
+state > addAction (fadeControl 2.0 255 0 0 0 true true) 
+state > addAction (createPath "party" true "v") 
+state > addAction (switchControl "albidragonscenestart" true) 
+state > addAction (panControl 0 1 2.0 false) 
+state > addAction (fadeControl 2.0 255 0 0 0 false true) 
+state > addAction (wait 1.0) 
+state > addAction (message "|luc|: \nNo!!!") 
+state > addAction (message "I can't get through!") 
+state > addAction (wait 0.5) 
+state > addAction (openBubble "exclam" "luc2" 0.5 false true) 
+state > addAction (createPath "luc2" true "RD") 
+state > addAction (message "|luc|: \nYou can burn through this, can't you?") 
+state > addAction (message "With your magic??") 
+state > addAction (message "|joy|: \nI-I don't know if I can!") 
+state > addAction (message "|luc|: \nYou have to! \nPlease!") 
+state > addAction (createPath "aramis2" true "Ur") 
+state > addAction (message "|aramis|: \nLeave her alone, kid.") 
+state > addAction (message "It's too late!") 
+state > addAction (createPath "luc2" true "l") 
+state > addAction (message "|luc|: \nNo! \nWe have to try!!!") 
+state > addAction (wait 1.0) 
+state > addAction (flash 1.0 255 150 225 255 true) 
+state > addAction (openBubble "exclam" "luc2" 1.0 false false) 
+state > addAction (openBubble "exclam" "aramis2" 1.0 false false) 
+state > addAction (openBubble "exclam" "joy2" 1.0 false true) 
+state > addAction (createPath "aramis2" true "u") 
+state > addAction (message "|aramis|: \nLook over there!!!") 
+state > addAction (message "What the hell IS that thing?!") 
+state > addAction (createPath "aramis2" true "d") 
+state > addAction (message "|aramis|: \nEveryone! Get back!") 
+state > addAction (createPath "aramis2" false "D2Lu") 
+state > addAction (createPath "joy2" false "Du") 
+state > addAction (wait 0.5) 
+state > addAction (createPath "luc2" true "u") 
+state > addAction (openBubble "exclam" "luc2" 0.5 false true) 
+state > addAction (createPath "luc2" true "LD2u") 
+state > addAction (wait 1.0) 
+state > addAction (switchControl "albirolandascend" true) 
+state > addAction (createPath "roland" true "s2") 
+state > addAction (changeElevation "roland" 144 0.0 true) 
+state > addAction (createPath "roland" true "D5") 
+state > addAction (wait 1.0) 
+state > addAction (flash 2.0 255 150 225 255 false) 
+state > addAction (createPath "aramis2" false "KWDW3k") 
+state > addAction (createPath "luc2" false "KWDW3k") 
+state > addAction (createPath "joy2" false "KWDW3k") 
+state > addAction (changeElevation "roland" 32 8.0 true) 
+state > addAction (wait 1.0) 
+state > addAction (switchControl "albirolandland" true) 
+state > addAction (changeElevation "roland" 0 0.5 true) 
+state > addAction (shakeControl 0.25 2 false) 
+state > addAction (wait 0.5) 
+state > addAction (createPath "roland" true "uW3r") 
+state > addAction (shakeControl 1.5 2 true) 
+state > addAction (wait 0.5) 
+state > addAction (createPath "roland" true "d") 
+state > addAction (wait 3.0) 
+state > addAction (switchControl "albirolandroar" true) 
+state > addAction (createPath "roland" true "u") 
+state > addAction (wait 1.0) 
+state > addAction (createPath "roland" true "r") 
+state > addAction (panControl 0 3 2.0 false) 
+state > addAction (shakeControl 2.0 3 true) 
+state > addAction (wait 1.0) 
+state > addAction (switchControl "albirolandrobed" true) 
+state > addAction (wait 0.5) 
+state > addAction (openBubble "exclam" "aramis2" 0.5 false true) 
+state > addAction (message "|aramis|: \nIt's one of robed guys from the castle!") 
+state > addAction (message "He's not human?!?") 
+state > addAction (wait 0.5) 
+state > addAction (message "Robed Figure: \nSo very astute of you...") 
+state > addAction (createPath "roland" true "s2W5D") 
+state > addAction (wait 0.5) 
+state > addAction (message "|aramis|: \nWho are you?") 
+state > addAction (message "Show yourself!") 
+state > addAction (message "Robed Figure: \nVery well...") 
+state > addAction (wait 1.0) 
+state > addAction (switchControl "albirolanddisrobed" true) 
+state > addAction (wait 1.0) 
+state > addAction (message "Roland: \nI am Roland, son of the Northern Skies.") 
+state > addAction (createPath "roland" true "s2WLd") 
+state > addAction (message "After speaking with the guards, it was a relief to discover that you were but a mere thief.") 
+state > addAction (message "The lowliest of your pathetic race.") 
+state > addAction (message "We were concerned that the sword's chosen keeper was someone of importance.") 
+state > addAction (openBubble "qmark" "aramis2" 0.5 false true) 
+state > addAction (createPath "aramis2" false "r") 
+state > addAction (createPath "roland" true "R2d") 
+state > addAction (message "For keeping it safe from harm, I will spare your lives.") 
+state > addAction (createPath "aramis2" true "Ur") 
+state > addAction (message "|aramis|: \nThe sword??? \nI don't have it!") 
+state > addAction (message "It was gone by the time I woke up!") 
+state > addAction (message "Roland: \nSilence, you fool!") 
+state > addAction (createPath "roland" true "DW5") 
+state > addAction (message "How can you not feel the power emanating from this woman...") 
+state > addAction (openBubble "exclam" "joy2" 0.5 false true) 
+state > addAction (message "|aramis|: \nHey! Leave her alone!") 
+state > addAction (createPath "roland" true "U2Ld") 
+state > addAction (createPath "aramis2" true "u") 
+state > addAction (wait 0.5) 
+state > addAction (message "Roland: \nShe hardly needs your protection.") 
+state > addAction (message "She is the ancient sword...") 
+state > addAction (message "The avatar of peace...") 
+state > addAction (message "...Joyeuse!!!") 
+state > addAction (wait 0.5) 
+state > addAction (createPath "joy2" true "U") 
+state > addAction (message "|joy|: \nI don't understand!") 
+state > addAction (message "Roland: \nNo matter...") 
+state > addAction (message "You are coming with me.") 
+state > addAction (pauseMusic 1.0) 
+state > addAction (wait 1.0) 
+state > addAction (createPath "luc2" true "s2WUW10U") 
+state > addAction (openBubble "qmark" "roland" 1.0 false true) 
+state > addAction (message "Roland: \nAnd who is this?") 
+state > addAction (message "Another villager?") 
+state > addAction (wait 0.5) 
+state > addAction (message "|luc|: \n...") 
+state > addAction (message "...are you the one...") 
+state > addAction (message "...who destroyed my village?!?") 
+state > addAction (message "Roland: \nAh, yes.") 
+state > addAction (message "Recovering the sword was of the upmost importance.") 
+state > addAction (message "I thought it easier to dig it from an icy grave than to peddle with such primates.") 
+state > addAction (wait 1.0) 
+state > addAction (playMusic "rolandbattle" true true 0.0)  #14 seconds until battle start
+state > addAction (messageTimed "|luc|: \nShe's not going anywhere." 3.5) 
+state > addAction (openBubble "exclam" "roland" 1.0 false false) 
+state > addAction (createPath "aramis2" false "U") 
+state > addAction (wait 0.5) 
+state > addAction (messageTimed "|aramis|: \nYeah! You messed with the wrong lowly thief!" 4.5) 
+state > addAction (createPath "joy2" false "U") 
+state > addAction (wait 0.5) 
+state > addAction (messageTimed "Roland: \nI see..." 2.0) 
+state > addAction (wait 0.0) 
+state > addAction (messageTimed "So you have chosen death..." 3.0) 
+state > addAction (startBattle "enemyroland1" false)
 
 
 \runstate1$6x4$ <- state1$6x4$ 0

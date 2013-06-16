@@ -35,7 +35,9 @@ public class MsgBox extends MenuPanel
 	
 	private int rowCount;
 	
-	public boolean alwaysSpeed0;
+	public boolean alwaysSpeed0, timed;
+	private long startTime;
+	private float duration;
 	
 	private MsgBoxEndAction yesAction, noAction;
 
@@ -167,6 +169,27 @@ public class MsgBox extends MenuPanel
 		//yesNoMenu.open();
 		
 		Global.delay();
+		
+		timed = false;
+	}
+	
+	public void open(float seconds)
+	{
+		super.open();
+		
+		if(msgQueue.size() > 0)
+			clear(msgQueue.get(0));	
+		
+		selectedOption = null;
+		
+		//yesNoMenu.open();
+		
+		Global.delay();
+		
+		timed = true;
+		duration = seconds;
+		startTime = System.currentTimeMillis();
+		
 	}
 	
 	@Override
@@ -187,8 +210,17 @@ public class MsgBox extends MenuPanel
 		super.update();
 		yesNoMenu.update();
 		
+		if(timed && System.currentTimeMillis() - startTime >= duration*1000.0f)
+		{
+			yesNoMenu.close();
+			close();
+			return;
+		}
+		
 		if(!done  && Opened())
 		{
+			
+			
 			textTimer++;
 			if(textTimer >= textSpeed)
 			{
@@ -396,7 +428,7 @@ public class MsgBox extends MenuPanel
 	
 	public void touchActionUp(int x, int y)
 	{
-		if(Opened())
+		if(Opened() && !timed)
 		{
 			if(!yesNoMenu.Closed())
 			{

@@ -466,6 +466,21 @@ public class Global
 		if(worldMsgBox.Closed())
 			worldMsgBox.open();
 	}
+	
+	public static void showMessage(String str, float seconds)
+	{
+		if(worldMsgBox == null)
+			worldMsgBox = new MsgBox();
+		
+		worldMsgBox.setBottom();
+		
+		menuButton.close();
+		
+		worldMsgBox.addMessage(str, false);
+		if(worldMsgBox.Closed())
+			worldMsgBox.open(seconds);
+	}
+	
 	public static void resetImageTimer()
 	{
 		updateAnimation = false;
