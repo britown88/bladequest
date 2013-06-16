@@ -197,6 +197,11 @@ public class GameObjectLibrary
 		Action act = new actMessage(message);
 		return act;
 	}
+	public static Action messageTimed(String message, float duration)
+	{		
+		Action act = new actMessage(message, duration);
+		return act;
+	}
 	public static Action messageTop(String message)
 	{		
 		Action act = new actMessage(message, Position.Top);

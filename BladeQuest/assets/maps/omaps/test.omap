@@ -10,6 +10,8 @@
 
 
 
+
+
 #!OBJ 0 0
 \name$0x0$ <- newObject "start" 0 0
 
@@ -189,7 +191,7 @@ addAction (modifyParty "luc" false)
 
 \runstate1$6x7$ <- state1$6x7$ 0
 #!OBJ 10 5
-\objName$10x5$ <- "movetest1"
+\objName$10x5$ <- "aramis2"
 \name$10x5$ <- newObject objName$10x5$ 10 5
 
 state1$10x5$ 0
@@ -200,7 +202,7 @@ setIgnorePartyOnMove true
 \runstate1$10x5$ <- state1$10x5$ 0
 
 #!OBJ 12 5
-\objName$12x5$ <- "movetest2"
+\objName$12x5$ <- "joy2"
 \name$12x5$ <- newObject objName$12x5$ 12 5
 
 state1$12x5$ 0
@@ -223,3 +225,25 @@ addAction (createPath "movetest2" true "L3")
 
 
 \runstate1$8x5$ <- state1$8x5$ 0
+#!OBJ 8 7
+\objName$8x7$ <- "name"
+\name$8x7$ <- newObject objName$8x7$ 8 7
+
+state1$8x7$ 0
+name$8x7$ > createState >
+setCollisionData true true true true >
+setSpriteFromTile 1 2 >
+addAction (playMusic "rolandbattle" true true 0.0) >  #14 seconds until battle start
+addAction (messageTimed "|luc|: \nShe's not going anywhere." 3.0)  >
+addAction (createPath "aramis2" false "U")  >
+addAction (wait 0.5)  >
+addAction (messageTimed "|aramis|: \nYeah! You messed with the wrong lowly thief!" 5.0)  >
+addAction (createPath "joy2" false "U")  >
+addAction (wait 0.5)  >
+addAction (messageTimed "Roland: \nI see..." 2.0)  >
+addAction (wait 0.0)  >
+addAction (messageTimed "So you have chosen death..." 3.0)  >
+addAction (startBattle "enemyroland1" false) 
+
+
+\runstate1$8x7$ <- state1$8x7$ 0
