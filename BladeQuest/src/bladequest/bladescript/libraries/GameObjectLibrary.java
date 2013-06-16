@@ -25,6 +25,7 @@ import bladequest.actions.actNameSelect;
 import bladequest.actions.actPanControl;
 import bladequest.actions.actPath;
 import bladequest.actions.actPauseMusic;
+import bladequest.actions.actPlayCachedAnimation;
 import bladequest.actions.actPlayMusic;
 import bladequest.actions.actPopSong;
 import bladequest.actions.actPushSong;
@@ -227,6 +228,22 @@ public class GameObjectLibrary
 		Action act = new actAnimation(builder, source, target, secondsShort);
 		return act;
 	}
+	public static Action playCachedAnimation(AnimationBuilder builder, String source, String target, boolean wait)
+	{		
+		Action act = new actPlayCachedAnimation(builder, source, target, wait);
+		return act;
+	}
+	public static Action playCachedAnimation(AnimationBuilder builder, Point source, Point target, boolean wait)
+	{		
+		Action act = new actPlayCachedAnimation(builder, source, target, wait);
+		return act;
+	}
+	public static Action playCachedAnimationStoppedShort(AnimationBuilder builder, String source, String target, float secondsShort)
+	{		
+		Action act = new actPlayCachedAnimation(builder, source, target, secondsShort);
+		return act;
+	}	
+	
 	public static Action filter(float[] filter)
 	{		
 		Action act = new actFilter(filter);
