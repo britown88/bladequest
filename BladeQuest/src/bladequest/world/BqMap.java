@@ -121,16 +121,22 @@ public class BqMap
 	{
 		nameDisplayPaint = Global.textFactory.getTextPaint(13, Color.WHITE, Align.CENTER);
 				
-		Rect displayNameRect = new Rect();
-		nameDisplayPaint.getTextBounds(displayName, 0, displayName.length()-1, displayNameRect);		
-		displayNameRect = Global.screenToVP(displayNameRect);
-		displayNameRect.inset(-20, -10);	
-		
-		displayNamePanel = new MenuPanel((Global.vpWidth - displayNameRect.width())/2, 0, displayNameRect.width(), displayNameRect.height());
-		displayNamePanel.thickFrame = false;
-		displayNamePanel.update();		
+		if(displayName.length() > 0)
+		{
+			Rect displayNameRect = new Rect();
+			nameDisplayPaint.getTextBounds(displayName, 0, displayName.length()-1, displayNameRect);		
+			displayNameRect = Global.screenToVP(displayNameRect);
+			displayNameRect.inset(-20, -10);	
+			
+			displayNamePanel = new MenuPanel((Global.vpWidth - displayNameRect.width())/2, 0, displayNameRect.width(), displayNameRect.height());
+			displayNamePanel.thickFrame = false;
+			displayNamePanel.update();		
 
-		displayNamePanel.addTextBox(displayName, displayNamePanel.width / 2, displayNamePanel.height / 2, nameDisplayPaint);
+			displayNamePanel.addTextBox(displayName, displayNamePanel.width / 2, displayNamePanel.height / 2, nameDisplayPaint);
+		
+		}
+		
+
 	}
 	
 	
@@ -334,7 +340,8 @@ public class BqMap
 	
 	public void renderDisplayName()
 	{
-		displayNamePanel.render();
+		if(displayNamePanel != null)
+			displayNamePanel.render();
 	}
 	
 	private void renderTiles(TilePlate[] plates, List<TilePlate> loadList)

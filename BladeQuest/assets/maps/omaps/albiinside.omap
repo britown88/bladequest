@@ -3,6 +3,7 @@
 
 
 
+
 #!OBJ 22 3
 \objName$22x3$ <- "name"
 \name$22x3$ <- newObject objName$22x3$ 22 3
@@ -251,7 +252,7 @@ addAction (message "|luc|: \nI'm not sure. Just stay inside.")
 
 state1$43x23$ 0
 name$43x23$ > createState >
-setSprite "woman1"
+setSprite "woman3"
 
 \runstate1$43x23$ <- state1$43x23$ 0
 #!OBJ 41 19
@@ -402,7 +403,7 @@ addAction (switchControl "albiseantalked" false)
 state1$8x19$ 0
 name$8x19$ > createState >
 setCollisionData true true true true >
-setSprite "woman1" >
+setSprite "woman3" >
 addAction (message "Bella: \nGoing into the forest?") >
 addAction (message "Be careful! There's talk of a monster prowling around at night!")
 

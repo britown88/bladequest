@@ -34,6 +34,8 @@ import bladequest.actions.actRemoveFilter;
 import bladequest.actions.actResetGame;
 import bladequest.actions.actRestoreParty;
 import bladequest.actions.actSaveMenu;
+import bladequest.actions.actScript;
+import bladequest.actions.actSecretMessage;
 import bladequest.actions.actSetBattleMusic;
 import bladequest.actions.actShake;
 import bladequest.actions.actShowScene;
@@ -259,6 +261,15 @@ public class GameObjectLibrary
 	public static Action setBattleMusic(ScriptVar onInit, ScriptVar onVictory, ScriptVar onBattleEnd)
 	{
 		return new actSetBattleMusic(onInit, onVictory, onBattleEnd);
+	}
+	
+	public static Action runScript(ScriptVar function)
+	{
+		return new actScript(function);
+	}
+	public static Action showSecretMessage(int i)
+	{
+		return new actSecretMessage();
 	}
 	
 	public static Action disableBattleMusic(int i)

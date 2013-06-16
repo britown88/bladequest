@@ -12,6 +12,8 @@
 
 
 
+
+
 #!OBJ 0 0
 \name$0x0$ <- newObject "start" 0 0
 
@@ -38,10 +40,68 @@ state1$2x3$ 0
 name$2x3$ > createState >
 setSpriteFromTile 1 2 >
 setCollisionData true true true true >
-addAction (startBattle "lineofspuds" true >
-	addToBranch 0 (message "You won, congrats.") >
-	addToBranch 1 (message "You lost, bahahahaha") >
-	addToBranch 2 (message "You ran! What a bitch!"))
+addAction (setBattleMusic ([x] "") ([x] "") ([x] fadeMusic 2.0)) >
+addAction (\endfight <- (startBattle "enemyroland1" false))
+endfight > addToBranch 0 (wait 2.0) 
+endfight > addToBranch 0 (fadeControl 5.0 255 0 0 0 true true) 
+endfight > addToBranch 0 (wait 2.0) 
+endfight > addToBranch 0 (showScene "albifrozen") 
+endfight > addToBranch 0 (fadeControl 5.0 255 0 0 0 false true) 
+endfight > addToBranch 0 (message "This is the end of the demo.") 
+endfight > addToBranch 0 (message "We at Dapper Hat thank you for playing and hope you enjoyed it!") 
+endfight > addToBranch 0 (message "Let us know what you think!  Drop us a line at support@bladequest.net") 	
+endfight > addToBranch 0 (message "Be sure to check us out at www.BladeQuest.net!") 
+endfight > addToBranch 0 (message "And Facebook.com/BladeQuest!") 
+endfight > addToBranch 0 (wait 1.0) 
+endfight > addToBranch 0 (playMusic "goofy" true true 0.0) 
+endfight > addToBranch 0 (message "Hey, wait a second!") 
+endfight > addToBranch 0 (fadeControl 1.0 255 0 0 0 true true) 
+endfight > addToBranch 0 (removeFilter 0) 
+endfight > addToBranch 0 (unloadScene 0) 
+endfight > addToBranch 0 (teleportParty name$2x3$ 13 10 "democongrats") 
+endfight > addToBranch 0 (fadeControl 1.0 255 0 0 0 false false) 
+endfight > addToBranch 0 (createPath "berndern" true "sL8W5") 
+endfight > addToBranch 0 (message "*huff* \n*huff*") 
+endfight > addToBranch 0 (wait 0.5) 
+endfight > addToBranch 0 (createPath "berndern" true "d") 
+endfight > addToBranch 0 (message "Brandon: \nHi!") 
+endfight > addToBranch 0 (message "I'm Brandon Townsend, the project lead for BladeQuest!") 
+endfight > addToBranch 0 (wait 0.5) 
+endfight > addToBranch 0 (createPath "berndern" true "lWuWrWd") 
+endfight > addToBranch 0 (openBubble "exclam" "berndern" 1.0 false false) 
+endfight > addToBranch 0 (message "Holy crap!") 
+endfight > addToBranch 0 (message "You actually beat Roland?!") 
+endfight > addToBranch 0 (createPath "berndern" true "sKWU") 
+endfight > addToBranch 0 (message "Whew... that...") 
+endfight > addToBranch 0 (message "That... is impressive!") 
+endfight > addToBranch 0 (wait 1.0) 
+endfight > addToBranch 0 (openBubble "exclam" "berndern" 1.0 false false) 
+endfight > addToBranch 0 (message "I have an idea!") 
+endfight > addToBranch 0 (message "To commemorate your accomplishments, I'll give you a code to send to me!") 
+endfight > addToBranch 0 (message "Just write this down and send it to support@bladequest.net") 
+endfight > addToBranch 0 (message "We'll honor you on our Facebook page!") 
+endfight > addToBranch 0 (message "Here's your code.  Don't tap too quickly now or you'll miss it!")
+endfight > addToBranch 0 (showSecretMessage 0) 
+endfight > addToBranch 0 (message "Send that to support@bladequest.net!") 
+endfight > addToBranch 0 (message "And come say hi on the Facebook page.  We love you guys!") 
+endfight > addToBranch 0 (message "Till next time!") 
+endfight > addToBranch 0 (fadeControl 5.0 255 255 255 255 true true) 
+endfight > addToBranch 0 (resetGame 0) 
+endfight > addToBranch 1 (wait 2.0) 
+endfight > addToBranch 1 (fadeControl 5.0 255 0 0 0 true true) 
+endfight > addToBranch 1 (wait 2.0) 
+endfight > addToBranch 1 (showScene "albifrozen") 
+endfight > addToBranch 1 (fadeControl 5.0 255 0 0 0 false true) 
+endfight > addToBranch 1 (message "This is the end of the demo.") 
+endfight > addToBranch 1 (message "We at Dapper Hat thank you for playing and hope you enjoyed it!") 
+endfight > addToBranch 1 (message "Let us know what you think!  Drop us a line at support@bladequest.net") 	
+endfight > addToBranch 1 (message "Be sure to check us out at www.BladeQuest.net!") 
+endfight > addToBranch 1 (message "And Facebook.com/BladeQuest!") 
+endfight > addToBranch 1 (message "Do you have what it takes to defeat Roland?") 
+endfight > addToBranch 1 (message "Keep trying!") 
+endfight > addToBranch 1 (fadeControl 5.0 255 255 255 255 true true) 
+endfight > addToBranch 1 (unloadScene 0) 
+endfight > addToBranch 1 (resetGame 0)
 
 \runstate1$2x3$ <- state1$2x3$ 0
 #!OBJ 2 5
@@ -233,17 +293,7 @@ state1$8x7$ 0
 name$8x7$ > createState >
 setCollisionData true true true true >
 setSpriteFromTile 1 2 >
-addAction (playMusic "rolandbattle" true true 0.0) >  #14 seconds until battle start
-addAction (messageTimed "|luc|: \nShe's not going anywhere." 3.0)  >
-addAction (createPath "aramis2" false "U")  >
-addAction (wait 0.5)  >
-addAction (messageTimed "|aramis|: \nYeah! You messed with the wrong lowly thief!" 5.0)  >
-addAction (createPath "joy2" false "U")  >
-addAction (wait 0.5)  >
-addAction (messageTimed "Roland: \nI see..." 2.0)  >
-addAction (wait 0.0)  >
-addAction (messageTimed "So you have chosen death..." 3.0)  >
-addAction (startBattle "enemyroland1" false) 
+addAction (showSecretMessage 0) 
 
 
 \runstate1$8x7$ <- state1$8x7$ 0

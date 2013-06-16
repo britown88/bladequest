@@ -1,0 +1,13 @@
+#!HEAD
+
+
+#!OBJ 21 10
+\objName$21x10$ <- "berndern"
+\name$21x10$ <- newObject objName$21x10$ 21 10
+
+state1$21x10$ 0
+name$21x10$ > createState >
+setSprite "berndern" >
+setIgnorePartyOnMove true
+
+\runstate1$21x10$ <- state1$21x10$ 0
