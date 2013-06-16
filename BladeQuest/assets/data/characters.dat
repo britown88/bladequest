@@ -9,7 +9,7 @@ setStartingName "?????" >
 setAbilityName "Tricks" >
 setCombatAction "combSteal" >
 setBaseStats 7 10 4 2 >
-setLevel 23 >
+setLevel 5 >
 mapBound equip {"knife", "felthat", "cottonshirt"} >
 mapBound addAbility {"coatweapon", "dblattack", "backstab"} >
 addLearnableAbility "dblattack" 6 > 
@@ -22,7 +22,7 @@ setStartingName "?????" >
 setAbilityName "Magic" >
 setCombatAction "combAuras" >
 setBaseStats 3 3 6 10 >
-setLevel 45 >
+setLevel 6 >
 mapBound addAbility {"heal", "ignite"} >
 mapBound equip {"silverstaff", "felthat", "cottonshirt"}) > 
 setDefaultShadow
@@ -32,10 +32,10 @@ setPortrait 1 0 >
 setAbilityName "Swordplay" >
 setCombatAction "combStance" >
 setBaseStats 10 4 7 2 >
-setLevel 52 >
-mapBound equip {"silversword", "felthat", "cottonshirt", "runningshoes"} >
-mapBound addAbility {"assault", "redcard"} >
-addLearnableAbility "zornhau" 6) >
+setLevel 5 >
+mapBound equip {"woodensword", "felthat", "cottonshirt"} >
+addLearnableAbility "assault" 6) >
+addLearnableAbility "redcard" 8) >
 setDefaultShadow
 
 \roland <- (createCharacter "roland" "Roland" "broland" "roland" >
