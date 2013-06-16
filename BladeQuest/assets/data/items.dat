@@ -101,18 +101,18 @@ setPower 4 >
 setValue 100 >
 usableByAll)
 
-\woodenshield <- (addItem "woodenshield" "Wooden Shield" "Shield" "lshield" "A crude shield." >
+\woodenshield <- (addItem "woodenshield" "Wood Shield" "Shield" "lshield" "A crude shield." >
 setPower 2 >
 setValue 120 >
 setUsableBy "luc")
 
-\volcanicrock <- (addItem "volcanicrock" "Volcanic Rock" "Accessory" "ring" "Still warm to the touch, boosts your fire affinity." >
+\volcanicrock <- (addItem "volcanicrock" "Volcano Rock" "Accessory" "ring" "Still warm to the touch, boosts your fire affinity." >
 setPower 0 >
 modStat "Fire" 15 >
 setValue 500 >
 usableByAll)
 
-\runningshoes <- (addItem "runningshoes" "Running Shoes" "Accessory" "boot" "Shoes that allow you to move faster." >
+\runningshoes <- (addItem "runningshoes" "RunningShoes" "Accessory" "boot" "Shoes that allow you to move faster." >
 setPower 0 >
 modStat "Speed" 3 >
 setValue 800 >

@@ -4,6 +4,7 @@
 
 
 
+
 #!OBJ 22 3
 \objName$22x3$ <- "name"
 \name$22x3$ <- newObject objName$22x3$ 22 3
@@ -590,3 +591,38 @@ addAction (message "|luc|'s Mom: \n...it was only a little earthquake...") >
 addAction (message "...Go back to sleep...")
 
 \runstate2$24x17$ <- state2$24x17$ 0
+#!OBJ 22 4
+\objName$22x4$ <- "name"
+\name$22x4$ <- newObject objName$22x4$ 22 4
+
+state1$22x4$ 0
+name$22x4$ > createState >
+setCollisionData true true true true >
+addAction (openMerchant "albiweaponshop" 0.0)
+
+
+\runstate1$22x4$ <- state1$22x4$ 0
+
+#!OBJ 28 4
+\objName$28x4$ <- "name"
+\name$28x4$ <- newObject objName$28x4$ 28 4
+
+state1$28x4$ 0
+name$28x4$ > createState >
+setCollisionData true true true true >
+addAction (openMerchant "albiarmorshop" 0.0)
+
+
+\runstate1$28x4$ <- state1$28x4$ 0
+
+#!OBJ 43 5
+\objName$43x5$ <- "name"
+\name$43x5$ <- newObject objName$43x5$ 43 5
+
+state1$43x5$ 0
+name$43x5$ > createState >
+setCollisionData true true true true >
+addAction (openMerchant "albiitemshop" 0.0)
+
+
+\runstate1$43x5$ <- state1$43x5$ 0

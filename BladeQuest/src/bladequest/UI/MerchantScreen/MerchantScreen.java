@@ -310,12 +310,12 @@ public class MerchantScreen
 				{
 					if(((String)confirmBox.getSelectedEntry().obj).equals("buy"))
 					{
-						int unitPrice = getCost(itemtoBuySell.getValue());
+						int unitPrice = selling ? itemtoBuySell.getValue() / 2 : getCost(itemtoBuySell.getValue());
 						int count = countPicker.getValue();
 						int cost = unitPrice*count;
 						
 						if(selling)
-						{
+						{							
 							Global.party.addGold(cost);
 							Global.party.removeItem(itemtoBuySell.getId(), count);
 						}
@@ -455,7 +455,7 @@ public class MerchantScreen
 		buySellPanel.getTextAt(1).text = itemtoBuySell.getDisplayName();
 		
 		int owned = Global.party.getItemCount(itemtoBuySell.idName);
-		int unitPrice = getCost(itemtoBuySell.getValue());
+		int unitPrice = selling ? itemtoBuySell.getValue() / 2 : getCost(itemtoBuySell.getValue());
 		int count = countPicker.getValue();
 		int cost = unitPrice*count;
 		buySellPanel.getTextAt(6).text = ""+owned;
@@ -514,7 +514,7 @@ public class MerchantScreen
 				entry = items.addItem(i.getDisplayName(), i, false);			
 				entry.getTextAt(0).x += d*2 + 4;					
 				//add item count
-				entry.addTextBox(""+i.getValue()+"G", items.getColumnWidth() - d, items.getRowHeight()/2, menuTextRight);
+				entry.addTextBox(""+i.getValue()/2+"G", items.getColumnWidth() - d, items.getRowHeight()/2, menuTextRight);
 				entry.addPicBox(Global.createIcon(i.getIcon(), d + 6, items.getRowHeight()/2, iconScale));
 			}
 			
