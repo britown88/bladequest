@@ -54,6 +54,7 @@ createCliffJumpBarrier x (y > add 1)
 
 
 
+
 #!OBJ 17 15
 \objName$17x15$ <- "name"
 \name$17x15$ <- newObject objName$17x15$ 17 15
@@ -404,8 +405,8 @@ setSprite "chest" >
 setAnimated false >
 setImageIndex 0 >
 addAction (switchControl "albiforestchestgold" true) >
-addAction (message "Found a 500G!") >
-addAction (modifyGold 500)
+addAction (message "Found a Sleeping Bag!") >
+addAction (modifyInventory "sleepingbag" 1 false)
 
 \runstate1$3x17$ <- state1$3x17$ 0
 

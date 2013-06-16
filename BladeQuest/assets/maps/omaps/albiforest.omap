@@ -42,6 +42,7 @@ createCliffJumpBarrier x (y > add 1)
 
 
 
+
 #!OBJ 10 5
 \name$10x5$ <- cliffJumpLeft 10 5
 #!OBJ 10 4
@@ -73,8 +74,8 @@ setSprite "chest" >
 setAnimated false >
 setImageIndex 0 >
 addAction (switchControl "albiforestchest2" true) >
-addAction (message "Found a Sleeping Bag!") >
-addAction (modifyInventory "sleepingbag" 1 false)
+addAction (message "Found 500G!") >
+addAction (modifyGold 500)
 
 \runstate1$19x43$ <- state1$19x43$ 0
 

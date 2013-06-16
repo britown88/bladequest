@@ -89,7 +89,7 @@ makeRatAI enemy
 setEBaseStats 10 1 1 1 >
 addDefaultStaffHit >
 setELevel 5 >
-setGold 23 >
+setGold 16 >
 setItems "potion" 25 "antidote" 85 true >
 modStat "MaxHP" -12 >
 modStat "BattlePower" -1 >
@@ -128,7 +128,7 @@ modStat "MaxHP" -30 >
 modStat "Speed" 6 >
 modStat "BattlePower" -2 >
 modStat "Intelligence" -1 >
-setGold 32 >
+setGold 21 >
 addEAbility "gale" >
 setEShadow (createShadow 44 14 40 > addElevation 16))
 
@@ -140,7 +140,7 @@ setItems "potion" 10 " " 0 true >
 setELevel 5 >
 modStat "BattlePower" -1 >
 addAttackOnlyState >
-setGold 22 >
+setGold 4 >
 setEShadow (createShadow 31 16 22))
 
 \spud2 <- (addEnemy "spud2" "Spud" "spud" >
@@ -151,7 +151,7 @@ setELevel 6 >
 modStat "MaxHP" -5 >
 modStat "BattlePower" -1 >
 addAttackOnlyState >
-setGold 32 >
+setGold 6 >
 setEShadow (createShadow 31 16 22))
 
 ################BUNNY AI##############
@@ -173,7 +173,7 @@ addDefaultDaggerHit >
 setEBaseStats 3 3 3 3 >
 setELevel 6 >
 LeafyBunnyAI >
-setGold 52 >
+setGold 13 >
 setItems "tranquilizer" 50 "tranquilizer" 85 true >
 modStat "MaxHP" -14 >
 modStat "BattlePower" -2 >
@@ -210,7 +210,7 @@ modStat "BattlePower" -2 >
 SatyrAI >
 setBoss >
 addEStatusImmunity "confuse" >
-setGold 864 >
+setGold 236 >
 setItems "potion" 100 "runningshoes" 100 true >
 addEAbility "satyrreversal" >
 addEAbility "provoke" >
@@ -233,7 +233,7 @@ setUseDrainState enemy
 addDefaultDaggerHit >
 setEBaseStats 5 10 8 3 >
 setELevel 7 >
-setGold 42  >
+setGold 22  >
 setUseDrainState >
 setItems "potion" 50 " " 0 true >
 addEAbility "drain" >
@@ -245,7 +245,7 @@ setEShadow (createShadow 34 12 30 > addElevation 16))
 addDefaultDaggerHit >
 setEBaseStats 5 10 8 3 >
 setELevel 7 >
-setGold 60  >
+setGold 34  >
 setUseDrainState >
 setItems "potion" 50 " " 0 true >
 addEAbility "drain" >
@@ -260,7 +260,7 @@ setEBaseStats 10 10 10 10 >
 setELevel 8 >
 modStat "BattlePower" -3 >
 modStat "MaxHP" 150 >
-setGold 250 >
+setGold 109 >
 setBoss >
 setItems "potion" 100 "silversword" 100 true >
 RecruitDerpState >
@@ -368,7 +368,7 @@ modStat "BattlePower" -3 >
 modStat "Fire" -20 >
 modStat "Water" 155 >
 modStat "MaxHP" 3000 >
-setGold 2500 >
+setGold 2200 >
 setBoss >
 RolandAI >
 addEAbility "shatter" >
