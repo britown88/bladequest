@@ -416,6 +416,127 @@ public class WorldAnimations
 		}.initialize();
 	}
 	
+	
+	public static void buildLightningStrike(BattleAnim anim, int time, 
+			int x1, int y1, 
+			int x2, int y2,
+			int a1, int r1, int g1, int b1,
+			int a2, int r2, int g2, int b2,
+			float outerWidth, float innerWidth,
+			int length)
+	{
+
+		List<Point> lightningBolt = PointMath.jaggedPath(new Point(x1, y1),
+				                                         new Point(x2, y2), 3, 128);
+		
+		Point prev = null;
+		for (Point p : lightningBolt)
+		{
+			if (prev == null)
+			{
+				prev = p;
+				continue;
+			}
+			
+			BattleAnimObject outer = new BattleAnimObject(Types.Line, false, "");
+			BattleAnimObjState state = new BattleAnimObjState(time, PosTypes.Target);
+			
+			
+			state.pos1 = new Point(prev);
+			state.pos2 = new Point(p);
+			state.strokeWidth = outerWidth;
+			state.argb(a2, r2, g2, b2);
+			outer.addState(state);
+			
+			anim.addObject(outer);
+			
+			
+			state = new BattleAnimObjState(time+length/2, PosTypes.Target);
+				
+				
+			state.pos1 = new Point(prev);
+			state.pos2 = new Point(p);
+			state.strokeWidth = outerWidth;
+			state.argb(a2, r2, g2, b2);
+			outer.addState(state);
+			
+			anim.addObject(outer);			
+			
+			state = new BattleAnimObjState(time + length, PosTypes.Target);
+			
+			
+			state.pos1 = new Point(prev);
+			state.pos2 = new Point(p);
+			state.strokeWidth = 0.0f;
+			state.argb(0, r2, g2, b2);
+			outer.addState(state);
+			
+			anim.addObject(outer);			
+			
+			BattleAnimObject inner = new BattleAnimObject(Types.Line, false, "");
+			state = new BattleAnimObjState(time, PosTypes.Target);
+			
+			
+			state.pos1 = new Point(prev);
+			state.pos2 = new Point(p);
+			state.strokeWidth = innerWidth;
+			state.argb(a1, r1, g1, b1);
+			inner.addState(state);
+			
+			anim.addObject(inner);
+			
+			state = new BattleAnimObjState(time + length/2, PosTypes.Target);
+			
+			
+			state.pos1 = new Point(prev);
+			state.pos2 = new Point(p);
+			state.strokeWidth = innerWidth;
+			state.argb(a1, r1, g1, b1);
+			inner.addState(state);
+			
+			anim.addObject(inner);			
+			
+			state = new BattleAnimObjState(time + length, PosTypes.Target);
+			
+			
+			state.pos1 = new Point(prev);
+			state.pos2 = new Point(p);
+			state.strokeWidth = 0.0f;
+			state.argb(0, r1, g1, b1);
+			inner.addState(state);
+			
+			anim.addObject(inner);			
+			
+			prev = p;
+		}
+	}
+	
+	public static AnimationBuilder buildRolandTransformation()
+	{
+		return new AnimationBuilder() {
+			@Override
+			public BattleAnim buildAnimation(BattleEventBuilder builder) {
+				BattleAnim out = new BattleAnim(1000.0f);
+				
+				for (int i = 0 ; i  < 20; ++i)
+				{
+					Point start = PointMath.randomPointOnRadius(400);
+					
+					buildLightningStrike(out,  i * 80, 
+							start.x, start.y, //start offset 
+							0,0, //target
+							255, 255, 255, 255,  //inner
+							128, 10, 220, 225, //outer
+							4.0f, 2.0f,
+							200);
+				}
+				
+				return out;
+			}	
+		};
+	}
+	
+	
 	public static AnimationBuilder buildIceCube(int length)
 	{
 		return new AnimationBuilder() {	

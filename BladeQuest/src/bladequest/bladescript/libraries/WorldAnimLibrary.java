@@ -90,6 +90,10 @@ public class WorldAnimLibrary
 		return WorldAnimations.buildIceShot();
 	}
 	
+	public static AnimationBuilder buildRolandTransformation(int i)
+	{
+		return WorldAnimations.buildRolandTransformation();
+	}
 	public static AnimationBuilder genIceCube(int length)
 	{
 		return WorldAnimations.buildIceCube(length);

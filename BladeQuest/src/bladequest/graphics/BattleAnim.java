@@ -8,9 +8,13 @@ import android.graphics.Point;
 public class BattleAnim 
 {
 	private List<BattleAnimObject> objects;
+	private List<BattleAnimObject> visibleObjects;
+	
+	private List<List<BattleAnimObject>> timedObjects;
 	
 	private float framePeriod;
 	private int frame, finalFrame;
+	private int timingSection; 
 	
 	private boolean playing, done, loops;
 	
@@ -18,9 +22,36 @@ public class BattleAnim
 	private AnimationPosition animPos;
 	//private Paint text;
 	
+	void generateTimedObjects()
+	{
+		int timings = Math.min(128, finalFrame/200);
+		timings = Math.max(1, Math.min(timings, objects.size()));
+		
+		timingSection = finalFrame / timings;
+		if (finalFrame % timings != 0) ++timingSection;
+		if (timingSection == 0) timingSection = 1;
+		
+		
+		timedObjects = new ArrayList<List<BattleAnimObject>>();
+		for (int i = 0; i <= timings; ++i)
+		{
+			timedObjects.add(new ArrayList<BattleAnimObject>());
+		}
+		
+		for (BattleAnimObject object : objects)
+		{
+			int firstObj = object.getStartFrame()/timingSection;
+			int lastObj = object.getEndFrame()/timingSection + 1;
+			for (int i = firstObj; i != lastObj; ++i)
+			{
+				timedObjects.get(i).add(object);
+			}
+		}
+	}
 	
 	public BattleAnim(float fps)
 	{
+		visibleObjects = new ArrayList<BattleAnimObject>();
 		objects = new ArrayList<BattleAnimObject>();
 		this.framePeriod = 1000.0f / fps;
 		
@@ -31,6 +62,7 @@ public class BattleAnim
 	public BattleAnim(BattleAnim other)
 	{
 		this.objects = new ArrayList<BattleAnimObject>();
+		visibleObjects = new ArrayList<BattleAnimObject>();
 		this.framePeriod = other.framePeriod;
 		this.loops = other.loops;
 		for(BattleAnimObject obj : other.objects)
@@ -42,6 +74,7 @@ public class BattleAnim
 	public BattleAnim(BattleAnim other, float speedModifer)
 	{
 		this.objects = new ArrayList<BattleAnimObject>();
+		visibleObjects = new ArrayList<BattleAnimObject>();
 		this.framePeriod = other.framePeriod * speedModifer;
 		this.loops = other.loops;
 		for(BattleAnimObject obj : other.objects)
@@ -101,6 +134,9 @@ public class BattleAnim
 		
 		//find finalFrame
 		findFinalFrame();
+		
+		//spatial partitioning!
+		generateTimedObjects();
 		
 		//smooth end necessary for looping
 		for(BattleAnimObject obj : objects)
@@ -165,20 +201,17 @@ public class BattleAnim
 					//update start time to the end of the last completed frame
 					startTime += (int)(elapsedFrames * framePeriod);
 					
+					visibleObjects.clear();
 					if(frame <= finalFrame)
-						for(BattleAnimObject obj : objects)
-							obj.update(frame);
+						for(BattleAnimObject obj : timedObjects.get(frame/timingSection))
+							obj.update(frame, visibleObjects);
 					else
 					{
 						//animation is over
 						if(loops)
 						{
 							play(animPos);
-							for(BattleAnimObject obj : objects)								
-							{
-								obj.update(frame);
-								//obj.render(frame);
-							}
+							update();
 						}							
 						else
 						{
@@ -213,7 +246,7 @@ public class BattleAnim
 //			Global.renderer.drawText("State Progress:"+objects.get(0).progress*100.0f + "%", Global.vpToScreenX(0), Global.vpToScreenY(60), text);
 //			
 			
-			for(BattleAnimObject obj : objects)
+			for(BattleAnimObject obj : visibleObjects)
 				obj.render(frame);
 		}
 			

@@ -61,8 +61,9 @@ state1$3x5$ 0
 name$3x5$ > createState >
 setSpriteFromTile 1 2 >
 setCollisionData true true true true >
-addAction (playAnimation (genIceShot 0) (point 4 6) (point 4 4) true) >
-addAction (playAnimation (genIceBarrage 320 400 250 12500) "animtester" "animtester" false)  #250 icicles in a 12.5s time window in a 320x400 area focused on this object
+addAction (playAnimation (buildRolandTransformation 0) "animtester" "animtester" true)
+
+#addAction (playAnimation (genIceBarrage 320 400 250 12500) "animtester" "animtester" false)  #250 icicles in a 12.5s time window in a 320x400 area focused on this object
 
 \runstate1$3x5$ <- state1$3x5$ 0
 #!OBJ 2 7

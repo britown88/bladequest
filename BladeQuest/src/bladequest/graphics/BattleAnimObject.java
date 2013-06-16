@@ -220,7 +220,7 @@ public class BattleAnimObject
 	
 	
 	public float progress;
-	public void update(int frame)
+	public void update(int frame, List<BattleAnimObject> visibleObjects)
 	{
 		//only interpolate if there's a next state to interpolate to!
 		if(nextState != null && frame >= startFrame && frame <= endFrame)
@@ -235,7 +235,6 @@ public class BattleAnimObject
 				}
 			}
 				
-			
 			workingState.updateSpriteAnimation();
 
 			if(nextState != null)
@@ -244,7 +243,18 @@ public class BattleAnimObject
 				int stateLength = nextState.frame - currentState.frame;
 				if (stateLength <=0) stateLength = 1;
 				progress = (float)(frame - currentState.frame) / (float)stateLength;
+				
+				
+				//injected interface.
+				if (type == Types.Interpolatable)
+				{
+					workingState.interpObj = currentState.interpObj.interpolateAgainst(nextState.interpObj, progress);
+					visibleObjects.add(this);
+					return;
+				}
+				
 				float cosProgress = BattleAnim.cosineInterpolator(progress);
+				
 				
 				
 				currentState.offset(this);
@@ -255,14 +265,7 @@ public class BattleAnimObject
 				
 				if(y3 != null && !y3.equals(nextState))
 					y3.offset(this);
-				
-				
-				//injected interface.
-				if (type == Types.Interpolatable)
-				{
-					workingState.interpObj = currentState.interpObj.interpolateAgainst(nextState.interpObj, progress);
-					return;
-				}
+
 				//interpolation			
 				
 				//---position (including lines)
@@ -309,6 +312,7 @@ public class BattleAnimObject
 				
 				if (!visibleInViewport()) return;  //don't interpolate what we don't have to!
 				
+				visibleObjects.add(this);
 				//---size
 				if(currentState.size.x != nextState.size.x || currentState.size.y != nextState.size.y)
 				{
