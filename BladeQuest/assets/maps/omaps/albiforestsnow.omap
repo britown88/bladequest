@@ -49,6 +49,7 @@ setLayer "Above"
 
 
 
+
 #!OBJ 10 5
 \name$10x5$ <- cliffJumpLeft 10 5
 #!OBJ 10 4
@@ -398,16 +399,31 @@ addAction (createPath "luc2" true "u") >
 addAction (openBubble "exclam" "luc2" 0.5 false true) >
 addAction (createPath "luc2" true "LD2u") >
 addAction (wait 1.0) >
-addAction (changeElevation "roland" 64 0.0 true) >
+addAction (changeElevation "roland" 144 0.0 true) >
 addAction (switchControl "albirolandascend" true) >
 addAction (createPath "roland" true "s4D5") >
-addAction (flash 5.0 255 150 225 255 false) >
-addAction (changeElevation "roland" 0 5.0 true) >
+addAction (wait 1.0) >
+addAction (flash 2.0 255 150 225 255 false) >
+addAction (createPath "aramis2" false "KWDW3k") >
+addAction (createPath "luc2" false "KWDW3k") >
+addAction (createPath "joy2" false "KWDW3k") >
+addAction (changeElevation "roland" 32 8.0 true) >
 addAction (wait 1.0) >
 addAction (switchControl "albirolandland" true) >
-addAction (createPath "roland" true "uW3rW3d")
-
-
+addAction (changeElevation "roland" 0 0.5 true) >
+addAction (shakeControl 0.25 2 false) >
+addAction (wait 0.5) >
+addAction (createPath "roland" true "uW3r") >
+addAction (shakeControl 1.5 2 true) >
+addAction (wait 0.5) >
+addAction (createPath "roland" true "d") >
+addAction (wait 3.0) >
+addAction (switchControl "albirolandroar" true) >
+addAction (createPath "roland" true "u") >
+addAction (wait 1.0) >
+addAction (createPath "roland" true "r") >
+addAction (panControl 0 3 2.0 false) >
+addAction (shakeControl 2.0 3 true)
 
 
 \runstate1$6x4$ <- state1$6x4$ 0
