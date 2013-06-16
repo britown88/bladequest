@@ -249,12 +249,15 @@ public class PointMath {
 	    }		
 	}
 	
-	private static void jaggedPathStep(PointF start, PointF end, int iterations, float radius, List<Point> out)
+	private static void jaggedPathStep(
+			float startX, float startY,
+			float endX, float endY, 
+			int iterations, float radius, List<Point> out)
 	{
 		
 		
-		float x = (start.x + end.x)/2.0f - radius + Global.rand.nextFloat() * radius * 2.0f;
-		float y = (start.y + end.y)/2.0f - radius + Global.rand.nextFloat() * radius * 2.0f;
+		float x = (startX + endX) * 0.5f - radius + Global.rand.nextFloat() * radius * 2.0f;
+		float y = (startY + endY) * 0.5f - radius + Global.rand.nextFloat() * radius * 2.0f;
 		
 
 		if (iterations == 0)
@@ -263,19 +266,18 @@ public class PointMath {
 			return;
 		}
 
-		PointF midPoint = new PointF(x,y);
-		jaggedPathStep(start, midPoint, iterations - 1, radius/2, out);		
+		jaggedPathStep(startX, startY, x,y, iterations - 1, radius/2, out);		
 		
 		out.add(new Point((int)x, (int)y));
 
-		jaggedPathStep(midPoint, end, iterations - 1, radius/2, out);
+		jaggedPathStep(x,y,endX, endY, iterations - 1, radius/2, out);
 	}
 	public static List<Point> jaggedPath(Point start, Point end, int iterations, float radius)
 	{
 		List<Point> out = new ArrayList<Point>();
 		out.add(start);
 		
-		jaggedPathStep(new PointF(start.x, start.y), new PointF(end.x, end.y), iterations, radius, out);
+		jaggedPathStep(start.x, start.y, end.x, end.y, iterations, radius, out);
 		
 		out.add(end);
 		return out;

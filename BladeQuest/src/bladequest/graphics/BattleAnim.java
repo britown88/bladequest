@@ -24,7 +24,7 @@ public class BattleAnim
 	
 	void generateTimedObjects()
 	{
-		int timings = Math.min(128, finalFrame/200);
+		int timings = Math.min(256, finalFrame/200);
 		timings = Math.max(1, Math.min(timings, objects.size()));
 		
 		timingSection = finalFrame / timings;
@@ -184,46 +184,48 @@ public class BattleAnim
 	{
 		if(playing)
 		{
+			boolean update = false;
 			if(frame == -1)
 			{
 				frame = 0;
 				startTime = System.currentTimeMillis();
+				update = true;
 			}
 			else
 			{
 				frameTime = System.currentTimeMillis() - startTime;
-				if(frameTime >= framePeriod)
+				update = frameTime >= framePeriod;
+			}
+			if (update)
+			{
+				//update frame, accounting for times when multiple frames were traversed
+				int elapsedFrames = (int)(frameTime / framePeriod);
+				frame += elapsedFrames;
+				
+				//update start time to the end of the last completed frame
+				startTime += (int)(elapsedFrames * framePeriod);
+				
+				visibleObjects.clear();
+				if(frame <= finalFrame)
+					for(BattleAnimObject obj : timedObjects.get(frame/timingSection))
+						obj.update(frame, visibleObjects);
+				else
 				{
-					//update frame, accounting for times when multiple frames were traversed
-					int elapsedFrames = (int)(frameTime / framePeriod);
-					frame += elapsedFrames;
-					
-					//update start time to the end of the last completed frame
-					startTime += (int)(elapsedFrames * framePeriod);
-					
-					visibleObjects.clear();
-					if(frame <= finalFrame)
-						for(BattleAnimObject obj : timedObjects.get(frame/timingSection))
-							obj.update(frame, visibleObjects);
+					//animation is over
+					if(loops)
+					{
+						play(animPos);
+						update();
+					}							
 					else
 					{
-						//animation is over
-						if(loops)
-						{
-							play(animPos);
-							update();
-						}							
-						else
-						{
-							playing = false;
-							done = true;
-						}
-						
+						playing = false;
+						done = true;
 					}
+					
 				}
 			}
 		}
-		
 	}
 	
 	public void render()

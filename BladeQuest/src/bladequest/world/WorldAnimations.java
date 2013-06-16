@@ -427,7 +427,7 @@ public class WorldAnimations
 	{
 
 		List<Point> lightningBolt = PointMath.jaggedPath(new Point(x1, y1),
-				                                         new Point(x2, y2), 3, 128);
+				                                         new Point(x2, y2), 2, 16);
 		
 		Point prev = null;
 		for (Point p : lightningBolt)
@@ -448,44 +448,38 @@ public class WorldAnimations
 			state.argb(a2, r2, g2, b2);
 			outer.addState(state);
 			
-			anim.addObject(outer);
-			
 			
 			state = new BattleAnimObjState(time+length/2, PosTypes.Target);
 				
 				
-			state.pos1 = new Point(prev);
-			state.pos2 = new Point(p);
-			state.strokeWidth = outerWidth;
-			state.argb(a2, r2, g2, b2);
-			outer.addState(state);
-			
-			anim.addObject(outer);			
-			
-			state = new BattleAnimObjState(time + length, PosTypes.Target);
+//			state.pos1 = new Point(prev);
+//			state.pos2 = new Point(p);
+//			state.strokeWidth = outerWidth;
+//			state.argb(a2, r2, g2, b2);
+//			outer.addState(state);			
+//			
+//			state = new BattleAnimObjState(time + length, PosTypes.Target);
 			
 			
 			state.pos1 = new Point(prev);
 			state.pos2 = new Point(p);
-			state.strokeWidth = 0.0f;
+			state.strokeWidth = outerWidth * 0.5f;
 			state.argb(0, r2, g2, b2);
 			outer.addState(state);
 			
-			anim.addObject(outer);			
+			
 			
 			BattleAnimObject inner = new BattleAnimObject(Types.Line, false, "");
 			state = new BattleAnimObjState(time, PosTypes.Target);
 			
 			
-			state.pos1 = new Point(prev);
-			state.pos2 = new Point(p);
-			state.strokeWidth = innerWidth;
-			state.argb(a1, r1, g1, b1);
-			inner.addState(state);
-			
-			anim.addObject(inner);
-			
-			state = new BattleAnimObjState(time + length/2, PosTypes.Target);
+//			state.pos1 = new Point(prev);
+//			state.pos2 = new Point(p);
+//			state.strokeWidth = innerWidth;
+//			state.argb(a1, r1, g1, b1);
+//			inner.addState(state);
+//			
+//			state = new BattleAnimObjState(time + length/2, PosTypes.Target);
 			
 			
 			state.pos1 = new Point(prev);
@@ -493,22 +487,64 @@ public class WorldAnimations
 			state.strokeWidth = innerWidth;
 			state.argb(a1, r1, g1, b1);
 			inner.addState(state);
-			
-			anim.addObject(inner);			
+						
 			
 			state = new BattleAnimObjState(time + length, PosTypes.Target);
 			
 			
 			state.pos1 = new Point(prev);
 			state.pos2 = new Point(p);
-			state.strokeWidth = 0.0f;
+			state.strokeWidth = innerWidth * 0.5f;
 			state.argb(0, r1, g1, b1);
 			inner.addState(state);
 			
+			
+			
+			anim.addObject(outer);			
 			anim.addObject(inner);			
 			
 			prev = p;
 		}
+	}
+	
+	
+	public static void buildTransformationOval(BattleAnim anim, int time, int startDiameter, int finalDiameter, int animLength, int stayLength, int shrinkLength)
+	{
+		BattleAnimObject shrinkOval = new BattleAnimObject(Types.Elipse, false, "");
+		
+		int offset = 0;
+		
+		BattleAnimObjState state = new BattleAnimObjState(time, PosTypes.Target);
+		
+		state.pos1 = new Point(0,offset);
+		state.size = new Point(startDiameter, startDiameter);
+		state.argb(0,0,0,0);
+		shrinkOval.addState(state);
+		
+		state = new BattleAnimObjState(time + animLength, PosTypes.Target);
+
+		state.pos1 = new Point(0,offset);
+		state.size = new Point(finalDiameter, finalDiameter);
+		state.argb(255,0,0,0);
+		shrinkOval.addState(state);
+		
+		state = new BattleAnimObjState(time + animLength + stayLength, PosTypes.Target);
+
+		state.pos1 = new Point(0,offset);
+		state.size = new Point(finalDiameter, finalDiameter);
+		state.argb(255,0,0,0);
+		shrinkOval.addState(state);
+		
+		anim.addObject(shrinkOval);
+		
+		state = new BattleAnimObjState(time + animLength + stayLength + shrinkLength, PosTypes.Target);
+
+		state.pos1 = new Point(0,offset);
+		state.size = new Point(0,0);
+		state.argb(255,0,0,0);
+		shrinkOval.addState(state);
+		
+		anim.addObject(shrinkOval);		
 	}
 	
 	public static AnimationBuilder buildRolandTransformation()
@@ -518,18 +554,43 @@ public class WorldAnimations
 			public BattleAnim buildAnimation(BattleEventBuilder builder) {
 				BattleAnim out = new BattleAnim(1000.0f);
 				
-				for (int i = 0 ; i  < 20; ++i)
+				//oval in
+				buildTransformationOval(out, 0, 500, 112, 2000, 1000, 1000);
+				
+				int offset = 0;
+				
+				//lightning
+				for (int i = 0 ; i  < 50; ++i)
 				{
-					Point start = PointMath.randomPointOnRadius(400);
+					Point start = PointMath.randomPointOnRadius(56);
 					
-					buildLightningStrike(out,  i * 80, 
-							start.x, start.y, //start offset 
-							0,0, //target
+					buildLightningStrike(out,  2000 + i * 20, 
+							start.x, start.y + offset, //start offset 
+							0, offset, //target
 							255, 255, 255, 255,  //inner
 							128, 10, 220, 225, //outer
 							4.0f, 2.0f,
-							200);
+							300);
 				}
+				
+				//shrink lightning
+				
+				for (int i = 0 ; i  < 30; ++i)
+				{
+					int r = BattleAnim.cosineInterpolation(56, 0, i/39.0f);
+					
+					Point start = PointMath.randomPointOnRadius(r);
+					
+					int a = 255;//BattleAnim.cosineInterpolation(255, 0, i/39.0f);
+					
+					buildLightningStrike(out,  2000 + 1000 + i * 20, 
+							start.x, start.y + offset, //start offset 
+							0,offset, //target
+							a, 255, 255, 255,  //inner
+							a/2, 10, 220, 225, //outer
+							4.0f, 2.0f,
+							200);
+				}				
 				
 				return out;
 			}	
