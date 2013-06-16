@@ -54,6 +54,7 @@ setLayer "Above"
 
 
 
+
 #!OBJ 10 5
 \name$10x5$ <- cliffJumpLeft 10 5
 #!OBJ 10 4
@@ -504,8 +505,6 @@ state > addAction (messageTimed "So you have chosen death..." 3.0)
 state > addAction (setBattleMusic ([x] "") ([x] "") ([x] fadeMusic 2.0)) 
 state > addAction (\endfight <- (startBattle "enemyroland1" false))
 endfight > addToBranch 0 (wait 2.0) 
-endfight > addToBranch 0 (fadeControl 5.0 255 0 0 0 true true) 
-endfight > addToBranch 0 (wait 2.0) 
 endfight > addToBranch 0 (showScene "albifrozen") 
 endfight > addToBranch 0 (fadeControl 5.0 255 0 0 0 false true) 
 endfight > addToBranch 0 (message "This is the end of the demo.") 
@@ -548,8 +547,6 @@ endfight > addToBranch 0 (message "And come say hi on the Facebook page.  We lov
 endfight > addToBranch 0 (message "Till next time!") 
 endfight > addToBranch 0 (fadeControl 5.0 255 255 255 255 true true) 
 endfight > addToBranch 0 (resetGame 0) 
-endfight > addToBranch 1 (wait 2.0) 
-endfight > addToBranch 1 (fadeControl 5.0 255 0 0 0 true true) 
 endfight > addToBranch 1 (wait 2.0) 
 endfight > addToBranch 1 (showScene "albifrozen") 
 endfight > addToBranch 1 (fadeControl 5.0 255 0 0 0 false true) 
