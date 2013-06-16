@@ -26,7 +26,7 @@ onHPFraction enemy numer denom fn
 
 \knife <- (addItem "knife" "Knife" "Weapon" "dagger" "A small and simple dagger." >
 setPower 5 >
-setValue 10 >
+setValue 30 >
 setUsableBy "aramis" >
 swing "dagger" "slice1" >
 swingBase 0 186 186 186 >
@@ -38,7 +38,7 @@ swingSlash 2 255 255 255)
 
 \woodensword <- (addItem "woodensword" "Wooden Sword" "Weapon" "sword" "A practice sword." >
 setPower 6 >
-setValue 25 >
+setValue 45 >
 usableByAll >
 swing "sword" "slice1" >
 swingBase 0 139 69 19 >
@@ -49,19 +49,19 @@ swingSlash 2 222 184 134)
 
 \silversword <- (addItem "silversword" "Silver Sword" "Weapon" "sword" "Some believe the silver inlay wards off the undead." >
 setPower 10 >
-setValue 125 >
+setValue 250 >
 usableByAll >
 swing "sword" "slice1" >
 swingBase 0 186 186 186 >
 swingBase 1 255 255 255 >
 swingSlash 0 128 128 128 >
 swingSlash 1 186 186 186 >
-swingSlash 2 255 255 255)     
+swingSlash 2 255 255 255)   
 
 \silverstaff <- (addItem "silverstaff" "Silver Staff" "Weapon" "staff" "A magical staff." >
 setPower 1 >
 modStat "MagicPower" 4 >
-setValue 500 >
+setValue 250 >
 usableByMagicPeople >
 swing "staff" "slice1" >
 swingBase 0 186 186 186 >
@@ -92,13 +92,12 @@ swingSlash 2 255 0 0)
 
 \felthat <- (addItem "felthat" "Felt Hat" "Helmet" "lhelmet" "Most basic of headwear." >
 setPower 3 >
-setValue 45 >
+setValue 15 >
 usableByAll)
-
 
 \cottonshirt <- (addItem "cottonshirt" "Cotton Shirt" "Torso" "ltorso" "A simple shirt." >
 setPower 4 >
-setValue 100 >
+setValue 25 >
 usableByAll)
 
 \woodenshield <- (addItem "woodenshield" "Wood Shield" "Shield" "lshield" "A crude shield." >
@@ -148,7 +147,7 @@ addDep (animBuildAction "heal") >
 addDep (damageAction -50.0 "Fixed"))
 
 \liferoot <- (addItem "liferoot" "Life Root" "Usable" "orb" "Revives a fallen party member." >
-setValue 500 >
+setValue 1200 >
 setTargetType "SingleDeadAlly" >
 addDefaultWait >
 addDep (reviveAnimAction 0 ) >
@@ -157,14 +156,14 @@ addDep (damageAction -50.0 "Fixed"))
 
 \megalixer <- (addItem "megalixer" "MegaLickser" "Usable" "orb" "Fully heals all allies." >
 setShortName "MegaLiksr" >
-setValue 9999 >
+setValue 1 >
 setTargetType "AllAllies" >
 addDefaultWait >
 addDep (animBuildAction "icebarrage") >
 addDep (damageAction -9999.0 "Fixed"))
 
 \bomb <- (addItem "bomb" "Bomb" "UsableBattleOnly" "orb" "Devastating damage to all enemies." >
-setValue 500 >
+setValue 1 >
 setTargetType "AllEnemies" >
 addDefaultWait >
 addDefaultAnimation >
@@ -172,7 +171,7 @@ addDep (damageAction 9999.0 "Fixed"))
 
  
 \antidote <- (addItem "antidote" "Antidote" "Usable" "orb" "Cures Poison." >
-setValue 50 >
+setValue 75 >
 setTargetType "Single" >
 addDefaultWait >
 addDep (animBuildAction "antidote") >
@@ -180,7 +179,7 @@ addDep (removeStatusAction "poison"))
 
 
 \tranquilizer <- (addItem "tranquilizer" "Tranqlizr" "UsableBattleOnly" "orb" "Cures Berserk." >
-setValue 50 >
+setValue 75 >
 setTargetType "Single" >
 addDefaultWait >
 addDep (animBuildAction "tranquilizer") >
@@ -188,7 +187,7 @@ addDep (removeStatusAction "berserk"))
 
 \sleepingbag <- (addItem "sleepingbag" "Sleeping Bag" "UsableSavePointOnly" "orb" "Use at a save point to fully restore one party member." >
 setShortDescription "Restore a party member." >
-setValue 100 >
+setValue 200 >
 setTargetType "Single" >
 addDefaultWait >
 addDep (fullRestore 0))
