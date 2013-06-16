@@ -993,7 +993,15 @@ public class PlayerCharacter
 		if(this.exp >= expToLevel)
 		{
 			overlap = this.exp - expToLevel;
+			int oldMaxHP = getUnModdedStat(Stats.MaxHP);
+			int oldMaxMP = getUnModdedStat(Stats.MaxMP);
 			modifyLevel(1, true);
+			int newMaxHP = getUnModdedStat(Stats.MaxHP);
+			int newMaxMP = getUnModdedStat(Stats.MaxMP);
+			
+			//on level up, gain back the newly given HP/MP.
+			HP += newMaxHP - oldMaxHP;
+			MP += newMaxMP - oldMaxMP;
 			this.exp = 0;
 			
 			return overlap;
