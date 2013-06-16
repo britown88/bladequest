@@ -85,7 +85,7 @@ public class TitleScreen
 		case Company:
 			break;
 		case GameLogo:	
-			BladeSong.instance().play(openingSong, true, true, 0);
+			Global.bladeSong.play(openingSong, true, true, 0);
 			playingAnim = Global.playAnimation("title", null, null);
 			break;
 		case CompanyTransition:
@@ -115,7 +115,7 @@ public class TitleScreen
 			menu.close();
 			Global.screenFader.setFadeColor(255, 0, 0, 0);
 			Global.screenFader.fadeOut(3.0f);
-			BladeSong.instance().fadeOut(3.0f);
+			Global.bladeSong.fadeOut(3.0f);
 			break;
 		default:
 			break;
@@ -143,7 +143,7 @@ public class TitleScreen
 	private void close()
 	{
 		Global.screenFader.setFadeColor(255, 0, 0, 0);
-		BladeSong.instance().play("", false, true, 0);
+		Global.bladeSong.play("", false, true, 0);
 		whitescene.unload();
 		Global.clearAnimations();
 	}
@@ -327,7 +327,7 @@ public class TitleScreen
 			if(!skippedIntro)
 			{
 				//BladeSong.instance().play("", false, true, 0);
-				BladeSong.instance().skipIntro();
+				Global.bladeSong.skipIntro();
 				
 			}
 			changeState(TitleStates.Menu);	

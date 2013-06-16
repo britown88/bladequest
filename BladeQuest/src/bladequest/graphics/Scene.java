@@ -33,12 +33,12 @@ public class Scene
 	public void load()
 	{
 		bmp = BitmapFactory.decodeStream(stream);
-		if (ScreenFilter.instance().isFiltering())
+		if (Global.screenFilter.isFiltering())
 		{
 			Bitmap unfiltered = bmp;
 			bmp = Bitmap.createBitmap(unfiltered.getWidth(), unfiltered.getHeight(), Config.ARGB_8888);
 			Canvas c = new Canvas(bmp);
-			c.drawBitmap(unfiltered, 0.0f, 0.0f, ScreenFilter.instance().defaultPaint());
+			c.drawBitmap(unfiltered, 0.0f, 0.0f, Global.screenFilter.defaultPaint());
 			unfiltered.recycle();
 		}
 		loaded = true;
@@ -69,10 +69,10 @@ public class Scene
 					Global.vpToScreenX(Global.vpWidth),
 					Global.vpToScreenY(Global.vpHeight));
 			
-			ScreenFilter.instance().save();
-			ScreenFilter.instance().clear();
+			Global.screenFilter.save();
+			Global.screenFilter.clear();
 			dro = (DrawScaledBmp)Global.renderer.drawBitmap(bmp, src, dest, null);
-			ScreenFilter.instance().restore();
+			Global.screenFilter.restore();
 		}
 	}
 	

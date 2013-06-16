@@ -20,7 +20,6 @@ import android.graphics.Paint.Align;
 import android.graphics.Paint.Cap;
 import android.graphics.Paint.Style;
 import android.graphics.Point;
-import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.Shader;
 import android.graphics.Typeface;
@@ -64,16 +63,10 @@ import bladequest.combat.BattleEventBuilder;
 import bladequest.combat.BattleMusicListener;
 import bladequest.combat.triggers.Trigger;
 import bladequest.enemy.Enemy;
-import bladequest.graphics.AnimatedBitmap;
 import bladequest.graphics.AnimationBuilder;
 import bladequest.graphics.AnimationPosition;
 import bladequest.graphics.BattleAnim;
-import bladequest.graphics.BattleAnimObjState;
-import bladequest.graphics.BattleAnimObjState.PosTypes;
-import bladequest.graphics.BattleAnimObject;
-import bladequest.graphics.BattleAnimObject.Types;
 import bladequest.graphics.BattleSprite;
-import bladequest.graphics.BitmapFrame;
 import bladequest.graphics.Icon;
 import bladequest.graphics.ReactionBubble;
 import bladequest.graphics.Renderer;
@@ -220,6 +213,9 @@ public class Global
 	public static BqPanel panel;
 	public static AudioManager audioMgr;
 	
+	public static BladeSong bladeSong;
+	public static ScreenFilter screenFilter;
+	
 	public static int fc1r = 0, fc1g = 0, fc1b = 200;
 	public static int fc2r = 0, fc2g = 0, fc2b = 100;
 
@@ -241,13 +237,13 @@ public class Global
 	
 	public static void pushSong()
 	{
-		songStack.add(BladeSong.instance().getCurrentSong());
+		songStack.add(bladeSong.getCurrentSong());
 	}
 	public static void popSong()
 	{
 		if (!songStack.isEmpty())
 		{
-			BladeSong.instance().fadeInto(1.0f, songStack.get(songStack.size()-1), 1.0f);
+			bladeSong.fadeInto(1.0f, songStack.get(songStack.size()-1), 1.0f);
 		}
 	}
 	
@@ -755,7 +751,7 @@ public class Global
 	{
 		//if(GameState != States.GS_TITLE)
 		screenFader.update();
-		BladeSong.instance().update();
+		bladeSong.update();
 		
 		target.update();
 		if(Global.playTimer != null)
@@ -1026,36 +1022,36 @@ public class Global
 			
 			@Override
 			public void onStart() {
-				interruptedSong = BladeSong.instance().getCurrentSong();
+				interruptedSong = bladeSong.getCurrentSong();
 				
 				if (e.getMusic() != null)
 				{
-					BladeSong.instance().play(e.getMusic(), true, true, 0);
+					bladeSong.play(e.getMusic(), true, true, 0);
 				}
 				else
 				{
 					if(e.isBossFight)
-						BladeSong.instance().play("boss", true, true, 0);
+						bladeSong.play("boss", true, true, 0);
 					else
-						BladeSong.instance().play("battle", true, true, 0);
+						bladeSong.play("battle", true, true, 0);
 				}						
 			}
 
 			@Override
 			public void onVictory() {
 				//play victory music
-				BladeSong.instance().play("victory", true, true, 0);
+				bladeSong.play("victory", true, true, 0);
 			}
 
 			
 			@Override
 			public void onBattleUnload() {
-				BladeSong.instance().play(interruptedSong, true, true, 1.0f);
+				bladeSong.play(interruptedSong, true, true, 1.0f);
 			}			
 			
 			@Override
 			public void onBattleEnd() {
-				BladeSong.instance().fadeOut(2.0f);				
+				bladeSong.fadeOut(2.0f);				
 			}
 
 			@Override
@@ -1082,6 +1078,8 @@ public class Global
         {
         	appRunning = true;
         	
+        	
+        	
         	saveLoader = new GameSaveLoader();
         	
         	saveLoader.registerFactory(actDisableBattleMusic.DisabledBattleMusicListener.tag, new actDisableBattleMusic.DisabledBattleMusicListenerDeserializer());
@@ -1093,15 +1091,18 @@ public class Global
         	
         	//ScreenFilter.instance().pushFilter(ScreenFilter.darknessFilter(0.65f));
         	
+        	bladeSong = new BladeSong();
+        	screenFilter = new ScreenFilter();
+        	
         	title = new TitleScreen();
         	
-        	ScreenFilter.instance();
+        	
 
         	saveLoadMenu = new SaveLoadMenu();
         	playingAnims = new ArrayList<BattleAnim>();
         	GameState = States.GS_TITLE;
         	title.titleStart();
-        	BladeSong.instance().play("", false, true, 0);
+        	bladeSong.play("", false, true, 0);
         	
         	Paint paint = textFactory.getTextPaint(13, Color.WHITE, Align.CENTER);
         	menuButton = new ListBox(vpWidth, vpHeight, 0, 40, 1, 1, paint);
@@ -1128,7 +1129,7 @@ public class Global
 		loadedSave = false;
 		screenFader.setFadeColor(255, 255, 255, 255);
 		screenFader.setFaded();
-		ScreenFilter.instance().clear();
+		screenFilter.clear();
 		
 		if (Global.battleMusicListener != null)
 		{
@@ -1144,7 +1145,7 @@ public class Global
     	screenFader.fadeIn(1.0f);
     	
     	title.titleStart();
-    	BladeSong.instance().fadeOut(2.0f);
+    	bladeSong.fadeOut(2.0f);
     	menuButton.setClosed();
     	audioMgr = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
         audioMgr.requestAudioFocus(activity, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
@@ -1153,7 +1154,7 @@ public class Global
 	
 	public static void closeGame()
 	{
-		BladeSong.instance().stop();
+		bladeSong.stop();
 		appRunning = false;
         activity.panel.destroyContext();
         activity.finish();

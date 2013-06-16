@@ -242,6 +242,9 @@ public class SaveLoadMenu
 	
 	public void backButtonPressed()
 	{
+		if(saveLoad == LOADING)
+			Global.saveLoader.save = null;
+		
 		close();
 	}
 	

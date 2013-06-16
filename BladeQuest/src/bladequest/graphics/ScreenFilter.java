@@ -99,23 +99,16 @@ public class ScreenFilter extends Serializable {
 	
 	Paint p;
 	
-	private ScreenFilter() {
+	public ScreenFilter() {
 		super(tag);
 		activeFilterSet = new FilterSet();
 		storedFilterSets = new ArrayList<FilterSet>();
 		Global.saveLoader.registerFactory(tag, new ScreenFilterDeserializer()); 
+		
+		Global.saveLoader.register(this);
 	}
 	
-	private static ScreenFilter filter;
-	public static ScreenFilter instance() 
-	{
-		if (filter == null)
-		{
-			filter = new ScreenFilter();
-			Global.saveLoader.register(filter);
-		}
-		return filter;
-	}
+
     public Paint defaultPaint()
     {
     	return p;

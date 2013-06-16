@@ -33,25 +33,25 @@ public class SoundLibrary
 	
 	public static int playSong(String songName, boolean playIntro, boolean loop, float fadeTime)
 	{
-		BladeSong.instance().play(songName, playIntro, loop, fadeTime);
+		Global.bladeSong.play(songName, playIntro, loop, fadeTime);
 		return 0;
 	}
 	
 	public static int fadeMusic(float fadeTime)
 	{
-		BladeSong.instance().fadeOut(fadeTime);
+		Global.bladeSong.fadeOut(fadeTime);
 		return 0;
 	}
 	
 	public static String pushSong() 
 	{
 		Global.pushSong();
-		return BladeSong.instance().getCurrentSong();
+		return Global.bladeSong.getCurrentSong();
 	}
 	public static String popSong() 
 	{
 		Global.popSong();
-		return BladeSong.instance().getCurrentSong();
+		return Global.bladeSong.getCurrentSong();
 	}	
 	
 }

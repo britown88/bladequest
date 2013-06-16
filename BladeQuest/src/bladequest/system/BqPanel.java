@@ -106,12 +106,12 @@ implements SurfaceHolder.Callback
     public void resume(){
     	renderThread.setRunning(true);
     	updateThread.setRunning(true);
-    	BladeSong.instance().systemResume();
+    	Global.bladeSong.systemResume();
     }
     
     public void pause()
     {
-    	BladeSong.instance().systemPause();
+    	Global.bladeSong.systemPause();
     	renderThread.setRunning(false);
     	updateThread.setRunning(false);
     	
@@ -159,74 +159,74 @@ implements SurfaceHolder.Callback
     			drawWorld();
     		
     		
-    		ScreenFilter.instance().save();
-    		ScreenFilter.instance().clear();
+    		Global.screenFilter.save();
+    		Global.screenFilter.clear();
     		if(!Global.menuButton.Closed())
     			Global.menuButton.render();
 
     		if(Global.debugButton != null)
     			Global.debugButton.render();
-    		ScreenFilter.instance().restore();
+    		Global.screenFilter.restore();
     		
     		break;
     	case GS_BATTLE:
     		Global.battle.render();
     		break;
     	case GS_MAINMENU:
-    		ScreenFilter.instance().save();
-    		ScreenFilter.instance().clear();
+    		Global.screenFilter.save();
+    		Global.screenFilter.clear();
     		Global.menu.render();
-    		ScreenFilter.instance().restore();
+    		Global.screenFilter.restore();
     		Global.screenFader.render();
     		
     		break;
     	case GS_SAVELOADMENU:
-    		ScreenFilter.instance().save();
-    		ScreenFilter.instance().clear();
+    		Global.screenFilter.save();
+    		Global.screenFilter.clear();
     		Global.saveLoadMenu.render();
     		Global.screenFader.render();
-    		ScreenFilter.instance().restore();
+    		Global.screenFilter.restore();
 			break;
     	case GS_LOADING:
     		Global.loadingScreen.render();
     		break;
     	case GS_NAMESELECT:
     		
-    		ScreenFilter.instance().save();
-    		ScreenFilter.instance().clear();
+    		Global.screenFilter.save();
+    		Global.screenFilter.clear();
     		Global.nameSelect.render();
     		Global.screenFader.render();
     		
-    		ScreenFilter.instance().restore();
+    		Global.screenFilter.restore();
     		break;
     	case GS_MERCHANT:
     		if(Global.map != null)
     			drawWorld();
     		
-    		ScreenFilter.instance().save();
-    		ScreenFilter.instance().clear();    		
+    		Global.screenFilter.save();
+    		Global.screenFilter.clear();    		
     		Global.merchantScreen.render();
     		
-    		ScreenFilter.instance().restore();
+    		Global.screenFilter.restore();
     		break;
     	case GS_DEBUG:
     		if(Global.map != null)
     			drawWorld();
     		
-    		ScreenFilter.instance().save();
-    		ScreenFilter.instance().clear();
+    		Global.screenFilter.save();
+    		Global.screenFilter.clear();
     		Global.debugScreen.render();
-    		ScreenFilter.instance().restore();
+    		Global.screenFilter.restore();
     		break;
     	}	
     	
-		ScreenFilter.instance().save();
-		ScreenFilter.instance().clear();
+    	Global.screenFilter.save();
+		Global.screenFilter.clear();
 		
     	drawForeground();
     	drawLog();
     	
-		ScreenFilter.instance().restore();
+    	Global.screenFilter.restore();
     }
     
 
@@ -286,8 +286,8 @@ implements SurfaceHolder.Callback
     	
     	Global.renderAnimations();
     	
-		ScreenFilter.instance().save();
-		ScreenFilter.instance().clear();
+    	Global.screenFilter.save();
+    	Global.screenFilter.clear();
 		
     	Global.map.renderDisplayName(); 
     	
@@ -297,7 +297,7 @@ implements SurfaceHolder.Callback
     	if(Global.worldMsgBox != null)
     		Global.worldMsgBox.render();
     	
-		ScreenFilter.instance().restore();
+    	Global.screenFilter.restore();
 
     }
     

@@ -12,7 +12,7 @@ public class actRemoveFilter extends Action
 	@Override
 	public void run()
 	{
-		ScreenFilter.instance().popFilter();
+		Global.screenFilter.popFilter();
 		
 		if (Global.map != null && Global.map.isLoaded())
 		{

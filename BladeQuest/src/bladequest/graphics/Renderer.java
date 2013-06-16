@@ -28,13 +28,13 @@ public class Renderer
 	
 	Paint filterPaint(Paint p)
 	{
-		if (ScreenFilter.instance().isFiltering())
+		if (Global.screenFilter.isFiltering())
 		{
 			if (p == null)
 			{
-				return ScreenFilter.instance().defaultPaint();
+				return Global.screenFilter.defaultPaint();
 			}
-			p.setColorFilter( new ColorMatrixColorFilter(ScreenFilter.instance().currentFilter()));
+			p.setColorFilter( new ColorMatrixColorFilter(Global.screenFilter.currentFilter()));
 		}
 		return p;
 	}

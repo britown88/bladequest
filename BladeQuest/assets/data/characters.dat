@@ -34,7 +34,7 @@ setCombatAction "combStance" >
 setBaseStats 10 4 7 2 >
 setLevel 5 >
 mapBound equip {"woodensword", "felthat", "cottonshirt"} >
-addLearnableAbility "assault" 6) >
+addLearnableAbility "assault" 6 >
 addLearnableAbility "redcard" 8) >
 setDefaultShadow
 

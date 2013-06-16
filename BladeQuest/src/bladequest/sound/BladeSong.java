@@ -9,27 +9,17 @@ import bladequest.world.Global;
 
 public class BladeSong extends Serializable {
 	
-	private BladeSong()
+	public BladeSong()
 	{
 		super(deserializeTag);
 		currentState = new StoppedState();
+		Global.saveLoader.registerFactory(deserializeTag, new BladeSongFactory());
+		Global.saveLoader.register(this);
 	}
-	private static BladeSong bladeSongInstance;
-	
-	public synchronized static BladeSong instance()
-	{
-		if (bladeSongInstance == null)
-		{
-			bladeSongInstance = new BladeSong();
-			Global.saveLoader.registerFactory(deserializeTag, new BladeSongFactory());
-			Global.saveLoader.register(bladeSongInstance);
-		}
-		
-		return bladeSongInstance;
-	}
+
 	public static final String deserializeTag = "BladeSong";
 	
-	private static class BladeSongFactory extends DeserializeFactory
+	private class BladeSongFactory extends DeserializeFactory
 	{
 
 		BladeSongFactory()
@@ -39,19 +29,18 @@ public class BladeSong extends Serializable {
 		@Override
 		public Object deserialize(Deserializer deserializer) {
 			
-			BladeSong instance = instance();
 			//instance.stop();
 			
 			if (deserializer.readInt() != 0) //something should be playing, and it's....
 			{
 				//TODO: Make this not just guess arguments (e.g. not suck donkey balls)
-				instance.fadeInto(2.0f, deserializer.readString(), 2.0f);
+				fadeInto(2.0f, deserializer.readString(), 2.0f);
 			}
 			else
 			{
-				instance.fadeOut(2.0f);
+				fadeOut(2.0f);
 			}
-			return instance;
+			return this;
 		}
 	}
 	

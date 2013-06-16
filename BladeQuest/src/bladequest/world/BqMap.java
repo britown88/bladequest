@@ -266,7 +266,7 @@ public class BqMap
 	public void setBGM(String bgm){defaultBGM = bgm;}	
 	public void playBGM(boolean playIntro)
 	{
-		BladeSong.instance().play(defaultBGM, playIntro, true, 0);
+		Global.bladeSong.play(defaultBGM, playIntro, true, 0);
 	}	
 	
 	private void initTilePlates()
@@ -396,7 +396,7 @@ public class BqMap
 				else
 				{
 					//plate should be loadedededed.
-					if (plates[x + y * plateCount.x].tryLoad(ScreenFilter.instance().defaultPaint()))
+					if (plates[x + y * plateCount.x].tryLoad(Global.screenFilter.defaultPaint()))
 					{
 						loadList.add(plates[x + y * plateCount.x]);
 					}
@@ -404,8 +404,8 @@ public class BqMap
 			}				
 		}
 	
-		ScreenFilter.instance().save();
-		ScreenFilter.instance().clear();
+		Global.screenFilter.save();
+		Global.screenFilter.clear();
 		
 		for (int y = 0; y < yCols; y++)
 		{
@@ -416,7 +416,7 @@ public class BqMap
 				plates[plateIndexFromVP(x,y)].render();				
 			}
 		}
-		ScreenFilter.instance().restore();
+		Global.screenFilter.restore();
 	}
 	
 	private int plateIndexFromVP(int x, int y)

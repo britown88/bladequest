@@ -50,6 +50,7 @@ public class GameSaveLoader
 	
 	public void registerFactory(String tag, DeserializeFactory factory)
 	{
+		factories.remove(tag);
 		factories.put(tag, factory);
 	}
 	

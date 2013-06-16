@@ -4,6 +4,7 @@
 
 
 
+
 #!OBJ 0 0
 \name$0x0$ <- newObject "start" 0 0
 
@@ -29,7 +30,7 @@ addAction (createPath "guard1" true "DR") >
 addAction (createPath "guard2" true "d") >
 addAction (createPath "guard1" true "RUl") >
 addAction (createPath "guard2" true "r") >
-addAction (message "Guard: \nJust get to your post. \nAnd don't fall asleep this time.") >
+addAction (message "Guard: \nJust get to your post, \nand don't fall asleep this time.") >
 addAction (message "There's a new arrival in cell four who's a bit of a handful.") >
 addAction (message "Think you can handle that?") >
 addAction (message "Guard: \nYes, sir!") >
@@ -120,7 +121,7 @@ addSwitchCondition "prisonguardnewspeech" >
 setSprite "guard2" > 
 setOptions true true false > 
 setCollisionData true true true true >
-addAction (message "Guard: \nI've got my eye on your this time...") >
+addAction (message "Guard: \nI've got my eye on you this time...") >
 addAction (message "Don't think you'll be getting out again!") >
 addAction (openBubble "sweat" "party" 2.0 false false) >
 addAction (message "????? \nYou are an example to us all.")
@@ -174,7 +175,7 @@ name$15x9$ > createState >
 setSpriteFromTile 5 2 >
 setLayer "Above" > 
 setCollisionData false false false true >
-addAction (message "It's locked")
+addAction (message "It's locked.")
 
 \runstate1$15x9$ <- state1$15x9$ 0
 
@@ -204,7 +205,7 @@ name$11x9$ > createState >
 setSpriteFromTile 5 2 >
 setLayer "Above" > 
 setCollisionData false false false true >
-addAction (message "It's locked")
+addAction (message "It's locked.")
 
 \runstate1$11x9$ <- state1$11x9$ 0
 
@@ -234,7 +235,7 @@ name$7x9$ > createState >
 setSpriteFromTile 5 2 >
 setLayer "Above" > 
 setCollisionData false false false true >
-addAction (message "It's locked")
+addAction (message "It's locked.")
 
 \runstate1$7x9$ <- state1$7x9$ 0
 
@@ -264,7 +265,7 @@ name$3x9$ > createState >
 setSpriteFromTile 5 2 >
 setLayer "Above" > 
 setCollisionData false false false true >
-addAction (message "It's locked")
+addAction (message "It's locked.")
 
 \runstate1$3x9$ <- state1$3x9$ 0
 

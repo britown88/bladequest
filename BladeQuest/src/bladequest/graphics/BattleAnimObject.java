@@ -420,7 +420,7 @@ public class BattleAnimObject
 				
 				if (colorTransform != null)
 				{
-					ScreenFilter.instance().pushFilter(colorTransform);	
+					Global.screenFilter.pushFilter(colorTransform);	
 				}
 				if (currentState.mirrored)
 				{
@@ -432,7 +432,7 @@ public class BattleAnimObject
 				}
 				if (colorTransform != null)
 				{				
-					ScreenFilter.instance().popFilter();
+					Global.screenFilter.popFilter();
 				}
 				break;
 			case Line:

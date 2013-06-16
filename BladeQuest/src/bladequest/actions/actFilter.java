@@ -15,7 +15,7 @@ public class actFilter extends Action
 	@Override
 	public void run()
 	{
-		ScreenFilter.instance().pushFilter(filter);
+		Global.screenFilter.pushFilter(filter);
 		
 		if (Global.map != null && Global.map.isLoaded())
 		{

@@ -1837,8 +1837,8 @@ public class Battle
 	
 	private void drawActors()
 	{
-		ScreenFilter.instance().save();
-		ScreenFilter.instance().clear();
+		Global.screenFilter.save();
+		Global.screenFilter.clear();
 		for(PlayerCharacter c : partyList)
 		{
 			c.renderShadow();
@@ -1848,7 +1848,7 @@ public class Battle
 			e.renderShadow();
 		}
 		
-		ScreenFilter.instance().restore();
+		Global.screenFilter.restore();
 		for(PlayerCharacter c : partyList)
 		{
 			c.battleRender();
@@ -1857,13 +1857,13 @@ public class Battle
 		for(Enemy e : encounter.Enemies())
 			e.battleRender();
 		
-		ScreenFilter.instance().save();
-		ScreenFilter.instance().clear();
+		Global.screenFilter.save();
+		Global.screenFilter.clear();
 		for(PlayerCharacter c : partyList)
 		{
 			characterPanes[c.Index()].render();
 		}
-		ScreenFilter.instance().restore();	
+		Global.screenFilter.restore();	
 		
 		
 			
@@ -1984,8 +1984,8 @@ public class Battle
 		
 		Global.renderAnimations();
 		
-		ScreenFilter.instance().save();
-		ScreenFilter.instance().clear();
+		Global.screenFilter.save();
+		Global.screenFilter.clear();
 		
 		drawDamageMarkers();
 		
@@ -2010,7 +2010,7 @@ public class Battle
 		}		
 		
 		
-		ScreenFilter.instance().restore();
+		Global.screenFilter.restore();
 	}
 	
 	public void backButtonPressed()
