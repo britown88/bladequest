@@ -8,7 +8,7 @@ import android.graphics.Point;
 public class BattleAnim 
 {
 	private List<BattleAnimObject> objects;
-	private List<BattleAnimObject> visibleObjects;
+	//private List<BattleAnimObject> visibleObjects;
 	
 	private List<List<BattleAnimObject>> timedObjects;
 	
@@ -51,7 +51,7 @@ public class BattleAnim
 	
 	public BattleAnim(float fps)
 	{
-		visibleObjects = new ArrayList<BattleAnimObject>();
+		//visibleObjects = new ArrayList<BattleAnimObject>();
 		objects = new ArrayList<BattleAnimObject>();
 		this.framePeriod = 1000.0f / fps;
 		
@@ -62,7 +62,7 @@ public class BattleAnim
 	public BattleAnim(BattleAnim other)
 	{
 		this.objects = new ArrayList<BattleAnimObject>();
-		visibleObjects = new ArrayList<BattleAnimObject>();
+	//	visibleObjects = new ArrayList<BattleAnimObject>();
 		this.framePeriod = other.framePeriod;
 		this.loops = other.loops;
 		for(BattleAnimObject obj : other.objects)
@@ -74,7 +74,7 @@ public class BattleAnim
 	public BattleAnim(BattleAnim other, float speedModifer)
 	{
 		this.objects = new ArrayList<BattleAnimObject>();
-		visibleObjects = new ArrayList<BattleAnimObject>();
+		//visibleObjects = new ArrayList<BattleAnimObject>();
 		this.framePeriod = other.framePeriod * speedModifer;
 		this.loops = other.loops;
 		for(BattleAnimObject obj : other.objects)
@@ -205,10 +205,9 @@ public class BattleAnim
 				//update start time to the end of the last completed frame
 				startTime += (int)(elapsedFrames * framePeriod);
 				
-				visibleObjects.clear();
 				if(frame <= finalFrame)
 					for(BattleAnimObject obj : timedObjects.get(frame/timingSection))
-						obj.update(frame, visibleObjects);
+						obj.update(frame);
 				else
 				{
 					//animation is over
@@ -248,7 +247,7 @@ public class BattleAnim
 //			Global.renderer.drawText("State Progress:"+objects.get(0).progress*100.0f + "%", Global.vpToScreenX(0), Global.vpToScreenY(60), text);
 //			
 			
-			for(BattleAnimObject obj : visibleObjects)
+			for(BattleAnimObject obj : timedObjects.get(frame/timingSection))
 				obj.render(frame);
 		}
 			

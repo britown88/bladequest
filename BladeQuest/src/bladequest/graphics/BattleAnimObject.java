@@ -220,7 +220,7 @@ public class BattleAnimObject
 	
 	
 	public float progress;
-	public void update(int frame, List<BattleAnimObject> visibleObjects)
+	public void update(int frame)
 	{
 		//only interpolate if there's a next state to interpolate to!
 		if(nextState != null && frame >= startFrame && frame <= endFrame)
@@ -249,7 +249,7 @@ public class BattleAnimObject
 				if (type == Types.Interpolatable)
 				{
 					workingState.interpObj = currentState.interpObj.interpolateAgainst(nextState.interpObj, progress);
-					visibleObjects.add(this);
+					//visibleObjects.add(this);
 					return;
 				}
 				
@@ -312,7 +312,7 @@ public class BattleAnimObject
 				
 				if (!visibleInViewport()) return;  //don't interpolate what we don't have to!
 				
-				visibleObjects.add(this);
+				//visibleObjects.add(this);
 				//---size
 				if(currentState.size.x != nextState.size.x || currentState.size.y != nextState.size.y)
 				{
