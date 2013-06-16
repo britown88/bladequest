@@ -116,6 +116,47 @@ addEnemy "spud" 158 158)
 \OneHawk <- (inheritEncounter "1hawk" >
 addEnemy "hawk" 128 128)
 
+#For nighttime...probably keep BunnyAndSpud as well.
+
+\BatAndSpud <- (inheritEncounter "batandspud" >
+addEnemy "bat" 68 128 >
+addEnemy "spud" 158 158)
+
+
+\TwoBats <- (inheritEncounter "twobats" >
+addEnemy "bat" 68 128 >
+addEnemy "bat" 98 158)
+
+
+#Snow map
+
+
+#slightly stronger bats!
+\FiveBats <- (inheritEncounter "fivebats" >
+addEnemy "bat2" 58 78 >
+addEnemy "bat2" 138 78 >
+addEnemy "bat2" 98 118 >
+addEnemy "bat2" 58 158 >
+addEnemy "bat2" 138 158 
+)
+
+
+\BunnyAndHawks <- (inheritEncounter "bunnyandhawks" >
+addEnemy "leafbunny" 58 88 >
+addEnemy "leafbunny" 98 148 >
+addEnemy "hawk" 148 88 >
+addEnemy "hawk" 188 148
+)
+
+\LineOfSpuds <- (inheritEncounter "lineofspuds" >
+addEnemy "spud2" 38 148 >
+addEnemy "spud2" 68 148 >
+addEnemy "spud2" 98 148 >
+addEnemy "spud2" 128 148 >
+addEnemy "spud2" 158 148 >
+addEnemy "spud2" 188 148)
+
+
 \SatyrBossBattle <- (inheritEncounter "satyrboss" >
 addEnemy "satyr" 128 128 > 
 disableRunning)

@@ -143,6 +143,17 @@ addAttackOnlyState >
 setGold 22 >
 setEShadow (createShadow 31 16 22))
 
+\spud2 <- (addEnemy "spud2" "Spud" "spud" >
+addDefaultDaggerHit >
+setEBaseStats 3 3 3 3 >
+setItems "potion" 10 " " 0 true >
+setELevel 6 >
+modStat "MaxHP" -5 >
+modStat "BattlePower" -1 >
+addAttackOnlyState >
+setGold 32 >
+setEShadow (createShadow 31 16 22))
+
 ################BUNNY AI##############
 
 LeafyBunnyAI enemy
@@ -227,6 +238,19 @@ setUseDrainState >
 setItems "potion" 50 " " 0 true >
 addEAbility "drain" >
 modStat "MaxHP" -30 >
+setEShadow (createShadow 34 12 30 > addElevation 16))
+
+#slightly stronger bats
+\bat2 <- (addEnemy "bat2" "Bat" "bat" >
+addDefaultDaggerHit >
+setEBaseStats 5 10 8 3 >
+setELevel 7 >
+setGold 60  >
+setUseDrainState >
+setItems "potion" 50 " " 0 true >
+addEAbility "drain" >
+modStat "MaxHP" -30 >
+modStat "MagicPower" 2 >
 setEShadow (createShadow 34 12 30 > addElevation 16))
 
 #
