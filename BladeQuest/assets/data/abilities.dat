@@ -87,6 +87,19 @@ add (waitAction 600) >
 addDep (damageAction 1.25 "Magic" > addDamageComponent "Fire" 1.0))
 
 
+########ITEM ABILITIES##################
+
+
+############SAFETY RING################
+
+\safetyheal <- (addAbility "safetyheal" "SafetyHeal" "Self" 0 >
+add (\defWait <- waitAction 450) >
+addDep (inflictStatusAction (regenStatus 10 20 3))) >
+addDep (waitAction 500) >
+(damageAction -10 "Fixed")
+
+
+
 #########ENEMY ABILITIES#################
 
 #######COMMON##########

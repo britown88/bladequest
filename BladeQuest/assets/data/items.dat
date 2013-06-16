@@ -1,8 +1,28 @@
+#################################COMMON FUNCTIONS#######################
+
 usableByAll item
  mapBound item setUsableBy {"aramis", "luc", "joy", "roland"}
  
 usableByMagicPeople item
   mapBound item setUsableBy {"joy", "roland"}
+  
+  
+  ###############################Super awesome triggers##################
+
+fireSwitchedTrigger trigger enemy fn
+  setSwitchCondition trigger false
+  fn enemy
+
+onHPFraction enemy numer denom fn 
+  \triggerRun <- (createSwitchCondition true)
+  createTrigger {triggerRun, getOnDamageReceivedEvent enemy} (
+  [trigger] (|(enemy > getHP) > less (enemy > getStat "MaxHP" > multiply numer > divide denom)
+  | equals true : fireSwitchedTrigger triggerRun enemy fn
+  | equals false : ""
+  ))
+  
+  
+  ######################################################################
 
 \knife <- (addItem "knife" "Knife" "Weapon" "dagger" "A small and simple dagger." >
 setPower 5 >
@@ -29,7 +49,7 @@ swingSlash 2 222 184 134)
 
 \silversword <- (addItem "silversword" "Silver Sword" "Weapon" "sword" "Some believe the silver inlay wards off the undead." >
 setPower 10 >
-setValue 123 >
+setValue 125 >
 usableByAll >
 swing "sword" "slice1" >
 swingBase 0 186 186 186 >
@@ -58,7 +78,7 @@ swingSlash 5 0 0 255)
 
 \fireknife <- (addItem "fireknife" "Flame Dagger" "Weapon" "dagger" "A dagger that does burning damage." >
 setPower 9 >
-setValue 10 >
+setValue 250 >
 setUsableBy "aramis" >
 addDamageComp "Fire" 1.0 >
 swing "dagger" "slice1" >
@@ -81,11 +101,33 @@ setPower 4 >
 setValue 100 >
 usableByAll)
 
+\woodenshield <- (addItem "woodenshield" "Wooden Shield" "Shield" "lshield" "A crude shield." >
+setPower 2 >
+setValue 120 >
+setUsableBy "luc")
+
+\volcanicrock <- (addItem "volcanicrock" "Volcanic Rock" "Accessory" "ring" "Still warm to the touch, boosts your fire affinity." >
+setPower 0 >
+modStat "Fire" 15 >
+setValue 500 >
+usableByAll)
+
 \runningshoes <- (addItem "runningshoes" "Running Shoes" "Accessory" "boot" "Shoes that allow you to move faster." >
 setPower 0 >
 modStat "Speed" 3 >
 setValue 800 >
 usableByAll)
+
+\safetyring <- (addItem "safetyring" "Safety Ring" "Accessory" "ring" "A ring that causes regen status when weakened." >
+setPower 0 >
+setValue 300 >
+onEquippedBattleStart ([battle wearer] 
+   onHPFraction wearer 1 4 ([healme]
+   addNextAbility healme healme (getAbility "safetyheal")
+))>
+usableByAll)
+
+
 
 
 addDefaultWait item

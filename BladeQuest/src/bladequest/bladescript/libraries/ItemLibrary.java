@@ -3,6 +3,7 @@ package bladequest.bladescript.libraries;
 import android.graphics.Color;
 import bladequest.battleactions.BattleAction;
 import bladequest.bladescript.LibraryWriter;
+import bladequest.bladescript.ScriptVar;
 import bladequest.world.Global;
 import bladequest.world.Item;
 import bladequest.world.Stats;
@@ -49,6 +50,13 @@ public class ItemLibrary {
 	public static Item setValue(Item itm, int value)
 	{
 		itm.setValue(value);
+		return itm;
+	}
+	
+	//fn takes Battle, PlayerCharacter
+	public static Item onEquippedBattleStart(Item itm, ScriptVar fn)
+	{
+		itm.addStartBattleEquippedScript(fn);
 		return itm;
 	}
 	public static Item modStat(Item itm, String stat, int value)
