@@ -11,12 +11,12 @@ setCombatAction "combSteal" >
 setBaseStats 7 10 4 2 >
 setLevel 5 >
 mapBound equip {"knife", "felthat", "cottonshirt"} >
-mapBound addAbility {"coatweapon", "dblattack", "backstab"} >
+mapBound addAbility {"coatweapon"} >
 addLearnableAbility "dblattack" 6 > 
 addLearnableAbility "backstab" 8 > 
 setDefaultShadow
 
-\joy <- (createCharacter "joy" "Joy" "bjoy" "joy" >
+\joy <- createCharacter "joy" "Joy" "bjoy" "joy" >
 setPortrait 2 0 >
 setStartingName "?????" >
 setAbilityName "Magic" >
@@ -24,27 +24,27 @@ setCombatAction "combAuras" >
 setBaseStats 3 3 6 10 >
 setLevel 6 >
 mapBound addAbility {"heal", "ignite"} >
-mapBound equip {"silverstaff", "felthat", "cottonshirt"}) > 
+mapBound equip {"silverstaff", "felthat", "cottonshirt"} > 
 setDefaultShadow
 
-\luc <- (createCharacter "luc" "Luc" "bluc" "luc" >
+\luc <- createCharacter "luc" "Luc" "bluc" "luc" >
 setPortrait 1 0 >
 setAbilityName "Swordplay" >
 setCombatAction "combStance" >
 setBaseStats 10 4 7 2 >
 setLevel 5 >
 mapBound equip {"woodensword", "felthat", "cottonshirt"} >
-addLearnableAbility "assault" 6) >
-addLearnableAbility "redcard" 8) >
+addLearnableAbility "assault" 6 >
+addLearnableAbility "redcard" 8 >
 setDefaultShadow
 
-\roland <- (createCharacter "roland" "Roland" "broland" "roland" >
+\roland <- createCharacter "roland" "Roland" "broland" "roland" >
 setPortrait 0 0 >
 setAbilityName "Ice Magic" >
 setCombatAction "combDragonForm" >
 setBaseStats 3 7 3 10 >
 setLevel 99 >
 mapBound equip {"felthat", "cottonshirt"} >
-mapBound addAbility {"frostwish", "entomb", "shatter"}) >
+mapBound addAbility {"frostwish", "entomb", "shatter"} >
 setDefaultShadow
 
