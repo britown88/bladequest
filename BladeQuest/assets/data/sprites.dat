@@ -71,7 +71,7 @@ setFace ""
 createSprite "snowpile" "misc" 32 32 >
 addSpriteFrame "" 0 48 16 64 >
 setFace ""
-createSprite "icepillar" "iceblock" 50 76 >
+createSprite "icepillar" "iceblockworld" 50 76 >
 addSpriteFrame "" 0 0 25 38 >
 setFace ""
 
