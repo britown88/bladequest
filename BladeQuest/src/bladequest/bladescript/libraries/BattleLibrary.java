@@ -88,6 +88,32 @@ public class BattleLibrary {
 		Global.abilities.put(name, newAbility);
 		return newAbility;
 	}
+	public static Battle setBattleEndHandler(ScriptVar battleEndHandler)
+	{
+		Global.battle.setBattleEndHandler(new Battle.BattleEndHandler() {
+			
+			ScriptVar battleEndHandler;
+			
+			Battle.BattleEndHandler initialize(ScriptVar battleEndHandler)
+			{
+				this.battleEndHandler = battleEndHandler;
+				return this;
+			}
+
+			@Override
+			public void onBattleEnd() {
+				try {
+					battleEndHandler.apply(ScriptVar.toScriptVar(Global.battle));
+				} catch (ParserException e) {
+					e.printStackTrace();
+					Log.d("Parser", e.what());
+				}
+			}
+			
+		}.initialize(battleEndHandler));
+		
+		return Global.battle; 
+	}
 	
 	public static Ability getAbility(String name)
 	{
