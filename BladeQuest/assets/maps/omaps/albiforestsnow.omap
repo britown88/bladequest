@@ -51,6 +51,8 @@ setLayer "Above"
 
 
 
+
+
 #!OBJ 10 5
 \name$10x5$ <- cliffJumpLeft 10 5
 #!OBJ 10 4
@@ -351,11 +353,6 @@ setSprite "icepillar"
 
 \runstate1$5x3$ <- state1$5x3$ 0
 
-#!OBJ 3 4
-\name$3x4$ <- createIcePillar 3 4
-
-
-
 #!OBJ 6 4
 \objName$6x4$ <- "name"
 \name$6x4$ <- newObject objName$6x4$ 6 4
@@ -405,12 +402,17 @@ state > addAction (createPath "roland" true "s2")
 state > addAction (changeElevation "roland" 144 0.0 true) 
 state > addAction (createPath "roland" true "D5") 
 state > addAction (wait 1.0) 
-state > addAction (flash 2.0 255 150 225 255 false) 
 state > addAction (createPath "aramis2" false "KWDW3k") 
 state > addAction (createPath "luc2" false "KWDW3k") 
 state > addAction (createPath "joy2" false "KWDW3k") 
-state > addAction (changeElevation "roland" 32 8.0 true) 
-state > addAction (wait 1.0) 
+state > addAction (changeElevation "roland" 32 8.0 false) 
+state > addAction (fadeControl 2.0 255 150 225 255 true false) 
+state > addAction (wait 2.0) 
+state > addAction (removeFilter 0)
+state > addAction (filter (darknessFilter 0.95)) 
+state > addAction (wait 0.5) 
+state > addAction (fadeControl 2.0 255 150 225 255 false false) 
+state > addAction (wait 6.5) 
 state > addAction (switchControl "albirolandland" true) 
 state > addAction (changeElevation "roland" 0 0.5 true) 
 state > addAction (shakeControl 0.25 2 false) 
@@ -444,9 +446,9 @@ state > addAction (switchControl "albirolanddisrobed" true)
 state > addAction (wait 1.0) 
 state > addAction (message "Roland: \nI am Roland, son of the Northern Skies.") 
 state > addAction (createPath "roland" true "s2WLd") 
-state > addAction (message "After speaking with the guards, it was a relief to discover that you were but a mere thief.") 
+state > addAction (message "It was a surprise to learn that you were but a mere thief.") 
 state > addAction (message "The lowliest of your pathetic race.") 
-state > addAction (message "We were concerned that the sword's chosen keeper was someone of importance.") 
+state > addAction (message "We had expected the sword's chosen keeper to be someone of importance.") 
 state > addAction (openBubble "qmark" "aramis2" 0.5 false true) 
 state > addAction (createPath "aramis2" false "r") 
 state > addAction (createPath "roland" true "R2d") 
@@ -496,7 +498,10 @@ state > addAction (wait 0.5)
 state > addAction (messageTimed "Roland: \nI see..." 2.0) 
 state > addAction (wait 0.0) 
 state > addAction (messageTimed "So you have chosen death..." 3.0) 
-state > addAction (startBattle "enemyroland1" false)
+state > addAction (setBattleMusic ([x] "") ([x] "") ([x] fadeMusic 2.0)) 
+state > addAction (startBattle "enemyroland1" false >
+	addToBranch 0 (message "You won, congrats.") >
+	addToBranch 1 (message "You lost, bahahahaha"))
 
 
 \runstate1$6x4$ <- state1$6x4$ 0

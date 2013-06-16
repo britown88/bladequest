@@ -468,7 +468,7 @@ public class WorldAnimations
 			{
 				BattleAnim anim = new BattleAnim(1000.0f);
 				//anim.loop();
-				BattleAnimObject obj = new BattleAnimObject(Types.Bitmap, false, "iceblock");
+				BattleAnimObject obj = new BattleAnimObject(Types.Bitmap, false, "iceblockworld");
 				
 				BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Target);
 				state.pos1 = new Point(0,0);
