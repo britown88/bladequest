@@ -8,6 +8,8 @@
 
 
 
+
+
 #!OBJ 4 14
 \objName$4x14$ <- "name"
 \name$4x14$ <- newObject objName$4x14$ 4 14
@@ -302,19 +304,6 @@ addAction (fadeControl 0.5 255 0 0 0 false true)
 
 \runstate1$25x29$ <- state1$25x29$ 0
 #!OBJ 7 9
-\objName$7x9$ <- "name"
-\name$7x9$ <- newObject objName$7x9$ 7 9
-
-state1$7x9$ 0
-name$7x9$ > createState >
-setSpriteFromTile 6 4 >
-setCollisionData true true true true >
-addAction (message "It's locked.")
-
-
-\runstate1$7x9$ <- state1$7x9$ 0
-
-
 \agnes$7x9$ <- newObject "agnes" 7 9
 
 state2$7x9$ 0
@@ -338,6 +327,21 @@ setFace "up" >
 setAnimated false
 
 \runstate4$7x9$ <- state4$7x9$ 0
+
+
+\objName$7x9$ <- "name"
+\name$7x9$ <- newObject objName$7x9$ 7 9
+
+state1$7x9$ 0
+name$7x9$ > createState >
+setSpriteFromTile 6 4 >
+setCollisionData true true true true >
+addAction (message "It's locked.")
+
+
+\runstate1$7x9$ <- state1$7x9$ 0
+
+
 
 
 
@@ -468,14 +472,14 @@ name$28x7$ > createState
 state2$28x7$ 0
 name$28x7$ > createState >
 addSwitchCondition "albidessarah" >
-setSprite "woman1"
+setSprite "woman3"
 
 \runstate2$28x7$ <- state2$28x7$ 0
 
 state3$28x7$ 0
 name$28x7$ > createState >
 addSwitchCondition "albidessarahfrozen" >
-setSprite "woman1" >
+setSprite "woman3" >
 setAnimated false >
 setFace "up"
 
