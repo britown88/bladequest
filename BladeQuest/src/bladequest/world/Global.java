@@ -1115,6 +1115,12 @@ public class Global
 		screenFader.setFaded();
 		ScreenFilter.instance().clear();
 		
+		if (Global.battleMusicListener != null)
+		{
+			Global.battleMusicListener.onRemove();
+			Global.battleMusicListener = null;	
+		}
+		
 		if(map != null)
 			map.unloadTiles();
 		title= new TitleScreen();
