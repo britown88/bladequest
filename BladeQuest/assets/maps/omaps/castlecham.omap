@@ -10,6 +10,7 @@
 
 
 
+
 #!OBJ 12 0
 createWindowObj x y
 \obj <- newObject "window" (12 > add x) y
@@ -34,6 +35,7 @@ state1$0x0$ 0
 \state$0x0$ <- (name$0x0$ > createState)
 state$0x0$ > setOptions true false false
 state$0x0$ > setAutoStart true
+state$0x0$ > addAction (modifyInventory "prisonkey" 1 true)
 state$0x0$ > addAction (createPath "party" true "u")
 state$0x0$ > addAction (wait 2.0)
 state$0x0$ > addAction (messageTop "|aramis|: \nHow big is this place anyway?")
