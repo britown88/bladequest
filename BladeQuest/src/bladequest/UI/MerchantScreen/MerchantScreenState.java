@@ -27,6 +27,7 @@ public class MerchantScreenState
 	public void touchActionUp(int x, int y) {}
 	public void touchActionMove(int x, int y) {}
 	public void touchActionDown(int x, int y) {}
+	public void longPress(int x, int y) {}
 	
 
 
