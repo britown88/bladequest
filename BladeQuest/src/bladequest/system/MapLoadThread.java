@@ -21,6 +21,7 @@ public class MapLoadThread extends Thread
 		
 		map.load();
 		Global.clearPan();
+		Global.menuButton.update();
 		Global.playTimer.start();
 		done = true;
 		

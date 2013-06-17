@@ -1115,10 +1115,10 @@ public class Global
         	//create debug button
         	
 //        	TODO: REMOVE THIS PART FOR RELEASE
-        	debugButton = new ListBox(0, vpHeight, 40, 40, 1, 1, paint);
-        	debugButton.anchor = Anchors.BottomLeft;
-        	debugButton.addItem("!", null, false);
-        	debugButton.update();
+//        	debugButton = new ListBox(0, vpHeight, 40, 40, 1, 1, paint);
+//        	debugButton.anchor = Anchors.BottomLeft;
+//        	debugButton.addItem("!", null, false);
+//        	debugButton.update();
 //        	TODO: REMOVE THIS PART FOR RELEASE
         }
 	}
