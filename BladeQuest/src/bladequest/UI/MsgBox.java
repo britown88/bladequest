@@ -225,29 +225,38 @@ public class MsgBox extends MenuPanel
 			if(textTimer >= textSpeed)
 			{
 				textTimer = 0;
-				
-				if(currentChar >= rowList.get(currentRow).length())
+				if(currentRow < rowList.size())
 				{
-					currentRow++;
-					currentChar = 0;
-					if(currentRow >= rowList.size())
+					if(currentChar >= rowList.get(currentRow).length())
 					{
-						done = true;
-						if(YesNoOpt && msgQueue.size() <= 1)
-							yesNoMenu.open();
-					}						
+						currentRow++;
+						currentChar = 0;
+						if(currentRow >= rowList.size())
+						{
+							done = true;
+							if(YesNoOpt && msgQueue.size() <= 1)
+								yesNoMenu.open();
+						}						
+						else
+						{
+							partialRow = "" + rowList.get(currentRow).charAt(currentChar);		
+							textBoxes.get(currentRow).text = partialRow;
+						}
+							
+					}
 					else
 					{
-						partialRow = "" + rowList.get(currentRow).charAt(currentChar);		
+						partialRow += rowList.get(currentRow).charAt(currentChar);
 						textBoxes.get(currentRow).text = partialRow;
 					}
-						
 				}
 				else
 				{
-					partialRow += rowList.get(currentRow).charAt(currentChar);
-					textBoxes.get(currentRow).text = partialRow;
+					done = true;
+					if(YesNoOpt && msgQueue.size() <= 1)
+						yesNoMenu.open();
 				}
+				
 				currentChar++;
 				
 				//Global.playSound("dlg");

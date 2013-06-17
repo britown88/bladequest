@@ -139,9 +139,11 @@ public class MerchantScreen
 				msgBox.addMessage(merchant.buying);
 				msgBox.nextMessage();
 			}
-
+			private boolean suppressOpen;
+			
 			public void update() {
 				rootMenu.update();
+				msgBox.update();
 				items.update();
 				if(!buySellPanel.Closed())
 					buySellPanel.update();
@@ -171,7 +173,7 @@ public class MerchantScreen
 					handleOption((String)rootMenu.getSelectedEntry().obj);
 				
 				state = items.touchActionUp(x, y);
-				if(state == LBStates.Selected)
+				if(state == LBStates.Selected && !suppressOpen)
 				{
 					if(items.getSelectedEntry().Disabled())
 					{
@@ -184,20 +186,17 @@ public class MerchantScreen
 						stateMachine.setState(getBuySellConfirmState());
 					}					
 				}
+				
+				suppressOpen = false;
 			}
 			public void longPress(int x, int y) {
-				LBStates state = items.touchActionUp(x, y);
-				if(state == LBStates.Selected)
+				if(items.getCurrentSelectedEntry() != null)
 				{
-					Item itemGetInfo = (Item)(items.getSelectedEntry().obj);
-					if(items.getSelectedEntry().Disabled())
-					{
-						msgBox.addMessage(itemGetInfo.getDescription());
-						String usableBy = itemGetInfo.usableByString();
-						if (usableBy != null);
-						msgBox.addMessage(usableBy);						
-						msgBox.open();
-					}
+					Item itemGetInfo = (Item)(items.getCurrentSelectedEntry().obj);
+					msgBox.addMessage(itemGetInfo.getDescription());
+					msgBox.nextMessage();	
+					suppressOpen = true;
+
 				}
 			}
 			public void touchActionMove(int x, int y) {
@@ -213,6 +212,8 @@ public class MerchantScreen
 	private MerchantScreenState getSellingState()
 	{
 		return new MerchantScreenState(){
+			private boolean suppressOpen;
+			
 			public void onSwitchedTo(MerchantScreenState prevState) {
 				buildSellingList();
 				
@@ -229,6 +230,7 @@ public class MerchantScreen
 			public void update() {
 				rootMenu.update();
 				items.update();
+				msgBox.update();
 				if(!buySellPanel.Closed())
 					buySellPanel.update();
 			}
@@ -257,7 +259,7 @@ public class MerchantScreen
 					handleOption((String)rootMenu.getSelectedEntry().obj);
 				
 				state = items.touchActionUp(x, y);
-				if(state == LBStates.Selected)
+				if(state == LBStates.Selected && !suppressOpen)
 				{
 					msgBox.addMessage(merchant.sell);
 					msgBox.nextMessage();
@@ -265,21 +267,17 @@ public class MerchantScreen
 					
 					stateMachine.setState(getBuySellConfirmState());
 				}
+				suppressOpen = false;
 			}
 			public void longPress(int x, int y) {
-				LBStates state = items.touchActionUp(x, y);
-				if(state == LBStates.Selected)
+				if(items.getCurrentSelectedEntry() != null)
 				{
-					Item itemGetInfo = (Item)(items.getSelectedEntry().obj);
-					if(items.getSelectedEntry().Disabled())
-					{
-						msgBox.addMessage(itemGetInfo.getDescription());
-						String usableBy = itemGetInfo.usableByString();
-						if (usableBy != null);
-						msgBox.addMessage(usableBy);
-						msgBox.open();						
-					}
-				}
+					Item itemGetInfo = (Item)(items.getCurrentSelectedEntry().obj);
+					msgBox.addMessage(itemGetInfo.getDescription());
+					msgBox.nextMessage();	
+					suppressOpen = true;
+
+				}				
 			}			
 			public void touchActionMove(int x, int y) {
 				rootMenu.touchActionMove(x, y);
