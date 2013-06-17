@@ -448,7 +448,7 @@ public class Party
 		if(index < partyCount)
 		{
 			c.index = index;
-			partyMembers[index] = c;
+			partyMembers[index] = new PlayerCharacter(c);
 		}
 							
 	}
