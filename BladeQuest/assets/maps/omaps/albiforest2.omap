@@ -683,7 +683,6 @@ state$17x6$ > addAction (setBattleMusic ([x] "") ([x] playSong "victory" true tr
 state$17x6$ > addAction (startBattle "satyrboss" true) 
 state$17x6$ > addAction (disableBattleMusic 0) 
 state$17x6$ > addAction (switchControl "albisatyrfought" true) 
-state$17x6$ > addAction (restoreParty 0) 
 state$17x6$ > addAction (wait 1.0) 
 state$17x6$ > addAction (createPath "aramis2" false "r") 
 state$17x6$ > addAction (createPath "luc" true "l") 

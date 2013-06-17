@@ -250,6 +250,30 @@ public class Item
 		}
 	}
 	
+	public String usableByString()
+	{
+			List<String> charNames = new ArrayList<String>();
+			PlayerCharacter c;
+			for(String str : getUsableChars())
+			{
+				c = Global.party.getCharacter(str);
+				if(c != null)
+					charNames.add(c.getDisplayName());
+			}							
+			if(charNames.size() > 0)
+			{
+				String usableByString = "Usable by: \n";
+				for(int j = 0; j < charNames.size(); ++j)
+				{
+					usableByString += charNames.get(j);
+					if(j < charNames.size() - 1)
+						usableByString += ", ";
+				}
+				return usableByString;
+			}	
+			return null;
+	}
+	
 	public void modifyCount(int i)
 	{
 		count += i;

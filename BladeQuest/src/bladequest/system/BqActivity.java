@@ -164,6 +164,8 @@ implements OnGestureListener, AudioManager.OnAudioFocusChangeListener
     	case GS_BATTLE:
     		Global.battle.onLongPress(p.x, p.y);
     		break;
+    	case GS_MERCHANT:
+    		Global.merchantScreen.onLongPress(p.x, p.y);
 		default:
 			break;
     	}

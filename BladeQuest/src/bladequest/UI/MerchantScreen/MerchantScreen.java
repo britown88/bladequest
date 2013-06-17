@@ -185,6 +185,21 @@ public class MerchantScreen
 					}					
 				}
 			}
+			public void longPress(int x, int y) {
+				LBStates state = items.touchActionUp(x, y);
+				if(state == LBStates.Selected)
+				{
+					Item itemGetInfo = (Item)(items.getSelectedEntry().obj);
+					if(items.getSelectedEntry().Disabled())
+					{
+						msgBox.addMessage(itemGetInfo.getDescription());
+						String usableBy = itemGetInfo.usableByString();
+						if (usableBy != null);
+						msgBox.addMessage(usableBy);						
+						msgBox.open();
+					}
+				}
+			}
 			public void touchActionMove(int x, int y) {
 				rootMenu.touchActionMove(x, y);
 				items.touchActionMove(x, y);
@@ -251,6 +266,21 @@ public class MerchantScreen
 					stateMachine.setState(getBuySellConfirmState());
 				}
 			}
+			public void longPress(int x, int y) {
+				LBStates state = items.touchActionUp(x, y);
+				if(state == LBStates.Selected)
+				{
+					Item itemGetInfo = (Item)(items.getSelectedEntry().obj);
+					if(items.getSelectedEntry().Disabled())
+					{
+						msgBox.addMessage(itemGetInfo.getDescription());
+						String usableBy = itemGetInfo.usableByString();
+						if (usableBy != null);
+						msgBox.addMessage(usableBy);
+						msgBox.open();						
+					}
+				}
+			}			
 			public void touchActionMove(int x, int y) {
 				rootMenu.touchActionMove(x, y);
 				items.touchActionMove(x, y);
@@ -623,6 +653,10 @@ public class MerchantScreen
 		if(!closing)
 			stateMachine.getState().touchActionDown(x, y);		
 	}
-
+	public void onLongPress(int x, int y)
+	{
+		if(!closing)
+			stateMachine.getState().longPress(x, y);		
+	}
 
 }
