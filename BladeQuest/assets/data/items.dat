@@ -161,7 +161,7 @@ addDefaultWait >
 addDep (animBuildAction "heal") >
 addDep (damageAction -50.0 "Fixed"))
 
-\liferoot <- (addItem "liferoot" "Life Root" "Usable" "orb" "Revives a fallen party member." >
+\liferoot <- (addItem "liferoot" "Life Root" "UsableBattleOnly" "orb" "Revives a fallen party member." >
 setValue 1200 >
 setTargetType "SingleDeadAlly" >
 addDefaultWait >
