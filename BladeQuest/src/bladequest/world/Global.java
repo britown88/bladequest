@@ -1610,6 +1610,7 @@ public class Global
 		loading = false;	
 		
 		GameDataLoader.loadNewGame(activity);
+		party.setAllowMovement(true);
 		
 //		party.removeCharacter("aramis");
 //		party.addCharacter("luc");

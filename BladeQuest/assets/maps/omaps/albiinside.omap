@@ -5,6 +5,7 @@
 
 
 
+
 #!OBJ 22 3
 \objName$22x3$ <- "name"
 \name$22x3$ <- newObject objName$22x3$ 22 3
@@ -422,7 +423,7 @@ setSprite "woman1" >
 addAction (message "|luc|'s Mom: \nFinally, you're awake! \nIt's so late in the day!") >
 addAction (message "Agnes is out of the Goldenbush she uses in her potions.") >
 addAction (message "I need you to go into the forest today and fetch some more.") >
-addAction (message "|luc|: \nWhy doesn't she just order them from the Item Shop?\n") >
+addAction (message "|luc|: \nWhy doesn't she just order them from the Item Shop?") >
 addAction (message "|luc|'s Mom: \nBecause we have you, dear.") >
 addAction (openBubble "sweat" "party" 1.0 false true) >
 addAction (message "|luc|: \nOk, I'll see what I can find...") >

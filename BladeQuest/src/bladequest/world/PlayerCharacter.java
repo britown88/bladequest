@@ -153,6 +153,7 @@ public class PlayerCharacter
 		
 		imageIndex = c.imageIndex;
 		weapon = c.weapon;
+		shield = c.shield;
 		torso = c.torso;
 		accessory = c.accessory;
 		helmet = c.helmet;
