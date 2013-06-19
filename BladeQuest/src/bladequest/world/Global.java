@@ -131,6 +131,8 @@ public class Global
 	public static Map<String, WeaponSwing> weaponSwingModels;
 	private static List<BattleAnim> playingAnims;
 	
+	public static PropertyMap properties;
+	
 	public static SoundPool soundPool;
 	public static PlayTimer playTimer;
 	
@@ -1078,7 +1080,7 @@ public class Global
         {
         	appRunning = true;
         	
-        	
+        	properties = new WorkingPropertyMap();
         	
         	saveLoader = new GameSaveLoader();
         	
@@ -1632,6 +1634,7 @@ public class Global
 		{
 			map.clearObjectAction();
 			map.unloadTiles();
+			map.unloadFog();
 		}
 		
 		playingReactions.clear();

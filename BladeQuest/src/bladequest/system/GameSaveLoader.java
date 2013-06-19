@@ -2,6 +2,7 @@ package bladequest.system;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +25,7 @@ import bladequest.world.Merchant;
 import bladequest.world.Party;
 import bladequest.world.PlayTimer;
 import bladequest.world.PlayerCharacter;
+import bladequest.world.PropertyMap;
 import bladequest.world.Stats;
 
 public class GameSaveLoader 
@@ -274,7 +276,6 @@ public class GameSaveLoader
 			for(Map.Entry<String, Integer> entry : lql.getValue().entrySet())
 				Global.merchants.get(lql.getKey()).setLimitedQtyItem(entry.getKey(), entry.getValue(), false);
 	
-		int i = 0;
 		for(PlayerCharacter c : save.characters)
 			if(c != null)
 			Global.party.insertCharacter(c, c.Index());	
@@ -289,7 +290,49 @@ public class GameSaveLoader
 		}
 		
 		Global.loading = true;
+	}
+	public static final byte[] intToByteArray(int value) {
+	    return new byte[] {
+	            (byte)(value >> 24),
+	            (byte)(value >> 16),
+	            (byte)(value >> 8),
+	            (byte)value};
+	}
+	public void writePropertyNode(FileOutputStream out, PropertyMap propMap)
+	{
+		try {
+		//write name
+		String key = propMap.key();
+		out.write(intToByteArray(key.length()));
+		out.write(key.getBytes());
 		
+		//next data  - length, then binary bytes.
+		byte[] data = propMap.getRaw();
+		if (data != null)
+		{
+			
+			out.write(intToByteArray(data.length));
+			//writing binary into ascii is a BAD TIME.
+			out.write(data);
+		}
+		else
+		{
+			out.write(intToByteArray(0));
+		}
+		
+		//next, write each child in a depth-first manner.
+		PropertyMap iterator = propMap.getFirstChild();
+		while (iterator != null)
+		{
+			writePropertyNode(out, propMap);
+			iterator = iterator.getNext();
+		}
+		out.write(intToByteArray(0)); // a zero length name means stop.
+		
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 	}
 	
 	public void writeSaves(BqActivity activity)
@@ -306,78 +349,78 @@ public class GameSaveLoader
 			Global.closeGame();
 		}
 		
-		String str = "";
+		StringBuilder str = new StringBuilder();
 		
 		for(GameSave gs : saves)
 		{
-			str += "save\n";
-			str += "map " + gs.mapName + " \"" + gs.mapDisplayName + "\" " + gs.mapPos.x + " " + gs.mapPos.y + "\n";
-			str += "playtime " + gs.playTime + "\n";
-			str += "gold " + gs.gold + "\n";
+			str.append("save\n");
+			str.append("map " + gs.mapName + " \"" + gs.mapDisplayName + "\" " + gs.mapPos.x + " " + gs.mapPos.y + "\n");
+			str.append("playtime " + gs.playTime + "\n");
+			str.append("gold " + gs.gold + "\n");
 			//options
-			str += "stretch " + gs.stretchScreen + "\n";
-			str += "txtspeed " + gs.textSpeed + "\n";
-			str += "fc1 " + gs.fc1r + " " + gs.fc1g + " " + gs.fc1b + "\n";
-			str += "fc2 " + gs.fc2r + " " + gs.fc2g + " " + gs.fc2b + "\n";
+			str.append("stretch " + gs.stretchScreen + "\n");
+			str.append("txtspeed " + gs.textSpeed + "\n");
+			str.append("fc1 " + gs.fc1r + " " + gs.fc1g + " " + gs.fc1b + "\n");
+			str.append("fc2 " + gs.fc2r + " " + gs.fc2g + " " + gs.fc2b + "\n");
 			
 			//defaultnames
 			for(Map.Entry<String, String> name : gs.defaultNames.entrySet())
-				str += "defname " + name.getKey() + " \"" + name.getValue() + "\"\n";
+				str.append("defname " + name.getKey() + " \"" + name.getValue() + "\"\n");
 			
 			//merchant limited quantity items
 			for(Map.Entry<String, Map<String, Integer>> lql : gs.merchantLimitedQtyItems.entrySet())
 				for(Map.Entry<String, Integer> entry : lql.getValue().entrySet())
-					str += "mlqi " + lql.getKey() + " " + entry.getKey() + " " + entry.getValue() + "\"\n";
+					str.append("mlqi " + lql.getKey() + " " + entry.getKey() + " " + entry.getValue() + "\"\n");
 		
 			
 			if(gs.playingSong != null)
-				str += "playingsong " + gs.playingSong + "\n";
+				str.append("playingsong " + gs.playingSong + "\n");
 
 			//switches
 			for(Map.Entry<String, Boolean> entry : gs.switches.entrySet())
-				str += "switch " + entry.getKey() + " " + entry.getValue() + "\n";
+				str.append("switch " + entry.getKey() + " " + entry.getValue() + "\n");
 			
 			//items
 			for(Item i : gs.items)
-				str += "item " + i.idName + " " + i.getCount() + "\n";
+				str.append("item " + i.idName + " " + i.getCount() + "\n");
 			
 			//characters
 			for(PlayerCharacter c : gs.characters)
 			{
 				if(c != null)
 				{
-					str += "character " + c.getName() + " \"" + c.getDisplayName() + "\" " + c.Index() + "\n";
-					str += "inparty " + c.isInParty + "\n";
-					str += "portrait " + c.portrait.x + " " + c.portrait.y + "\n";
-					str += "sprites " + c.getWorldSprite().name + " " + c.getBattleSprite().name + "\n";
-					str += "level " + c.getLevel() + "\n";
-					str += "exp " + c.getExp() + "\n";
+					str.append("character " + c.getName() + " \"" + c.getDisplayName() + "\" " + c.Index() + "\n");
+					str.append("inparty " + c.isInParty + "\n");
+					str.append("portrait " + c.portrait.x + " " + c.portrait.y + "\n");
+					str.append("sprites " + c.getWorldSprite().name + " " + c.getBattleSprite().name + "\n");
+					str.append("level " + c.getLevel() + "\n");
+					str.append("exp " + c.getExp() + "\n");
 					
-					str += "hpmp " + c.getHP() + " "  + c.getMP() + "\n";
+					str.append("hpmp " + c.getHP() + " "  + c.getMP() + "\n");
 					
 					for(StatusEffect se : c.getStatusEffects())
-						str += se.saveLine() + "\n";
+						str.append(se.saveLine() + "\n");
 					
 					for(Item i : c.getEquippedItems())
-						str += "equip " + i.idName + "\n";
+						str.append("equip " + i.idName + "\n");
 					
 					for(Ability ab : c.getAbilities())
-						str += "ability " + ab.name + "\n";
+						str.append("ability " + ab.name + "\n");
 					
-					str += "statmods";
+					str.append("statmods");
 					for(int i = 0; i < Stats.NUM_STATS.ordinal(); ++i)
-						str += " " + c.getStatMod(i);
+						str.append(" " + c.getStatMod(i));
 					
-					str += "\nendcharacter\n";	
+					str.append("\nendcharacter\n");	
 				}
 						
 			}		
-			str += "serializestring" + gs.serializedString.toString() + "\n";
-			str += "endsave\n";			
+			str.append("serializestring" + gs.serializedString.toString() + "\n");			
+			str.append("endsave\n");			
 		}
 		
 		try {
-			fos.write(str.getBytes());
+			fos.write(str.toString().getBytes());
 			fos.close();
 		} catch (Exception e) {
 			Log.d(TAG, "Failed to write file!");
