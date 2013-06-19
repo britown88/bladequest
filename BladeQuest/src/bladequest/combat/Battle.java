@@ -1162,6 +1162,7 @@ public class Battle
 	public void forceNextAbilityEvent(PlayerCharacter source, List<PlayerCharacter> targets, Ability ability)
 	{
 		battleEvents.add(1,new BattleEvent(Action.Ability,ability, source, targets, markers));
+		battleEvents.get(1).init();
 		battleEvents.get(1).setSpecial();
 		battleEvents.get(1).dontRunStatusEffects();
 	}

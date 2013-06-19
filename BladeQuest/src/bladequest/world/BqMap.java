@@ -39,6 +39,9 @@ import bladequest.system.FileReader;
 
 public class BqMap 
 {
+	private int[] fogged;
+	
+	
 	private String name, tilesetName, displayName, defaultBGM;
 	public Bitmap tileset;
 	
