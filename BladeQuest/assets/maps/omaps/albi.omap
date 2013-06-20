@@ -23,6 +23,8 @@
 
 
 
+
+
 #!OBJ 4 14
 \objName$4x14$ <- "name"
 \name$4x14$ <- newObject objName$4x14$ 4 14
@@ -200,6 +202,7 @@ addAction (createPath "kidlooking2" true "dW") >
 addAction (openBubble "exclam" "kidlooking2" 1.0 false true) >
 addAction (message "Tommy: \nOh, hi |luc|!") >
 addAction (message "We're looking for Henry, he said if we find him he'll tell us a secret!") >
+addAction (message "He's hiding somewhere here in the village!") >
 addAction (createPath "kidlooking2" false "l")
 
 
@@ -279,6 +282,7 @@ setSpriteFromTile 6 4 >
 addItemCondition "goldenbush" >
 addAction (message "It's getting late.") >
 addAction (messageWithYesNo "Ready to call it a night?" >
+	addToBranch 0 (restoreParty 0) >
 	addToBranch 0 (modifyInventory "goldenbush" 1 true) >
 	addToBranch 0 (pauseMusic 2.0) >
 	addToBranch 0 (fadeControl 2.0 255 0 0 0 true true) >

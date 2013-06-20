@@ -6,6 +6,8 @@
 
 
 
+
+
 #!OBJ 22 3
 \objName$22x3$ <- "name"
 \name$22x3$ <- newObject objName$22x3$ 22 3
@@ -229,11 +231,14 @@ addAction (messageWithYesNo "Bed for the night is 10G, yould you like to stay?" 
 		addToBranch 0 (message "Have a nice night!") >
 		addToBranch 0 (fadeControl 1.0 255 0 0 0 true true) >
 		addToBranch 0 (restoreParty 0) >
-		addToBranch 0 (teleportParty name$43x24$ 48 17 "albiinside") >
+		addToBranch 0 (openBubble "sleep" "party" -1 true false) >
+		addToBranch 0 (teleportParty name$43x24$ 47 17 "albiinside") >
 		addToBranch 0 (pushSong 0) >
 		addToBranch 0 (playMusic "sleep" false false 0.0) >
 		addToBranch 0 (popSong 0) >
 		addToBranch 0 (fadeControl 1.0 255 0 0 0 false true) >
+		addToBranch 0 (closeBubble "party") >
+		addToBranch 0 (createPath "party" true "Rd") >
 		addToBranch 1 (message "Oh no, you dont have enough!")) >
 	addToBranch 1 (message "Ok, see you around!"))
 
@@ -244,7 +249,22 @@ name$43x24$ > createState >
 addSwitchCondition "albinight" >
 setCollisionData true true true true >
 addAction (message "Innkeeper Sarah: \nWhat's going on out there, |luc|??") >
-addAction (message "|luc|: \nI'm not sure. Just stay inside.")
+addAction (message "|luc|: \nI'm not sure. Just stay inside.") >
+addAction (messageWithYesNo "Innkeeper Sarah: \nWant to rest a bit? Bed is 10G." >
+	addToBranch 0 (startGoldTransaction 10 >
+		addToBranch 0 (message "Sleep well!") >
+		addToBranch 0 (fadeControl 1.0 255 0 0 0 true true) >
+		addToBranch 0 (restoreParty 0) >
+		addToBranch 0 (openBubble "sleep" "party" -1 true false) >
+		addToBranch 0 (teleportParty name$43x24$ 47 17 "albiinside") >
+		addToBranch 0 (pushSong 0) >
+		addToBranch 0 (playMusic "sleep" false false 0.0) >
+		addToBranch 0 (popSong 0) >
+		addToBranch 0 (fadeControl 1.0 255 0 0 0 false true) >
+		addToBranch 0 (closeBubble "party") >
+		addToBranch 0 (createPath "party" true "Rd") >
+		addToBranch 1 (message "Oh no, you dont have enough!")) >
+	addToBranch 1 (message "Ok, be careful out there!"))
 
 \runstate2$43x24$ <- state2$43x24$ 0
 
@@ -309,7 +329,7 @@ name$42x6$ > createState >
 setCollisionData true true true true >
 setSprite "man3" >
 setFace "up" >
-addAction (message "Oliver: \nThe price of potions has gotten ridiculous \nlately!")
+addAction (message "Oliver: \nYou can long-tap items in the shop to get more info!")
 
 
 \runstate1$42x6$ <- state1$42x6$ 0
@@ -627,3 +647,14 @@ addAction (openMerchant "albiitemshop" 0.0)
 
 
 \runstate1$43x5$ <- state1$43x5$ 0
+#!OBJ 20 17
+\objName$20x17$ <- "name"
+\name$20x17$ <- newObject objName$20x17$ 20 17
+
+state3$20x17$ 0
+name$20x17$ > createState >
+addAction (fadeControl 1.0 255 0 0 0 true true) >
+addAction (restoreParty 0) >
+addAction (fadeControl 1.0 255 0 0 0 false true)
+
+\runstate3$20x17$ <- state3$20x17$ 0

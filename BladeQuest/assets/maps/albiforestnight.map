@@ -3167,13 +3167,13 @@ t 28 49 0 51 4 0 0 0 0
 [encounters]
 zone 0 11 11 37 1
 encounter twobats
-encounter batandspud
 encounter bunnyandspud
+encounter batandspud
 endzone
 zone 11 29 17 19 1
-encounter twobats
-encounter batandspud
 encounter bunnyandspud
+encounter batandspud
+encounter twobats
 endzone
 zone 11 2 16 27 1
 encounter twobats

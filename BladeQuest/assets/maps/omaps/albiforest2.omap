@@ -55,6 +55,7 @@ createCliffJumpBarrier x (y > add 1)
 
 
 
+
 #!OBJ 17 15
 \objName$17x15$ <- "name"
 \name$17x15$ <- newObject objName$17x15$ 17 15
@@ -82,14 +83,6 @@ addAction (fadeControl 0.5 255 0 0 0 false true)
 
 \runstate1$3x0$ <- state1$3x0$ 0
 
-state2$3x0$ 0
-name$3x0$ > createState >
-addSwitchCondition "albiaramisjoined" >
-addAction (message "|aramis|: \nAre you even paying attention there, kid?") >
-addAction (message "Footsteps led the other way!") >
-addAction (createPath "party" true "D")
-
-\runstate2$3x0$ <- state2$3x0$ 0
 
 state3$3x0$ 0
 \state$3x0$ <- (name$3x0$ > createState)
@@ -557,33 +550,6 @@ addSwitchCondition "albiaramisjoined"
 \runstate2$4x5$ <- state2$4x5$ 0
 
 
-#!OBJ 16 14
-\objName$16x14$ <- "name"
-\name$16x14$ <- newObject objName$16x14$ 16 14
-
-state1$16x14$ 0
-name$16x14$ > createState >
-addAction (switchControl "albiaramis1" true)
-
-\runstate1$16x14$ <- state1$16x14$ 0
-
-state2$16x14$ 0
-name$16x14$ > createState >
-addSwitchCondition "albiaramis1" >
-addAction (message "|aramis|: \nAre you even paying attention there, kid?") >
-addAction (message "Footsteps led the other way!") >
-addAction (createPath "party" true "D")
-
-
-\runstate2$16x14$ <- state2$16x14$ 0
-
-state3$16x14$ 0
-name$16x14$ > createState >
-addSwitchCondition "albijoyscenedone"
-
-
-\runstate3$16x14$ <- state3$16x14$ 0
-
 #!OBJ 8 2
 \objName$8x2$ <- "joy"
 \name$8x2$ <- newObject objName$8x2$ 8 2
@@ -638,6 +604,7 @@ addSwitchCondition "albisatyrfought"
 state1$17x6$ 0
 \state$17x6$ <- (name$17x6$ > createState)
 state$17x6$ > setIgnorePartyOnMove true
+state$17x6$ > addAction (switchControl "albiaramis1" true) 
 state$17x6$ > addAction (message "Woman's Voice: \nAAAAAAAH!!! HEEEEELP!!!") 
 state$17x6$ > addAction (playMusic "boss" true true 0.0) 
 state$17x6$ > addAction (switchControl "albiaramis2" true) 
