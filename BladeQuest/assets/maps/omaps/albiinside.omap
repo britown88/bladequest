@@ -8,6 +8,7 @@
 
 
 
+
 #!OBJ 22 3
 \objName$22x3$ <- "name"
 \name$22x3$ <- newObject objName$22x3$ 22 3
@@ -231,7 +232,7 @@ addAction (messageWithYesNo "Bed for the night is 10G, yould you like to stay?" 
 		addToBranch 0 (message "Have a nice night!") >
 		addToBranch 0 (fadeControl 1.0 255 0 0 0 true true) >
 		addToBranch 0 (restoreParty 0) >
-		addToBranch 0 (openBubble "sleep" "party" -1 true false) >
+		addToBranch 0 (openBubble "sleep" "party" -1.0 true false) >
 		addToBranch 0 (teleportParty name$43x24$ 47 17 "albiinside") >
 		addToBranch 0 (pushSong 0) >
 		addToBranch 0 (playMusic "sleep" false false 0.0) >
@@ -255,7 +256,7 @@ addAction (messageWithYesNo "Innkeeper Sarah: \nWant to rest a bit? Bed is 10G."
 		addToBranch 0 (message "Sleep well!") >
 		addToBranch 0 (fadeControl 1.0 255 0 0 0 true true) >
 		addToBranch 0 (restoreParty 0) >
-		addToBranch 0 (openBubble "sleep" "party" -1 true false) >
+		addToBranch 0 (openBubble "sleep" "party" -1.0 true false) >
 		addToBranch 0 (teleportParty name$43x24$ 47 17 "albiinside") >
 		addToBranch 0 (pushSong 0) >
 		addToBranch 0 (playMusic "sleep" false false 0.0) >
