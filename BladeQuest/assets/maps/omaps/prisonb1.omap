@@ -4,18 +4,34 @@ state >
 addAction (switchControl "turning" false) >
 addAction (openBubble "exclam" name 1.0 false false) >
 addAction (message "Stop right there!") >
-addAction (startBattle encounter false >
-	addToBranch 0 (message "Yeah okay you beat me but you still have to go back to your cell!") >
-	addToBranch 1 (message "Back to your cell with you!"))>
-addAction (restoreParty 0) >
-addAction (switchControl "pdoor4" false) >
-addAction (switchControl "pdoor3" false) >
-addAction (switchControl "guardasleep" false) >
-addAction (modifyInventory "prisonkey" 1 true) >
-addAction (fadeControl 1.0 255 0 0 0 true true) >
-addAction (teleportParty obj 15 5 "prisonb2") >
-addAction (fadeControl 1.0 255 0 0 0 false true) >
-addAction (switchControl "turning" true) 
+addAction (\batle <- (startBattle encounter false))
+batle > addToBranch 0 (message "Yeah okay you beat me but you still have to go back to your cell!")
+batle > addToBranch 0 (restoreParty 0)
+batle > addToBranch 0 (switchControl "pdoor4" false)
+batle > addToBranch 0 (switchControl "pdoor3" false)
+batle > addToBranch 0 (switchControl "guardasleep" false)
+batle > addToBranch 0 (modifyInventory "prisonkey" 1 true)
+batle > addToBranch 0 (fadeControl 1.0 255 0 0 0 true true)
+batle > addToBranch 0 (teleportParty obj 15 5 "prisonb2")
+batle > addToBranch 0 (fadeControl 1.0 255 0 0 0 false true)
+batle > addToBranch 0 (switchControl "turning" true) 
+batle > addToBranch 1 (message "Back to your cell with you!")
+batle > addToBranch 1 (restoreParty 0)
+batle > addToBranch 1 (switchControl "pdoor4" false)
+batle > addToBranch 1 (switchControl "pdoor3" false)
+batle > addToBranch 1 (switchControl "guardasleep" false)
+batle > addToBranch 1 (modifyInventory "prisonkey" 1 true)
+batle > addToBranch 1 (fadeControl 1.0 255 0 0 0 true true)
+batle > addToBranch 1 (teleportParty obj 15 5 "prisonb2")
+batle > addToBranch 1 (fadeControl 1.0 255 0 0 0 false true)
+batle > addToBranch 1 (switchControl "turning" true) 
+batle > addToBranch 1 (message "|aramis|: \nThose guards are bad news. I bet I could run from them next time.")
+batle > addToBranch 2 (fadeControl 1.0 255 0 0 0 true true)
+batle > addToBranch 2 (teleportParty obj 20 5 "prisonb2")
+batle > addToBranch 2 (fadeControl 1.0 255 0 0 0 false true)
+batle > addToBranch 2 (message "|aramis|: \nEesh that was close! Gotta try harder to get by without them seeing!")
+batle > addToBranch 2 (switchControl "turning" true) 
+state
 
 buildLoSState1 obj name
 obj > createState >
@@ -64,6 +80,8 @@ defaultguard obj name face1 face2
 defGuardState obj name face1
 defGuardState obj name face2 >
 addSwitchCondition "guardsturned"
+
+
 
 
 
