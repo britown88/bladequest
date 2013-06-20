@@ -4,6 +4,7 @@ import java.util.List;
 
 import bladequest.combat.DamageMarker;
 import bladequest.statuseffects.StatusEffect;
+import bladequest.world.EncounterZone;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
 
@@ -60,7 +61,15 @@ public class bactLureEnemies extends BattleAction {
 						}
 						Global.party.clearMovementPath();
 						Global.showMessage("The lure bell stopped ringing...", false);
+						
 					}
+					if (Global.map != null && Global.map.isLoaded())
+					{
+						for(EncounterZone zone : Global.map.encounterZones)
+						{
+							zone.reset();
+						}	
+					}				
 				}
 			});
 			return;
