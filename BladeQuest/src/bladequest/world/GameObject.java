@@ -177,6 +177,11 @@ public class GameObject {
 		updateState();
 		return states.get(currentState).AutoStarts();
 	}
+	public void tryUse(Point pathingStartPoint,Point gridPos)
+	{
+		updateState();
+		states.get(currentState).onPartyActivate(pathingStartPoint, gridPos);
+	}
 	
 	public void clearActions()
 	{

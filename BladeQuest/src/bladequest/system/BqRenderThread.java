@@ -1,10 +1,10 @@
 package bladequest.system;
 
 
-import bladequest.world.Global;
-
-import android.graphics.*;
+import android.graphics.Canvas;
+import android.util.Log;
 import android.view.SurfaceHolder;
+import bladequest.world.Global;
 
 public class BqRenderThread extends Thread 
 {	
@@ -21,10 +21,25 @@ public class BqRenderThread extends Thread
 	public void setRunning(boolean running) {
 		this.running = running;
 	}
+	public void setHolder(SurfaceHolder surfaceHolder)
+	{
+		if (this.surfaceHolder != null)
+		{
+			synchronized (this.surfaceHolder) 
+			{			
+				this.surfaceHolder = surfaceHolder;
+			}	
+		}
+		else
+		{
+			this.surfaceHolder = surfaceHolder;
+		}
+	}
 
 	public BqRenderThread(SurfaceHolder surfaceHolder) {
 		super();
 		this.surfaceHolder = surfaceHolder;
+		running = false;
 	}
 	
 
@@ -38,27 +53,34 @@ public class BqRenderThread extends Thread
 		int sleepTime;
 
 				
-		while (running) 
+		for(;;) 
 		{
-			canvas = null;
 			startTime = System.currentTimeMillis();
-			
-			try 
-			{				
-				canvas = this.surfaceHolder.lockCanvas();
-
-				//canvas.setBitmap(bmp);
-				synchronized (surfaceHolder) 
-				{					
-			    	
-			    	Global.renderer.render(canvas);  //locked internally now.							
-				}
-			} 
-			finally 
+			if (running && surfaceHolder != null)
 			{
-				if (canvas != null)
-					surfaceHolder.unlockCanvasAndPost(canvas);
+				canvas = null;
+				synchronized (surfaceHolder) 
+				{									
+					try 
+					{		
+						canvas = this.surfaceHolder.lockCanvas();
+		
+						if (canvas != null)
+						{
+							Global.renderer.render(canvas);  //locked internally now.								
+						}
+	
+					} 
+					finally 
+					{
+						if (canvas != null)
+						{
+							surfaceHolder.unlockCanvasAndPost(canvas);
+						}
+					}
+				}
 			}
+
 
 			frameTime = System.currentTimeMillis() - startTime;
 			sleepTime = (int)(Global.FRAME_PERIOD - frameTime);					

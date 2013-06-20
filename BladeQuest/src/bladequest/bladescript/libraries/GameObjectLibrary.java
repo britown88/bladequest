@@ -1,6 +1,7 @@
 package bladequest.bladescript.libraries;
 
 import android.graphics.Point;
+import android.util.Log;
 import bladequest.actions.Action;
 import bladequest.actions.actAllowSaving;
 import bladequest.actions.actAnimation;
@@ -45,13 +46,16 @@ import bladequest.actions.actTeleportParty;
 import bladequest.actions.actUnloadScene;
 import bladequest.actions.actWait;
 import bladequest.bladescript.LibraryWriter;
+import bladequest.bladescript.ParserException;
 import bladequest.bladescript.ScriptVar;
+import bladequest.bladescript.ScriptVar.BadTypeException;
 import bladequest.graphics.AnimationBuilder;
 import bladequest.world.GameObject;
 import bladequest.world.Global;
 import bladequest.world.Layer;
 import bladequest.world.ObjectPath;
 import bladequest.world.ObjectState;
+import bladequest.world.ObjectState.ActivationHandler;
 
 public class GameObjectLibrary 
 {
@@ -161,6 +165,32 @@ public class GameObjectLibrary
 		ObjectState state = new ObjectState(obj);
 		obj.addState(state);
 		return state;
+	}
+	public static ObjectState setActivationHandler(ObjectState obj, ScriptVar fn)
+	{
+		ObjectState.ActivationHandler handler = new ObjectState.ActivationHandler()
+		{
+			ScriptVar fn;
+			ObjectState.ActivationHandler initialize(ScriptVar fn)	
+			{
+				this.fn = fn;
+				return this;
+			}
+
+			@Override
+			public boolean canActivate(Point startPoint, Point partyPos) {
+				try {
+					return fn.apply(ScriptVar.toScriptVar(startPoint)).apply(ScriptVar.toScriptVar(partyPos)).getBoolean();
+				} catch (ParserException e) {
+					e.printStackTrace();
+					Log.d("Parser", e.what());
+				}
+				return false;
+			}
+		}.initialize(fn);
+		
+		obj.setActivationHandler(handler);
+		return obj;
 	}
 	
 	public static Action addToBranch(Action action, int index, Action actToAdd)

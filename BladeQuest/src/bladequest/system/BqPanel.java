@@ -35,11 +35,27 @@ implements SurfaceHolder.Callback
 	{
 		super(activity);
 		//register for callbacks
-		getHolder().addCallback(this);	
-		renderThread = new BqRenderThread(getHolder());	
-		updateThread = new BqThread(this);
+		//SurfaceHolder holder = getHolder();
+		getHolder().addCallback(this);
+		
+		Log.d(TAG, "panel boot...");
+		if (renderThread == null)
+		{
+			renderThread = new BqRenderThread(null);	
+			renderThread.start();  //"running" isn't set until the surface is created.
+		}
+		
+		if (updateThread == null)
+		{
+			updateThread = new BqThread(this);	
+			updateThread.start();  //"running" isn't set until the surface is created.
+		};
+
 		plateLoader = new PlateLoadThread();
+		
 		plateLoader.start();
+
+		
 		setFocusable(true);	
 		blackpaint = new Paint();
 		blackpaint.setColor(Color.BLACK);
@@ -61,21 +77,26 @@ implements SurfaceHolder.Callback
     	
     	scaleImage();
     	
-    	if (renderThread.getState() == Thread.State.TERMINATED)
+    	if (renderThread == null || renderThread.getState() == Thread.State.TERMINATED)
     	{
     		Log.d(TAG, "Thread terminated, creating new...");
-    		renderThread = new BqRenderThread(getHolder());
+    		renderThread = new BqRenderThread(holder);
+    		renderThread.start();
+    	}
+    	else
+    	{
+        	renderThread.setHolder(holder);    		
     	}
     	renderThread.setRunning(true);
-    	renderThread.start(); 
+
     	
-    	if (updateThread.getState() == Thread.State.TERMINATED)
+    	if (updateThread == null || updateThread.getState() == Thread.State.TERMINATED)
     	{
     		Log.d(TAG, "Thread terminated, creating new...");
     		updateThread = new BqThread(this);
+        	updateThread.start();    		
     	}    	
     	updateThread.setRunning(true);
-    	updateThread.start();
     	   	
     }
     
@@ -105,7 +126,10 @@ implements SurfaceHolder.Callback
     
     public void resume(){
     	renderThread.setRunning(true);
-    	updateThread.setRunning(true);
+    	if (updateThread != null)
+    	{
+        	updateThread.setRunning(true);	
+    	}
     	Global.bladeSong.systemResume();
     }
     
@@ -113,8 +137,10 @@ implements SurfaceHolder.Callback
     {
     	Global.bladeSong.systemPause();
     	renderThread.setRunning(false);
-    	updateThread.setRunning(false);
-    	
+    	if (updateThread != null)
+    	{    	
+    		updateThread.setRunning(false);
+    	}
     }
     
     public void destroyContext()
@@ -126,6 +152,7 @@ implements SurfaceHolder.Callback
     		//try
     		//{
     			renderThread.setRunning(false);
+    			renderThread.setHolder(null);
     			//renderThread.join();
     			updateThread.setRunning(false);
     			//updateThread.join();

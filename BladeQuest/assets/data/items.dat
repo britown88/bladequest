@@ -208,6 +208,13 @@ addDefaultWait >
 addDep (fullRestore 0))
 
 
+\lurebell <- (addItem "lurebell" "Lure Bell" "UsableWorldOnly" "orb" "Lures enemies towards you with an irresistable sound.  Runs out after 50 steps." >
+setShortDescription "Causes more random battles." >
+setValue 500 >
+setTargetType "Single" >
+addDefaultWait >
+addDep (lureAction 50))
+
 \tent <- (addItem "tent" "Tent" "UsableSavePointOnly" "orb" "Use at a save point to fully restore all party members." >
 setShortDescription "Restore all party members." >
 setValue 500 >

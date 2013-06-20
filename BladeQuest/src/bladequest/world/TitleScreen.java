@@ -256,7 +256,10 @@ public class TitleScreen
 			
 			break;
 		case LoadMenu:
+			Global.screenFilter.save();
+			Global.screenFilter.clear();
 			Global.saveLoadMenu.render();
+			Global.screenFilter.restore();
 			break;
 		default:
 			break;

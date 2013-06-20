@@ -21,6 +21,7 @@ import bladequest.battleactions.bactFullRestore;
 import bladequest.battleactions.bactInflictStatus;
 import bladequest.battleactions.bactJumpHome;
 import bladequest.battleactions.bactJumpToAndFace;
+import bladequest.battleactions.bactLureEnemies;
 import bladequest.battleactions.bactMessage;
 import bladequest.battleactions.bactMirror;
 import bladequest.battleactions.bactRemoveStatus;
@@ -404,6 +405,11 @@ public class BattleLibrary {
 		return new bactBasicAttack(power, DamageTypes.valueOf(damageType), speedFactor, function);
 	}
 		
+	
+	public static BattleAction lureAction(int stepCount)
+	{
+		return new bactLureEnemies(stepCount);
+	}
 	
 	public static BattleAction mirrorAction(boolean mirrored)
 	{

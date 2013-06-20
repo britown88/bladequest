@@ -1,35 +1,15 @@
 #!HEAD
 
 
+shopkeeperActivation state pt
+state > setActivationHandler ([startPt endPt] 
+(|distance startPt pt
+|greater 2.0 : false
+|([x] true) : true
+))
 
 
 
-
-
-
-
-#!OBJ 22 3
-\objName$22x3$ <- "name"
-\name$22x3$ <- newObject objName$22x3$ 22 3
-
-state1$22x3$ 0
-name$22x3$ > createState >
-setCollisionData true true true true >
-setSprite "shopkeeper"
-
-
-\runstate1$22x3$ <- state1$22x3$ 0
-#!OBJ 28 3
-\objName$28x3$ <- "name"
-\name$28x3$ <- newObject objName$28x3$ 28 3
-
-state1$28x3$ 0
-name$28x3$ > createState >
-setCollisionData true true true true >
-setSprite "shopkeeper"
-
-
-\runstate1$28x3$ <- state1$28x3$ 0
 #!OBJ 6 9
 \objName$6x9$ <- "name"
 \name$6x9$ <- newObject objName$6x9$ 6 9
@@ -217,22 +197,24 @@ addAction (fadeControl 0.5 255 0 0 0 false true)
 \runstate2$43x27$ <- state2$43x27$ 0
 
 
-#!OBJ 43 24
-\objName$43x24$ <- "name"
-\name$43x24$ <- newObject objName$43x24$ 43 24
+#!OBJ 43 23
+\objName$43x23$ <- "name"
+\name$43x23$ <- newObject objName$43x23$ 43 23
 
-state1$43x24$ 0
-name$43x24$ > createState >
+state1$43x23$ 0
+name$43x23$ > createState >
 setCollisionData true true true true >
+shopkeeperActivation (point 43 23) >
+setSprite "woman3" >
 addAction (message "Innkeeper Sarah: \nOh hi there, |luc|!") >
 addAction (message "Looking for a night away from home? \n*teehee*") >
-addAction (messageWithYesNo "Bed for the night is 10G, yould you like to stay?" >
+addAction (messageWithYesNo "Bed for the night is 10G, would you like to stay?" >
 	addToBranch 0 (startGoldTransaction 10 >
 		addToBranch 0 (message "Have a nice night!") >
 		addToBranch 0 (fadeControl 1.0 255 0 0 0 true true) >
 		addToBranch 0 (restoreParty 0) >
-		addToBranch 0 (openBubble "sleep" "party" -1 true false) >
-		addToBranch 0 (teleportParty name$43x24$ 47 17 "albiinside") >
+		addToBranch 0 (openBubble "sleep" "party" -1.0 true false) >
+		addToBranch 0 (teleportParty name$43x23$ 47 17 "albiinside") >
 		addToBranch 0 (pushSong 0) >
 		addToBranch 0 (playMusic "sleep" false false 0.0) >
 		addToBranch 0 (popSong 0) >
@@ -242,12 +224,14 @@ addAction (messageWithYesNo "Bed for the night is 10G, yould you like to stay?" 
 		addToBranch 1 (message "Oh no, you dont have enough!")) >
 	addToBranch 1 (message "Ok, see you around!"))
 
-\runstate1$43x24$ <- state1$43x24$ 0
+\runstate1$43x23$ <- state1$43x23$ 0
 
-state2$43x24$ 0
-name$43x24$ > createState >
+state2$43x23$ 0
+name$43x23$ > createState >
 addSwitchCondition "albinight" >
 setCollisionData true true true true >
+shopkeeperActivation (point 43 23) >
+setSprite "woman3" >
 addAction (message "Innkeeper Sarah: \nWhat's going on out there, |luc|??") >
 addAction (message "|luc|: \nI'm not sure. Just stay inside.") >
 addAction (messageWithYesNo "Innkeeper Sarah: \nWant to rest a bit? Bed is 10G." >
@@ -255,8 +239,8 @@ addAction (messageWithYesNo "Innkeeper Sarah: \nWant to rest a bit? Bed is 10G."
 		addToBranch 0 (message "Sleep well!") >
 		addToBranch 0 (fadeControl 1.0 255 0 0 0 true true) >
 		addToBranch 0 (restoreParty 0) >
-		addToBranch 0 (openBubble "sleep" "party" -1 true false) >
-		addToBranch 0 (teleportParty name$43x24$ 47 17 "albiinside") >
+		addToBranch 0 (openBubble "sleep" "party" -1.0 true false) >
+		addToBranch 0 (teleportParty name$43x23$ 47 17 "albiinside") >
 		addToBranch 0 (pushSong 0) >
 		addToBranch 0 (playMusic "sleep" false false 0.0) >
 		addToBranch 0 (popSong 0) >
@@ -266,17 +250,9 @@ addAction (messageWithYesNo "Innkeeper Sarah: \nWant to rest a bit? Bed is 10G."
 		addToBranch 1 (message "Oh no, you dont have enough!")) >
 	addToBranch 1 (message "Ok, be careful out there!"))
 
-\runstate2$43x24$ <- state2$43x24$ 0
+\runstate2$43x23$ <- state2$43x23$ 0
 
-#!OBJ 43 23
-\objName$43x23$ <- "name"
-\name$43x23$ <- newObject objName$43x23$ 43 23
 
-state1$43x23$ 0
-name$43x23$ > createState >
-setSprite "woman3"
-
-\runstate1$43x23$ <- state1$43x23$ 0
 #!OBJ 41 19
 \objName$41x19$ <- "name"
 \name$41x19$ <- newObject objName$41x19$ 41 19
@@ -287,7 +263,7 @@ setCollisionData true true true true >
 setSprite "oldman" >
 setFace "right" >
 addAction (message "Louis: \nI have my own house.") >
-addAction (message "But I stay here to watch Sarah work. \nHehehe")
+addAction (message "But I stay here to watch Sarah work. \nHehehe...")
 
 
 \runstate1$41x19$ <- state1$41x19$ 0
@@ -310,16 +286,7 @@ setAnimated false
 
 
 \runstate1$42x3$ <- state1$42x3$ 0
-#!OBJ 43 4
-\objName$43x4$ <- "name"
-\name$43x4$ <- newObject objName$43x4$ 43 4
 
-state1$43x4$ 0
-name$43x4$ > createState >
-setSprite "shopkeeper"
-
-
-\runstate1$43x4$ <- state1$43x4$ 0
 #!OBJ 42 6
 \objName$42x6$ <- "name"
 \name$42x6$ <- newObject objName$42x6$ 42 6
@@ -612,41 +579,47 @@ addAction (message "|luc|'s Mom: \n...it was only a little earthquake...") >
 addAction (message "...Go back to sleep...")
 
 \runstate2$24x17$ <- state2$24x17$ 0
-#!OBJ 22 4
-\objName$22x4$ <- "name"
-\name$22x4$ <- newObject objName$22x4$ 22 4
+#!OBJ 22 3
+\objName$22x3$ <- "name"
+\name$22x3$ <- newObject objName$22x3$ 22 3
 
-state1$22x4$ 0
-name$22x4$ > createState >
+state1$22x3$ 0
+name$22x3$ > createState >
 setCollisionData true true true true >
+shopkeeperActivation (point 22 3) >
+setSprite "shopkeeper" >
 addAction (openMerchant "albiweaponshop" 0.0)
 
 
-\runstate1$22x4$ <- state1$22x4$ 0
+\runstate1$22x3$ <- state1$22x3$ 0
 
-#!OBJ 28 4
-\objName$28x4$ <- "name"
-\name$28x4$ <- newObject objName$28x4$ 28 4
+#!OBJ 28 3
+\objName$28x3$ <- "name"
+\name$28x3$ <- newObject objName$28x3$ 28 3
 
-state1$28x4$ 0
-name$28x4$ > createState >
+state1$28x3$ 0
+name$28x3$ > createState >
+shopkeeperActivation (point 28 3) >
+setSprite "shopkeeper" >
 setCollisionData true true true true >
 addAction (openMerchant "albiarmorshop" 0.0)
 
 
-\runstate1$28x4$ <- state1$28x4$ 0
+\runstate1$28x3$ <- state1$28x3$ 0
 
-#!OBJ 43 5
-\objName$43x5$ <- "name"
-\name$43x5$ <- newObject objName$43x5$ 43 5
+#!OBJ 43 4
+\objName$43x4$ <- "name"
+\name$43x4$ <- newObject objName$43x4$ 43 4
 
-state1$43x5$ 0
-name$43x5$ > createState >
+state1$43x4$ 0
+name$43x4$ > createState >
 setCollisionData true true true true >
+shopkeeperActivation (point 43 4) >
+setSprite "shopkeeper" >
 addAction (openMerchant "albiitemshop" 0.0)
 
 
-\runstate1$43x5$ <- state1$43x5$ 0
+\runstate1$43x4$ <- state1$43x4$ 0
 #!OBJ 20 17
 \objName$20x17$ <- "name"
 \name$20x17$ <- newObject objName$20x17$ 20 17

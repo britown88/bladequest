@@ -117,9 +117,9 @@ public class combSteal extends CombatAction
 			{
 				Enemy target = (Enemy)builder.getTargets().get(0);
 				
-				if(target.hasItems())
+				if(target.holdingItem())
 				{
-					String item = target.getItem(true);
+					String item = target.stealItem();
 					if(item == null)
 					{
 						builder.addMarker(new DamageMarker("MISS", target));	

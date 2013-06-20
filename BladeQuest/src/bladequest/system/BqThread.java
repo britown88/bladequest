@@ -19,7 +19,7 @@ public class BqThread extends Thread
 	{
 		super();
 		this.gamePanel = gamePanel;
-		
+		running = false;
 	}
 	
 	@Override
@@ -29,15 +29,17 @@ public class BqThread extends Thread
 		int sleepTime;
 		
 		
-		while(running)
+		for(;;)
 		{
-	    	startTime = System.currentTimeMillis();
-	    	
-	    	handleInput();  
-	    	Global.update();	
-	    	gamePanel.draw();
-	    	
-	    	Global.renderer.swap();	//locked internally now.    	
+			startTime = System.currentTimeMillis();
+			if (running)
+			{
+		    	handleInput();  
+		    	Global.update();	
+		    	gamePanel.draw();
+		    	
+		    	Global.renderer.swap();	//locked internally now.
+			}
 
 
 			frameTime = System.currentTimeMillis() - startTime;

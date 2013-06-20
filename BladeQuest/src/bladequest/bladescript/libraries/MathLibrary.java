@@ -2,6 +2,7 @@ package bladequest.bladescript.libraries;
 
 import android.graphics.Point;
 import bladequest.bladescript.LibraryWriter;
+import bladequest.math.PointMath;
 import bladequest.world.Global;
 
 public class MathLibrary 
@@ -15,6 +16,10 @@ public class MathLibrary
 		}
 	}
 	
+	public static float distance(Point p1, Point p2)
+	{
+		return PointMath.length(PointMath.subtract(p1, p2));
+	}
 	
 	public static boolean equals(boolean x, boolean y)
 	{
@@ -25,7 +30,15 @@ public class MathLibrary
 	{
 		return x > y;
 	}
+	public static boolean greater(float x, float y)
+	{
+		return x > y;
+	}	
 	public static boolean less(int x, int y)
+	{
+		return x < y;
+	}
+	public static boolean less(float x, float y)
 	{
 		return x < y;
 	}	

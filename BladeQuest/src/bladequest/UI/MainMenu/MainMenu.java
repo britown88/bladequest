@@ -2156,7 +2156,7 @@ public class MainMenu
 	private void darken(){darkening = true;}	
 	private void undarken(){darkening = false;}	
 	private void renderDark(){Global.renderer.drawColor(Color.argb(darkenAlpha, 0, 0, 0));}
-	private void showMessage(String msg, boolean yesNoOpt)
+	public void showMessage(String msg, boolean yesNoOpt)
 	{
 		darken();
 		messageBox.addMessage(msg, yesNoOpt);

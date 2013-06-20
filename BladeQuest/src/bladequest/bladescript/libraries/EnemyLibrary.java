@@ -196,9 +196,14 @@ public class EnemyLibrary {
 		enemy.setGold(gold);
 		return enemy;
 	}
-	public static Enemy setItems(Enemy enemy, String commonItem, int commonDropRate, String rareItem, int rareDropRate, boolean rareStealOnly)
+	public static Enemy addDrop(Enemy enemy, String itemName, float dropRate)
 	{
-		enemy.setItems(commonItem, commonDropRate, rareItem, rareDropRate, rareStealOnly);
+		enemy.addDrop(itemName, dropRate);
+		return enemy;
+	}
+	public static Enemy setHeldItem(Enemy enemy, String heldItem)
+	{
+		enemy.setHeldItem(heldItem);
 		return enemy;
 	}
 	public static Enemy addEStatusImmunity(Enemy enemy, String status)

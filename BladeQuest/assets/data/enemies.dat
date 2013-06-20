@@ -90,7 +90,8 @@ setEBaseStats 10 1 1 1 >
 addDefaultStaffHit >
 setELevel 5 >
 setGold 16 >
-setItems "potion" 25 "antidote" 85 true >
+addDrop "potion" 0.25 >
+setHeldItem "antidote" >
 modStat "MaxHP" -12 >
 modStat "BattlePower" -1 >
 makeRatAI >
@@ -124,7 +125,7 @@ addDefaultDaggerHit >
 setEBaseStats 3 3 3 3 >
 setELevel 7 >
 HawkAI >
-setItems "potion" 25 "potion" 75 true >
+addDrop "potion" 0.1 >
 modStat "MaxHP" -30 >
 modStat "Speed" 6 >
 modStat "BattlePower" -2 >
@@ -137,7 +138,7 @@ setEShadow (createShadow 44 14 40 > addElevation 16))
 \spud <- (addEnemy "spud" "Spud" "spud" >
 addDefaultDaggerHit >
 setEBaseStats 3 3 3 3 >
-setItems "potion" 10 " " 0 true >
+addDrop "potion" 0.05 >
 setELevel 5 >
 modStat "BattlePower" -1 >
 addAttackOnlyState >
@@ -147,7 +148,7 @@ setEShadow (createShadow 31 16 22))
 \spud2 <- (addEnemy "spud2" "Spud" "spud" >
 addDefaultDaggerHit >
 setEBaseStats 3 3 3 3 >
-setItems "potion" 10 " " 0 true >
+addDrop "potion" 0.1 >
 setELevel 6 >
 modStat "MaxHP" -5 >
 modStat "BattlePower" -1 >
@@ -175,7 +176,9 @@ setEBaseStats 3 3 3 3 >
 setELevel 6 >
 LeafyBunnyAI >
 setGold 13 >
-setItems "tranquilizer" 50 "tranquilizer" 85 true >
+addDrop "tranquilizer" 0.25 >
+addDrop "lurebell" 0.1 >
+setHeldItem "tranquilizer" >
 modStat "MaxHP" -14 >
 modStat "BattlePower" -2 >
 addEAbility "leafygreens" >
@@ -212,7 +215,8 @@ SatyrAI >
 setBoss >
 addEStatusImmunity "confuse" >
 setGold 236 >
-setItems "potion" 100 "runningshoes" 100 true >
+addDrop "tent" 1.0 >
+setHeldItem "runningshoes" >
 addEAbility "satyrreversal" >
 addEAbility "provoke" >
 addEAbility "trickery" >
@@ -236,7 +240,7 @@ setEBaseStats 5 10 8 3 >
 setELevel 7 >
 setGold 22  >
 setUseDrainState >
-setItems "potion" 50 " " 0 true >
+addDrop "potion" 0.5 >
 addEAbility "drain" >
 modStat "MaxHP" -30 >
 setEShadow (createShadow 34 12 30 > addElevation 16))
@@ -248,7 +252,7 @@ setEBaseStats 5 10 8 3 >
 setELevel 7 >
 setGold 34  >
 setUseDrainState >
-setItems "potion" 50 " " 0 true >
+addDrop "potion" 0.1 >
 addEAbility "drain" >
 modStat "MaxHP" -30 >
 modStat "MagicPower" 2 >
@@ -263,7 +267,8 @@ modStat "BattlePower" -3 >
 modStat "MaxHP" 150 >
 setGold 109 >
 setBoss >
-setItems "potion" 100 "silversword" 100 true >
+addDrop "potion" 1.0 >
+setHeldItem "silversword" >
 RecruitDerpState >
 addEAbility "specialmegakick" >
 addEAbility "dynamosupernova" >
@@ -369,6 +374,7 @@ modStat "BattlePower" -3 >
 modStat "Fire" -20 >
 modStat "Water" 155 >
 modStat "MaxHP" 3000 >
+modStat "Speed" 20 > #no no, roland goes first.
 setGold 2200 >
 setBoss >
 RolandAI >
@@ -377,6 +383,6 @@ addEAbility "entomb"  >
 addEAbility "frozengrip"  >
 addEAbility "icebarrage" >
 addEAbility "chill" >
-setItems "potion" 100 "frostrapier" 100 true >
+setHeldItem "frostrapier" >
 onBattleStartRun RolandTriggers > 
 setEShadow (createShadow 74 30 43 > nudgeX 16))

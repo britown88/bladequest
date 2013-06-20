@@ -265,6 +265,13 @@ public class PlayerCharacter
 		onDamagedEvent = null;
 		onDamageReceivedEvent = null;
 		onAttackEvent = null;
+		
+		
+		//force 1HP at the end of battle.
+		if (hasStatus("KO"))
+		{
+			this.revive();
+		}
 	}
 	
 	public int getExp(){return exp;}

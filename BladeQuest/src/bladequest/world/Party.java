@@ -122,6 +122,10 @@ public class Party
 		
 		allowMovement = am; 
 	}
+	public boolean getAllowMovement()
+	{
+		return allowMovement;
+	}
 	
 	public PlayerCharacter[] getPartyMembers(boolean includeAll)
 	{
@@ -822,6 +826,18 @@ public class Party
 			mapPath();
 		}	
 	}
+	public boolean target(int x, int y)
+	{
+		//returns true if successful.  There's plenty of cases where it isn't - not grid aligned, for example.
+		
+		if (!gridaligned || !allowMovement) return false;
+		
+		originalTarget = new Point(x,y);
+		pathingStartPoint = new Point(gridPos);
+		mapPath();
+		
+		return true;
+	}
  	public void update()
 	{
  		updateElevation();
@@ -987,21 +1003,12 @@ public class Party
 				
 				originalTarget = new Point(gridPos);
 				
-				//if you clicked an object and were 2 or less blocks away
-				if(objectAtDestination && path.calculateHeuristic(pathingStartPoint) <= 1 && !selectedObject.AutoStarts())
+				//if you clicked an object
+				if(objectAtDestination)
 				{
-					//execute the object's script
-					if(selectedObject.execute())
-					{
-						//Global.saveLoader.saveGame(0);
-						//Global.saveLoader.writeSaves(Global.activity);
-						clearMovementPath();
-					}
-						
-
-					objectAtDestination = false;	
-					
-					
+					//try and use this object.
+					selectedObject.tryUse(pathingStartPoint, gridPos);	
+					objectAtDestination = false;
 				}				
 			}
 		}

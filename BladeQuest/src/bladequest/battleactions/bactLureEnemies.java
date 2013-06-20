@@ -9,9 +9,10 @@ import bladequest.world.PlayerCharacter;
 
 public class bactLureEnemies extends BattleAction {
 
-	public bactLureEnemies() 
+	int lureSteps;
+	public bactLureEnemies(int lureSteps) 
 	{
-		
+		this.lureSteps = lureSteps;
 	}
 	public void runOutsideOfBattle(PlayerCharacter attacker, List<PlayerCharacter> targets, List<DamageMarker> markers) 
 	{
@@ -29,7 +30,7 @@ public class bactLureEnemies extends BattleAction {
 
 				{
 				    icon = "";	
-					remainingSteps = 50;
+					remainingSteps = lureSteps;
 				    hidden = false;
 					negative = false;
 					removeOnDeath = false;
@@ -39,24 +40,39 @@ public class bactLureEnemies extends BattleAction {
 				
 				@Override
 				public StatusEffect clone() {
-					// TODO Auto-generated method stub
-					return null;
+					return this;
 				}
+				@Override
+				public void onInflict(PlayerCharacter c) 
+				{
+					Global.menu.showMessage(c.getDisplayName() + " started ringing the lure bell!", false);
+				}
+				
 				@Override
 				public void worldEffect() 
 				{
-					if (--remainingSteps == 0)
+					if (!Global.party.getAllowMovement()) return;
+					if (remainingSteps-- == 0)
 					{
 						for (PlayerCharacter t : Global.party.getPartyList(true))
 						{
 							t.removeStatusEffect("lure");
 						}
-						Global.worldMsgBox.addMessage("The lure bell stopped ringing...");
+						Global.party.clearMovementPath();
+						Global.showMessage("The lure bell stopped ringing...", false);
 					}
 				}
-				
 			});
 			return;
 		}
+	}
+	@Override
+	public boolean willAffectTarget(PlayerCharacter target)
+	{
+		for (PlayerCharacter t : Global.party.getPartyList(true))
+		{
+			if (t.hasStatus("lure")) return false;
+		}		
+		return true;
 	}
 }

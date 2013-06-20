@@ -974,6 +974,7 @@ public class Battle
 		
 		addMsgToInfobar("You are victorious!");
 
+		
 		int gold = 0;
 		int exp = 0;
 		List<String> itemDrops = new ArrayList<String>();
@@ -982,52 +983,69 @@ public class Battle
 			if (e.getEscaped()) continue;
 			gold += e.getGold();
 			exp += e.getExp(avgLevel); 
-			if(e.hasItems())
-			{
-				String item = e.getItem(false);
-				if(item != null)
-					itemDrops.add(item);
-			}
+			String item = e.getDrop();
+			if(item != null)
+				itemDrops.add(item);
 			
 		}
 		
-		//pick random drop
-		String wonItem = null;
-		if(itemDrops.size() > 0)
-			wonItem = itemDrops.get(Global.rand.nextInt(itemDrops.size()));
+		java.util.Collections.sort(itemDrops);
 		
 		Global.party.addGold(gold);
 		
 		addMsgToInfobar("Obtained " + gold + "G!");
-		addMsgToInfobar("Earned " + exp + " experience!");
 		
-		String newAbilities = "";
 		
-		for(PlayerCharacter c : aliveChars)
+		if (aliveChars.size() > 0) //not sure how mutual destruction would work, but might as well add it.
 		{
-			int leftover = c.awardExperience(exp);
-			while(leftover > 0)
+			exp /= aliveChars.size(); //distribute experience to the whole party.  GG grinding.
+			addMsgToInfobar("Earned " + exp + " experience!");
+			
+			String newAbilities = "";
+			
+			for(PlayerCharacter c : aliveChars)
 			{
-				addMsgToInfobar(c.getDisplayName() + " grew to level " + c.getLevel() + "!");
-				
-				do
+				int leftover = c.awardExperience(exp);
+				while(leftover > 0)
 				{
-					newAbilities = c.checkForAbilities();
-					if(newAbilities != "")
-						addMsgToInfobar(c.getDisplayName() + " learned " + newAbilities + "!");
+					addMsgToInfobar(c.getDisplayName() + " grew to level " + c.getLevel() + "!");
 					
-				}while(newAbilities != "");
-				
-				leftover = c.awardExperience(leftover);
-			}				
+					do
+					{
+						newAbilities = c.checkForAbilities();
+						if(newAbilities != "")
+							addMsgToInfobar(c.getDisplayName() + " learned " + newAbilities + "!");
+						
+					}while(newAbilities != "");
+					
+					leftover = c.awardExperience(leftover);
+				}				
+			}
+
 		}
 		
-		if(wonItem != null)
+		String prevItem = null;
+		int winCount= 0;
+		itemDrops.add(null);
+		for (String item : itemDrops)
 		{
-			Global.party.addItem(wonItem, 1);	
-			addMsgToInfobar("Found a " + Global.items.get(wonItem).getDisplayName() + "!");
-		}		
-		
+			if (prevItem != item && prevItem != null)
+			{
+				if (winCount == 1)
+				{
+					Global.party.addItem(prevItem, 1);	
+					addMsgToInfobar("Found a " + Global.items.get(prevItem).getDisplayName() + "!");
+				}
+				else
+				{
+					Global.party.addItem(prevItem, winCount);	
+					addMsgToInfobar("Found " + Global.items.get(prevItem).getDisplayName() + "x" + winCount + "!");					
+				}
+				winCount = 0;
+			}
+			prevItem = item;
+			++winCount;
+		}
 	}
 	
 	public Outcome getOutcome(){ return outcome;}

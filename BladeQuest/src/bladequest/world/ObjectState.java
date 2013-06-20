@@ -9,6 +9,7 @@ import bladequest.actions.actMessage;
 import bladequest.graphics.ReactionBubble;
 import bladequest.graphics.Sprite;
 import bladequest.graphics.Tile;
+import bladequest.math.PointMath;
 import bladequest.system.DataLine;
 
 public class ObjectState {
@@ -233,6 +234,49 @@ public class ObjectState {
 			
 		}
 			
+	}
+	
+	public static interface ActivationHandler
+	{
+		boolean canActivate(Point startPoint, Point partyPos);
+	}
+	
+	private class DefaultActivationHandler implements ActivationHandler
+	{
+		public boolean canActivate(Point startPoint, Point partyPos)
+		{
+			if (autoStart) return false;
+			if (PointMath.length(PointMath.subtract(startPoint, parent.getGridPos())) > 1.0f)
+			{
+				return false;
+			}
+			
+			return true;			
+		}
+	}
+	
+	private ActivationHandler activationHandler = new DefaultActivationHandler();
+	
+	public void setActivationHandler(ActivationHandler handler)
+	{
+		activationHandler = handler;
+	}
+	
+	private boolean canActivate(Point startPoint, Point partyPos)
+	{
+		return activationHandler.canActivate(startPoint, partyPos);
+	}
+	
+	
+	public void onPartyActivate(Point startPoint, Point partyPos)
+	{
+	   if(canActivate(startPoint, partyPos))
+	   {
+		   if (execute())
+		   {
+			   Global.party.clearMovementPath();   
+		   }
+	   }
 	}
 
 	

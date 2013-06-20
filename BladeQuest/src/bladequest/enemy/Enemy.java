@@ -55,11 +55,24 @@ public class Enemy extends PlayerCharacter
 		}
 	}
 	
+	
+	private class Drop
+	{
+		Drop(String item, float dropRate)
+		{
+			this.item = item;
+			this.dropRate = dropRate;
+		}
+		String item;
+		float dropRate; //0-1.
+	}
+	
+	List<Drop> drops;
+	String heldItem;
+	
+	
 	private int gold;
-	private String commonItem, rareItem, attackAnim;
-	private int commonDropRate, rareDropRate, abilityChance;
-	private boolean rareStealOnly;
-	private boolean stolen;
+	private String attackAnim;
 	
 	private int colorIndices[];
 	
@@ -79,9 +92,7 @@ public class Enemy extends PlayerCharacter
 		isEnemy = true;
 		
 		position = new Point();
-		
-		stolen = false;
-		
+		drops = new ArrayList<Drop>();
 		battleStartActions = new ArrayList<BattleStartAction>(); 
 	}
 	
@@ -91,12 +102,8 @@ public class Enemy extends PlayerCharacter
 		isEnemy = true;
 		position = e.position;
 		gold = e.gold;
-		commonItem = e.commonItem;
-		rareItem = e.rareItem;
-		commonDropRate = e.commonDropRate;
-		rareDropRate = e.rareDropRate;
-		rareStealOnly = e.rareStealOnly;
-		abilityChance = e.abilityChance;
+		drops = e.drops;
+		heldItem = e.heldItem;	
 		bossFight = e.bossFight;
 		attackAnim = e.attackAnim;
 		colorIndices = e.colorIndices;
@@ -109,8 +116,6 @@ public class Enemy extends PlayerCharacter
 		}
 				
 		battleStartActions = e.battleStartActions;
-		
-		stolen = false;
 	}
 	
 	@Override
@@ -366,7 +371,7 @@ public class Enemy extends PlayerCharacter
 	public void setBoss()
 	{
 		bossFight = true;
-		exp *=4;
+		exp *= 4;
 	}
 	
 	public boolean isBoss() { return bossFight; }
@@ -383,50 +388,46 @@ public class Enemy extends PlayerCharacter
 		
 	}
 	
-	public void setItems(String commonItem, int commonDropRate, String rareItem, int rareDropRate, boolean rareStealOnly)
+	public void setHeldItem(String heldItem)
 	{
-		this.commonItem = commonItem;
-		this.commonDropRate = commonDropRate;
-		this.rareItem = rareItem.length() > 1 ? rareItem : "";
-		this.rareDropRate = rareDropRate;
-		this.rareStealOnly = rareStealOnly;
+		this.heldItem = heldItem;
 	}
 	
-	public boolean hasItems()
+	public void addDrop(String dropItem, float rate)
 	{
-		return (commonItem != null || rareItem != null) && !stolen;
+		drops.add(new Drop(dropItem, rate));
 	}
 	
-	public String getItem(boolean stealing)
+	public boolean holdingItem()
 	{
+		return heldItem != null;
+	}
+	
+	public String stealItem()
+	{
+		if (!holdingItem()) return null;
 		int roll = Global.rand.nextInt(100);
+		if (roll < 20) return null; //
 		
-		if(!stolen)
-		{
-			
-			if((rareStealOnly && stealing) || !rareStealOnly)
-			{
-				if(roll < rareDropRate && rareItem != null)
-				{
-					stolen = stealing;
-					return rareItem;
-				}
-			}
-			
-			if(roll < commonDropRate && commonItem != null)
-			{
-				stolen = stealing;
-				return commonItem;
-			}
-
-		}
-		
-		return null;
+		String out = heldItem;
+		heldItem = null;
+		return out;
 	}
 	
+	public String getDrop()
+	{
+		for (Drop d : drops)
+		{
+			if (Global.rand.nextFloat() < d.dropRate)
+			{
+				return d.item;
+			}
+		}
+		return null;  //no soup
+	}
 	public void setExp()
 	{
-		exp = (int)((float)Math.pow(level, 3.0f)/level);
+		exp = level*level;
 		
 	}	
 	
