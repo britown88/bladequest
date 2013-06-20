@@ -89,8 +89,7 @@ addEnemy "bat" 128 128)
 
 \guardEncounter <- (inheritEncounter "guard" >
 slidesIn >
-addEnemy "guard" 128 128 >
-disableRunning)
+addEnemy "guard" 128 128)
 
 
 writeRecruitTaunt recruit
@@ -112,8 +111,7 @@ disableRunning)
 slidesIn >
 addEnemy "guard" 128 78 >
 addEnemy "guard" 68 128 >
-addEnemy "guard" 128 178 >
-disableRunning)
+addEnemy "guard" 128 178)
 
 
 \BunnyAndSpud <- (inheritEncounter "bunnyandspud" >
