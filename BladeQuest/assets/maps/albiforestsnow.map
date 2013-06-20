@@ -3153,17 +3153,17 @@ t 23 49 0 51 4 0 0 0 0
 t 26 49 0 51 4 0 0 0 0 
 t 28 49 0 51 4 0 0 0 0 
 [encounters]
-zone 0 11 11 37 0
+zone 0 11 11 37 1
 encounter lineofspuds
 encounter fivebats
 encounter bunnyandhawks
 endzone
-zone 11 29 17 19 0
+zone 11 29 17 19 1
 encounter fivebats
 encounter bunnyandhawks
 encounter lineofspuds
 endzone
-zone 11 2 16 27 0
+zone 11 2 16 27 1
 encounter lineofspuds
 encounter bunnyandhawks
 encounter fivebats
