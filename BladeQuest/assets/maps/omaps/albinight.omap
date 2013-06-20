@@ -10,6 +10,7 @@
 
 
 
+
 #!OBJ 4 14
 \objName$4x14$ <- "name"
 \name$4x14$ <- newObject objName$4x14$ 4 14
@@ -53,10 +54,10 @@ state1$24x23$ 0
 name$24x23$ > createState >
 setCollisionData true true true true >
 setSprite "man3" > 
-addAction (message "Arthur: \nSo you heard that, too?") >
+addAction (message "Arthur: \nSo you heard that, too? I think somethging landed in the forest!") >
 addAction (message "Never seen the sky light up like that before!") >
 addAction (message "|luc|: \nI'm going to go check it out.") >
-addAction (message "Arthur: \nBe careful!")
+addAction (message "Arthur: \nBe careful! Use the Item Shops and Inn if you need to!")
 
 \runstate1$24x23$ <- state1$24x23$ 0
 
@@ -448,18 +449,6 @@ addAction (message "It's locked.")
 
 
 \runstate1$17x21$ <- state1$17x21$ 0
-#!OBJ 24 24
-\objName$24x24$ <- "albi.destroy()"
-\name$24x24$ <- newObject objName$24x24$ 24 24
-
-state1$24x24$ 0
-\state <- (name$24x24$ > createState)
-
-
-
-
-
-\runstate1$24x24$ <- state1$24x24$ 0
 #!OBJ 28 7
 \objName$28x7$ <- "sarah"
 \name$28x7$ <- newObject objName$28x7$ 28 7
