@@ -3,12 +3,14 @@ package bladequest.statuseffects;
 import java.util.ArrayList;
 import java.util.List;
 
+import bladequest.battleactions.bactDamage;
 import bladequest.battleactions.bactWait;
 import bladequest.combat.Battle;
 import bladequest.combat.BattleEventBuilder;
 import bladequest.combat.triggers.Trigger;
 import bladequest.system.Recyclable;
 import bladequest.world.Ability;
+import bladequest.world.DamageTypes;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
 import bladequest.world.TargetTypes;
@@ -108,7 +110,7 @@ public class seConfuse extends StatusEffect
 		
 		}.initialize(c));
 		
-		disposeTriggers.add(new Trigger(affected.getOnPhysicalHitLandsEvent()){
+		disposeTriggers.add(new Trigger(affected.getOnDamageReceivedEvent()){
 			PlayerCharacter aff;
 			Trigger initialize(PlayerCharacter aff)
 			{
@@ -117,6 +119,7 @@ public class seConfuse extends StatusEffect
 			}			
 			@Override
 			public void trigger() {
+				if (bactDamage.triggerDamageBuilder.getDamageType() != DamageTypes.Physical) return;
 				aff.removeStatusEffect("confuse");
 				//if the player hasn't gone yet...  But don't sweep the current game state away!  if unconfusing self with a self-attack, just go ahead and finish.
 				if (Global.battle.getCurrentActor() != aff)

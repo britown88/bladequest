@@ -143,7 +143,7 @@ public class combSteal extends CombatAction
 		}.addDependency(builder.getLast()));
 		
 		
-		builder.addEventObject(new bactWait(BattleEvent.frameFromActIndex(3)).addDependency(builder.getLast()));
+		builder.addEventObject(new bactWait(BattleEvent.frameFromActIndex(14)).addDependency(builder.getLast()));
 	}
 
 }

@@ -29,9 +29,6 @@ import bladequest.bladescript.libraries.WorldAnimLibrary;
 import bladequest.graphics.Scene;
 import bladequest.graphics.Tile;
 import bladequest.graphics.TilePlate;
-import bladequest.serialize.Deserializer;
-import bladequest.serialize.Serializable;
-import bladequest.serialize.Serializer;
 import bladequest.system.CommandLine;
 import bladequest.system.DataLine;
 import bladequest.system.FileReader;
@@ -39,24 +36,24 @@ import bladequest.system.FileReader;
 
 public class BqMap 
 {
-	private class Fog extends Serializable
-	{
-		public Fog() {
-			super("Fog");
-		}
-
-		private int[] fogged;
-
-		public void onSerialize(Serializer serializer) {
-
-			for (int i = 0; i < fogged.length; ++i)
-			{
-				serializer.write(fogged[i]);
-			}
-		}
-		
-	}
-	Fog fog = new Fog();
+//	private class Fog extends Serializable
+//	{
+//		public Fog() {
+//			super("Fog");
+//		}
+//
+//		private int[] fogged;
+//
+//		public void onSerialize(Serializer serializer) {
+//
+//			for (int i = 0; i < fogged.length; ++i)
+//			{
+//				serializer.write(fogged[i]);
+//			}
+//		}
+//		
+//	}
+	//Fog fog = new Fog();
 	
 	private String name, tilesetName, displayName, defaultBGM;
 	public Bitmap tileset;
@@ -119,26 +116,26 @@ public class BqMap
 		buildDisplayName();
 		nameDisplayCounter = 0;
 		
-		int count = mapSize.x * mapSize.y;
-		count = (count/8) + ((count%8 != 0) ? 1 : 0);
-		fog.fogged = new int[count];
-		
-		Deserializer fogData = Global.properties.getChild("maps").getChild(name).getChild("fog").get();
-		if (fogData != null)
-		{
-			for (int i = 0; i < count; ++i)
-			{
-				fog.fogged[i] = fogData.readInt();
-			}
-		}
-		else
-		{
-			for (int i = 0; i < count; ++i)
-			{
-				fog.fogged[i] = 0;
-			}
-		}
-		
+//		int count = mapSize.x * mapSize.y;
+//		count = (count/8) + ((count%8 != 0) ? 1 : 0);
+//		fog.fogged = new int[count];
+//		
+//		Deserializer fogData = Global.properties.getChild("maps").getChild(name).getChild("fog").get();
+//		if (fogData != null)
+//		{
+//			for (int i = 0; i < count; ++i)
+//			{
+//				fog.fogged[i] = fogData.readInt();
+//			}
+//		}
+//		else
+//		{
+//			for (int i = 0; i < count; ++i)
+//			{
+//				fog.fogged[i] = 0;
+//			}
+//		}
+//		
 		loadGameObjects();
 
 		for(GameObject go : objects)
@@ -362,7 +359,7 @@ public class BqMap
 	}
 	public void unloadFog()
 	{
-		Global.properties.getChild("maps").getChild(name).getChild("fog").set(fog);
+	//	Global.properties.getChild("maps").getChild(name).getChild("fog").set(fog);
 	}
 	public void update()
 	{

@@ -22,9 +22,8 @@ import bladequest.combat.triggers.Condition;
 import bladequest.combat.triggers.Event;
 import bladequest.combatactions.CombatActionBuilder;
 import bladequest.enemy.Enemy;
-import bladequest.graphics.BattleSprite.faces;
 import bladequest.graphics.BattleAnim;
-import bladequest.graphics.ScreenFilter;
+import bladequest.graphics.BattleSprite.faces;
 import bladequest.observer.ObserverUpdatePool;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.world.Ability;
@@ -128,9 +127,6 @@ public class Battle
 	
 	private Outcome outcome;
 	
-	
-	private String interruptedSong;
-	
 	void updateCurrentFrame()
 	{
 		currentFrame = (int)(System.currentTimeMillis()-startTime);
@@ -228,37 +224,6 @@ public class Battle
 			}
 		};
 	}	
-	
-	private BattleState getWaitingForInputState()
-	{
-		return new BattleState()
-		{
-			@Override
-			public void touchActionUp(int x, int y) 
-			{
-				for(MenuPanel mp : characterPanes)
-					if(mp.contains(x, y) && mp.obj != null)
-					{
-						MainMenu.populateCharStatusPanel(charStatusPanel, (PlayerCharacter)mp.obj);
-						stateMachine.setState(getCharStatusState());
-						return;
-					}
-				
-				selectFirstChar();
-				if (!getCharacterBattleAction()) nextChar = true;
-			}
-			
-			@Override
-			public void onSwitchedTo(BattleState prevState)
-			{
-				recedeChar();
-				mainMenu.close();
-				setInfoBarText(txtStart);
-				for(PlayerCharacter c : partyList)
-					c.setFace(faces.Idle);
-			}
-		};
-	}
 	private BattleState getSelectState()
 	{
 		return new BattleState()
@@ -657,7 +622,7 @@ public class Battle
 	
 	private void endOfBattleUpdate()
 	{
-		if(messageQueue.size() == 1 && Global.screenFader.isDone() && !battleOver)
+		if(messageQueue.size() < 2 && Global.screenFader.isDone() && !battleOver)
 			triggerEndBattle();
 		else				
 			if(Global.screenFader.isFadedOut() && battleOver)
@@ -1316,6 +1281,14 @@ public class Battle
 			i.clearUseCount();
 		}
 	}
+	private void startPlayerChoice()
+	{
+		for(PlayerCharacter c : partyList)
+			c.setFace(faces.Idle);
+		
+		selectFirstChar();
+		if (!getCharacterBattleAction()) nextChar = true;	
+	}
 	private void nextActor(boolean firstActor)
 	{	
 		targets.clear();
@@ -1326,14 +1299,9 @@ public class Battle
 		}
 		else
 		{
-			boolean prevSpecial = false;
 			nextActor = false;
 			if(!firstActor)
 			{
-				if (battleEvents.get(0) != null)
-				{
-					prevSpecial = battleEvents.get(0).getType() == ActionType.Special;
-				}
 				battleEvents.remove(0);
 			}
 			
@@ -1342,8 +1310,8 @@ public class Battle
 			{
 				selectFirstChar();
 				startTurn.trigger();
-				stateMachine.setState(getWaitingForInputState());
 				clearItemUses();
+				startPlayerChoice();
 				return;
 			}
 			else
@@ -1377,7 +1345,7 @@ public class Battle
 				else 
 				{					
 					//reset targets
-					if (!prevSpecial) //can't reset on special!
+					if (!currentEvent.running()) //we're returning to this event, don't reset the targets!
 					{   
 						if (Action.Ability == action && ability != null)
 						{
@@ -1765,22 +1733,43 @@ public class Battle
 		recedeChar();
 		nextChar = true;
 	}
+	private boolean previousCharacterExists()
+	{
+		int idx = currentCharIndex;
+		PlayerCharacter character = currentChar;
+	
+		for (;;)
+		{
+			if(idx == 0)
+			{	
+				return false;
+			}
+			character = partyList.get(--idx);
+			
+			if (!character.isInBattle()) continue;
+		
+			PlayerCharacter temp = currentChar;
+			currentChar = character;
+			if (getCharacterBattleAction())
+			{
+				currentChar = temp;
+				return true;
+			}
+			currentChar = temp;
+		}
+	}
 	private void previousCharacter()
 	{
-		if(selCharOpened)
+		if (!previousCharacterExists())
 		{
-			if(currentCharIndex == 0)
-				stateMachine.setState(getWaitingForInputState());
-			else
-			{			
-				recedeChar();
-				prevChar = true;
-				
-			}
-			
+			return;
 		}
 		
-		
+		if(selCharOpened)
+		{		
+			recedeChar();
+			prevChar = true;			
+		}
 	}
 	private void handleNextPrev()
 	{
@@ -1788,6 +1777,12 @@ public class Battle
 		{
 			if(prevChar)
 			{
+				if (!previousCharacterExists())
+				{
+					nextChar = prevChar = false;	
+					return;
+				}
+				int startIndex = currentCharIndex;
 				nextChar = prevChar = false;
 				if(currentChar.getAction() == Action.Item)
 					currentChar.unuseItem();
@@ -1795,9 +1790,10 @@ public class Battle
 				for (;;)
 				{
 					if(currentCharIndex == 0)
-					{	
-						stateMachine.setState(getWaitingForInputState());
-						nextChar = prevChar = false;
+					{
+						//This assumes no items have been used!!!
+						currentCharIndex = startIndex;
+						nextChar = prevChar = false;	
 						return;
 					}
 					--currentCharIndex;

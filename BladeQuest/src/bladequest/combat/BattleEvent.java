@@ -197,6 +197,10 @@ public class BattleEvent
 		}
 		
 	}
+	public boolean running()
+	{
+		return this.running;
+	}
 	public void init()
 	{
 		if (actionRunner != null)

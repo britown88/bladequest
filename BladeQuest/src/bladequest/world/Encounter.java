@@ -26,6 +26,17 @@ public class Encounter
 		slidesIn = false;
 	}
 	
+	public int getLevel()
+	{
+		int level = 0;
+		for (Enemy e : enemies) 
+		{
+			if (e.getLevel() > level) level = e.getLevel();
+			else if (e.getLevel() == level) ++level;
+		}
+		return level;
+	}
+	
 	public void setMusic(String music)
 	{
 		this.music = music;

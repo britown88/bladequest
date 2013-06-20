@@ -318,7 +318,7 @@ public class MainMenu
 						else
 						{
 							itemToUse = i;
-							stateMachine.setState(getItemUseState());	
+							stateMachine.setState(getItemUseState());
 						}							
 					}
 				}

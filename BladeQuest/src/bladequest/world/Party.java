@@ -90,6 +90,18 @@ public class Party
 		
 		shadow = new Shadow(20, 10, 16, 200, 2.0f);
 	}	
+	
+	public int averageLevel()
+	{
+		int count = 0;
+		int level = 0;
+		for (PlayerCharacter p : getPartyList(false))	
+		{
+			++count;
+			level += p.getLevel();
+		}
+		return level/count;
+	}
 
 	public int getX() {return worldPos.x;}
 	public void setX(int x) {worldPos.x = x;}

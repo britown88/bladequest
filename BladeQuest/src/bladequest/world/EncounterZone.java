@@ -3,6 +3,8 @@ package bladequest.world;
 import java.util.ArrayList;
 import java.util.List;
 
+import bladequest.graphics.BattleAnim;
+
 import android.graphics.Rect;
 
 public class EncounterZone 
@@ -31,7 +33,38 @@ public class EncounterZone
 		else
 			return null;		
 	}
-	
+	public int getLevel()
+	{
+		int level = 0;
+		for (String eString : encounters)
+		{
+			Encounter e = Global.encounters.get(eString);
+			if (e.getLevel() > level) level = e.getLevel();
+		}
+		return level;
+	}
+	public float levelDifferenceMult()
+	{
+		
+		for (PlayerCharacter t : Global.party.getPartyList(true))
+		{
+			if (t.hasStatus("lure"))
+			{
+				return 2.0f;
+			}
+		}
+		
+		int partyLevel = Global.party.averageLevel();
+		int zoneLevel = getLevel();
+		
+		if (partyLevel <= zoneLevel) return 1.0f;
+		
+		float t = (partyLevel - zoneLevel)/5.0f;
+		
+		if (t > 1.0f) t = 1.0f;
+		
+		return BattleAnim.linearInterpolation(1.0f, 0.05f, t);
+	}
 	public boolean checkForEncounters(float growthRate)
 	{
 		float roll = Global.rand.nextFloat();
@@ -50,9 +83,9 @@ public class EncounterZone
 		}
 		else
 			if(currentChance == 0)
-				currentChance = encounterRate / 100.0f;
+				currentChance = levelDifferenceMult() * encounterRate / 100.0f;
 			else
-				currentChance = (float)Math.pow(currentChance, growthRate);
+				currentChance = (float)Math.pow(currentChance, Math.pow(growthRate, levelDifferenceMult()));
 		
 		return encounter;
 	}
