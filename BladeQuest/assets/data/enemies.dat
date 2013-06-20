@@ -103,6 +103,7 @@ addDefaultSwordHit >
 setEBaseStats 10 10 10 10 >
 setELevel 25 >
 addAttackOnlyState >
+modStat "Speed" -255 >
 setGold 1200 >
 setEShadow (createShadow 38 24 32 > nudgeX -4))
 
