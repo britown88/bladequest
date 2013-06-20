@@ -11,6 +11,7 @@
 
 
 
+
 #!OBJ 4 14
 \objName$4x14$ <- "name"
 \name$4x14$ <- newObject objName$4x14$ 4 14
@@ -54,7 +55,7 @@ state1$24x23$ 0
 name$24x23$ > createState >
 setCollisionData true true true true >
 setSprite "man3" > 
-addAction (message "Arthur: \nSo you heard that, too? I think somethging landed in the forest!") >
+addAction (message "Arthur: \nSo you heard that, too? I think something landed in the forest!") >
 addAction (message "Never seen the sky light up like that before!") >
 addAction (message "|luc|: \nI'm going to go check it out.") >
 addAction (message "Arthur: \nBe careful! Use the Item Shops and Inn if you need to!")
