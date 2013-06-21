@@ -262,23 +262,10 @@ public class ObjectState {
 		activationHandler = handler;
 	}
 	
-	private boolean canActivate(Point startPoint, Point partyPos)
+	public boolean canActivate(Point startPoint, Point partyPos)
 	{
 		return activationHandler.canActivate(startPoint, partyPos);
 	}
-	
-	
-	public void onPartyActivate(Point startPoint, Point partyPos)
-	{
-	   if(canActivate(startPoint, partyPos))
-	   {
-		   if (execute())
-		   {
-			   Global.party.clearMovementPath();   
-		   }
-	   }
-	}
-
 	
 	private void HandleObjectPath()
 	{		

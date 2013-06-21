@@ -180,7 +180,13 @@ public class GameObject {
 	public void tryUse(Point pathingStartPoint,Point gridPos)
 	{
 		updateState();
-		states.get(currentState).onPartyActivate(pathingStartPoint, gridPos);
+		if (states.get(currentState).canActivate(pathingStartPoint, gridPos))
+		{
+		   if (execute())
+		   {
+			   Global.party.clearMovementPath();   
+		   }		
+		}
 	}
 	
 	public void clearActions()
