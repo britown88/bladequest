@@ -482,6 +482,12 @@ public class BattleLibrary {
 		return ability; 
 	}
 	
+	public static Ability setAbilityAdvances(Ability ability, boolean advances)
+	{
+		ability.setAdvances(advances);
+		return ability; 
+	}
+	
 	//null output
 	public static int interruptCurrent(ScriptVar ignored)
 	{

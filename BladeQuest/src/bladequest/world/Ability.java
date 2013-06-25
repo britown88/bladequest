@@ -14,6 +14,7 @@ public class Ability
 	private int mpcost;	
 	private boolean usableOutOfBattle;
 	private boolean enabled;
+	private boolean advance;
 	
 	MovePriority priority;
 	public String name, shortName, description, shortDescription;
@@ -30,8 +31,17 @@ public class Ability
 		this.enabled = true;
 		this.description = "";
 		this.priority = MovePriority.Regular;
+		this.advance = true;
 		
 		actions = new ArrayList<BattleAction>();
+	}
+	public void setAdvances(boolean advances)
+	{
+		this.advance = advances;
+	}
+	public boolean advances()
+	{
+		return this.advance;
 	}
 	public String getShortDescription() { return shortDescription == null ? description : shortDescription;}
 	public void setShortDescription(String desc) { shortDescription = desc;}

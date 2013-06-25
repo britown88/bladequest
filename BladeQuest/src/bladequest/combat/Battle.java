@@ -1114,14 +1114,11 @@ public class Battle
 			
 			if(actor.isEnemy() || 
 			   selCharOpened || 
-			   actor.getAction() == Action.Guard ||
-			   actor.getAction() == Action.Skipped ||
-			   currentEvent.runningStatus() ||
-			   currentEvent.isDone())
+			   !currentEvent.advances())
 			{
 				currentEvent.update(this);
 				//check if we've been interrupted mid-event.
-				if(currentEvent == battleEvents.get(0) &&currentEvent.isDone())
+				if(currentEvent == battleEvents.get(0) && currentEvent.isDone())
 				{
 					nextActorInit();
 				}
@@ -1254,8 +1251,7 @@ public class Battle
 		displayNamePanel.hide();
 		//battleEvents.get(0).getSource().acting = false;
 		PlayerCharacter actor = battleEvents.get(0).getSource();			
-		if(!actor.isEnemy() && battleEvents.get(0).getAction() != Action.Guard
-							&& battleEvents.get(0).getAction() != Action.Skipped)
+		if(!actor.isEnemy() && battleEvents.get(0).advances())
 		{
 			recedeChar();
 			actor.setFace(faces.Idle);
@@ -1340,11 +1336,6 @@ public class Battle
 				Action action = currentEvent.getAction();
 				Ability ability = currentEvent.getAbility();
 				
-				if (actor.getAction() == Action.Skipped)
-				{
-					currentEvent.setActionType(Action.Skipped);
-				}
-				
 				//set frame text
 				switch(action)
 				{case Attack:setInfoBarText(actor.getDisplayName()+" attacks!");break;
@@ -1403,7 +1394,7 @@ public class Battle
 					if(!actor.isEnemy())
 					{
 						currentChar = actor;
-						if ((action != Action.Guard && action != Action.Skipped) && !currentEvent.interrupted())
+						if (currentEvent.advances())
 							advanceChar();
 					}
 					else

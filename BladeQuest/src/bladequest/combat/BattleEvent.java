@@ -15,6 +15,7 @@ import bladequest.statuseffects.StatusEffect;
 import bladequest.world.Ability;
 import bladequest.world.DamageTypes;
 import bladequest.world.PlayerCharacter;
+import bladequest.world.PlayerCharacter.Action;
 
 public class BattleEvent 
 {
@@ -281,6 +282,18 @@ public class BattleEvent
 			actionRunner.interrupt();
 		}
 		interrupted = true;
+	}
+	public boolean advances()
+	{
+		if (getAction() == Action.Ability) 
+		{
+			if (!ability.advances()) return false;
+		}
+		
+		return !(getAction() == Action.Guard ||
+			     getAction() == Action.Skipped ||
+				 runningStatus() ||
+				 interrupted());
 	}
 	public boolean interrupted()
 	{

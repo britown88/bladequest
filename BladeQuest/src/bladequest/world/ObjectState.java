@@ -246,7 +246,7 @@ public class ObjectState {
 		public boolean canActivate(Point startPoint, Point partyPos)
 		{
 			if (autoStart) return false;
-			if (PointMath.length(PointMath.subtract(startPoint, parent.getGridPos())) > 1.0f)
+			if (PointMath.length(PointMath.subtract(partyPos, parent.getGridPos())) > 1.0f)
 			{
 				return false;
 			}

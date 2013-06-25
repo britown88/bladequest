@@ -93,6 +93,7 @@ addDep (damageAction 1.25 "Magic" > addDamageComponent "Fire" 1.0))
 ############SAFETY RING################
 
 \safetyheal <- (addAbility "safetyheal" "SafetyHeal" "Self" 0 >
+setAbilityAdvances false >
 add (\defWait <- waitAction 450) >
 addDep (inflictStatusAction (regenStatus 10 20 3))) >
 addDep (waitAction 500) >
@@ -206,7 +207,6 @@ addDep (inflictStatusAction (beserkStatus 2)))
 
 
 \entomb <- (addAbility "entomb" "Entomb" "Single" 0 >
-setDisabled >
 add (waitAction 450) >
 addDep (animBuildAction "entomb") >
 add (waitAction 3050) > 
