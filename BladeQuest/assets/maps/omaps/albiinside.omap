@@ -3,7 +3,7 @@
 
 shopkeeperActivation state pt
 state > setActivationHandler ([startPt endPt] 
-(|distance startPt pt
+(|distance endPt pt
 |greater 2.0 : false
 |([x] true) : true
 ))

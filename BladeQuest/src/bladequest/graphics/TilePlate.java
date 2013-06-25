@@ -20,7 +20,7 @@ public class TilePlate
 	final int layerCount = 4;
 	
 	private Lock lock;
-	private boolean loaded,loading, empty, unloadAfterLoadFlag/*, foreground*/;
+	private boolean loaded,loading, empty, unloadAfterLoadFlag, foreground;
 	private List<List<Tile>> tiles;
 	private List<GameObject> objects;
 	private Bitmap tileset;
@@ -46,7 +46,7 @@ public class TilePlate
 		loading = false;
 		platePos = new Point(x, y);
 		unloadAfterLoadFlag = false;
-		//this.foreground = foreground;
+		this.foreground = foreground;
 	}
 	//in vp grid tiles
 	public Rect getRect()
@@ -109,11 +109,17 @@ public class TilePlate
 	{
 		bmp = Global.getFreeTileBitmap();
 		
-		
 		empty = tiles.size() == 0;
 		Canvas canvas = new Canvas(bmp.bmp);
 		
-		canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+		if (!foreground)
+		{
+			canvas.drawColor(Color.BLACK);	
+		}
+		else
+		{
+			canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);	
+		}
 		
 		for (int i = 0; i < layerCount; ++i)
 		{
@@ -150,7 +156,14 @@ public class TilePlate
 		{
 			Canvas canvas = new Canvas(animBmp.bmp);	
 			
-			canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+			if (!foreground)
+			{
+				canvas.drawColor(Color.BLACK);	
+			}
+			else
+			{
+				canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);	
+			}
 			
 			for (int i = 0; i < layerCount; ++i)
 			{

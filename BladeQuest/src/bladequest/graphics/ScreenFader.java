@@ -181,7 +181,8 @@ public class ScreenFader extends Serializable
 					{
 						flashing = false;
 						fading = false;
-						done = true;		
+						done = true;
+						current = to;
 					}
 					else
 					{
