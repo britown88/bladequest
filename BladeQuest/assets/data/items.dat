@@ -208,7 +208,7 @@ addDefaultWait >
 addDep (fullRestore 0))
 
 
-\lurebell <- (addItem "lurebell" "Lure Bell" "UsableWorldOnly" "orb" "Lures enemies towards you with an irresistable sound.  Runs out after 50 steps." >
+\lurebell <- (addItem "lurebell" "Lure Bell" "UsableWorldOnly" "orb" "Attracts enemies with an alluring ring. Lasts 50 steps." >
 setShortDescription "Causes more random battles." >
 setValue 250 >
 setTargetType "Single" >

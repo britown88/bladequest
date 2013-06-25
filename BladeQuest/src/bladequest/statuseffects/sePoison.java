@@ -93,14 +93,13 @@ public class sePoison extends StatusEffect
 		
 		if(Global.party.getStepCount() % 3 == 0)
 		{
-			if(!c.isDead())
-				c.modifyHP(-power/10.0f, true);				
-				
-			if(c.isDead())
-			{
-				Global.showMessage(c.getDisplayName() + " succumbed to poison and fell unconscious.", false);
-				Global.party.clearMovementPath();
-			}			
+			int damage = calculateDamage(c);
+			int hp = c.getHP();
+			
+			damage = hp > damage ? damage : hp - 1;				
+
+			c.modifyHP(-damage, false);		
+		
 		}
 			
 	}	

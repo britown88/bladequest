@@ -303,6 +303,8 @@ public class MerchantScreen
 				countPicker.setValue(1);
 				updateBuySellPanel();
 				darken();
+				msgBox.addMessage(itemtoBuySell.getDescription());
+				msgBox.nextMessage();	
 			}
 
 			public void update() {

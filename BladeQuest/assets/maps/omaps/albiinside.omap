@@ -10,6 +10,8 @@ state > setActivationHandler ([startPt endPt]
 
 
 
+
+
 #!OBJ 6 9
 \objName$6x9$ <- "name"
 \name$6x9$ <- newObject objName$6x9$ 6 9
@@ -419,6 +421,7 @@ addAction (wait 1.0) >
 addAction (createPath "party" true "u") >
 addAction (message "|luc|: \nYou do know there are monsters out there, right?") >
 addAction (message "|luc|'s Mom: \nI'm sure it's nothing you can't handle!") >
+addAction (message "And if you're strong enough, they leave you alone!") >
 addAction (wait 0.5) >
 addAction (createPath "party" true "d") >
 addAction (wait 0.5) >

@@ -3,7 +3,9 @@ merchant albiitemshop
 item potion
 item antidote
 item tranquilizer
+item lurebell
 item sleepingbag
+item tent
 endmerchant
 #
 merchant albiweaponshop

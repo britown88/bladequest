@@ -25,6 +25,7 @@
 
 
 
+
 #!OBJ 4 14
 \objName$4x14$ <- "name"
 \name$4x14$ <- newObject objName$4x14$ 4 14
@@ -247,6 +248,7 @@ name$11x6$ > createState >
 setSpriteFromTile 6 4 >
 addAction (fadeControl 0.5 255 0 0 0 true true) >
 addAction (teleportParty name$11x6$ 22 8 "albiinside") >
+addAction (playMusic "shop" true true 0.0) >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
 \runstate1$11x6$ <- state1$11x6$ 0
@@ -260,6 +262,7 @@ name$15x6$ > createState >
 setSpriteFromTile 6 4 >
 addAction (fadeControl 0.5 255 0 0 0 true true) >
 addAction (teleportParty name$15x6$ 28 8 "albiinside") >
+addAction (playMusic "shop" true true 0.0) >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
 \runstate1$15x6$ <- state1$15x6$ 0
@@ -353,6 +356,7 @@ name$22x3$ > createState >
 setSpriteFromTile 6 4 >
 addAction (fadeControl 0.5 255 0 0 0 true true) >
 addAction (teleportParty name$22x3$ 43 8 "albiinside") >
+addAction (playMusic "shop" true true 0.0) >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
 \runstate1$22x3$ <- state1$22x3$ 0
