@@ -57,6 +57,7 @@ createCliffJumpBarrier x (y > add 1)
 
 
 
+
 #!OBJ 17 15
 \objName$17x15$ <- "name"
 \name$17x15$ <- newObject objName$17x15$ 17 15
@@ -80,6 +81,7 @@ state1$3x0$ 0
 name$3x0$ > createState >
 addAction (fadeControl 0.5 255 0 0 0 true true) >
 addAction (teleportParty name$3x0$ 3 48 "albiforestnight") >
+addAction (playMusic "darkforest" true true 1.0) >
 addAction (fadeControl 0.5 255 0 0 0 false true)
 
 \runstate1$3x0$ <- state1$3x0$ 0

@@ -11,6 +11,7 @@ state > setActivationHandler ([startPt endPt]
 
 
 
+
 #!OBJ 6 9
 \objName$6x9$ <- "name"
 \name$6x9$ <- newObject objName$6x9$ 6 9
