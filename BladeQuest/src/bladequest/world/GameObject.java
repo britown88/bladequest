@@ -203,6 +203,7 @@ public class GameObject {
 	public void clearMovement()
 	{
 		target = gridPos;
+		blockedTarget = null;
 	}
 	public void restorePath()
 	{
