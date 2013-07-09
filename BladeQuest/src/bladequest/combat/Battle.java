@@ -1251,7 +1251,7 @@ public class Battle
 		displayNamePanel.hide();
 		//battleEvents.get(0).getSource().acting = false;
 		PlayerCharacter actor = battleEvents.get(0).getSource();			
-		if(!actor.isEnemy() && battleEvents.get(0).advances())
+		if(!actor.isEnemy() && (selCharOpened || battleEvents.get(0).advances()))
 		{
 			recedeChar();
 			actor.setFace(faces.Idle);
