@@ -61,15 +61,14 @@ public class bactLureEnemies extends BattleAction {
 						}
 						Global.party.clearMovementPath();
 						Global.showMessage("The lure bell stopped ringing...", false);
-						
-					}
-					if (Global.map != null && Global.map.isLoaded())
-					{
-						for(EncounterZone zone : Global.map.encounterZones)
+						if (Global.map != null && Global.map.isLoaded())
 						{
-							zone.reset();
+							for(EncounterZone zone : Global.map.encounterZones)
+							{
+								zone.reset();
+							}	
 						}	
-					}				
+					}			
 				}
 			});
 			return;

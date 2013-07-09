@@ -182,13 +182,14 @@ public class BattleAnim
 	//update currentFrame, update all objects, and end playing if past final frame
 	public void update()
 	{
-		if(playing)
+		while (playing)
 		{
 			boolean update = false;
 			if(frame == -1)
 			{
 				frame = 0;
 				startTime = System.currentTimeMillis();
+				frameTime = 0;
 				update = true;
 			}
 			else
@@ -214,16 +215,16 @@ public class BattleAnim
 					if(loops)
 					{
 						play(animPos);
-						update();
+						continue;
 					}							
 					else
 					{
 						playing = false;
 						done = true;
 					}
-					
 				}
 			}
+			break;
 		}
 	}
 	
