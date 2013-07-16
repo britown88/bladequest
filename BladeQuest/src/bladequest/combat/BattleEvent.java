@@ -236,8 +236,8 @@ public class BattleEvent
 				}
 			});
 			
-			if(attacker.weapEquipped())
-				for(DamageComponent dc : attacker.weapon().getDamageComponents())
+			if(attacker.hand1Equipped())
+				for(DamageComponent dc : attacker.hand1().getDamageComponents())
 					damageAction.addDamageComponent(dc.getAffinity(), dc.getPower());
 			
 			

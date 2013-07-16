@@ -41,8 +41,8 @@ public class BattleActionPatterns {
 		
 		bactDamage damageAction = new bactDamage(power, type, accuracyType, missChance);
 		
-		if(attacker.weapEquipped())
-			for(DamageComponent dc : attacker.weapon().getDamageComponents())
+		if(attacker.hand1Equipped())
+			for(DamageComponent dc : attacker.hand1().getDamageComponents())
 				damageAction.addDamageComponent(dc.getAffinity(), dc.getPower());
 		
 		

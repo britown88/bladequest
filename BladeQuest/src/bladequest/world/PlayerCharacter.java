@@ -29,7 +29,7 @@ public class PlayerCharacter
 	public boolean isInParty;
 	
 	//equipment
-	private Item weapon, shield, helmet, torso, accessory;
+	private Item hand1, hand2, helmet, torso, accessory;
 	
 	protected int[] stats;
 	protected int[] statMods;
@@ -152,8 +152,8 @@ public class PlayerCharacter
 		portrait = new Point(c.portrait);
 		
 		imageIndex = c.imageIndex;
-		weapon = c.weapon;
-		shield = c.shield;
+		hand1 = c.hand1;
+		hand2 = c.hand2;
 		torso = c.torso;
 		accessory = c.accessory;
 		helmet = c.helmet;
@@ -362,20 +362,20 @@ public class PlayerCharacter
 	public void genWeaponSwing()
 	{
 		if(hasTypeEquipped(Type.Weapon))
-			weapon.generateSwing();
+			hand1.generateSwing();
 	}
 	
 	public WeaponSwingDrawable getWeaponSwing()
 	{
-		return hasTypeEquipped(Type.Weapon) ? weapon.getSwing() : null;
+		return hasTypeEquipped(Type.Weapon) ? hand1.getSwing() : null;
 	}
 	
 	public boolean hasTypeEquipped(Item.Type type)
 	{
 		switch(type)
 		{
-		case Weapon: return weapEquipped();
-		case Shield: return shieldEquipped();
+		case Weapon: return hand1Equipped();
+		case Shield: return hand2Equipped();
 		case Helmet: return helmEquipped();
 		case Accessory: return accessEquipped();
 		case Torso: return torsoEquipped();
@@ -385,16 +385,16 @@ public class PlayerCharacter
 		return false;		
 	}
 	public boolean helmEquipped() { return helmet != null; }
-	public boolean weapEquipped() { return weapon != null; }
+	public boolean hand1Equipped() { return hand1 != null; }
 	public boolean torsoEquipped() { return torso != null; }
 	public boolean accessEquipped() { return accessory != null; }
-	public boolean shieldEquipped() { return shield != null; }
+	public boolean hand2Equipped() { return hand2 != null; }
 	public Item getEquippedItem(Item.Type type)
 	{
 		switch(type)
 		{
-		case Weapon: return weapon;
-		case Shield: return shield;
+		case Weapon: return hand1;
+		case Shield: return hand2;
 		case Helmet: return helmet;
 		case Accessory: return accessory;
 		case Torso: return torso;
@@ -404,15 +404,15 @@ public class PlayerCharacter
 		return null;
 	}
 	public Item helmet() { return helmet; }
-	public Item weapon() { return weapon; }
+	public Item hand1() { return hand1; }
+	public Item hand2() { return hand2; }
 	public Item torso() { return torso; }
 	public Item accessory() { return accessory; }
-	public Item shield() { return shield; }
 	public List<Item> getEquippedItems()
 	{
 		List<Item> list = new ArrayList<Item>();
-		if(weapEquipped()) list.add(weapon);
-		if(shieldEquipped()) list.add(shield);
+		if(hand1Equipped()) list.add(hand1);
+		if(hand2Equipped()) list.add(hand2);
 		if(helmEquipped()) list.add(helmet);
 		if(torsoEquipped()) list.add(torso);
 		if(accessEquipped()) list.add(accessory);
@@ -444,8 +444,8 @@ public class PlayerCharacter
 			
 			switch(item.getType())
 			{
-			case Weapon:weapon = item;break;			
-			case Shield:shield = item;break;			
+			case Weapon:hand1 = item;break;			
+			case Shield:hand2 = item;break;			
 			case Torso:	torso = item;break;			
 			case Helmet:helmet = item;break;			
 			case Accessory:	accessory = item;break;
@@ -458,9 +458,9 @@ public class PlayerCharacter
 	
 	public boolean hasItemEquipped(int id)
 	{
-		if(weapon != null && weapon.getId() == id)
+		if(hand1 != null && hand1.getId() == id)
 			return true;
-		if(shield != null && shield.getId() == id)
+		if(hand2 != null && hand2.getId() == id)
 			return true;
 		if(helmet != null && helmet.getId() == id)
 			return true;
@@ -490,23 +490,23 @@ public class PlayerCharacter
 		switch(item.getType())
 		{
 		case Weapon:
-			if(weapon != null)
+			if(hand1 != null)
 			{
-				weapon.unequip(this);
-				Global.party.addItem(weapon.getId());
+				hand1.unequip(this);
+				Global.party.addItem(hand1.getId());
 			}			
-			weapon = item;
+			hand1 = item;
 			item.equip(this);
 			Global.party.removeItem(id, 1);
 			break;
 			
 		case Shield:
-			if(shield != null)
+			if(hand2 != null)
 			{
-				shield.unequip(this);
-				Global.party.addItem(shield.getId());
+				hand2.unequip(this);
+				Global.party.addItem(hand2.getId());
 			}			
-			shield = item;
+			hand2 = item;
 			item.equip(this);
 			Global.party.removeItem(id, 1);
 			break;
@@ -559,8 +559,8 @@ public class PlayerCharacter
 	
 	public void clearEquipment()
 	{
-		weapon = null;
-		shield = null;
+		hand1 = null;
+		hand2 = null;
 		helmet = null;
 		torso = null;
 		accessory = null;
@@ -571,20 +571,20 @@ public class PlayerCharacter
 		switch(type)
 		{
 		case Weapon:
-			if(weapon != null)
+			if(hand1 != null)
 			{
-				weapon.unequip(this);
-				Global.party.addItem(weapon.getId());
-				weapon = null;
+				hand1.unequip(this);
+				Global.party.addItem(hand1.getId());
+				hand1 = null;
 			}			
 			break;
 			
 		case Shield:
-			if(shield != null)
+			if(hand2 != null)
 			{
-				shield.unequip(this);
-				Global.party.addItem(shield.getId());
-				shield = null;
+				hand2.unequip(this);
+				Global.party.addItem(hand2.getId());
+				hand2 = null;
 			}			
 			break;
 			
@@ -751,12 +751,12 @@ public class PlayerCharacter
 		stats[Stats.MaxMP.ordinal()] = Math.min(999, (int)(((intel * 2.0f + (255.0f/99.0f)*lvl) / 3.0f) * 5.0f * getCoefficient()));
 	
 		//AP
-		float w = weapEquipped() ? weapon.Power() : 0.0f;		
+		float w = hand1Equipped() ? hand1.Power() : 0.0f;		
 		stats[Stats.BattlePower.ordinal()] = calcBP(lvl, str, w);
 		
 		//Defense
 		float arm = (helmEquipped() ? helmet.Power() : 0.0f) + (torsoEquipped() ? torso.Power() : 0.0f);
-		float sh = shieldEquipped() ? shield.Power() : 0.0f;
+		float sh = hand2Equipped() ? hand2.Power() : 0.0f;
 		stats[Stats.Defense.ordinal()] = calcDef(lvl, vit, arm, sh);
 		
 		//MagicPower/Defense
@@ -1268,8 +1268,8 @@ public class PlayerCharacter
 		}
 	}
 	
-	public void playWeaponAnimation(Point src, Point tar){if(weapEquipped()) weapon.playAnimation(src, tar);}
-	public BattleAnim getWeaponAnimation(){if(weapEquipped()) return weapon.getAnim(); else return null;}
+	public void playWeaponAnimation(Point src, Point tar){if(hand1Equipped()) hand1.playAnimation(src, tar);}
+	public BattleAnim getWeaponAnimation(){if(hand1Equipped()) return hand1.getAnim(); else return null;}
 	
 	public void renderShadow()
 	{

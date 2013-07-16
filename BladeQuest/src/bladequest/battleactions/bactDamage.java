@@ -25,7 +25,7 @@ public class bactDamage extends DelegatingAction
 	BattleActionRunner onHit;
 	
 	public static DamageBuilder triggerDamageBuilder;
-	
+	boolean offHand;
 	BattleCalc.AccuracyType accuracyType;
 	
 	private class TriggerDamageBuilder implements DamageBuilder
@@ -99,7 +99,8 @@ public class bactDamage extends DelegatingAction
 		this.type = type;
 		this.customMiss = 0.0f;
 		this.accuracyType = BattleCalc.AccuracyType.Regular;
-		this.onHit = new BattleActionRunner();		
+		this.onHit = new BattleActionRunner();
+		this.offHand = false;
 	}
 	
 	public bactDamage(float power, DamageTypes type, BattleCalc.AccuracyType accuracy, float missChance)
@@ -109,8 +110,14 @@ public class bactDamage extends DelegatingAction
 		this.type = type;
 		this.customMiss = missChance;
 		this.accuracyType = accuracy;
-		this.onHit = new BattleActionRunner();		
+		this.onHit = new BattleActionRunner();
+		this.offHand = false;
 	}	
+	
+	void setOffHand(boolean useOffHand)
+	{
+		this.offHand = true;
+	}
 	
 	public void addDamageComponent(Stats affinity, float power)
 	{

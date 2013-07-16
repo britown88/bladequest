@@ -42,7 +42,7 @@ name$2x3$ > createState >
 setSpriteFromTile 1 2 >
 setCollisionData true true true true >
 addAction (setBattleMusic ([x] "") ([x] "") ([x] fadeMusic 2.0)) >
-addAction (\endfight <- (startBattle "enemyroland1" false))
+addAction (\endfight <- (startBattle "satyrboss" false))
 endfight > addToBranch 0 (wait 2.0) 
 endfight > addToBranch 0 (showScene "albifrozen") 
 endfight > addToBranch 0 (fadeControl 5.0 255 0 0 0 false true) 

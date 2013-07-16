@@ -1618,14 +1618,14 @@ public class MainMenu
 		int d = (int)((float)Global.iconSize*iconScale/2.0f);
 		
 		//Weapon
-		entry = eqpEquipSlots.addItem(selectedChar.weapEquipped() ? selectedChar.weapon().getDisplayName() : "Weapon", Item.Type.Weapon, !selectedChar.weapEquipped());
+		entry = eqpEquipSlots.addItem(selectedChar.hand1Equipped() ? selectedChar.hand1().getDisplayName() : "Weapon", Item.Type.Weapon, !selectedChar.hand1Equipped());
 		entry.getTextAt(0).x += d*2 + 4;
-		entry.addPicBox(Global.createIcon(selectedChar.weapEquipped() ? selectedChar.weapon().getIcon() : "sword", d + 6, eqpEquipSlots.getRowHeight()/2, iconScale));
+		entry.addPicBox(Global.createIcon(selectedChar.hand1Equipped() ? selectedChar.hand1().getIcon() : "sword", d + 6, eqpEquipSlots.getRowHeight()/2, iconScale));
 		
 		//Shield
-		entry = eqpEquipSlots.addItem(selectedChar.shieldEquipped() ? selectedChar.shield().getDisplayName() : "Shield", Item.Type.Shield, !selectedChar.shieldEquipped());
+		entry = eqpEquipSlots.addItem(selectedChar.hand2Equipped() ? selectedChar.hand2().getDisplayName() : "Shield", Item.Type.Shield, !selectedChar.hand2Equipped());
 		entry.getTextAt(0).x += d*2 + 4;
-		entry.addPicBox(Global.createIcon(selectedChar.shieldEquipped() ? selectedChar.shield().getIcon() : "hshield", d + 6, eqpEquipSlots.getRowHeight()/2, iconScale));
+		entry.addPicBox(Global.createIcon(selectedChar.hand2Equipped() ? selectedChar.hand2().getIcon() : "hshield", d + 6, eqpEquipSlots.getRowHeight()/2, iconScale));
 		
 		//Helmet
 		entry = eqpEquipSlots.addItem(selectedChar.helmEquipped() ? selectedChar.helmet().getDisplayName() : "Helmet", Item.Type.Helmet, !selectedChar.helmEquipped());
@@ -2047,11 +2047,11 @@ public class MainMenu
 		int iconYBuff = 2;
 		
 		//equipment
-		equipBox.addPicBox(Global.createIcon(pc.weapEquipped() ? pc.weapon().getIcon() : "sword", d + iconBuffer, eqpRows[0] + iconYBuff, iconScale));
-		equipBox.addTextBox(pc.weapEquipped() ? pc.weapon().getDisplayName() : "Weapon", eqpCols[0], eqpRows[0], pc.weapEquipped() ? whiteLeft : grayLeft);
+		equipBox.addPicBox(Global.createIcon(pc.hand1Equipped() ? pc.hand1().getIcon() : "sword", d + iconBuffer, eqpRows[0] + iconYBuff, iconScale));
+		equipBox.addTextBox(pc.hand1Equipped() ? pc.hand1().getDisplayName() : "Weapon", eqpCols[0], eqpRows[0], pc.hand1Equipped() ? whiteLeft : grayLeft);
 		
-		equipBox.addPicBox(Global.createIcon(pc.shieldEquipped() ? pc.shield().getIcon() : "hshield", d + iconBuffer, eqpRows[1] + iconYBuff, iconScale));
-		equipBox.addTextBox(pc.shieldEquipped() ? pc.shield().getDisplayName() : "Shield", eqpCols[0], eqpRows[1], pc.shieldEquipped() ? whiteLeft : grayLeft);
+		equipBox.addPicBox(Global.createIcon(pc.hand2Equipped() ? pc.hand2().getIcon() : "hshield", d + iconBuffer, eqpRows[1] + iconYBuff, iconScale));
+		equipBox.addTextBox(pc.hand2Equipped() ? pc.hand2().getDisplayName() : "Shield", eqpCols[0], eqpRows[1], pc.hand2Equipped() ? whiteLeft : grayLeft);
 		
 		equipBox.addPicBox(Global.createIcon(pc.helmEquipped() ? pc.helmet().getIcon() : "hhelmet", d + iconBuffer, eqpRows[2] + iconYBuff, iconScale));
 		equipBox.addTextBox(pc.helmEquipped() ? pc.helmet().getDisplayName() : "Helmet", eqpCols[0], eqpRows[2], pc.helmEquipped() ? whiteLeft : grayLeft);
