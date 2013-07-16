@@ -472,47 +472,5 @@ public class Enemy extends PlayerCharacter
 				position.y-getHeight()/2, 
 				position.x+getWidth()/2, 
 				position.y+getHeight()/2));}
-	
-	@Override
-	public void updateSecondaryStats()
-	{
-		float str = getStat(Stats.Strength);
-		float agi = getStat(Stats.Agility);
-		float vit = getStat(Stats.Vitality);
-		float intel = getStat(Stats.Intelligence);
-		float lvl = level;
-		
-		//speed based on agi
-		//( ( Agility x 3) + ( 255 / 99 ) x Level ) / 4
-		stats[Stats.Speed.ordinal()] = (int)(((agi*3.0f)+(255.0f/99.0f)*lvl)/4.0f);
-		
-		//Evade: 255 = 90% evasion
-		//Level 99: 10%
-		//Agility 255: 10%
-		float pointsPerPercent = 255.0f / BattleCalc.maxEvade;
-		int levelBonus = (int)(((pointsPerPercent*10.0f)/99.0f)*lvl);
-		int agiBonus = (int)(((pointsPerPercent*10.0f)/255.0f)*agi);
-		int minBonus = (int)(pointsPerPercent*BattleCalc.minEvade);
-		stats[Stats.Evade.ordinal()] = minBonus + levelBonus + agiBonus;
-		
-		pointsPerPercent = 255.0f / BattleCalc.maxCrit;
-		minBonus = (int)(pointsPerPercent*BattleCalc.minCrit);
-		stats[Stats.Crit.ordinal()] = minBonus;
-		
-		//hp/mp based on vit and int	
-		stats[Stats.MaxHP.ordinal()] = (int)((((vit * 2.0f) + (255.0f/99.0f)*lvl) / 3.0f) * 20.0f * getCoefficient());
-		stats[Stats.MaxMP.ordinal()] = (int)(((intel * 2.0f + (255.0f/99.0f)*lvl) / 3.0f) * 7.0f * getCoefficient());
-		
-		//AP	
-		stats[Stats.BattlePower.ordinal()] = (int)(((str * 2.0f) + ((255.0f / 99.0f) * lvl)) / 3.0f);
-		
-		//Defense
-		stats[Stats.Defense.ordinal()] = (int)(((vit * 4.0f) + ((255.0f / 99.0f) * lvl)) / 5.0f);
-		
-		stats[Stats.MagicPower.ordinal()] = (int)(((intel*3.0f)+(255.0f/99.0f)*lvl)/4.0f);
-		stats[Stats.MagicDefense.ordinal()] = (int)(((intel*3.0f)+(255.0f/99.0f)*lvl)/4.0f);
-		
-		
-	}
 
 }

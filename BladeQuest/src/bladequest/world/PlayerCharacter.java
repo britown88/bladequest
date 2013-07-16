@@ -695,6 +695,11 @@ public class PlayerCharacter
 		setExpToLevel();		
 		updateStats();
 	}
+	public int getBaseStat(Stats stat)
+	{
+		return baseStats[stat.ordinal()];
+	}
+	
 	
 	protected void updateStats()
 	{
@@ -705,10 +710,10 @@ public class PlayerCharacter
 		float lvl = level;
 		
 		//stat = (basestat/99)*level
-		stats[Stats.Strength.ordinal()] = (int)(str * Math.pow(lvl/99.0f, 2.0f));
-		stats[Stats.Agility.ordinal()] = (int)(agi * Math.pow(lvl/99.0f, 2.0f));
-		stats[Stats.Vitality.ordinal()] = (int)(vit * Math.pow(lvl/99.0f, 2.0f));
-		stats[Stats.Intelligence.ordinal()] = (int)(intel * Math.pow(lvl/99.0f, 2.0f));
+		stats[Stats.Strength.ordinal()] = (int)(str * (lvl/99.0f));
+		stats[Stats.Agility.ordinal()] = (int)(agi * (lvl/99.0f));
+		stats[Stats.Vitality.ordinal()] = (int)(vit * (lvl/99.0f));
+		stats[Stats.Intelligence.ordinal()] = (int)(intel * (lvl/99.0f));
 		
 		stats[Stats.Fire.ordinal()] = 100;
 		stats[Stats.Wind.ordinal()] = 100;
@@ -717,20 +722,17 @@ public class PlayerCharacter
 		
 		updateSecondaryStats();
 	}
-	private int calcBP(float lvl, float str, float w){return (int)(((str * 2.0f) + (w * 2.0f) + ((255.0f / 99.0f) * lvl)) / 5.0f);}
-	private int calcDef(float lvl, float vit, float arm, float sh) { return (int)(((vit * 2.0f) + (arm * 2.0f) + (sh * 2.0f) + ((255.0f / 99.0f) * lvl)) / 5.0f);}
 	
 	public void updateSecondaryStats()
 	{
 		float str = getStat(Stats.Strength);
 		float agi = getStat(Stats.Agility);
-		float vit = getStat(Stats.Vitality);
 		float intel = getStat(Stats.Intelligence);
 		float lvl = level;
 		
 		//speed based on agi
 		//( ( Agility x 3) + ( 255 / 99 ) x Level ) / 4
-		stats[Stats.Speed.ordinal()] = (int)(((agi*3.0f)+(255.0f/99.0f)*lvl)/4.0f);
+		stats[Stats.Speed.ordinal()] = (int)(agi);
 		
 		//Evade: 255 = 90% evasion
 		//Level 99: 10%
@@ -747,21 +749,20 @@ public class PlayerCharacter
 		stats[Stats.Crit.ordinal()] = minBonus;
 		
 		//hp/mp based on vit and int	
-		stats[Stats.MaxHP.ordinal()] = Math.min(9999, (int)((((vit * 2.0f) + (255.0f/99.0f)*lvl) / 3.0f) * 15.0f * getCoefficient()));
-		stats[Stats.MaxMP.ordinal()] = Math.min(999, (int)(((intel * 2.0f + (255.0f/99.0f)*lvl) / 3.0f) * 5.0f * getCoefficient()));
+		stats[Stats.MaxHP.ordinal()] = BattleCalc.calculateCurvedHPMPValue(baseStats[Stats.Vitality.ordinal()], lvl, BattleCalc.maxHP);
+		stats[Stats.MaxMP.ordinal()] = BattleCalc.calculateCurvedHPMPValue(baseStats[Stats.Intelligence.ordinal()], lvl, BattleCalc.maxMP);
 	
 		//AP
 		float w = weapEquipped() ? weapon.Power() : 0.0f;		
-		stats[Stats.BattlePower.ordinal()] = calcBP(lvl, str, w);
+		stats[Stats.BattlePower.ordinal()] = (int) (str + w);
 		
 		//Defense
-		float arm = (helmEquipped() ? helmet.Power() : 0.0f) + (torsoEquipped() ? torso.Power() : 0.0f);
-		float sh = shieldEquipped() ? shield.Power() : 0.0f;
-		stats[Stats.Defense.ordinal()] = calcDef(lvl, vit, arm, sh);
+
+		stats[Stats.Defense.ordinal()] = (int) ((helmEquipped() ? helmet.Power() : 0.0f) + (torsoEquipped() ? torso.Power() : 0.0f));
 		
 		//MagicPower/Defense
-		stats[Stats.MagicPower.ordinal()] = (int)(((intel*3.0f)+(255.0f/99.0f)*lvl)/4.0f);
-		stats[Stats.MagicDefense.ordinal()] = (int)(((intel*3.0f)+(255.0f/99.0f)*lvl)/4.0f);
+		stats[Stats.MagicPower.ordinal()] = (int)(intel);
+		stats[Stats.MagicDefense.ordinal()] = (int)(intel);
 		
 		
 	}

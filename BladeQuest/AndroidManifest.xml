@@ -5,7 +5,7 @@
     <supports-screens android:anyDensity="false" android:smallScreens="true" android:resizeable="false" android:largeScreens="true" android:normalScreens="true"></supports-screens>
 
 
-    <application android:label="@string/app_name" android:icon="@drawable/icon" android:debuggable="false">
+    <application android:label="@string/app_name" android:icon="@drawable/icon" android:debuggable="true">
         <activity android:name="bladequest.system.BqActivity"
                   android:label="@string/app_name" android:screenOrientation="landscape">
             <intent-filter>
