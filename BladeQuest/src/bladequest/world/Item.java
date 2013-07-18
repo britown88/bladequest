@@ -20,7 +20,7 @@ public class Item
 	private int count, useCount;
 	private Type type;
 	private int power, value;
-	private boolean equipped, sellable;
+	private boolean twoHanded, equipped, sellable;
 	private int[] statMods;
 	
 	private String swingModel;
@@ -35,7 +35,6 @@ public class Item
 	public String idName;
 	
 	private List<BattleAction> actions;
-	private List<String> usableBy;
 	private TargetTypes targetType;
 	
 	private List<DamageComponent> damageComponents;
@@ -51,7 +50,6 @@ public class Item
 		count = 1;
 		id = id_++;
 		actions = new ArrayList<BattleAction>();
-		usableBy = new ArrayList<String>();
 		statMods = new int[Stats.NUM_STATS.ordinal()];
 		damageComponents = new ArrayList<DamageComponent>();
 		this.type = type;
@@ -60,6 +58,7 @@ public class Item
 		useCount = 0;
 		sellable = true;		
 		onEquippedBattleStart = new ArrayList<ScriptVar>();
+		twoHanded = false;
 	}
 	
 	public Item(Item i)
@@ -76,7 +75,6 @@ public class Item
 		this.sellable = i.sellable;
 		
 		this.actions = i.actions;
-		this.usableBy = i.usableBy;
 		this.targetType = i.targetType;
 		this.type = i.type;
 		this.power = i.power;
@@ -84,6 +82,8 @@ public class Item
 		
 		this.swingAnim = i.swingAnim;
 		this.damageComponents = new ArrayList<DamageComponent>(i.damageComponents);
+		
+		this.twoHanded = i.twoHanded;
 		
 		//copy swing model data
 		if(i.swingModel != null)
@@ -113,6 +113,20 @@ public class Item
 	public boolean isSellable() { return sellable; }
 	public void setSellable(boolean b) { sellable = b; }
 	
+	public boolean isWeapon()
+	{
+		return type == Type.Dagger || type == Type.Sword || type == Type.Staff;
+	}
+	
+	public void setTwoHanded(boolean twoHanded)
+	{
+		this.twoHanded = twoHanded;
+	}
+	public boolean isTwoHanded()
+	{
+		return twoHanded;
+	}
+	
 	public List<BattleAction> getActions() { return actions;}
 	public void addAction(BattleAction action){actions.add(action);}	
 	public String getDisplayName(){return displayName;}	
@@ -125,8 +139,6 @@ public class Item
 	public void setCount(int i){count = i; useCount = 0;}
 	public int getId(){return id;}
 	public Type getType(){return type;}
-	public void addUsableBy(String name){usableBy.add(name);}
-	public List<String> getUsableChars() { return usableBy; }
 	public void clearUseCount() {useCount = 0;}
 	public boolean isUsable(UseTypes useType)
 	{
@@ -250,30 +262,6 @@ public class Item
 		}
 	}
 	
-	public String usableByString()
-	{
-			List<String> charNames = new ArrayList<String>();
-			PlayerCharacter c;
-			for(String str : getUsableChars())
-			{
-				c = Global.party.getCharacter(str);
-				if(c != null)
-					charNames.add(c.getDisplayName());
-			}							
-			if(charNames.size() > 0)
-			{
-				String usableByString = "Usable by: \n";
-				for(int j = 0; j < charNames.size(); ++j)
-				{
-					usableByString += charNames.get(j);
-					if(j < charNames.size() - 1)
-						usableByString += ", ";
-				}
-				return usableByString;
-			}	
-			return null;
-	}
-	
 	public void modifyCount(int i)
 	{
 		count += i;
@@ -295,7 +283,9 @@ public class Item
 		UsableBattleOnly,
 		UsableWorldOnly,
 		UsableSavePointOnly,
-		Weapon,
+		Dagger,
+		Sword,
+		Staff,
 		Shield,
 		Helmet,
 		Torso,

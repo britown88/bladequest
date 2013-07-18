@@ -34,20 +34,20 @@ namespace BladeCraft.Classes
             writer.WriteLine("endzone");
         }
 
-        public void write(XmlTextWriter xwriter)
+        public void write(MapWriter writer)
         {
 
-           xwriter.WriteStartElement("EncounterZone");
-           xwriter.WriteAttributeString("X", zone.X.ToString());
-           xwriter.WriteAttributeString("Y", zone.Y.ToString());
-           xwriter.WriteAttributeString("Width", zone.Width.ToString());
-           xwriter.WriteAttributeString("Height", zone.Height.ToString());
-           xwriter.WriteAttributeString("EncounterRate", encounterRate.ToString());
+           writer.startSection("EncounterZone");
+           writer.writeAttribute("X", zone.X.ToString());
+           writer.writeAttribute("Y", zone.Y.ToString());
+           writer.writeAttribute("Width", zone.Width.ToString());
+           writer.writeAttribute("Height", zone.Height.ToString());
+           writer.writeAttribute("EncounterRate", encounterRate.ToString());
 
            foreach (string str in encounters)
-              xwriter.WriteElementString("Encounter", str);
+              writer.writeElement("Encounter", str);
 
-           xwriter.WriteEndElement();
+           writer.endSection();
         }
 
     }

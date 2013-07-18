@@ -25,6 +25,27 @@ public class BattleCalc
 	public static final float maxCrit = 90.0f;
 	public static final float minCrit = 5.0f;
 	
+	public static final float maxLevel = 99.0f;
+	public static final float maxHP = 9999.0f;
+	public static final float maxMP = 999.0f;
+	public static final float maxStat = 255.0f;
+	
+	public static int calculateCurvedHPMPValue(float finalStat, float level, float maximum)
+	{		
+		float invLevel = level / maxLevel;
+		float curve = 0.3f + (invLevel * 0.7f);
+		float invFinalStat = finalStat / maxStat;
+		
+		float ret = curve * invLevel * (
+					(maximum * invFinalStat * 0.2f) +
+					(maximum * 0.8f) +
+					invLevel * 0.4f * maximum * invFinalStat -
+					invLevel * 0.4f * maximum
+				);
+		
+		return (int)(Math.max(1, Math.min(maximum, ret)));
+	}
+	
 	
 	private static DamageReturnType damageReturnType;	
 	public static DamageReturnType getDmgReturnType(){return damageReturnType;}
@@ -41,12 +62,12 @@ public class BattleCalc
 		} 
 	}
 	
-	public static int calculatedDamage(PlayerCharacter attacker, PlayerCharacter defender, float power, DamageTypes type, List<DamageComponent> arrayList, float customMiss, AccuracyType accuracy)
+	public static int calculatedDamage(PlayerCharacter attacker, PlayerCharacter defender, float power, DamageTypes type, List<DamageComponent> arrayList, float customMiss, AccuracyType accuracy, PlayerCharacter.Hand hand)
 	{
 		boolean hitStatusApplied = false;
 		
-		attacker.updateSecondaryStats();
-		defender.updateSecondaryStats();
+		attacker.updateSecondaryStats(hand);
+		defender.updateSecondaryStats(PlayerCharacter.Hand.MainHand);
 		
 		boolean physical = type == DamageTypes.Physical || type == DamageTypes.PhysicalIgnoreDef; 
 		boolean ignoreDef = type == DamageTypes.MagicalIgnoreDef || type == DamageTypes.PhysicalIgnoreDef;
@@ -55,18 +76,16 @@ public class BattleCalc
 		float DP = physical ? defender.getStat(Stats.Defense) : defender.getStat(Stats.MagicDefense);
 		
 		//guarding
-		if(defender.getAction() == Action.Guard) DP *= 1.5f;		
+		//if(defender.getAction() == Action.Guard) DP *= 1.5f;		
 		if (ignoreDef) DP = 0.0f;
-				
-		int BP = (int)(AP*power);
-		float coefficient = attacker == null ? 1.0f : attacker.getCoefficient();
-		float defenderTypeMod = defender.isEnemy() ? 10.0f : 4.0f;
 		
-		float defendedDmg = power < 0 ? BP * 2.0f : Math.max(0.0f, (BP * 2.0f) - DP);
-		int baseDmg = (int)(defendedDmg * defenderTypeMod * coefficient);		
+		float attackerTypeMod = attacker.isEnemy() ? 7.0f : 10.0f;
 		
-		int variance = Global.rand.nextInt(20);		
-		int dmgMod = (int)((float)baseDmg*(float)((variance-10)/100.0F));
+		float rawDamage = AP * attackerTypeMod;
+		float reduceFactor = (float) Math.pow(DP/255.0, 0.7);
+		float variance = ((float)Global.rand.nextInt(20) - 10.0f)/100.0f;	
+		
+		float moddedDmg = rawDamage * (1.0f - reduceFactor) * (1.0f + variance);
 	
 		int evade = 0;
 		int standardEvade = getStandardEvasion(defender, type);
@@ -99,13 +118,13 @@ public class BattleCalc
 		}
 		
 		
-		int finalDmg = 0;
+		float finalDmg = 0.0f;
 		
 		switch(type)
 		{
 		case Fixed:
 			damageReturnType = DamageReturnType.Hit;
-			finalDmg = (int)power;
+			finalDmg = power;
 			break;
 		case PhysicalIgnoreDef:	
 		case Physical:
@@ -117,7 +136,7 @@ public class BattleCalc
 					damageReturnType = DamageReturnType.Blocked;
 				}
 
-				finalDmg = applyAffinities(baseDmg + dmgMod, attacker, defender, arrayList);
+				finalDmg = applyAffinities(moddedDmg, attacker, defender, arrayList);
 				
 				roll = Global.rand.nextInt(100);
 				int critChance = (int)((float)attacker.getStat(Stats.Crit)*(maxCrit/255.0f));
@@ -140,7 +159,7 @@ public class BattleCalc
 			break;
 		case Magic:
 		case MagicalIgnoreDef:
-			finalDmg = applyAffinities(baseDmg + dmgMod, attacker, defender, arrayList);
+			finalDmg = applyAffinities(moddedDmg, attacker, defender, arrayList);
 			if (!hitStatusApplied)
 			{
 				damageReturnType = DamageReturnType.Hit;
@@ -148,12 +167,22 @@ public class BattleCalc
 			break;
 		}
 		
+		if(power > 0)
+		{
+			if(defender.getAction() == Action.Guard)
+				finalDmg *= 0.5f;	
+			
+			finalDmg = Math.max(0, finalDmg - defender.getStat(Stats.DamageIgnore));
+		}		
+			
 		finalDmg = Math.max(-9999, Math.min(9999, finalDmg));
 		
-		return finalDmg;
+		attacker.updateSecondaryStats(PlayerCharacter.Hand.MainHand);
+		
+		return (int)finalDmg;
 	}
 	
-	private static int applyAffinities(int damage, PlayerCharacter attacker, PlayerCharacter defender, List<DamageComponent> damageComponents)
+	private static float applyAffinities(float damage, PlayerCharacter attacker, PlayerCharacter defender, List<DamageComponent> damageComponents)
 	{
 		float neutralComponent = 1.0f;
 		for(DamageComponent dc : damageComponents)
@@ -187,7 +216,7 @@ public class BattleCalc
 		for(Float f : damageParts)
 			finalDamage += f;
 		
-		return (int)finalDamage;
+		return finalDamage;
 			
 	}
 	

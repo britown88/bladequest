@@ -224,14 +224,6 @@ public class GameDataLoader
 		{
 			itm.setPower(Integer.parseInt(dl.values.get(0)));
 		}
-		else if(dl.item.equals("usableby"))
-		{
-			for(String c : dl.values)
-			{
-				if(c.length() > 1)
-					itm.addUsableBy(c);
-			}
-		}
 		else if(dl.item.equals("targettype"))
 		{
 			itm.setTargetType(getTargetType(dl.values.get(0)));
@@ -426,7 +418,7 @@ public class GameDataLoader
 		}
 		else if(dl.item.equals("equip"))
 		{
-			c.firstEquip(dl.values.get(0));
+			c.firstEquip(PlayerCharacter.Slot.valueOf(dl.values.get(0)), dl.values.get(1));
 		}
 		else if(dl.item.equals("ability"))
 		{
@@ -530,8 +522,12 @@ public class GameDataLoader
 	{
 		if(str.equals("usable"))
 			return Item.Type.Usable;
-		else if(str.equals("weapon"))
-			return Item.Type.Weapon;
+		else if(str.equals("dagger"))
+			return Item.Type.Dagger;		
+		else if(str.equals("sword"))
+			return Item.Type.Sword;
+		else if(str.equals("staff"))
+			return Item.Type.Staff;		
 		else if(str.equals("shield"))
 			return Item.Type.Shield;
 		else if(str.equals("torso"))

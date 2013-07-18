@@ -74,6 +74,27 @@ public abstract class ScriptVar {
 		}	
 	}
 	
+	@SuppressWarnings("unchecked")
+	public static  void stringListFromSingleOrList(List<String> list, ScriptVar var)
+	{
+		try {		
+			if (var.isString()) //single condition...
+			{
+				list.add(var.getString());
+			}
+			else
+			{
+				if (!var.isEmptyList())
+				{
+					stringListFromSingleOrList(list, var.tail());  //recursively add from back.
+					list.add(var.head().getString());
+				}
+			}
+		} catch (BadTypeException e) {
+			e.printStackTrace();
+		}	
+	}
+	
 	public class BadTypeException extends ParserException
 	{
 		BadTypeException(String expectedType, String myType)

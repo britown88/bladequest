@@ -390,7 +390,7 @@ public class BattleLibrary {
 	}
 	public static float basicDamageCalc(PlayerCharacter attacker, PlayerCharacter defender, float power, String type)
 	{
-		return BattleCalc.calculatedDamage(attacker, defender, power, DamageTypes.valueOf(type), new ArrayList<DamageComponent>(), 0.0f, BattleCalc.AccuracyType.Regular);
+		return BattleCalc.calculatedDamage(attacker, defender, power, DamageTypes.valueOf(type), new ArrayList<DamageComponent>(), 0.0f, BattleCalc.AccuracyType.Regular, PlayerCharacter.Hand.MainHand);
 	}
 	
 	

@@ -326,7 +326,9 @@ public class Party
 		typeList.add(Item.Type.UsableSavePointOnly);
 		typeList.add(Item.Type.UsableWorldOnly);		
 		typeList.add(Item.Type.UsableBattleOnly);
-		typeList.add(Item.Type.Weapon);
+		typeList.add(Item.Type.Dagger);
+		typeList.add(Item.Type.Sword);
+		typeList.add(Item.Type.Staff);
 		typeList.add(Item.Type.Shield);		
 		typeList.add(Item.Type.Helmet);
 		typeList.add(Item.Type.Torso);

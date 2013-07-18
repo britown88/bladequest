@@ -15,6 +15,7 @@ public enum Stats
 	Speed,
 	Evade,
 	Block,
+	DamageIgnore,
 	Crit,
 	Fire,
 	Earth,

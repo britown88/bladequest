@@ -3,17 +3,24 @@
 setDefaultShadow character
   setShadow character (createShadow 32 16 32)
 
-\aramis <- createCharacter "aramis" "Aramis" "baramis" "aramis" >
+
+
+\aramis <- (createCharacter "aramis" "Aramis" "baramis" "aramis" >
 setPortrait 0 0 >
 setStartingName "?????" >
 setAbilityName "Tricks" >
 setCombatAction "combSteal" >
 setBaseStats 7 10 4 2 >
 setLevel 5 >
-mapBound equip {"knife", "felthat", "cottonshirt"} >
+setHandEquippable "MainHand" "Dagger" >
+setHandEquippable "OffHand" "Dagger" >
+equip "Hand1" "knife" >
+equip "Hand2" "knife" >
+equip "Helmet" "felthat" >
+equip "Torso" "cottonshirt" >
 mapBound addAbility {"coatweapon"} >
 addLearnableAbility "dblattack" 6 > 
-addLearnableAbility "backstab" 8 > 
+addLearnableAbility "backstab" 8) > 
 setDefaultShadow
 
 \joy <- (createCharacter "joy" "Joy" "bjoy" "joy" >
@@ -24,7 +31,11 @@ setCombatAction "combAuras" >
 setBaseStats 3 3 6 10 >
 setLevel 6 >
 mapBound addAbility {"heal", "ignite"} >
-mapBound equip {"silverstaff", "felthat", "cottonshirt"}) > 
+setHandEquippable "MainHand" {"Sword", "Staff"} >
+setHandEquippable "OffHand" "Shield" >
+equip "Hand1" "silverstaff" >
+equip "Helmet" "felthat" >
+equip "Torso" "cottonshirt") >
 setDefaultShadow
 
 \luc <- (createCharacter "luc" "Luc" "bluc" "luc" >
@@ -33,10 +44,15 @@ setAbilityName "Swordplay" >
 setCombatAction "combStance" >
 setBaseStats 10 4 7 2 >
 setLevel 5 >
-mapBound equip {"woodensword", "felthat", "cottonshirt"} >
+setHandEquippable "MainHand" "Sword" >
+setHandEquippable "OffHand" "Shield" >
+equip "Hand1" "woodensword" >
+equip "Helmet" "felthat" >
+equip "Torso" "cottonshirt" >
 addLearnableAbility "assault" 6 >
 addLearnableAbility "redcard" 8) >
 setDefaultShadow
+
 
 \roland <- (createCharacter "roland" "Roland" "broland" "roland" >
 setPortrait 0 0 >
@@ -44,7 +60,11 @@ setAbilityName "Ice Magic" >
 setCombatAction "combDragonForm" >
 setBaseStats 3 7 3 10 >
 setLevel 99 >
-mapBound equip {"felthat", "cottonshirt"} >
+setHandEquippable "MainHand" {"Sword", "Staff"} >
+setHandEquippable "OffHand" {"Sword", "Shield"} >
+equip "Hand1" "silverstaff" >
+equip "Helmet" "felthat" >
+equip "Torso" "cottonshirt" >
 mapBound addAbility {"frostwish", "entomb", "shatter"}) >
 setDefaultShadow
 

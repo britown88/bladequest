@@ -86,14 +86,12 @@ makeRatAI enemy
 
 #
 \rat <- (addEnemy "rat" "Rat" "rat" >
-setEBaseStats 10 1 1 1 >
+setEBaseStats 1 1 1 1 >
 addDefaultStaffHit >
 setELevel 5 >
 setGold 16 >
 addDrop "potion" 0.25 >
 setHeldItem "antidote" >
-modStat "MaxHP" -12 >
-modStat "BattlePower" -1 >
 makeRatAI >
 addEAbility "bite" >
 setEShadow (createShadow 40 36 15))

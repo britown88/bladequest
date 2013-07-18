@@ -5,6 +5,13 @@ namespace BladeCraft.Classes
 {
     public class Tile
     {
+
+        public static int sideLeft = 0;
+        public static int sideTop = 1;
+        public static int sideRight = 2;
+        public static int sideBottom = 3;
+        public static int numSides = 4;
+
         public int x, y, bmpX, bmpY, animBmpX, animBmpY;
         public int layer;
         public bool[] collSides;

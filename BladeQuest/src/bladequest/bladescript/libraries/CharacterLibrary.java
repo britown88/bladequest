@@ -1,5 +1,8 @@
 package bladequest.bladescript.libraries;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.util.Log;
 import bladequest.bladescript.LibraryWriter;
 import bladequest.bladescript.ParserException;
@@ -7,7 +10,9 @@ import bladequest.bladescript.ScriptVar;
 import bladequest.combatactions.CombatAction;
 import bladequest.graphics.Shadow;
 import bladequest.world.Global;
+import bladequest.world.Item;
 import bladequest.world.PlayerCharacter;
+import bladequest.world.PlayerCharacter.Hand;
 import bladequest.world.Stats;
 
 public class CharacterLibrary 
@@ -93,10 +98,23 @@ public class CharacterLibrary
 		pc.fullRestore();
 		return pc;
 	}
-	
-	public static PlayerCharacter equip(PlayerCharacter pc, String item)
+	public static PlayerCharacter setHandEquippable(PlayerCharacter pc, String hand, ScriptVar itemTypeList)
 	{
-		pc.firstEquip(item);
+		List<String> stringList = new ArrayList<String>();
+		ScriptVar.stringListFromSingleOrList(stringList, itemTypeList);
+		
+		List<Item.Type> itemTypes = new ArrayList<Item.Type>();
+		
+		for (String s : stringList)
+		{
+			itemTypes.add(Item.Type.valueOf(s));
+		}
+		pc.setHandEquippable(PlayerCharacter.Hand.valueOf(hand), itemTypes);
+		return pc;
+	}
+	public static PlayerCharacter equip(PlayerCharacter pc, String slot, String item)
+	{
+		pc.firstEquip(PlayerCharacter.Slot.valueOf(slot), item);
 		return pc;
 	}
 	

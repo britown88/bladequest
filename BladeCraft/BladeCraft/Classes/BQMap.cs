@@ -1,21 +1,148 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Xml;
 using System.Drawing;
 
-
+using System.Linq;
 using BladeCraft.Forms;
 
 using System.Text.RegularExpressions;
 
 namespace BladeCraft.Classes
 {
+   public interface MapWriter : IDisposable
+   {
+      void writeComment(String comment);
+      void startSection(String sectionName);
+      void writeAttribute(String attributeName, String value);
+      void endSection();
 
+      void writeElement(String elementName, String element);
+   }
 
    public class BQMap
    {
+      public class XMLMapWriter : MapWriter
+      {
+         XmlTextWriter xwriter;
+         public XMLMapWriter(String name)
+         {
+            xwriter = new XmlTextWriter("bcfiles\\" + name + ".xml", null);
+            xwriter.WriteStartDocument();
+            
+         }
+         public void writeComment(String comment)
+         {
+            xwriter.WriteComment(comment);
+         }
+
+         public void startSection(String sectionName)
+         {
+            xwriter.WriteStartElement(sectionName);
+         }
+
+         public void writeAttribute(String attributeName, String value)
+         {
+            xwriter.WriteAttributeString(attributeName, value);
+         }
+         public void writeElement(String elementName, String element)
+         {
+            xwriter.WriteElementString(elementName, element);
+         }
+
+         public void endSection()
+         {
+            xwriter.WriteEndElement();
+         }
+
+         public void Dispose()
+         {
+            xwriter.WriteEndDocument();
+            xwriter.Close();
+         }
+      }
+
+      public class Memento
+      {
+         public Memento()
+         {
+            this.sections = new List<Section>();
+         }
+         public class Section
+         {
+            public Section()
+            {
+               attributes = new Dictionary<String, String>();
+               elements = new Dictionary<String, String>();
+               sections = new List<Section>();
+            }
+            public String name;
+            public IDictionary<String, String> attributes;
+            public IDictionary<String, String> elements;
+            public List<Section> sections;
+         }
+         public List<Section> sections;
+      }
+
+      public class MementoWriter : MapWriter 
+      {
+         Memento memento;
+         Memento.Section activeSection;
+         List<Memento.Section> sectionStack;
+         public MementoWriter(Memento memento)
+         {
+            this.memento = memento;
+            sectionStack = new List<Memento.Section>();
+         }
+         public void writeComment(string comment)
+         {
+            //nice try obama
+         }
+
+         public void startSection(string sectionName)
+         {
+            if (activeSection != null)
+            {
+               sectionStack.Add(activeSection);
+            }
+            activeSection = new Memento.Section();
+            activeSection.name = sectionName;
+         }
+
+         public void writeAttribute(string attributeName, string value)
+         {
+            activeSection.attributes[attributeName] = value;
+         }
+
+         public void endSection()
+         {
+            if (sectionStack.Any())
+            {
+               sectionStack[sectionStack.Count - 1].sections.Add(activeSection);
+               activeSection = sectionStack[sectionStack.Count - 1];
+               sectionStack.RemoveAt(sectionStack.Count - 1);
+            }
+            else
+            {
+               memento.sections.Add(activeSection);
+               activeSection = null;
+            }
+         }
+
+         public void writeElement(string elementName, string element)
+         {
+            activeSection.elements[elementName] = element;
+         }
+
+         public void Dispose()
+         {
+            //sure
+         }
+      }
+
       private enum LoadTypes
       {
          Header,
@@ -34,7 +161,7 @@ namespace BladeCraft.Classes
          Right = 1 << 7
       };
       private int sizeX, sizeY;
-      private string name, path, tileset, displayName, BGM;
+      private string name, path, displayName, BGM;
       private bool save;
 
       public int layerCount = 8;
@@ -49,6 +176,8 @@ namespace BladeCraft.Classes
 
       private ObjectHeader headerForm;
       private Point[] materialPoints;
+
+      public List<Memento> undoList, redoList;
 
       public List<Point> MatList;
 
@@ -83,16 +212,22 @@ namespace BladeCraft.Classes
          zones = new List<EncounterZone>();
          objects = new List<GameObject>();
          MatList = new List<Point>();
+         undoList = new List<Memento>();
+         redoList = new List<Memento>();
          buildMaterialLocations();
       }
 
+      void reset()
+      {
+         string[] values = new string[20];
+         zones = new List<EncounterZone>();
+         MatList = new List<Point>();
+      }
       public BQMap(string filename)
       {
-         StreamReader reader = new StreamReader(filename);
-         string[] values= new string[20];
-         zones = new List<EncounterZone>();
-         objects = new List<GameObject>();
-         MatList = new List<Point>();
+         objects = new List<GameObject>();  //hack - not affected by undo-redo!
+         undoList = new List<Memento>();
+         redoList = new List<Memento>();
 
          this.path = filename;
 
@@ -247,11 +382,7 @@ namespace BladeCraft.Classes
       }
 
       public string getMapPath() { return path; }      
-      
-      public void setTileset(string ts)
-      {
-         tileset = ts;
-      }
+     
 
       public void updateSize(int x, int y)
       {
@@ -422,7 +553,6 @@ namespace BladeCraft.Classes
       public int width() { return sizeX; }
       public int height() { return sizeY; }
       public string getName() { return name; }
-      public string getTileset() { return tileset; }
       public void setName(string name) { this.name = name; }
       public void setDisplayName(String st) { displayName = st; }
       public String getDisplayName() { return displayName; }
@@ -523,81 +653,290 @@ namespace BladeCraft.Classes
       {
          if(objects.Count > 0)
          {
-            StreamWriter writer = new StreamWriter("assets\\maps\\omaps\\" + name + ".omap");
-            writer.WriteLine("#!HEAD");
-            writer.WriteLine(Header);
+            using (StreamWriter writer = new StreamWriter("assets\\maps\\omaps\\" + name + ".omap"))
+            {
+               writer.WriteLine("#!HEAD");
+               writer.WriteLine(Header);
 
-            foreach(GameObject obj in objects)
-               obj.write(writer);
+               foreach (GameObject obj in objects)
+                  obj.write(writer);
 
-            writer.Close();
+               writer.Close();
+            }
          }
          
       }
 
-      private void writeTile(Tile t, XmlTextWriter xwriter)
+      private void writeTile(Tile t, MapWriter writer)
       {
-         xwriter.WriteStartElement("Tile");
+         writer.startSection("Tile");
 
-         xwriter.WriteStartElement("WorldPosition");
-         xwriter.WriteAttributeString("X", t.x.ToString());
-         xwriter.WriteAttributeString("Y", t.y.ToString());
-         xwriter.WriteEndElement();
+         writer.startSection("WorldPosition");
+         writer.writeAttribute("X", t.x.ToString());
+         writer.writeAttribute("Y", t.y.ToString());
+         writer.endSection();
 
-         xwriter.WriteStartElement("BitmapCoordinates");
-         xwriter.WriteAttributeString("X", t.bmpX.ToString());
-         xwriter.WriteAttributeString("Y", t.bmpY.ToString());
-         xwriter.WriteEndElement();
+         writer.startSection("BitmapCoordinates");
+         writer.writeAttribute("X", t.bmpX.ToString());
+         writer.writeAttribute("Y", t.bmpY.ToString());
+         writer.endSection();
 
-         xwriter.WriteElementString("Layer", t.layer.ToString());
+         writer.writeElement("Layer", t.layer.ToString());
 
-         xwriter.WriteStartElement("CollisionData");
-         xwriter.WriteAttributeString("Left", t.collSides[0].ToString());
-         xwriter.WriteAttributeString("Top", t.collSides[1].ToString());
-         xwriter.WriteAttributeString("Right", t.collSides[2].ToString());
-         xwriter.WriteAttributeString("Down", t.collSides[3].ToString());
-         xwriter.WriteEndElement();
+         writer.startSection("CollisionData");
+         writer.writeAttribute("Left", t.collSides[0].ToString());
+         writer.writeAttribute("Top", t.collSides[1].ToString());
+         writer.writeAttribute("Right", t.collSides[2].ToString());
+         writer.writeAttribute("Down", t.collSides[3].ToString());
+         writer.endSection();
 
          if (t.animated)
          {
-            xwriter.WriteStartElement("AnimatedBitmapCoordinates");
-            xwriter.WriteAttributeString("X", t.animBmpX.ToString());
-            xwriter.WriteAttributeString("Y", t.animBmpY.ToString());
-            xwriter.WriteEndElement();
+            writer.startSection("AnimatedBitmapCoordinates");
+            writer.writeAttribute("X", t.animBmpX.ToString());
+            writer.writeAttribute("Y", t.animBmpY.ToString());
+            writer.endSection();
          }
 
          if (t.IsMaterial())
          {
-            xwriter.WriteStartElement("MaterialCoordinates");
-            xwriter.WriteAttributeString("X", t.matX.ToString());
-            xwriter.WriteAttributeString("Y", t.matY.ToString());
-            xwriter.WriteEndElement();
+            writer.startSection("MaterialCoordinates");
+            writer.writeAttribute("X", t.matX.ToString());
+            writer.writeAttribute("Y", t.matY.ToString());
+            writer.endSection();
          }
 
 
-         xwriter.WriteEndElement();
+         writer.endSection();
       }
+
+
+      public interface MapNode
+      {
+         bool startNode();
+         bool endNode();
+         String name();
+         String elementData();
+         String getAttribute(String attrName);
+      }
+      public interface MapReader : IDisposable
+      {
+         IEnumerable<MapNode> getNodes();
+      }
+
+
+      public class XMLNode : MapNode 
+      {
+         XmlTextReader reader;
+         public XMLNode(XmlTextReader reader)
+         {
+            this.reader = reader;
+         }
+
+         public bool startNode()
+         {
+            return XmlNodeType.Element == reader.NodeType;
+         }
+         public bool endNode()
+         {
+            return XmlNodeType.EndElement == reader.NodeType;
+         }
+
+         public string name()
+         {
+            return reader.LocalName;
+         }
+
+         public string elementData()
+         {
+            return reader.ReadString();
+         }
+
+         public string getAttribute(string attrName)
+         {
+            return reader.GetAttribute(attrName);
+         }
+      }
+
+      public class XMLMapReader : MapReader
+      {
+         public XMLMapReader(string path)
+         {
+            reader = new XmlTextReader(path);
+         }
+         XmlTextReader reader;
       
+         public void Dispose()
+         {
+            reader.Close();
+            reader.Dispose();
+         }
+      
+         public IEnumerable<MapNode> getNodes()
+         {
+            while (reader.Read())
+            {
+               yield return new XMLNode(reader);
+            }
+         }
+      }
+
+
+
+      public class MementoSectionNode : MapNode
+      {
+         Memento.Section section;
+         bool start;
+         public MementoSectionNode(Memento.Section section, bool start)
+         {
+            this.section = section;
+            this.start = start;
+         }
+
+         public bool startNode()
+         {
+            return start == true;
+         }
+         public bool endNode()
+         {
+            return start == false;
+         }
+
+         public string name()
+         {
+            return section.name;
+         }
+
+         public string elementData()
+         {
+            return "";
+         }
+
+         public string getAttribute(string attrName)
+         {
+            return section.attributes[attrName];
+         }
+      }
+
+
+
+      public class MementoElementNode : MapNode
+      {
+         String elemName, data;
+         bool start;
+         public MementoElementNode(String elemName, string data, bool start)
+         {
+            this.elemName = elemName;
+            this.data = data;
+            this.start = start;
+         }
+
+         public bool startNode()
+         {
+            return start == true;
+         }
+         public bool endNode()
+         {
+            return start == false;
+         }
+
+         public string name()
+         {
+            return elemName;
+         }
+
+         public string elementData()
+         {
+            return data;
+         }
+
+         public string getAttribute(string attrName)
+         {
+            return "";
+         }
+      }
+
+      public class MementoReader : MapReader
+      {
+         public MementoReader(Memento memento)
+         {
+            this.memento = memento;
+         }
+         Memento memento;
+
+         public void Dispose()
+         {
+         }
+
+         public IEnumerable<MapNode> readSection(Memento.Section section)
+         {
+            yield return new MementoSectionNode(section, true);
+            foreach (KeyValuePair<string, string> kvp in section.elements)
+            {
+               yield return new MementoElementNode(kvp.Key, kvp.Value, true);
+               yield return new MementoElementNode(kvp.Key, kvp.Value, false);
+            }
+            foreach (var subsection in section.sections)
+            {
+               foreach (var node in readSection(subsection))
+               {
+                  yield return node;
+               }
+            }
+            yield return new MementoSectionNode(section, false);
+         }
+         public IEnumerable<MapNode> getNodes()
+         {
+            foreach (var section in memento.sections)
+            {
+               foreach (var node in readSection(section))
+               {
+                  yield return node;
+               }
+            }
+         }
+      }
+
+
+      
+
+
       private void readXML(string path)
       {
-         XmlTextReader r = new XmlTextReader(path);
+         using (XMLMapReader reader = new XMLMapReader(path))
+         {
+            read(reader);
+         }
+      }
+      private void readMemento(Memento memento)
+      {
+         using (MementoReader reader = new MementoReader(memento))
+         {
+            read(reader);
+         }
+      }
+
+
+      private void read(MapReader r)
+      {
+         reset();
          Tile newTile = new Tile();
          EncounterZone newZone = new EncounterZone();
 
-         while (r.Read())
+         foreach (var node in r.getNodes())
          {
-            switch (r.NodeType)
+            if (node.startNode())
             {
-               case XmlNodeType.Element:
-                  switch (r.LocalName)
+                  switch (node.name())
                   {
                      case "Map":
-                        BGM = r.GetAttribute("BGM");
-                        displayName = r.GetAttribute("DisplayName");
-                        tileset = r.GetAttribute("TileSet");
+                        BGM = node.getAttribute("BGM");
+                        displayName = node.getAttribute("DisplayName");
+                        //tileset = node.getAttribute("TileSet");
+                        //TODO: Replace
 
-                        sizeX = Convert.ToInt32(r.GetAttribute("Width"));
-                        sizeY = Convert.ToInt32(r.GetAttribute("Height"));
+                        sizeX = Convert.ToInt32(node.getAttribute("Width"));
+                        sizeY = Convert.ToInt32(node.getAttribute("Height"));
 
                         tileList = new Tile[layerCount][];
                         for (int i = 0; i < layerCount; ++i)
@@ -607,127 +946,170 @@ namespace BladeCraft.Classes
                         newTile = new Tile();
                         break;
                      case "WorldPosition":
-                        newTile.x = Convert.ToInt32(r.GetAttribute("X"));
-                        newTile.y = Convert.ToInt32(r.GetAttribute("Y"));
+                        newTile.x = Convert.ToInt32(node.getAttribute("X"));
+                        newTile.y = Convert.ToInt32(node.getAttribute("Y"));
                         break;
                      case "BitmapCoordinates":
-                        newTile.bmpX = Convert.ToInt32(r.GetAttribute("X"));
-                        newTile.bmpY = Convert.ToInt32(r.GetAttribute("Y"));
+                        newTile.bmpX = Convert.ToInt32(node.getAttribute("X"));
+                        newTile.bmpY = Convert.ToInt32(node.getAttribute("Y"));
                         break;
                      case "Material":
                         MatList.Add(new Point(
-                           Convert.ToInt32(r.GetAttribute("X")),
-                           Convert.ToInt32(r.GetAttribute("Y"))));
+                           Convert.ToInt32(node.getAttribute("X")),
+                           Convert.ToInt32(node.getAttribute("Y"))));
                         break;
                      case "Layer":
-                        newTile.layer = Convert.ToInt32(r.ReadString());
+                        newTile.layer = Convert.ToInt32(node.elementData());
                         break;
                      case "CollisionData":
-                        newTile.collSides[0] = Convert.ToBoolean(r.GetAttribute("Left"));
-                        newTile.collSides[1] = Convert.ToBoolean(r.GetAttribute("Top"));
-                        newTile.collSides[2] = Convert.ToBoolean(r.GetAttribute("Right"));
-                        newTile.collSides[3] = Convert.ToBoolean(r.GetAttribute("Down"));
+                        newTile.collSides[0] = Convert.ToBoolean(node.getAttribute("Left"));
+                        newTile.collSides[1] = Convert.ToBoolean(node.getAttribute("Top"));
+                        newTile.collSides[2] = Convert.ToBoolean(node.getAttribute("Right"));
+                        newTile.collSides[3] = Convert.ToBoolean(node.getAttribute("Down"));
                         break;
                      case "AnimatedBitmapCoordinates":
-                        newTile.animate(Convert.ToInt32(r.GetAttribute("X")), Convert.ToInt32(r.GetAttribute("Y")));
+                        newTile.animate(Convert.ToInt32(node.getAttribute("X")), Convert.ToInt32(node.getAttribute("Y")));
                         break;
                      case "MaterialCoordinates":
-                        newTile.addToMaterial(Convert.ToInt32(r.GetAttribute("X")), Convert.ToInt32(r.GetAttribute("Y")));
+                        newTile.addToMaterial(Convert.ToInt32(node.getAttribute("X")), Convert.ToInt32(node.getAttribute("Y")));
                         break;
                      case "EncounterZone":
                         newZone = new EncounterZone();
-                        newZone.zone.Width = Convert.ToInt32(r.GetAttribute("Width"));
-                        newZone.zone.Height = Convert.ToInt32(r.GetAttribute("Height"));
-                        newZone.zone.X = Convert.ToInt32(r.GetAttribute("X"));
-                        newZone.zone.Y = Convert.ToInt32(r.GetAttribute("Y"));
-                        newZone.encounterRate = (int)Convert.ToDecimal(r.GetAttribute("EncounterRate"));
+                        newZone.zone.Width = Convert.ToInt32(node.getAttribute("Width"));
+                        newZone.zone.Height = Convert.ToInt32(node.getAttribute("Height"));
+                        newZone.zone.X = Convert.ToInt32(node.getAttribute("X"));
+                        newZone.zone.Y = Convert.ToInt32(node.getAttribute("Y"));
+                        newZone.encounterRate = (int)Convert.ToDecimal(node.getAttribute("EncounterRate"));
                         break;
                      case "Encounter":
-                        newZone.encounters.Add(r.ReadString());
-                        break; 
-                  }
-                  break;
-               case XmlNodeType.EndElement:
-                  switch (r.LocalName)
-                  {
-                     case "Tile":
-                        addTile(newTile);
+                        newZone.encounters.Add(node.elementData());
                         break;
-                     case "EncounterZone":
-                        zones.Add(newZone);
-                        break;
-                        
                   }
-                  break;
-            };
+            }
+            else if (node.endNode())
+            {
+               switch (node.name())
+               {
+                  case "Tile":
+                     addTile(newTile);
+                     break;
+                  case "EncounterZone":
+                     zones.Add(newZone);
+                     break;
+
+               }
+            }
          }
-
-         r.Close();
-
       }
 
-      public void write()
+
+      public void writeBQData()
       {
-         XmlTextWriter xwriter = new XmlTextWriter("bcfiles\\" + name + ".xml", null);
-         xwriter.WriteStartDocument();
-         xwriter.WriteComment("BladeCraft Map File for assets\\maps\\" + name + ".map");
-         xwriter.WriteStartElement("Map");
-         xwriter.WriteAttributeString("Height", sizeY.ToString());
-         xwriter.WriteAttributeString("Width", sizeX.ToString());
-         xwriter.WriteAttributeString("TileSet", tileset);
-         xwriter.WriteAttributeString("DisplayName", displayName);
-         xwriter.WriteAttributeString("BGM", BGM);
+         using (StreamWriter writer = new StreamWriter("assets\\maps\\" + name + ".map"))
+         {
+            writer.WriteLine("[header]");
+            writer.WriteLine("size " + sizeX + " " + sizeY);
+            //writer.WriteLine("tileset " + tileset);
+            //TODO: replace
+            writer.WriteLine("displayname \"" + displayName + "\"");
+            writer.WriteLine("BGM " + BGM);
+
+
+            //write map file
+            writer.WriteLine("[tiles]");
+            foreach (Tile[] tList in tileList)
+               foreach (Tile t in tList)
+                  if (t != null)
+                     if (t.animated)
+                        writer.WriteLine("t " + t.x + " " + t.y + " " + t.bmpX + " " + t.bmpY + " " + t.layer.ToString() + " " +
+                        Convert.ToInt32(t.collSides[0]).ToString() + " " + Convert.ToInt32(t.collSides[1]).ToString() + " " +
+                        Convert.ToInt32(t.collSides[2]).ToString() + " " + Convert.ToInt32(t.collSides[3]).ToString() + " " +
+                        "t " + t.animBmpX + " " + t.animBmpY);
+                     else
+                        writer.WriteLine("t " + t.x + " " + t.y + " " + t.bmpX + " " + t.bmpY + " " + t.layer.ToString() + " " +
+                        Convert.ToInt32(t.collSides[0]).ToString() + " " + Convert.ToInt32(t.collSides[1]).ToString() + " " +
+                        Convert.ToInt32(t.collSides[2]).ToString() + " " + Convert.ToInt32(t.collSides[3]).ToString() + " ");
+
+
+            writer.WriteLine("[encounters]");
+            foreach (EncounterZone ez in zones)
+               ez.write(writer);
+
+            writer.Close();
+         }
+         
+
+         writeObjects();
+      }
+
+      public void writeXML()
+      {
+         using (MapWriter m = new XMLMapWriter(name))
+         {
+            write(m);
+         };
+      }
+
+
+      public void write(MapWriter writer)
+      {
+         writer.writeComment("BladeCraft Map File for assets\\maps\\" + name + ".map");
+         writer.startSection("Map");
+         writer.writeAttribute("Height", sizeY.ToString());
+         writer.writeAttribute("Width", sizeX.ToString());
+         //writer.writeAttribute("TileSet", tileset);
+         //Todo: Replace
+         writer.writeAttribute("DisplayName", displayName);
+         writer.writeAttribute("BGM", BGM);
 
          foreach(Tile[] tList in tileList)
             foreach (Tile t in tList) 
                if (t != null) 
-                  writeTile(t, xwriter);
+                  writeTile(t, writer);
          foreach (EncounterZone ez in zones)
-            ez.write(xwriter);
+            ez.write(writer);
          if (MatList.Count > 0)
             foreach (Point p in MatList)
             {
-               xwriter.WriteStartElement("Material");
-               xwriter.WriteAttributeString("X", p.X.ToString());
-               xwriter.WriteAttributeString("Y", p.Y.ToString());
-               xwriter.WriteEndElement();
+               writer.startSection("Material");
+               writer.writeAttribute("X", p.X.ToString());
+               writer.writeAttribute("Y", p.Y.ToString());
+               writer.endSection();
             }
-      
-         xwriter.WriteEndElement();
-         xwriter.WriteEndDocument();
-         xwriter.Close();
 
-         StreamWriter writer = new StreamWriter("assets\\maps\\" + name + ".map");
-         writer.WriteLine("[header]");
-         writer.WriteLine("size " + sizeX + " " + sizeY);
-         writer.WriteLine("tileset " + tileset);
-         writer.WriteLine("displayname \"" + displayName + "\"");
-         writer.WriteLine("BGM " + BGM);
+         writer.endSection();
+      }
 
 
-         //write map file
-         writer.WriteLine("[tiles]");
-         foreach(Tile[] tList in tileList)
-         foreach (Tile t in tList)
-            if (t != null)
-               if (t.animated)
-                  writer.WriteLine("t " + t.x + " " + t.y + " " + t.bmpX + " " + t.bmpY + " " + t.layer.ToString() + " " +
-                  Convert.ToInt32(t.collSides[0]).ToString() + " " + Convert.ToInt32(t.collSides[1]).ToString() + " " +
-                  Convert.ToInt32(t.collSides[2]).ToString() + " " + Convert.ToInt32(t.collSides[3]).ToString() + " " +
-                  "t " + t.animBmpX + " " + t.animBmpY);
-               else
-                  writer.WriteLine("t " + t.x + " " + t.y + " " + t.bmpX + " " + t.bmpY + " " + t.layer.ToString() + " " +
-                  Convert.ToInt32(t.collSides[0]).ToString() + " " + Convert.ToInt32(t.collSides[1]).ToString() + " " +
-                  Convert.ToInt32(t.collSides[2]).ToString() + " " + Convert.ToInt32(t.collSides[3]).ToString() + " ");
-
-
-         writer.WriteLine("[encounters]");
-         foreach (EncounterZone ez in zones)
-            ez.write(writer);
-
-         writer.Close();
-
-         writeObjects();
+      public void writeMemento()
+      {
+         redoList.Clear();
+         Memento m = new Memento();
+         using (MementoWriter writer = new MementoWriter(m))
+         {
+            write(writer);
+         }
+         undoList.Add(m);
+      }
+      public void undo()
+      {
+         if (undoList.Count > 1)
+         {
+            Memento targetMemento = undoList[undoList.Count - 2];
+            redoList.Add(undoList[undoList.Count - 1]);
+            readMemento(targetMemento);
+            undoList.RemoveAt(undoList.Count - 1);
+         }
+      }
+      public void redo()
+      {
+         if (redoList.Any())
+         {
+            Memento targetMemento = redoList[redoList.Count - 1];
+            undoList.Add(targetMemento);
+            readMemento(targetMemento);
+            redoList.RemoveAt(redoList.Count - 1);
+         }
       }
    }
 }

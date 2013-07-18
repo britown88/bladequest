@@ -85,7 +85,7 @@ public class MainMenu
 	private int darkenAlpha;
 	private boolean darkening;
 	
-	private Item.Type equipItemType;
+	private PlayerCharacter.Slot equipItemSlot;
 	
 	private MainMenuStateMachine stateMachine; 
 	
@@ -105,7 +105,7 @@ public class MainMenu
 		darkenAlpha = 0;
 		darkening = false;
 		
-		equipItemType = null;
+		equipItemSlot = null;
 		
 		buildPaints();
 		
@@ -291,13 +291,13 @@ public class MainMenu
 						if(!i.isUsable(UseTypes.World))
 						{
 							List<String> charNames = new ArrayList<String>();
-							PlayerCharacter c;
-							for(String str : i.getUsableChars())
+							for (PlayerCharacter c : Global.party.getPartyList(true))
 							{
-								c = Global.party.getCharacter(str);
-								if(c != null)
+								if (c.canEquip(i))
+								{
 									charNames.add(c.getDisplayName());
-							}							
+								}
+							}					
 							if(charNames.size() > 0)
 							{
 								String usableByString = "Usable by: \n";
@@ -481,7 +481,7 @@ public class MainMenu
 			@Override
 			public void changeToRoot() {
 				sideBar.close();
-				equipItemType = null;
+				equipItemSlot = null;
 				selectedEqpItem = null;
 				eqpRemove = false;
 			}
@@ -515,7 +515,7 @@ public class MainMenu
 					eqpCharPanel.render();
 					eqpEquipSlots.render();
 					eqpInfoBar.render();				
-					if(equipItemType != null)
+					if(equipItemSlot != null)
 						renderDark();
 					eqpStats.render();
 					eqpSelect.render();
@@ -551,7 +551,7 @@ public class MainMenu
 				
 				if(sideBar.Opened())
 				{					
-					if(equipItemType != null)
+					if(equipItemSlot != null)
 					{				
 						selectedEqpItem = null;
 						updateEquipStats();
@@ -560,19 +560,19 @@ public class MainMenu
 						switch(state)
 						{
 						case Close:
-							equipItemType = null;
+							equipItemSlot = null;
 							fillEqpSelect();
 							undarken();
 							break;
 						case Selected:
 							Item i = (Item)eqpSelect.getSelectedEntry().obj;
 							if(i == null)
-								selectedChar.unequip(equipItemType);
+								selectedChar.unequip(equipItemSlot);
 							else
-								selectedChar.equip(i.getId());
+								selectedChar.equip(equipItemSlot, i.getId());
 							
 							undarken();
-							equipItemType = null;
+							equipItemSlot = null;
 							updateEquipScreen();
 							break;
 						default:
@@ -591,11 +591,11 @@ public class MainMenu
 							state = eqpEquipSlots.touchActionUp(x, y);
 							if(state == LBStates.Selected)
 							{
-								Item.Type type = (Item.Type)eqpEquipSlots.getSelectedEntry().obj;
+								PlayerCharacter.Slot slot = (PlayerCharacter.Slot)eqpEquipSlots.getSelectedEntry().obj;
 								
-								if(selectedChar.hasTypeEquipped(type)|| hasItemToEquip(selectedChar, type))
+								if(selectedChar.hasSlotEquipped(slot)|| hasItemToEquip(selectedChar, slot))
 								{
-									equipItemType = type;
+									equipItemSlot = slot;
 									darken();
 									fillEqpSelect();
 								}
@@ -612,7 +612,7 @@ public class MainMenu
 			public void touchActionMove(int x, int y) {
 				if(sideBar.Opened())
 				{					
-					if(equipItemType != null)
+					if(equipItemSlot != null)
 					{
 						eqpSelect.touchActionMove(x, y);
 						if(eqpSelect.getCurrentSelectedEntry() != null)
@@ -642,7 +642,7 @@ public class MainMenu
 			public void touchActionDown(int x, int y) {
 				if(sideBar.Opened())
 				{						
-					if(equipItemType != null)
+					if(equipItemSlot != null)
 					{
 						eqpSelect.touchActionDown(x, y);
 						if(eqpSelect.getCurrentSelectedEntry() != null)
@@ -1538,7 +1538,7 @@ public class MainMenu
 		int column3x = (int)(eqpStats.width*0.85f);
 		int arrowx = (int)(eqpStats.width*0.69f);
 		
-		selectedChar.updateSecondaryStats();
+		selectedChar.updateSecondaryStats(PlayerCharacter.Hand.MainHand);
 		
 		//create labels and base stats
 		eqpStats.addTextBox("POW", column1x, (int)(eqpStats.height*(percentOfHeight*i)), menuText);
@@ -1586,8 +1586,8 @@ public class MainMenu
 			
 			//get new stats
 			int[] newStats = selectedEqpItem != null ? 
-					selectedChar.getModdedStats(selectedEqpItem) :
-					selectedChar.getModdedStatsRmv(equipItemType);
+					selectedChar.getModdedStats(equipItemSlot, selectedEqpItem) :
+					selectedChar.getModdedStatsRmv(equipItemSlot);
 			
 			//create updated stats
 			i = 1;
@@ -1617,28 +1617,39 @@ public class MainMenu
 		float iconScale = 1.75f;
 		int d = (int)((float)Global.iconSize*iconScale/2.0f);
 		
-		//Weapon
-		entry = eqpEquipSlots.addItem(selectedChar.hand1Equipped() ? selectedChar.hand1().getDisplayName() : "Weapon", Item.Type.Weapon, !selectedChar.hand1Equipped());
+		//Hand 1
+		entry = eqpEquipSlots.addItem(selectedChar.hand1Equipped() ? selectedChar.hand1().getDisplayName() : "Main Hand", PlayerCharacter.Slot.Hand1, !selectedChar.hand1Equipped());
 		entry.getTextAt(0).x += d*2 + 4;
 		entry.addPicBox(Global.createIcon(selectedChar.hand1Equipped() ? selectedChar.hand1().getIcon() : "sword", d + 6, eqpEquipSlots.getRowHeight()/2, iconScale));
 		
-		//Shield
-		entry = eqpEquipSlots.addItem(selectedChar.hand2Equipped() ? selectedChar.hand2().getDisplayName() : "Shield", Item.Type.Shield, !selectedChar.hand2Equipped());
-		entry.getTextAt(0).x += d*2 + 4;
-		entry.addPicBox(Global.createIcon(selectedChar.hand2Equipped() ? selectedChar.hand2().getIcon() : "hshield", d + 6, eqpEquipSlots.getRowHeight()/2, iconScale));
+		if (selectedChar.hand1Equipped() && selectedChar.hand1().isTwoHanded())
+		{
+			//Hand 2
+			entry = eqpEquipSlots.addItem(selectedChar.hand1().getDisplayName(), PlayerCharacter.Slot.Hand2, true);
+			entry.getTextAt(0).x += d*2 + 4;
+			entry.addPicBox(Global.createIcon(selectedChar.hand1().getIcon(), d + 6, eqpEquipSlots.getRowHeight()/2, iconScale));
+		}
+		else
+		{
+			//Hand 2
+			entry = eqpEquipSlots.addItem(selectedChar.hand2Equipped() ? selectedChar.hand2().getDisplayName() : "Off Hand", PlayerCharacter.Slot.Hand2, !selectedChar.hand2Equipped());
+			entry.getTextAt(0).x += d*2 + 4;
+			entry.addPicBox(Global.createIcon(selectedChar.hand2Equipped() ? selectedChar.hand2().getIcon() : "hshield", d + 6, eqpEquipSlots.getRowHeight()/2, iconScale));			
+		}
+
 		
 		//Helmet
-		entry = eqpEquipSlots.addItem(selectedChar.helmEquipped() ? selectedChar.helmet().getDisplayName() : "Helmet", Item.Type.Helmet, !selectedChar.helmEquipped());
+		entry = eqpEquipSlots.addItem(selectedChar.helmEquipped() ? selectedChar.helmet().getDisplayName() : "Helmet", PlayerCharacter.Slot.Helmet, !selectedChar.helmEquipped());
 		entry.getTextAt(0).x += d*2 + 4;
 		entry.addPicBox(Global.createIcon(selectedChar.helmEquipped() ? selectedChar.helmet().getIcon() : "hhelmet", d + 6, eqpEquipSlots.getRowHeight()/2, iconScale));
 		
 		//Torso
-		entry = eqpEquipSlots.addItem(selectedChar.torsoEquipped() ? selectedChar.torso().getDisplayName() : "Torso", Item.Type.Torso, !selectedChar.torsoEquipped());
+		entry = eqpEquipSlots.addItem(selectedChar.torsoEquipped() ? selectedChar.torso().getDisplayName() : "Torso", PlayerCharacter.Slot.Torso, !selectedChar.torsoEquipped());
 		entry.getTextAt(0).x += d*2 + 4;
 		entry.addPicBox(Global.createIcon(selectedChar.torsoEquipped() ? selectedChar.torso().getIcon() : "htorso", d + 6, eqpEquipSlots.getRowHeight()/2, iconScale));
 		
 		//Accessory
-		entry = eqpEquipSlots.addItem(selectedChar.accessEquipped() ? selectedChar.accessory().getDisplayName() : "Accessory", Item.Type.Accessory, !selectedChar.accessEquipped());
+		entry = eqpEquipSlots.addItem(selectedChar.accessEquipped() ? selectedChar.accessory().getDisplayName() : "Accessory", PlayerCharacter.Slot.Accessory, !selectedChar.accessEquipped());
 		entry.getTextAt(0).x += d*2 + 4;
 		entry.addPicBox(Global.createIcon(selectedChar.accessEquipped() ? selectedChar.accessory().getIcon() : "ring", d + 6, eqpEquipSlots.getRowHeight()/2, iconScale));
 				
@@ -1652,26 +1663,20 @@ public class MainMenu
 		float iconScale = 2.0f;
 		int d = (int)((float)Global.iconSize*iconScale/2.0f);
 		
-		if(equipItemType != null)
+		if(equipItemSlot != null)
 		{
 			entry = eqpSelect.addItem("Remove", null, false);				
 			entry.getTextAt(0).x += d*2 + 4;
-		}			
-		
-		for(Item i : Global.party.getInventory())
-			if(i.getType() != Type.Key && !i.isUsable(UseTypes.World) && i.getUsableChars().contains(selectedChar.getName()))
+
+			for(Item i : selectedChar.getUsableItemsForSlot(equipItemSlot))
 			{
-				if(i.getType() == equipItemType)
-				{	
-					entry = eqpSelect.addItem(i.getDisplayName(), i, disabled);				
-					entry.getTextAt(0).x += d*2 + 4;					
-					//add item count
-					entry.addTextBox(""+i.getCount(), eqpSelect.getColumnWidth() - 32, eqpSelect.getRowHeight()/2, disabled ? grayMenuText : menuText);
-					entry.addPicBox(Global.createIcon(i.getIcon(), d + 6, eqpSelect.getRowHeight()/2, iconScale));
-					
-				}
-				
-			}	
+				entry = eqpSelect.addItem(i.getDisplayName(), i, disabled);				
+				entry.getTextAt(0).x += d*2 + 4;					
+				//add item count
+				entry.addTextBox(""+i.getCount(), eqpSelect.getColumnWidth() - 32, eqpSelect.getRowHeight()/2, disabled ? grayMenuText : menuText);
+				entry.addPicBox(Global.createIcon(i.getIcon(), d + 6, eqpSelect.getRowHeight()/2, iconScale));
+			}
+		}					
 		
 		eqpSelect.update();	
 	}
@@ -1842,16 +1847,9 @@ public class MainMenu
 		opts.getEntryAt(i++).getTextAt(1).text = "Touch Screen";
 	}
 	
-	private boolean hasItemToEquip(PlayerCharacter pc, Item.Type type)
+	private boolean hasItemToEquip(PlayerCharacter pc, PlayerCharacter.Slot type)
 	{
-		List<Item> usableItems = new ArrayList<Item>();
-
-		for(Item i : Global.party.getInventory())
-			if(i.getType() == type && i.getUsableChars().contains(pc.getName()))
-				usableItems.add(i);	
-		
-		return !usableItems.isEmpty();
-
+		return !pc.getUsableItemsForSlot(type).isEmpty();
 	}
 	
 	private static void buildCharMainBox(MenuPanel panel, PlayerCharacter pc)
@@ -1948,7 +1946,7 @@ public class MainMenu
 			statRows[i] = statsBox.height / (numStatRows+1) * (i+1);		
 			
 
-		pc.updateSecondaryStats();			
+		pc.updateSecondaryStats(PlayerCharacter.Hand.MainHand);			
 
 		statsBox.addTextBox("Power:", statCols[0], statRows[0], blueRight);
 		statsBox.addTextBox(""+pc.getStat(Stats.BattlePower), 
@@ -2239,11 +2237,11 @@ public class MainMenu
 		}
 		else if(opt.equals("opt"))
 		{
-			selectedChar.equipBest(Item.Type.Weapon);
-			selectedChar.equipBest(Item.Type.Shield);
-			selectedChar.equipBest(Item.Type.Helmet);
-			selectedChar.equipBest(Item.Type.Torso);
-			selectedChar.equipBest(Item.Type.Accessory);
+			selectedChar.equipBest(PlayerCharacter.Slot.Hand1);
+			selectedChar.equipBest(PlayerCharacter.Slot.Hand2);
+			selectedChar.equipBest(PlayerCharacter.Slot.Helmet);
+			selectedChar.equipBest(PlayerCharacter.Slot.Torso);
+			selectedChar.equipBest(PlayerCharacter.Slot.Accessory);
 			updateEquipScreen();
 		}
 		else if(opt.equals("bak"))
@@ -2378,7 +2376,7 @@ public class MainMenu
 		if(charList.size() > 1 && Math.abs(velocityY) < 300 && Math.abs(velocityX) > 300)
 		{
 			undarken();
-			equipItemType = null;
+			equipItemSlot = null;
 			
 			//determine current index
 			int i = 0;
