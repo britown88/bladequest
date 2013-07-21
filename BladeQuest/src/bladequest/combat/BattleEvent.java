@@ -248,8 +248,13 @@ public class BattleEvent
 								}
 							});
 							
+							
+							//figure out off-hand penalty
+							float power = 1.0f;
+							if (hand == PlayerCharacter.Hand.OffHand) power = 0.5f;
+							
 							PlayerCharacter attacker = builder.getSource();
-							bactDamage damageAction = new bactDamage(1.0f, DamageTypes.Physical);
+							bactDamage damageAction = new bactDamage(power, DamageTypes.Physical);
 							damageAction.setHand(hand);
 							damageAction.onHitRunner().addEventObject(new BattleAction()
 							{
@@ -267,9 +272,8 @@ public class BattleEvent
 							if(equipped)
 								for(DamageComponent dc : (hand == PlayerCharacter.Hand.MainHand ? attacker.hand1() : attacker.hand2()).getDamageComponents())
 									damageAction.addDamageComponent(dc.getAffinity(), dc.getPower());
-						
-
-							bactSlash slash = new bactSlash(damageAction, 1.0f);
+						    
+							bactSlash slash = new bactSlash(damageAction, hand, 1.0f);
 							
 							builder.addEventObject(slash);
 							

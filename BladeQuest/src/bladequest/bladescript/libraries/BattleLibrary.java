@@ -37,6 +37,7 @@ import bladequest.battleactions.bactSneakToTarget;
 import bladequest.battleactions.bactSpecialMirrored;
 import bladequest.battleactions.bactSpecialPosition;
 import bladequest.battleactions.bactTargetingSelf;
+import bladequest.battleactions.bactTwoHandedAttack;
 import bladequest.battleactions.bactWait;
 import bladequest.bladescript.LibraryWriter;
 import bladequest.bladescript.ParserException;
@@ -403,6 +404,11 @@ public class BattleLibrary {
 	public static BattleAction conditionalAttackAction(float power, String damageType, float speedFactor, ScriptVar function)
 	{
 		return new bactBasicAttack(power, DamageTypes.valueOf(damageType), speedFactor, function);
+	}
+	
+	public static BattleAction twoHandedAttackAction(float power, float speedFactor)
+	{
+		return new bactTwoHandedAttack(power, speedFactor);
 	}
 		
 	

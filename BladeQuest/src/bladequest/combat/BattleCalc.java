@@ -79,7 +79,7 @@ public class BattleCalc
 		//if(defender.getAction() == Action.Guard) DP *= 1.5f;		
 		if (ignoreDef) DP = 0.0f;
 		
-		float attackerTypeMod = attacker.isEnemy() ? 7.0f : 10.0f;
+		float attackerTypeMod = 10.0f;
 		
 		float rawDamage = AP * attackerTypeMod;
 		float reduceFactor = (float) Math.pow(DP/255.0, 0.7);
@@ -136,6 +136,7 @@ public class BattleCalc
 					damageReturnType = DamageReturnType.Blocked;
 				}
 
+				moddedDmg *= power;
 				finalDmg = applyAffinities(moddedDmg, attacker, defender, arrayList);
 				
 				roll = Global.rand.nextInt(100);
@@ -159,6 +160,8 @@ public class BattleCalc
 			break;
 		case Magic:
 		case MagicalIgnoreDef:
+			
+			moddedDmg *= power;
 			finalDmg = applyAffinities(moddedDmg, attacker, defender, arrayList);
 			if (!hitStatusApplied)
 			{

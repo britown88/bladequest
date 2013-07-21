@@ -18,7 +18,7 @@ equip "Hand1" "knife" >
 equip "Hand2" "knife" >
 equip "Helmet" "felthat" >
 equip "Torso" "cottonshirt" >
-mapBound addAbility {"coatweapon"} >
+mapBound addAbility {"coatweapon", "dblattack"} >
 addLearnableAbility "dblattack" 6 > 
 addLearnableAbility "backstab" 8) > 
 setDefaultShadow

@@ -18,7 +18,6 @@ import bladequest.graphics.Sprite;
 import bladequest.graphics.WeaponSwingDrawable;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.statuseffects.seKO;
-import bladequest.world.Item.Type;
 
 public class PlayerCharacter 
 {
@@ -27,6 +26,8 @@ public class PlayerCharacter
 	protected boolean isEnemy = false;
 	
 	public boolean isInParty;
+	
+	Hand swingHand;
 	
 	//equipment
 	private Item hand1, hand2, helmet, torso, accessory;
@@ -250,7 +251,10 @@ public class PlayerCharacter
 	{
 		return onDamageReceivedEvent;
 	}		
-	
+	public void setAttackHand(PlayerCharacter.Hand hand)
+	{
+	   swingHand = hand;
+	}
 	public List<Item.Type> getUsableTypes(Slot slot)
 	{
 		List<Item.Type> out = new ArrayList<Item.Type>();
@@ -413,11 +417,19 @@ public class PlayerCharacter
 	{
 		if(hasSlotEquipped(Slot.Hand1))
 			hand1.generateSwing();
+		
+		if(hand2WeaponEquipped())
+			hand2.generateSwing();		
 	}
 	
 	public WeaponSwingDrawable getWeaponSwing()
 	{
-		return hasSlotEquipped(Slot.Hand1) ? hand1.getSwing() : null;
+		if (swingHand == null) return null;
+		if (swingHand == Hand.MainHand)
+		{
+			return hasSlotEquipped(Slot.Hand1) ? hand1.getSwing() : null;	
+		}
+		return hasSlotEquipped(Slot.Hand2) ? hand2.getSwing() : null;
 	}
 	
 	public boolean hasSlotEquipped(Slot slot)
@@ -1393,8 +1405,7 @@ public class PlayerCharacter
 			if(battleSpr.getFace() == faces.Attack)
 			{
 				boolean mirrored = getMirrored();
-				//int offset = -20;
-				//if (mirrored) offset *= -1;
+				
 				WeaponSwingDrawable swing = getWeaponSwing();
 				if(swing != null)
 					swing.render(imageIndex, position.x -20, position.y-6, mirrored);

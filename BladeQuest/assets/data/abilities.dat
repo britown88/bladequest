@@ -35,8 +35,8 @@ addDep (waitAction 300)
 \dblattack <- (addAbility "dblattack" "Double Attack" "Single" 4 >
 setShortName "DblAttack" >
 setDesc "Attack twice quickly." >
-add (basicAttackAction 0.9 "Physical" 0.6) >
-addDep (basicAttackAction 0.9 "Physical" 0.6))
+add (twoHandedAttackAction 0.9 0.6) >
+addDep (twoHandedAttackAction 0.9 0.6))
 
 ######################LUC#####################################
 \assault <- (addAbility "assault" "Assault" "Single" 4 >
