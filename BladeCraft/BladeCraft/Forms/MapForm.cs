@@ -30,6 +30,7 @@ namespace BladeCraft.Forms
       private Point lastPointAdded;
 
       private Tile selectedTile;
+      private string tilesetPath;
 
       private Point zoneStart, zoneEnd;
       private bool drawingzone;
@@ -153,10 +154,16 @@ namespace BladeCraft.Forms
 
          return mapName;
       }
+
       void addDrawNode(string folderName)
+      {
+          addDrawNode(folderName, null);
+      }
+      void addDrawNode(string folderName, Action<string> onCall)
       {
          int nodeCnt = TileSetTreeView.Nodes.Count;
          TileSetTreeView.Nodes.Add(folderName);
+         TileSetTreeView.Nodes[nodeCnt].Tag = onCall;
          int i = 0;
          foreach (var path in System.IO.Directory.GetFiles(Application.StartupPath + "\\assets\\drawable\\"  + folderName))
          {
@@ -164,11 +171,18 @@ namespace BladeCraft.Forms
             TileSetTreeView.Nodes[nodeCnt].Nodes[i++].Tag = path;
          }
       }
+      private void setMaterialTile(string path)
+      {
+          selectedTile.isMaterial = true;
+          selectedTile.tileset = path;
+          selectedTile.matX = 0;
+          selectedTile.matY = 0;
+      }
       public MapForm(BQMap map)
       {
          InitializeComponent();
          mouseDown = false;
-         selectedTile = new Tile(0, 0, 0, 0, 0);
+         selectedTile = new Tile(0, 0, 0, 0, null, 0);
          //this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer, true);
          
          
@@ -193,7 +207,7 @@ namespace BladeCraft.Forms
          swapLayerMapFormData = new SwapLayerMapFormData(this);
          mapFormTileSelection = new TileSelectionMapFormData(this);
 
-         addDrawNode("materials");
+         addDrawNode("materials", path => setMaterialTile(path));
          addDrawNode("walls");
          addDrawNode("stairs");
       }
@@ -285,13 +299,12 @@ namespace BladeCraft.Forms
          selectedTile.isMaterial = false;
          selectedTile.bmpX = (int)(e.X / (tileSize * tsScale));
          selectedTile.bmpY = (int)(e.Y / (tileSize * tsScale));
+         selectedTile.tileset = tilesetPath;
          tsPanel.Invalidate();
       }
 
       private void mapPanel_Paint(object sender, PaintEventArgs e)
       {
-         if (tileset == null) return;
-
          Graphics g = e.Graphics;
          Pen gridPen = new Pen(Color.Black);
          if (map != null)
@@ -381,18 +394,17 @@ namespace BladeCraft.Forms
             {
                Tile t = map.getTile(x, y, layer);
 
-               if (t != null)
+               if (t != null && t.tileset != null)
                {
+                  Bitmap bmp = null;
+                  if (!Bitmaps.bitmaps.TryGetValue(t.tileset, out bmp)) continue;
                   Rectangle destRect = new Rectangle((int)(t.x * tileSize * mapScale), (int)(t.y * tileSize * mapScale), (int)(tileSize * mapScale), (int)(tileSize * mapScale));
-                  g.DrawImage(tileset,
+                  g.DrawImage(bmp,
                      destRect,
                      (tsbFrameTwo.Checked && t.animated) ? t.animBmpX * tileSize : t.bmpX * tileSize,
                      (tsbFrameTwo.Checked && t.animated) ? t.animBmpY * tileSize : t.bmpY * tileSize,
                      tileSize, tileSize, GraphicsUnit.Pixel, ia);
                }
-                  
-
-
             }
       }
 
@@ -618,7 +630,7 @@ namespace BladeCraft.Forms
                   else
                   {
                      erase = true;
-                     selectedTile = new Tile(0, 0, 0, 0, 0);
+                     selectedTile = new Tile(0, 0, 0, 0, null, 0);
                   }
                   
                }
@@ -927,12 +939,14 @@ namespace BladeCraft.Forms
 
       private void TileSetTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
       {
-         if (e.Node.Tag != null)
+         if (e.Node.Tag != null && e.Node.Tag is string)
          {
-            tileset = new Bitmap((string)e.Node.Tag);
+            tilesetPath = (string)e.Node.Tag;
+            
 
-            if (tileset != null)
+            if (Bitmaps.bitmaps.TryGetValue(tilesetPath, out tileset))
             {
+                
                //pbTileset.Image = (Image)tileset;
                tsPanel.Width = (int)(tileset.Width * tsScale);
                tsPanel.Height = (int)(tileset.Height * tsScale);
@@ -940,6 +954,11 @@ namespace BladeCraft.Forms
              
                tsPanel.Invalidate();
                mapPanel.Invalidate();
+
+               if (e.Node.Parent.Tag != null)
+               {
+                   (e.Node.Parent.Tag as Action<string>).Invoke(tilesetPath);
+               }
             }
          }
       }

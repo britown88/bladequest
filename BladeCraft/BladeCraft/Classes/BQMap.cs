@@ -484,12 +484,12 @@ namespace BladeCraft.Classes
 
          if (fillingTile == null && t == null)
          {
-            tlist[y * sizeX + x] = new Tile(x, y, fillTo.bmpX, fillTo.bmpY, layer);
+            tlist[y * sizeX + x] = new Tile(x, y, fillTo.bmpX, fillTo.bmpY, fillTo.tileset, layer);
 
             t = tlist[y * sizeX + x];            
 
             if (fillTo.isMaterial)
-               addMaterial(t.x, t.y, fillTo.matX, fillTo.matY, frameTwo, layer);
+               addMaterial(t.x, t.y, fillTo.matX, fillTo.matY, fillTo.tileset, frameTwo, layer);
             else if (frameTwo)
                t.animate(fillTo.bmpX, fillTo.animBmpY);
 
@@ -498,7 +498,7 @@ namespace BladeCraft.Classes
          else if (fillingTile != null && fillingTile.isMaterial && t.isMaterial && fillingTile.matX == t.matX && fillingTile.matY == t.matY)
          {
             if (fillTo.isMaterial)
-               addMaterial(t.x, t.y, fillTo.matX, fillTo.matY, frameTwo, layer);
+               addMaterial(t.x, t.y, fillTo.matX, fillTo.matY, fillTo.tileset, frameTwo, layer);
             else
             {
                if (frameTwo)
@@ -508,7 +508,7 @@ namespace BladeCraft.Classes
                }
                else
                {
-                  tlist[y * sizeX + x] = new Tile(t.x, t.y, fillTo.bmpX, fillTo.bmpY, layer); 
+                  tlist[y * sizeX + x] = new Tile(t.x, t.y, fillTo.bmpX, fillTo.bmpY, fillTo.tileset, layer); 
                }
                
             }
@@ -518,7 +518,7 @@ namespace BladeCraft.Classes
             t.bmpX == fillingTile.bmpX && t.bmpY == fillingTile.bmpY)
          {
             if (fillTo.isMaterial)
-               addMaterial(t.x, t.y, fillTo.matX, fillTo.matY, frameTwo, layer);
+               addMaterial(t.x, t.y, fillTo.matX, fillTo.matY, fillTo.tileset, frameTwo, layer);
             else
             {
                if (frameTwo)
@@ -528,7 +528,7 @@ namespace BladeCraft.Classes
                }
                else
                {
-                  tlist[y * sizeX + x] = new Tile(t.x, t.y, fillTo.bmpX, fillTo.bmpY, layer); 
+                  tlist[y * sizeX + x] = new Tile(t.x, t.y, fillTo.bmpX, fillTo.bmpY, fillTo.tileset, layer); 
                }
             }
             
@@ -560,15 +560,16 @@ namespace BladeCraft.Classes
       public String getBGM() { return BGM; }
 
 
-      public void addMaterial(int x, int y, int matX, int matY, bool frameTwo, int layer)
+      public void addMaterial(int x, int y, int matX, int matY, string tileset, bool frameTwo, int layer)
       {
          int index = y * sizeX + x;
          Tile[] tlist = tileList[layer];
 
          if (tlist[index] == null)
-            addTile(new Tile(x, y, 0, 0, layer));
+            addTile(new Tile(x, y, 0, 0, tileset, layer));
                   
          tlist[index].addToMaterial(matX, matY);
+         tlist[index].tileset = tileset;
 
          updateMaterialTile(x - 1, y - 1, matX, matY, layer, frameTwo);
          updateMaterialTile(x, y - 1, matX, matY, layer, frameTwo);
@@ -670,6 +671,11 @@ namespace BladeCraft.Classes
       private void writeTile(Tile t, MapWriter writer)
       {
          writer.startSection("Tile");
+
+         if (t.tileset != null)
+         {
+             writer.writeElement("TileSet", t.tileset);
+         }
 
          writer.startSection("WorldPosition");
          writer.writeAttribute("X", t.x.ToString());
@@ -942,6 +948,9 @@ namespace BladeCraft.Classes
                         for (int i = 0; i < layerCount; ++i)
                            tileList[i] = new Tile[sizeX * sizeY];
                         break;
+                     case "TileSet":
+                        newTile.tileset = node.elementData();
+                        break;
                      case "Tile":
                         newTile = new Tile();
                         break;
@@ -1066,6 +1075,7 @@ namespace BladeCraft.Classes
             foreach (Tile t in tList) 
                if (t != null) 
                   writeTile(t, writer);
+
          foreach (EncounterZone ez in zones)
             ez.write(writer);
          if (MatList.Count > 0)

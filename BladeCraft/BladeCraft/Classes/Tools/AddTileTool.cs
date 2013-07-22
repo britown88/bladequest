@@ -33,7 +33,7 @@ namespace BladeCraft.Classes.Tools
                if (mapData.isAnimationFrame())
                   map.animateTile(x, y, t.bmpX, t.bmpY, mapData.getCurrentLayer());
                else
-                  map.addTile(new Tile(x, y, t.bmpX, t.bmpY, mapData.getCurrentLayer()));
+                  map.addTile(new Tile(x, y, t.bmpX, t.bmpY, t.tileset, mapData.getCurrentLayer()));
 
             }
 

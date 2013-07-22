@@ -27,7 +27,7 @@ namespace BladeCraft.Classes.Tools
          else
          {
             Tile t = selectionData.selectedTile();
-            map.addMaterial(x, y, t.matX, t.matY, 
+            map.addMaterial(x, y, t.matX, t.matY, t.tileset,
                mapData.isAnimationFrame(), mapData.getCurrentLayer());
             lastPointAdded = new Point(x, y);
             mapData.invalidateDraw();
