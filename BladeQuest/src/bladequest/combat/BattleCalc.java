@@ -169,10 +169,10 @@ public class BattleCalc
 		
 		if(power > 0)
 		{
-			if(defender.getAction() == Action.Guard)
+			if(defender.getAction() == Action.Guard || (!attacker.isEnemy() && !defender.isEnemy()))
 				finalDmg *= 0.5f;	
 			
-			finalDmg = Math.max(0, finalDmg - defender.getStat(Stats.DamageIgnore));
+			finalDmg = Math.max(0, finalDmg - defender.getStat(Stats.DamageIgnore) * 10.0f);
 		}		
 			
 		finalDmg = Math.max(-9999, Math.min(9999, finalDmg));
