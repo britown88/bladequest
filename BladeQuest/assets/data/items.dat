@@ -1,16 +1,4 @@
-#################################COMMON FUNCTIONS#######################
-
-usableByAll item
- mapBound item setUsableBy {"aramis", "luc", "joy", "roland"}
- 
-usableByMagicPeople item
-  mapBound item setUsableBy {"joy", "roland"}
-  
-usableBySwordPeople item
-  mapBound item setUsableBy {"joy", "luc"}
-  
-  
-  ###############################Super awesome triggers##################
+###############################Super awesome triggers##################
 
 fireSwitchedTrigger trigger enemy fn
   setSwitchCondition trigger false
@@ -27,10 +15,9 @@ onHPFraction enemy numer denom fn
   
   ######################################################################
 
-\knife <- (addItem "knife" "Knife" "Weapon" "dagger" "A small and simple dagger." >
+\knife <- (addItem "knife" "Knife" "Dagger" "dagger" "A small and simple dagger." >
 setPower 5 >
 setValue 30 >
-setUsableBy "aramis" >
 swing "dagger" "slice1" >
 swingBase 0 186 186 186 >
 swingBase 1 255 255 255 >
@@ -39,10 +26,9 @@ swingSlash 0 128 128 128 >
 swingSlash 1 186 186 186 >
 swingSlash 2 255 255 255)
 
-\woodensword <- (addItem "woodensword" "Wooden Sword" "Weapon" "sword" "A practice sword." >
+\woodensword <- (addItem "woodensword" "Wooden Sword" "Sword" "sword" "A practice sword." >
 setPower 6 >
 setValue 45 >
-usableBySwordPeople >
 swing "sword" "slice1" >
 swingBase 0 139 69 19 >
 swingBase 1 222 184 134 >
@@ -50,10 +36,9 @@ swingSlash 0 92 64 51 >
 swingSlash 1 139 69 19 >
 swingSlash 2 222 184 134)  
 
-\silversword <- (addItem "silversword" "Silver Sword" "Weapon" "sword" "Some believe the silver inlay wards off the undead." >
+\silversword <- (addItem "silversword" "Silver Sword" "Sword" "sword" "Some believe the silver inlay wards off the undead." >
 setPower 10 >
 setValue 250 >
-usableBySwordPeople >
 swing "sword" "slice1" >
 swingBase 0 186 186 186 >
 swingBase 1 255 255 255 >
@@ -62,10 +47,9 @@ swingSlash 1 186 186 186 >
 swingSlash 2 255 255 255)   
 
 
-\frostrapier <- (addItem "frostrapier" "Frost Rapier" "Weapon" "sword" "A sword imbued with the power of ice." >
+\frostrapier <- (addItem "frostrapier" "Frost Rapier" "Sword" "sword" "A sword imbued with the power of ice." >
 setPower 12 >
 setValue 525 >
-usableBySwordPeople >
 swing "sword" "slice1" >
 swingBase 0 105 212 213 >
 swingBase 1 165 242 243 >
@@ -73,11 +57,11 @@ swingSlash 0 105 212 213 >
 swingSlash 1 136 227 228 >
 swingSlash 2 165 242 243)     
 
-\silverstaff <- (addItem "silverstaff" "Silver Staff" "Weapon" "staff" "A magical staff." >
+\silverstaff <- (addItem "silverstaff" "Silver Staff" "Staff" "staff" "A two-handed magical staff." >
 setPower 1 >
 modStat "MagicPower" 4 >
 setValue 250 >
-usableByMagicPeople >
+setTwoHanded true >
 swing "staff" "slice1" >
 swingBase 0 186 186 186 >
 swingBase 1 255 255 255 >
@@ -91,10 +75,9 @@ swingSlash 4 0 0 186 >
 swingSlash 5 0 0 255)
 
 
-\fireknife <- (addItem "fireknife" "Flame Dagger" "Weapon" "dagger" "A dagger that does burning damage." >
+\fireknife <- (addItem "fireknife" "Flame Dagger" "Dagger" "dagger" "A dagger that does burning damage." >
 setPower 9 >
 setValue 250 >
-setUsableBy "aramis" >
 addDamageComp "Fire" 1.0 >
 swing "dagger" "slice1" >
 swingBase 0 186 0 0 >
@@ -107,13 +90,11 @@ swingSlash 2 255 0 0)
 
 \felthat <- (addItem "felthat" "Felt Hat" "Helmet" "lhelmet" "Most basic of headwear." >
 setPower 3 >
-setValue 15 >
-usableByAll)
+setValue 15)
 
 \cottonshirt <- (addItem "cottonshirt" "Cotton Shirt" "Torso" "ltorso" "A simple shirt." >
 setPower 4 >
-setValue 25 >
-usableByAll)
+setValue 25)
 
 \woodenshield <- (addItem "woodenshield" "Wood Shield" "Shield" "lshield" "A crude shield." >
 setPower 2 >
@@ -125,14 +106,12 @@ setUsableBy "luc")
 \volcanicrock <- (addItem "volcanicrock" "Volcano Rock" "Accessory" "ring" "Still warm to the touch, boosts your fire affinity." >
 setPower 0 >
 modStat "Fire" 15 >
-setValue 500 >
-usableByAll)
+setValue 500)
 
 \runningshoes <- (addItem "runningshoes" "RunningShoes" "Accessory" "boot" "Shoes that allow you to move faster." >
 setPower 0 >
 modStat "Speed" 3 >
-setValue 800 >
-usableByAll)
+setValue 800)
 
 \safetyring <- (addItem "safetyring" "Safety Ring" "Accessory" "ring" "A ring that causes regen status when weakened." >
 setPower 0 >
@@ -140,8 +119,7 @@ setValue 300 >
 onEquippedBattleStart ([battle wearer] 
    onHPFraction wearer 1 4 ([healme]
    addNextAbility healme healme (getAbility "safetyheal")
-))>
-usableByAll)
+)))
 
 
 

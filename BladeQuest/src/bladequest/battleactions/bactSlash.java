@@ -11,14 +11,17 @@ public class bactSlash extends DelegatingAction {
 
 	BattleAction onSlash;
 	float speedFactor;
-	public bactSlash(BattleAction onSlash, float speedFactor) {
+	PlayerCharacter.Hand attackHand; 
+	public bactSlash(BattleAction onSlash, PlayerCharacter.Hand attackHand, float speedFactor) {
 		this.onSlash = onSlash;
 		this.speedFactor = speedFactor;
+		this.attackHand = attackHand;
 	}
 	@Override
 	protected void buildEvents(BattleEventBuilder builder) {
 		// TODO Auto-generated method stub
 		PlayerCharacter attacker = builder.getSource();
+		attacker.setAttackHand(attackHand);
 
 		BattleAnim anim = attacker.getWeaponAnimation();
 		builder.addEventObject(new bactSetFace(faces.Ready, 0));

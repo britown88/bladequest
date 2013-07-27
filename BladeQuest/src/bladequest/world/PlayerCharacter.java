@@ -18,7 +18,6 @@ import bladequest.graphics.Sprite;
 import bladequest.graphics.WeaponSwingDrawable;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.statuseffects.seKO;
-import bladequest.world.Item.Type;
 
 public class PlayerCharacter 
 {
@@ -28,8 +27,20 @@ public class PlayerCharacter
 	
 	public boolean isInParty;
 	
+	Hand swingHand;
+	
 	//equipment
-	private Item weapon, shield, helmet, torso, accessory;
+	private Item hand1, hand2, helmet, torso, accessory;
+	
+	public enum Slot
+	{
+		Hand1,
+		Hand2,
+		Helmet,
+		Torso,
+		Accessory
+	}
+	List<Item.Type> hand1Types, hand2Types;
 	
 	protected int[] stats;
 	protected int[] statMods;
@@ -88,6 +99,14 @@ public class PlayerCharacter
 	
 	private Shadow shadow;
 	
+	
+	public void setHandEquippable(Hand hand, List<Item.Type> equipList)
+	{
+		if (hand == Hand.MainHand) hand1Types = equipList;
+		else hand2Types = equipList;
+	}
+	
+	
 	public PlayerCharacter(String name, String displayNam, String bSpr, String wSpr)
 	{
 		this.name = name;
@@ -113,6 +132,8 @@ public class PlayerCharacter
 		positionSpecial = false;
 		statusImmunities = new ArrayList<String>();
 		startingName = "";
+		hand1Types = new ArrayList<Item.Type>();
+		hand2Types = new ArrayList<Item.Type>();
 	}
 	
 	public PlayerCharacter(PlayerCharacter c)
@@ -152,8 +173,8 @@ public class PlayerCharacter
 		portrait = new Point(c.portrait);
 		
 		imageIndex = c.imageIndex;
-		weapon = c.weapon;
-		shield = c.shield;
+		hand1 = c.hand1;
+		hand2 = c.hand2;
 		torso = c.torso;
 		accessory = c.accessory;
 		helmet = c.helmet;
@@ -180,6 +201,9 @@ public class PlayerCharacter
 		}
 		
 		statusImmunities = c.statusImmunities;
+		
+		hand1Types = new ArrayList<Item.Type>(c.hand1Types);
+		hand2Types = new ArrayList<Item.Type>(c.hand2Types);
 	}
 	
 	public void setStartingName(String name){startingName = name;}
@@ -227,6 +251,36 @@ public class PlayerCharacter
 	{
 		return onDamageReceivedEvent;
 	}		
+	public void setAttackHand(PlayerCharacter.Hand hand)
+	{
+	   swingHand = hand;
+	}
+	public List<Item.Type> getUsableTypes(Slot slot)
+	{
+		List<Item.Type> out = new ArrayList<Item.Type>();
+		switch (slot)
+		{
+		case Hand1:
+			out = new ArrayList<Item.Type>(hand1Types);
+			break;
+		case Hand2:
+			out = new ArrayList<Item.Type>(hand2Types);
+			break;
+		case Accessory:
+			out.add(Item.Type.Accessory);
+			break;
+		case Helmet:
+			out.add(Item.Type.Helmet);
+			break;
+		case Torso:
+			out.add(Item.Type.Torso);
+			break;
+		default:
+			break; 
+		}
+		return out;
+	}
+	
 	public void setExp(int exp){this.exp = exp;}
 	public void setDisplayName(String str){displayName = str;}
 	public void setSprites(String world, String battle)
@@ -361,40 +415,65 @@ public class PlayerCharacter
 	
 	public void genWeaponSwing()
 	{
-		if(hasTypeEquipped(Type.Weapon))
-			weapon.generateSwing();
+		if(hasSlotEquipped(Slot.Hand1))
+			hand1.generateSwing();
+		
+		if(hand2WeaponEquipped())
+			hand2.generateSwing();		
 	}
 	
 	public WeaponSwingDrawable getWeaponSwing()
 	{
-		return hasTypeEquipped(Type.Weapon) ? weapon.getSwing() : null;
+		if (swingHand == null) return null;
+		if (swingHand == Hand.MainHand)
+		{
+			return hasSlotEquipped(Slot.Hand1) ? hand1.getSwing() : null;	
+		}
+		return hasSlotEquipped(Slot.Hand2) ? hand2.getSwing() : null;
 	}
 	
-	public boolean hasTypeEquipped(Item.Type type)
+	public boolean hasSlotEquipped(Slot slot)
 	{
-		switch(type)
+		switch(slot)
 		{
-		case Weapon: return weapEquipped();
-		case Shield: return shieldEquipped();
+		case Hand1: return hand1Equipped();
+		case Hand2: return hand2Equipped();
 		case Helmet: return helmEquipped();
 		case Accessory: return accessEquipped();
 		case Torso: return torsoEquipped();
 		default:
 			break;
 		}
-		return false;		
+		return false;			
 	}
+//	
+//	public boolean hasTypeEquipped(Item.Type type)
+//	{
+//		switch(type)
+//		{
+//		case Weapon: return hand1Equipped();
+//		case Shield: return hand2Equipped();
+//		case Helmet: return helmEquipped();
+//		case Accessory: return accessEquipped();
+//		case Torso: return torsoEquipped();
+//		default:
+//			break;
+//		}
+//		return false;		
+//	}
 	public boolean helmEquipped() { return helmet != null; }
-	public boolean weapEquipped() { return weapon != null; }
+	public boolean hand1Equipped() { return hand1 != null; }
 	public boolean torsoEquipped() { return torso != null; }
 	public boolean accessEquipped() { return accessory != null; }
-	public boolean shieldEquipped() { return shield != null; }
-	public Item getEquippedItem(Item.Type type)
+	public boolean hand2Equipped() { return hand2 != null; }
+	public boolean hand2WeaponEquipped() { return hand2Equipped() && hand2.isWeapon();}
+	
+	public Item getEquippedItem(Slot slot)
 	{
-		switch(type)
+		switch(slot)
 		{
-		case Weapon: return weapon;
-		case Shield: return shield;
+		case Hand1: return hand1;
+		case Hand2: return hand2;
 		case Helmet: return helmet;
 		case Accessory: return accessory;
 		case Torso: return torso;
@@ -403,19 +482,43 @@ public class PlayerCharacter
 		}
 		return null;
 	}
+	
 	public Item helmet() { return helmet; }
-	public Item weapon() { return weapon; }
+	public Item hand1() { return hand1; }
 	public Item torso() { return torso; }
 	public Item accessory() { return accessory; }
-	public Item shield() { return shield; }
+	public Item hand2() { return hand2; }
 	public List<Item> getEquippedItems()
 	{
 		List<Item> list = new ArrayList<Item>();
-		if(weapEquipped()) list.add(weapon);
-		if(shieldEquipped()) list.add(shield);
+		if(hand1Equipped()) list.add(hand1);
+		if(hand2Equipped()) list.add(hand2);
 		if(helmEquipped()) list.add(helmet);
 		if(torsoEquipped()) list.add(torso);
 		if(accessEquipped()) list.add(accessory);
+		
+		return list;
+	}
+	
+	public static class EquippedItem
+	{
+	   EquippedItem(Item item, Slot slot)
+	   {
+		   this.item = item;
+		   this.slot = slot;
+	   }
+	   public Item item;
+	   public Slot slot;
+	}
+	
+	public List<EquippedItem> getSlottedEquippedItems()
+	{
+		List<EquippedItem> list = new ArrayList<EquippedItem>();
+		if(hand1Equipped()) list.add(new EquippedItem(hand1, Slot.Hand1));
+		if(hand2Equipped()) list.add(new EquippedItem(hand2, Slot.Hand2));
+		if(helmEquipped()) list.add(new EquippedItem(helmet, Slot.Helmet));
+		if(torsoEquipped()) list.add(new EquippedItem(torso, Slot.Torso));
+		if(accessEquipped()) list.add(new EquippedItem(accessory, Slot.Accessory));
 		
 		return list;
 	}
@@ -434,18 +537,40 @@ public class PlayerCharacter
 				portrait.y * Global.portraitSrcSize + Global.portraitSrcSize);
 	}
 	
+	public boolean canEquip(Slot slot, Item item)
+	{
+		if (!getUsableTypes(slot).contains(item.getType())) return false;
+		
+		
+		if (slot == Slot.Hand2)
+		{
+			if (item.isTwoHanded()) return false; //two handed items are only allowed on the main hand.
+			if (hand1Equipped() && hand1.isTwoHanded()) return false;  //don't allow any equips when a two handed item is equipped.
+		}
+		
+		return true;
+	}
 	
-	public void firstEquip(String itemName)
+	public boolean canEquip(Item item)
+	{
+		for (Slot slot : Slot.values())
+		{
+			if (canEquip(slot, item)) return true;
+		}
+		return false;
+	}
+	
+	public void firstEquip(Slot slot, String itemName)
 	{
 		Item item = new Item(Global.items.get(itemName));
-		if(item.getUsableChars().contains(name))
+		if(canEquip(slot, item))
 		{
 			item.equip(this);
 			
-			switch(item.getType())
+			switch(slot)
 			{
-			case Weapon:weapon = item;break;			
-			case Shield:shield = item;break;			
+			case Hand1:hand1 = item;break;			
+			case Hand2:hand2 = item;break;			
 			case Torso:	torso = item;break;			
 			case Helmet:helmet = item;break;			
 			case Accessory:	accessory = item;break;
@@ -458,9 +583,9 @@ public class PlayerCharacter
 	
 	public boolean hasItemEquipped(int id)
 	{
-		if(weapon != null && weapon.getId() == id)
+		if(hand1 != null && hand1.getId() == id)
 			return true;
-		if(shield != null && shield.getId() == id)
+		if(hand2 != null && hand2.getId() == id)
 			return true;
 		if(helmet != null && helmet.getId() == id)
 			return true;
@@ -472,7 +597,7 @@ public class PlayerCharacter
 		return false;
 	}
 	
-	public void equip(int id)
+	public void equip(Slot slot, int id)
 	{
 		Item item = null;
 		
@@ -484,29 +609,33 @@ public class PlayerCharacter
 			}
 
 		//item wasn't found or item is not usable by this character
-		if(item == null || !item.getUsableChars().contains(name))
+		if(item == null || !canEquip(slot, item))
 			return;
 		
-		switch(item.getType())
+		switch(slot)
 		{
-		case Weapon:
-			if(weapon != null)
+		case Hand1:
+			if(hand1 != null)
 			{
-				weapon.unequip(this);
-				Global.party.addItem(weapon.getId());
+				hand1.unequip(this);
+				Global.party.addItem(hand1.getId());
 			}			
-			weapon = item;
+			hand1 = item;
 			item.equip(this);
 			Global.party.removeItem(id, 1);
+			if (hand1.isTwoHanded())
+			{
+				this.unequip(Slot.Hand2);
+			}			
 			break;
 			
-		case Shield:
-			if(shield != null)
+		case Hand2:
+			if(hand2 != null)
 			{
-				shield.unequip(this);
-				Global.party.addItem(shield.getId());
+				hand2.unequip(this);
+				Global.party.addItem(hand2.getId());
 			}			
-			shield = item;
+			hand2 = item;
 			item.equip(this);
 			Global.party.removeItem(id, 1);
 			break;
@@ -550,41 +679,41 @@ public class PlayerCharacter
 	
 	public void unequipAll()
 	{
-		unequip(Type.Weapon);
-		unequip(Type.Shield);
-		unequip(Type.Helmet);
-		unequip(Type.Torso);
-		unequip(Type.Accessory);
+		unequip(Slot.Hand1);
+		unequip(Slot.Hand2);
+		unequip(Slot.Helmet);
+		unequip(Slot.Torso);
+		unequip(Slot.Accessory);
 	}
 	
 	public void clearEquipment()
 	{
-		weapon = null;
-		shield = null;
+		hand1 = null;
+		hand2 = null;
 		helmet = null;
 		torso = null;
 		accessory = null;
 	}
 	
-	public void unequip(Item.Type type)
+	public void unequip(Slot slot)
 	{		
-		switch(type)
+		switch(slot)
 		{
-		case Weapon:
-			if(weapon != null)
+		case Hand1:
+			if(hand1 != null)
 			{
-				weapon.unequip(this);
-				Global.party.addItem(weapon.getId());
-				weapon = null;
+				hand1.unequip(this);
+				Global.party.addItem(hand1.getId());
+				hand1 = null;
 			}			
 			break;
 			
-		case Shield:
-			if(shield != null)
+		case Hand2:
+			if(hand2 != null)
 			{
-				shield.unequip(this);
-				Global.party.addItem(shield.getId());
-				shield = null;
+				hand2.unequip(this);
+				Global.party.addItem(hand2.getId());
+				hand2 = null;
 			}			
 			break;
 			
@@ -720,10 +849,16 @@ public class PlayerCharacter
 		stats[Stats.Water.ordinal()] = 100;
 		stats[Stats.Earth.ordinal()] = 100;
 		
-		updateSecondaryStats();
+		updateSecondaryStats(PlayerCharacter.Hand.MainHand);
 	}
 	
-	public void updateSecondaryStats()
+	public enum Hand
+	{
+		MainHand,
+		OffHand
+	}
+	
+	public void updateSecondaryStats(Hand handedness)
 	{
 		float str = getStat(Stats.Strength);
 		float agi = getStat(Stats.Agility);
@@ -752,8 +887,17 @@ public class PlayerCharacter
 		stats[Stats.MaxHP.ordinal()] = BattleCalc.calculateCurvedHPMPValue(baseStats[Stats.Vitality.ordinal()], lvl, BattleCalc.maxHP);
 		stats[Stats.MaxMP.ordinal()] = BattleCalc.calculateCurvedHPMPValue(baseStats[Stats.Intelligence.ordinal()], lvl, BattleCalc.maxMP);
 	
+		
+		float w = 0.0f;
 		//AP
-		float w = weapEquipped() ? weapon.Power() : 0.0f;		
+		if (handedness == Hand.MainHand)
+		{
+			w = hand1Equipped() ? hand1.Power() : 0.0f;	
+		}
+		else	
+		{
+			w = hand2Equipped() && hand2.isWeapon() ? hand2.Power() : 0.0f;
+		}
 		stats[Stats.BattlePower.ordinal()] = (int) (str + w);
 		
 		//Defense
@@ -767,107 +911,65 @@ public class PlayerCharacter
 		
 	}
 	
-	//pass item equipment slot and this function will equip the best 
-	//(most Def or BP) item available
-	public void equipBest(Item.Type type)
+	
+	public List<Item> getUsableItemsForSlot(Slot slot)
 	{
 		List<Item> itemList = new ArrayList<Item>();
 		
 		//build list of items of the appropriate type usable by this character		
 		for(Item i : Global.party.getInventory())
-			if(i.getType() == type && i.getUsableChars().contains(name))
-				itemList.add(i);
+			if(canEquip(slot, i))
+				itemList.add(i);	
 		
+		return itemList;
+	}
+	
+	//pass item equipment slot and this function will equip the best 
+	//based purely on value, and greedy.  this won't unequip other party members.
+	public void equipBest(Slot slot)
+	{
+
+		List<Item> itemList = getUsableItemsForSlot(slot);
 		
 		if(itemList.size() > 0)
 		{
 			Item bestItem = null;
-			
-			switch(type)
+			int bestCost = -1;
+			for (Item i : itemList)
 			{
-			//weapon finds best BP
-			case Weapon:
-				int bestBPboost = -256;
-				
-				for(Item i : itemList)
+				if (i.getValue() > bestCost)
 				{
-					int[] newStats = getModdedStats(i);
-					if(newStats[Stats.BattlePower.ordinal()] - getStat(Stats.BattlePower) > bestBPboost)
-					{
-						bestBPboost = newStats[Stats.BattlePower.ordinal()] - getStat(Stats.BattlePower);
-						if(bestBPboost > 0)
-							bestItem = i;
-					}
-				}				
-				break;
-			//armor finds best Def
-			case Torso:
-			case Helmet:
-			case Shield:
-				int bestDefboost = -256;
-				
-				for(Item i : itemList)
-				{
-					int[] newStats = getModdedStats(i);
-					if(newStats[Stats.Defense.ordinal()] - getStat(Stats.Defense) > bestDefboost)
-					{
-						bestDefboost = newStats[Stats.Defense.ordinal()] - getStat(Stats.Defense);
-						if(bestDefboost > 0)
-							bestItem = i;
-					}
-				}				
-				break;
-			//accessory finds either BP or def, whichever provides larger boost
-			case Accessory:
-				int bestBoost = -256;
-				
-				for(Item i : itemList)
-				{
-					int[] newStats = getModdedStats(i);
-					if(newStats[Stats.Defense.ordinal()] - getStat(Stats.Defense) > bestBoost)
-					{
-						bestBoost = newStats[Stats.Defense.ordinal()] - getStat(Stats.Defense);
-						if(bestBoost > 0)
-							bestItem = i;
-					}
-					else if(newStats[Stats.BattlePower.ordinal()] - getStat(Stats.BattlePower) > bestBoost)
-					{
-						bestBoost = newStats[Stats.BattlePower.ordinal()] - getStat(Stats.BattlePower);
-						if(bestBoost > 0)
-							bestItem = i;
-					}
-				}				
-				break;
-			default:
-				break;
+					bestCost = i.getValue();
+					bestItem = i;
+				}
 			}
 			
 			if(bestItem != null)
-				equip(bestItem.getId());
+				equip(slot, bestItem.getId());
 		}
 		
 	}
 	
-	public int[] getModdedStats(Item i)
+	public int[] getModdedStats(Slot slot, Item i)
 	{
 		int[] moddedStats = new int[Stats.NUM_STATS.ordinal()];		
 		Item currEquipped = null;
 		
-		if(hasTypeEquipped(i.getType()))
-			currEquipped = getEquippedItem(i.getType());
+		if(hasSlotEquipped(slot))
+			currEquipped = getEquippedItem(slot);
 		
-		equip(i.getId());
-		updateSecondaryStats();
+		equip(slot, i.getId());
+		updateSecondaryStats(PlayerCharacter.Hand.MainHand);
 		
 		for(int stat = 0; stat < Stats.NUM_STATS.ordinal(); ++stat)
 			moddedStats[stat] = getStat(stat);
 		
 		if(currEquipped != null)
-			equip(currEquipped.getId());
+			equip(slot, currEquipped.getId());
 		else
-			unequip(i.getType());	
+			unequip(slot);	
 		
-		updateSecondaryStats();
+		updateSecondaryStats(PlayerCharacter.Hand.MainHand);
 		
 		//return modded stats array		
 		return moddedStats;
@@ -875,26 +977,26 @@ public class PlayerCharacter
 	}
 	
 	//get stats from removing item at given slot	
-	public int[] getModdedStatsRmv(Type type)
+	public int[] getModdedStatsRmv(Slot slot)
 	{
 		int[] moddedStats = new int[Stats.NUM_STATS.ordinal()];
 	
 		Item currEquipped = null;
 		
-		if(hasTypeEquipped(type))
-			currEquipped = getEquippedItem(type);
+		if(hasSlotEquipped(slot))
+			currEquipped = getEquippedItem(slot);
 		
-		unequip(type);
-		updateSecondaryStats();
+		unequip(slot);
+		updateSecondaryStats(PlayerCharacter.Hand.MainHand);
 		
 		for(int stat = 0; stat < Stats.NUM_STATS.ordinal(); ++stat)
 			moddedStats[stat] = getStat(stat);
 		
 		if(currEquipped != null)
-			equip(currEquipped.getId());
+			equip(slot, currEquipped.getId());
 		
 		
-		updateSecondaryStats();
+		updateSecondaryStats(PlayerCharacter.Hand.MainHand);
 		//return modded stats array		
 		return moddedStats;
 		
@@ -1269,8 +1371,8 @@ public class PlayerCharacter
 		}
 	}
 	
-	public void playWeaponAnimation(Point src, Point tar){if(weapEquipped()) weapon.playAnimation(src, tar);}
-	public BattleAnim getWeaponAnimation(){if(weapEquipped()) return weapon.getAnim(); else return null;}
+	public void playWeaponAnimation(Point src, Point tar){if(hand1Equipped()) hand1.playAnimation(src, tar);}
+	public BattleAnim getWeaponAnimation(){if(hand1Equipped()) return hand1.getAnim(); else return null;}
 	
 	public void renderShadow()
 	{
@@ -1303,8 +1405,7 @@ public class PlayerCharacter
 			if(battleSpr.getFace() == faces.Attack)
 			{
 				boolean mirrored = getMirrored();
-				//int offset = -20;
-				//if (mirrored) offset *= -1;
+				
 				WeaponSwingDrawable swing = getWeaponSwing();
 				if(swing != null)
 					swing.render(imageIndex, position.x -20, position.y-6, mirrored);

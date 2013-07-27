@@ -401,8 +401,10 @@ public class GameSaveLoader
 					for(StatusEffect se : c.getStatusEffects())
 						str.append(se.saveLine() + "\n");
 					
-					for(Item i : c.getEquippedItems())
-						str.append("equip " + i.idName + "\n");
+					for(PlayerCharacter.EquippedItem i : c.getSlottedEquippedItems())
+					{
+						str.append("equip " + i.slot.toString() + " " + i.item.idName + "\n");
+					}
 					
 					for(Ability ab : c.getAbilities())
 						str.append("ability " + ab.name + "\n");
@@ -589,7 +591,7 @@ public class GameSaveLoader
 		}
 		else if(dl.item.equals("equip"))
 		{
-			c.firstEquip(dl.values.get(0));
+			c.firstEquip(PlayerCharacter.Slot.valueOf(dl.values.get(0)), dl.values.get(1));
 		}
 		else if(dl.item.equals("ability"))
 		{

@@ -43,7 +43,7 @@ public class BattleCalc
 					invLevel * 0.4f * maximum
 				);
 		
-		return (int)(Math.max(1, Math.min(maximum, ret)));		
+		return (int)(Math.max(1, Math.min(maximum, ret)));
 	}
 	
 	
@@ -62,12 +62,12 @@ public class BattleCalc
 		} 
 	}
 	
-	public static int calculatedDamage(PlayerCharacter attacker, PlayerCharacter defender, float power, DamageTypes type, List<DamageComponent> arrayList, float customMiss, AccuracyType accuracy)
+	public static int calculatedDamage(PlayerCharacter attacker, PlayerCharacter defender, float power, DamageTypes type, List<DamageComponent> arrayList, float customMiss, AccuracyType accuracy, PlayerCharacter.Hand hand)
 	{
 		boolean hitStatusApplied = false;
 		
-		attacker.updateSecondaryStats();
-		defender.updateSecondaryStats();
+		attacker.updateSecondaryStats(hand);
+		defender.updateSecondaryStats(PlayerCharacter.Hand.MainHand);
 		
 		boolean physical = type == DamageTypes.Physical || type == DamageTypes.PhysicalIgnoreDef; 
 		boolean ignoreDef = type == DamageTypes.MagicalIgnoreDef || type == DamageTypes.PhysicalIgnoreDef;
@@ -79,7 +79,7 @@ public class BattleCalc
 		//if(defender.getAction() == Action.Guard) DP *= 1.5f;		
 		if (ignoreDef) DP = 0.0f;
 		
-		float attackerTypeMod = attacker.isEnemy() ? 7.0f : 10.0f;
+		float attackerTypeMod = 10.0f;
 		
 		float rawDamage = AP * attackerTypeMod;
 		float reduceFactor = (float) Math.pow(DP/255.0, 0.7);
@@ -136,6 +136,7 @@ public class BattleCalc
 					damageReturnType = DamageReturnType.Blocked;
 				}
 
+				moddedDmg *= power;
 				finalDmg = applyAffinities(moddedDmg, attacker, defender, arrayList);
 				
 				roll = Global.rand.nextInt(100);
@@ -159,6 +160,8 @@ public class BattleCalc
 			break;
 		case Magic:
 		case MagicalIgnoreDef:
+			
+			moddedDmg *= power;
 			finalDmg = applyAffinities(moddedDmg, attacker, defender, arrayList);
 			if (!hitStatusApplied)
 			{
@@ -176,6 +179,8 @@ public class BattleCalc
 		}		
 			
 		finalDmg = Math.max(-9999, Math.min(9999, finalDmg));
+		
+		attacker.updateSecondaryStats(PlayerCharacter.Hand.MainHand);
 		
 		return (int)finalDmg;
 	}

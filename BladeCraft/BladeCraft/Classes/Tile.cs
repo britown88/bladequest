@@ -1,10 +1,17 @@
 ﻿using System;
-
+using System.Drawing;
 
 namespace BladeCraft.Classes
 {
     public class Tile
     {
+
+        public static int sideLeft = 0;
+        public static int sideTop = 1;
+        public static int sideRight = 2;
+        public static int sideBottom = 3;
+        public static int numSides = 4;
+
         public int x, y, bmpX, bmpY, animBmpX, animBmpY;
         public int layer;
         public bool[] collSides;
@@ -13,6 +20,7 @@ namespace BladeCraft.Classes
         public int matX, matY;
 
         public bool animated;
+        public string tileset;
 
         public Tile()
         {
@@ -20,7 +28,7 @@ namespace BladeCraft.Classes
            animated = false;
         }
 
-        public Tile(int x, int y, int bmpX, int bmpY, int layer)
+        public Tile(int x, int y, int bmpX, int bmpY, string tileset, int layer)
         {
             this.x = x;
             this.y = y;
@@ -35,6 +43,7 @@ namespace BladeCraft.Classes
             this.isMaterial = false;
 
             animated = false;
+            this.tileset = tileset;
         }
 
         public void animate(int animBmpX, int animBmpY)
@@ -70,6 +79,7 @@ namespace BladeCraft.Classes
             this.matY = t.matY;
             this.isMaterial = t.isMaterial;
             this.layer = t.layer;
+            this.tileset = t.tileset;
             collSides = new bool[4];
             for (int i = 0; i < 4; ++i)
                 collSides[i] = t.collSides[i];

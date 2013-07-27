@@ -7,6 +7,8 @@ import bladequest.battleactions.BattleAction;
 import bladequest.battleactions.BattleAction.State;
 import bladequest.battleactions.BattleActionPatterns;
 import bladequest.battleactions.BattleActionRunner;
+import bladequest.battleactions.DelegatingAction;
+import bladequest.battleactions.TargetedAction;
 import bladequest.battleactions.bactDamage;
 import bladequest.battleactions.bactSlash;
 import bladequest.battleactions.bactTryEscape;
@@ -14,7 +16,9 @@ import bladequest.combat.BattleCalc.MovePriority;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.world.Ability;
 import bladequest.world.DamageTypes;
+import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
+import bladequest.world.TargetTypes;
 import bladequest.world.PlayerCharacter.Action;
 
 public class BattleEvent 
@@ -202,6 +206,86 @@ public class BattleEvent
 	{
 		return this.running;
 	}
+	private void buildAttackSlash(BattleEventBuilder builder, PlayerCharacter.Hand hand, BattleAction prevAction)
+	{
+		
+		builder.addEventObject(new DelegatingAction()
+		{
+			PlayerCharacter.Hand hand;
+			DelegatingAction initialize(PlayerCharacter.Hand hand)
+			{
+				this.hand = hand;
+				return this;
+			}
+			@Override
+			protected void buildEvents(BattleEventBuilder builder) 
+			{
+				
+				PlayerCharacter attacker = builder.getSource();
+				List<PlayerCharacter> targets = Global.battle.getTargetable(attacker, builder.getTargets(), TargetTypes.Single);
+				if (!targets.isEmpty())
+				{
+					PlayerCharacter target = targets.get(0);
+					
+
+					builder.addEventObject(new TargetedAction(target)
+					{
+						PlayerCharacter.Hand hand;
+						TargetedAction initialize(PlayerCharacter.Hand hand)
+						{
+							this.hand = hand;
+							return this;
+						}
+
+						@Override
+						protected void buildEvents(BattleEventBuilder builder) {
+							builder.addEventObject(new BattleAction()
+							{
+								public State run(BattleEventBuilder builder)
+								{
+									for (PlayerCharacter target : builder.getTargets()) {target.getOnPhysicalHitEvent().trigger();}
+									return State.Finished;
+								}
+							});
+							
+							
+							//figure out off-hand penalty
+							float power = 1.0f;
+							if (hand == PlayerCharacter.Hand.OffHand) power = 0.5f;
+							
+							PlayerCharacter attacker = builder.getSource();
+							bactDamage damageAction = new bactDamage(power, DamageTypes.Physical);
+							damageAction.setHand(hand);
+							damageAction.onHitRunner().addEventObject(new BattleAction()
+							{
+								public State run(BattleEventBuilder builder)
+								{
+									builder.getSource().getOnPhysicalHitSuccessEvent().trigger();
+									for (PlayerCharacter target : builder.getTargets()) {target.getOnPhysicalHitLandsEvent().trigger();}
+									return State.Finished;
+								}
+							});
+							
+							boolean equipped = hand == PlayerCharacter.Hand.MainHand && attacker.hand1Equipped() ||
+											   hand == PlayerCharacter.Hand.OffHand && attacker.hand2Equipped();
+					 		
+							if(equipped)
+								for(DamageComponent dc : (hand == PlayerCharacter.Hand.MainHand ? attacker.hand1() : attacker.hand2()).getDamageComponents())
+									damageAction.addDamageComponent(dc.getAffinity(), dc.getPower());
+						    
+							bactSlash slash = new bactSlash(damageAction, hand, 1.0f);
+							
+							builder.addEventObject(slash);
+							
+							
+						}
+					}.initialize(hand));
+					
+				}
+			}
+				
+		}.initialize(hand).addDependency(prevAction));
+	}
 	public void init()
 	{
 		if (actionRunner != null)
@@ -215,36 +299,13 @@ public class BattleEvent
 		switch(action)
 		{
 		case Attack:
-			builder.addEventObject(new BattleAction()
+			
+			buildAttackSlash(builder, PlayerCharacter.Hand.MainHand, null);
+			
+			if (builder.getSource().hand2WeaponEquipped())
 			{
-				public State run(BattleEventBuilder builder)
-				{
-					for (PlayerCharacter target : builder.getTargets()) {target.getOnPhysicalHitEvent().trigger();}
-					return State.Finished;
-				}
-			});
-			PlayerCharacter attacker = builder.getSource();
-			
-			bactDamage damageAction = new bactDamage(1.0f, DamageTypes.Physical);
-			damageAction.onHitRunner().addEventObject(new BattleAction()
-			{
-				public State run(BattleEventBuilder builder)
-				{
-					builder.getSource().getOnPhysicalHitSuccessEvent().trigger();
-					for (PlayerCharacter target : builder.getTargets()) {target.getOnPhysicalHitLandsEvent().trigger();}
-					return State.Finished;
-				}
-			});
-			
-			if(attacker.weapEquipped())
-				for(DamageComponent dc : attacker.weapon().getDamageComponents())
-					damageAction.addDamageComponent(dc.getAffinity(), dc.getPower());
-			
-			
-			bactSlash slash = new bactSlash(damageAction, 1.0f);
-			
-			builder.addEventObject(slash);
-			
+				buildAttackSlash(builder, PlayerCharacter.Hand.OffHand, builder.getLast());	
+			}
 			attackBuilder = new AttackBuilder(builder);
 			//TRIGGER WARNING
 			builder.getSource().getOnAttackEvent().trigger();

@@ -32,10 +32,10 @@ public class ItemLibrary {
 		item.setShortName(desc);
 		return item;
 	}
-	public static Item setUsableBy(Item itm, String character)
+	public static Item  setTwoHanded(Item item, boolean twoHanded)
 	{
-		itm.addUsableBy(character);
-		return itm;
+		item.setTwoHanded(twoHanded);
+		return item;
 	}
 	public static Item setTargetType(Item itm, String targetType)
 	{

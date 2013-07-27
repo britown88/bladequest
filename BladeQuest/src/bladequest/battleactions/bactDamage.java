@@ -24,8 +24,9 @@ public class bactDamage extends DelegatingAction
 	
 	BattleActionRunner onHit;
 	
-	public static DamageBuilder triggerDamageBuilder;
+	PlayerCharacter.Hand handToUse;
 	
+	public static DamageBuilder triggerDamageBuilder;
 	BattleCalc.AccuracyType accuracyType;
 	
 	private class TriggerDamageBuilder implements DamageBuilder
@@ -99,7 +100,8 @@ public class bactDamage extends DelegatingAction
 		this.type = type;
 		this.customMiss = 0.0f;
 		this.accuracyType = BattleCalc.AccuracyType.Regular;
-		this.onHit = new BattleActionRunner();		
+		this.onHit = new BattleActionRunner();
+		this.handToUse = PlayerCharacter.Hand.MainHand;
 	}
 	
 	public bactDamage(float power, DamageTypes type, BattleCalc.AccuracyType accuracy, float missChance)
@@ -109,8 +111,14 @@ public class bactDamage extends DelegatingAction
 		this.type = type;
 		this.customMiss = missChance;
 		this.accuracyType = accuracy;
-		this.onHit = new BattleActionRunner();		
+		this.onHit = new BattleActionRunner();
+		this.handToUse = PlayerCharacter.Hand.MainHand;
 	}	
+	
+	public void setHand(PlayerCharacter.Hand hand)
+	{
+		this.handToUse = hand;
+	}
 	
 	public void addDamageComponent(Stats affinity, float power)
 	{
@@ -138,7 +146,7 @@ public class bactDamage extends DelegatingAction
 		PlayerCharacter attacker = builder.getSource();
 		PlayerCharacter target =  BattleAction.getTarget(builder);
 	
-		int dmg = BattleCalc.calculatedDamage(attacker, target, power, type, damageComponents, customMiss, accuracyType);
+		int dmg = BattleCalc.calculatedDamage(attacker, target, power, type, damageComponents, customMiss, accuracyType, handToUse);
 		
 		
 		TriggerDamageBuilder triggerSettings = new TriggerDamageBuilder(attacker, target, dmg, BattleCalc.getDmgReturnType(), damageComponents, type); 
@@ -201,7 +209,7 @@ public class bactDamage extends DelegatingAction
 	{
 		for(PlayerCharacter t : targets)
 		{
-			int dmg = BattleCalc.calculatedDamage(attacker, t, power, type, damageComponents, customMiss, accuracyType);
+			int dmg = BattleCalc.calculatedDamage(attacker, t, power, type, damageComponents, customMiss, accuracyType, handToUse);
 			switch(BattleCalc.getDmgReturnType())
 			{
 			case Blocked:

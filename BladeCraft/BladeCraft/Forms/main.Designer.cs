@@ -182,7 +182,7 @@
          this.Controls.Add(this.lvwMaps);
          this.Controls.Add(this.statusStrip1);
          this.Controls.Add(this.menuStrip1);
-         this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+         //this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
          this.IsMdiContainer = true;
          this.MainMenuStrip = this.menuStrip1;
          this.Name = "main";

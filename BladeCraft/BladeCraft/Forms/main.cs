@@ -11,10 +11,17 @@ using BladeCraft.Classes;
 
 namespace BladeCraft
 {
+    public static class Bitmaps
+    {
+      public static Dictionary<string, Bitmap> bitmaps;
+    }
+
     public partial class main : Form
     {
         //private BQMap map;
         private MapInfoForm infoForm;
+
+
 
         public main()
         {
@@ -25,9 +32,26 @@ namespace BladeCraft
             
         }
 
+
+        private void loadBitmapFolder(string folder)
+        {
+           foreach (var path in System.IO.Directory.GetFiles(Application.StartupPath + "\\assets\\drawable\\" + folder))
+           {
+               Bitmaps.bitmaps.Add(path, new Bitmap(path));
+           }
+        }
+
+        private void loadBitmaps()
+        {
+            Bitmaps.bitmaps = new Dictionary<string, Bitmap>();
+            loadBitmapFolder("stairs");
+            loadBitmapFolder("walls");
+            loadBitmapFolder("materials");
+        }
+
         private void main_Load(object sender, EventArgs e)
         {
-
+            loadBitmaps();
             readMaps();
 
             //bitmapselect selectform = new bitmapselect(gamedata.bitmaps);

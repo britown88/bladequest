@@ -8,17 +8,13 @@ using System.Drawing.Imaging;
 using System.Text;
 using System.Windows.Forms;
 using BladeCraft.Classes;
-
+using BladeCraft.Classes.Tools;
 
 
 namespace BladeCraft.Forms
 {
    public partial class MapForm : Form
    {
-      private static int sideLeft = 0;      
-      private static int sideTop = 1;
-      private static int sideRight = 2;      
-      private static int sideBottom = 3;
 
       private main parent;
       private BQMap map;
@@ -26,7 +22,6 @@ namespace BladeCraft.Forms
       private Bitmap collArrows, E;
       private Rectangle ERect;//hehe
       private Rectangle[] collArrowRects;
-      private string selectedTileset;
       private float tsScale = 2.0f, mapScale = 1.0f;
       private int tileSize = 16;
 
@@ -35,6 +30,7 @@ namespace BladeCraft.Forms
       private Point lastPointAdded;
 
       private Tile selectedTile;
+      private string tilesetPath;
 
       private Point zoneStart, zoneEnd;
       private bool drawingzone;
@@ -42,15 +38,151 @@ namespace BladeCraft.Forms
 
       private GameObject copiedObject;
 
-      private int currentLayer, swapToLayer; 
+      private int currentLayer, swapToLayer;
 
+      private Tool activeTool;
 
+      private class TileSelectionMapFormData : TileSelectionData
+      {
+         MapForm form;
+         public TileSelectionMapFormData(MapForm form)
+         {
+            this.form = form;
+         }
+
+         public Tile selectedTile()
+         {
+            return form.selectedTile;
+         }
+
+         public bool eraseSelected()
+         {
+            return form.erase;
+         }
+      }
+      TileSelectionMapFormData mapFormTileSelection;
+
+      private class MapFormData : MapData
+      {
+         MapForm form;
+
+         public MapFormData(MapForm form)
+         {
+            this.form = form;
+         }
+         public BQMap getMap()
+         {
+            return form.map;
+         }
+
+         public void invalidateDraw()
+         {
+            form.mapPanel.Invalidate();
+         }
+
+         public bool isAnimationFrame()
+         {
+            return form.tsbFrameTwo.Checked;
+         }
+
+         public int getCurrentLayer()
+         {
+            return form.currentLayer;
+         }
+         public float getTileSize()
+         {
+            return form.tileSize;
+         }
+         public float getMapScale()
+         {
+            return form.mapScale;
+         }
+      }
+      private MapFormData mapFormData;
+
+      private class CollisionMapFormData : CollisionMapData
+      {
+         MapData m_mapData;
+         ToolStripMenuItem[] collisionItems;
+
+         public CollisionMapFormData(MapData mapData_in,ToolStripMenuItem left, ToolStripMenuItem top, ToolStripMenuItem right, ToolStripMenuItem bottom)
+         {
+            m_mapData = mapData_in;
+            collisionItems = new ToolStripMenuItem[4];
+            collisionItems[0] = left;
+            collisionItems[1] = top;
+            collisionItems[2] = right;
+            collisionItems[3] = bottom;
+         }
+
+         public bool getSide(int side)
+         {
+            return collisionItems[side].Checked;
+         }
+         public MapData getMapData()
+         {
+            return m_mapData;
+         }
+      }
+      private CollisionMapFormData collisionMapFormData;
+      
+
+      private class SwapLayerMapFormData : SwapLayerMapData
+      {
+         MapForm form;
+         public SwapLayerMapFormData(MapForm form)
+         {
+            this.form = form;
+         }
+         public int getSwapToLayer()
+         {
+            return form.swapToLayer;
+         }
+
+         public MapData getMapData()
+         {
+            return form.mapFormData;
+         }
+      }
+
+      private SwapLayerMapFormData swapLayerMapFormData;
+      string stripPath(string path)
+      {
+
+         string mapName = path.Remove(0, path.LastIndexOf('\\') + 1);
+         mapName = mapName.Remove(mapName.LastIndexOf('.'));
+
+         return mapName;
+      }
+
+      void addDrawNode(string folderName)
+      {
+          addDrawNode(folderName, null);
+      }
+      void addDrawNode(string folderName, Action<string> onCall)
+      {
+         int nodeCnt = TileSetTreeView.Nodes.Count;
+         TileSetTreeView.Nodes.Add(folderName);
+         TileSetTreeView.Nodes[nodeCnt].Tag = onCall;
+         int i = 0;
+         foreach (var path in System.IO.Directory.GetFiles(Application.StartupPath + "\\assets\\drawable\\"  + folderName))
+         {
+            TileSetTreeView.Nodes[nodeCnt].Nodes.Add(stripPath(path));
+            TileSetTreeView.Nodes[nodeCnt].Nodes[i++].Tag = path;
+         }
+      }
+      private void setMaterialTile(string path)
+      {
+          selectedTile.isMaterial = true;
+          selectedTile.tileset = path;
+          selectedTile.matX = 0;
+          selectedTile.matY = 0;
+      }
       public MapForm(BQMap map)
       {
          InitializeComponent();
          mouseDown = false;
-         selectedTileset = "";
-         selectedTile = new Tile(0, 0, 0, 0, 0);
+         selectedTile = new Tile(0, 0, 0, 0, null, 0);
          //this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer, true);
          
          
@@ -63,11 +195,21 @@ namespace BladeCraft.Forms
 
          this.map = map;
 
+         map.writeMemento();
+
          E = new Bitmap("misc\\E.png");
          ERect = new Rectangle(0, 0, 16, 16);
 
-         
+         mapFormData = new MapFormData(this);
+         collisionMapFormData = new CollisionMapFormData(mapFormData,
+                                                         leftToolStripMenuItem, topToolStripMenuItem,
+                                                         rightToolStripMenuItem, bottomToolStripMenuItem);
+         swapLayerMapFormData = new SwapLayerMapFormData(this);
+         mapFormTileSelection = new TileSelectionMapFormData(this);
 
+         addDrawNode("materials", path => setMaterialTile(path));
+         addDrawNode("walls");
+         addDrawNode("stairs");
       }
 
       
@@ -76,6 +218,8 @@ namespace BladeCraft.Forms
       {
          parent = (main)MdiParent;
          Text = "MAP - " + map.getName() + ":\"" + map.getDisplayName() + "\"";
+
+
       }
 
       public BQMap getMap() { return map; }
@@ -85,8 +229,6 @@ namespace BladeCraft.Forms
          //map = parent.getMap();
          if (map != null)
          {
-            if (map.getTileset() != null)
-               tscbTilesetName.SelectedItem = map.getTileset();
             mapPanel.Width = (int)(map.width() * tileSize * mapScale);
             mapPanel.Height = (int)(map.height() * tileSize * mapScale);
             mapPanel.Invalidate();
@@ -94,41 +236,42 @@ namespace BladeCraft.Forms
          }         
       }
 
-      private void addMaterial()
-      {
-         map.MatList.Add(new Point(selectedTile.bmpX, selectedTile.bmpY));
-         matPanel.Height = (int)(tileSize * tsScale);
-         matPanel.Width = (int)(tileSize * map.MatList.Count * tsScale);
-         matPanel.Invalidate();
-      }
-      
+//       private void addMaterial()
+//       {
+//          map.MatList.Add(new Point(selectedTile.bmpX, selectedTile.bmpY));
+//          matPanel.Height = (int)(tileSize * tsScale);
+//          matPanel.Width = (int)(tileSize * map.MatList.Count * tsScale);
+//          matPanel.Invalidate();
+//       }
+//       
 
       private void tscbTilesetName_SelectedIndexChanged(object sender, EventArgs e)
       {
-         string filename = "assets\\drawable\\tilesets\\" + tscbTilesetName.SelectedItem.ToString().ToLower() + ".png";
-         try
-         {
-            tileset = new Bitmap(filename);
-            selectedTileset = tscbTilesetName.SelectedItem.ToString();
-            if(map != null) map.setTileset(selectedTileset);
-         }
-         catch
-         {
-            MessageBox.Show("Tileset not found!");
-            tileset = null;
-            tscbTilesetName.SelectedItem = selectedTileset;
-         }
-         
-         if (tileset != null)
-         {
-            //pbTileset.Image = (Image)tileset;
-            tsPanel.Width = (int)(tileset.Width * tsScale);
-            tsPanel.Height = (int)(tileset.Height * tsScale);
-            
-
-            tsPanel.Invalidate();
-            mapPanel.Invalidate();
-         }
+         return;
+//          string filename = "assets\\drawable\\tilesets\\" + tscbTilesetName.SelectedItem.ToString().ToLower() + ".png";
+//          try
+//          {
+//             tileset = new Bitmap(filename);
+//             selectedTileset = tscbTilesetName.SelectedItem.ToString();
+//             if(map != null) map.setTileset(selectedTileset);
+//          }
+//          catch
+//          {
+//             MessageBox.Show("Tileset not found!");
+//             tileset = null;
+//             tscbTilesetName.SelectedItem = selectedTileset;
+//          }
+//          
+//          if (tileset != null)
+//          {
+//             //pbTileset.Image = (Image)tileset;
+//             tsPanel.Width = (int)(tileset.Width * tsScale);
+//             tsPanel.Height = (int)(tileset.Height * tsScale);
+//             
+// 
+//             tsPanel.Invalidate();
+//             mapPanel.Invalidate();
+//          }
       }
 
       private void tsPanel_Paint(object sender, PaintEventArgs e)
@@ -145,7 +288,7 @@ namespace BladeCraft.Forms
                   selectedTile.bmpY * tileSize * tsScale, tileSize * tsScale, tileSize * tsScale);
          }
 
-         matPanel.Invalidate();
+         //matPanel.Invalidate();
             
       }
 
@@ -156,6 +299,7 @@ namespace BladeCraft.Forms
          selectedTile.isMaterial = false;
          selectedTile.bmpX = (int)(e.X / (tileSize * tsScale));
          selectedTile.bmpY = (int)(e.Y / (tileSize * tsScale));
+         selectedTile.tileset = tilesetPath;
          tsPanel.Invalidate();
       }
 
@@ -203,6 +347,8 @@ namespace BladeCraft.Forms
 
             }
 
+            if (activeTool != null) activeTool.onDraw(g);
+
          }
          
       }
@@ -248,18 +394,17 @@ namespace BladeCraft.Forms
             {
                Tile t = map.getTile(x, y, layer);
 
-               if (t != null)
+               if (t != null && t.tileset != null)
                {
+                  Bitmap bmp = null;
+                  if (!Bitmaps.bitmaps.TryGetValue(t.tileset, out bmp)) continue;
                   Rectangle destRect = new Rectangle((int)(t.x * tileSize * mapScale), (int)(t.y * tileSize * mapScale), (int)(tileSize * mapScale), (int)(tileSize * mapScale));
-                  g.DrawImage(tileset,
+                  g.DrawImage(bmp,
                      destRect,
                      (tsbFrameTwo.Checked && t.animated) ? t.animBmpX * tileSize : t.bmpX * tileSize,
                      (tsbFrameTwo.Checked && t.animated) ? t.animBmpY * tileSize : t.bmpY * tileSize,
                      tileSize, tileSize, GraphicsUnit.Pixel, ia);
                }
-                  
-
-
             }
       }
 
@@ -288,17 +433,6 @@ namespace BladeCraft.Forms
                ez.zone.Y * tileSize * mapScale,
                ez.zone.Width * tileSize * mapScale,
                ez.zone.Height * tileSize * mapScale);
-
-         if (drawingzone)
-         {
-            Rectangle current = new Rectangle(
-               Math.Min((int)(zoneEnd.X * tileSize * mapScale), (int)(zoneStart.X * tileSize * mapScale)),
-               Math.Min((int)(zoneEnd.Y * tileSize * mapScale), (int)(zoneStart.Y * tileSize * mapScale)),
-               Math.Abs((int)(zoneEnd.X * tileSize * mapScale - zoneStart.X * tileSize * mapScale)),
-               Math.Abs((int)(zoneEnd.Y * tileSize * mapScale - zoneStart.Y * tileSize * mapScale)));
-
-            g.DrawRectangle(pen, current);
-         }
       }
 
       private void drawCollision(Graphics g, Rectangle frame)
@@ -310,11 +444,10 @@ namespace BladeCraft.Forms
                if (t != null)
                {
                   Rectangle destRect = new Rectangle((int)(t.x * tileSize * mapScale), (int)(t.y * tileSize * mapScale), (int)(tileSize * mapScale), (int)(tileSize * mapScale));
-                  if (t.collSides[sideTop]) g.DrawImage(collArrows, destRect, collArrowRects[sideTop], GraphicsUnit.Pixel);
-                  if (t.collSides[sideRight]) g.DrawImage(collArrows, destRect, collArrowRects[sideRight], GraphicsUnit.Pixel);
-                  if (t.collSides[sideBottom]) g.DrawImage(collArrows, destRect, collArrowRects[sideBottom], GraphicsUnit.Pixel);
-                  if (t.collSides[sideLeft]) g.DrawImage(collArrows, destRect, collArrowRects[sideLeft], GraphicsUnit.Pixel);
-
+                  if (t.collSides[Tile.sideTop]) g.DrawImage(collArrows, destRect, collArrowRects[Tile.sideTop], GraphicsUnit.Pixel);
+                  if (t.collSides[Tile.sideRight]) g.DrawImage(collArrows, destRect, collArrowRects[Tile.sideRight], GraphicsUnit.Pixel);
+                  if (t.collSides[Tile.sideBottom]) g.DrawImage(collArrows, destRect, collArrowRects[Tile.sideBottom], GraphicsUnit.Pixel);
+                  if (t.collSides[Tile.sideLeft]) g.DrawImage(collArrows, destRect, collArrowRects[Tile.sideLeft], GraphicsUnit.Pixel);
                }
             }
       }
@@ -329,17 +462,7 @@ namespace BladeCraft.Forms
          mapPanel.Invalidate();
       }
 
-      private void addMaterial(int x, int y)
-      {
-         if (erase)
-            map.deleteTile(x, y, currentLayer);
-         else
-         {
-            map.addMaterial(x, y, selectedTile.matX, selectedTile.matY, tsbFrameTwo.Checked, currentLayer);
-            lastPointAdded = new Point(x, y);
-            mapPanel.Invalidate();
-         }
-      }
+
 
       private void swapLayer(int x, int y)
       {
@@ -348,147 +471,82 @@ namespace BladeCraft.Forms
          mapPanel.Invalidate();
       }
 
-      private void addtile(int x, int y)
-      {
-         if (map != null)
-         {
-            if (erase)
-               map.deleteTile(x, y, currentLayer);
-            else
-            {
-               if (tsbFrameTwo.Checked)
-                  map.animateTile(x, y, selectedTile.bmpX, selectedTile.bmpY, currentLayer);
-               else
-                  map.addTile(new Tile(x, y, selectedTile.bmpX, selectedTile.bmpY, currentLayer));
-            
-            }
 
-            lastPointAdded = new Point(x, y);
-            mapPanel.Invalidate();
-         }
+
+      Point clickedPoint(MouseEventArgs e)
+      {
+          Point gridPoint = new Point();
+          gridPoint.X = (int)(e.X / (tileSize * mapScale));
+          gridPoint.Y = (int)(e.Y / (tileSize * mapScale));
+
+          return gridPoint;
       }
 
-      private void setCollision(int x, int y)
+      private void updateTool(MouseEventArgs e)
       {
-         if (map != null)
+         Tool currentTool = null;
+         if (!tsbObjectLayer.Checked)
          {
-            Tile t = map.getTile(x, y, 0);
-            if (t != null)
+            if (e.Button == System.Windows.Forms.MouseButtons.Left && btnDraw.Checked)
             {
-               t.setCollision(sideTop, topToolStripMenuItem.Checked);
-               t.setCollision(sideLeft, leftToolStripMenuItem.Checked);
-               t.setCollision(sideBottom, bottomToolStripMenuItem.Checked);
-               t.setCollision(sideRight, rightToolStripMenuItem.Checked);
-               
+               if (Form.ModifierKeys == Keys.Control)
+               {
+                  currentTool = new FillTool(mapFormData, mapFormTileSelection);
+               }
+               else if (tsbCollision.Checked)
+               {
+                  currentTool = new CollisionTool(collisionMapFormData);
+               }
+               else if (tsbSwapLayers.Checked)
+               {
+                  currentTool = new SwapLayerTool(swapLayerMapFormData);
+               }
+               else if (selectedTile.isMaterial)
+               {
+                  currentTool = new MaterialTool(mapFormData, mapFormTileSelection);
+               }
+               else
+               {
+                  currentTool = new AddTileTool(mapFormData, mapFormTileSelection);
+               }
             }
-            lastPointAdded = new Point(x, y);
-            mapPanel.Invalidate();
+         }
+         else if (tsbEncounters.Checked)
+         {
+            currentTool = new EncounterZoneTool(mapFormData);
+         }
+
+         if (activeTool == null || !activeTool.equals(currentTool))
+         {
+            activeTool = currentTool;
          }
       }
 
       private void mapPanel_MouseDown(object sender, MouseEventArgs e)
       {
          mapFrame.Focus();
-         Point gridPoint = new Point();
-         gridPoint.X = (int)(e.X / (tileSize * mapScale));
-         gridPoint.Y = (int)(e.Y / (tileSize * mapScale));
 
-         if (!tsbObjectLayer.Checked && Form.ModifierKeys != Keys.Control)
-         {
-            if (e.Button == System.Windows.Forms.MouseButtons.Left && btnDraw.Checked)
-            {
-               if (tsbCollision.Checked)
-                 setCollision(gridPoint.X, gridPoint.Y);
-               else if (tsbSwapLayers.Checked)
-                  swapLayer(gridPoint.X, gridPoint.Y);
-               else if (selectedTile.isMaterial)
-                  addMaterial(gridPoint.X, gridPoint.Y);                 
-               else
-                  addtile(gridPoint.X, gridPoint.Y);
-
-               mouseDown = true;
-            }
-         }
-         else if (tsbEncounters.Checked)
-         {
-            drawingzone = true;
-            zoneStart = gridPoint;
-            mapPanel.Invalidate();
-         }
+         Point gridPoint = clickedPoint(e);
+         updateTool(e);
+         if (activeTool != null) activeTool.onClick(gridPoint.X, gridPoint.Y);
          
       }
       private void mapPanel_MouseMove(object sender, MouseEventArgs e)
       {
-         Point gridPoint = new Point();
-         gridPoint.X = (int)(e.X / (tileSize * mapScale));
-         gridPoint.Y = (int)(e.Y / (tileSize * mapScale));
 
-         if (!tsbObjectLayer.Checked && Form.ModifierKeys != Keys.Control)
-         {
-            if (e.Button == System.Windows.Forms.MouseButtons.Left && btnDraw.Checked)
-            {
-               if (mouseDown)
-               {  
-                  if (!lastPointAdded.Equals(gridPoint))
-                  {
-                     if (tsbCollision.Checked)
-                        setCollision(gridPoint.X, gridPoint.Y);
-                     else if (tsbSwapLayers.Checked)
-                        swapLayer(gridPoint.X, gridPoint.Y);
-                     else if (selectedTile.isMaterial)
-                        addMaterial(gridPoint.X, gridPoint.Y);
-                     else
-                        addtile(gridPoint.X, gridPoint.Y);
-                  }                     
-               }
-            }
-         }
-         else if( tsbEncounters.Checked)
-         {
-            zoneEnd = gridPoint;
-            mapPanel.Invalidate();
-         }
-         
+         Point gridPoint = clickedPoint(e);
+         updateTool(e);
+         if (activeTool != null) activeTool.mouseMove(gridPoint.X, gridPoint.Y);
       }
 
       private void mapPanel_MouseUp(object sender, MouseEventArgs e)
       {
-         Point gridPoint = new Point();
-         gridPoint.X = (int)(e.X / (tileSize * mapScale));
-         gridPoint.Y = (int)(e.Y / (tileSize * mapScale));
-
-         if (!tsbObjectLayer.Checked)
+         Point gridPoint = clickedPoint(e);
+         updateTool(e);
+         if (activeTool != null)
          {
-            if (e.Button == System.Windows.Forms.MouseButtons.Left)
-            {
-               mouseDown = false;
-
-               if (Form.ModifierKeys == Keys.Control)
-               {
-                  map.fill(gridPoint.X, gridPoint.Y, selectedTile, tsbFrameTwo.Checked, currentLayer);
-                  mapPanel.Invalidate();
-               }
-            }
-         }
-         else if (tsbEncounters.Checked)
-         {
-            drawingzone = false;
-            if (!zoneStart.Equals(gridPoint))
-            {
-               EncounterZone ez = new EncounterZone();
-               ez.zone = new Rectangle(
-                  Math.Min(gridPoint.X, zoneStart.X),
-                  Math.Min(gridPoint.Y, zoneStart.Y),
-                  Math.Abs(gridPoint.X - zoneStart.X),
-                  Math.Abs(gridPoint.Y - zoneStart.Y));
-
-               
-
-               ZoneForm zf = new ZoneForm(map, ez, true);
-               zf.ShowDialog();
-               mapPanel.Invalidate();
-            }            
-            
+            activeTool.mouseUp(gridPoint.X, gridPoint.Y);
+            map.writeMemento();
          }
       }
 
@@ -496,9 +554,7 @@ namespace BladeCraft.Forms
       {
          if (tsbObjectLayer.Checked)
          {
-            Point gridPoint = new Point();
-            gridPoint.X = (int)(e.X / (tileSize * mapScale));
-            gridPoint.Y = (int)(e.Y / (tileSize * mapScale));
+            Point gridPoint = clickedPoint(e);
 
             if (tsbEncounters.Checked)
             {
@@ -543,9 +599,7 @@ namespace BladeCraft.Forms
 
       private void mapPanel_MouseClick(object sender, MouseEventArgs e)
       {
-         Point gridPoint = new Point();
-         gridPoint.X = (int)(e.X / (tileSize * mapScale));
-         gridPoint.Y = (int)(e.Y / (tileSize * mapScale));
+         Point gridPoint = clickedPoint(e);
 
          if (!tsbObjectLayer.Checked)
          {
@@ -556,10 +610,10 @@ namespace BladeCraft.Forms
                   Tile copyColTile = map.getTile(gridPoint.X, gridPoint.Y, 0);
                   if (copyColTile != null)
                   {
-                     topToolStripMenuItem.Checked = copyColTile.collSides[sideTop];
-                     leftToolStripMenuItem.Checked = copyColTile.collSides[sideLeft];
-                     bottomToolStripMenuItem.Checked = copyColTile.collSides[sideBottom];
-                     rightToolStripMenuItem.Checked = copyColTile.collSides[sideRight];
+                     topToolStripMenuItem.Checked = copyColTile.collSides[Tile.sideTop];
+                     leftToolStripMenuItem.Checked = copyColTile.collSides[Tile.sideLeft];
+                     bottomToolStripMenuItem.Checked = copyColTile.collSides[Tile.sideBottom];
+                     rightToolStripMenuItem.Checked = copyColTile.collSides[Tile.sideRight];
                   }
 
                }
@@ -576,7 +630,7 @@ namespace BladeCraft.Forms
                   else
                   {
                      erase = true;
-                     selectedTile = new Tile(0, 0, 0, 0, 0);
+                     selectedTile = new Tile(0, 0, 0, 0, null, 0);
                   }
                   
                }
@@ -729,7 +783,7 @@ namespace BladeCraft.Forms
 
       private void toolStripButton1_Click(object sender, EventArgs e)
       {
-         map.write();
+         map.writeXML();
          parent.readMaps();
          MessageBox.Show("Map saved!");
       }
@@ -774,15 +828,15 @@ namespace BladeCraft.Forms
 
       }
 
-      private void btnAddMat_Click(object sender, EventArgs e)
-      {
-         addMaterial();
-      }
+//       private void btnAddMat_Click(object sender, EventArgs e)
+//       {
+//          //addMaterial();
+//       }
 
       private void matPanel_MouseClick(object sender, MouseEventArgs e)
       {
          erase = false;
-         matPanel.Focus();
+         //matPanel.Focus();
          
          int index = (int)(e.X / (tileSize * tsScale));
          if (index < map.MatList.Count)
@@ -836,6 +890,17 @@ namespace BladeCraft.Forms
          {
             tsbLayer.Text = "0";
          }
+
+         if (e.KeyChar == 26) //CTRL-Z
+         {
+            map.undo();
+            mapPanel.Invalidate();
+         }
+         if (e.KeyChar == 25)
+         {
+            map.redo();
+            mapPanel.Invalidate();
+         }
       }
 
       private void tsbLayerSwapTo_TextChanged(object sender, EventArgs e)
@@ -861,6 +926,41 @@ namespace BladeCraft.Forms
       {
          mapPanel.Invalidate();
       }
-      
+
+      private void btnRemoveMat_Click(object sender, EventArgs e)
+      {
+
+      }
+
+      private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+      {
+
+      }
+
+      private void TileSetTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+      {
+         if (e.Node.Tag != null && e.Node.Tag is string)
+         {
+            tilesetPath = (string)e.Node.Tag;
+            
+
+            if (Bitmaps.bitmaps.TryGetValue(tilesetPath, out tileset))
+            {
+                
+               //pbTileset.Image = (Image)tileset;
+               tsPanel.Width = (int)(tileset.Width * tsScale);
+               tsPanel.Height = (int)(tileset.Height * tsScale);
+                         
+             
+               tsPanel.Invalidate();
+               mapPanel.Invalidate();
+
+               if (e.Node.Parent.Tag != null)
+               {
+                   (e.Node.Parent.Tag as Action<string>).Invoke(tilesetPath);
+               }
+            }
+         }
+      }
    }
 }
