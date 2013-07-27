@@ -142,16 +142,12 @@ public class GameObject {
 	
 	public void setStateBubble(int index, String str){states.get(index).setBubble(str);}
 	public void setStateSprite(int index, String str){states.get(index).setSprite(str);}
-	public void addAction(int index, Action act){states.get(index).addAction(act);}	
 	public void addSwitchCondition(int index, String str){states.get(index).addSwitchCondition(str);}
 	public void addItemCondition(int index, String str){states.get(index).addItemCondition(str);}
 	public void setStateOpts(int index, boolean waitOnActivate, boolean faceOnMove, boolean faceOnActivate) {states.get(index).setOpts(waitOnActivate, faceOnMove, faceOnActivate);}
 	public Point getGridPos(){return gridPos;}	
 	public Point getWorldPos(){return worldPos; }
 	public ObjectState getCurrentState() { return runningState == null ? states.get(currentState) : runningState; }
-
-	public Action getAction(int stateIndex, int actionIndex){return states.get(stateIndex).getAction(actionIndex); }
-	public int numActions(int index) { return states.get(index).numActions(); }
 	
 	public void Face(String face) { states.get(currentState).face(face); }
 	

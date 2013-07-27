@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.graphics.Point;
+import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import bladequest.actions.Action;
-import bladequest.actions.actMessage;
+import bladequest.actions.ActionScript;
+import bladequest.actions.ActionScript.Status;
 import bladequest.graphics.ReactionBubble;
 import bladequest.graphics.Sprite;
 import bladequest.graphics.Tile;
@@ -15,8 +17,6 @@ import bladequest.system.DataLine;
 public class ObjectState {
 	private Sprite spr;
 	private Tile tileSprite;
-	private int currentAction;
-	private boolean isRunning;
 	private boolean autoStart, animated, faceOnMove, ignorePartyOnMove, faceOnActivate, waitOnActivate;	
 	
 	private Layer layer; 
@@ -30,7 +30,6 @@ public class ObjectState {
 	
 	private GameObject parent;
 	
-	private List<Action> actionList; 
 	private List<String> switchList; 
 	private List<String> itemReqList;	
 	
@@ -44,12 +43,13 @@ public class ObjectState {
 	private String bubbleName;
 	private ObjectPath defaultPath;
 	
+	private ActionScript actionScript;
+	
 	
 	public ObjectState(GameObject parent)
 	{	
+		actionScript = new ActionScript();
 		this.parent = parent;
-		currentAction = 0;
-		isRunning = false;
 		waitOnActivate = true;
 		faceOnActivate = true;
 		faceOnMove = true;
@@ -63,7 +63,7 @@ public class ObjectState {
 		
 		layer = Layer.Level;
 		
-		actionList = new ArrayList<Action>(); 
+		
 		switchList = new ArrayList<String>(); 
 		itemReqList = new ArrayList<String>(); 
 		
@@ -109,17 +109,13 @@ public class ObjectState {
 	public boolean hasCollision() { return collSides[0] || collSides[1] || collSides[2] || collSides[3]; }
 	
 	public int getMoveSpeed() { return moveSpeed; }
-	public boolean isRunning() { return isRunning; }
+	public boolean isRunning() { return actionScript.getStatus() == Status.Running; }
 	public void setAutoStart(boolean start) { autoStart = start; }
 	public int getMovementRange() { return moveRange; }	
 	public Layer getLayer(){return layer;}	
 	public void setLayer(Layer layer){this.layer = layer;}		
 	public void addSwitchCondition(String str){switchList.add(str);}	
 	public void addItemCondition(String str){itemReqList.add(str);}
-	public void addAction(Action act){actionList.add(act);}	
-	
-	public Action getAction(int index){ return actionList.get(index);}
-	public int numActions() { return actionList.size(); }
 	
 	public boolean hasPath() { return objPath != null; }
 	public void setSpeedOptions(int speed, int wait)
@@ -146,7 +142,7 @@ public class ObjectState {
 	}
 	public boolean AutoStarts(){return autoStart;}
 	
-	public boolean hasActions() { return actionList.size() >0; }
+	public boolean hasActions() { return actionScript.hasActions();}
 	
 	public void setSprite(String spr)
 	{
@@ -182,16 +178,16 @@ public class ObjectState {
 	
 	public boolean execute()
 	{
-		if(Global.party.allowMovement() && actionList.size() > 0)
+		if(Global.party.allowMovement() && hasActions())
 		{
 			if(waitOnActivate)
 				Global.party.clearMovementPath();
 			FaceOnActivate();
 			Global.party.setAllowMovement(!waitOnActivate);
-			isRunning = true;
 			parent.clearMovement();
 			objPath = null;
-			actionList.get(currentAction).run();
+			
+			actionScript.execute();
 
 			return true;
 		}
@@ -209,9 +205,7 @@ public class ObjectState {
 	
 	public void clearActions()
 	{
-		//actionList.clear();
-		isRunning = false;
-		currentAction = 0;
+		actionScript.reset();
 		
 	}
 	
@@ -219,7 +213,7 @@ public class ObjectState {
 	{
 		if(objPath != null)
 		{
-			if(!isRunning && defaultMoveWait > 0)
+			if(!isRunning() && defaultMoveWait > 0)
 			{
 				objPathWaitStart = System.currentTimeMillis();
 				moveWait = defaultMoveWait;
@@ -395,8 +389,6 @@ public class ObjectState {
 					Global.switches.put(str, false);
 					returnval = false;
 				}
-					
-				
 			}
 				
 		if(itemReqList.size() > 0)
@@ -408,10 +400,10 @@ public class ObjectState {
 	
 	public void update()
 	{			
-		if(isRunning && waitOnActivate)
+		if(isRunning() && waitOnActivate)
 			Global.party.setAllowMovement(false);
 		
-		if(!isRunning && Global.party.allowMovement() && autoStart)
+		if(!isRunning() && Global.party.allowMovement() && autoStart)
 			execute();
 			
 		//handle path waiting
@@ -425,7 +417,7 @@ public class ObjectState {
 			}			
 		}
 
-		if(objPath == null && !isRunning && moveRange > 0 && parent.isGridAligned() && Global.GameState == States.GS_WORLDMOVEMENT)
+		if(objPath == null && !isRunning() && moveRange > 0 && parent.isGridAligned() && Global.GameState == States.GS_WORLDMOVEMENT)
 		{
 			moveTimer++;
 			if(moveTimer >= moveDelay)
@@ -450,47 +442,19 @@ public class ObjectState {
 			}
 		}
 		
-		if(isRunning)
-		{				
-			if(actionList.get(currentAction).isDone())
-			{
-				actionList.get(currentAction).reset();
-					
-				currentAction++;
-				
-				if (currentAction >= actionList.size())
-				{
-					currentAction = 0;
-					isRunning = false;
-					if(waitOnActivate)
-						Global.party.setAllowMovement(true);
-					if(defaultPath != null)
-					{
-						applyPath(defaultPath);
-					}				
-					else if (!parent.isGridAligned())
-					{
-						parent.restorePath();
-					}
-				}
-				else
-				{
-					actionList.get(currentAction).run();
-					currentAction += actionList.get(currentAction).skip;
-					actionList.get(currentAction).skip = 0;
-				}
-			}
-			else if(currentAction+1 < actionList.size() && 
-					actionList.get(currentAction).name.equals("actMessage") &&
-					actionList.get(currentAction+1).name.equals("actMessage") &&
-					!((actMessage)actionList.get(currentAction)).yesNo() )
-			{				
-				actionList.get(currentAction).reset();
-				currentAction++;
-				actionList.get(currentAction).run();
-				
-			}
+		
+		if(actionScript.update() == Status.Finished)
+		{
+			actionScript.reset();
+			if(waitOnActivate)
+				Global.party.setAllowMovement(true);
+			
+			if(defaultPath != null)
+				applyPath(defaultPath);				
+			else if (!parent.isGridAligned())
+				parent.restorePath();
 		}
+		
 
 	}
 	
@@ -528,6 +492,12 @@ public class ObjectState {
 		else
 			if(tileSprite != null)
 				tileSprite.renderToWorld(x, y, Global.map.tileset);
+		
+	}
+
+	public void addAction(Action action) 
+	{
+		actionScript.addAction(action);
 		
 	}
 }

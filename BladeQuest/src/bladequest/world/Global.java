@@ -35,6 +35,7 @@ import bladequest.UI.SaveLoadMenu;
 import bladequest.UI.MainMenu.MainMenu;
 import bladequest.UI.MerchantScreen.MerchantScreen;
 import bladequest.actions.Action;
+import bladequest.actions.ActionScript;
 import bladequest.actions.actDisableBattleMusic;
 import bladequest.actions.actExpectInput;
 import bladequest.actions.actFadeControl;
@@ -45,6 +46,7 @@ import bladequest.actions.actResetGame;
 import bladequest.actions.actShowScene;
 import bladequest.actions.actUnloadScene;
 import bladequest.actions.actWait;
+import bladequest.actions.ActionScript.Status;
 import bladequest.battleactions.BattleAction;
 import bladequest.battleactions.DamageBuilder;
 import bladequest.battleactions.DelegatingAction;
@@ -88,11 +90,9 @@ import bladequest.system.MapLoadThread;
 import bladequest.system.Recyclable;
 
 
-//THIS IS A TEST COMMENT
-
 public class Global 
 {
-	private static GameObject gameOverObject;
+	private static ActionScript gameOverScript;
 	private static final String TAG = Global.class.getSimpleName();
 	public static LoadingScreen loadingScreen;
 	public final static int MAX_FPS = 60;
@@ -817,9 +817,7 @@ public class Global
     		if(debugButton != null)
     			debugButton.update();
 
-    		if(gameOverObject.isRunning())
-    			gameOverObject.update();
-    		else if(map != null)
+    		if(gameOverScript.update() != Status.Running && map != null)
     			map.update();
     		
         	party.update();
@@ -1711,18 +1709,17 @@ public class Global
 		Global.map.clearObjectAction();
 		GameState = States.GS_WORLDMOVEMENT;
 		screenFader.setFaded();
-		gameOverObject.execute();
+		gameOverScript.execute();
 	}
 	
 	private static void createGameOverObject()
 	{
-		gameOverObject = new GameObject("gameover", 0, 0);
-		gameOverObject.addState(new ObjectState(gameOverObject));
-		gameOverObject.setStateOpts(0, true, false, false);
-		gameOverObject.addAction(0, new actRemoveFilter());
-		gameOverObject.addAction(0, new actPlayMusic("annihilation", true, true,0.0f));
-		gameOverObject.addAction(0, new actShowScene("gameover"));
-		gameOverObject.addAction(0, new actFadeControl(3.0f, 255, 0, 0, 0, false, true));
+		gameOverScript = new ActionScript();
+
+		gameOverScript.addAction(new actRemoveFilter());
+		gameOverScript.addAction(new actPlayMusic("annihilation", true, true,0.0f));
+		gameOverScript.addAction(new actShowScene("gameover"));
+		gameOverScript.addAction(new actFadeControl(3.0f, 255, 0, 0, 0, false, true));
 		
 		Action ei = new actExpectInput(5.0f);
 		ei.addToBranch(0, new actWait(0.25f));
@@ -1732,7 +1729,7 @@ public class Global
 		ei.addToBranch(1, new actUnloadScene());
 		ei.addToBranch(1, new actResetGame());
 		ei.setBranchLoop(0, true);
-		gameOverObject.addAction(0, ei);
+		gameOverScript.addAction(ei);
 
 	}
 }
