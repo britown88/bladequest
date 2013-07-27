@@ -100,8 +100,7 @@ setValue 25)
 setPower 2 >
 setValue 120 >
 modStat "Block" 10 >
-modStat "DamageIgnore" 1 >
-setUsableBy "luc")
+modStat "DamageIgnore" 1)
 
 \volcanicrock <- (addItem "volcanicrock" "Volcano Rock" "Accessory" "ring" "Still warm to the touch, boosts your fire affinity." >
 setPower 0 >

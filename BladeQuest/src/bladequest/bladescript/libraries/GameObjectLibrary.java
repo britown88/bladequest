@@ -34,6 +34,7 @@ import bladequest.actions.actReactionBubble;
 import bladequest.actions.actRemoveFilter;
 import bladequest.actions.actResetGame;
 import bladequest.actions.actRestoreParty;
+import bladequest.actions.actRunScript;
 import bladequest.actions.actSaveMenu;
 import bladequest.actions.actScript;
 import bladequest.actions.actSecretMessage;
@@ -48,14 +49,12 @@ import bladequest.actions.actWait;
 import bladequest.bladescript.LibraryWriter;
 import bladequest.bladescript.ParserException;
 import bladequest.bladescript.ScriptVar;
-import bladequest.bladescript.ScriptVar.BadTypeException;
 import bladequest.graphics.AnimationBuilder;
 import bladequest.world.GameObject;
 import bladequest.world.Global;
 import bladequest.world.Layer;
 import bladequest.world.ObjectPath;
 import bladequest.world.ObjectState;
-import bladequest.world.ObjectState.ActivationHandler;
 
 public class GameObjectLibrary 
 {
@@ -443,4 +442,15 @@ public class GameObjectLibrary
 		return act;
 	}
 
+	public static Action runScript(int i)
+	{
+		return new actRunScript();
+	}
+	public static Action addScriptAction(Action script, Action action)
+	{
+		actRunScript rScript = (actRunScript)script;		
+		rScript.addAction(action);
+		return script;
+	}
+	
 }
