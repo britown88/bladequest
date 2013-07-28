@@ -2,7 +2,8 @@ package bladequest.bladescript.libraries;
 
 import android.graphics.Point;
 import android.util.Log;
-import bladequest.UI.MsgBox.Options;
+import bladequest.UI.MsgBox.MsgBox.Options;
+import bladequest.UI.MsgBox.MsgBox.Position;
 import bladequest.actions.Action;
 import bladequest.actions.actAllowSaving;
 import bladequest.actions.actAnimation;
@@ -19,7 +20,6 @@ import bladequest.actions.actGameOver;
 import bladequest.actions.actGoldTransaction;
 import bladequest.actions.actMerchant;
 import bladequest.actions.actMessage;
-import bladequest.actions.actMessage.Position;
 import bladequest.actions.actModifyGold;
 import bladequest.actions.actModifyInventory;
 import bladequest.actions.actModifyParty;
@@ -222,22 +222,23 @@ public class GameObjectLibrary
 	}
 	public static Action messageWithYesNo(String message)
 	{		
-		Action act = new actMessage(message, Options.YesNo);
+		Action act = new actMessage(message, Options.YesNo, Position.Bottom);
 		return act;
 	}
 	public static Action message(String message)
 	{		
-		Action act = new actMessage(message);
+		Action act = new actMessage(message, Options.None, Position.Bottom);
 		return act;
 	}
 	public static Action messageTimed(String message, float duration)
 	{		
-		Action act = new actMessage(message, duration);
+		actMessage act = new actMessage(message, Options.None, Position.Bottom);
+		act.setTimed(duration);
 		return act;
 	}
 	public static Action messageTop(String message)
 	{		
-		Action act = new actMessage(message, Position.Top);
+		Action act = new actMessage(message, Options.None, Position.Top);
 		return act;
 	}
 	public static Action modifyGold(int gold)

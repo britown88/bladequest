@@ -4,9 +4,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Rect;
-import bladequest.UI.ListBox.LBStates;
-import bladequest.UI.MsgBox.Options;
-import bladequest.UI.MsgBox.YesNo;
+import bladequest.UI.MsgBox.MsgAction;
+import bladequest.UI.MsgBox.MsgBox;
 import bladequest.system.GameSave;
 import bladequest.world.Global;
 import bladequest.world.PlayTimer;
@@ -145,10 +144,17 @@ public class SaveLoadMenu
 	private void darken(){darkening = true;}	
 	private void undarken(){darkening = false;}	
 	private void renderDark(){Global.renderer.drawColor(Color.argb(darkenAlpha, 0, 0, 0));}
-	private void showMessage(String msg, MsgBox.Options option)
+	private void showBasicMessage(String msg)
 	{
 		darken();
-		messageBox.addMessage(msg, option);
+		messageBox.addBasicMessage(msg);
+		messageBox.open();
+	}
+	
+	private void showYesNoMessage(String msg, MsgAction yesAction, MsgAction noAction)
+	{
+		darken();
+		messageBox.addYesNoMessage(msg, yesAction, noAction);
 		messageBox.open();
 	}
 	
@@ -188,56 +194,56 @@ public class SaveLoadMenu
 	
 	private void handleMsgBoxClose()
 	{
-		if(closeAfterMsg)
-			close();
-		else
-			if(saveLoad == SAVING)
-			{
-				if(messageBox.getSelectedOpt() == YesNo.Yes || !messageBox.isYesNo())
-				{
-					if(menu.getSelectedEntry().obj == null)
-						Global.saveLoader.saveGame(Global.saveLoader.getSaves().size());
-					else
-						Global.saveLoader.saveGame((Integer)menu.getSelectedEntry().obj);
-					
-					Global.saveLoader.writeSaves(Global.activity);
-					Global.saveLoader.readSaves(Global.activity);
-					buildPanels();
-					
-					showMessage("Game saved!", Options.None);					
-					closeAfterMsg = true;
-				}			
-			}
-			else if(saveLoad == LOADING)
-			{
-				if(messageBox.getSelectedOpt() == YesNo.Yes)
-				{
-					if(deleting)
-					{
-						Global.saveLoader.deleteSave((Integer)menu.getCurrentSelectedEntry().obj);
-						Global.saveLoader.writeSaves(Global.activity);
-						Global.saveLoader.readSaves(Global.activity);
-						buildPanels();
-						
-						
-						if(!Global.saveLoader.hasSaves())
-							close();
-					}
-					else
-					{
-						Global.saveLoader.loadGame((Integer)menu.getSelectedEntry().obj);
-						Global.clearAnimations();
-						//Global.musicBox.pause(1.0f);
-						//BladeSong.instance().fadeOut(1.0f);
-						showMessage("Game loaded!", Options.None);
-						closeAfterMsg = true;
-					}
-					
-				}
-				else
-					Global.saveLoader.save = null;
-				deleting = false;
-			}
+//		if(closeAfterMsg)
+//			close();
+//		else
+//			if(saveLoad == SAVING)
+//			{
+//				if(messageBox.getSelectedOpt() == YesNo.Yes || !messageBox.isYesNo())
+//				{
+//					if(menu.getSelectedEntry().obj == null)
+//						Global.saveLoader.saveGame(Global.saveLoader.getSaves().size());
+//					else
+//						Global.saveLoader.saveGame((Integer)menu.getSelectedEntry().obj);
+//					
+//					Global.saveLoader.writeSaves(Global.activity);
+//					Global.saveLoader.readSaves(Global.activity);
+//					buildPanels();
+//					
+//					showBasicMessage("Game saved!");					
+//					closeAfterMsg = true;
+//				}			
+//			}
+//			else if(saveLoad == LOADING)
+//			{
+//				if(messageBox.getSelectedOpt() == YesNo.Yes)
+//				{
+//					if(deleting)
+//					{
+//						Global.saveLoader.deleteSave((Integer)menu.getCurrentSelectedEntry().obj);
+//						Global.saveLoader.writeSaves(Global.activity);
+//						Global.saveLoader.readSaves(Global.activity);
+//						buildPanels();
+//						
+//						
+//						if(!Global.saveLoader.hasSaves())
+//							close();
+//					}
+//					else
+//					{
+//						Global.saveLoader.loadGame((Integer)menu.getSelectedEntry().obj);
+//						Global.clearAnimations();
+//						//Global.musicBox.pause(1.0f);
+//						//BladeSong.instance().fadeOut(1.0f);
+//						showBasicMessage("Game loaded!");
+//						closeAfterMsg = true;
+//					}
+//					
+//				}
+//				else
+//					Global.saveLoader.save = null;
+//				deleting = false;
+//			}
 	}
 	
 	public void backButtonPressed()
@@ -250,13 +256,13 @@ public class SaveLoadMenu
 	
 	public void onLongPress()
 	{
-		if(!close && menu.getCurrentSelectedEntry() != null)
-		{
-			showMessage("Delete this save?", Options.YesNo);
-			deleting = true;
-			//menu.showOptSelect = false;
-			//menu.getSelectedEntry().move(0, 0, 10);	
-		}
+//		if(!close && menu.getCurrentSelectedEntry() != null)
+//		{
+//			showYesNoMessage("Delete this save?", Options.YesNo);
+//			deleting = true;
+//			//menu.showOptSelect = false;
+//			//menu.getSelectedEntry().move(0, 0, 10);	
+//		}
 		
 	}
 	
@@ -279,43 +285,43 @@ public class SaveLoadMenu
 		
 	public void touchActionUp(int x, int y)
 	{
-		if(!close)
-		{
-			if(!messageBox.Closed())
-			{
-				messageBox.touchActionUp(x, y);
-				if(!messageBox.Opened())
-				{
-					undarken();
-					handleMsgBoxClose();
-				}
-					
-			}				
-			else
-			{
-				ListBox.LBStates state = menu.touchActionUp(x, y);
-				if(state == LBStates.Selected)
-				{
-					if(saveLoad == SAVING)
-					{
-						if(menu.getSelectedEntry().obj == null)
-							showMessage("Saving game...", Options.None);													
-						else
-							showMessage("Overwrite this save?", Options.YesNo);
-					}
-					else if(saveLoad == LOADING && !deleting)
-					{
-						showMessage("Load this save?", Options.YesNo);
-						
-					}
-					//menu.getSelectedEntry().move(0, 0, 10);	
-					//menu.getSelectedEntry().pos = new Point(0,0);		
-					
-					//close();
-				}
-			}
-			
-		}
+//		if(!close)
+//		{
+//			if(!messageBox.Closed())
+//			{
+//				messageBox.touchActionUp(x, y);
+//				if(!messageBox.Opened())
+//				{
+//					undarken();
+//					handleMsgBoxClose();
+//				}
+//					
+//			}				
+//			else
+//			{
+//				ListBox.LBStates state = menu.touchActionUp(x, y);
+//				if(state == LBStates.Selected)
+//				{
+//					if(saveLoad == SAVING)
+//					{
+//						if(menu.getSelectedEntry().obj == null)
+//							showBasicMessage("Saving game...");													
+//						else
+//							showMessage("Overwrite this save?", Options.YesNo);
+//					}
+//					else if(saveLoad == LOADING && !deleting)
+//					{
+//						showMessage("Load this save?", Options.YesNo);
+//						
+//					}
+//					//menu.getSelectedEntry().move(0, 0, 10);	
+//					//menu.getSelectedEntry().pos = new Point(0,0);		
+//					
+//					//close();
+//				}
+//			}
+//			
+//		}
 		
 	}
 	

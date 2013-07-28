@@ -29,12 +29,13 @@ import android.util.Log;
 import bladequest.UI.DebugScreen;
 import bladequest.UI.ListBox;
 import bladequest.UI.MenuPanel.Anchors;
-import bladequest.UI.MsgBox;
 import bladequest.UI.NameSelect;
 import bladequest.UI.SaveLoadMenu;
 import bladequest.UI.MainMenu.MainMenu;
 import bladequest.UI.MerchantScreen.MerchantScreen;
-import bladequest.UI.MsgBox.Options;
+import bladequest.UI.MsgBox.Message;
+import bladequest.UI.MsgBox.MsgAction;
+import bladequest.UI.MsgBox.MsgBox;
 import bladequest.actions.Action;
 import bladequest.actions.ActionScript;
 import bladequest.actions.ActionScript.Status;
@@ -438,17 +439,15 @@ public class Global
 	}
 	
 	
-	public static void showMessage(String str, MsgBox.Options option)
+	public static void showBasicMessage(String str, MsgBox.Position pos)
 	{
 		if(worldMsgBox == null)
-			worldMsgBox = new MsgBox();
-		
-		worldMsgBox.setBottom();
-		
+			worldMsgBox = new MsgBox();		
+		worldMsgBox.setPosition(pos);		
 		menuButton.close();
 		
-		worldMsgBox.addMessage(str, option);
-		if(worldMsgBox.Closed())
+		worldMsgBox.addBasicMessage(str);
+		if(!worldMsgBox.Opened())
 			worldMsgBox.open();
 	}
 	
@@ -457,33 +456,41 @@ public class Global
 		if(worldMsgBox != null)
 			worldMsgBox.setClosed();
 	}
-	
-	public static void showMessageTop(String str, MsgBox.Options option)
+
+	public static void showYesNoMessage(String str, MsgBox.Position pos, MsgAction yesAction, MsgAction noAction)
 	{
 		if(worldMsgBox == null)
-			worldMsgBox = new MsgBox();
-		
-		worldMsgBox.setTop();
-		
+			worldMsgBox = new MsgBox();		
+		worldMsgBox.setPosition(pos);		
 		menuButton.close();
 		
-		worldMsgBox.addMessage(str, option);
-		if(worldMsgBox.Closed())
+		worldMsgBox.addYesNoMessage(str, yesAction, noAction);
+		if(!worldMsgBox.Opened())
 			worldMsgBox.open();
 	}
 	
-	public static void showMessage(String str, float seconds)
+	public static void showMessage(Message msg, MsgBox.Position pos)
 	{
 		if(worldMsgBox == null)
-			worldMsgBox = new MsgBox();
-		
-		worldMsgBox.setBottom();
-		
+			worldMsgBox = new MsgBox();		
+		worldMsgBox.setPosition(pos);		
 		menuButton.close();
 		
-		worldMsgBox.addMessage(str, Options.None);
+		worldMsgBox.addMessage(msg);
+		if(!worldMsgBox.Opened())
+			worldMsgBox.open();
+	}
+	
+	public static void showTimedMessage(String msg, MsgBox.Position pos, float duration)
+	{
+		if(worldMsgBox == null)
+			worldMsgBox = new MsgBox();		
+		worldMsgBox.setPosition(pos);		
+		menuButton.close();
+		//TODO: Make duration work
+		worldMsgBox.addBasicMessage(msg);
 		if(worldMsgBox.Closed())
-			worldMsgBox.open(seconds);
+			worldMsgBox.open();
 	}
 	
 	public static void resetImageTimer()

@@ -5,8 +5,9 @@ import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import bladequest.UI.ListBox.LBStates;
 import bladequest.UI.MenuPanel.Anchors;
-import bladequest.UI.MsgBox.Options;
-import bladequest.UI.MsgBox.YesNo;
+import bladequest.UI.MsgBox.MsgAction;
+import bladequest.UI.MsgBox.MsgBox;
+import bladequest.UI.MsgBox.MsgBox.Options;
 import bladequest.graphics.Sprite;
 import bladequest.world.PlayerCharacter;
 import bladequest.world.Global;
@@ -106,12 +107,7 @@ public class NameSelect
 	private void darken(){darkening = true;}	
 	private void undarken(){darkening = false;}	
 	private void renderDark(){Global.renderer.drawColor(Color.argb(darkenAlpha, 0, 0, 0));}
-	private void showMessage(String msg, MsgBox.Options option)
-	{
-		darken();
-		messageBox.addMessage(msg, option);
-		messageBox.open();
-	}
+
 
 	
 	private void handleOption(String str)
@@ -130,8 +126,17 @@ public class NameSelect
 		}
 		else if(str.equals("don"))
 		{
-			showMessage("Character will be named " + newName + ". Are you sure?", Options.YesNo);
-			//close();
+			String msg = "Character will be named " + newName + ". Are you sure?";
+			darken();
+			messageBox.addYesNoMessage(msg, new MsgAction() {				
+				@Override
+				public void execute() {
+					character.setDisplayName(newName);
+					close();					
+				}
+			}, new MsgAction() {});
+			
+			messageBox.open();
 		}
 	}
 	
@@ -203,13 +208,6 @@ public class NameSelect
 			if(messageBox.Opened())
 			{
 				messageBox.touchActionUp(x, y);
-				
-				if(messageBox.isYesNo() && messageBox.getSelectedOpt() == YesNo.Yes)
-				{
-					//change name and close menu
-					character.setDisplayName(newName);
-					close();
-				}
 				
 				if(!messageBox.Opened())
 					undarken();

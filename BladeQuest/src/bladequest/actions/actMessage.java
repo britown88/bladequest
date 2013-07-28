@@ -1,87 +1,64 @@
 package bladequest.actions;
 
-import bladequest.UI.MsgBox;
-import bladequest.UI.MsgBox.Options;
-import bladequest.UI.MsgBox.YesNo;
+import bladequest.UI.MsgBox.MsgAction;
+import bladequest.UI.MsgBox.MsgBox;
+import bladequest.UI.MsgBox.MsgBox.Options;
+import bladequest.UI.MsgBox.MsgBox.Position;
 import bladequest.world.Global;
 
 
 public class actMessage extends Action 
-{
-	public enum Position
-	{
-		Top,
-		Bottom
-	}
-	
-	String msg;
-	boolean timed;
-	Position pos;
-	float duration;
+{	
+	private String msg;
+	private boolean timed;
+	private Position pos;
+	private float duration;
 	
 	MsgBox.Options option;
-
 	
-	public actMessage(String str)
-	{
-		super();
-		msg = str;
-		this.option = Options.None;
-		pos = Position.Bottom;
-
-	}
-	
-	public actMessage(String str, float seconds)
-	{
-		super();
-		msg = str;
-		this.option = Options.None;
-		pos = Position.Bottom;
-		duration = seconds;
-		timed = true;
-
-	}
-	
-	public actMessage(String str, Position pos)
-	{
-		super();
-		msg = str;
-		this.option = Options.None;
-		this.pos = pos;
-
-	}
-	
-	public boolean yesNo() { return option == Options.YesNo; }
-	
-	public actMessage(String str, MsgBox.Options option)
+	public actMessage(String str, MsgBox.Options option, Position pos)
 	{
 		super();
 		msg = str;
 		this.option = option;
-		pos = Position.Bottom;
-
+		this.pos = pos;
+	}
+	
+	public void setTimed(float duration)
+	{
+		timed = true;
+		this.duration = duration;
 	}
 	
 	@Override
 	public void run()
 	{
 		if(timed)
-			Global.showMessage(msg, duration);
+			Global.showTimedMessage(msg, pos, duration);
 		else
-		{
-			switch(pos)
+			switch(option)
 			{
-			case Top:
-				Global.showMessageTop(msg, option);
+			case None:
+				Global.showBasicMessage(msg, pos);
 				break;
-			case Bottom:
-				Global.showMessage(msg, option);
+			case YesNo:
+				Global.showYesNoMessage(msg, pos, 
+						new MsgAction() {
+							@Override
+							public void execute()
+							{
+								startBranch(0);
+							}
+						},
+						new MsgAction() {
+							@Override
+							public void execute(){startBranch(1);
+							}
+						});
 				break;
-			default:
+			case List:
 				break;
-			}			
-		}
-		
+			}
 	}
 	
 	@Override
@@ -90,10 +67,7 @@ public class actMessage extends Action
 		if(!runningBranch)
 		{
 			if(Global.worldMsgBox.Closed())
-			{
-				startBranch(Global.worldMsgBox.getSelectedOpt() == YesNo.Yes ? 0 : 1);
 				return !runningBranch;
-			}
 			else
 				return false;
 		}
