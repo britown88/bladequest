@@ -50,7 +50,7 @@ public class Item
 		count = 1;
 		id = id_++;
 		actions = new ArrayList<BattleAction>();
-		statMods = new int[Stats.NUM_STATS.ordinal()];
+		statMods = new int[Stats.count()];
 		damageComponents = new ArrayList<DamageComponent>();
 		this.type = type;
 		power = 0;
@@ -98,8 +98,8 @@ public class Item
 		}
 		
 		//copy over stat mods
-		statMods = new int[Stats.NUM_STATS.ordinal()];	
-		for(int j = 0; j < Stats.NUM_STATS.ordinal(); ++j)
+		statMods = new int[Stats.count()];	
+		for(int j = 0; j < Stats.count(); ++j)
 			statMods[j] = i.statMods[j];
 		
 		this.useCount = 0;
@@ -219,14 +219,14 @@ public class Item
 	public void equip(PlayerCharacter c) 
 	{ 
 		equipped = true; 
-		for(int j = 0; j < Stats.NUM_STATS.ordinal(); ++j)
+		for(int j = 0; j < Stats.count(); ++j)
 			c.modStat(j, statMods[j]);
 
 	}
 	public void unequip(PlayerCharacter c) 
 	{ 
 		equipped = false; 
-		for(int j = 0; j < Stats.NUM_STATS.ordinal(); ++j)
+		for(int j = 0; j < Stats.count(); ++j)
 			c.modStat(j, -statMods[j]);
 	}
 	

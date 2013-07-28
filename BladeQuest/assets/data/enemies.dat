@@ -126,7 +126,7 @@ HawkAI >
 addDrop "potion" 0.1 >
 modStat "MaxHP" -30 >
 modStat "Speed" 6 >
-modStat "BattlePower" -2 >
+modStat "Power" -2 >
 modStat "Intelligence" -1 >
 setGold 21 >
 addEAbility "gale" >
@@ -138,7 +138,7 @@ addDefaultDaggerHit >
 setEBaseStats 3 3 3 3 >
 addDrop "potion" 0.05 >
 setELevel 5 >
-modStat "BattlePower" -1 >
+modStat "Power" -1 >
 addAttackOnlyState >
 setGold 4 >
 setEShadow (createShadow 31 16 22))
@@ -149,7 +149,7 @@ setEBaseStats 3 3 3 3 >
 addDrop "potion" 0.1 >
 setELevel 6 >
 modStat "MaxHP" -5 >
-modStat "BattlePower" -1 >
+modStat "Power" -1 >
 addAttackOnlyState >
 setGold 6 >
 setEShadow (createShadow 31 16 22))
@@ -178,7 +178,7 @@ addDrop "tranquilizer" 0.25 >
 addDrop "lurebell" 0.1 >
 setHeldItem "tranquilizer" >
 modStat "MaxHP" -14 >
-modStat "BattlePower" -2 >
+modStat "Power" -2 >
 addEAbility "leafygreens" >
 addEAbility "maddeningeyes" >
 setEShadow (createShadow 42 12 25))
@@ -208,7 +208,7 @@ addDefaultDaggerHit >
 setEBaseStats 10 10 10 10 >
 setELevel 10 >
 modStat "MaxHP" 600 >
-modStat "BattlePower" -2 >
+modStat "Power" -2 >
 SatyrAI >
 setBoss >
 addEStatusImmunity "confuse" >
@@ -261,7 +261,7 @@ setEShadow (createShadow 34 12 30 > addElevation 16))
 addDefaultSwordHit >
 setEBaseStats 10 10 10 10 >
 setELevel 8 >
-modStat "BattlePower" -3 >
+modStat "Power" -3 >
 modStat "MaxHP" 150 >
 setGold 109 >
 setBoss >
@@ -368,7 +368,7 @@ RolandTriggers roland
 addColoredSwordHit  (RGBA 105 212 213 255) (RGBA 165 242 243 255) >
 setEBaseStats 10 10 10 10 >
 setELevel 16 >
-modStat "BattlePower" -3 >
+modStat "Power" -3 >
 modStat "Fire" -20 >
 modStat "Water" 155 >
 modStat "MaxHP" 3000 >

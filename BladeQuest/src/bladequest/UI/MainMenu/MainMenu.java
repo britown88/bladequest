@@ -1542,7 +1542,7 @@ public class MainMenu
 		
 		//create labels and base stats
 		eqpStats.addTextBox("POW", column1x, (int)(eqpStats.height*(percentOfHeight*i)), menuText);
-		eqpStats.addTextBox(""+selectedChar.getStat(Stats.BattlePower), column2x, (int)(eqpStats.height*(percentOfHeight*i)), selectedChar.getStatMod(Stats.BattlePower) > 0 ? blueMenuTextCenter : selectedChar.getStatMod(Stats.BattlePower) < 0 ? redMenuTextCenter : menuTextCenter);
+		eqpStats.addTextBox(""+selectedChar.getStat(Stats.Power), column2x, (int)(eqpStats.height*(percentOfHeight*i)), selectedChar.getStatMod(Stats.Power) > 0 ? blueMenuTextCenter : selectedChar.getStatMod(Stats.Power) < 0 ? redMenuTextCenter : menuTextCenter);
 		++i;		
 		eqpStats.addTextBox("DEF", column1x, (int)(eqpStats.height*(percentOfHeight*i)), menuText);
 		eqpStats.addTextBox(""+selectedChar.getStat(Stats.Defense), column2x, (int)(eqpStats.height*(percentOfHeight*i)), selectedChar.getStatMod(Stats.Defense) > 0 ? blueMenuTextCenter : selectedChar.getStatMod(Stats.Defense) < 0 ? redMenuTextCenter : menuTextCenter);
@@ -1575,7 +1575,7 @@ public class MainMenu
 		eqpStats.addTextBox(""+selectedChar.getStat(Stats.Block), column2x, (int)(eqpStats.height*(percentOfHeight*i)), selectedChar.getStatMod(Stats.Block) > 0 ? blueMenuTextCenter : selectedChar.getStatMod(Stats.Block) < 0 ? redMenuTextCenter : menuTextCenter);
 		++i;		
 		eqpStats.addTextBox("CRIT", column1x, (int)(eqpStats.height*(percentOfHeight*i)), menuText);
-		eqpStats.addTextBox(""+selectedChar.getStat(Stats.Crit), column2x, (int)(eqpStats.height*(percentOfHeight*i)), selectedChar.getStatMod(Stats.Crit) > 0 ? blueMenuTextCenter : selectedChar.getStatMod(Stats.Crit) < 0 ? redMenuTextCenter : menuTextCenter);
+		eqpStats.addTextBox(""+selectedChar.getStat(Stats.Fury), column2x, (int)(eqpStats.height*(percentOfHeight*i)), selectedChar.getStatMod(Stats.Fury) > 0 ? blueMenuTextCenter : selectedChar.getStatMod(Stats.Fury) < 0 ? redMenuTextCenter : menuTextCenter);
 		
 		
 		if(selectedEqpItem != null || eqpRemove)
@@ -1591,7 +1591,7 @@ public class MainMenu
 			
 			//create updated stats
 			i = 1;
-			eqpStats.addTextBox(""+newStats[Stats.BattlePower.ordinal()], 	column3x, (int)(eqpStats.height*(percentOfHeight*i++)), newStats[Stats.BattlePower.ordinal()] 	> selectedChar.getStat(Stats.BattlePower) 	? blueMenuTextCenter : newStats[Stats.BattlePower.ordinal()] 	< selectedChar.getStat(Stats.BattlePower) 	? redMenuTextCenter : menuTextCenter);
+			eqpStats.addTextBox(""+newStats[Stats.Power.ordinal()], 	column3x, (int)(eqpStats.height*(percentOfHeight*i++)), newStats[Stats.Power.ordinal()] 	> selectedChar.getStat(Stats.Power) 	? blueMenuTextCenter : newStats[Stats.Power.ordinal()] 	< selectedChar.getStat(Stats.Power) 	? redMenuTextCenter : menuTextCenter);
 			eqpStats.addTextBox(""+newStats[Stats.Defense.ordinal()], 		column3x, (int)(eqpStats.height*(percentOfHeight*i++)), newStats[Stats.Defense.ordinal()] 		> selectedChar.getStat(Stats.Defense) 		? blueMenuTextCenter : newStats[Stats.Defense.ordinal()] 		< selectedChar.getStat(Stats.Defense) 		? redMenuTextCenter : menuTextCenter);
 			eqpStats.addTextBox(""+newStats[Stats.MagicPower.ordinal()], 	column3x, (int)(eqpStats.height*(percentOfHeight*i++)), newStats[Stats.MagicPower.ordinal()] 	> selectedChar.getStat(Stats.MagicPower) 	? blueMenuTextCenter : newStats[Stats.MagicPower.ordinal()] 	< selectedChar.getStat(Stats.MagicPower) 	? redMenuTextCenter : menuTextCenter);
 			eqpStats.addTextBox(""+newStats[Stats.MagicDefense.ordinal()], 	column3x, (int)(eqpStats.height*(percentOfHeight*i++)), newStats[Stats.MagicDefense.ordinal()] 	> selectedChar.getStat(Stats.MagicDefense) 	? blueMenuTextCenter : newStats[Stats.MagicDefense.ordinal()] 	< selectedChar.getStat(Stats.MagicDefense) 	? redMenuTextCenter : menuTextCenter);
@@ -1602,7 +1602,7 @@ public class MainMenu
 			eqpStats.addTextBox(""+newStats[Stats.Speed.ordinal()], 		column3x, (int)(eqpStats.height*(percentOfHeight*i++)), newStats[Stats.Speed.ordinal()] 		> selectedChar.getStat(Stats.Speed) 		? blueMenuTextCenter : newStats[Stats.Speed.ordinal()] 			< selectedChar.getStat(Stats.Speed) 		? redMenuTextCenter : menuTextCenter);
 			eqpStats.addTextBox(""+newStats[Stats.Evade.ordinal()], 		column3x, (int)(eqpStats.height*(percentOfHeight*i++)), newStats[Stats.Evade.ordinal()] 		> selectedChar.getStat(Stats.Evade) 		? blueMenuTextCenter : newStats[Stats.Evade.ordinal()] 			< selectedChar.getStat(Stats.Evade) 		? redMenuTextCenter : menuTextCenter);
 			eqpStats.addTextBox(""+newStats[Stats.Block.ordinal()], 		column3x, (int)(eqpStats.height*(percentOfHeight*i++)), newStats[Stats.Block.ordinal()] 		> selectedChar.getStat(Stats.Block) 		? blueMenuTextCenter : newStats[Stats.Block.ordinal()] 			< selectedChar.getStat(Stats.Block) 		? redMenuTextCenter : menuTextCenter);
-			eqpStats.addTextBox(""+newStats[Stats.Crit.ordinal()], 			column3x, (int)(eqpStats.height*(percentOfHeight*i++)), newStats[Stats.Crit.ordinal()] 			> selectedChar.getStat(Stats.Crit) 			? blueMenuTextCenter : newStats[Stats.Crit.ordinal()] 			< selectedChar.getStat(Stats.Crit) 			? redMenuTextCenter : menuTextCenter);
+			eqpStats.addTextBox(""+newStats[Stats.Fury.ordinal()], 			column3x, (int)(eqpStats.height*(percentOfHeight*i++)), newStats[Stats.Fury.ordinal()] 			> selectedChar.getStat(Stats.Fury) 			? blueMenuTextCenter : newStats[Stats.Fury.ordinal()] 			< selectedChar.getStat(Stats.Fury) 			? redMenuTextCenter : menuTextCenter);
 			
 			
 		}
@@ -1935,12 +1935,12 @@ public class MainMenu
 		blueRight.getTextWidths("5", widths);
 		int charWidth = (int)widths[0];
 		
-		int statsBuffer = charWidth * 5;
+		int statsBuffer = charWidth * 4;
 		
 		int statCols[] = new int[1];		
 		statCols[0] = menuWidth - statsBuffer - charWidth;	
 		
-		int numStatRows = 12;
+		int numStatRows = 13;
 		int statRows[] = new int[numStatRows];		
 		for(int i = 0; i < numStatRows; ++i)
 			statRows[i] = statsBox.height / (numStatRows+1) * (i+1);		
@@ -1949,18 +1949,18 @@ public class MainMenu
 		pc.updateSecondaryStats(PlayerCharacter.Hand.MainHand);			
 
 		statsBox.addTextBox("Power:", statCols[0], statRows[0], blueRight);
-		statsBox.addTextBox(""+pc.getStat(Stats.BattlePower), 
-				statCols[0] + statsBuffer, statRows[0], genStatPaint(pc, Stats.BattlePower, blueRight, redRight, whiteRight));
+		statsBox.addTextBox(""+pc.getStat(Stats.Power), 
+				statCols[0] + statsBuffer, statRows[0], genStatPaint(pc, Stats.Power, blueRight, redRight, whiteRight));
 		
 		statsBox.addTextBox("Defend:", statCols[0], statRows[1], blueRight);
 		statsBox.addTextBox(""+pc.getStat(Stats.Defense), 
 				statCols[0] + statsBuffer, statRows[1], genStatPaint(pc, Stats.Defense, blueRight, redRight, whiteRight));
 		
-		statsBox.addTextBox("M.Pow:", statCols[0], statRows[2], blueRight);
+		statsBox.addTextBox("M. Pow:", statCols[0], statRows[2], blueRight);
 		statsBox.addTextBox(""+pc.getStat(Stats.MagicPower), 
 				statCols[0] + statsBuffer, statRows[2], genStatPaint(pc, Stats.MagicPower, blueRight, redRight, whiteRight));
 		
-		statsBox.addTextBox("M.Def:", statCols[0], statRows[3], blueRight);
+		statsBox.addTextBox("M. Def:", statCols[0], statRows[3], blueRight);
 		statsBox.addTextBox(""+pc.getStat(Stats.MagicDefense), 
 				statCols[0] + statsBuffer, statRows[3], genStatPaint(pc, Stats.MagicDefense, blueRight, redRight, whiteRight));
 		
@@ -1969,7 +1969,7 @@ public class MainMenu
 		statsBox.addTextBox(""+pc.getStat(Stats.Strength), 
 				statCols[0] + statsBuffer, statRows[4], genStatPaint(pc, Stats.Strength, blueRight, redRight, whiteRight));
 		
-		statsBox.addTextBox("Agil:", statCols[0], statRows[5], blueRight);
+		statsBox.addTextBox("Agility:", statCols[0], statRows[5], blueRight);
 		statsBox.addTextBox(""+pc.getStat(Stats.Agility), 
 				statCols[0] + statsBuffer, statRows[5], genStatPaint(pc, Stats.Agility, blueRight, redRight, whiteRight));
 		
@@ -1993,9 +1993,13 @@ public class MainMenu
 		statsBox.addTextBox(""+pc.getStat(Stats.Block), 
 				statCols[0] + statsBuffer, statRows[10], genStatPaint(pc, Stats.Block, blueRight, redRight, whiteRight));
 		
-		statsBox.addTextBox("Crit:", statCols[0], statRows[11], blueRight);
-		statsBox.addTextBox(""+pc.getStat(Stats.Crit), 
-				statCols[0] + statsBuffer, statRows[11], genStatPaint(pc, Stats.Crit, blueRight, redRight, whiteRight));
+		statsBox.addTextBox("Nullify:", statCols[0], statRows[11], blueRight);
+		statsBox.addTextBox(""+pc.getStat(Stats.Nullify), 
+				statCols[0] + statsBuffer, statRows[11], genStatPaint(pc, Stats.Nullify, blueRight, redRight, whiteRight));
+		
+		statsBox.addTextBox("Fury:", statCols[0], statRows[12], blueRight);
+		statsBox.addTextBox(""+pc.getStat(Stats.Fury), 
+				statCols[0] + statsBuffer, statRows[12], genStatPaint(pc, Stats.Fury, blueRight, redRight, whiteRight));
 		
 		panel.addChildPanel(statsBox);
 	}

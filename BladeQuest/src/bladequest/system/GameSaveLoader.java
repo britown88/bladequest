@@ -410,7 +410,7 @@ public class GameSaveLoader
 						str.append("ability " + ab.name + "\n");
 					
 					str.append("statmods");
-					for(int i = 0; i < Stats.NUM_STATS.ordinal(); ++i)
+					for(int i = 0; i < Stats.count(); ++i)
 						str.append(" " + c.getStatMod(i));
 					
 					str.append("\nendcharacter\n");	
@@ -599,7 +599,7 @@ public class GameSaveLoader
 		}
 		else if(dl.item.equals("statmods"))
 		{
-			for(int i = 0; i < Stats.NUM_STATS.ordinal(); ++i)
+			for(int i = 0; i < Stats.count(); ++i)
 				c.setStatMod(i, Integer.parseInt(dl.values.get(i)));
 		}
 		else if(dl.item.equals("endcharacter"))

@@ -8,19 +8,21 @@ public enum Stats
 	Intelligence,
 	MaxHP,
 	MaxMP,
-	BattlePower,
+	Power,
 	Defense,
 	MagicPower,
 	MagicDefense,
 	Speed,
 	Evade,
 	Block,
-	DamageIgnore,
-	Crit,
+	Nullify,
+	Fury,
 	Fire,
 	Earth,
 	Wind,
-	Water,
-	NUM_STATS
+	Water;
+	private static Stats[] allValues = values();
+    public static Stats fromOrdinal(int n) {return allValues[n];}
+    public static int count(){ return allValues.length;}
 	
 }

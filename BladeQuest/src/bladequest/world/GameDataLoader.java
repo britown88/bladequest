@@ -238,7 +238,7 @@ public class GameDataLoader
 		}
 		else if(dl.item.equals("statmods"))
 		{
-			for(int i = 0; i < Stats.NUM_STATS.ordinal(); ++i)
+			for(int i = 0; i < Stats.count(); ++i)
 				itm.addStatMod(i, Integer.parseInt(dl.values.get(i)));
 		}
 		else if(dl.item.equals("damagecomp"))

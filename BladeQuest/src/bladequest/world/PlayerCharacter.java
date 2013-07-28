@@ -117,8 +117,8 @@ public class PlayerCharacter
 		exp = 0;
 		setExpToLevel();
 		imageIndex = 0;
-		stats = new int[Stats.NUM_STATS.ordinal()];
-		statMods = new int[Stats.NUM_STATS.ordinal()];
+		stats = new int[Stats.count()];
+		statMods = new int[Stats.count()];
 		baseStats = new int[4];
 		abilitiesName = "";
 		targets = new Vector<PlayerCharacter>();
@@ -152,10 +152,10 @@ public class PlayerCharacter
 		index = c.index;
 		
 		//copy over stats
-		stats = new int[Stats.NUM_STATS.ordinal()];
-		statMods = new int[Stats.NUM_STATS.ordinal()];
+		stats = new int[Stats.count()];
+		statMods = new int[Stats.count()];
 		baseStats = new int[4];		
-		for(int i = 0; i < Stats.NUM_STATS.ordinal(); ++i)
+		for(int i = 0; i < Stats.count(); ++i)
 		{	stats[i] = c.stats[i];
 			statMods[i] = c.statMods[i];}
 		for(int i = 0; i < 4; ++i)
@@ -356,12 +356,18 @@ public class PlayerCharacter
 	public int getStat(Stats stat){return getStat(stat.ordinal());}	
 	public int getStat(int stat)
 	{
-		if(stat == Stats.MaxHP.ordinal())
+		switch(Stats.fromOrdinal(stat))
+		{
+		case MaxHP:
 			return Math.min(9999, stats[stat] + statMods[stat]);
-		else if(stat == Stats.MaxMP.ordinal())
+		case MaxMP:
 			return Math.min(999, stats[stat] + statMods[stat]);
-		else
+		case Power:
+		case MagicPower:
+			return stats[stat] + statMods[stat];
+		default:
 			return Math.min(255, stats[stat] + statMods[stat]);
+		}
 	}	
 	public int getUnModdedStat(Stats stat){return getUnModdedStat(stat.ordinal());}	
 	public int getUnModdedStat(int stat)
@@ -446,21 +452,7 @@ public class PlayerCharacter
 		}
 		return false;			
 	}
-//	
-//	public boolean hasTypeEquipped(Item.Type type)
-//	{
-//		switch(type)
-//		{
-//		case Weapon: return hand1Equipped();
-//		case Shield: return hand2Equipped();
-//		case Helmet: return helmEquipped();
-//		case Accessory: return accessEquipped();
-//		case Torso: return torsoEquipped();
-//		default:
-//			break;
-//		}
-//		return false;		
-//	}
+
 	public boolean helmEquipped() { return helmet != null; }
 	public boolean hand1Equipped() { return hand1 != null; }
 	public boolean torsoEquipped() { return torso != null; }
@@ -881,7 +873,7 @@ public class PlayerCharacter
 		
 		pointsPerPercent = 255.0f / BattleCalc.maxCrit;
 		minBonus = (int)(pointsPerPercent*BattleCalc.minCrit);
-		stats[Stats.Crit.ordinal()] = minBonus;
+		stats[Stats.Fury.ordinal()] = minBonus;
 		
 		//hp/mp based on vit and int	
 		stats[Stats.MaxHP.ordinal()] = BattleCalc.calculateCurvedHPMPValue(baseStats[Stats.Vitality.ordinal()], lvl, BattleCalc.maxHP);
@@ -898,7 +890,7 @@ public class PlayerCharacter
 		{
 			w = hand2Equipped() && hand2.isWeapon() ? hand2.Power() : 0.0f;
 		}
-		stats[Stats.BattlePower.ordinal()] = (int) (str + w);
+		stats[Stats.Power.ordinal()] = (int) (str + w);
 		
 		//Defense
 
@@ -952,7 +944,7 @@ public class PlayerCharacter
 	
 	public int[] getModdedStats(Slot slot, Item i)
 	{
-		int[] moddedStats = new int[Stats.NUM_STATS.ordinal()];		
+		int[] moddedStats = new int[Stats.count()];		
 		Item currEquipped = null;
 		
 		if(hasSlotEquipped(slot))
@@ -961,7 +953,7 @@ public class PlayerCharacter
 		equip(slot, i.getId());
 		updateSecondaryStats(PlayerCharacter.Hand.MainHand);
 		
-		for(int stat = 0; stat < Stats.NUM_STATS.ordinal(); ++stat)
+		for(int stat = 0; stat < Stats.count(); ++stat)
 			moddedStats[stat] = getStat(stat);
 		
 		if(currEquipped != null)
@@ -979,7 +971,7 @@ public class PlayerCharacter
 	//get stats from removing item at given slot	
 	public int[] getModdedStatsRmv(Slot slot)
 	{
-		int[] moddedStats = new int[Stats.NUM_STATS.ordinal()];
+		int[] moddedStats = new int[Stats.count()];
 	
 		Item currEquipped = null;
 		
@@ -989,7 +981,7 @@ public class PlayerCharacter
 		unequip(slot);
 		updateSecondaryStats(PlayerCharacter.Hand.MainHand);
 		
-		for(int stat = 0; stat < Stats.NUM_STATS.ordinal(); ++stat)
+		for(int stat = 0; stat < Stats.count(); ++stat)
 			moddedStats[stat] = getStat(stat);
 		
 		if(currEquipped != null)

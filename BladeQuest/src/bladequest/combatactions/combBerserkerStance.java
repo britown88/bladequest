@@ -141,7 +141,7 @@ public class combBerserkerStance extends Stance {
 			}
 			public void getStatShift(PlayerCharacter c)
 			{
-				statShift = (int)(c.getUnModdedStat(Stats.BattlePower) * 0.25f);
+				statShift = (int)(c.getUnModdedStat(Stats.Power) * 0.25f);
 			}
 			public void onInflict(PlayerCharacter c) 
 			{			
@@ -149,14 +149,14 @@ public class combBerserkerStance extends Stance {
 				trySetEnabledState(c.getAbility("zornhau"), true);
 				
 				getStatShift(c);
-				c.modStat(Stats.BattlePower.ordinal(), statShift);
+				c.modStat(Stats.Power.ordinal(), statShift);
 				c.modStat(Stats.Defense.ordinal(), -statShift);
 			}
 			public void onRemove(PlayerCharacter c) 
 			{
 				trySetEnabledState(c.getAbility("assault"), false);
 				trySetEnabledState(c.getAbility("zornhau"), false);
-				c.modStat(Stats.BattlePower.ordinal(), -statShift);
+				c.modStat(Stats.Power.ordinal(), -statShift);
 				c.modStat(Stats.Defense.ordinal(), statShift);				
 			}
 			public Stance getStance() 

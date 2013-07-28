@@ -109,7 +109,7 @@ public class BattleCalc
 					return DamageReturnType.Blocked;
 				
 				roll = Global.rand.nextInt(100);
-				int critChance = (int)((float)attacker.getStat(Stats.Crit)*(maxCrit/255.0f));
+				int critChance = (int)((float)attacker.getStat(Stats.Fury)*(maxCrit/255.0f));
 				
 				if(roll < critChance)
 					return DamageReturnType.Critical;
@@ -141,7 +141,7 @@ public class BattleCalc
 		boolean physical = type == DamageTypes.Physical || type == DamageTypes.PhysicalIgnoreDef; 
 		boolean ignoreDef = type == DamageTypes.MagicalIgnoreDef || type == DamageTypes.PhysicalIgnoreDef;
 				
-		int AP = physical ? attacker.getStat(Stats.BattlePower) : attacker.getStat(Stats.MagicPower);
+		int AP = physical ? attacker.getStat(Stats.Power) : attacker.getStat(Stats.MagicPower);
 		float DP = ignoreDef ? 0.0f : physical ? defender.getStat(Stats.Defense) : defender.getStat(Stats.MagicDefense);
 		
 		float rawDamage = AP * 10.0f;		
@@ -168,7 +168,7 @@ public class BattleCalc
 			if(defender.getAction() == Action.Guard || (!attacker.isEnemy() && !defender.isEnemy()))
 				finalDmg *= 0.5f;	
 			
-			finalDmg = Math.max(0, finalDmg - defender.getStat(Stats.DamageIgnore) * 10.0f);
+			finalDmg = Math.max(0, finalDmg - defender.getStat(Stats.Nullify) * 10.0f);
 		}		
 			
 		//cap
