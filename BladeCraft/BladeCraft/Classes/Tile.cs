@@ -6,6 +6,14 @@ namespace BladeCraft.Classes
     public class Tile
     {
 
+        public enum Type
+        {
+            Singular,
+            Material,
+            Wall,
+            Object
+        };
+
         public static int sideLeft = 0;
         public static int sideTop = 1;
         public static int sideRight = 2;
@@ -16,8 +24,7 @@ namespace BladeCraft.Classes
         public int layer;
         public bool[] collSides;
 
-        public bool isMaterial;
-        public int matX, matY;
+        public Type tileType;
 
         public bool animated;
         public string tileset;
@@ -26,6 +33,7 @@ namespace BladeCraft.Classes
         {
            collSides = new bool[4];
            animated = false;
+           tileType = Type.Singular;
         }
 
         public Tile(int x, int y, int bmpX, int bmpY, string tileset, int layer)
@@ -40,7 +48,7 @@ namespace BladeCraft.Classes
             for (int i = 0; i < 4; ++i)
                 collSides[i] = false;
 
-            this.isMaterial = false;
+            tileType = Type.Singular;
 
             animated = false;
             this.tileset = tileset;
@@ -53,17 +61,15 @@ namespace BladeCraft.Classes
             this.animBmpY = animBmpY;
         }
 
-        public void addToMaterial(int matX, int matY)
+        public void addToMaterial()
         {
-           this.isMaterial = true;
-           this.matX = matX;
-           this.matY = matY;
+            tileType = Type.Material;
         }
 
-       public bool IsMaterial() { return this.isMaterial; }
-       public bool hasSameMaterial(int matX, int matY)
+        public bool IsMaterial() { return tileType == Type.Material; }
+       public bool hasSameMaterial(string tileset)
        {
-          return isMaterial && matX == this.matX && matY == this.matY;
+          return IsMaterial() && tileset.Equals(this.tileset);
        }
 
         public Tile(Tile t)
@@ -75,9 +81,7 @@ namespace BladeCraft.Classes
             this.animBmpX = t.animBmpX;
             this.animBmpY = t.animBmpY;
             this.animated = t.animated;
-            this.matX = t.matX;
-            this.matY = t.matY;
-            this.isMaterial = t.isMaterial;
+            this.tileType = t.tileType;
             this.layer = t.layer;
             this.tileset = t.tileset;
             collSides = new bool[4];

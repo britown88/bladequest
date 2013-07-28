@@ -173,10 +173,18 @@ namespace BladeCraft.Forms
       }
       private void setMaterialTile(string path)
       {
-          selectedTile.isMaterial = true;
+          selectedTile.tileType = Tile.Type.Material;
           selectedTile.tileset = path;
-          selectedTile.matX = 0;
-          selectedTile.matY = 0;
+      }
+      private void setWallTile(string path)
+      {
+          selectedTile.tileType = Tile.Type.Wall;
+          selectedTile.tileset = path;
+      }
+      private void setObjectTile(string path)
+      {
+          selectedTile.tileType = Tile.Type.Object;
+          selectedTile.tileset = path;
       }
       public MapForm(BQMap map)
       {
@@ -208,8 +216,9 @@ namespace BladeCraft.Forms
          mapFormTileSelection = new TileSelectionMapFormData(this);
 
          addDrawNode("materials", path => setMaterialTile(path));
-         addDrawNode("walls");
+         addDrawNode("walls", path => setWallTile(path));
          addDrawNode("stairs");
+         addDrawNode("objects", path => setObjectTile(path));
       }
 
       
@@ -296,7 +305,7 @@ namespace BladeCraft.Forms
       {
          erase = false;
          tilesetPanel.Focus();
-         selectedTile.isMaterial = false;
+         selectedTile.tileType= Tile.Type.Singular;
          selectedTile.bmpX = (int)(e.X / (tileSize * tsScale));
          selectedTile.bmpY = (int)(e.Y / (tileSize * tsScale));
          selectedTile.tileset = tilesetPath;
@@ -487,6 +496,18 @@ namespace BladeCraft.Forms
          Tool currentTool = null;
          if (!tsbObjectLayer.Checked)
          {
+             if (selectedTile.IsMaterial())
+             {
+                 currentTool = new MaterialTool(mapFormData, mapFormTileSelection);
+             }
+             else if (selectedTile.tileType == Tile.Type.Wall)
+             {
+                 currentTool = new WallTool(mapFormData, mapFormTileSelection);
+             }
+             else if (selectedTile.tileType == Tile.Type.Object)
+             {
+                 currentTool = new ObjectTool(mapFormData, mapFormTileSelection);
+             }
             if (e.Button == System.Windows.Forms.MouseButtons.Left && btnDraw.Checked)
             {
                if (Form.ModifierKeys == Keys.Control)
@@ -501,21 +522,17 @@ namespace BladeCraft.Forms
                {
                   currentTool = new SwapLayerTool(swapLayerMapFormData);
                }
-               else if (selectedTile.isMaterial)
+               else if (currentTool == null)
                {
-                  currentTool = new MaterialTool(mapFormData, mapFormTileSelection);
-               }
-               else
-               {
-                  currentTool = new AddTileTool(mapFormData, mapFormTileSelection);
+                   currentTool = new AddTileTool(mapFormData, mapFormTileSelection);
                }
             }
+
          }
          else if (tsbEncounters.Checked)
          {
             currentTool = new EncounterZoneTool(mapFormData);
          }
-
          if (activeTool == null || !activeTool.equals(currentTool))
          {
             activeTool = currentTool;
@@ -526,10 +543,12 @@ namespace BladeCraft.Forms
       {
          mapFrame.Focus();
 
-         Point gridPoint = clickedPoint(e);
-         updateTool(e);
-         if (activeTool != null) activeTool.onClick(gridPoint.X, gridPoint.Y);
-         
+         if (e.Button == MouseButtons.Left)
+         {
+             Point gridPoint = clickedPoint(e);
+             updateTool(e);
+             if (activeTool != null) activeTool.onClick(gridPoint.X, gridPoint.Y);
+         }
       }
       private void mapPanel_MouseMove(object sender, MouseEventArgs e)
       {
@@ -797,60 +816,6 @@ namespace BladeCraft.Forms
       {
          map.openHeaderForm(MdiParent);
       }
-
-      private void matPanel_Paint(object sender, PaintEventArgs e)
-      {
-         Graphics g = e.Graphics;
-         Pen selPen = new Pen(Color.Red);
-         selPen.Width = 4;
-
-         int x = 0;
-         int selectedX = 0;
-         foreach (Point p in map.MatList)
-         {
-            Rectangle destRect = new Rectangle((int)(x * tileSize * tsScale), 0, (int)(tileSize * tsScale), (int)(tileSize * tsScale));
-            
-            g.DrawImage( tileset,
-               destRect,
-               (p.X + 4) * tileSize,
-               (p.Y + 1) * tileSize,
-               tileSize, tileSize, GraphicsUnit.Pixel);
-
-            if (selectedTile.IsMaterial())
-               if (p.X == selectedTile.matX && p.Y == selectedTile.matY)
-                  selectedX = x;
-
-            x += 1;
-         }
-
-         if (selectedTile.IsMaterial())
-            g.DrawRectangle(selPen, selectedX * tileSize * tsScale, 0, tileSize * tsScale, tileSize * tsScale);
-
-      }
-
-//       private void btnAddMat_Click(object sender, EventArgs e)
-//       {
-//          //addMaterial();
-//       }
-
-      private void matPanel_MouseClick(object sender, MouseEventArgs e)
-      {
-         erase = false;
-         //matPanel.Focus();
-         
-         int index = (int)(e.X / (tileSize * tsScale));
-         if (index < map.MatList.Count)
-         {
-            selectedTile.isMaterial = true;
-            Point selectedMat = map.MatList[index];
-            selectedTile.matX = selectedMat.X;
-            selectedTile.matY = selectedMat.Y;
-
-            tsPanel.Invalidate();
-         }
-         
-      }
-
       private void tsbSwapLayers_CheckStateChanged(object sender, EventArgs e)
       {
          tsbLayerSwapTo.Enabled = tsbSwapLayers.Checked;
@@ -896,7 +861,7 @@ namespace BladeCraft.Forms
             map.undo();
             mapPanel.Invalidate();
          }
-         if (e.KeyChar == 25)
+         if (e.KeyChar == 25  ) //ctrl-Y
          {
             map.redo();
             mapPanel.Invalidate();
@@ -964,3 +929,4 @@ namespace BladeCraft.Forms
       }
    }
 }
+

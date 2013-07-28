@@ -47,6 +47,7 @@ namespace BladeCraft
             loadBitmapFolder("stairs");
             loadBitmapFolder("walls");
             loadBitmapFolder("materials");
+            loadBitmapFolder("objects");
         }
 
         private void main_Load(object sender, EventArgs e)

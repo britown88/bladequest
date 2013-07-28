@@ -52,9 +52,9 @@ namespace BladeCraft.Classes.Tools
 
       public void mouseMove(int x, int y)
       {
-         if (mouseDown ||  
-             x != lastPointAdded.X ||
-             y != lastPointAdded.Y)
+         if (mouseDown &&  
+             (x != lastPointAdded.X ||
+             y != lastPointAdded.Y))
          {
             addTile(x, y);
          }
