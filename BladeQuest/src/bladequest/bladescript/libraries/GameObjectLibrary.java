@@ -2,6 +2,7 @@ package bladequest.bladescript.libraries;
 
 import android.graphics.Point;
 import android.util.Log;
+import bladequest.UI.MsgBox.Options;
 import bladequest.actions.Action;
 import bladequest.actions.actAllowSaving;
 import bladequest.actions.actAnimation;
@@ -221,7 +222,7 @@ public class GameObjectLibrary
 	}
 	public static Action messageWithYesNo(String message)
 	{		
-		Action act = new actMessage(message, true);
+		Action act = new actMessage(message, Options.YesNo);
 		return act;
 	}
 	public static Action message(String message)

@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Rect;
 import bladequest.UI.ListBox.LBStates;
+import bladequest.UI.MsgBox.Options;
 import bladequest.UI.MsgBox.YesNo;
 import bladequest.sound.BladeSong;
 import bladequest.system.GameSave;
@@ -145,10 +146,10 @@ public class SaveLoadMenu
 	private void darken(){darkening = true;}	
 	private void undarken(){darkening = false;}	
 	private void renderDark(){Global.renderer.drawColor(Color.argb(darkenAlpha, 0, 0, 0));}
-	private void showMessage(String msg, boolean yesNoOpt)
+	private void showMessage(String msg, MsgBox.Options option)
 	{
 		darken();
-		messageBox.addMessage(msg, yesNoOpt);
+		messageBox.addMessage(msg, option);
 		messageBox.open();
 	}
 	
@@ -204,7 +205,7 @@ public class SaveLoadMenu
 					Global.saveLoader.readSaves(Global.activity);
 					buildPanels();
 					
-					showMessage("Game saved!", false);					
+					showMessage("Game saved!", Options.None);					
 					closeAfterMsg = true;
 				}			
 			}
@@ -229,7 +230,7 @@ public class SaveLoadMenu
 						Global.clearAnimations();
 						//Global.musicBox.pause(1.0f);
 						//BladeSong.instance().fadeOut(1.0f);
-						showMessage("Game loaded!", false);
+						showMessage("Game loaded!", Options.None);
 						closeAfterMsg = true;
 					}
 					
@@ -252,7 +253,7 @@ public class SaveLoadMenu
 	{
 		if(!close && menu.getCurrentSelectedEntry() != null)
 		{
-			showMessage("Delete this save?", true);
+			showMessage("Delete this save?", Options.YesNo);
 			deleting = true;
 			//menu.showOptSelect = false;
 			//menu.getSelectedEntry().move(0, 0, 10);	
@@ -299,13 +300,13 @@ public class SaveLoadMenu
 					if(saveLoad == SAVING)
 					{
 						if(menu.getSelectedEntry().obj == null)
-							showMessage("Saving game...", false);													
+							showMessage("Saving game...", Options.None);													
 						else
-							showMessage("Overwrite this save?", true);
+							showMessage("Overwrite this save?", Options.YesNo);
 					}
 					else if(saveLoad == LOADING && !deleting)
 					{
-						showMessage("Load this save?", true);
+						showMessage("Load this save?", Options.YesNo);
 						
 					}
 					//menu.getSelectedEntry().move(0, 0, 10);	

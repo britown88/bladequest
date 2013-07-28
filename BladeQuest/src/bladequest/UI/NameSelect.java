@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import bladequest.UI.ListBox.LBStates;
 import bladequest.UI.MenuPanel.Anchors;
+import bladequest.UI.MsgBox.Options;
 import bladequest.UI.MsgBox.YesNo;
 import bladequest.graphics.Sprite;
 import bladequest.world.PlayerCharacter;
@@ -105,10 +106,10 @@ public class NameSelect
 	private void darken(){darkening = true;}	
 	private void undarken(){darkening = false;}	
 	private void renderDark(){Global.renderer.drawColor(Color.argb(darkenAlpha, 0, 0, 0));}
-	private void showMessage(String msg, boolean yesNoOpt)
+	private void showMessage(String msg, MsgBox.Options option)
 	{
 		darken();
-		messageBox.addMessage(msg, yesNoOpt);
+		messageBox.addMessage(msg, option);
 		messageBox.open();
 	}
 
@@ -129,7 +130,7 @@ public class NameSelect
 		}
 		else if(str.equals("don"))
 		{
-			showMessage("Character will be named " + newName + ". Are you sure?", true);
+			showMessage("Character will be named " + newName + ". Are you sure?", Options.YesNo);
 			//close();
 		}
 	}

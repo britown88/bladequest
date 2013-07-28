@@ -2,6 +2,7 @@ package bladequest.battleactions;
 
 import java.util.List;
 
+import bladequest.UI.MsgBox.Options;
 import bladequest.combat.DamageMarker;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.world.EncounterZone;
@@ -46,7 +47,7 @@ public class bactLureEnemies extends BattleAction {
 				@Override
 				public void onInflict(PlayerCharacter c) 
 				{
-					Global.menu.showMessage(c.getDisplayName() + " started ringing the lure bell!", false);
+					Global.menu.showMessage(c.getDisplayName() + " started ringing the lure bell!", Options.None);
 				}
 				
 				@Override
@@ -60,7 +61,7 @@ public class bactLureEnemies extends BattleAction {
 							t.removeStatusEffect("lure");
 						}
 						Global.party.clearMovementPath();
-						Global.showMessage("The lure bell stopped ringing...", false);
+						Global.showMessage("The lure bell stopped ringing...", Options.None);
 						if (Global.map != null && Global.map.isLoaded())
 						{
 							for(EncounterZone zone : Global.map.encounterZones)

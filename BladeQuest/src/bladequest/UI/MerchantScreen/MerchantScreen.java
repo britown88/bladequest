@@ -12,6 +12,7 @@ import bladequest.UI.ListBox.LBStates;
 import bladequest.UI.NumberPicker;
 import bladequest.UI.MainMenu.MainMenuState;
 import bladequest.UI.MenuPanel.Anchors;
+import bladequest.UI.MsgBox.Options;
 import bladequest.world.Global;
 import bladequest.world.Item;
 import bladequest.world.Merchant;
@@ -101,7 +102,7 @@ public class MerchantScreen
 				
 				if(rootMenu.Closed() && msgBox.Closed())
 				{
-					Global.showMessage(merchant.farewell, false);
+					Global.showMessage(merchant.farewell, Options.None);
 					Global.GameState = States.GS_WORLDMOVEMENT;
 					Global.delay();
 					closing = false;
@@ -562,10 +563,10 @@ public class MerchantScreen
 	private void undarken(){darkening = false;}	
 	private void renderDark(){Global.renderer.drawColor(Color.argb(darkenAlpha, 0, 0, 0));}
 		
-	private void showMessage(String msg, boolean yesNoOpt)
+	private void showMessage(String msg, MsgBox.Options option)
 	{
 		//darken();
-		msgBox.addMessage(msg, yesNoOpt);
+		msgBox.addMessage(msg, option);
 		msgBox.open();
 	}	
 	private void showMessageYesNo(String msg, MsgBoxEndAction yesAction, MsgBoxEndAction noAction)
@@ -583,7 +584,7 @@ public class MerchantScreen
 		
 		stateMachine.setState(getRootState());
 		
-		showMessage(merchant.greeting, false);
+		showMessage(merchant.greeting, Options.None);
 		rootMenu.open();
 	}	
 	private void close() { closing = true;}

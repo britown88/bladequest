@@ -13,6 +13,7 @@ import bladequest.UI.ListBox;
 import bladequest.UI.ListBox.LBStates;
 import bladequest.UI.MenuPanel;
 import bladequest.UI.MenuPanel.Anchors;
+import bladequest.UI.MsgBox.Options;
 import bladequest.UI.MsgBox;
 import bladequest.UI.MainMenu.MainMenu;
 import bladequest.battleactions.BattleAction;
@@ -1732,7 +1733,7 @@ public class Battle
 	
 	public void showMessage(String msg)
 	{
-		msgBox.addMessage(msg, false);
+		msgBox.addMessage(msg, Options.None);
 		msgBox.open();
 	}
 	

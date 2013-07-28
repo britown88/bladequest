@@ -34,6 +34,7 @@ import bladequest.UI.NameSelect;
 import bladequest.UI.SaveLoadMenu;
 import bladequest.UI.MainMenu.MainMenu;
 import bladequest.UI.MerchantScreen.MerchantScreen;
+import bladequest.UI.MsgBox.Options;
 import bladequest.actions.Action;
 import bladequest.actions.ActionScript;
 import bladequest.actions.ActionScript.Status;
@@ -437,7 +438,7 @@ public class Global
 	}
 	
 	
-	public static void showMessage(String str, boolean yesNoOpt)
+	public static void showMessage(String str, MsgBox.Options option)
 	{
 		if(worldMsgBox == null)
 			worldMsgBox = new MsgBox();
@@ -446,7 +447,7 @@ public class Global
 		
 		menuButton.close();
 		
-		worldMsgBox.addMessage(str, yesNoOpt);
+		worldMsgBox.addMessage(str, option);
 		if(worldMsgBox.Closed())
 			worldMsgBox.open();
 	}
@@ -457,7 +458,7 @@ public class Global
 			worldMsgBox.setClosed();
 	}
 	
-	public static void showMessageTop(String str, boolean yesNoOpt)
+	public static void showMessageTop(String str, MsgBox.Options option)
 	{
 		if(worldMsgBox == null)
 			worldMsgBox = new MsgBox();
@@ -466,7 +467,7 @@ public class Global
 		
 		menuButton.close();
 		
-		worldMsgBox.addMessage(str, yesNoOpt);
+		worldMsgBox.addMessage(str, option);
 		if(worldMsgBox.Closed())
 			worldMsgBox.open();
 	}
@@ -480,7 +481,7 @@ public class Global
 		
 		menuButton.close();
 		
-		worldMsgBox.addMessage(str, false);
+		worldMsgBox.addMessage(str, Options.None);
 		if(worldMsgBox.Closed())
 			worldMsgBox.open(seconds);
 	}

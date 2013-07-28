@@ -2,6 +2,7 @@ package bladequest.actions;
 
 import java.util.List;
 
+import bladequest.UI.MsgBox.Options;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
 
@@ -72,7 +73,7 @@ public class actSecretMessage extends Action
 		for(i = 0; i < 3; ++i)
 			out[2] ^= levels[i] << (i*8);		
 		
-		Global.showMessage(toHexString(out).substring(0, 22), false);
+		Global.showMessage(toHexString(out).substring(0, 22),Options.None);
 
 		
 	}

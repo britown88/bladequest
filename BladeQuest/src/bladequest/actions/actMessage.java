@@ -1,5 +1,7 @@
 package bladequest.actions;
 
+import bladequest.UI.MsgBox;
+import bladequest.UI.MsgBox.Options;
 import bladequest.UI.MsgBox.YesNo;
 import bladequest.world.Global;
 
@@ -13,16 +15,18 @@ public class actMessage extends Action
 	}
 	
 	String msg;
-	boolean yesNoOpt, timed;
+	boolean timed;
 	Position pos;
 	float duration;
+	
+	MsgBox.Options option;
 
 	
 	public actMessage(String str)
 	{
 		super();
 		msg = str;
-		this.yesNoOpt = false;
+		this.option = Options.None;
 		pos = Position.Bottom;
 
 	}
@@ -31,7 +35,7 @@ public class actMessage extends Action
 	{
 		super();
 		msg = str;
-		this.yesNoOpt = false;
+		this.option = Options.None;
 		pos = Position.Bottom;
 		duration = seconds;
 		timed = true;
@@ -42,18 +46,18 @@ public class actMessage extends Action
 	{
 		super();
 		msg = str;
-		this.yesNoOpt = false;
+		this.option = Options.None;
 		this.pos = pos;
 
 	}
 	
-	public boolean yesNo() { return yesNoOpt; }
+	public boolean yesNo() { return option == Options.YesNo; }
 	
-	public actMessage(String str, boolean yesNoOpt)
+	public actMessage(String str, MsgBox.Options option)
 	{
 		super();
 		msg = str;
-		this.yesNoOpt = yesNoOpt;
+		this.option = option;
 		pos = Position.Bottom;
 
 	}
@@ -68,10 +72,10 @@ public class actMessage extends Action
 			switch(pos)
 			{
 			case Top:
-				Global.showMessageTop(msg, yesNoOpt);
+				Global.showMessageTop(msg, option);
 				break;
 			case Bottom:
-				Global.showMessage(msg, yesNoOpt);
+				Global.showMessage(msg, option);
 				break;
 			default:
 				break;

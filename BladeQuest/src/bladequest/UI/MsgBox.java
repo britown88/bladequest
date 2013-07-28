@@ -27,9 +27,11 @@ public class MsgBox extends MenuPanel
 	private String partialRow;
 	private boolean done;
 	
-	private ListBox yesNoMenu;
-	private boolean YesNoOpt, hasCharName;
+	private ListBox yesNoMenu, optionsMenu;
+	private boolean hasCharName;
 	private YesNo selectedOption;
+	
+	private Options option;
 	
 	private final char wildCard = '|';
 	
@@ -40,6 +42,13 @@ public class MsgBox extends MenuPanel
 	private float duration;
 	
 	private MsgBoxEndAction yesAction, noAction;
+	
+	public enum Options
+	{
+		None,
+		YesNo,
+		List
+	}
 
 	public MsgBox()
 	{
@@ -85,12 +94,12 @@ public class MsgBox extends MenuPanel
 		
 	public void addMessage(String msg)
 	{
-		addMessage(msg, false);
+		addMessage(msg, Options.None);
 	}
-	public void addMessage(String msg, boolean YesNo)
+	public void addMessage(String msg, Options option)
 	{
 		msgQueue.add(msg);
-		this.YesNoOpt = YesNo;
+		this.option = option;
 	}
 	
 	public void showYesNo(String message, MsgBoxEndAction yesAction, MsgBoxEndAction noAction)
@@ -98,7 +107,7 @@ public class MsgBox extends MenuPanel
 		this.yesAction = yesAction;
 		this.noAction = noAction;
 		
-		this.YesNoOpt = true;
+		this.option = Options.YesNo;
 		msgQueue.add(message);
 	}
 	
@@ -138,7 +147,7 @@ public class MsgBox extends MenuPanel
 	private void setSpeed(int s){textSpeed = s;}	
 	public boolean isDone(){return done;}
 	public YesNo getSelectedOpt() { return selectedOption; }
-	public boolean isYesNo() { return YesNoOpt; }
+	public boolean isYesNo() { return option == Options.YesNo; }
 	
 	@Override
 	public void close()
@@ -234,7 +243,7 @@ public class MsgBox extends MenuPanel
 						if(currentRow >= rowList.size())
 						{
 							done = true;
-							if(YesNoOpt && msgQueue.size() <= 1)
+							if(option == Options.YesNo && msgQueue.size() <= 1)
 								yesNoMenu.open();
 						}						
 						else
@@ -253,7 +262,7 @@ public class MsgBox extends MenuPanel
 				else
 				{
 					done = true;
-					if(YesNoOpt && msgQueue.size() <= 1)
+					if(option == Options.YesNo && msgQueue.size() <= 1)
 						yesNoMenu.open();
 				}
 				

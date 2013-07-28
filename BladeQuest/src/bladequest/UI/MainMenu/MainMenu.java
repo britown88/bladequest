@@ -15,6 +15,7 @@ import bladequest.UI.ListBox.LBStates;
 import bladequest.UI.ListBoxEntry;
 import bladequest.UI.MenuPanel;
 import bladequest.UI.MenuPanel.Anchors;
+import bladequest.UI.MsgBox.Options;
 import bladequest.UI.MsgBox;
 import bladequest.UI.MsgBoxEndAction;
 import bladequest.UI.NumberPicker;
@@ -285,7 +286,7 @@ public class MainMenu
 					if(invList.getSelectedEntry().Disabled())
 					{						
 						//if(i.getType() == Type.Usable)
-						showMessage(i.getDescription(), false);
+						showMessage(i.getDescription(), Options.None);
 						
 						//add usable by string
 						if(!i.isUsable(UseTypes.World))
@@ -314,7 +315,7 @@ public class MainMenu
 					else
 					{
 						if(invShowKeys)
-							showMessage(i.getDescription(), false);
+							showMessage(i.getDescription(), Options.None);
 						else
 						{
 							itemToUse = i;
@@ -821,7 +822,7 @@ public class MainMenu
 							}							
 						}
 						else if(ab.getDescription().length() > 0)
-							showMessage(ab.getDescription(), false);
+							showMessage(ab.getDescription(), Options.None);
 					}
 					
 				}
@@ -1140,8 +1141,8 @@ public class MainMenu
 					Global.fc1b = Global.fc1g = Global.fc1r = 
 						Global.fc2b = Global.fc2g = Global.fc2r = 0;
 					updateOptionsScreen();
-					showMessage("You made the menus too bright! That was silly of you...", false);
-					showMessage("We at Dapper Hat kindly recommend that you choose a darker setting.", false);
+					showMessage("You made the menus too bright! That was silly of you...", Options.None);
+					showMessage("We at Dapper Hat kindly recommend that you choose a darker setting.", Options.None);
 				}
 			}
 			@Override
@@ -2158,10 +2159,10 @@ public class MainMenu
 	private void darken(){darkening = true;}	
 	private void undarken(){darkening = false;}	
 	private void renderDark(){Global.renderer.drawColor(Color.argb(darkenAlpha, 0, 0, 0));}
-	public void showMessage(String msg, boolean yesNoOpt)
+	public void showMessage(String msg, MsgBox.Options option)
 	{
 		darken();
-		messageBox.addMessage(msg, yesNoOpt);
+		messageBox.addMessage(msg, option);
 		messageBox.open();
 	}
 	private void showMessageYesNo(String msg, MsgBoxEndAction yesAction, MsgBoxEndAction noAction)
@@ -2311,7 +2312,7 @@ public class MainMenu
 		}
 		else if(opt.equals("cs"))
 		{
-			showMessage("More control options coming soon!", false);
+			showMessage("More control options coming soon!", Options.None);
 		}
 		else if(opt.equals("bak"))
 		{
