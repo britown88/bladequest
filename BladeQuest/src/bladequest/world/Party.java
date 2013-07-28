@@ -8,6 +8,8 @@ import java.util.List;
 
 import android.graphics.Point;
 import android.graphics.Rect;
+import bladequest.context.ContextItem;
+import bladequest.context.ContextItem.Status;
 import bladequest.graphics.ReactionBubble;
 import bladequest.graphics.Shadow;
 import bladequest.graphics.Sprite;

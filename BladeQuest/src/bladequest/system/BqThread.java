@@ -228,7 +228,10 @@ public class BqThread extends Thread
 	        			Global.worldMsgBox.touchActionUp(p.x, p.y);
 	        			if(Global.worldMsgBox.Closing() && Global.party.allowMovement())
 	        				Global.menuButton.open();
-	        		}	        			
+	        		}	   
+	        		
+	        		if(Global.party.allowMovement())
+	        			Global.contextMenu.touchActionUp(p.x, p.y);
 	        		
 	        		if(Global.debugButton != null && Global.debugButton.contains(p.x, p.y) && Global.debugButton.touchActionUp(p.x, p.y) == LBStates.Selected)
 	        			Global.openDebugMenu();

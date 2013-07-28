@@ -36,6 +36,7 @@ import bladequest.UI.MainMenu.MainMenu;
 import bladequest.UI.MerchantScreen.MerchantScreen;
 import bladequest.actions.Action;
 import bladequest.actions.ActionScript;
+import bladequest.actions.ActionScript.Status;
 import bladequest.actions.actDisableBattleMusic;
 import bladequest.actions.actExpectInput;
 import bladequest.actions.actFadeControl;
@@ -46,7 +47,6 @@ import bladequest.actions.actResetGame;
 import bladequest.actions.actShowScene;
 import bladequest.actions.actUnloadScene;
 import bladequest.actions.actWait;
-import bladequest.actions.ActionScript.Status;
 import bladequest.battleactions.BattleAction;
 import bladequest.battleactions.DamageBuilder;
 import bladequest.battleactions.DelegatingAction;
@@ -64,6 +64,7 @@ import bladequest.combat.BattleCalc.DamageReturnType;
 import bladequest.combat.BattleEventBuilder;
 import bladequest.combat.BattleMusicListener;
 import bladequest.combat.triggers.Trigger;
+import bladequest.context.ContextMenu;
 import bladequest.enemy.Enemy;
 import bladequest.graphics.AnimationBuilder;
 import bladequest.graphics.AnimationPosition;
@@ -92,6 +93,8 @@ import bladequest.system.Recyclable;
 
 public class Global 
 {
+	public static ContextMenu contextMenu;
+	
 	private static ActionScript gameOverScript;
 	private static final String TAG = Global.class.getSimpleName();
 	public static LoadingScreen loadingScreen;
@@ -387,6 +390,9 @@ public class Global
 
 	public static void updateMousePosition(int x, int y, boolean autoNewTarget)
 	{
+		if(party.allowMovement() && contextMenu.contains(x, y))
+			return;
+		
 		if(party.allowMovement() && menuButton.contains(x, y))
 			return;
 		
@@ -800,6 +806,8 @@ public class Global
 			break;
 		//case GS_SHOWSCENE:
     	case GS_WORLDMOVEMENT:
+    		contextMenu.update();
+    		
     		updateReactionBubbles();
     		
     		if(worldMsgBox != null)
@@ -1076,11 +1084,11 @@ public class Global
 	{
 		if(!appRunning)
         {
-        	appRunning = true;
+        	appRunning = true;        	
         	
-        	properties = new WorkingPropertyMap();
-        	
+        	properties = new WorkingPropertyMap();        	
         	saveLoader = new GameSaveLoader();
+        	
         	
         	saveLoader.registerFactory(actDisableBattleMusic.DisabledBattleMusicListener.tag, new actDisableBattleMusic.DisabledBattleMusicListenerDeserializer());
         	
@@ -1091,6 +1099,7 @@ public class Global
         	
         	//ScreenFilter.instance().pushFilter(ScreenFilter.darknessFilter(0.65f));
         	
+        	contextMenu = new ContextMenu();
         	bladeSong = new BladeSong();
         	screenFilter = new ScreenFilter();
         	

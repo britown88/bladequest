@@ -190,6 +190,7 @@ implements SurfaceHolder.Callback
     		Global.screenFilter.clear();
     		if(!Global.menuButton.Closed())
     			Global.menuButton.render();
+    		Global.contextMenu.render();
 
     		if(Global.debugButton != null)
     			Global.debugButton.render();
