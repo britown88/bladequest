@@ -488,17 +488,17 @@ namespace BladeCraft.Classes
 
             t = tlist[y * sizeX + x];            
 
-            if (fillTo.isMaterial)
-               addMaterial(t.x, t.y, fillTo.matX, fillTo.matY, fillTo.tileset, frameTwo, layer);
+            if (fillTo.IsMaterial())
+               addMaterial(t.x, t.y, fillTo.tileset, frameTwo, layer);
             else if (frameTwo)
                t.animate(fillTo.bmpX, fillTo.animBmpY);
 
             fill = true;
          }
-         else if (fillingTile != null && fillingTile.isMaterial && t.isMaterial && fillingTile.matX == t.matX && fillingTile.matY == t.matY)
+         else if (fillingTile != null && fillingTile.IsMaterial() && t.hasSameMaterial(fillingTile.tileset))
          {
-            if (fillTo.isMaterial)
-               addMaterial(t.x, t.y, fillTo.matX, fillTo.matY, fillTo.tileset, frameTwo, layer);
+            if (fillTo.IsMaterial())
+               addMaterial(t.x, t.y, fillTo.tileset, frameTwo, layer);
             else
             {
                if (frameTwo)
@@ -514,11 +514,11 @@ namespace BladeCraft.Classes
             }
             fill = true;
          }
-         else if (fillingTile != null && !fillingTile.isMaterial && t != null &&
+         else if (fillingTile != null && !fillingTile.IsMaterial() && t != null &&
             t.bmpX == fillingTile.bmpX && t.bmpY == fillingTile.bmpY)
          {
-            if (fillTo.isMaterial)
-               addMaterial(t.x, t.y, fillTo.matX, fillTo.matY, fillTo.tileset, frameTwo, layer);
+             if (fillTo.IsMaterial())
+               addMaterial(t.x, t.y,fillTo.tileset, frameTwo, layer);
             else
             {
                if (frameTwo)
@@ -560,7 +560,7 @@ namespace BladeCraft.Classes
       public String getBGM() { return BGM; }
 
 
-      public void addMaterial(int x, int y, int matX, int matY, string tileset, bool frameTwo, int layer)
+      public void addMaterial(int x, int y, string tileset, bool frameTwo, int layer)
       {
          int index = y * sizeX + x;
          Tile[] tlist = tileList[layer];
@@ -568,22 +568,22 @@ namespace BladeCraft.Classes
          if (tlist[index] == null)
             addTile(new Tile(x, y, 0, 0, tileset, layer));
                   
-         tlist[index].addToMaterial(matX, matY);
+         tlist[index].addToMaterial();
          tlist[index].tileset = tileset;
 
-         updateMaterialTile(x - 1, y - 1, matX, matY, layer, frameTwo);
-         updateMaterialTile(x, y - 1, matX, matY, layer, frameTwo);
-         updateMaterialTile(x + 1, y - 1, matX, matY, layer, frameTwo);
-         updateMaterialTile(x - 1, y, matX, matY, layer, frameTwo);
-         updateMaterialTile(x, y, matX, matY, layer, frameTwo);
-         updateMaterialTile(x + 1, y, matX, matY, layer, frameTwo);
-         updateMaterialTile(x - 1, y + 1, matX, matY, layer, frameTwo);
-         updateMaterialTile(x, y + 1, matX, matY, layer, frameTwo);
-         updateMaterialTile(x + 1, y + 1, matX, matY, layer, frameTwo);
+         updateMaterialTile(x - 1, y - 1, tileset, layer, frameTwo);
+         updateMaterialTile(x, y - 1, tileset, layer, frameTwo);
+         updateMaterialTile(x + 1, y - 1, tileset, layer, frameTwo);
+         updateMaterialTile(x - 1, y, tileset, layer, frameTwo);
+         updateMaterialTile(x, y, tileset, layer, frameTwo);
+         updateMaterialTile(x + 1, y, tileset, layer, frameTwo);
+         updateMaterialTile(x - 1, y + 1, tileset, layer, frameTwo);
+         updateMaterialTile(x, y + 1, tileset, layer, frameTwo);
+         updateMaterialTile(x + 1, y + 1, tileset, layer, frameTwo);
 
       }
 
-      private bool hasSameMaterial(int x, int y, int matX, int matY, int layer)
+      private bool hasSameMaterial(int x, int y, string tileset, int layer)
       {
          if (x < 0 || x >= sizeX || y < 0 || y >= sizeY)
             return true;
@@ -591,7 +591,7 @@ namespace BladeCraft.Classes
          int index = y * sizeX + x;
          Tile[] tlist = tileList[layer];
          if (tlist[index] != null)
-            return tlist[index].hasSameMaterial(matX,  matY);
+            return tlist[index].hasSameMaterial(tileset);
          else
             return false;
       }
@@ -612,23 +612,23 @@ namespace BladeCraft.Classes
          //fromList[index].
       }
 
-      private void updateMaterialTile(int x, int y, int matX, int matY, int layer, bool frameTwo)
+      private void updateMaterialTile(int x, int y, string tileSet, int layer, bool frameTwo)
       {
          int index = y * sizeX + x;
          Tile[] tlist = tileList[layer];
 
-         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY || tlist[index] == null || !tlist[index].hasSameMaterial(matX, matY))
+         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY || tlist[index] == null || !tlist[index].hasSameMaterial(tileSet))
             return;
 
-         bool top = y > 0 ? hasSameMaterial(x, y - 1, matX, matY, layer) : true;
-         bool left = x > 0 ? hasSameMaterial(x - 1, y, matX, matY, layer) : true;
-         bool right = x < sizeX - 1 ? hasSameMaterial(x + 1, y, matX, matY, layer) : true;
-         bool bottom = y < sizeY - 1 ? hasSameMaterial(x, y + 1, matX, matY, layer) : true;
+         bool top = y > 0 ? hasSameMaterial(x, y - 1, tileSet, layer) : true;
+         bool left = x > 0 ? hasSameMaterial(x - 1, y, tileSet, layer) : true;
+         bool right = x < sizeX - 1 ? hasSameMaterial(x + 1, y, tileSet, layer) : true;
+         bool bottom = y < sizeY - 1 ? hasSameMaterial(x, y + 1, tileSet, layer) : true;
 
-         bool topLeft = top && left && hasSameMaterial(x - 1, y - 1, matX, matY, layer);
-         bool bottomLeft = bottom && left && hasSameMaterial(x - 1, y + 1, matX, matY, layer);
-         bool bottomRight = bottom && right && hasSameMaterial(x + 1, y + 1, matX, matY, layer);
-         bool topRight = top && right && hasSameMaterial(x + 1, y - 1, matX, matY, layer);
+         bool topLeft = top && left && hasSameMaterial(x - 1, y - 1, tileSet, layer);
+         bool bottomLeft = bottom && left && hasSameMaterial(x - 1, y + 1, tileSet, layer);
+         bool bottomRight = bottom && right && hasSameMaterial(x + 1, y + 1, tileSet, layer);
+         bool topRight = top && right && hasSameMaterial(x + 1, y - 1, tileSet, layer);
 
          char flags = (char)((top ? (char)corners.Top : (char)0) | (bottom ? (char)corners.Bottom : (char)0) |
                   (right ? (char)corners.Right : (char)0) | (left ? (char)corners.Left : (char)0) |
@@ -637,9 +637,6 @@ namespace BladeCraft.Classes
 
 
          Point p = materialPoints[flags];
-
-         p.X += matX;
-         p.Y += matY;
 
          if (frameTwo)
             animateTile(x, y, p.X, p.Y, layer);
@@ -704,13 +701,7 @@ namespace BladeCraft.Classes
             writer.endSection();
          }
 
-         if (t.IsMaterial())
-         {
-            writer.startSection("MaterialCoordinates");
-            writer.writeAttribute("X", t.matX.ToString());
-            writer.writeAttribute("Y", t.matY.ToString());
-            writer.endSection();
-         }
+          writer.writeElement("TileType", t.tileType.ToString());
 
 
          writer.endSection();
@@ -979,8 +970,8 @@ namespace BladeCraft.Classes
                      case "AnimatedBitmapCoordinates":
                         newTile.animate(Convert.ToInt32(node.getAttribute("X")), Convert.ToInt32(node.getAttribute("Y")));
                         break;
-                     case "MaterialCoordinates":
-                        newTile.addToMaterial(Convert.ToInt32(node.getAttribute("X")), Convert.ToInt32(node.getAttribute("Y")));
+                     case "TileType":
+                        newTile.tileType = (Tile.Type)Enum.Parse(typeof(Tile.Type), node.elementData());
                         break;
                      case "EncounterZone":
                         newZone = new EncounterZone();

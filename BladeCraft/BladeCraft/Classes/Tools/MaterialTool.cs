@@ -12,12 +12,13 @@ namespace BladeCraft.Classes.Tools
       MapData mapData;
       TileSelectionData selectionData;
       Point lastPointAdded;
-      bool mouseDown = false;
+      bool mouseDown;
 
       public MaterialTool(MapData mapData, TileSelectionData selectionData)
       {
          this.mapData = mapData;
          this.selectionData = selectionData;
+         this.mouseDown = false;
       }
       private void addMaterial(int x, int y)
       {
@@ -27,7 +28,7 @@ namespace BladeCraft.Classes.Tools
          else
          {
             Tile t = selectionData.selectedTile();
-            map.addMaterial(x, y, t.matX, t.matY, t.tileset,
+            map.addMaterial(x, y, t.tileset,
                mapData.isAnimationFrame(), mapData.getCurrentLayer());
             lastPointAdded = new Point(x, y);
             mapData.invalidateDraw();
@@ -42,8 +43,8 @@ namespace BladeCraft.Classes.Tools
 
       public void mouseMove(int x, int y)
       {
-         if (x != lastPointAdded.X ||
-             y != lastPointAdded.Y &&
+         if ((x != lastPointAdded.X ||
+             y != lastPointAdded.Y) &&
             mouseDown)
          {
             addMaterial(x, y);
