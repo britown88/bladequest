@@ -1,5 +1,8 @@
 package bladequest.bladescript.libraries;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.graphics.Point;
 import android.util.Log;
 import bladequest.UI.MsgBox.MsgBox.Options;
@@ -241,6 +244,18 @@ public class GameObjectLibrary
 		Action act = new actMessage(message, Options.None, Position.Top);
 		return act;
 	}
+	public static Action messageWithOptions(String message, ScriptVar optList)
+	{
+		List<String> stringList = new ArrayList<String>();
+		ScriptVar.stringListFromSingleOrList(stringList, optList);
+		
+		actMessage act = new actMessage(message, Options.List, Position.Bottom);
+		act.useOptionList(stringList);
+		
+		return act;
+	}
+	
+	
 	public static Action modifyGold(int gold)
 	{		
 		Action act = new actModifyGold(gold);
