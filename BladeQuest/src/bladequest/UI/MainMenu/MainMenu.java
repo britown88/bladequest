@@ -2163,14 +2163,12 @@ public class MainMenu
 	public void showBasicMessage(String msg)
 	{
 		darken();
-		messageBox.setPosition(Position.Bottom);
 		messageBox.addBasicMessage(msg);
 		messageBox.open();
 	}
 	private void showMessageYesNo(String msg, MsgAction yesAction, MsgAction noAction)
 	{
 		darken();
-		messageBox.setPosition(Position.Bottom);
 		messageBox.addYesNoMessage(msg, yesAction, noAction);
 		messageBox.open();
 	}

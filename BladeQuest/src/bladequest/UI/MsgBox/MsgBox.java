@@ -1,15 +1,16 @@
 package bladequest.UI.MsgBox;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import bladequest.UI.ListBox;
-import bladequest.UI.MenuPanel;
 import bladequest.UI.ListBox.LBStates;
-import bladequest.UI.MenuPanel.Anchors;
+import bladequest.UI.MenuPanel;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
 
@@ -23,11 +24,14 @@ public class MsgBox extends MenuPanel
 	}
 	
 	private String msg;
+	
+	private Position position;
 
 	private Paint txtPaint, txtPaintCenter;	
 	private static final int buffer =10;
 	public static final int msgBoxHeight = 96;
-	public static final int optionRowHeight = 40;
+	private static final int optionRowHeight = 40;
+	private static final int moveSpeed = 5;
 	
 	private List<String> rowList;
 	private List<Message> msgQueue;
@@ -50,6 +54,8 @@ public class MsgBox extends MenuPanel
 	public boolean alwaysSpeed0, timed;
 	private long startTime;
 	private float duration;
+	
+	private Map<Position, Integer> optPosNone, optPosYesNo, optPosList, optPos;
 	
 	public enum Options
 	{
@@ -81,29 +87,60 @@ public class MsgBox extends MenuPanel
 		rowList = new ArrayList<String>();		
 		msgQueue = new ArrayList<Message>();
 		alwaysSpeed0 = false;
+		
+		position = Position.Bottom;
+		
+		
+		optPosNone = new HashMap<MsgBox.Position, Integer>();
+		optPosNone.put(Position.Top, buffer);
+		optPosNone.put(Position.Center, Global.vpHeight / 2);
+		optPosNone.put(Position.Bottom, Global.vpHeight - buffer);
+		
+		optPosYesNo = new HashMap<MsgBox.Position, Integer>();
+		optPosYesNo.put(Position.Top, buffer);
+		optPosYesNo.put(Position.Center, Global.vpHeight / 2);
+		optPosYesNo.put(Position.Bottom, Global.vpHeight - buffer*2 - optionRowHeight);
+		
+		optPos = optPosNone;
 		//clear(msg);		
 	}
 	
 	public void setPosition(Position newPos)
 	{
-		switch(newPos)
+		setOptPos();
+		
+		if(position != newPos)
 		{
-		case Bottom:
-			pos.y = Global.vpHeight - buffer;
-			anchor = Anchors.BottomCenter;
-			break;
-		case Top:
-			pos.y = buffer;
-			anchor = Anchors.TopCenter;
-			break;
-		case Center:
-			pos.y = Global.vpHeight / 2;
-			anchor = Anchors.TrueCenter;
-			break;
-		}
+			switch(newPos)
+			{
+			case Bottom: anchor = Anchors.BottomCenter; break;
+			case Top: anchor = Anchors.TopCenter; break;
+			case Center: anchor = Anchors.TrueCenter; break;
+			}
+			
+			pos.y = optPos.get(newPos);
+			position = newPos;
+		}		
+				
 		
 		update();
 		
+	}
+	
+	private void setOptPos()
+	{
+		if(msgQueue.size() > 0)
+		{
+			switch(msgQueue.get(0).getOption())
+			{
+			case None: optPos = optPosNone; move(Global.vpWidth/2, optPos.get(position), moveSpeed); break;
+			case YesNo: optPos = optPosYesNo; break;
+			case List: optPos = optPosList; break;				
+			}
+			
+			
+		}
+			
 	}
 		
 	public void addBasicMessage(String msg)
@@ -162,7 +199,7 @@ public class MsgBox extends MenuPanel
 		clear();
 		rowSplit();	
 		
-				
+		setOptPos();
 	}
 	
 	private void openYesNo()
@@ -172,8 +209,8 @@ public class MsgBox extends MenuPanel
 			yesNoMenu.addItem(opt.getText(), opt.getAction(), opt.disabled());
 		
 		yesNoMenu.open();
-		//TODO make this work for top vs bottom
-		move(Global.vpWidth/2, Global.vpHeight - buffer*2 - optionRowHeight, 5);		
+
+		move(Global.vpWidth/2, optPos.get(position), moveSpeed);		
 	}
 	
 	private void setSpeed(int s){textSpeed = s;}	
@@ -183,6 +220,7 @@ public class MsgBox extends MenuPanel
 	public void close()
 	{
 		super.close();	
+		move(Global.vpWidth/2, optPosNone.get(position), moveSpeed);
 		yesNoMenu.close();
 		msgQueue.clear();
 	}
