@@ -1003,42 +1003,222 @@ namespace BladeCraft.Classes
       }
 
 
+      class TileImage
+      {
+         public int xSize, ySize;
+         public List<bool> used;
+         public List<int> index;
+         public TileImage()
+         {
+            used = new List<bool>();
+            index = new List<int>();
+         }
+      }
+      IEnumerable<byte> toRLE(TileImage t)
+      {
+         byte count = 0;
+         bool currentlyOn = t.used[0];
+         foreach (bool b in t.used)
+         {
+            if (currentlyOn == b)
+            {
+               if (count == 255)
+               {
+                  yield return 0;
+                  count = 1;
+               }
+               else
+               {
+                  ++count;
+               }
+            }
+            else
+            {
+               if (count != 0)
+               {
+                  yield return count;
+               }
+               count = 1;
+               currentlyOn = !currentlyOn;
+            }
+         }
+         if (count != 0) yield return count;
+      }
+      class TileSet
+      {
+         public Dictionary<String, TileImage> images;
+         public int totalImages;
+         public TileSet()
+         {
+            images = new Dictionary<String, TileImage>();
+            totalImages = 0;
+         }
+      }
+      TileSet getTileData()
+      {
+         var output = new TileSet();
+         foreach (Tile[] tiles in tileList)
+         {
+            foreach (Tile t in tiles)
+            {
+               if (t == null || t.tileset == null) continue;
+
+               TileImage imageData = null;
+               if (!output.images.TryGetValue(t.tileset, out imageData))
+               {
+                  imageData = new TileImage();
+                  output.images.Add(t.tileset, imageData);
+                  GraphicsUnit unit = GraphicsUnit.Pixel;
+                  var bounds = Bitmaps.bitmaps[t.tileset].GetBounds(ref unit);
+                  imageData.xSize = (int)(bounds.Width / 16);
+                  imageData.ySize = (int)(bounds.Height / 16);
+                  for (int i = 0; i < imageData.xSize * imageData.ySize; ++i)
+                  {
+                     imageData.used.Add(false);
+
+                  }
+               }
+               imageData.used[t.bmpX + t.bmpY * imageData.xSize] = true;
+               if (t.animated)
+               {
+                  imageData.used[t.animBmpX + t.animBmpY * imageData.xSize] = true;
+               }
+            }
+         }
+         int idx = 0;
+         foreach (TileImage t in output.images.Values)
+         {
+            foreach (bool used in t.used)
+            {
+               t.index.Add(idx);
+               if (used)
+               {
+                  ++idx;
+               }
+            }
+         }
+         output.totalImages = idx;
+         return output;
+      }
+
+      public static void writeString(BinaryWriter writer, string s)
+      {
+         //use null terminated strings...
+         foreach (char c in s.ToCharArray())
+         {
+            writer.Write(c);
+         }
+         writer.Write((char)0);
+      }
+      //get the last two folders.
+      private string getPath(string pathName)
+      {
+         int idx  = pathName.LastIndexOf('\\');
+         int start = 1 + pathName.Substring(0, idx - 1).LastIndexOf('\\');
+         int final = pathName.LastIndexOf('.');
+         string outStr = pathName.Substring(start, idx - start - 1) + "/" +
+                         pathName.Substring(idx+1, final - idx - 1);
+
+         return outStr;
+      }
+      private void writeData(BinaryWriter writer)
+      {
+         //header basic data.
+
+         //two ints - size x, size y
+         writer.Write(sizeX);
+         writer.Write(sizeY);
+
+         //one string - map display name.
+         writeString(writer, displayName);
+
+         //tile data.
+         var tileData = getTileData();
+
+
+         //int - total # of different tiles used
+         writer.Write(tileData.totalImages);
+
+         //int  - image count.
+         writer.Write(tileData.images.Count);
+         foreach (KeyValuePair<string, TileImage> imagePair in tileData.images)
+         {
+            //image name.
+            writeString(writer, getPath(imagePair.Key));
+
+            //byte - is the first tile used or unused?
+            writer.Write((byte)(imagePair.Value.used[0] == true ? 1 : 0));
+
+            //RLE - is the tile used?
+            foreach (byte b in toRLE(imagePair.Value))
+            {
+               writer.Write(b);
+            }
+         }
+
+         //individual tiles, by layer.
+         for (int i = 0; i < 8; ++i)
+         {
+            int count = 0;
+            foreach (Tile t in tileList[i])
+            {
+               if (t == null || t.tileset == null) continue;
+
+               ++count;
+            }
+
+            //int - number of tiles in this layer.
+            writer.Write(count);
+
+            foreach (Tile t in tileList[i])
+            {
+               if (t == null || t.tileset == null) continue;
+
+               byte collisionOut = (byte)(t.animated ? 1 : 0);
+               if (i == 0)  //layer 0 == collision
+               {
+                  //collision walls (bits, 1,2,3,4). 
+                  if (t.collSides[0]) collisionOut += 2;
+                  if (t.collSides[1]) collisionOut += 4;
+                  if (t.collSides[2]) collisionOut += 8;
+                  if (t.collSides[3]) collisionOut += 16;  
+               }
+               //byte - is this tile animated? (bit 0.)  collision data(bits 1-4).
+               writer.Write(collisionOut);
+
+               //two shorts - X and Y
+               writer.Write((short)t.x);
+               writer.Write((short)t.y);
+
+               //short - image
+               var image = tileData.images[t.tileset];
+               writer.Write((short)(image.index[t.bmpX + t.bmpY * image.xSize]));
+
+               if (t.animated)
+               {
+                  //1 short - animation image index.
+                  writer.Write((short)(image.index[t.animBmpX + t.animBmpY * image.xSize]));
+               }
+            }
+         }
+
+         //encounter zones.
+         writer.Write(zones.Count);
+
+         foreach (var zone in zones)
+         {
+            zone.write(writer);
+         }
+      }
       public void writeBQData()
       {
-         using (StreamWriter writer = new StreamWriter("assets\\maps\\" + name + ".map"))
+         using (var file = File.Open("assets\\maps\\" + name + ".map", FileMode.Create))
          {
-            writer.WriteLine("[header]");
-            writer.WriteLine("size " + sizeX + " " + sizeY);
-            //writer.WriteLine("tileset " + tileset);
-            //TODO: replace
-            writer.WriteLine("displayname \"" + displayName + "\"");
-            writer.WriteLine("BGM " + BGM);
-
-
-            //write map file
-            writer.WriteLine("[tiles]");
-            foreach (Tile[] tList in tileList)
-               foreach (Tile t in tList)
-                  if (t != null)
-                     if (t.animated)
-                        writer.WriteLine("t " + t.x + " " + t.y + " " + t.bmpX + " " + t.bmpY + " " + t.layer.ToString() + " " +
-                        Convert.ToInt32(t.collSides[0]).ToString() + " " + Convert.ToInt32(t.collSides[1]).ToString() + " " +
-                        Convert.ToInt32(t.collSides[2]).ToString() + " " + Convert.ToInt32(t.collSides[3]).ToString() + " " +
-                        "t " + t.animBmpX + " " + t.animBmpY);
-                     else
-                        writer.WriteLine("t " + t.x + " " + t.y + " " + t.bmpX + " " + t.bmpY + " " + t.layer.ToString() + " " +
-                        Convert.ToInt32(t.collSides[0]).ToString() + " " + Convert.ToInt32(t.collSides[1]).ToString() + " " +
-                        Convert.ToInt32(t.collSides[2]).ToString() + " " + Convert.ToInt32(t.collSides[3]).ToString() + " ");
-
-
-            writer.WriteLine("[encounters]");
-            foreach (EncounterZone ez in zones)
-               ez.write(writer);
-
-            writer.Close();
+            using (var writer = new BinaryWriter(file))
+            {
+               writeData(writer);
+            }
          }
-         
-
          writeObjects();
       }
 
@@ -1047,7 +1227,8 @@ namespace BladeCraft.Classes
          using (MapWriter m = new XMLMapWriter(name))
          {
             write(m);
-         };
+         }
+         writeBQData();
       }
 
 

@@ -205,7 +205,7 @@ public class WorldAnimations
 			{
 				BattleAnim anim = new BattleAnim(1000.0f);
 				//anim.loop();
-				BattleAnimObject obj = new BattleAnimObject(Types.Bitmap, false, "sugoimoonkundesu");
+				BattleAnimObject obj = new BattleAnimObject(Types.Bitmap, false, "misc/sugoimoonkundesu");
 				BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Screen);
 				state.pos1 = new Point(100,100);
 				state.size = new Point(60, 58);
@@ -253,7 +253,7 @@ public class WorldAnimations
 			{
 				BattleAnim anim = new BattleAnim(1000.0f);
 				//anim.loop();
-				BattleAnimObject obj = new BattleAnimObject(Types.Bitmap, false, "twinkle");
+				BattleAnimObject obj = new BattleAnimObject(Types.Bitmap, false, "misc/twinkle");
 				
 				BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Source);
 				state.pos1 = new Point(0,0);
@@ -297,7 +297,7 @@ public class WorldAnimations
 				BattleAnim anim = new BattleAnim(1000.0f);
 
 				//twinkle
-				BattleAnimObject obj = new BattleAnimObject(Types.Bitmap, false, "twinkle");
+				BattleAnimObject obj = new BattleAnimObject(Types.Bitmap, false, "misc/twinkle");
 				BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Screen);
 				state.pos1 = new Point(120,60);
 				state.size = new Point(18, 18);
@@ -614,7 +614,7 @@ public class WorldAnimations
 			{
 				BattleAnim anim = new BattleAnim(1000.0f);
 				//anim.loop();
-				BattleAnimObject obj = new BattleAnimObject(Types.Bitmap, false, "icecube");
+				BattleAnimObject obj = new BattleAnimObject(Types.Bitmap, false, "misc/icecube");
 				
 				BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Target);
 				state.pos1 = new Point(0,0);
@@ -650,7 +650,7 @@ public class WorldAnimations
 			{
 				BattleAnim anim = new BattleAnim(1000.0f);
 				//anim.loop();
-				BattleAnimObject obj = new BattleAnimObject(Types.Bitmap, false, "iceblockworld");
+				BattleAnimObject obj = new BattleAnimObject(Types.Bitmap, false, "misc/iceblockworld");
 				
 				BattleAnimObjState state = new BattleAnimObjState(0, PosTypes.Target);
 				state.pos1 = new Point(0,0);
@@ -740,7 +740,7 @@ public class WorldAnimations
 	
 	public static void addPoof(BattleAnim anim, int time, float x, float y, float xDir, float yDir)
 	{
-		Bitmap icePoof = Global.bitmaps.get("particles");
+		Bitmap icePoof = Global.bitmaps.get("misc/particles");
 		Rect poofRect = new Rect(1,13,13,24);
 		
 		int poofCount = Global.rand.nextInt(2) + 1;
@@ -803,7 +803,7 @@ public class WorldAnimations
 	
 	public static void addShatterPoof(BattleAnim anim, int time, float xDir, float yDir)
 	{
-		Bitmap icePoof = Global.bitmaps.get("particles");
+		Bitmap icePoof = Global.bitmaps.get("misc/particles");
 		Rect poofRect = new Rect(1,13,13,24);
 		
 		int poofCount = Global.rand.nextInt(3) + 3;

@@ -42,7 +42,7 @@ public class WeaponSwing
 		{
 			@Override
 			public BitmapFrame[] getFrames() {
-				Bitmap animBmp = Global.bitmaps.get("animsprites");
+				Bitmap animBmp = Global.bitmaps.get("misc/animsprites");
 				BitmapFrame[] frames = new BitmapFrame[3];
 				
 				for (int i = 0; i < 3; ++i)
@@ -65,7 +65,7 @@ public class WeaponSwing
 	public WeaponSwingDrawable genSwingDrawable(int[] base, int[] swing)
 	{
 		Bitmap newBmp = Bitmap.createBitmap(frameSize.x*3, frameSize.y, Config.ARGB_8888);
-		Bitmap swingBmp = Global.bitmaps.get("weaponswing");
+		Bitmap swingBmp = Global.bitmaps.get("misc/weaponswing");
 				
 		//baseColors = base;
 		//swingColors = swing;

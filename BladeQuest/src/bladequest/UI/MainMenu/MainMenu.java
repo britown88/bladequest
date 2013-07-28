@@ -1309,7 +1309,7 @@ public class MainMenu
 				Rect src = chars[i].getPortraitSrcRect();
 				Rect dest = new Rect(0, 0, rootCharPlates.RowHeight(), rootCharPlates.RowHeight());
 				dest.inset(3, 3);
-				rootCharPlates.panels[i].addPicBox(Global.bitmaps.get("portraits"), src, dest);
+				rootCharPlates.panels[i].addPicBox(Global.bitmaps.get("characters/portraits"), src, dest);
 				
 				//charplate text boxes
 				rootCharPlates.panels[i].addTextBox(chars[i].getDisplayName(), rootCharPlates.RowHeight() + 15, (int)(rootCharPlates.RowHeight()*0.25f), menuText);
@@ -1448,7 +1448,7 @@ public class MainMenu
 			
 			Rect src = c.getPortraitSrcRect();
 			Rect dest = new Rect(12, 12, width-12, width-12);
-			lbi.addPicBox(Global.bitmaps.get("portraits"), src, dest);
+			lbi.addPicBox(Global.bitmaps.get("characters/portraits"), src, dest);
 			
 			lbi.addTextBox(c.getDisplayName(), width/2, width-6, menuTextCenter);
 			
@@ -1517,7 +1517,7 @@ public class MainMenu
 		Rect src = selectedChar.getPortraitSrcRect();
 		Rect dest = new Rect(0, 0, eqpCharPanel.width, eqpCharPanel.width);
 		dest.inset(12, 12);
-		eqpCharPanel.addPicBox(Global.bitmaps.get("portraits"), src, dest);
+		eqpCharPanel.addPicBox(Global.bitmaps.get("characters/portraits"), src, dest);
 		eqpCharPanel.addTextBox(selectedChar.getDisplayName(), eqpCharPanel.width/2, eqpCharPanel.height - (eqpCharPanel.height - eqpCharPanel.width)/2 - 12, menuTextCenter);
 
 		updateEquipStats();
@@ -1718,7 +1718,7 @@ public class MainMenu
 		Rect src = selectedChar.getPortraitSrcRect();
 		Rect dest = new Rect(0, 0, Global.vpHeight/3, Global.vpHeight/3);
 		dest.inset(12, 12);
-		skillsCharPanel.addPicBox(Global.bitmaps.get("portraits"), src, dest);		
+		skillsCharPanel.addPicBox(Global.bitmaps.get("characters/portraits"), src, dest);		
 		skillsCharPanel.addTextBox(selectedChar.getDisplayName(), Global.vpHeight/3, (int)((Global.vpHeight/3)*0.25f), menuText);		
 		skillsCharPanel.addTextBox("lv"+selectedChar.getLevel(), Global.vpWidth*2/3-6, (int)((Global.vpHeight/3)*0.25f), smallTextRight);
 		skillsCharPanel.addTextBox("HP:", (Global.vpWidth*2/3-Global.vpHeight/3)/2+Global.vpHeight/3-6, (int)((Global.vpHeight/3)*0.50f), smallTextRight);
@@ -1864,7 +1864,7 @@ public class MainMenu
 		
 		Rect dest = new Rect(0, (mainBox.height - menuWidth) / 2 - 12, menuWidth,  (mainBox.height - menuWidth) / 2 + menuWidth - 12);
 		dest.inset(16, 16);
-		mainBox.addPicBox(Global.bitmaps.get("portraits"), src, dest);
+		mainBox.addPicBox(Global.bitmaps.get("characters/portraits"), src, dest);
 		
 		int numInfoRows = 8;
 		int infoRows[] = new int[numInfoRows];		

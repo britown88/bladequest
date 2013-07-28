@@ -23,7 +23,7 @@ public class Icon
 				srcX*Global.iconSize + Global.iconSize, 
 				srcY*Global.iconSize +  Global.iconSize);
 		
-		bmp = Global.bitmaps.get("icons");		
+		bmp = Global.bitmaps.get("misc/icons");		
 	}
 	
 	public Icon(Icon other)
@@ -33,7 +33,7 @@ public class Icon
 		
 		this.src = new Rect(other.src);
 		this.destRect = new Rect(0,0,0,0);
-		bmp = Global.bitmaps.get("icons");		
+		bmp = Global.bitmaps.get("misc/icons");		
 	}
 	
 	public void move(int x, int y)

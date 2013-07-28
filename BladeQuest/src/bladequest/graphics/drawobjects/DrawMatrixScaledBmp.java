@@ -17,6 +17,7 @@ public class DrawMatrixScaledBmp implements DrawObject {
 	
 	public DrawMatrixScaledBmp(Bitmap bitmap, Matrix m, Rect src, Rect dest, Paint paint)
 	{
+		bitmap.getRowBytes();
 		this.bitmap =bitmap;
 		this.src = src;
 		this.dest = dest;

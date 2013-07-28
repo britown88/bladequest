@@ -1,92 +1,92 @@
 #Sprites
 addHeroWorldSprites 0
-createWorldSprite "heroworld" "aramis" 0 0
-createWorldSprite "heroworld" "roland" 1 0
-createWorldSprite "heroworld" "sanson" 2 0
-createWorldSprite "heroworld" "reine" 3 0
-createWorldSprite "heroworld" "ursos" 4 0
-createWorldSprite "heroworld" "joy" 5 0
-createWorldSprite "heroworld" "curtana" 0 1
-createWorldSprite "heroworld" "luc" 1 1
-createWorldSprite "heroworld" "luc2" 2 1
-createWorldSprite "heroworld" "marie" 3 1
-createWorldSprite "heroworld" "carl" 4 1
+createWorldSprite "characters/heroworld" "aramis" 0 0
+createWorldSprite "characters/heroworld" "roland" 1 0
+createWorldSprite "characters/heroworld" "sanson" 2 0
+createWorldSprite "characters/heroworld" "reine" 3 0
+createWorldSprite "characters/heroworld" "ursos" 4 0
+createWorldSprite "characters/heroworld" "joy" 5 0
+createWorldSprite "characters/heroworld" "curtana" 0 1
+createWorldSprite "characters/heroworld" "luc" 1 1
+createWorldSprite "characters/heroworld" "luc2" 2 1
+createWorldSprite "characters/heroworld" "marie" 3 1
+createWorldSprite "characters/heroworld" "carl" 4 1
 
 addNPCSprites 0
-createWorldSprite "npcspecial" "berndern" 0 0
-createWorldSprite "npcsprites" "robe" 0 0
-createWorldSprite "npcsprites" "guard" 1 0
-createWorldSprite "npcsprites" "bandit" 2 0
-createWorldSprite "npcsprites" "satyr" 0 1
-createWorldSprite "npcsprites" "guard2" 1 1
-createWorldSprite "npcsprites" "oldman" 0 2
-createWorldSprite "npcsprites" "oldwoman" 1 2
-createWorldSprite "npcsprites" "shopkeeper" 2 2
-createWorldSprite "npcsprites" "woman1" 0 3
-createWorldSprite "npcsprites" "woman2" 1 3
-createWorldSprite "npcsprites" "woman3" 2 3
-createWorldSprite "npcsprites" "man1" 0 4
-createWorldSprite "npcsprites" "man2" 1 4
-createWorldSprite "npcsprites" "man3" 2 4
-createWorldSprite "npcsprites" "child1" 0 5
-createWorldSprite "npcsprites" "child2" 1 5
+createWorldSprite "characters/npcspecial" "berndern" 0 0
+createWorldSprite "characters/npcsprites" "robe" 0 0
+createWorldSprite "characters/npcsprites" "guard" 1 0
+createWorldSprite "characters/npcsprites" "bandit" 2 0
+createWorldSprite "characters/npcsprites" "satyr" 0 1
+createWorldSprite "characters/npcsprites" "guard2" 1 1
+createWorldSprite "characters/npcsprites" "oldman" 0 2
+createWorldSprite "characters/npcsprites" "oldwoman" 1 2
+createWorldSprite "characters/npcsprites" "shopkeeper" 2 2
+createWorldSprite "characters/npcsprites" "woman1" 0 3
+createWorldSprite "characters/npcsprites" "woman2" 1 3
+createWorldSprite "characters/npcsprites" "woman3" 2 3
+createWorldSprite "characters/npcsprites" "man1" 0 4
+createWorldSprite "characters/npcsprites" "man2" 1 4
+createWorldSprite "characters/npcsprites" "man3" 2 4
+createWorldSprite "characters/npcsprites" "child1" 0 5
+createWorldSprite "characters/npcsprites" "child2" 1 5
 
 addMiscSprites 0
-createSprite "savepoint" "misc" 32 32 >
+createSprite "savepoint" "misc/misc" 32 32 >
 addSpriteFrame "" 16 48 32 64 >
 addSpriteFrame "" 32 48 48 64 >
 addSpriteFrame "" 48 48 64 64 >
 addSpriteFrame "" 32 48 48 64 >
 setFace ""
-createSprite "brokenice" "misc" 32 32 >
+createSprite "brokenice" "misc/misc" 32 32 >
 addSpriteFrame "" 0 64 16 80 >
 setFace ""
-createSprite "goldenbush" "misc" 32 32 >
+createSprite "goldenbush" "misc/misc" 32 32 >
 addSpriteFrame "" 16 64 32 80 >
 addSpriteFrame "" 32 64 48 80 >
 setFace ""
-createSprite "sword1" "misc" 32 32 >
+createSprite "sword1" "misc/misc" 32 32 >
 addSpriteFrame "" 32 16 48 32 >
 addSpriteFrame "" 48 16 64 32 >
 setFace ""
-createSprite "sword2" "misc" 32 32 >
+createSprite "sword2" "misc/misc" 32 32 >
 addSpriteFrame "" 32 32 48 48 >
 addSpriteFrame "" 48 32 64 48 >
 setFace ""
-createSprite "orb" "misc" 32 32 >
+createSprite "orb" "misc/misc" 32 32 >
 addSpriteFrame "" 32 0 48 16 >
 addSpriteFrame "" 48 0 64 16 >
 setFace ""
-createSprite "plant" "misc" 32 32 >
+createSprite "plant" "misc/misc" 32 32 >
 addSpriteFrame "" 0 0 16 16 >
 setFace ""
-createSprite "footsteps" "misc" 32 32 >
+createSprite "footsteps" "misc/misc" 32 32 >
 addSpriteFrame "" 16 0 32 16 >
 setFace ""
-createSprite "chest" "misc" 32 32 >
+createSprite "chest" "misc/misc" 32 32 >
 addSpriteFrame "" 0 16 16 32 >
 addSpriteFrame "" 16 16 32 32 >
 setFace ""
-createSprite "door" "misc" 32 32 >
+createSprite "door" "misc/misc" 32 32 >
 addSpriteFrame "" 0 32 16 48 >
 setFace ""
-createSprite "snowpile" "misc" 32 32 >
+createSprite "snowpile" "misc/misc" 32 32 >
 addSpriteFrame "" 0 48 16 64 >
 setFace ""
-createSprite "icepillar" "iceblockworld" 50 76 >
+createSprite "icepillar" "misc/iceblockworld" 50 76 >
 addSpriteFrame "" 0 0 25 38 >
 setFace ""
 
 addEnemySprites 0
-createEnemySprite "recruit" "enemies" (point 0 0) (point 48 40)
-createEnemySprite "guard" "enemies" (point 48 0) (point 56 48)
-createEnemySprite "hawk" "enemies" (point 104 0) (point 48 48)
-createEnemySprite "spud" "enemies" (point 0 40) (point 32 32)
-createEnemySprite "bat" "enemies" (point 32 48) (point 32 40)
-createEnemySprite "rat" "enemies" (point 64 48) (point 32 32)
-createEnemySprite "leafbunny" "enemies" (point 96 48) (point 43 34)
-createEnemySprite "satyr" "enemies" (point 0 88) (point 75 76)
-createEnemySprite "eroland" "enemies" (point 75 82) (point 75 62)
+createEnemySprite "recruit" "characters/enemies" (point 0 0) (point 48 40)
+createEnemySprite "guard" "characters/enemies" (point 48 0) (point 56 48)
+createEnemySprite "hawk" "characters/enemies" (point 104 0) (point 48 48)
+createEnemySprite "spud" "characters/enemies" (point 0 40) (point 32 32)
+createEnemySprite "bat" "characters/enemies" (point 32 48) (point 32 40)
+createEnemySprite "rat" "characters/enemies" (point 64 48) (point 32 32)
+createEnemySprite "leafbunny" "characters/enemies" (point 96 48) (point 43 34)
+createEnemySprite "satyr" "characters/enemies" (point 0 88) (point 75 76)
+createEnemySprite "eroland" "characters/enemies" (point 75 82) (point 75 62)
 
 addBattleSprites 0
 createBattleSprite "broland" 0 0
@@ -101,28 +101,28 @@ createBattleSprite "bjoy" 0 1
 \enemy <- addEnemySprites 0
 \battle <- addBattleSprites 0
 
-\target <- (createSprite "target" "target" 45 45 >
+\target <- (createSprite "target" "misc/target" 45 45 >
 addSpriteFrame2 "" 30 0 0 >
 addSpriteFrame2 "" 30 1 0 >
 addSpriteFrame2 "" 30 2 0 >
 addSpriteFrame2 "" 30 1 0 >
 setFace "")
 
-\rdflying <- (createSprite "rdflying" "rolanddragon" 280 144 >
+\rdflying <- (createSprite "rdflying" "characters/rolanddragon" 280 144 >
 addSpriteFrame "down" 0 0 140 72 >
 addSpriteFrame "down" 140 0 280 72 >
 addSpriteFrame "down" 280 0 420 72 >
 addSpriteFrame "down" 420 0 560 72 >
 setFace "down")
 
-\rdlanding <- (createSprite "rdlanding" "rolanddragon" 280 144 >
+\rdlanding <- (createSprite "rdlanding" "characters/rolanddragon" 280 144 >
 addSpriteFrame "left" 0 72 140 144 >
 addSpriteFrame "up" 140 72 280 144 >
 addSpriteFrame "right" 280 72 420 144 >
 addSpriteFrame "down" 420 72 560 144 >
 setFace "left")
 
-\rdroaring <- (createSprite "rdroaring" "rolanddragon" 280 144 >
+\rdroaring <- (createSprite "rdroaring" "characters/rolanddragon" 280 144 >
 addSpriteFrame "left" 0 144 140 216 >
 addSpriteFrame "up" 140 144 280 216 >
 addSpriteFrame "right" 280 144 420 216 >

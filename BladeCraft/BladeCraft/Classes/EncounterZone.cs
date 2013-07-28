@@ -18,20 +18,24 @@ namespace BladeCraft.Classes
             encounters = new List<string>();
         }
 
-        public void write(StreamWriter writer)
+        public void write(BinaryWriter writer)
         {
-            writer.WriteLine(
-                "zone " +
-                zone.X.ToString() + " " +
-                zone.Y.ToString() + " " +
-                zone.Width.ToString() + " " +
-                zone.Height.ToString() + " " +
-                encounterRate.ToString());
+           //4 shorts - x,y,width, height
+           writer.Write((short)zone.X);
+           writer.Write((short)zone.Y);
+           writer.Write((short)zone.Width);
+           writer.Write((short)zone.Height);
 
-            foreach (string str in encounters)
-                writer.WriteLine("encounter " + str);
+           //float - encounter rate.
+           writer.Write(encounterRate);
 
-            writer.WriteLine("endzone");
+
+           //int - # of encounters.
+           writer.Write(encounters.Count);
+           foreach (string str in encounters)
+           {
+              BQMap.writeString(writer, str);
+           }
         }
 
         public void write(MapWriter writer)

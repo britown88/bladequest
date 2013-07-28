@@ -78,9 +78,18 @@ public class TilePlate
 	{
 		if(!loading && loaded && !empty)
 		{
+		
+			//src, dest
 			Global.renderer.drawBitmap((Global.animateTiles && animated) ? (animBmp != null ? animBmp.bmp : bmp.bmp): bmp.bmp,
-				Global.worldToScreenX(platePos.x*32*Global.tilePlateSize.x),
-				Global.worldToScreenY(platePos.y*32*Global.tilePlateSize.y), null	);
+				new Rect(0,
+						 0,
+						 16*(Global.tilePlateSize.x),
+						 16*(Global.tilePlateSize.y)),
+				new Rect(Global.worldToScreenX(platePos.x*32*Global.tilePlateSize.x),
+						 Global.worldToScreenY(platePos.y*32*Global.tilePlateSize.y),
+						 Global.worldToScreenX((platePos.x+1)*32*Global.tilePlateSize.x),
+						 Global.worldToScreenY((platePos.y+1)*32*Global.tilePlateSize.y))						 
+				, null	);
 		}
 	}
 	

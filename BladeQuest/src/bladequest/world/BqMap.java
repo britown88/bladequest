@@ -6,12 +6,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.Paint.Align;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -83,8 +85,6 @@ public class BqMap
 	
 	public BqMap(String mapname, InputStream file)
 	{	
-		buildCommandList();
-		
 		name = mapname;
 		objects = new ArrayList<GameObject>();	
 		encounterZones = new ArrayList<EncounterZone>();
@@ -99,20 +99,8 @@ public class BqMap
 	public void  load()
 	{
 		loaded = false;
-		FileReader fr = new FileReader(mapFile);		
-		String s = "";
-		List<DataLine> lines = new ArrayList<DataLine>();
 		
-		do
-		{ 
-			s = fr.ReadLine();
-			if(s.length() > 0)
-				lines.add(new DataLine(s)); 
-		} while(s.length() > 0);
-		
-		for(DataLine dl : lines)
-			LoadDataLine(dl);
-		
+		loadMapData();
 		buildDisplayName();
 		nameDisplayCounter = 0;
 		
@@ -310,7 +298,7 @@ public class BqMap
 		plateCount = new Point((mapSize.x/Global.tilePlateSize.x)+(mapSize.x%Global.tilePlateSize.x>0?1:0), 
 							   (mapSize.y/Global.tilePlateSize.y)+(mapSize.y%Global.tilePlateSize.y>0?1:0));
 		
-		tileset = Global.bitmaps.get(tilesetName);
+//		tileset = Global.bitmaps.get(tilesetName);
 		
 		background = new TilePlate[plateCount.x*plateCount.y];
 		for(int x = 0; x < plateCount.x; ++x)
@@ -541,71 +529,185 @@ public class BqMap
 		levelObjects[idx] = go;		
 	}
 
-	
-	private void LoadDataLine(DataLine dl)
+	private short readShort()
 	{
-		if(dl.item.charAt(0) == '#')
-			return;
-		else
-			if(commands.containsKey(dl.item))
-				commands.get(dl.item).execute(dl);
+		try {
+			int out = 0;
+			out += mapFile.read();
+			out += mapFile.read()  << 8;			
+			return (short)(out);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return 0;
+		}
 	}
-		
-	private void buildCommandList()
+	private int readInt()
 	{
-		commands = new HashMap<String, CommandLine>();
-		
-		commands.put("t", new CommandLine(){public void execute(DataLine dl) {tile(dl);};});
-				
-		commands.put("size", new CommandLine(){public void execute(DataLine dl) {size(dl);};});
-		commands.put("tileset", new CommandLine(){public void execute(DataLine dl) {tileset(dl);};});
-		commands.put("displayname", new CommandLine(){public void execute(DataLine dl) {displayname(dl);};});
-		commands.put("BGM", new CommandLine(){public void execute(DataLine dl) {BGM(dl);};});
-		
-		commands.put("zone", new CommandLine(){public void execute(DataLine dl) {zone(dl);};});
-		commands.put("encounter", new CommandLine(){public void execute(DataLine dl) {encounter(dl);};});
-		commands.put("endzone", new CommandLine(){public void execute(DataLine dl) {endzone(dl);};});
+		try {
+			int out = 0;
+			out += mapFile.read(); 
+			out += mapFile.read() << 8; 
+			out += mapFile.read() << 16;
+			out += mapFile.read() << 24;
+			return out ;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return 0;
+		}
 	}	
 	
-	private void size(DataLine dl){mapSize = new Point(Integer.parseInt(dl.values.get(0)), Integer.parseInt(dl.values.get(1)));}
-	private void tileset(DataLine dl)
+	private float readFloat()
 	{
-		tilesetName = dl.values.get(0).toLowerCase(Locale.US);
-		backdrop = Global.scenes.get(tilesetName + "backdrop");
-		initTilePlates();
+		int i = readInt();
+		return Float.intBitsToFloat(i);
+	}		
+	private String readString()
+	{
+		StringBuilder s = new StringBuilder();
+		for(;;)
+		{
+			try {
+				int i = mapFile.read();
+				if (i == 0) break;
+				s.append((char)i);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}			
+		}
+		return s.toString();
 	}
-	
-	private void displayname(DataLine dl){displayName = dl.values.get(0);}
-	private void BGM(DataLine dl){defaultBGM = dl.values.get(0);}
-	
-	private void zone(DataLine dl){loadedEncounterZone = new EncounterZone(Integer.parseInt(dl.values.get(0)),Integer.parseInt(dl.values.get(1)),Integer.parseInt(dl.values.get(2)),Integer.parseInt(dl.values.get(3)),Float.parseFloat(dl.values.get(4)));}
-	private void encounter(DataLine dl){loadedEncounterZone.addEncounter(dl.values.get(0));}
-	private void endzone(DataLine dl){encounterZones.add(loadedEncounterZone);}
-	
-	private void tile(DataLine dl)
+	private void loadMapData()
 	{
-		int x = Integer.parseInt(dl.values.get(0));
-		int y = Integer.parseInt(dl.values.get(1));
-		int bmpX = Integer.parseInt(dl.values.get(2));
-		int bmpY = Integer.parseInt(dl.values.get(3));
-		int layer = Integer.parseInt(dl.values.get(4));
-		boolean collLeft = dl.values.get(5).equals("1");
-		boolean collTop = dl.values.get(6).equals("1");
-		boolean collRight = dl.values.get(7).equals("1");
-		boolean collBottom = dl.values.get(8).equals("1");
-		
+		try {
+			//two ints - map size.
+			int x = readInt();
+			int y = readInt();
+			mapSize = new Point(x,y);
+			//string 
+			displayName = readString();
+			
+			int numTiles = readInt();
+			
+			int columns = 16;
+			int rows = numTiles / columns;
+			if (numTiles%columns != 0) ++rows;
+			
+			tileset = Bitmap.createBitmap(16*columns, 16*rows, Config.ARGB_8888);
+			
+			Canvas c = new Canvas(tileset);
+			
+			c.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+			
+			int images = readInt();
+			int index = 0;
+			for (int i = 0; i < images; ++i)
+			{
+				Bitmap renderFrom = Global.bitmaps.get(readString());
+				int bmpWidth  = renderFrom.getWidth()/16;
+				int bmpHeight = renderFrom.getHeight()/16;
+				int bmpLen = bmpWidth*bmpHeight;
 				
-		
-		Tile t = new Tile(x, y, bmpX, bmpY, layer > 3 ? Layer.Above : Layer.Under, layer%4);
-		t.setCollision(collLeft, collTop, collRight, collBottom);
-		
-		if(dl.values.get(9) != null && dl.values.get(9).equals("t"))
-			t.animate(Integer.parseInt(dl.values.get(10)), Integer.parseInt(dl.values.get(11)));
+				boolean currentlyReading;
+				
+				currentlyReading = (int) mapFile.read() == 1;
+				
+				int subIndex = 0;
+				while (subIndex < bmpLen)
+				{
+					int runLen = mapFile.read();
+					if (runLen == 0)
+					{
+						runLen += 256;
+					}
+					if (currentlyReading)
+					{
+						for (int j = 0; j < runLen; ++j)
+						{
+							c.drawBitmap(renderFrom, 
+									//from
+									new Rect(16*(subIndex%bmpWidth), 16*(subIndex/bmpWidth),
+											 16*(subIndex%bmpWidth)+16, 16*(subIndex/bmpWidth)+16), 
+									new Rect(16*(index%columns), 16*(index/columns),
+								   		     16*(index%columns)+16, 16*(index/columns)+16), null);
+							++index;
+							++subIndex;
+						}
+					}
+					else
+					{
+						subIndex += runLen;
+					}
+					if (runLen < 256)
+					{
+						currentlyReading = !currentlyReading;
+					}
+				}
+				
+			}
+			
+			initTilePlates();
+			
+			//now, load in the layers, one by one...
+			for (int layer = 0; layer < 8; ++layer)
+			{
+				int tilesOnLayer = readInt();
+				
+				for (int i = 0; i < tilesOnLayer; ++i)
+				{
+					int tileData = mapFile.read();
+					boolean animated = (tileData & 0x01) != 0;
+					boolean collLeft  = (tileData & 0x02) != 0;
+					boolean collTop = (tileData & 0x04) != 0;
+					boolean collRight  = (tileData & 0x08) != 0; 
+					boolean collBottom = (tileData & 0x0F) != 0;
+					
+					short tX = readShort();
+					short tY = readShort();
+					
+					short imageIdx = readShort();
+					
+					Tile t = new Tile(tX, tY, imageIdx%columns, imageIdx/columns, layer > 3 ? Layer.Above : Layer.Under, layer%4);
+					t.setCollision(collLeft, collTop, collRight, collBottom);					
+					
+					if (animated)
+					{
+						short animIdx = readShort();
+						t.animate(animIdx%columns, animIdx/columns);
+					}
+						
+					addTile(t);
+				}
+			}
+			
 
-		addTile(t);	
+			//lastly, encounter zones.
+			
+			int zoneCount = readInt();
+			
+			for (int i = 0; i < zoneCount; ++i)
+			{
+				
+				short zX = readShort();
+				short zY = readShort();
+				short zWidth = readShort();
+				short zHeight = readShort();
+				float encounterRate = readFloat();
+				
+				EncounterZone ez = new EncounterZone(zX, zY, zWidth, zHeight, encounterRate);
+				
+				
+				int encounterTypes = readInt();
+				for (int j = 0; j < encounterTypes; ++j)
+				{
+					ez.addEncounter(readString());
+				}
+				encounterZones.add(ez);
+			}
+			
+			//done!
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
-
-
-	
 
 }

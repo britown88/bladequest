@@ -20,7 +20,7 @@
 [battleanims]
 ba bite 60.0
 #top teeth
-obj bmp 0 animsprites
+obj bmp 0 misc/animsprites
 
 state 0 tar
 bmpsrc 128 0 160 32
@@ -47,7 +47,7 @@ endobj
 
 
 #bottom teeth
-obj bmp 0 animsprites
+obj bmp 0 misc/animsprites
 
 state 0 tar
 bmpsrc 96 0 128 32
@@ -75,7 +75,7 @@ endba
 
 #fire
 ba fire 60.0
-obj bmp 0 fire
+obj bmp 0 misc/fire
 #rate = 6
 state 0 tar
 bmpsrc 0 0 52 52
@@ -132,7 +132,7 @@ endba
 
 ba title 1200
 #sky
-obj bmp 0 title-sky
+obj bmp 0 title/title-sky
 state 0 scrn
 size 448 96
 pos 1 224 48
@@ -146,7 +146,7 @@ endstate
 endobj
 
 #water
-obj bmp 0 title-water
+obj bmp 0 title/title-water
 linterp
 state 0 scrn
 size 448 192
@@ -171,7 +171,7 @@ endstate
 endobj
 
 #water2
-obj bmp 0 title-water
+obj bmp 0 title/title-water
 linterp
 state 0 scrn
 size 448 192
@@ -198,7 +198,7 @@ endobj
 
 
 #clouds
-obj bmp 0 title-clouds
+obj bmp 0 title/title-clouds
 linterp
 state 0 scrn
 size 448 94
@@ -213,7 +213,7 @@ endstate
 endobj
 
 #clouds2
-obj bmp 0 title-clouds
+obj bmp 0 title/title-clouds
 linterp
 state 0 scrn
 size 448 94
@@ -228,7 +228,7 @@ endstate
 endobj
 
 #tree
-obj bmp 0 title-tree
+obj bmp 0 title/title-tree
 linterp
 state 0 scrn
 size 316 288
@@ -253,7 +253,7 @@ endstate
 endobj
 
 #cliff
-obj bmp 0 title-cliff
+obj bmp 0 title/title-cliff
 linterp
 state 0 scrn
 size 174 110
@@ -279,7 +279,7 @@ endstate
 endobj
 
 #logo
-obj bmp 0 titlemain
+obj bmp 0 title/titlemain
 state 6250 scrn
 size 224 124
 pos 1 224 114
@@ -307,7 +307,7 @@ endstate
 endobj
 
 #logo2
-obj bmp 0 titlesub
+obj bmp 0 title/titlesub
 state 6875 scrn
 size 224 124
 pos 1 224 114
@@ -334,7 +334,7 @@ endba
 ba titleloop 60.0f
 loop
 #sky
-obj bmp 0 title-sky
+obj bmp 0 title/title-sky
 state 0 scrn
 size 448 96
 pos 1 224 48
@@ -348,7 +348,7 @@ endstate
 endobj
 
 #water
-obj bmp 0 title-water
+obj bmp 0 title/title-water
 state 0 scrn
 size 448 192
 pos 1 224 192
@@ -362,7 +362,7 @@ endstate
 endobj
 
 #clouds
-obj bmp 0 title-clouds
+obj bmp 0 title/title-clouds
 linterp
 state 0 scrn
 size 448 94
@@ -377,7 +377,7 @@ endstate
 endobj
 
 #tree
-obj bmp 0 title-tree
+obj bmp 0 title/title-tree
 state 0 scrn
 size 316 288
 pos 1 158 144
@@ -391,7 +391,7 @@ endstate
 endobj
 
 #cliff
-obj bmp 0 title-cliff
+obj bmp 0 title/title-cliff
 state 0 scrn
 size 174 110
 pos 1 361 233
@@ -406,7 +406,7 @@ endstate
 endobj
 
 #logo
-obj bmp 0 titlemain
+obj bmp 0 title/titlemain
 state 0 scrn
 size 224 124
 pos 1 224 114
@@ -422,7 +422,7 @@ endstate
 endobj
 
 #logo2
-obj bmp 0 titlesub
+obj bmp 0 title/titlesub
 state 0 scrn
 size 224 124
 pos 1 224 114
@@ -523,7 +523,7 @@ endobj
 endba
 #
 ba logo 60.0
-obj bmp 0 titlemain
+obj bmp 0 title/titlemain
 
 state 0 scrn
 size 224 124
@@ -555,7 +555,7 @@ endstate
 
 endobj
 
-obj bmp 0 titlesub
+obj bmp 0 title/titlesub
 
 state 120 scrn
 size 224 124

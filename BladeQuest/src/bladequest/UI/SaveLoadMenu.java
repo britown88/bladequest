@@ -92,7 +92,7 @@ public class SaveLoadMenu
 							portraitSize*cindex+portraitSize,
 							menu.getRowHeight());
 					dest.inset(5, 5);
-					entry.addPicBox(Global.bitmaps.get("portraits"), src, dest);
+					entry.addPicBox(Global.bitmaps.get("characters/portraits"), src, dest);
 					++cindex;
 				}
 					
