@@ -292,8 +292,7 @@ public class BattleAnim
 	
 		return (int)(a0*mu*mu2 + a1*mu2 + a2*mu + a3);
 	}
-	//TODO: USE THIS
-	@SuppressWarnings("unused")
+
 	public static float cubicInterpolation(float y0, float y1, float y2, float y3, float mu)
 	{
 		float a0,a1,a2,a3,mu2;

@@ -2,7 +2,6 @@ package bladequest.system;
 
 
 import android.graphics.Canvas;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import bladequest.world.Global;
 

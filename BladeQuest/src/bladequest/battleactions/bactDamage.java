@@ -8,7 +8,6 @@ import bladequest.combat.BattleCalc.DamageReturnType;
 import bladequest.combat.BattleEventBuilder;
 import bladequest.combat.DamageComponent;
 import bladequest.combat.DamageMarker;
-import bladequest.graphics.BattleSprite.faces;
 import bladequest.world.DamageTypes;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;

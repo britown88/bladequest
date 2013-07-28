@@ -68,8 +68,7 @@ public class ActionScript
 			}
 			else if(currentActionIndex+1 < actionList.size() && 
 					actionList.get(currentActionIndex).name.equals("actMessage") &&
-					actionList.get(currentActionIndex+1).name.equals("actMessage") &&
-					!((actMessage)actionList.get(currentActionIndex)).yesNo() )
+					actionList.get(currentActionIndex+1).name.equals("actMessage"))
 			{				
 				actionList.get(currentActionIndex).reset();
 				currentActionIndex++;

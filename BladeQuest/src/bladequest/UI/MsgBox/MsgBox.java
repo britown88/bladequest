@@ -1,24 +1,41 @@
-package bladequest.UI;
+package bladequest.UI.MsgBox;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
+import bladequest.UI.ListBox;
 import bladequest.UI.ListBox.LBStates;
+import bladequest.UI.MenuPanel;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
 
 public class MsgBox extends MenuPanel
 {
+	public enum Position
+	{
+		Top,
+		Center,
+		Bottom
+	}
+	
 	private String msg;
+	
+	private Position position;
 
 	private Paint txtPaint, txtPaintCenter;	
-	private static int buffer =10;
-	public static int msgBoxHeight = 96;
+	private static final int buffer =10;
+	public static final int msgBoxHeight = 96;
+	private static final int optionRowHeight = 40;
+	private static final int moveSpeed = 5;
 	
-	private List<String> rowList, msgQueue;
+	private List<String> rowList;
+	private List<Message> msgQueue;
+	
 	
 	private int textSpeed;
 	private int textTimer;
@@ -27,9 +44,8 @@ public class MsgBox extends MenuPanel
 	private String partialRow;
 	private boolean done;
 	
-	private ListBox yesNoMenu;
-	private boolean YesNoOpt, hasCharName;
-	private YesNo selectedOption;
+	private ListBox yesNoMenu, optionsMenu;
+	private boolean hasCharName;
 	
 	private final char wildCard = '|';
 	
@@ -39,7 +55,14 @@ public class MsgBox extends MenuPanel
 	private long startTime;
 	private float duration;
 	
-	private MsgBoxEndAction yesAction, noAction;
+	private Map<Position, Integer> optPosNone, optPosYesNo, optPosList, optPos;
+	
+	public enum Options
+	{
+		None,
+		YesNo,
+		List
+	}
 
 	public MsgBox()
 	{
@@ -56,56 +79,92 @@ public class MsgBox extends MenuPanel
 		for(int i = 0; i < rowCount; ++i)
 			addTextBox("", 8, (int)(openSize.y * (0.2f*(i+1))), txtPaint);
 		
-		yesNoMenu = new ListBox(Global.vpWidth/2, Global.vpHeight - height - buffer*2, 0, 40, 1, 2, txtPaintCenter);
+		yesNoMenu = new ListBox(Global.vpWidth/2, Global.vpHeight - buffer, 0, optionRowHeight, 1, 2, txtPaintCenter);
 		yesNoMenu.anchor = Anchors.BottomCenter;
-		yesNoMenu.setOpenSize(openSize.x, 40);
+		yesNoMenu.setOpenSize(openSize.x, optionRowHeight);
 		yesNoMenu.openSpeed = 30;
-		yesNoMenu.addItem("Yes", YesNo.Yes, false);
-		yesNoMenu.addItem("No", YesNo.No, false);
 		
 		rowList = new ArrayList<String>();		
-		msgQueue = new ArrayList<String>();	
+		msgQueue = new ArrayList<Message>();
 		alwaysSpeed0 = false;
+		
+		position = Position.Bottom;
+		
+		
+		optPosNone = new HashMap<MsgBox.Position, Integer>();
+		optPosNone.put(Position.Top, buffer);
+		optPosNone.put(Position.Center, Global.vpHeight / 2);
+		optPosNone.put(Position.Bottom, Global.vpHeight - buffer);
+		
+		optPosYesNo = new HashMap<MsgBox.Position, Integer>();
+		optPosYesNo.put(Position.Top, buffer);
+		optPosYesNo.put(Position.Center, Global.vpHeight / 2);
+		optPosYesNo.put(Position.Bottom, Global.vpHeight - buffer*2 - optionRowHeight);
+		
+		optPos = optPosNone;
 		//clear(msg);		
 	}
 	
-	public void setTop()
+	public void setPosition(Position newPos)
 	{
-		pos.y = buffer;
-		anchor = Anchors.TopCenter;
+		setOptPos();
+		
+		if(position != newPos)
+		{
+			switch(newPos)
+			{
+			case Bottom: anchor = Anchors.BottomCenter; break;
+			case Top: anchor = Anchors.TopCenter; break;
+			case Center: anchor = Anchors.TrueCenter; break;
+			}
+			
+			pos.y = optPos.get(newPos);
+			position = newPos;
+		}		
+				
+		
 		update();
+		
 	}
 	
-	public void setBottom()
+	private void setOptPos()
 	{
-		pos.y = Global.vpHeight - buffer;
-		anchor = Anchors.BottomCenter;
-		update();
+		if(msgQueue.size() > 0)
+		{
+			switch(msgQueue.get(0).getOption())
+			{
+			case None: optPos = optPosNone; move(Global.vpWidth/2, optPos.get(position), moveSpeed); break;
+			case YesNo: optPos = optPosYesNo; break;
+			case List: optPos = optPosList; break;				
+			}
+			
+			
+		}
+			
 	}
 		
-	public void addMessage(String msg)
+	public void addBasicMessage(String msg)
 	{
-		addMessage(msg, false);
+		msgQueue.add(new Message(msg, Options.None));
 	}
-	public void addMessage(String msg, boolean YesNo)
+	
+	public void addMessage(Message msg)
 	{
 		msgQueue.add(msg);
-		this.YesNoOpt = YesNo;
 	}
 	
-	public void showYesNo(String message, MsgBoxEndAction yesAction, MsgBoxEndAction noAction)
-	{
-		this.yesAction = yesAction;
-		this.noAction = noAction;
+	public void addYesNoMessage(String message, MsgAction yesAction, MsgAction noAction)
+	{		
+		Message msg = new Message(message, Options.YesNo);
+		msg.addOption("Yes", yesAction);
+		msg.addOption("No", noAction);
 		
-		this.YesNoOpt = true;
-		msgQueue.add(message);
+		msgQueue.add(msg);
 	}
 	
-	private void clear(String str)
-	{
-		this.msg = str;
-		hasCharName = str.indexOf(wildCard) != -1;
+	@Override
+	public void clear()
+	{		
 		for(int i = 0; i < rowCount; ++i)
 			textBoxes.get(i).text = "";
 		
@@ -117,11 +176,7 @@ public class MsgBox extends MenuPanel
 		currentChar = 0;
 		partialRow = "";
 		
-		done = false;
-		
-		//close();		
-		rowSplit();
-		
+		done = false;				
 	}
 	
 	//forces next message
@@ -130,20 +185,42 @@ public class MsgBox extends MenuPanel
 		Global.delay();
 		msgQueue.remove(0);
 		if(msgQueue.size() > 0)					
-			clear(msgQueue.get(0));
+			showCurrentMessage();
 		else					
 			close();
 	}
 	
+	private void showCurrentMessage()
+	{
+		Message currentMsg = msgQueue.get(0);
+		msg = currentMsg.getMessage();
+		hasCharName = msg.indexOf(wildCard) != -1;
+		
+		clear();
+		rowSplit();	
+		
+		setOptPos();
+	}
+	
+	private void openYesNo()
+	{
+		yesNoMenu.clearObjects();
+		for(MsgOption opt : msgQueue.get(0).getOptions())
+			yesNoMenu.addItem(opt.getText(), opt.getAction(), opt.disabled());
+		
+		yesNoMenu.open();
+
+		move(Global.vpWidth/2, optPos.get(position), moveSpeed);		
+	}
+	
 	private void setSpeed(int s){textSpeed = s;}	
 	public boolean isDone(){return done;}
-	public YesNo getSelectedOpt() { return selectedOption; }
-	public boolean isYesNo() { return YesNoOpt; }
 	
 	@Override
 	public void close()
 	{
 		super.close();	
+		move(Global.vpWidth/2, optPosNone.get(position), moveSpeed);
 		yesNoMenu.close();
 		msgQueue.clear();
 	}
@@ -162,9 +239,7 @@ public class MsgBox extends MenuPanel
 		super.open();
 		
 		if(msgQueue.size() > 0)
-			clear(msgQueue.get(0));	
-		
-		selectedOption = null;
+			showCurrentMessage();
 		
 		//yesNoMenu.open();
 		
@@ -178,11 +253,7 @@ public class MsgBox extends MenuPanel
 		super.open();
 		
 		if(msgQueue.size() > 0)
-			clear(msgQueue.get(0));	
-		
-		selectedOption = null;
-		
-		//yesNoMenu.open();
+			showCurrentMessage();
 		
 		Global.delay();
 		
@@ -219,8 +290,6 @@ public class MsgBox extends MenuPanel
 		
 		if(!done  && Opened())
 		{
-			
-			
 			textTimer++;
 			if(textTimer >= textSpeed)
 			{
@@ -234,8 +303,8 @@ public class MsgBox extends MenuPanel
 						if(currentRow >= rowList.size())
 						{
 							done = true;
-							if(YesNoOpt && msgQueue.size() <= 1)
-								yesNoMenu.open();
+							if(msgQueue.get(0).getOption() == Options.YesNo)
+								openYesNo();
 						}						
 						else
 						{
@@ -253,8 +322,8 @@ public class MsgBox extends MenuPanel
 				else
 				{
 					done = true;
-					if(YesNoOpt && msgQueue.size() <= 1)
-						yesNoMenu.open();
+					if(msgQueue.get(0).getOption() == Options.YesNo)
+						openYesNo();
 				}
 				
 				currentChar++;
@@ -444,21 +513,12 @@ public class MsgBox extends MenuPanel
 				LBStates state = yesNoMenu.touchActionUp(x, y);
 				if(state == LBStates.Selected)
 				{
-					selectedOption = (YesNo)yesNoMenu.getSelectedEntry().obj;
-					
-					if(selectedOption == YesNo.Yes && yesAction != null)
-					{
-						yesAction.execute();
-						yesAction = null;						
-					}
-					else if(noAction != null)
-					{
-						noAction.execute();
-						noAction = null;						
-					}
-					
 					yesNoMenu.close();
 					close();
+					
+					MsgAction result = (MsgAction)yesNoMenu.getSelectedEntry().obj;	
+					if(result != null)
+						result.execute();
 				}
 			}				
 			else
@@ -484,11 +544,6 @@ public class MsgBox extends MenuPanel
 		}
 		
 	}
-	
-	public enum YesNo
-	{
-		Yes,
-		No
-	}
+
 
 }

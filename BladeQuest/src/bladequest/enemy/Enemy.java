@@ -12,7 +12,6 @@ import bladequest.battleactions.bactWait;
 import bladequest.bladescript.ParserException;
 import bladequest.bladescript.ScriptVar;
 import bladequest.combat.Battle;
-import bladequest.combat.BattleCalc;
 import bladequest.combat.BattleEventBuilder;
 import bladequest.graphics.AnimatedBitmap;
 import bladequest.graphics.BattleAnim;
@@ -28,7 +27,6 @@ import bladequest.system.Recyclable;
 import bladequest.world.Ability;
 import bladequest.world.Global;
 import bladequest.world.PlayerCharacter;
-import bladequest.world.Stats;
 import bladequest.world.TargetTypes;
 
 

@@ -4,14 +4,15 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import bladequest.UI.ListBox;
+import bladequest.UI.ListBox.LBStates;
 import bladequest.UI.ListBoxEntry;
 import bladequest.UI.MenuPanel;
-import bladequest.UI.MsgBox;
-import bladequest.UI.MsgBoxEndAction;
-import bladequest.UI.ListBox.LBStates;
-import bladequest.UI.NumberPicker;
-import bladequest.UI.MainMenu.MainMenuState;
 import bladequest.UI.MenuPanel.Anchors;
+import bladequest.UI.MsgBox.MsgBox;
+import bladequest.UI.MsgBox.MsgAction;
+import bladequest.UI.MsgBox.MsgBox.Options;
+import bladequest.UI.MsgBox.MsgBox.Position;
+import bladequest.UI.NumberPicker;
 import bladequest.world.Global;
 import bladequest.world.Item;
 import bladequest.world.Merchant;
@@ -76,7 +77,7 @@ public class MerchantScreen
 				if(items.Opened())
 					items.close();
 				
-				msgBox.addMessage(merchant.greeting);
+				msgBox.addBasicMessage(merchant.greeting);
 				msgBox.nextMessage();
 			}
 			public void update() {
@@ -101,7 +102,7 @@ public class MerchantScreen
 				
 				if(rootMenu.Closed() && msgBox.Closed())
 				{
-					Global.showMessage(merchant.farewell, false);
+					Global.showBasicMessage(merchant.farewell, Position.Bottom);
 					Global.GameState = States.GS_WORLDMOVEMENT;
 					Global.delay();
 					closing = false;
@@ -136,7 +137,7 @@ public class MerchantScreen
 				
 				selling = false;
 				
-				msgBox.addMessage(merchant.buying);
+				msgBox.addBasicMessage(merchant.buying);
 				msgBox.nextMessage();
 			}
 			private boolean suppressOpen;
@@ -177,7 +178,7 @@ public class MerchantScreen
 				{
 					if(items.getSelectedEntry().Disabled())
 					{
-						msgBox.addMessage(merchant.insufficientFunds);
+						msgBox.addBasicMessage(merchant.insufficientFunds);
 						msgBox.nextMessage();
 					} 						
 					else
@@ -193,7 +194,7 @@ public class MerchantScreen
 				if(items.getCurrentSelectedEntry() != null)
 				{
 					Item itemGetInfo = (Item)(items.getCurrentSelectedEntry().obj);
-					msgBox.addMessage(itemGetInfo.getDescription());
+					msgBox.addBasicMessage(itemGetInfo.getDescription());
 					msgBox.nextMessage();	
 					suppressOpen = true;
 
@@ -223,7 +224,7 @@ public class MerchantScreen
 				
 				selling = true;
 				
-				msgBox.addMessage(merchant.selling);
+				msgBox.addBasicMessage(merchant.selling);
 				msgBox.nextMessage();
 			}
 
@@ -261,7 +262,7 @@ public class MerchantScreen
 				state = items.touchActionUp(x, y);
 				if(state == LBStates.Selected && !suppressOpen)
 				{
-					msgBox.addMessage(merchant.sell);
+					msgBox.addBasicMessage(merchant.sell);
 					msgBox.nextMessage();
 					itemtoBuySell = (Item)(items.getSelectedEntry().obj);
 					
@@ -273,7 +274,7 @@ public class MerchantScreen
 				if(items.getCurrentSelectedEntry() != null)
 				{
 					Item itemGetInfo = (Item)(items.getCurrentSelectedEntry().obj);
-					msgBox.addMessage(itemGetInfo.getDescription());
+					msgBox.addBasicMessage(itemGetInfo.getDescription());
 					msgBox.nextMessage();	
 					suppressOpen = true;
 
@@ -303,7 +304,7 @@ public class MerchantScreen
 				countPicker.setValue(1);
 				updateBuySellPanel();
 				darken();
-				msgBox.addMessage(itemtoBuySell.getDescription());
+				msgBox.addBasicMessage(itemtoBuySell.getDescription());
 				msgBox.nextMessage();	
 			}
 
@@ -371,25 +372,27 @@ public class MerchantScreen
 			}			
 		};
 	}
-	private MerchantScreenState getEquipSelectState()
-	{
-		return new MerchantScreenState(){
-			public void changeStateTo(MerchantScreenState state) {}
-			public void onSwitchedTo(MerchantScreenState prevState) {}
-
-			public void update() {}
-			public void render() {}
-			
-			public void handleClosing(){
-				stateMachine.setState(getRootState());
-			}	
-
-			public void backButtonPressed() {}
-			public void touchActionUp(int x, int y) {}
-			public void touchActionMove(int x, int y) {}
-			public void touchActionDown(int x, int y) {}			
-		};
-	}
+	
+	//TODO
+//	private MerchantScreenState getEquipSelectState()
+//	{
+//		return new MerchantScreenState(){
+//			public void changeStateTo(MerchantScreenState state) {}
+//			public void onSwitchedTo(MerchantScreenState prevState) {}
+//
+//			public void update() {}
+//			public void render() {}
+//			
+//			public void handleClosing(){
+//				stateMachine.setState(getRootState());
+//			}	
+//
+//			public void backButtonPressed() {}
+//			public void touchActionUp(int x, int y) {}
+//			public void touchActionMove(int x, int y) {}
+//			public void touchActionDown(int x, int y) {}			
+//		};
+//	}
 
 	private void buildPaints()
 	{
@@ -562,16 +565,11 @@ public class MerchantScreen
 	private void undarken(){darkening = false;}	
 	private void renderDark(){Global.renderer.drawColor(Color.argb(darkenAlpha, 0, 0, 0));}
 		
-	private void showMessage(String msg, boolean yesNoOpt)
+	
+	private void showMessageYesNo(String msg, MsgAction yesAction, MsgAction noAction)
 	{
 		//darken();
-		msgBox.addMessage(msg, yesNoOpt);
-		msgBox.open();
-	}	
-	private void showMessageYesNo(String msg, MsgBoxEndAction yesAction, MsgBoxEndAction noAction)
-	{
-		//darken();
-		msgBox.showYesNo(msg, yesAction, noAction);
+		msgBox.addYesNoMessage(msg, yesAction, noAction);
 		msgBox.open();
 	}
 	public void open(Merchant merchant, float discount)
@@ -583,7 +581,8 @@ public class MerchantScreen
 		
 		stateMachine.setState(getRootState());
 		
-		showMessage(merchant.greeting, false);
+		msgBox.addBasicMessage(merchant.greeting);
+		msgBox.open();
 		rootMenu.open();
 	}	
 	private void close() { closing = true;}

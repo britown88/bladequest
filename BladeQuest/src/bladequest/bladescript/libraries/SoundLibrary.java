@@ -1,7 +1,6 @@
 package bladequest.bladescript.libraries;
 
 import bladequest.bladescript.LibraryWriter;
-import bladequest.sound.BladeSong;
 import bladequest.sound.Song;
 import bladequest.world.Global;
 

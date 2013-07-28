@@ -29,13 +29,16 @@ import android.util.Log;
 import bladequest.UI.DebugScreen;
 import bladequest.UI.ListBox;
 import bladequest.UI.MenuPanel.Anchors;
-import bladequest.UI.MsgBox;
 import bladequest.UI.NameSelect;
 import bladequest.UI.SaveLoadMenu;
 import bladequest.UI.MainMenu.MainMenu;
 import bladequest.UI.MerchantScreen.MerchantScreen;
+import bladequest.UI.MsgBox.Message;
+import bladequest.UI.MsgBox.MsgAction;
+import bladequest.UI.MsgBox.MsgBox;
 import bladequest.actions.Action;
 import bladequest.actions.ActionScript;
+import bladequest.actions.ActionScript.Status;
 import bladequest.actions.actDisableBattleMusic;
 import bladequest.actions.actExpectInput;
 import bladequest.actions.actFadeControl;
@@ -46,7 +49,6 @@ import bladequest.actions.actResetGame;
 import bladequest.actions.actShowScene;
 import bladequest.actions.actUnloadScene;
 import bladequest.actions.actWait;
-import bladequest.actions.ActionScript.Status;
 import bladequest.battleactions.BattleAction;
 import bladequest.battleactions.DamageBuilder;
 import bladequest.battleactions.DelegatingAction;
@@ -64,6 +66,7 @@ import bladequest.combat.BattleCalc.DamageReturnType;
 import bladequest.combat.BattleEventBuilder;
 import bladequest.combat.BattleMusicListener;
 import bladequest.combat.triggers.Trigger;
+import bladequest.context.ContextMenu;
 import bladequest.enemy.Enemy;
 import bladequest.graphics.AnimationBuilder;
 import bladequest.graphics.AnimationPosition;
@@ -92,6 +95,8 @@ import bladequest.system.Recyclable;
 
 public class Global 
 {
+	public static ContextMenu contextMenu;
+	
 	private static ActionScript gameOverScript;
 	private static final String TAG = Global.class.getSimpleName();
 	public static LoadingScreen loadingScreen;
@@ -387,6 +392,9 @@ public class Global
 
 	public static void updateMousePosition(int x, int y, boolean autoNewTarget)
 	{
+		if(party.allowMovement() && contextMenu.contains(x, y))
+			return;
+		
 		if(party.allowMovement() && menuButton.contains(x, y))
 			return;
 		
@@ -431,17 +439,15 @@ public class Global
 	}
 	
 	
-	public static void showMessage(String str, boolean yesNoOpt)
+	public static void showBasicMessage(String str, MsgBox.Position pos)
 	{
 		if(worldMsgBox == null)
-			worldMsgBox = new MsgBox();
-		
-		worldMsgBox.setBottom();
-		
+			worldMsgBox = new MsgBox();		
+		worldMsgBox.setPosition(pos);		
 		menuButton.close();
 		
-		worldMsgBox.addMessage(str, yesNoOpt);
-		if(worldMsgBox.Closed())
+		worldMsgBox.addBasicMessage(str);
+		if(!worldMsgBox.Opened())
 			worldMsgBox.open();
 	}
 	
@@ -450,33 +456,41 @@ public class Global
 		if(worldMsgBox != null)
 			worldMsgBox.setClosed();
 	}
-	
-	public static void showMessageTop(String str, boolean yesNoOpt)
+
+	public static void showYesNoMessage(String str, MsgBox.Position pos, MsgAction yesAction, MsgAction noAction)
 	{
 		if(worldMsgBox == null)
-			worldMsgBox = new MsgBox();
-		
-		worldMsgBox.setTop();
-		
+			worldMsgBox = new MsgBox();		
+		worldMsgBox.setPosition(pos);		
 		menuButton.close();
 		
-		worldMsgBox.addMessage(str, yesNoOpt);
-		if(worldMsgBox.Closed())
+		worldMsgBox.addYesNoMessage(str, yesAction, noAction);
+		if(!worldMsgBox.Opened())
 			worldMsgBox.open();
 	}
 	
-	public static void showMessage(String str, float seconds)
+	public static void showMessage(Message msg, MsgBox.Position pos)
 	{
 		if(worldMsgBox == null)
-			worldMsgBox = new MsgBox();
-		
-		worldMsgBox.setBottom();
-		
+			worldMsgBox = new MsgBox();		
+		worldMsgBox.setPosition(pos);		
 		menuButton.close();
 		
-		worldMsgBox.addMessage(str, false);
+		worldMsgBox.addMessage(msg);
+		if(!worldMsgBox.Opened())
+			worldMsgBox.open();
+	}
+	
+	public static void showTimedMessage(String msg, MsgBox.Position pos, float duration)
+	{
+		if(worldMsgBox == null)
+			worldMsgBox = new MsgBox();		
+		worldMsgBox.setPosition(pos);		
+		menuButton.close();
+		//TODO: Make duration work
+		worldMsgBox.addBasicMessage(msg);
 		if(worldMsgBox.Closed())
-			worldMsgBox.open(seconds);
+			worldMsgBox.open();
 	}
 	
 	public static void resetImageTimer()
@@ -800,6 +814,8 @@ public class Global
 			break;
 		//case GS_SHOWSCENE:
     	case GS_WORLDMOVEMENT:
+    		contextMenu.update();
+    		
     		updateReactionBubbles();
     		
     		if(worldMsgBox != null)
@@ -1076,11 +1092,11 @@ public class Global
 	{
 		if(!appRunning)
         {
-        	appRunning = true;
+        	appRunning = true;        	
         	
-        	properties = new WorkingPropertyMap();
-        	
+        	properties = new WorkingPropertyMap();        	
         	saveLoader = new GameSaveLoader();
+        	
         	
         	saveLoader.registerFactory(actDisableBattleMusic.DisabledBattleMusicListener.tag, new actDisableBattleMusic.DisabledBattleMusicListenerDeserializer());
         	
@@ -1091,6 +1107,7 @@ public class Global
         	
         	//ScreenFilter.instance().pushFilter(ScreenFilter.darknessFilter(0.65f));
         	
+        	contextMenu = new ContextMenu();
         	bladeSong = new BladeSong();
         	screenFilter = new ScreenFilter();
         	

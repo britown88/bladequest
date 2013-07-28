@@ -2,7 +2,6 @@ package bladequest.battleactions;
 
 import java.util.List;
 
-import bladequest.battleactions.BattleAction.State;
 import bladequest.combat.BattleCalc;
 import bladequest.combat.BattleEventBuilder;
 import bladequest.combat.DamageComponent;

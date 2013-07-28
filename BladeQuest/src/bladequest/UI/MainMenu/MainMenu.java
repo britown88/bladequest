@@ -15,8 +15,10 @@ import bladequest.UI.ListBox.LBStates;
 import bladequest.UI.ListBoxEntry;
 import bladequest.UI.MenuPanel;
 import bladequest.UI.MenuPanel.Anchors;
-import bladequest.UI.MsgBox;
-import bladequest.UI.MsgBoxEndAction;
+import bladequest.UI.MsgBox.MsgBox;
+import bladequest.UI.MsgBox.MsgAction;
+import bladequest.UI.MsgBox.MsgBox.Options;
+import bladequest.UI.MsgBox.MsgBox.Position;
 import bladequest.UI.NumberPicker;
 import bladequest.combat.DamageMarker;
 import bladequest.statuseffects.StatusEffect;
@@ -285,7 +287,7 @@ public class MainMenu
 					if(invList.getSelectedEntry().Disabled())
 					{						
 						//if(i.getType() == Type.Usable)
-						showMessage(i.getDescription(), false);
+						showBasicMessage(i.getDescription());
 						
 						//add usable by string
 						if(!i.isUsable(UseTypes.World))
@@ -307,14 +309,14 @@ public class MainMenu
 									if(j < charNames.size() - 1)
 										usableByString += ", ";
 								}
-								messageBox.addMessage(usableByString);									
+								messageBox.addBasicMessage(usableByString);									
 							}	
 						}
 					}
 					else
 					{
 						if(invShowKeys)
-							showMessage(i.getDescription(), false);
+							showBasicMessage(i.getDescription());
 						else
 						{
 							itemToUse = i;
@@ -821,7 +823,7 @@ public class MainMenu
 							}							
 						}
 						else if(ab.getDescription().length() > 0)
-							showMessage(ab.getDescription(), false);
+							showBasicMessage(ab.getDescription());
 					}
 					
 				}
@@ -1140,8 +1142,8 @@ public class MainMenu
 					Global.fc1b = Global.fc1g = Global.fc1r = 
 						Global.fc2b = Global.fc2g = Global.fc2r = 0;
 					updateOptionsScreen();
-					showMessage("You made the menus too bright! That was silly of you...", false);
-					showMessage("We at Dapper Hat kindly recommend that you choose a darker setting.", false);
+					showBasicMessage("You made the menus too bright! That was silly of you...");
+					showBasicMessage("We at Dapper Hat kindly recommend that you choose a darker setting.");
 				}
 			}
 			@Override
@@ -2158,16 +2160,16 @@ public class MainMenu
 	private void darken(){darkening = true;}	
 	private void undarken(){darkening = false;}	
 	private void renderDark(){Global.renderer.drawColor(Color.argb(darkenAlpha, 0, 0, 0));}
-	public void showMessage(String msg, boolean yesNoOpt)
+	public void showBasicMessage(String msg)
 	{
 		darken();
-		messageBox.addMessage(msg, yesNoOpt);
+		messageBox.addBasicMessage(msg);
 		messageBox.open();
 	}
-	private void showMessageYesNo(String msg, MsgBoxEndAction yesAction, MsgBoxEndAction noAction)
+	private void showMessageYesNo(String msg, MsgAction yesAction, MsgAction noAction)
 	{
 		darken();
-		messageBox.showYesNo(msg, yesAction, noAction);
+		messageBox.addYesNoMessage(msg, yesAction, noAction);
 		messageBox.open();
 	}
 	
@@ -2185,7 +2187,7 @@ public class MainMenu
 		{
 			showMessageYesNo(
 					"Quit the game and return to the title screen?", 
-					new MsgBoxEndAction(){
+					new MsgAction(){
 						public void execute()
 						{
 							Global.restartGame();
@@ -2311,7 +2313,7 @@ public class MainMenu
 		}
 		else if(opt.equals("cs"))
 		{
-			showMessage("More control options coming soon!", false);
+			showBasicMessage("More control options coming soon!");
 		}
 		else if(opt.equals("bak"))
 		{

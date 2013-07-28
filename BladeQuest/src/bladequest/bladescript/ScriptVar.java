@@ -74,7 +74,7 @@ public abstract class ScriptVar {
 		}	
 	}
 	
-	@SuppressWarnings("unchecked")
+
 	public static  void stringListFromSingleOrList(List<String> list, ScriptVar var)
 	{
 		try {		

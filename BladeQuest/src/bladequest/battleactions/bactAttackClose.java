@@ -1,16 +1,10 @@
 package bladequest.battleactions;
 
-import java.util.List;
-
 import android.graphics.Point;
 import bladequest.combat.BattleCalc;
 import bladequest.combat.BattleEvent;
 import bladequest.combat.BattleEventBuilder;
 import bladequest.graphics.BattleAnim;
-import bladequest.graphics.BattleAnimObject;
-import bladequest.graphics.BattleAnimObject.Types;
-import bladequest.graphics.BattleSprite;
-import bladequest.graphics.BattleSprite.faces;
 import bladequest.math.PointMath;
 import bladequest.world.DamageTypes;
 import bladequest.world.PlayerCharacter;
