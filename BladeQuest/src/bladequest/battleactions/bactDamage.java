@@ -146,10 +146,12 @@ public class bactDamage extends DelegatingAction
 		PlayerCharacter attacker = builder.getSource();
 		PlayerCharacter target =  BattleAction.getTarget(builder);
 	
-		int dmg = BattleCalc.calculatedDamage(attacker, target, power, type, damageComponents, customMiss, accuracyType, handToUse);
+		DamageReturnType result = BattleCalc.calculateAttackOutcome(attacker, target, power, type, damageComponents, customMiss, accuracyType, handToUse);
+		
+		int dmg = BattleCalc.calculatedDamage(attacker, target, power, type, damageComponents, result, handToUse);
 		
 		
-		TriggerDamageBuilder triggerSettings = new TriggerDamageBuilder(attacker, target, dmg, BattleCalc.getDmgReturnType(), damageComponents, type); 
+		TriggerDamageBuilder triggerSettings = new TriggerDamageBuilder(attacker, target, dmg, result, damageComponents, type); 
 
 		boolean attackAction = Global.battle.currentBattleEvent().getAction() == Action.Attack;
 		
@@ -209,15 +211,16 @@ public class bactDamage extends DelegatingAction
 	{
 		for(PlayerCharacter t : targets)
 		{
-			int dmg = BattleCalc.calculatedDamage(attacker, t, power, type, damageComponents, customMiss, accuracyType, handToUse);
-			switch(BattleCalc.getDmgReturnType())
+			DamageReturnType result = BattleCalc.calculateAttackOutcome(attacker, t, power, type, damageComponents, customMiss, accuracyType, handToUse);
+			
+			switch(result)
 			{
 			case Blocked:
 				markers.add(new DamageMarker("BLOCK", t));	
 				break;
-			case Critical:
-				markers.add(new DamageMarker("CRIT", t));	
 			case Hit:
+			case Critical:
+				int dmg = BattleCalc.calculatedDamage(attacker, t, power, type, damageComponents, result, handToUse);
 				t.modifyHP(-dmg, false);
 				markers.add(new DamageMarker(-dmg, t));	
 				break;

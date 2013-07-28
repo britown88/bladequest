@@ -45,10 +45,7 @@ public class BattleCalc
 		
 		return (int)(Math.max(1, Math.min(maximum, ret)));
 	}
-	
-	
-	private static DamageReturnType damageReturnType;	
-	public static DamageReturnType getDmgReturnType(){return damageReturnType;}
+
 	
 	private static int getStandardEvasion(PlayerCharacter character, DamageTypes type)
 	{
@@ -62,31 +59,17 @@ public class BattleCalc
 		} 
 	}
 	
-	public static int calculatedDamage(PlayerCharacter attacker, PlayerCharacter defender, float power, DamageTypes type, List<DamageComponent> arrayList, float customMiss, AccuracyType accuracy, PlayerCharacter.Hand hand)
+	public static DamageReturnType calculateAttackOutcome(
+			PlayerCharacter attacker, 
+			PlayerCharacter defender, 
+			float power, 
+			DamageTypes type, 
+			List<DamageComponent> arrayList, 
+			float customMiss, 
+			AccuracyType accuracy, 
+			PlayerCharacter.Hand hand)
 	{
-		boolean hitStatusApplied = false;
 		
-		attacker.updateSecondaryStats(hand);
-		defender.updateSecondaryStats(PlayerCharacter.Hand.MainHand);
-		
-		boolean physical = type == DamageTypes.Physical || type == DamageTypes.PhysicalIgnoreDef; 
-		boolean ignoreDef = type == DamageTypes.MagicalIgnoreDef || type == DamageTypes.PhysicalIgnoreDef;
-				
-		int AP = physical ? attacker.getStat(Stats.BattlePower) : attacker.getStat(Stats.MagicPower);
-		float DP = physical ? defender.getStat(Stats.Defense) : defender.getStat(Stats.MagicDefense);
-		
-		//guarding
-		//if(defender.getAction() == Action.Guard) DP *= 1.5f;		
-		if (ignoreDef) DP = 0.0f;
-		
-		float attackerTypeMod = 10.0f;
-		
-		float rawDamage = AP * attackerTypeMod;
-		float reduceFactor = (float) Math.pow(DP/255.0, 0.7);
-		float variance = ((float)Global.rand.nextInt(20) - 10.0f)/100.0f;	
-		
-		float moddedDmg = rawDamage * (1.0f - reduceFactor) * (1.0f + variance);
-	
 		int evade = 0;
 		int standardEvade = getStandardEvasion(defender, type);
 		int roll;
@@ -102,82 +85,93 @@ public class BattleCalc
 			roll = Global.rand.nextInt(100);
 			evade = (int)(customMiss*100);
 			if(roll < standardEvade)
-			{
-				damageReturnType = DamageReturnType.Miss;
-				hitStatusApplied = true;
-			}
+				return DamageReturnType.Miss;
+			
 			break;
 		}
 		
 		roll = Global.rand.nextInt(100);
 		
 		if(roll < evade)
-		{
-			damageReturnType = DamageReturnType.Miss;
-			hitStatusApplied = true;
-		}
-		
-		
-		float finalDmg = 0.0f;
+			return DamageReturnType.Miss;		
 		
 		switch(type)
 		{
+		case Magic:
+		case MagicalIgnoreDef:
 		case Fixed:
-			damageReturnType = DamageReturnType.Hit;
-			finalDmg = power;
-			break;
+			return DamageReturnType.Hit;
 		case PhysicalIgnoreDef:	
 		case Physical:
 				roll = Global.rand.nextInt(100);
 				int blockChance = (int)((float)defender.getStat(Stats.Block)*(90.0f/255.0f));				
-				if(roll < blockChance && !hitStatusApplied)
-				{
-					hitStatusApplied = true;
-					damageReturnType = DamageReturnType.Blocked;
-				}
-
-				moddedDmg *= power;
-				finalDmg = applyAffinities(moddedDmg, attacker, defender, arrayList);
+				if(roll < blockChance)
+					return DamageReturnType.Blocked;
 				
 				roll = Global.rand.nextInt(100);
-				int critChance = (int)((float)attacker.getStat(Stats.Crit)*(maxCrit/255.0f));
+				int critChance = (int)((float)attacker.getStat(Stats.Fury)*(maxCrit/255.0f));
 				
-				if(roll < critChance && !hitStatusApplied)
-				{
-					damageReturnType = DamageReturnType.Critical;
-					hitStatusApplied = true;
-					finalDmg *= 2.0f;
-				}
+				if(roll < critChance)
+					return DamageReturnType.Critical;
 				else
-				{
-					if (!hitStatusApplied)
-					{
-						damageReturnType = DamageReturnType.Hit;
-					}
-				}
-									
-					
-			break;
-		case Magic:
-		case MagicalIgnoreDef:
-			
-			moddedDmg *= power;
-			finalDmg = applyAffinities(moddedDmg, attacker, defender, arrayList);
-			if (!hitStatusApplied)
-			{
-				damageReturnType = DamageReturnType.Hit;
-			}			
-			break;
+					return DamageReturnType.Hit;
 		}
 		
+		return DamageReturnType.Hit;		
+		
+	}
+	
+	public static int calculatedDamage(
+			PlayerCharacter attacker, 
+			PlayerCharacter defender, 
+			float power, 
+			DamageTypes type, 
+			List<DamageComponent> arrayList, 
+			DamageReturnType dmgReturnType,
+			PlayerCharacter.Hand hand)
+	{
+		//didn't hit
+		if(dmgReturnType == DamageReturnType.Miss || dmgReturnType == DamageReturnType.Blocked)
+			return 0;
+		
+		
+		attacker.updateSecondaryStats(hand);
+		defender.updateSecondaryStats(PlayerCharacter.Hand.MainHand);
+		
+		boolean physical = type == DamageTypes.Physical || type == DamageTypes.PhysicalIgnoreDef; 
+		boolean ignoreDef = type == DamageTypes.MagicalIgnoreDef || type == DamageTypes.PhysicalIgnoreDef;
+				
+		int AP = physical ? attacker.getStat(Stats.Power) : attacker.getStat(Stats.MagicPower);
+		float DP = ignoreDef ? 0.0f : physical ? defender.getStat(Stats.Defense) : defender.getStat(Stats.MagicDefense);
+		
+		float rawDamage = AP * 10.0f;		
+		float variance = ((float)Global.rand.nextInt(20) - 10.0f)/100.0f;		
+		float moddedDmg = rawDamage * power * (1.0f + variance);
+		
+		//only reduce by armor if attacking
+		if(power > 0)
+		{
+			float reduceFactor = (float) Math.pow(DP/255.0, 0.7);
+			moddedDmg *= (1.0f - reduceFactor);
+		}
+		
+		//crit
+		if(dmgReturnType == DamageReturnType.Critical)
+			moddedDmg *= 2.0;
+		
+		//return power for fixed, otherwise apply affinities	
+		float finalDmg = (type == DamageTypes.Fixed) ? power : applyAffinities(moddedDmg, attacker, defender, arrayList);
+				
+		//apply defensive reductions if attacking
 		if(power > 0)
 		{
 			if(defender.getAction() == Action.Guard || (!attacker.isEnemy() && !defender.isEnemy()))
 				finalDmg *= 0.5f;	
 			
-			finalDmg = Math.max(0, finalDmg - defender.getStat(Stats.DamageIgnore) * 10.0f);
+			finalDmg = Math.max(0, finalDmg - defender.getStat(Stats.Nullify) * 10.0f);
 		}		
 			
+		//cap
 		finalDmg = Math.max(-9999, Math.min(9999, finalDmg));
 		
 		attacker.updateSecondaryStats(PlayerCharacter.Hand.MainHand);

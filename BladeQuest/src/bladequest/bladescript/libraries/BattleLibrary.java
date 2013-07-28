@@ -47,6 +47,7 @@ import bladequest.combat.Battle;
 import bladequest.combat.BattleCalc;
 import bladequest.combat.BattleEventBuilder;
 import bladequest.combat.DamageComponent;
+import bladequest.combat.BattleCalc.DamageReturnType;
 import bladequest.combat.triggers.Condition;
 import bladequest.combat.triggers.Trigger;
 import bladequest.enemy.Enemy;
@@ -391,7 +392,7 @@ public class BattleLibrary {
 	}
 	public static float basicDamageCalc(PlayerCharacter attacker, PlayerCharacter defender, float power, String type)
 	{
-		return BattleCalc.calculatedDamage(attacker, defender, power, DamageTypes.valueOf(type), new ArrayList<DamageComponent>(), 0.0f, BattleCalc.AccuracyType.Regular, PlayerCharacter.Hand.MainHand);
+		return BattleCalc.calculatedDamage(attacker, defender, power, DamageTypes.valueOf(type), new ArrayList<DamageComponent>(), DamageReturnType.Hit, PlayerCharacter.Hand.MainHand);
 	}
 	
 	
