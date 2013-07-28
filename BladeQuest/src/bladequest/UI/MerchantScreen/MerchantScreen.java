@@ -4,15 +4,14 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import bladequest.UI.ListBox;
+import bladequest.UI.ListBox.LBStates;
 import bladequest.UI.ListBoxEntry;
 import bladequest.UI.MenuPanel;
-import bladequest.UI.MsgBox;
-import bladequest.UI.MsgBoxEndAction;
-import bladequest.UI.ListBox.LBStates;
-import bladequest.UI.NumberPicker;
-import bladequest.UI.MainMenu.MainMenuState;
 import bladequest.UI.MenuPanel.Anchors;
+import bladequest.UI.MsgBox;
 import bladequest.UI.MsgBox.Options;
+import bladequest.UI.MsgBoxEndAction;
+import bladequest.UI.NumberPicker;
 import bladequest.world.Global;
 import bladequest.world.Item;
 import bladequest.world.Merchant;
@@ -372,25 +371,27 @@ public class MerchantScreen
 			}			
 		};
 	}
-	private MerchantScreenState getEquipSelectState()
-	{
-		return new MerchantScreenState(){
-			public void changeStateTo(MerchantScreenState state) {}
-			public void onSwitchedTo(MerchantScreenState prevState) {}
-
-			public void update() {}
-			public void render() {}
-			
-			public void handleClosing(){
-				stateMachine.setState(getRootState());
-			}	
-
-			public void backButtonPressed() {}
-			public void touchActionUp(int x, int y) {}
-			public void touchActionMove(int x, int y) {}
-			public void touchActionDown(int x, int y) {}			
-		};
-	}
+	
+	//TODO
+//	private MerchantScreenState getEquipSelectState()
+//	{
+//		return new MerchantScreenState(){
+//			public void changeStateTo(MerchantScreenState state) {}
+//			public void onSwitchedTo(MerchantScreenState prevState) {}
+//
+//			public void update() {}
+//			public void render() {}
+//			
+//			public void handleClosing(){
+//				stateMachine.setState(getRootState());
+//			}	
+//
+//			public void backButtonPressed() {}
+//			public void touchActionUp(int x, int y) {}
+//			public void touchActionMove(int x, int y) {}
+//			public void touchActionDown(int x, int y) {}			
+//		};
+//	}
 
 	private void buildPaints()
 	{

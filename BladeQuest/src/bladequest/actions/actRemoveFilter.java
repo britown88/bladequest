@@ -1,6 +1,5 @@
 package bladequest.actions;
 
-import bladequest.graphics.ScreenFilter;
 import bladequest.world.Global;
 
 public class actRemoveFilter extends Action

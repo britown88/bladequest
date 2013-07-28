@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.graphics.Bitmap;
-import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Point;
 import android.graphics.Rect;
-import bladequest.graphics.BattleAnimObject.Types;
 import bladequest.world.Global;
 
 public class BattleAnimObject 

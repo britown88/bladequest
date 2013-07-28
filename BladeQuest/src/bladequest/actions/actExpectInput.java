@@ -1,6 +1,5 @@
 package bladequest.actions;
 
-import bladequest.UI.MsgBox.YesNo;
 import bladequest.world.Global;
 
 public class actExpectInput extends Action

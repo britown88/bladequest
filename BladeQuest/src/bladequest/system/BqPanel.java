@@ -11,9 +11,7 @@ import android.graphics.Paint.Align;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import bladequest.graphics.ScreenFilter;
 import bladequest.graphics.TilePlate;
-import bladequest.sound.BladeSong;
 import bladequest.world.Global;
 
 

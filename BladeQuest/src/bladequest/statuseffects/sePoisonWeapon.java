@@ -9,8 +9,6 @@ import bladequest.battleactions.DelegatingAction;
 import bladequest.battleactions.bactDamage;
 import bladequest.battleactions.bactInflictStatus;
 import bladequest.battleactions.bactWait;
-import bladequest.combat.BasicAttackBuilder;
-import bladequest.combat.BattleEvent;
 import bladequest.combat.BattleEventBuilder;
 import bladequest.combat.triggers.Trigger;
 import bladequest.system.Recyclable;

@@ -5,7 +5,6 @@ import java.util.List;
 
 import android.graphics.Point;
 import android.graphics.Rect;
-import bladequest.world.Global;
 
 public class BattleAnimObjState 
 {

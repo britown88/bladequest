@@ -15,8 +15,9 @@ public class MsgBox extends MenuPanel
 	private String msg;
 
 	private Paint txtPaint, txtPaintCenter;	
-	private static int buffer =10;
-	public static int msgBoxHeight = 96;
+	private static final int buffer =10;
+	public static final int msgBoxHeight = 96;
+	public static final int optionRowHeight = 40;
 	
 	private List<String> rowList, msgQueue;
 	
@@ -65,9 +66,9 @@ public class MsgBox extends MenuPanel
 		for(int i = 0; i < rowCount; ++i)
 			addTextBox("", 8, (int)(openSize.y * (0.2f*(i+1))), txtPaint);
 		
-		yesNoMenu = new ListBox(Global.vpWidth/2, Global.vpHeight - height - buffer*2, 0, 40, 1, 2, txtPaintCenter);
+		yesNoMenu = new ListBox(Global.vpWidth/2, Global.vpHeight - buffer, 0, optionRowHeight, 1, 2, txtPaintCenter);
 		yesNoMenu.anchor = Anchors.BottomCenter;
-		yesNoMenu.setOpenSize(openSize.x, 40);
+		yesNoMenu.setOpenSize(openSize.x, optionRowHeight);
 		yesNoMenu.openSpeed = 30;
 		yesNoMenu.addItem("Yes", YesNo.Yes, false);
 		yesNoMenu.addItem("No", YesNo.No, false);
@@ -142,6 +143,12 @@ public class MsgBox extends MenuPanel
 			clear(msgQueue.get(0));
 		else					
 			close();
+	}
+	
+	private void openYesNo()
+	{
+		yesNoMenu.open();
+		move(Global.vpWidth/2, Global.vpHeight - buffer*2 - optionRowHeight, 5);
 	}
 	
 	private void setSpeed(int s){textSpeed = s;}	
@@ -244,7 +251,11 @@ public class MsgBox extends MenuPanel
 						{
 							done = true;
 							if(option == Options.YesNo && msgQueue.size() <= 1)
-								yesNoMenu.open();
+							{
+								
+								openYesNo();
+							}
+								
 						}						
 						else
 						{
@@ -263,7 +274,7 @@ public class MsgBox extends MenuPanel
 				{
 					done = true;
 					if(option == Options.YesNo && msgQueue.size() <= 1)
-						yesNoMenu.open();
+						openYesNo();
 				}
 				
 				currentChar++;

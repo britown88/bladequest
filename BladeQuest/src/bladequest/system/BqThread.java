@@ -6,7 +6,6 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import bladequest.UI.ListBox.LBStates;
 import bladequest.world.Global;
-import bladequest.world.States;
 
 public class BqThread extends Thread
 {

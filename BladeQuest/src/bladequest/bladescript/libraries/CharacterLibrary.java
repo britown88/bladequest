@@ -12,7 +12,6 @@ import bladequest.graphics.Shadow;
 import bladequest.world.Global;
 import bladequest.world.Item;
 import bladequest.world.PlayerCharacter;
-import bladequest.world.PlayerCharacter.Hand;
 import bladequest.world.Stats;
 
 public class CharacterLibrary 

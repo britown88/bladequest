@@ -10,7 +10,6 @@ import bladequest.UI.MenuPanel.Anchors;
 import bladequest.UI.SaveLoadMenu;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.Scene;
-import bladequest.sound.BladeSong;
 import bladequest.system.DataLoadThread;
 
 

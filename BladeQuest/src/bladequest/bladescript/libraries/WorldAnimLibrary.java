@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.Point;
 import bladequest.bladescript.LibraryWriter;
 import bladequest.graphics.AnimationBuilder;
-import bladequest.world.Global;
 import bladequest.world.WorldAnimations;
 
 public class WorldAnimLibrary 
