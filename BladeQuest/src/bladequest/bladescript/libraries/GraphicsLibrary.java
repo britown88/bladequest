@@ -77,7 +77,7 @@ public class GraphicsLibrary
 	
 	public static BattleSprite createBattleSprite(String name, int x, int y)
 	{
-		BattleSprite bSpr = new BattleSprite(name, "herobattlers", 64, 64);		
+		BattleSprite bSpr = new BattleSprite(name, "characters/herobattlers", 64, 64);		
 		
 		bSpr.addFrame(BattleSprite.faces.Idle, 32, x*3+2, y*5+0);
 		

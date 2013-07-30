@@ -10,7 +10,7 @@ public class TilePlateBitmap
 	public Bitmap bmp;
 	public TilePlateBitmap()
 	{
-		bmp = Bitmap.createBitmap(32*Global.tilePlateSize.x, 32*Global.tilePlateSize.y, Config.ARGB_8888);
+		bmp = Bitmap.createBitmap(16*Global.tilePlateSize.x, 16*Global.tilePlateSize.y, Config.ARGB_8888);
 		used = false;
 	}
 	

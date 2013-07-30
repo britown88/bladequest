@@ -48,7 +48,7 @@ public class combEmpowerFire extends CombatAction {
 	{
 		BattleAnim out = new BattleAnim(1000.0f);
 		//LASER PARTY
-		Bitmap map = Global.bitmaps.get("animsprites");
+		Bitmap map = Global.bitmaps.get("misc/animsprites");
 		BattleAnimObject laser = new BattleAnimObject(Types.Bitmap, false, map);
 		Rect laserRect = new Rect(99, 49, 99 + 24, 49 + 8);		
 //		BattleAnimObjState laserInit = new BattleAnimObjState(0, PosTypes.Target);

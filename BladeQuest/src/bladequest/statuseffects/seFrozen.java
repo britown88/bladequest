@@ -39,7 +39,7 @@ public class seFrozen extends StatusEffect
 	{
 		BattleAnim anim = new BattleAnim(1000.0f);
 		
-		Bitmap icePoof = Global.bitmaps.get("particles");
+		Bitmap icePoof = Global.bitmaps.get("misc/particles");
 		Rect poofRect = new Rect(1,13,13,24);
 		
 		final int poofs = 50;

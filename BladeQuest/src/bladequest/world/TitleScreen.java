@@ -36,7 +36,7 @@ public class TitleScreen
 	{
 		state = TitleStates.NotStarted;			
 
-		dapperlogo = Global.bitmaps.get("dapperhatlogo");		
+		dapperlogo = Global.bitmaps.get("title/dapperhatlogo");		
 		whitescene = Global.scenes.get("white");
 		
 		paint = Global.textFactory.getTextPaint(13, Color.WHITE, Align.CENTER);		

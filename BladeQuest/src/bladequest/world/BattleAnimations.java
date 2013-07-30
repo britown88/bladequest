@@ -50,7 +50,7 @@ public class BattleAnimations
 		
 		Point position = target.getPosition(true);
 		
-		Bitmap icePoof = Global.bitmaps.get("particles");
+		Bitmap icePoof = Global.bitmaps.get("misc/particles");
 		Rect poofRect = new Rect(1,13,13,24);
 		
 		//to radians
@@ -103,11 +103,11 @@ public class BattleAnimations
 	
 	public static BitmapFrame getIceBlock()
 	{
-		return new BitmapFrame(Global.bitmaps.get("iceblock"), new Rect(0,0,25,38));
+		return new BitmapFrame(Global.bitmaps.get("misc/iceblock"), new Rect(0,0,25,38));
 	}
 	public static BitmapFrame getIcicle()
 	{
-		return new BitmapFrame(Global.bitmaps.get("particles"), new Rect(37, 0, 52, 6));
+		return new BitmapFrame(Global.bitmaps.get("misc/particles"), new Rect(37, 0, 52, 6));
 	}
 	
 
@@ -142,7 +142,7 @@ public class BattleAnimations
 				frames = new BitmapFrame[6];
 				for (int i = 0; i < 6; ++i)
 				{
-					frames[i] = new BitmapFrame(Global.bitmaps.get("redCard"),new Rect(i*width, 0, (i+1)*width, height));
+					frames[i] = new BitmapFrame(Global.bitmaps.get("misc/redCard"),new Rect(i*width, 0, (i+1)*width, height));
 				}
 			}
 			@Override
@@ -166,7 +166,7 @@ public class BattleAnimations
 				frames = new BitmapFrame[4];
 				for (int i = 0; i < 4; ++i)
 				{
-					frames[i] = new BitmapFrame(Global.bitmaps.get("beserkstance"),new Rect(i*width, 0, (i+1)*width, height));
+					frames[i] = new BitmapFrame(Global.bitmaps.get("misc/beserkstance"),new Rect(i*width, 0, (i+1)*width, height));
 				}
 			}
 			@Override
@@ -190,7 +190,7 @@ public class BattleAnimations
 				frames = new BitmapFrame[2];
 				for (int i = 0; i < frames.length; ++i)
 				{
-					frames[i] = new BitmapFrame(Global.bitmaps.get("gale"),new Rect(i*width, 0, (i+1)*width, height));
+					frames[i] = new BitmapFrame(Global.bitmaps.get("misc/gale"),new Rect(i*width, 0, (i+1)*width, height));
 				}
 			}
 			@Override
@@ -212,7 +212,7 @@ public class BattleAnimations
 				frames = new BitmapFrame[4];
 				for (int i = 0; i < frames.length; ++i)
 				{
-					frames[i] = new BitmapFrame(Global.bitmaps.get("reactionbubbles"),new Rect((i+7)*width, 0, (i+8)*width, height));
+					frames[i] = new BitmapFrame(Global.bitmaps.get("misc/reactionbubbles"),new Rect((i+7)*width, 0, (i+8)*width, height));
 				}
 			}
 			@Override
@@ -234,7 +234,7 @@ public class BattleAnimations
 				frames = new BitmapFrame[2];
 				for (int i = 0; i < frames.length; ++i)
 				{
-					frames[i] = new BitmapFrame(Global.bitmaps.get("reactionbubbles"),new Rect((i+5)*width, 0, (i+6)*width, height));
+					frames[i] = new BitmapFrame(Global.bitmaps.get("misc/reactionbubbles"),new Rect((i+5)*width, 0, (i+6)*width, height));
 				}
 			}
 			@Override
@@ -258,7 +258,7 @@ public class BattleAnimations
 				frames = new BitmapFrame[3];
 				for (int i = 0; i < frames.length; ++i)
 				{
-					frames[i] = new BitmapFrame(Global.bitmaps.get("reactionbubbles"),new Rect((i)*width, 32, (i+1)*width, 32+height));
+					frames[i] = new BitmapFrame(Global.bitmaps.get("misc/reactionbubbles"),new Rect((i)*width, 32, (i+1)*width, 32+height));
 				}
 			}
 			@Override
@@ -281,7 +281,7 @@ public class BattleAnimations
 				frames = new BitmapFrame[3];
 				for (int i = 0; i < frames.length; ++i)
 				{
-					frames[i] = new BitmapFrame(Global.bitmaps.get("reactionbubbles"),new Rect((i+3)*width, 32, (i+4)*width, 32+height));
+					frames[i] = new BitmapFrame(Global.bitmaps.get("misc/reactionbubbles"),new Rect((i+3)*width, 32, (i+4)*width, 32+height));
 				}
 			}
 			@Override
@@ -381,7 +381,7 @@ public class BattleAnimations
 				
 				BitmapFrame icicleFrame = getIcicle(); 
 				
-				Bitmap icePoof = Global.bitmaps.get("particles");
+				Bitmap icePoof = Global.bitmaps.get("misc/particles");
 				Rect poofRect = new Rect(1,13,13,24);
 				
 				for (int i = 0; i < icicleCount; ++i) 
@@ -491,7 +491,7 @@ public class BattleAnimations
 				
 				BitmapFrame icicleFrame = getIcicle(); 	
 				
-				Bitmap icePoof = Global.bitmaps.get("particles");
+				Bitmap icePoof = Global.bitmaps.get("misc/particles");
 				Rect poofRect = new Rect(1,13,13,24);
 				
 				//inflict frozen status partially through this!
@@ -814,7 +814,7 @@ public class BattleAnimations
 				int smokeParticles = Global.rand.nextInt(8) + 6;
 				final int stepTime = 100;
 				
-				Bitmap smoke = Global.bitmaps.get("particles");
+				Bitmap smoke = Global.bitmaps.get("misc/particles");
 				Rect poofRect = new Rect(1,13,13,24); 
 				
 
@@ -1018,7 +1018,7 @@ public class BattleAnimations
 				final int stickTime = 250;
 
 				Rect r = new Rect(26,0,34,3);
-				Bitmap dartBmp = Global.bitmaps.get("particles");
+				Bitmap dartBmp = Global.bitmaps.get("misc/particles");
 				
 				Point start = builder.getSource().getPosition(true);
 				Point end =   BattleAction.getTarget(builder).getPosition(true);
@@ -1319,7 +1319,7 @@ public class BattleAnimations
 				frames = new BitmapFrame[5];
 				for (int i = 0; i < 5; ++i)
 				{
-					frames[i] = new BitmapFrame(Global.bitmaps.get("beserkstance"),new Rect(i*width, top, (i+1)*width, top + height));
+					frames[i] = new BitmapFrame(Global.bitmaps.get("misc/beserkstance"),new Rect(i*width, top, (i+1)*width, top + height));
 				}
 			}
 			@Override
@@ -1342,7 +1342,7 @@ public class BattleAnimations
 				{
 					int idx = i;
 					if (i > 2) idx = 4-i;
-					frames[i] = new BitmapFrame(Global.bitmaps.get("particles"),new Rect(idx*8, 0, (idx+1)*8, 8));
+					frames[i] = new BitmapFrame(Global.bitmaps.get("misc/particles"),new Rect(idx*8, 0, (idx+1)*8, 8));
 				}
 			}
 			@Override
@@ -1363,7 +1363,7 @@ public class BattleAnimations
 				frames = new BitmapFrame[6];
 				for (int i = 0; i < 6; ++i)
 				{
-					frames[i] = new BitmapFrame(Global.bitmaps.get("fire"),new Rect(i*53, 0, (i+1)*53, 53));
+					frames[i] = new BitmapFrame(Global.bitmaps.get("misc/fire"),new Rect(i*53, 0, (i+1)*53, 53));
 				}
 			}
 			@Override

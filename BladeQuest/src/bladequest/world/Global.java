@@ -1229,7 +1229,7 @@ public class Global
 	
 	public static void createBattleSprite(String name, int x, int y)
 	{
-		BattleSprite bSpr = new BattleSprite(name, "herobattlers", 64, 64);		
+		BattleSprite bSpr = new BattleSprite(name, "characters/herobattlers", 64, 64);		
 		
 		bSpr.addFrame(BattleSprite.faces.Idle, 32, x*3+2, y*5+0);
 		
@@ -1270,7 +1270,7 @@ public class Global
 		String[] files = null;
 		String bmpName;		
 
-		try{ files = activity.getAssets().list(path); } catch (Exception e) {
+		try{ files = activity.getAssets().list("drawable/" + path); } catch (Exception e) {
 			Log.d(TAG, "Unable to list files in Dir " + path);
 			closeGame();}
 		
@@ -1279,14 +1279,14 @@ public class Global
 		{
 			if(filename.indexOf('.') != -1)
 			{
-				try {is = activity.getAssets().open(path+"/"+filename);} catch (Exception e) {
+				try {is = activity.getAssets().open("drawable/" + path+"/"+filename);} catch (Exception e) {
 					Log.d(TAG, "Unable to open file "+path+"/"+filename);
 					closeGame();}
 				
 				bmpName = filename.substring(0, filename.lastIndexOf('.'));
 				
 				if(is != null)
-					bitmaps.put(bmpName, BitmapFactory.decodeStream(is));
+					bitmaps.put(path+"/"+bmpName, BitmapFactory.decodeStream(is));
 			}			
 			
 		}
@@ -1543,10 +1543,15 @@ public class Global
 		playingReactions = new HashMap<String,ReactionBubble>();
 		
 		bitmaps = new HashMap<String, Bitmap>();
-		loadBitmaps("drawable/characters");
-		loadBitmaps("drawable/misc");
-		loadBitmaps("drawable/misc/title");
-		loadBitmaps("drawable/tilesets");	
+		loadBitmaps("characters");
+		loadBitmaps("misc");
+		loadBitmaps("title");
+		loadBitmaps("tilesets");
+		loadBitmaps("walls");
+		loadBitmaps("materials");
+		loadBitmaps("objects");
+		loadBitmaps("stairs");
+		
 		BattleAnimations.createAnimationBuilders();
 
 		scenes = new HashMap<String, Scene>();

@@ -53,10 +53,10 @@ public class Tile
 	public void render(Canvas canvas, Bitmap bitmap, boolean animated, Paint p)
 	{		
 		Rect dest = new Rect(
-				(worldPos.x%Global.tilePlateSize.x)*32,
-				(worldPos.y%Global.tilePlateSize.y)*32,
-				(worldPos.x%Global.tilePlateSize.x)*32 + 32,
-				(worldPos.y%Global.tilePlateSize.y)*32 + 32);
+				(worldPos.x%Global.tilePlateSize.x)*16,
+				(worldPos.y%Global.tilePlateSize.y)*16,
+				(worldPos.x%Global.tilePlateSize.x)*16 + 16,
+				(worldPos.y%Global.tilePlateSize.y)*16 + 16);
 		
 		if(bitmap != null && !bitmap.isRecycled())		
 			canvas.drawBitmap(bitmap, (animated && this.animated) ? animSrc : src, dest, p);	
