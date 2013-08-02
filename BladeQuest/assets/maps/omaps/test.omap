@@ -18,6 +18,7 @@
 
 
 
+
 #!OBJ 0 0
 \name$0x0$ <- newObject "start" 0 0
 
@@ -42,7 +43,7 @@ addSwitchCondition "startgame"
 
 state1$2x3$ 0
 name$2x3$ > createState >
-setSpriteFromTile 1 2 >
+setSprite "carl" >
 setCollisionData true true true true >
 addAction (startBattle "satyrboss" true)
 
@@ -53,7 +54,7 @@ addAction (startBattle "satyrboss" true)
 
 state1$2x5$ 0
 name$2x5$ > createState >
-setSpriteFromTile 1 2 >
+setSprite "carl" >
 setCollisionData true true true true >
 addAction (restoreParty 0) >
 addAction (message "You've been fully healed bro.")
@@ -65,7 +66,7 @@ addAction (message "You've been fully healed bro.")
 
 state1$3x5$ 0
 name$3x5$ > createState >
-setSpriteFromTile 1 2 >
+setSprite "carl" >
 setCollisionData true true true true >
 addAction (playAnimation (buildRolandTransformation 0) "animtester" "animtester" true)
 
@@ -77,7 +78,7 @@ addAction (playAnimation (buildRolandTransformation 0) "animtester" "animtester"
 
 state1$2x7$ 0
 name$2x7$ > createState >
-setSpriteFromTile 1 2 >
+setSprite "carl" >
 setCollisionData true true true true >
 addAction (message "This will test the Yes and No functions!") >
 addAction (messageWithYesNo "Would you like to?" > 
@@ -103,7 +104,7 @@ addAction (message "This concludes the test!")
 
 state1$4x3$ 0
 name$4x3$ > createState >
-setSpriteFromTile 1 2 >
+setSprite "carl" >
 setCollisionData true true true true >
 addAction (message "What was my name again?") >
 addAction (playMusic "mystery" true true 10.0) >
@@ -131,7 +132,7 @@ addAction (messageWithYesNo "Save your game?" >
 
 state1$4x7$ 0
 name$4x7$ > createState >
-setSpriteFromTile 1 2 >
+setSprite "carl" >
 setCollisionData true true true true >
 addAction (message "This tests the merchant screen.") >
 addAction (openMerchant "itemshop" 0.5)
@@ -143,7 +144,7 @@ addAction (openMerchant "itemshop" 0.5)
 
 state1$8x3$ 0
 name$8x3$ > createState >
-setSpriteFromTile 1 2 >
+setSprite "carl" >
 setCollisionData true true true true >
 addAction (message "The screen will now flash until you tap the screen.") >
 addAction (expectInput 2.0 >
@@ -161,7 +162,7 @@ addAction (message "This concludes the test.")
 
 state1$6x5$ 0
 name$6x5$ > createState >
-setSpriteFromTile 1 2 >
+setSprite "carl" >
 setCollisionData true true true true >
 addAction (changeElevation "floatyskull" 64 2.0 false) >
 addAction (setFloating "floatyskull" true 90 4) >
@@ -179,7 +180,7 @@ addAction (setFloating "party" true 90 4)
 state1$6x3$ 0
 name$6x3$ > createState >
 setCollisionData true true true true >
-setSpriteFromTile 1 2 >
+setSprite "carl" >
 addAction (messageWithYesNo "Drop 10G in the skull?" >
 	addToBranch 0 (startGoldTransaction 10 >
 		addToBranch 0 (message "Welp, there goes...") >
@@ -187,26 +188,14 @@ addAction (messageWithYesNo "Drop 10G in the skull?" >
 	addToBranch 1 (message "That is probably wise."))
 
 \runstate1$6x3$ <- state1$6x3$ 0
-#!OBJ 6 7
-\objName$6x7$ <- "name"
-\name$6x7$ <- newObject objName$6x7$ 6 7
 
-state1$6x7$ 0
-name$6x7$ > createState >
-setCollisionData true true true true >
-setSpriteFromTile 1 2 >
-addAction (modifyParty "aramis" true) >
-addAction (modifyParty "luc" false)
-
-
-\runstate1$6x7$ <- state1$6x7$ 0
 #!OBJ 10 5
 \objName$10x5$ <- "aramis2"
 \name$10x5$ <- newObject objName$10x5$ 10 5
 
 state1$10x5$ 0
 name$10x5$ > createState >
-setSpriteFromTile 1 2  >
+setSprite "carl" >
 setIgnorePartyOnMove true
 
 \runstate1$10x5$ <- state1$10x5$ 0
@@ -217,7 +206,7 @@ setIgnorePartyOnMove true
 
 state1$12x5$ 0
 name$12x5$ > createState >
-setSpriteFromTile 1 2 >
+setSprite "carl" >
 setIgnorePartyOnMove true
 
 \runstate1$12x5$ <- state1$12x5$ 0
@@ -228,22 +217,11 @@ setIgnorePartyOnMove true
 
 state1$8x5$ 0
 name$8x5$ > createState >
-setSpriteFromTile 1 2 >
+setSprite "carl" >
 setCollisionData true true true true >
 addAction (createPath "movetest1" false "L") >
 addAction (createPath "movetest2" true "L3")
 
 
 \runstate1$8x5$ <- state1$8x5$ 0
-#!OBJ 8 7
-\objName$8x7$ <- "name"
-\name$8x7$ <- newObject objName$8x7$ 8 7
 
-state1$8x7$ 0
-name$8x7$ > createState >
-setCollisionData true true true true >
-setSpriteFromTile 1 2 >
-addAction (showSecretMessage 0) 
-
-
-\runstate1$8x7$ <- state1$8x7$ 0

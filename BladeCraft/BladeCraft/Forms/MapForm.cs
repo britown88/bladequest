@@ -168,7 +168,7 @@ namespace BladeCraft.Forms
          foreach (var path in System.IO.Directory.GetFiles(Application.StartupPath + "\\assets\\drawable\\"  + folderName))
          {
             TileSetTreeView.Nodes[nodeCnt].Nodes.Add(stripPath(path));
-            TileSetTreeView.Nodes[nodeCnt].Nodes[i++].Tag = path;
+            TileSetTreeView.Nodes[nodeCnt].Nodes[i++].Tag = path.Substring(Application.StartupPath.Length + 1);
          }
       }
       private void setMaterialTile(string path)
