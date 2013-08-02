@@ -83,9 +83,12 @@ addAction (message "This will test the Yes and No functions!") >
 addAction (messageWithYesNo "Would you like to?" > 
 	addToBranch 0 (message "You chose yes!") >
 	addToBranch 1 (message "You chose no!")) >
-addAction ((runScript 1) > 
-	addScriptAction( message "And this is a bonus test!") >
-	addScriptAction( message "This message and the last were in a nested script!")) >
+addAction (message "And this will test the options list.") >
+addAction (messageWithOptions "Would you like to?" {"Yeah!", "Fuck you.", "I hate decisions.", "OH HEY I SCROLL"} > 
+	addToBranch 0 (message "Way to be a team player!") >
+	addToBranch 1 (message ":(") >
+	addToBranch 2 (message "You will never get through life that way.") >
+	addToBranch 3 (message "Literally no effort to add that.")) >
 addAction (message "This concludes the test!")
 
 

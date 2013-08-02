@@ -84,12 +84,16 @@ public class MsgBox extends MenuPanel
 		yesNoMenu.setOpenSize(openSize.x, optionRowHeight);
 		yesNoMenu.openSpeed = 30;
 		
+		optionsMenu = new ListBox(Global.vpWidth/2, Global.vpHeight - buffer, 0, optionRowHeight*3, 3, 1, txtPaint);
+		optionsMenu.anchor = Anchors.BottomCenter;
+		optionsMenu.setOpenSize(openSize.x, optionRowHeight*3);
+		optionsMenu.openSpeed = 30;
+		
 		rowList = new ArrayList<String>();		
 		msgQueue = new ArrayList<Message>();
 		alwaysSpeed0 = false;
 		
-		position = Position.Bottom;
-		
+		position = Position.Bottom;		
 		
 		optPosNone = new HashMap<MsgBox.Position, Integer>();
 		optPosNone.put(Position.Top, buffer);
@@ -100,6 +104,11 @@ public class MsgBox extends MenuPanel
 		optPosYesNo.put(Position.Top, buffer);
 		optPosYesNo.put(Position.Center, Global.vpHeight / 2);
 		optPosYesNo.put(Position.Bottom, Global.vpHeight - buffer*2 - optionRowHeight);
+		
+		optPosList = new HashMap<MsgBox.Position, Integer>();
+		optPosList.put(Position.Top, buffer);
+		optPosList.put(Position.Center, Math.min(Global.vpHeight/2, Global.vpHeight - buffer * 2 - optionRowHeight*3 - msgBoxHeight/2));
+		optPosList.put(Position.Bottom, Global.vpHeight - buffer * 2 - optionRowHeight*3);
 		
 		optPos = optPosNone;
 		//clear(msg);		
@@ -213,6 +222,17 @@ public class MsgBox extends MenuPanel
 		move(Global.vpWidth/2, optPos.get(position), moveSpeed);		
 	}
 	
+	private void openOptionMenu()
+	{
+		optionsMenu.clearObjects();
+		for(MsgOption opt : msgQueue.get(0).getOptions())
+			optionsMenu.addItem(opt.getText(), opt.getAction(), opt.disabled());
+		
+		optionsMenu.open();
+
+		move(Global.vpWidth/2, optPos.get(position), moveSpeed);		
+	}
+	
 	private void setSpeed(int s){textSpeed = s;}	
 	public boolean isDone(){return done;}
 	
@@ -222,6 +242,7 @@ public class MsgBox extends MenuPanel
 		super.close();	
 		move(Global.vpWidth/2, optPosNone.get(position), moveSpeed);
 		yesNoMenu.close();
+		optionsMenu.close();
 		msgQueue.clear();
 	}
 	
@@ -230,6 +251,7 @@ public class MsgBox extends MenuPanel
 	{
 		super.setClosed();
 		yesNoMenu.setClosed();
+		optionsMenu.setClosed();
 		msgQueue.clear();
 	}
 	
@@ -271,6 +293,8 @@ public class MsgBox extends MenuPanel
 			super.render();
 			if(!yesNoMenu.Closed())
 				yesNoMenu.render();
+			if(!optionsMenu.Closed())
+				optionsMenu.render();
 		}
 			
 	}
@@ -280,10 +304,12 @@ public class MsgBox extends MenuPanel
 	{
 		super.update();
 		yesNoMenu.update();
+		optionsMenu.update();
 		
 		if(timed && System.currentTimeMillis() - startTime >= duration*1000.0f)
 		{
 			yesNoMenu.close();
+			optionsMenu.close();
 			close();
 			return;
 		}
@@ -305,6 +331,9 @@ public class MsgBox extends MenuPanel
 							done = true;
 							if(msgQueue.get(0).getOption() == Options.YesNo)
 								openYesNo();
+							if(msgQueue.get(0).getOption() == Options.List)
+								openOptionMenu();
+							
 						}						
 						else
 						{
@@ -324,6 +353,8 @@ public class MsgBox extends MenuPanel
 					done = true;
 					if(msgQueue.get(0).getOption() == Options.YesNo)
 						openYesNo();
+					if(msgQueue.get(0).getOption() == Options.List)
+						openOptionMenu();
 				}
 				
 				currentChar++;
@@ -501,6 +532,23 @@ public class MsgBox extends MenuPanel
 		{
 			if(yesNoMenu.Opened())
 				yesNoMenu.touchActionMove(x, y);
+			
+			if(optionsMenu.Opened())
+				optionsMenu.touchActionMove(x, y);
+		}
+	}
+	
+	private void LBTouchActionUp(int x, int y, ListBox lb)
+	{
+		LBStates state = lb.touchActionUp(x, y);
+		if(state == LBStates.Selected)
+		{
+			lb.close();
+			close();
+			
+			MsgAction result = (MsgAction)lb.getSelectedEntry().obj;	
+			if(result != null)
+				result.execute();
 		}
 	}
 	
@@ -509,24 +557,13 @@ public class MsgBox extends MenuPanel
 		if(Opened() && !timed)
 		{
 			if(!yesNoMenu.Closed())
-			{
-				LBStates state = yesNoMenu.touchActionUp(x, y);
-				if(state == LBStates.Selected)
-				{
-					yesNoMenu.close();
-					close();
-					
-					MsgAction result = (MsgAction)yesNoMenu.getSelectedEntry().obj;	
-					if(result != null)
-						result.execute();
-				}
-			}				
+				LBTouchActionUp(x, y, yesNoMenu);		
+			else if(!optionsMenu.Closed())
+				LBTouchActionUp(x, y, optionsMenu);
 			else
 			{
 				if(done)
-				{
 					nextMessage();
-				}
 				else
 					setSpeed(0);
 			}
@@ -541,6 +578,9 @@ public class MsgBox extends MenuPanel
 			setSpeed(0);
 			if(yesNoMenu.Opened())
 				yesNoMenu.touchActionDown(x, y);
+			
+			if(optionsMenu.Opened())
+				optionsMenu.touchActionDown(x, y);
 		}
 		
 	}

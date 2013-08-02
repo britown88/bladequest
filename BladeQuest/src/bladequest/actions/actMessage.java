@@ -1,5 +1,9 @@
 package bladequest.actions;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import bladequest.UI.MsgBox.Message;
 import bladequest.UI.MsgBox.MsgAction;
 import bladequest.UI.MsgBox.MsgBox;
 import bladequest.UI.MsgBox.MsgBox.Options;
@@ -16,6 +20,9 @@ public class actMessage extends Action
 	
 	MsgBox.Options option;
 	
+	List<String> optionList;
+	
+	
 	public actMessage(String str, MsgBox.Options option, Position pos)
 	{
 		super();
@@ -29,6 +36,13 @@ public class actMessage extends Action
 		timed = true;
 		this.duration = duration;
 	}
+	
+	public void useOptionList(List<String> optionList)
+	{
+		this.optionList= new ArrayList<String>(optionList); 
+	}
+	
+	public boolean splits(){return option != Options.None;}
 	
 	@Override
 	public void run()
@@ -57,6 +71,25 @@ public class actMessage extends Action
 						});
 				break;
 			case List:
+				Message messageObj = new Message(msg, option);
+				if(optionList != null)
+				{
+					int i = 0;
+					for(String str : optionList)
+					{
+						messageObj.addOption(str, 
+							new MsgAction() 
+							{
+								private int index;
+								public MsgAction initialize(int index) {this.index = index; return this;}
+								@Override
+								public void execute(){startBranch(index);}
+							}.initialize(i++));						
+					}
+				}
+				
+				Global.showMessage(messageObj, pos);				
+				
 				break;
 			}
 	}
