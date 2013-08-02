@@ -19,6 +19,7 @@
 
 
 
+
 #!OBJ 0 0
 \name$0x0$ <- newObject "start" 0 0
 
@@ -189,39 +190,14 @@ addAction (messageWithYesNo "Drop 10G in the skull?" >
 
 \runstate1$6x3$ <- state1$6x3$ 0
 
-#!OBJ 10 5
-\objName$10x5$ <- "aramis2"
-\name$10x5$ <- newObject objName$10x5$ 10 5
+#!OBJ 6 7
+\objName$6x7$ <- "name"
+\name$6x7$ <- newObject objName$6x7$ 6 7
 
-state1$10x5$ 0
-name$10x5$ > createState >
-setSprite "carl" >
-setIgnorePartyOnMove true
-
-\runstate1$10x5$ <- state1$10x5$ 0
-
-#!OBJ 12 5
-\objName$12x5$ <- "joy2"
-\name$12x5$ <- newObject objName$12x5$ 12 5
-
-state1$12x5$ 0
-name$12x5$ > createState >
-setSprite "carl" >
-setIgnorePartyOnMove true
-
-\runstate1$12x5$ <- state1$12x5$ 0
-
-#!OBJ 8 5
-\objName$8x5$ <- "name"
-\name$8x5$ <- newObject objName$8x5$ 8 5
-
-state1$8x5$ 0
-name$8x5$ > createState >
+state1$6x7$ 0
+name$6x7$ > createState >
 setSprite "carl" >
 setCollisionData true true true true >
-addAction (createPath "movetest1" false "L") >
-addAction (createPath "movetest2" true "L3")
+addAction (startSpudQuest 0)
 
-
-\runstate1$8x5$ <- state1$8x5$ 0
-
+\runstate1$6x7$ <- state1$6x7$ 0

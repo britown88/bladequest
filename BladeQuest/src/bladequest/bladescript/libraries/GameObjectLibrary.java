@@ -45,6 +45,7 @@ import bladequest.actions.actSecretMessage;
 import bladequest.actions.actSetBattleMusic;
 import bladequest.actions.actShake;
 import bladequest.actions.actShowScene;
+import bladequest.actions.actSpudQuest;
 import bladequest.actions.actStartBattle;
 import bladequest.actions.actSwitch;
 import bladequest.actions.actTeleportParty;
@@ -222,6 +223,10 @@ public class GameObjectLibrary
 	public static Action allowSaving(int i)
 	{
 		return new actAllowSaving();
+	}
+	public static Action startSpudQuest(int i)
+	{
+		return new actSpudQuest();
 	}
 	public static Action messageWithYesNo(String message)
 	{		

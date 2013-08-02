@@ -85,6 +85,7 @@ import bladequest.graphics.WeaponSwing;
 import bladequest.math.PointMath;
 import bladequest.sound.BladeSong;
 import bladequest.sound.Song;
+import bladequest.spudquest.UI;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.system.BqActivity;
 import bladequest.system.BqPanel;
@@ -114,6 +115,8 @@ public class Global
 	public static ReentrantLock lock = new ReentrantLock();
 	public static States GameState;
 	public static TitleScreen title;
+	
+	public static UI spudQuest;
 	
 	public static Map<String, AnimationBuilder> animationBuilders;
 	public static Map<String, Bitmap> bitmaps;
@@ -881,6 +884,9 @@ public class Global
     	case GS_NAMESELECT:
     		nameSelect.update();
     		break;
+    	case GS_SPUDQUEST:
+    		spudQuest.update();
+    		break;
 		default:
 			break;
     	}
@@ -1579,7 +1585,12 @@ public class Global
 		
 	}	
 	
-	
+	public static void startSpudQuest()
+	{
+		spudQuest = new UI();		
+		transition(States.GS_SPUDQUEST);
+		
+	}
 	
 	
 	public static int streamVolume;

@@ -340,6 +340,22 @@ public class BqThread extends Thread
 	        		break;
 	        	}
 	    		break;
+	    	case GS_SPUDQUEST:
+	    		switch (event.getAction())
+	        	{
+	        	case MotionEvent.ACTION_DOWN:
+	        		Global.spudQuest.touchActionDown(p.x, p.y);
+	        		break;
+	        		
+	        	case MotionEvent.ACTION_UP:
+	        		Global.spudQuest.touchActionUp(p.x, p.y);
+	        		break;
+	        		
+	        	case MotionEvent.ACTION_MOVE:
+	        		Global.spudQuest.touchActionMove(p.x, p.y);
+	        		break;
+	        	}
+	    		break;
 			default:
 				break;
 	    		
