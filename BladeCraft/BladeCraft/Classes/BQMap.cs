@@ -1116,7 +1116,7 @@ namespace BladeCraft.Classes
          int idx  = pathName.LastIndexOf('\\');
          int start = 1 + pathName.Substring(0, idx - 1).LastIndexOf('\\');
          int final = pathName.LastIndexOf('.');
-         string outStr = pathName.Substring(start, idx - start - 1) + "/" +
+         string outStr = pathName.Substring(start, idx - start) + "/" +
                          pathName.Substring(idx+1, final - idx - 1);
 
          return outStr;

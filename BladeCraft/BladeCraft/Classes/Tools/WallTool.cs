@@ -112,7 +112,7 @@ namespace BladeCraft.Classes.Tools
             else
             {
                 //you never are both top and bottom here!!
-                //diagonal walls always use at least two tiles, even if they are just one high.
+                //diagonal walls always use at least two tiles, even if they are just one high.  This is because they're half in one tile, half in another.
                 //you also can't have rightwall && top or leftwall && bottom!
 
                 //0,0 <- leftWall && !top && !bottom
@@ -124,7 +124,7 @@ namespace BladeCraft.Classes.Tools
                 //2,1 <- useless
                 //3,1 <- no walls && bottom
 
-                //backwards walls are *mirrored!*
+                //the second set of walls are *mirrored!*
                 if (diagBack) p.Y--;
                 int baseY = diagForward ? 4 : 6;
                 int wallHeight = height + 1;  //we use an extra tile because one tile is split into two halves.

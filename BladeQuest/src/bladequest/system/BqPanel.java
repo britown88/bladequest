@@ -128,12 +128,12 @@ implements SurfaceHolder.Callback
     	{
         	updateThread.setRunning(true);	
     	}
-    	Global.bladeSong.systemResume();
+    	Global.bladeSong.resume();
     }
     
     public void pause()
     {
-    	Global.bladeSong.systemPause();
+    	Global.bladeSong.pause();
     	renderThread.setRunning(false);
     	if (updateThread != null)
     	{    	

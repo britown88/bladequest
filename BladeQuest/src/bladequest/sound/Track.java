@@ -18,9 +18,11 @@ public class Track {
 		abstract boolean isPlaying();
 		boolean isDead() {return false;}
 		void play(){}
+		void play(int ms){}
 		void pause(){}
 		void update(){}
 		void onLoad(){}
+		int overflow(){return 0;}
 	}
 	
 	
@@ -46,6 +48,17 @@ public class Track {
 				player.setState(new PlayState(player));
 			}
 		}
+		void play(int ms)
+		{
+			if (!player.isLoaded())
+			{
+				player.setState(new PlayFromWaitState(player, ms));
+			}
+			else
+			{
+				player.setState(new PlayState(player, ms));
+			}
+		}		
 	}
 	
 	private class PlayWaitState extends MusicState
@@ -66,6 +79,26 @@ public class Track {
 		}		
 	}
 	
+	private class PlayFromWaitState extends MusicState
+	{
+		int ms;
+		PlayFromWaitState(Music player, int ms)
+		{
+			super(player);
+			this.ms = ms;
+		}		
+		boolean isPlaying() {return true;}
+		void pause()
+		{
+			player.setState(new UnsetState(player));
+		}
+		void onLoad()
+		{
+			//actually play.
+			player.mp.seekTo(ms);
+			player.setState(new PlayState(player, ms));
+		}		
+	}
 
 	private class PlayState extends MusicState
 	{
@@ -86,7 +119,7 @@ public class Track {
 			super(player);
 			startTime = System.currentTimeMillis() - delay;
 			player.mp.start(); //restart from a paused state
-			
+			player.mp.seekTo((int)delay); //I SURE HOOP THIS WORKS>>FAFa:s,f
 			
 			if (player.loops)
 			{
@@ -109,7 +142,7 @@ public class Track {
 			{
 				//oh no, we're out of song
 				//unload resources.			
-				player.setState(new DeadState(player));			
+				player.setState(new DeadState(player, (int)(player.duration - (System.currentTimeMillis() - startTime))));			
 				
 				if (player.loops)
 				{
@@ -141,9 +174,11 @@ public class Track {
 	
 	private class DeadState extends MusicState
 	{
-		DeadState(Music player)
+		int overflowMS;
+		DeadState(Music player, int overflowMS)
 		{
-			super(player);
+			super(player);			
+			this.overflowMS = overflowMS;
 			player.mp.release();
 			player.mp = null;
 		}
@@ -151,7 +186,8 @@ public class Track {
 		{
 			return false;
 		}
-		boolean isDead() {return true;}		
+		boolean isDead() {return true;}
+		int overflow(){return overflowMS;}
 	}
 	
 	
@@ -199,7 +235,7 @@ public class Track {
 			if (loaded)
 			{
 				currentState.pause();
-				currentState = new DeadState(this);
+				currentState = new DeadState(this, 0);
 			}
 		}
 		synchronized void setState(MusicState state)
@@ -219,7 +255,15 @@ public class Track {
 		{
 			currentState.update();
 		}
-				
+		
+		synchronized float getVolume()
+		{
+			return this.volume;
+		}
+		synchronized boolean getLoops()
+		{
+			return this.loops;
+		}
 		synchronized void setVolume(float volume)
 		{
 			if (isDead()) return;
@@ -233,6 +277,10 @@ public class Track {
 				this.volume = volume;
 			}
 		}
+		synchronized int getOverflow() 
+		{
+			return currentState.overflow();
+		}
 		synchronized void setLoaded()
 		{
 			loaded = true;
@@ -244,6 +292,11 @@ public class Track {
 		{
 			currentState.play();
 		}
+
+		synchronized void play(int ms)
+		{
+			currentState.play(ms);
+		}		
 		synchronized void pause()
 		{
 			currentState.pause();
@@ -252,14 +305,23 @@ public class Track {
 	
 	
 	Music intro, loop, nextPlay;
-	
+	Song song;
 	public Track(Song song, float startingVolume, boolean loops, boolean playIntro) 
 	{		
+		this.song = song;
 		if (playIntro && song.HasIntro())
 		{
 			intro =  new Music(song.IntroPath(), startingVolume, false);
 		}
 		loop =  new Music(song.Path(), startingVolume, loops);
+	}
+	synchronized boolean getLoops()
+	{
+		return loop.getLoops();
+	}	
+	synchronized float getVolume()
+	{
+		return loop.getVolume();
 	}
 	synchronized void setVolume(float newVolume)
 	{
@@ -289,7 +351,15 @@ public class Track {
 			intro.update();
 			if (intro.isDead())
 			{
-				loop.play();
+				int overflow = 0;//intro.getOverflow();
+				if (overflow > 40)
+				{
+					loop.play(overflow);
+				}
+				else
+				{
+					loop.play();
+				}
 			}
 		}
 	}
@@ -315,6 +385,29 @@ public class Track {
 		if (nextPlay != null)
 		{
 			nextPlay.kill();
+		}
+		intro = null;
+		loop = null;
+		nextPlay = null;
+	}
+	synchronized void seekTo(int ms)
+	{
+		boolean loops = getLoops();
+		float volume = getVolume();
+		kill();
+		
+		if (song.HasIntro())
+		{
+			intro =  new Music(song.IntroPath(), volume, false);
+		}
+		loop =  new Music(song.Path(), volume, loops);
+		if (intro != null)
+		{
+			intro.play(ms);
+		}
+		else 
+		{
+			loop.play(ms);
 		}
 	}
 	synchronized void skipIntro()

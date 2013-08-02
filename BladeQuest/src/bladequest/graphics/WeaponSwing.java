@@ -90,7 +90,7 @@ public class WeaponSwing
 			}
 		
 		Bitmap newAnimBmp = Bitmap.createBitmap(animFrameSize.x*3, animFrameSize.y, Config.ARGB_8888);
-		Bitmap animBmp = Global.bitmaps.get("animsprites");
+		Bitmap animBmp = Global.bitmaps.get("misc/animsprites");
 		
 		for(int y = animSrcRect.top; y < animSrcRect.bottom; ++y)
 			for(int x = animSrcRect.left; x < animSrcRect.right; ++x)

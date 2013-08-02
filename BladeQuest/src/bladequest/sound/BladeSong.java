@@ -1,6 +1,9 @@
 package bladequest.sound;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import bladequest.serialize.DeserializeFactory;
 import bladequest.serialize.Deserializer;
 import bladequest.serialize.Serializable;
@@ -52,6 +55,8 @@ public class BladeSong extends Serializable {
 		void onPause(){}
 		void onResume(){}
 		void onSkipIntro(){}
+		int  getPlayTime(){return 0;}
+		void seekTo(int ms){}
 		void onSerialize(Serializer serializer){serializer.write(0);} //by default, write 0 for "Stopped",
 		String playingSong(){return "";}
 		abstract BladeSongState strippedState();
@@ -63,12 +68,22 @@ public class BladeSong extends Serializable {
 	{
 		Track track;
 		String trackName;
+		long startTime;
 		PlaySongState(Song song, String songName, float startVolume, boolean loops, boolean playIntro)
 		{
 			trackName = songName;
 			track = new Track(song, startVolume, loops, playIntro);
+			startTime = System.currentTimeMillis();
 			track.play();
 		}
+		int  getPlayTime()
+		{
+			return (int)(System.currentTimeMillis() - startTime);
+		}
+		void seekTo(int ms)
+		{
+			track.seekTo(ms);
+		} 
 		String playingSong()
 		{
 			return trackName;
@@ -141,7 +156,11 @@ public class BladeSong extends Serializable {
 				float volume = 1.0f-(time/((float)fadeTime));
 				parent.track.setVolume(volume);
 			}
-		}		
+		}
+		int  getPlayTime()
+		{
+			return parent.getPlayTime();
+		}
 		void onStop()
 		{
 			parent.onStop();
@@ -186,6 +205,14 @@ public class BladeSong extends Serializable {
 		{
 			return parent.strippedState();
 		}
+		int  getPlayTime()
+		{
+			return parent.getPlayTime();
+		}
+		void seekTo(int ms)
+		{
+			parent.seekTo(ms);
+		} 
 		void onStop()
 		{
 			parent.onStop();
@@ -237,6 +264,14 @@ public class BladeSong extends Serializable {
 				parent.track.setVolume(volume);
 			}
 		}		
+		int  getPlayTime()
+		{
+			return parent.getPlayTime();
+		}
+		void seekTo(int ms)
+		{
+			parent.seekTo(ms);
+		} 		
 		void onStop()
 		{
 			parent.onStop();
@@ -351,17 +386,22 @@ public class BladeSong extends Serializable {
 		currentState = new FadeIntoState(state, fadeOutTime, nextSong, fadeInTime);
 	}
 	
-	//system music calls for screen on/off
-	//nothing special currently...?  since we use "synchronized" here another thread can't nuke your state unexpectedly.
-	public synchronized void systemPause()
+	List<BladeSongState> stateStack = new ArrayList<BladeSongState>();
+	
+	void pushState()
 	{
 		pause();
-	}	
-	public synchronized void systemResume()
-	{
-		resume();
+		stateStack.add(currentState);
 	}
-
+	
+	void popState()
+	{
+		if (stateStack.size() > 0)
+		{
+			currentState = stateStack.get(stateStack.size()-1);
+			stateStack.remove(stateStack.size()-1);			
+		}
+	}
 	@Override
 	public synchronized void onSerialize(Serializer serializer) {
 		currentState.onSerialize(serializer);

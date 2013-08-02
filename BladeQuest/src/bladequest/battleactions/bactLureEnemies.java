@@ -2,7 +2,7 @@ package bladequest.battleactions;
 
 import java.util.List;
 
-import bladequest.UI.MsgBox.MsgBox.Options;
+import android.graphics.Point;
 import bladequest.UI.MsgBox.MsgBox.Position;
 import bladequest.combat.DamageMarker;
 import bladequest.statuseffects.StatusEffect;
@@ -19,6 +19,25 @@ public class bactLureEnemies extends BattleAction {
 	}
 	public void runOutsideOfBattle(PlayerCharacter attacker, List<PlayerCharacter> targets, List<DamageMarker> markers) 
 	{
+		boolean foundZone = false;
+		if (Global.map != null)
+		{
+			Point pos = Global.party.getGridPos();
+			for (EncounterZone ez : Global.map.encounterZones)
+			{
+				if (ez.getZone().contains(pos.x, pos.y))
+				{
+					foundZone = true;
+				}
+			}
+		}
+		if (!foundZone)
+		{
+			Global.party.addItem("lurebell", 1);
+			Global.menu.showBasicMessage("There were no nearby enemies to lure.");
+			return;
+		}
+		
 		for (PlayerCharacter t : Global.party.getPartyList(true))
 		{
 			t.removeStatusEffect("lure");
