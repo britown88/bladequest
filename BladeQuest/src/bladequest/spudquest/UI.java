@@ -13,6 +13,8 @@ public class UI
 	{
 		backdrop = Global.scenes.get("sqbd");
 		backdrop.load();
+		
+		//board = new DropBox(x, y, width, height, rows, columns)
 	}
 	
 	public void update()
