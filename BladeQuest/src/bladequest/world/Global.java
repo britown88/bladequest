@@ -85,7 +85,12 @@ import bladequest.graphics.WeaponSwing;
 import bladequest.math.PointMath;
 import bladequest.sound.BladeSong;
 import bladequest.sound.Song;
+import bladequest.spudquest.Card;
+import bladequest.spudquest.Card.Type;
+import bladequest.spudquest.Move;
+import bladequest.spudquest.Player;
 import bladequest.spudquest.SpudUI;
+import bladequest.spudquest.SpudUIStrategy;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.system.BqActivity;
 import bladequest.system.BqPanel;
@@ -1587,10 +1592,22 @@ public class Global
 	
 	public static void startSpudQuest()
 	{
-		spudQuest = new SpudUI();	
+		spudQuest = new SpudUI(new SpudUIStrategy());	
 		
-		for(int i = 0; i < 4; ++i)
-			spudQuest.addAllowMoveState();
+		Card[] cards = new Card[8];
+		
+		for(int i = 0; i < 8; ++i)
+			cards[i] = new Card(Type.Spud, null);
+		
+		spudQuest.addPlayerCards(cards);
+		
+		spudQuest.addAllowMoveState();
+		spudQuest.addEnemyCardState(new Card(Type.Spud, null), 1, 1);
+		spudQuest.addRevealCardState(1, 1);
+		spudQuest.addModifyAttackState(1, 1, 8);
+		spudQuest.addModifyHealthState(1, 1, 5);
+		spudQuest.addModifyAttackState(0, 0, 99);
+		
 		
 		transition(States.GS_SPUDQUEST);
 		
