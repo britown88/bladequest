@@ -37,7 +37,7 @@ namespace BladeCraft
         {
            foreach (var path in System.IO.Directory.GetFiles(Application.StartupPath + "\\assets\\drawable\\" + folder))
            {
-               Bitmaps.bitmaps.Add(path, new Bitmap(path));
+               Bitmaps.bitmaps.Add(path.Substring(Application.StartupPath.Length + 1), new Bitmap(path));
            }
         }
 

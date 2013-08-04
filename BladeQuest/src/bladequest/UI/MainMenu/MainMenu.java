@@ -121,7 +121,7 @@ public class MainMenu
 			public void onSwitchedTo(MainMenuState prevState) {
 				
 				undarken();
-				buildCharPlates();
+				updateCharPlates();
 				
 				sideBar.pos = new Point(Global.vpWidth, 0);
 				sideBar.anchor = Anchors.TopRight;
@@ -174,11 +174,13 @@ public class MainMenu
 				if(state == LBStates.Selected)
 					handleOption((String)rootMenu.getSelectedEntry().obj);
 				
-				selectedPanel = rootCharPlates.touchActionUp(x, y);				
+				selectedPanel = rootCharPlates.touchActionUp(x, y);	
+				MenuPanel[] panels = rootCharPlates.getPanels();
 				//update party order based on charplates order
 				for(int i = 0; i < 4; ++i) 
 				{
-					Global.party.partyMembers[i] = (PlayerCharacter)rootCharPlates.panels[i].obj;
+					
+					Global.party.partyMembers[i] = panels[i] != null ? (PlayerCharacter)panels[i].obj : null;
 					if(Global.party.partyMembers[i] != null) Global.party.partyMembers[i].setIndex(i);
 					
 				}
@@ -704,10 +706,12 @@ public class MainMenu
 			@Override
 			public void touchActionUp(int x, int y) {
 				MenuPanel selectedPanel = rootCharPlates.touchActionUp(x, y);	
+				MenuPanel[] panels = rootCharPlates.getPanels();
 				//update party order based on charplates order
 				for(int i = 0; i < 4; ++i) 
 				{
-					Global.party.partyMembers[i] = (PlayerCharacter)rootCharPlates.panels[i].obj;
+					
+					Global.party.partyMembers[i] = panels[i] != null ? (PlayerCharacter)panels[i].obj : null;
 					if(Global.party.partyMembers[i] != null) Global.party.partyMembers[i].setIndex(i);
 					
 				}
@@ -958,10 +962,12 @@ public class MainMenu
 			@Override
 			public void touchActionUp(int x, int y) {
 				MenuPanel selectedPanel = rootCharPlates.touchActionUp(x, y);	
+				MenuPanel[] panels = rootCharPlates.getPanels();
 				//update party order based on charplates order
 				for(int i = 0; i < 4; ++i) 
 				{
-					Global.party.partyMembers[i] = (PlayerCharacter)rootCharPlates.panels[i].obj;
+					
+					Global.party.partyMembers[i] = panels[i] != null ? (PlayerCharacter)panels[i].obj : null;
 					if(Global.party.partyMembers[i] != null) Global.party.partyMembers[i].setIndex(i);
 					
 				}
@@ -1282,7 +1288,7 @@ public class MainMenu
 		
 		rootMenu.thickOptSelect = true;
 		
-		rootCharPlates = new DropBox(0, 0, Global.vpWidth - menuWidth, Global.vpHeight - barHeight, 4, 1);	
+				
 		buildCharPlates();
 		buildCharStatus();
 		buildCharUseScreen();
@@ -1293,51 +1299,75 @@ public class MainMenu
 	}
 	private void buildCharPlates()
 	{		
+		rootCharPlates = new DropBox(0, 0, Global.vpWidth - menuWidth, Global.vpHeight - barHeight);	
+		
+		for(int i = 0; i < 4; ++i)
+			rootCharPlates.addPanelRect(new Rect(0, rootCharPlates.height/4*i, rootCharPlates.width, rootCharPlates.height/4*(i+1)));
+		
+		
+		
 		//build character plates
 		PlayerCharacter[] chars = Global.party.getPartyMembers(false);
 		
 		for(int i = 0; i < 4; ++i)
 		{
-			rootCharPlates.panels[i].clear();
-			rootCharPlates.panels[i].show();
-			
-			if(chars[i] == null  || chars[i].getEscaped())
+			if(chars[i] != null)
 			{
-				rootCharPlates.panels[i].hide();
-				rootCharPlates.panels[i].obj = null;
-			}				
-			else
+				
+				MenuPanel panel = new MenuPanel(0, 0, rootCharPlates.width, rootCharPlates.height/4);
+				panel.obj = chars[i];
+				rootCharPlates.addPanel(panel, i);
+			}
+		}
+		
+		//rootCharPlates.setPanelLocked(1, true);
+	}
+	
+	private void updateCharPlates()
+	{
+		PlayerCharacter[] chars = Global.party.getPartyMembers(false);
+		int rowHeight = rootCharPlates.height / 4;
+		
+		int i = 0;
+		for(MenuPanel mp : rootCharPlates.getPanels())
+		{
+			if(mp != null)
 			{
+				mp.clear();
+				
 				Rect src = chars[i].getPortraitSrcRect();
-				Rect dest = new Rect(0, 0, rootCharPlates.RowHeight(), rootCharPlates.RowHeight());
+				Rect dest = new Rect(0, 0, rowHeight, rowHeight);
 				dest.inset(3, 3);
-				rootCharPlates.panels[i].addPicBox(Global.bitmaps.get("characters/portraits"), src, dest);
+				mp.addPicBox(Global.bitmaps.get("characters/portraits"), src, dest);
 				
 				//charplate text boxes
-				rootCharPlates.panels[i].addTextBox(chars[i].getDisplayName(), rootCharPlates.RowHeight() + 15, (int)(rootCharPlates.RowHeight()*0.25f), menuText);
-				rootCharPlates.panels[i].addTextBox("lv"+chars[i].getLevel(), rootCharPlates.panels[i].width - (int)smallText.measureText("lv"+chars[i].getLevel()) - 10, (int)(rootCharPlates.RowHeight()*0.20f), smallText);
-				rootCharPlates.panels[i].addTextBox("HP:"+chars[i].getHP()+"/"+chars[i].getStat(Stats.MaxHP), rootCharPlates.RowHeight()*2 + 15, (int)(rootCharPlates.RowHeight()*0.50f), smallText);
-				rootCharPlates.panels[i].addTextBox("MP:"+chars[i].getMP()+"/"+chars[i].getStat(Stats.MaxMP), rootCharPlates.RowHeight()*3 + 15, (int)(rootCharPlates.RowHeight()*0.75f), smallText);
+				mp.addTextBox(chars[i].getDisplayName(), rowHeight + 15, (int)(rowHeight*0.25f), menuText);
+				mp.addTextBox("lv"+chars[i].getLevel(), mp.width - (int)smallText.measureText("lv"+chars[i].getLevel()) - 10, (int)(rowHeight*0.20f), smallText);
+				mp.addTextBox("HP:"+chars[i].getHP()+"/"+chars[i].getStat(Stats.MaxHP), rowHeight*2 + 15, (int)(rowHeight*0.50f), smallText);
+				mp.addTextBox("MP:"+chars[i].getMP()+"/"+chars[i].getStat(Stats.MaxMP), rowHeight*3 + 15, (int)(rowHeight*0.75f), smallText);
 				
 				//status effect icons
 				float iconScale = 1.5f;
 				int j = 0, d = (int)(Global.iconSize*iconScale + 2);
 				for(StatusEffect se : chars[i].getStatusEffects())
 					if(j < 9 && se.icon().length() > 0)
-						rootCharPlates.panels[i].addPicBox(
+						mp.addPicBox(
 							Global.createIcon(se.icon(), 
-									rootCharPlates.RowHeight()+ d +  d*j++, 
-									rootCharPlates.RowHeight() - d,
+									rowHeight + d +  d*j++, 
+									rowHeight - d,
 									iconScale));
 				
-				if(chars[i].isDead())
-					rootCharPlates.panels[i].darken = true;				
 				
-				rootCharPlates.panels[i].obj = chars[i];
 			}
-
+				
+			++i;
 		}
+
+
 	}
+	
+	
+	
 	private void buildInventory()
 	{		
 		invInfoBar = new ListBox(new Rect(0, 0, Global.vpWidth, barHeight), 1, 3, menuTextCenter);

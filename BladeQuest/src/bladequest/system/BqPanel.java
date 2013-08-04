@@ -244,6 +244,13 @@ implements SurfaceHolder.Callback
     		Global.debugScreen.render();
     		Global.screenFilter.restore();
     		break;
+    	case GS_SPUDQUEST:
+    		Global.screenFilter.save();
+    		Global.screenFilter.clear();
+    		Global.spudQuest.render();
+    		Global.screenFilter.restore();
+    		break;
+    		
     	}	
     	
     	Global.screenFilter.save();
