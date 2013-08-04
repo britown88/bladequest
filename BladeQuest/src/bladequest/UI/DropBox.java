@@ -12,6 +12,8 @@ public class DropBox extends MenuPanel
 
 	private List<DropBoxRect> panelRects;
 	
+	private DropBoxRect lastMovedRect;
+	
 	private int selectedIndex;
 	private Point tapStartPos, selectedPanelStartPos;
 	
@@ -31,11 +33,13 @@ public class DropBox extends MenuPanel
 	{
 		r.offset(pos.x, pos.y);
 		
-		DropBoxRect dbr = new DropBoxRect(Global.vpToScreen(r));
+		DropBoxRect dbr = new DropBoxRect(Global.vpToScreen(r), panelRects.size());
 	
 		panelRects.add(dbr);
 		return panelRects.size() - 1;
 	}
+	
+	public DropBoxRect getLastMovedRect(){return lastMovedRect;}
 	
 	public void addPanel(MenuPanel panel, int index)
 	{
@@ -169,6 +173,8 @@ public class DropBox extends MenuPanel
 	
 	public void touchActionDown(int x, int y) 
 	{
+		lastMovedRect = null;
+		
 		if(getRect().contains(x, y))
 		{
 			int i = 0;
@@ -200,6 +206,7 @@ public class DropBox extends MenuPanel
 		{
 			MenuPanel mp = panelRects.get(selectedIndex).getPanel();
 			
+						
 			if(mp != null)
 			{
 				
@@ -219,6 +226,8 @@ public class DropBox extends MenuPanel
 			return mp;
 			
 		}
+		
+		
 		
 		return null;
 		
@@ -266,9 +275,10 @@ public class DropBox extends MenuPanel
 				moved = true;
 				
 				if(!panelRects.get(currentIndex).isLocked() && !selectedDBR.isLocked())
-				{
+				{					
 					movePanel(selectedIndex, currentIndex, false);
-					selectedIndex = currentIndex;	
+					selectedIndex = currentIndex;
+					lastMovedRect = panelRects.get(selectedIndex);
 				}
 				
 				

@@ -85,7 +85,7 @@ import bladequest.graphics.WeaponSwing;
 import bladequest.math.PointMath;
 import bladequest.sound.BladeSong;
 import bladequest.sound.Song;
-import bladequest.spudquest.UI;
+import bladequest.spudquest.SpudUI;
 import bladequest.statuseffects.StatusEffect;
 import bladequest.system.BqActivity;
 import bladequest.system.BqPanel;
@@ -116,7 +116,7 @@ public class Global
 	public static States GameState;
 	public static TitleScreen title;
 	
-	public static UI spudQuest;
+	public static SpudUI spudQuest;
 	
 	public static Map<String, AnimationBuilder> animationBuilders;
 	public static Map<String, Bitmap> bitmaps;
@@ -1587,7 +1587,11 @@ public class Global
 	
 	public static void startSpudQuest()
 	{
-		spudQuest = new UI();		
+		spudQuest = new SpudUI();	
+		
+		for(int i = 0; i < 4; ++i)
+			spudQuest.addAllowMoveState();
+		
 		transition(States.GS_SPUDQUEST);
 		
 	}
