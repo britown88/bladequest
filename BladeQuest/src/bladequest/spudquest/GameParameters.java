@@ -12,7 +12,7 @@ public class GameParameters {
 		players = new ArrayList<Player>();
 	}
 
-	GameParameters addPlayer(Player p)
+	public GameParameters addPlayer(Player p)
 	{
 		players.add(p);
 		return this;

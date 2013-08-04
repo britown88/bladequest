@@ -1,11 +1,7 @@
 package bladequest.spudquest;
 
-public abstract class Player {
+public interface Player {
 	
-	public Player() 
-	{
-	}
-	
-	public abstract Card[] getStartingHand();
-	public abstract Move takeTurn(); //can return NULL to wait.
+	Card[] getStartingHand();
+	Move takeTurn(Game gameState); //can return NULL to wait.
 }

@@ -19,12 +19,24 @@ public class Card {
 		DeadSpud,
 		Empty
 	}
-	public Card(Type type, Player owner)
+	public Card(CardParameters params)
 	{
-		this.type = type;
-		this.owner = owner;
+		this.type = params.type;
+		this.owner = params.owner;
+		this.HP = params.hp;
+		this.attackPower = params.damage;
 		this.revealed = false;
 	}
+	
+	public int getHP()
+	{
+		return HP;
+	}
+	public int getDamage()
+	{
+		return attackPower;
+	}
+	
 	public Type getType()
 	{
 		return type;
@@ -33,7 +45,10 @@ public class Card {
 	{
 		return owner;
 	}
-	
+	public void setOwner(Player owner)
+	{
+		this.owner = owner;
+	}
 	//overload meee
 	public int getAttackPower()
 	{

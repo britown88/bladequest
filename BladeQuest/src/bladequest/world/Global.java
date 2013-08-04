@@ -85,9 +85,13 @@ import bladequest.graphics.WeaponSwing;
 import bladequest.math.PointMath;
 import bladequest.sound.BladeSong;
 import bladequest.sound.Song;
+import bladequest.spudquest.AIPlayer;
 import bladequest.spudquest.Card;
 import bladequest.spudquest.Card.Type;
-import bladequest.spudquest.Move;
+import bladequest.spudquest.CardParameters;
+import bladequest.spudquest.Game;
+import bladequest.spudquest.GameParameters;
+import bladequest.spudquest.HumanPlayer;
 import bladequest.spudquest.Player;
 import bladequest.spudquest.SpudUI;
 import bladequest.spudquest.SpudUIStrategy;
@@ -1589,24 +1593,69 @@ public class Global
 		createGameOverObject();
 		
 	}	
-	
+	static Card[] makeBasicHand()
+	{
+		Card[] out = new Card[8];
+		
+		for (int i = 0; i < 8; ++i)
+		{
+			out[i] = new Card(new CardParameters().setDamage(i+1)
+					                              .setHP(i+1)
+					                              .setType(Type.Spud));
+		}
+		
+		return out;
+	}
+	static class SpudquestRunner extends SpudUIStrategy
+	{
+		HumanPlayer p;
+		Game g;
+		SpudUI spudQuest;
+		public void cardPlayed(Card card, int x, int y)
+		{
+			p.playCard(card, x, y);
+			g.update();
+			g.update();
+			if (!g.gameIsOver())
+			{
+				spudQuest.addAllowMoveState();
+			}
+		}
+		public SpudquestRunner(Game g, HumanPlayer p)
+		{
+			this.p = p;
+			this.g = g;
+		}
+		public void setSpudquestUI(SpudUI spudQuest)
+		{
+			this.spudQuest = spudQuest;
+		}
+	}
 	public static void startSpudQuest()
 	{
-		spudQuest = new SpudUI(new SpudUIStrategy());	
 		
-		Card[] cards = new Card[8];
+		Card[] playerCards = makeBasicHand();
 		
-		for(int i = 0; i < 8; ++i)
-			cards[i] = new Card(Type.Spud, null);
+		HumanPlayer p1 = new HumanPlayer(playerCards);
+		AIPlayer p2 = new AIPlayer(makeBasicHand());
 		
-		spudQuest.addPlayerCards(cards);
+		Game g = new Game(new GameParameters().addPlayer(p1)
+											  .addPlayer(p2));
+
 		
+		SpudquestRunner gameStrategy = new SpudquestRunner(g, p1);
+		spudQuest = new SpudUI(gameStrategy);	
+		spudQuest.addPlayerCards(playerCards);
+		g.setFeedback(spudQuest.asFeedback());
+		
+		gameStrategy.setSpudquestUI(spudQuest);
+		//initial player turn...
 		spudQuest.addAllowMoveState();
-		spudQuest.addEnemyCardState(new Card(Type.Spud, null), 1, 1);
-		spudQuest.addRevealCardState(1, 1);
-		spudQuest.addModifyAttackState(1, 1, 8);
-		spudQuest.addModifyHealthState(1, 1, 5);
-		spudQuest.addModifyAttackState(0, 0, 99);
+		//spudQuest.addEnemyCardState(new Card(Type.Spud, null), 1, 1);
+		//spudQuest.addRevealCardState(1, 1);
+		//spudQuest.addModifyAttackState(1, 1, 8);
+		//spudQuest.addModifyHealthState(1, 1, 5);
+		//spudQuest.addModifyAttackState(0, 0, 99);
 		
 		
 		transition(States.GS_SPUDQUEST);

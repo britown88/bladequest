@@ -8,6 +8,8 @@ import java.util.List;
 import bladequest.spudquest.Card.Type;
 
 public class Game {
+	
+	SpudquestFeedback feedback;
 
 	List<Player> players;
 	GameState currentState;
@@ -23,6 +25,11 @@ public class Game {
 		turn = 0;
 		turnsTaken = 0;
 		setupTurn();
+	}
+	
+	public void setFeedback(SpudquestFeedback feedback)
+	{
+		this.feedback = feedback;
 	}
 	
 	private Player currentPlayer()
@@ -76,9 +83,10 @@ public class Game {
 		@Override
 		public void onUpdate() 
 		{
-			Move m = player.takeTurn();
+			Move m = player.takeTurn(game);
 			if (m != null)
 			{
+				
 				Player defender;
 				if (player == game.players.get(0))
 				{
@@ -92,6 +100,7 @@ public class Game {
 				board.playCard(m.card, m.x, m.y);
 				
 				//vision phase.
+				game.revealAt(player, m.card, m.x, m.y);
 				
 				//battle phase.
 				List<Army> playerArmies = new ArrayList<Army>();
@@ -124,35 +133,97 @@ public class Game {
 						} 
 					}
 				
+					int validDefenders = 0;
+					for (Army army : enemyArmies)
+					{
+						for (Position p : army.army)
+						{
+							validDefenders |= (1 << (p.x + p.y * 4));
+						}
+					}					
+					
 					//dueling time!
-					runArmyBattles(playerArmies, player, defender);
+					runArmyBattles(playerArmies, validDefenders, player, defender);
 					
 					//undo battle state.  It's okay to call endBattle on a dead card.
 					for (Army army : playerArmies)
 					{
-						for (Position card : army.army)
-						{
-							board.cardAt(card.x, card.y).endBattle();
-						}
+						endBattle(army);
 					}
 					for (Army army : enemyArmies)
 					{
-						for (Position card : army.army)
-						{
-							board.cardAt(card.x, card.y).endBattle();
-						}
+						endBattle(army);
 					}
 				}
 				
+				//next dude go go go
 				game.endTurn();
 			}
 		}
 	}
 	
-	void addAttackSquare(int x, int y, Player attacker, List<Position> attackable)
+	void endBattle(Army army)
+	{
+		for (Position card : army.army)
+		{
+			Card c = board.cardAt(card.x, card.y);
+			if (c.bonusHP > 0)
+			{
+				feedback.modifyHealth(card.x, card.y, -c.bonusHP);
+			}
+			if (c.bonusPower > 0)
+			{
+				feedback.modifyAttack(card.x, card.y, -c.bonusPower);
+			}			
+			c.endBattle();
+			
+		}
+	}
+	
+	void tryReveal(Player p, Card source,int x, int y)
 	{
 		if (x < 0 || x > 3 ||
 			y < 0 || y > 3) return; //trivial rejection
+		
+		Card c = board.cardAt(x, y);
+		if (c.getType() == Type.Spud && 
+			c.getOwner() != p)
+		{
+			if (!c.isRevealed())
+			{
+				c.reveal(source);
+				feedback.reveal(x, y);
+			}
+			if (!source.isRevealed())
+			{
+				source.reveal(null);
+			}
+		}
+	}
+	void revealAt(Player p, Card source,int x, int y)
+	{
+		boolean revealSelf = source.isRevealed();
+		
+		tryReveal(p, source, x-1, y);
+		tryReveal(p, source, x+1, y);
+		tryReveal(p, source, x, y-1);
+		tryReveal(p, source, x, y+1);
+		
+		if (revealSelf != source.isRevealed())  //we got revealed!
+		{
+			feedback.reveal(x, y);
+		}
+	}
+	
+	void addAttackSquare(int x, int y, int validDefenders, Player attacker, List<Position> attackable)
+	{
+		if (x < 0 || x > 3 ||
+			y < 0 || y > 3) return; //trivial rejection
+		
+		if (0 == (validDefenders & (1 << (x + y * 4))) )
+		{
+			return; //can't attack this square!
+		}
 		
 		Card c = board.cardAt(x, y);
 		if (c.getType() == Type.Spud && c.getOwner() != attacker)
@@ -169,20 +240,27 @@ public class Game {
 		
 		if (defender.isDead())
 		{
-			board.playCard(new Card(Type.DeadSpud, null), defendLoc.x, defendLoc.y);
+			board.playCard(new Card(new CardParameters().setType(Type.DeadSpud)), defendLoc.x, defendLoc.y);
+			feedback.kill(defendLoc.x, defendLoc.y);
 		}
 		else		// check if a counter attack is possible. 
 		{
+			feedback.modifyHealth(defendLoc.x, defendLoc.y, -damage);
 			damage = defender.getAttackPower();
 			attacker.takeDamage(damage);
 			if (attacker.isDead())
 			{
-				board.playCard(new Card(Type.DeadSpud, null), attackLoc.x, attackLoc.y);				
+				board.playCard(new Card(new CardParameters().setType(Type.DeadSpud)), attackLoc.x, attackLoc.y);
+				feedback.kill(attackLoc.x, attackLoc.y);
+			}
+			else
+			{
+				feedback.modifyHealth(attackLoc.x, attackLoc.y, -damage);
 			}
 		}
 	}
 	
-	void runArmyBattles(List<Army> armies, Player attacker, Player defender)
+	void runArmyBattles(List<Army> armies, int validDefenders, Player attacker, Player defender)
 	{
 		List<Position> attackingCards = new ArrayList<Position>();
 		//good guys attack first!
@@ -203,10 +281,10 @@ public class Game {
 			if (c.getType() == Type.Spud) //not dead yet...
 			{
 				List<Position> canAttack = new ArrayList<Position>(); //range goes here?
-				addAttackSquare(check.x - 1, check.y, attacker, canAttack);
-				addAttackSquare(check.x + 1, check.y, attacker, canAttack);
-				addAttackSquare(check.x, check.y-1, attacker, canAttack);
-				addAttackSquare(check.x, check.y+1, attacker, canAttack);
+				addAttackSquare(check.x - 1, check.y, validDefenders, attacker, canAttack);
+				addAttackSquare(check.x + 1, check.y, validDefenders, attacker, canAttack);
+				addAttackSquare(check.x, check.y-1, validDefenders, attacker, canAttack);
+				addAttackSquare(check.x, check.y+1, validDefenders, attacker, canAttack);
 				
 				if (!canAttack.isEmpty())
 				{
@@ -267,6 +345,8 @@ public class Game {
 			if (armyBuff != 0  && c.getType() == Type.Spud)
 			{
 				c.applyArmyBuff(armyBuff);
+				feedback.modifyAttack(position.x, position.y, armyBuff);
+				feedback.modifyHealth(position.x, position.y, armyBuff);
 			}
 		}
 	}
@@ -379,7 +459,7 @@ public class Game {
 		while (!openList.isEmpty())
 		{
 			Position currentCheck = openList.get(openList.size()-1);
-			openList.remove(openList.size());
+			openList.remove(openList.size()-1);
 		
 			int x = currentCheck.x;
 			int y = currentCheck.y;
@@ -409,7 +489,7 @@ public class Game {
 		while (!openList.isEmpty())
 		{
 			Position currentCheck = openList.get(openList.size()-1);
-			openList.remove(openList.size());
+			openList.remove(openList.size()-1);
 		
 			int x = currentCheck.x;
 			int y = currentCheck.y;

@@ -53,7 +53,37 @@ public class SpudUI
 		setBoardLocked(true);
 		
 	}
-	
+    public SpudquestFeedback asFeedback()
+    {
+    	return new SpudquestFeedback()
+    	{
+
+			@Override
+			public void enemyPlayCard(Card c, int x, int y) {
+				addEnemyCardState(c, x, y);
+			}
+
+			@Override
+			public void kill(int x, int y) {
+				addKillState(x,y);
+			}
+
+			@Override
+			public void modifyAttack(int x, int y, int amount) {
+				addModifyAttackState(x, y, amount);
+			}
+
+			@Override
+			public void modifyHealth(int x, int y, int amount) {
+				addModifyHealthState(x, y, amount);
+			}
+
+			@Override
+			public void reveal(int x, int y) {
+				addRevealCardState(x, y);
+			}	
+    	};
+    }
 	public void addPlayerCards(Card[] cards)
 	{
 		Paint smallText = Global.textFactory.getTextPaint(8, Color.WHITE, Align.LEFT);
@@ -61,13 +91,13 @@ public class SpudUI
 		
 		for(int i = 0; i < 8; ++i)
 		{
-			
+			Card c = cards[i];
 			MenuPanel mp = new MenuPanel(0, 0, 48, 48);			
 			
-			mp.addTextBox("0", 4, 8, smallText);
-			mp.addTextBox("0", 4, 40, smallText);
+			mp.addTextBox(String.valueOf(c.getHP()), 4, 8, smallText);
+			mp.addTextBox(String.valueOf(c.getAttackPower()), 4, 40, smallText);
 			mp.addTextBox("Player", 24, 24, smallTextCenter);
-			mp.obj = cards[i];
+			mp.obj = c;
 			board.addPanel(mp, 16 + i);
 		}
 	}
@@ -315,8 +345,8 @@ public class SpudUI
 				
 				MenuPanel mp = new MenuPanel(0, 0, 48, 48);			
 				
-				mp.addTextBox("0", 4, 8, smallText);
-				mp.addTextBox("0", 4, 40, smallText);
+				mp.addTextBox(String.valueOf(card.getHP()), 4, 8, smallText);
+				mp.addTextBox(String.valueOf(card.getAttackPower()), 4, 40, smallText);
 				mp.addTextBox("Enemy", 24, 24, smallTextCenter);
 				mp.obj = card;
 				mp.drawContent = false;

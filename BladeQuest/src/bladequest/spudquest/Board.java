@@ -12,7 +12,7 @@ public class Board {
 		
 		for (int i = 0; i < 4*4; ++i)
 		{
-			cards[i] = new Card(Type.Empty, null);
+			cards[i] = new Card(new CardParameters());
 		}
 	}
 
