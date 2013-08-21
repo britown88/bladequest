@@ -420,7 +420,7 @@ namespace BladeCraft.Classes
          return tile;
       }
 
-      public Tile animateTile(int x, int y, int bmpX, int bmpY, int layer)
+      public Tile animateTile(int x, int y, int bmpX, int bmpY, string animationTileset, int layer)
       {
          int index = y * sizeX + x;
          if (x >= 0 && x < sizeX && y >= 0 && y < sizeY)
@@ -508,7 +508,7 @@ namespace BladeCraft.Classes
                }
                else
                {
-                  tlist[y * sizeX + x] = new Tile(t.x, t.y, fillTo.bmpX, fillTo.bmpY, fillTo.tileset, layer); 
+                  tlist[y * sizeX + x] = new Tile(t.x, t.y, fillTo.bmpX, fillTo.bmpY, fillTo.tileset, layer);
                }
                
             }
@@ -528,7 +528,7 @@ namespace BladeCraft.Classes
                }
                else
                {
-                  tlist[y * sizeX + x] = new Tile(t.x, t.y, fillTo.bmpX, fillTo.bmpY, fillTo.tileset, layer); 
+                  tlist[y * sizeX + x] = new Tile(t.x, t.y, fillTo.bmpX, fillTo.bmpY, fillTo.tileset, layer);
                }
             }
             
@@ -537,6 +537,20 @@ namespace BladeCraft.Classes
 
          if(fill)
          {
+
+            var tile = tlist[y * sizeX + x];
+            if (tile.layer == 0 && tile.tileset != null)
+            {
+               var bmpImage = Bitmaps.bitmaps[tile.tileset];
+               var tileData = bmpImage.tiles[tile.bmpX + tile.bmpY * bmpImage.xPixels / MapForm.tileSize];
+
+               tile.collSides[0] = tileData.colLeft;
+               tile.collSides[1] = tileData.colRight;
+               tile.collSides[2] = tileData.colTop;
+               tile.collSides[3] = tileData.colBottom;
+            }
+
+
             if (x + 1 < sizeX && !fillChecked[y * sizeX + x + 1])
                pList.Add(new Point(x + 1, y));
             if (x - 1 >= 0 && !fillChecked[y * sizeX + x-1])
@@ -639,7 +653,7 @@ namespace BladeCraft.Classes
          Point p = materialPoints[flags];
 
          if (frameTwo)
-            animateTile(x, y, p.X, p.Y, layer);
+            animateTile(x, y, p.X, p.Y, tileSet, layer);
          else
          {
             tlist[index].bmpX = p.X;
@@ -1069,13 +1083,12 @@ namespace BladeCraft.Classes
                   imageData = new TileImage();
                   output.images.Add(t.tileset, imageData);
                   GraphicsUnit unit = GraphicsUnit.Pixel;
-                  var bounds = Bitmaps.bitmaps[t.tileset].GetBounds(ref unit);
-                  imageData.xSize = (int)(bounds.Width / 16);
-                  imageData.ySize = (int)(bounds.Height / 16);
+                  var tileData = Bitmaps.bitmaps[t.tileset];
+                  imageData.xSize = (int)(tileData.xPixels / 16);
+                  imageData.ySize = (int)(tileData.yPixels / 16);
                   for (int i = 0; i < imageData.xSize * imageData.ySize; ++i)
                   {
                      imageData.used.Add(false);
-
                   }
                }
                imageData.used[t.bmpX + t.bmpY * imageData.xSize] = true;

@@ -18,12 +18,12 @@ namespace BladeCraft.Forms
 
       private main parent;
       private BQMap map;
-      private Bitmap tileset;
+      private TileImage tileset;
       private Bitmap collArrows, E;
       private Rectangle ERect;//hehe
       private Rectangle[] collArrowRects;
       private float tsScale = 2.0f, mapScale = 1.0f;
-      private int tileSize = 16;
+      public static int tileSize = 16;
 
       private Point selectedObject;
       private bool mouseDown, erase;
@@ -91,7 +91,7 @@ namespace BladeCraft.Forms
          }
          public float getTileSize()
          {
-            return form.tileSize;
+            return MapForm.tileSize;
          }
          public float getMapScale()
          {
@@ -165,10 +165,14 @@ namespace BladeCraft.Forms
          TileSetTreeView.Nodes.Add(folderName);
          TileSetTreeView.Nodes[nodeCnt].Tag = onCall;
          int i = 0;
+
          foreach (var path in System.IO.Directory.GetFiles(Application.StartupPath + "\\assets\\drawable\\"  + folderName))
          {
-            TileSetTreeView.Nodes[nodeCnt].Nodes.Add(stripPath(path));
-            TileSetTreeView.Nodes[nodeCnt].Nodes[i++].Tag = path.Substring(Application.StartupPath.Length + 1);
+            if (path.Substring(path.Length - 3) == "png")
+            {
+               TileSetTreeView.Nodes[nodeCnt].Nodes.Add(stripPath(path));
+               TileSetTreeView.Nodes[nodeCnt].Nodes[i++].Tag = path.Substring(Application.StartupPath.Length + 1);
+            }
          }
       }
       private void setMaterialTile(string path)
@@ -291,10 +295,28 @@ namespace BladeCraft.Forms
 
          if (tileset != null)
          {
-            g.DrawImage(tileset, 0, 0, tsPanel.Width, tsPanel.Height);
-            if(!selectedTile.IsMaterial())
-               g.DrawRectangle(selPen, selectedTile.bmpX * tileSize * tsScale,
-                  selectedTile.bmpY * tileSize * tsScale, tileSize * tsScale, tileSize * tsScale);
+            int xSize = tileset.xPixels / MapForm.tileSize;
+            int ySize = tileset.yPixels / MapForm.tileSize;
+            for (int j = 0;  j < ySize; ++j)
+            {
+               for (int i = 0;  i < xSize; ++i)
+               {
+                  var t = tileset.tiles[i + j * xSize];
+                  Rectangle destRect = new Rectangle((int)(i * tileSize * tsScale), (int)(j * tileSize * tsScale), (int)(tileSize * tsScale), (int)(tileSize * tsScale));
+                  foreach (var bmp in t.bitmaps)
+                  {
+                     g.DrawImage(bmp.bitmap,
+                        destRect,
+                        bmp.x * tileSize,
+                        bmp.y * tileSize,
+                        tileSize, tileSize, GraphicsUnit.Pixel);
+                  }
+               }
+            }
+            
+             if(!selectedTile.IsMaterial())
+                g.DrawRectangle(selPen, selectedTile.bmpX * tileSize * tsScale,
+                   selectedTile.bmpY * tileSize * tsScale, tileSize * tsScale, tileSize * tsScale);
          }
 
          //matPanel.Invalidate();
@@ -402,17 +424,31 @@ namespace BladeCraft.Forms
             for (int y = frame.Top; y < Math.Min(map.height(), frame.Bottom); ++y)
             {
                Tile t = map.getTile(x, y, layer);
+               
 
-               if (t != null && t.tileset != null)
+               if (t != null)
                {
-                  Bitmap bmp = null;
-                  if (!Bitmaps.bitmaps.TryGetValue(t.tileset, out bmp)) continue;
+                  bool showAnim = (tsbFrameTwo.Checked && t.animated);
+                  String tileset = t.tileset;
+                  if (tileset == null) continue;
+
+                  TileImage bmp = null;
+                  if (!Bitmaps.bitmaps.TryGetValue(tileset, out bmp)) continue;
+
+                  int bmpX = showAnim ? t.animBmpX : t.bmpX;
+                  int bmpY = showAnim ? t.animBmpY : t.bmpY;
+
+                  TileInfo info = bmp.tiles[bmpX + (bmpY * bmp.xPixels / MapForm.tileSize)];
+                  
                   Rectangle destRect = new Rectangle((int)(t.x * tileSize * mapScale), (int)(t.y * tileSize * mapScale), (int)(tileSize * mapScale), (int)(tileSize * mapScale));
-                  g.DrawImage(bmp,
-                     destRect,
-                     (tsbFrameTwo.Checked && t.animated) ? t.animBmpX * tileSize : t.bmpX * tileSize,
-                     (tsbFrameTwo.Checked && t.animated) ? t.animBmpY * tileSize : t.bmpY * tileSize,
-                     tileSize, tileSize, GraphicsUnit.Pixel, ia);
+                  foreach(var b in info.bitmaps)
+                  {
+                     g.DrawImage(b.bitmap,
+                        destRect,
+                        b.x * tileSize,
+                        b.y * tileSize,
+                        tileSize, tileSize, GraphicsUnit.Pixel, ia);
+                  }
                }
             }
       }
@@ -552,8 +588,10 @@ namespace BladeCraft.Forms
       }
       private void mapPanel_MouseMove(object sender, MouseEventArgs e)
       {
-
          Point gridPoint = clickedPoint(e);
+         if (gridPoint.X < 0 || gridPoint.Y < 0 ||
+             gridPoint.X >= map.width() ||
+             gridPoint.Y >= map.height()) return;
          updateTool(e);
          if (activeTool != null) activeTool.mouseMove(gridPoint.X, gridPoint.Y);
       }
@@ -913,8 +951,8 @@ namespace BladeCraft.Forms
             {
                 
                //pbTileset.Image = (Image)tileset;
-               tsPanel.Width = (int)(tileset.Width * tsScale);
-               tsPanel.Height = (int)(tileset.Height * tsScale);
+               tsPanel.Width = (int)(tileset.xPixels* tsScale);
+               tsPanel.Height = (int)(tileset.yPixels* tsScale);
                          
              
                tsPanel.Invalidate();

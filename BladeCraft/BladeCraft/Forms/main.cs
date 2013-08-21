@@ -11,10 +11,7 @@ using BladeCraft.Classes;
 
 namespace BladeCraft
 {
-    public static class Bitmaps
-    {
-      public static Dictionary<string, Bitmap> bitmaps;
-    }
+
 
     public partial class main : Form
     {
@@ -32,18 +29,81 @@ namespace BladeCraft
             
         }
 
+       private class TileDataElement
+       {
+          public TileDataElement(XmlTextReader reader, string elementType)
+          {
+             this.reader = reader;
+             this.elementType = elementType;
+          }
+          public string getAttribute(string name)
+          {
+             return reader.GetAttribute(name);
+          }
+          XmlTextReader reader;
+          public string elementType;
+       }
+
+        IEnumerable<TileDataElement> getNodes(XmlTextReader reader)
+        {
+           while (reader.Read())
+           {
+              if (XmlNodeType.Element == reader.NodeType)
+              {
+                 yield return new TileDataElement(reader, reader.LocalName);
+              }
+           }
+        }
+
+        private TileImage readTileImageData(string path, XmlTextReader xmlReader)
+        {
+           var bmp = new TileImage(new Bitmap(path));
+
+
+           foreach (var node in getNodes(xmlReader))
+           {
+              if (node.elementType == "Map") continue;
+              //only element type right now is "tile", deal with it nerds.
+              int x = Convert.ToInt32(node.getAttribute("X"));
+              int y = Convert.ToInt32(node.getAttribute("Y"));
+
+              bool leftCol = Convert.ToBoolean(node.getAttribute("colLeft"));
+              bool rightCol = Convert.ToBoolean(node.getAttribute("colRight"));
+              bool topCol = Convert.ToBoolean(node.getAttribute("colTop"));
+              bool bottomCol = Convert.ToBoolean(node.getAttribute("colBottom"));
+
+              bmp.setCollision(x, y, leftCol, rightCol, topCol, bottomCol);
+           }
+
+           return bmp;
+        }
 
         private void loadBitmapFolder(string folder)
         {
            foreach (var path in System.IO.Directory.GetFiles(Application.StartupPath + "\\assets\\drawable\\" + folder))
            {
-               Bitmaps.bitmaps.Add(path.Substring(Application.StartupPath.Length + 1), new Bitmap(path));
+              var ext = path.Substring(path.Length - 3);
+              if (ext == "png")
+              {
+                 try
+                 {
+                    using (var reader = new XmlTextReader(path.Substring(0, path.Length - 3) + "dat"))
+                    {
+                       Bitmaps.bitmaps.Add(path.Substring(Application.StartupPath.Length + 1), readTileImageData(path, reader));
+                    }
+                 }
+                 catch (System.Exception ex)
+                 {
+                    //file not found LOL DICKS
+                    Bitmaps.bitmaps.Add(path.Substring(Application.StartupPath.Length + 1), new TileImage(new Bitmap(path)));
+                 }
+              }
            }
         }
 
         private void loadBitmaps()
         {
-            Bitmaps.bitmaps = new Dictionary<string, Bitmap>();
+            Bitmaps.bitmaps = new Dictionary<string, TileImage>();
             loadBitmapFolder("stairs");
             loadBitmapFolder("walls");
             loadBitmapFolder("materials");
@@ -173,6 +233,78 @@ namespace BladeCraft
 
         }
 
+        private void defaultCollisionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+           var colForm = new CollisionForm();
+           colForm.Show();
+           colForm.Focus();
+        }
+    }
 
+    public class TileBitmap
+    {
+       public TileBitmap(Bitmap bmp, int x,int y, int layerOffset)
+       {
+          this.x = x;
+          this.y = y;
+          this.bitmap = bmp;
+          this.layerOffset = layerOffset;
+       }
+       public int layerOffset;
+       public int x,y;
+       public Bitmap bitmap;
+    }
+
+    public class TileInfo
+    {
+       public TileInfo(Bitmap bmp, int x, int y)
+       {
+          colLeft = colRight =  colTop = colBottom = false;
+          bitmaps = new List<TileBitmap>();
+          bitmaps.Add(new TileBitmap(bmp, x,y,0));
+       }
+       public void setCollision(bool left, bool right, bool top, bool bot)
+       {
+          colLeft = left;
+          colRight = right;
+          colTop = top;
+          colBottom = bot;
+       }
+       public bool colLeft, colRight, colTop, colBottom;
+       public List<TileBitmap> bitmaps;
+    }
+
+    public class TileImage
+    {
+       public TileImage(Bitmap bmp)
+       {
+          GraphicsUnit pixels = GraphicsUnit.Pixel;
+          xPixels = (int)bmp.GetBounds(ref pixels).Width;
+          yPixels = (int)bmp.GetBounds(ref pixels).Height;
+          int xSize = (int)(xPixels / MapForm.tileSize);
+          int ySize = (int)(yPixels / MapForm.tileSize);
+
+          tiles = new List<TileInfo>();
+          for (int j = 0; j < ySize; ++j)
+          {
+             for (int i = 0; i < xSize; ++i)
+             {
+                tiles.Add(new TileInfo(bmp, i, j));
+             }
+          }
+       }
+       public void setCollision(int x, int y, bool left, bool right, bool top, bool bot)
+       {
+          int xSize = (int)(xPixels / MapForm.tileSize);
+          tiles[x + xSize * y].setCollision(left, right, top, bot);
+       }
+       public List<TileInfo> tiles;
+       public int xPixels, yPixels; //as opposed to # of tiles
+
+    }
+
+    public static class Bitmaps
+    {
+       public static Dictionary<string, TileImage> bitmaps;
     }
 }
