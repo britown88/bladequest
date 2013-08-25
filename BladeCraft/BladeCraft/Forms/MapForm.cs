@@ -161,17 +161,25 @@ namespace BladeCraft.Forms
       }
       void addDrawNode(string folderName, Action<string> onCall)
       {
-         int nodeCnt = TileSetTreeView.Nodes.Count;
-         TileSetTreeView.Nodes.Add(folderName);
-         TileSetTreeView.Nodes[nodeCnt].Tag = onCall;
+         addDrawNode(Application.StartupPath + "\\assets\\drawable\\" + folderName, onCall, TileSetTreeView.Nodes);
+      }
+      void addDrawNode(string folderName, Action<string> onCall, TreeNodeCollection nodes)
+      {
+         int nodeCnt = nodes.Count;
+         nodes.Add(folderName.Remove(0, folderName.LastIndexOf('\\') + 1));
+         nodes[nodeCnt].Tag = onCall;
          int i = 0;
+         foreach (var directory in System.IO.Directory.EnumerateDirectories(folderName))
+         {
+            addDrawNode(directory, onCall, nodes[nodeCnt].Nodes);
+         }
 
-         foreach (var path in System.IO.Directory.GetFiles(Application.StartupPath + "\\assets\\drawable\\"  + folderName))
+         foreach (var path in System.IO.Directory.GetFiles(folderName))
          {
             if (path.Substring(path.Length - 3) == "png")
             {
-               TileSetTreeView.Nodes[nodeCnt].Nodes.Add(stripPath(path));
-               TileSetTreeView.Nodes[nodeCnt].Nodes[i++].Tag = path.Substring(Application.StartupPath.Length + 1);
+               nodes[nodeCnt].Nodes.Add(stripPath(path));
+               nodes[nodeCnt].Nodes[i++].Tag = path.Substring(Application.StartupPath.Length + 1);
             }
          }
       }

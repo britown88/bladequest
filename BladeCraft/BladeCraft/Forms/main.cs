@@ -243,6 +243,13 @@ namespace BladeCraft
 
     public class TileBitmap
     {
+       public TileBitmap(TileBitmap rhs)
+       {
+          this.x = rhs.x;
+          this.y = rhs.y;
+          this.bitmap = rhs.bitmap;
+          this.layerOffset = rhs.layerOffset;
+       }
        public TileBitmap(Bitmap bmp, int x,int y, int layerOffset)
        {
           this.x = x;
@@ -257,6 +264,18 @@ namespace BladeCraft
 
     public class TileInfo
     {
+       public TileInfo(TileInfo rhs)
+       {
+         colLeft = rhs.colLeft; 
+         colRight = rhs.colRight; 
+         colTop  = rhs.colTop;
+         colBottom = rhs.colBottom;
+         bitmaps = new List<TileBitmap>();
+         foreach (TileBitmap t in rhs.bitmaps)
+         {
+            bitmaps.Add(new TileBitmap(t));
+         }
+       }
        public TileInfo(Bitmap bmp, int x, int y)
        {
           colLeft = colRight =  colTop = colBottom = false;
@@ -276,6 +295,16 @@ namespace BladeCraft
 
     public class TileImage
     {
+       public TileImage(TileImage rhs)
+       {
+          this.xPixels = rhs.xPixels;
+          this.yPixels = rhs.yPixels;
+          this.tiles = new List<TileInfo>();
+          foreach (var t in rhs.tiles)
+          {
+             this.tiles.Add(new TileInfo(t));
+          }
+       }
        public TileImage(Bitmap bmp)
        {
           GraphicsUnit pixels = GraphicsUnit.Pixel;

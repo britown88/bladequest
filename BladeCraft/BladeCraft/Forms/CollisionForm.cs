@@ -28,6 +28,7 @@ namespace BladeCraft.Forms
          public bool top, bottom, left, right;
       }
       string activePath;
+      TileImage tileset;
       List<CollisionData> tileCollision;
       float scale;
       Bitmap collArrows;
@@ -69,6 +70,9 @@ namespace BladeCraft.Forms
          collArrowRects[2] = new Rectangle(32, 0, 16, 16);
          collArrowRects[3] = new Rectangle(48, 0, 16, 16);
 
+         tileset = null;
+         activePath = null;
+
          addNode("materials");
          addNode("walls");
          addNode("stairs");
@@ -91,7 +95,7 @@ namespace BladeCraft.Forms
 
             xwriter.WriteStartElement("Map");
 
-            var tileset = Bitmaps.bitmaps[activePath];
+            Bitmaps.bitmaps[activePath] = tileset;
             int tileSize = MapForm.tileSize;
             int xSize = tileset.xPixels / MapForm.tileSize;
             int ySize = tileset.yPixels / MapForm.tileSize;
@@ -129,14 +133,13 @@ namespace BladeCraft.Forms
          if (e.Node.Tag != null && e.Node.Tag is string)  //jesus shitballs, I'm an element nodeeeeee
          {
             activePath = (string)e.Node.Tag;
-            var tileData = Bitmaps.bitmaps[activePath];
-            int xSize = tileData.xPixels / MapForm.tileSize;
-            int ySize = tileData.yPixels / MapForm.tileSize;
+            int xSize = tileset.xPixels / MapForm.tileSize;
+            int ySize = tileset.yPixels / MapForm.tileSize;
 
             tileCollision = new List<CollisionData>();
 
-            CollisionPanel.Width = (int)(tileData.xPixels * scale);
-            CollisionPanel.Height = (int)(tileData.yPixels * scale);
+            CollisionPanel.Width = (int)(tileset.xPixels * scale);
+            CollisionPanel.Height = (int)(tileset.yPixels * scale);
 
             CollisionPanel.Invalidate();
          }
@@ -150,7 +153,6 @@ namespace BladeCraft.Forms
             return;
          }
 
-         var tileset = Bitmaps.bitmaps[activePath];
          int xSize = tileset.xPixels / MapForm.tileSize;
          int ySize = tileset.yPixels / MapForm.tileSize;
          int tileSize = MapForm.tileSize;
@@ -179,7 +181,6 @@ namespace BladeCraft.Forms
 
          if (activePath != null)
          {
-            var tileset = Bitmaps.bitmaps[activePath];
             int tileSize = MapForm.tileSize;
             int xSize = tileset.xPixels / MapForm.tileSize;
             int ySize = tileset.yPixels / MapForm.tileSize;
