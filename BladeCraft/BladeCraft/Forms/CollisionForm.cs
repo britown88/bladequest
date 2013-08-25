@@ -43,13 +43,18 @@ namespace BladeCraft.Forms
          return mapName;
       }
 
-      void addNode(string folderName)
+      void addNode(string folderName, TreeNodeCollection nodes)
       {
          int nodeCnt = TileSetTreeView.Nodes.Count;
-         TileSetTreeView.Nodes.Add(folderName);
+         nodes.Add(folderName.Remove(0, folderName.LastIndexOf('\\') + 1));
          int i = 0;
 
-         foreach (var path in System.IO.Directory.GetFiles(Application.StartupPath + "\\assets\\drawable\\" + folderName))
+         foreach (var directory in System.IO.Directory.EnumerateDirectories(folderName))
+         {
+            addNode(directory, nodes[nodeCnt].Nodes);
+         }
+
+         foreach (var path in System.IO.Directory.GetFiles(folderName))
          {
             if (path.Substring(path.Length - 3) == "png")
             {
@@ -57,6 +62,11 @@ namespace BladeCraft.Forms
                TileSetTreeView.Nodes[nodeCnt].Nodes[i++].Tag = path.Substring(Application.StartupPath.Length + 1);
             }
          }
+      }
+
+      void addNode(string folderName)
+      {
+         addNode(Application.StartupPath + "\\assets\\drawable\\" + folderName, TileSetTreeView.Nodes);
       }
 
       public CollisionForm()
@@ -133,6 +143,9 @@ namespace BladeCraft.Forms
          if (e.Node.Tag != null && e.Node.Tag is string)  //jesus shitballs, I'm an element nodeeeeee
          {
             activePath = (string)e.Node.Tag;
+
+            tileset = new TileImage(Bitmaps.bitmaps[activePath]);
+
             int xSize = tileset.xPixels / MapForm.tileSize;
             int ySize = tileset.yPixels / MapForm.tileSize;
 
@@ -216,26 +229,7 @@ namespace BladeCraft.Forms
 
       private void CollisionPanel_MouseClick(object sender, MouseEventArgs e)
       {
-         if (activePath == null)
-         {
-            return;
-         }
-
-         var pt = clickedPoint(e);
-
-         var tileset = Bitmaps.bitmaps[activePath];
-
-         int xSize = tileset.xPixels / MapForm.tileSize;
-         int ySize = tileset.yPixels / MapForm.tileSize;
-
-         var tile = tileset.tiles[pt.X + pt.Y * xSize];
-
-         tile.colBottom = bottomToolStripMenuItem.Checked;
-         tile.colTop = topToolStripMenuItem.Checked;
-         tile.colLeft = leftToolStripMenuItem.Checked;
-         tile.colRight = rightToolStripMenuItem.Checked;
-
-         CollisionPanel.Invalidate();
+         
       }
 
       private void allToolStripMenuItem_Click(object sender, EventArgs e)
@@ -252,6 +246,43 @@ namespace BladeCraft.Forms
          topToolStripMenuItem.Checked = false;
          rightToolStripMenuItem.Checked = false;
          bottomToolStripMenuItem.Checked = false;
+      }
+
+      private bool mouseDown = false;
+
+      private void CollisionPanel_MouseUp(object sender, MouseEventArgs e)
+      {
+         mouseDown = false;
+      }
+
+      private void CollisionPanel_MouseDown(object sender, MouseEventArgs e)
+      {
+         mouseDown = true;
+      }
+
+      private void CollisionPanel_MouseMove(object sender, MouseEventArgs e)
+      {
+         if (activePath == null || !mouseDown)
+         {
+            return;
+         }
+
+         var pt = clickedPoint(e);
+
+         int xSize = tileset.xPixels / MapForm.tileSize;
+         int ySize = tileset.yPixels / MapForm.tileSize;
+
+         if (pt.X < 0 || pt.X >= xSize ||
+             pt.Y < 0 || pt.Y >= ySize) return;
+
+         var tile = tileset.tiles[pt.X + pt.Y * xSize];
+
+         tile.colBottom = bottomToolStripMenuItem.Checked;
+         tile.colTop = topToolStripMenuItem.Checked;
+         tile.colLeft = leftToolStripMenuItem.Checked;
+         tile.colRight = rightToolStripMenuItem.Checked;
+
+         CollisionPanel.Invalidate();
       }
 
 

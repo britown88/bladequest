@@ -239,6 +239,13 @@ namespace BladeCraft
            colForm.Show();
            colForm.Focus();
         }
+
+        private void macrosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+           var macroForm = new MacroForm();
+           macroForm.Show();
+           macroForm.Focus();
+        }
     }
 
     public class TileBitmap

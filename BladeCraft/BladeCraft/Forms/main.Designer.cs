@@ -35,6 +35,7 @@
          this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.gameDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.defaultCollisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -44,7 +45,7 @@
          this.chMapName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
          this.mapRightClick = new System.Windows.Forms.ContextMenuStrip(this.components);
          this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-         this.defaultCollisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.macrosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.menuStrip1.SuspendLayout();
          this.statusStrip1.SuspendLayout();
          this.mapRightClick.SuspendLayout();
@@ -74,21 +75,22 @@
          // newMapToolStripMenuItem
          // 
          this.newMapToolStripMenuItem.Name = "newMapToolStripMenuItem";
-         this.newMapToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+         this.newMapToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
          this.newMapToolStripMenuItem.Text = "New Map";
          this.newMapToolStripMenuItem.Click += new System.EventHandler(this.newMapToolStripMenuItem_Click);
          // 
          // closeToolStripMenuItem
          // 
          this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-         this.closeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+         this.closeToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
          this.closeToolStripMenuItem.Text = "Close";
          // 
          // editToolStripMenuItem
          // 
          this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.gameDataToolStripMenuItem,
-            this.defaultCollisionToolStripMenuItem});
+            this.defaultCollisionToolStripMenuItem,
+            this.macrosToolStripMenuItem});
          this.editToolStripMenuItem.Name = "editToolStripMenuItem";
          this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
          this.editToolStripMenuItem.Text = "Edit";
@@ -100,6 +102,13 @@
          this.gameDataToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
          this.gameDataToolStripMenuItem.Text = "Game Data";
          this.gameDataToolStripMenuItem.Click += new System.EventHandler(this.gameDataToolStripMenuItem_Click);
+         // 
+         // defaultCollisionToolStripMenuItem
+         // 
+         this.defaultCollisionToolStripMenuItem.Name = "defaultCollisionToolStripMenuItem";
+         this.defaultCollisionToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+         this.defaultCollisionToolStripMenuItem.Text = "Default Collision";
+         this.defaultCollisionToolStripMenuItem.Click += new System.EventHandler(this.defaultCollisionToolStripMenuItem_Click);
          // 
          // helpToolStripMenuItem
          // 
@@ -175,12 +184,12 @@
          this.deleteToolStripMenuItem.Text = "Delete";
          this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
          // 
-         // defaultCollisionToolStripMenuItem
+         // macrosToolStripMenuItem
          // 
-         this.defaultCollisionToolStripMenuItem.Name = "defaultCollisionToolStripMenuItem";
-         this.defaultCollisionToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
-         this.defaultCollisionToolStripMenuItem.Text = "Default Collision";
-         this.defaultCollisionToolStripMenuItem.Click += new System.EventHandler(this.defaultCollisionToolStripMenuItem_Click);
+         this.macrosToolStripMenuItem.Name = "macrosToolStripMenuItem";
+         this.macrosToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+         this.macrosToolStripMenuItem.Text = "Macros";
+         this.macrosToolStripMenuItem.Click += new System.EventHandler(this.macrosToolStripMenuItem_Click);
          // 
          // main
          // 
@@ -224,6 +233,7 @@
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem gameDataToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem defaultCollisionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem macrosToolStripMenuItem;
     }
 }
 

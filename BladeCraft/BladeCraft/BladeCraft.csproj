@@ -77,6 +77,12 @@
     <Compile Include="Forms\CollisionForm.Designer.cs">
       <DependentUpon>CollisionForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\MacroForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MacroForm.Designer.cs">
+      <DependentUpon>MacroForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ObjectForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -118,6 +124,9 @@
     <Compile Include="Classes\Tile.cs" />
     <EmbeddedResource Include="Forms\CollisionForm.resx">
       <DependentUpon>CollisionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MacroForm.resx">
+      <DependentUpon>MacroForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ObjectForm.resx">
       <DependentUpon>ObjectForm.cs</DependentUpon>

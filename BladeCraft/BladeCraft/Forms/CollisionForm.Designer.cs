@@ -30,7 +30,6 @@
       {
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CollisionForm));
          this.CollisionFrame = new System.Windows.Forms.Panel();
-         this.CollisionPanel = new BladeCraft.Classes.DBPanel();
          this.TileSetTreeView = new System.Windows.Forms.TreeView();
          this.toolStrip1 = new System.Windows.Forms.ToolStrip();
          this.saveButton1 = new System.Windows.Forms.ToolStripButton();
@@ -42,6 +41,7 @@
          this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
          this.allToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.noneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.CollisionPanel = new BladeCraft.Classes.DBPanel();
          this.CollisionFrame.SuspendLayout();
          this.toolStrip1.SuspendLayout();
          this.SuspendLayout();
@@ -58,15 +58,6 @@
          this.CollisionFrame.Name = "CollisionFrame";
          this.CollisionFrame.Size = new System.Drawing.Size(436, 485);
          this.CollisionFrame.TabIndex = 3;
-         // 
-         // CollisionPanel
-         // 
-         this.CollisionPanel.Location = new System.Drawing.Point(4, 4);
-         this.CollisionPanel.Name = "CollisionPanel";
-         this.CollisionPanel.Size = new System.Drawing.Size(200, 100);
-         this.CollisionPanel.TabIndex = 0;
-         this.CollisionPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.CollisionPanel_Paint);
-         this.CollisionPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.CollisionPanel_MouseClick);
          // 
          // TileSetTreeView
          // 
@@ -119,48 +110,59 @@
          // 
          this.leftToolStripMenuItem.CheckOnClick = true;
          this.leftToolStripMenuItem.Name = "leftToolStripMenuItem";
-         this.leftToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+         this.leftToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
          this.leftToolStripMenuItem.Text = "Left";
          // 
          // rightToolStripMenuItem
          // 
          this.rightToolStripMenuItem.CheckOnClick = true;
          this.rightToolStripMenuItem.Name = "rightToolStripMenuItem";
-         this.rightToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+         this.rightToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
          this.rightToolStripMenuItem.Text = "Right";
          // 
          // topToolStripMenuItem
          // 
          this.topToolStripMenuItem.CheckOnClick = true;
          this.topToolStripMenuItem.Name = "topToolStripMenuItem";
-         this.topToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+         this.topToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
          this.topToolStripMenuItem.Text = "Top";
          // 
          // bottomToolStripMenuItem
          // 
          this.bottomToolStripMenuItem.CheckOnClick = true;
          this.bottomToolStripMenuItem.Name = "bottomToolStripMenuItem";
-         this.bottomToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+         this.bottomToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
          this.bottomToolStripMenuItem.Text = "Bottom";
          // 
          // toolStripSeparator3
          // 
          this.toolStripSeparator3.Name = "toolStripSeparator3";
-         this.toolStripSeparator3.Size = new System.Drawing.Size(149, 6);
+         this.toolStripSeparator3.Size = new System.Drawing.Size(111, 6);
          // 
          // allToolStripMenuItem
          // 
          this.allToolStripMenuItem.Name = "allToolStripMenuItem";
-         this.allToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+         this.allToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
          this.allToolStripMenuItem.Text = "All";
          this.allToolStripMenuItem.Click += new System.EventHandler(this.allToolStripMenuItem_Click);
          // 
          // noneToolStripMenuItem
          // 
          this.noneToolStripMenuItem.Name = "noneToolStripMenuItem";
-         this.noneToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+         this.noneToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
          this.noneToolStripMenuItem.Text = "None";
          this.noneToolStripMenuItem.Click += new System.EventHandler(this.noneToolStripMenuItem_Click);
+         // 
+         // CollisionPanel
+         // 
+         this.CollisionPanel.Location = new System.Drawing.Point(4, 4);
+         this.CollisionPanel.Name = "CollisionPanel";
+         this.CollisionPanel.Size = new System.Drawing.Size(200, 100);
+         this.CollisionPanel.TabIndex = 0;
+         this.CollisionPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.CollisionPanel_Paint);
+         this.CollisionPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CollisionPanel_MouseDown);
+         this.CollisionPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CollisionPanel_MouseMove);
+         this.CollisionPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.CollisionPanel_MouseUp);
          // 
          // CollisionForm
          // 
