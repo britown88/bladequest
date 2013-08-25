@@ -449,6 +449,25 @@ namespace BladeCraft.Classes
          else 
             return null;
       }
+      public void writeDefaultCollision(int x, int y, int layer)
+      {
+         Tile tile = null;
+         if (x >= 0 && x < sizeX && y >= 0 && y < sizeY)
+            tile = tileList[layer][y * sizeX + x];
+
+         if (tile == null || tile.tileset == null) return;
+
+         var baseTile = getTile(x, y, 0);
+         if (baseTile == null) return;
+
+         var bmpImage = Bitmaps.bitmaps[tile.tileset];
+         var tileData = bmpImage.tiles[tile.bmpX + tile.bmpY * bmpImage.xPixels / MapForm.tileSize];
+
+         baseTile.collSides[0] = baseTile.collSides[0] || tileData.colLeft;
+         baseTile.collSides[1] = baseTile.collSides[1] || tileData.colRight;
+         baseTile.collSides[2] = baseTile.collSides[2] || tileData.colTop;
+         baseTile.collSides[3] = baseTile.collSides[3] || tileData.colBottom;
+      }
 
       private bool[] fillChecked;
 
@@ -539,16 +558,7 @@ namespace BladeCraft.Classes
          {
 
             var tile = tlist[y * sizeX + x];
-            if (tile.layer == 0 && tile.tileset != null)
-            {
-               var bmpImage = Bitmaps.bitmaps[tile.tileset];
-               var tileData = bmpImage.tiles[tile.bmpX + tile.bmpY * bmpImage.xPixels / MapForm.tileSize];
-
-               tile.collSides[0] = tileData.colLeft;
-               tile.collSides[1] = tileData.colRight;
-               tile.collSides[2] = tileData.colTop;
-               tile.collSides[3] = tileData.colBottom;
-            }
+            writeDefaultCollision(x, y, tile.layer);
 
 
             if (x + 1 < sizeX && !fillChecked[y * sizeX + x + 1])

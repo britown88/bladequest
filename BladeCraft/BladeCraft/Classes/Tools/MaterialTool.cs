@@ -33,17 +33,7 @@ namespace BladeCraft.Classes.Tools
             map.addMaterial(x, y, t.tileset,
                mapData.isAnimationFrame(), mapData.getCurrentLayer());
 
-            var tile = map.getTile(x, y, mapData.getCurrentLayer());
-            if (tile.layer == 0 && tile.tileset != null)
-            {
-               var bmpImage = Bitmaps.bitmaps[tile.tileset];
-               var tileData = bmpImage.tiles[tile.bmpX + tile.bmpY * bmpImage.xPixels / MapForm.tileSize];
-
-               tile.collSides[0] = tileData.colLeft;
-               tile.collSides[1] = tileData.colRight;
-               tile.collSides[2] = tileData.colTop;
-               tile.collSides[3] = tileData.colBottom;
-            }
+            map.writeDefaultCollision(x, y, mapData.getCurrentLayer());
 
             lastPointAdded = new Point(x, y);
             mapData.invalidateDraw();

@@ -46,18 +46,9 @@ namespace BladeCraft.Classes.Tools
                         else
                         {
                             var tile = new Tile(x + i, y + j, i, j, t.tileset, mapData.getCurrentLayer());
-                            if (tile.layer == 0 && tile.tileset != null)
-                            {
-                               var bmpImage = Bitmaps.bitmaps[tile.tileset];
-                               var tileData = bmpImage.tiles[tile.bmpX + tile.bmpY * bmpImage.xPixels / MapForm.tileSize];
-
-                               tile.collSides[0] = tileData.colLeft;
-                               tile.collSides[1] = tileData.colRight;
-                               tile.collSides[2] = tileData.colTop;
-                               tile.collSides[3] = tileData.colBottom;
-                            }
                             tile.tileType = Tile.Type.Object;
                             map.addTile(tile);
+                            map.writeDefaultCollision(x + i, y + i, mapData.getCurrentLayer());
                         }
                     }
                 }

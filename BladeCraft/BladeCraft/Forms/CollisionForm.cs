@@ -229,10 +229,31 @@ namespace BladeCraft.Forms
          int ySize = tileset.yPixels / MapForm.tileSize;
 
          var tile = tileset.tiles[pt.X + pt.Y * xSize];
-         tile.colBottom = tile.colTop = tile.colLeft = tile.colRight = true;
+
+         tile.colBottom = bottomToolStripMenuItem.Checked;
+         tile.colTop = topToolStripMenuItem.Checked;
+         tile.colLeft = leftToolStripMenuItem.Checked;
+         tile.colRight = rightToolStripMenuItem.Checked;
 
          CollisionPanel.Invalidate();
       }
+
+      private void allToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         leftToolStripMenuItem.Checked = true;
+         topToolStripMenuItem.Checked = true;
+         rightToolStripMenuItem.Checked = true;
+         bottomToolStripMenuItem.Checked = true;
+      }
+
+      private void noneToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         leftToolStripMenuItem.Checked = false;
+         topToolStripMenuItem.Checked = false;
+         rightToolStripMenuItem.Checked = false;
+         bottomToolStripMenuItem.Checked = false;
+      }
+
 
    }
 }
