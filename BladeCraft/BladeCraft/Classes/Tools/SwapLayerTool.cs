@@ -30,6 +30,13 @@ namespace BladeCraft.Classes.Tools
 
            mapData.getMapData().invalidateDraw();
            lastPointAdded = new Point(x, y);
+
+           int layerFrom = mapData.getMapData().getCurrentLayer();
+           int layerTo = mapData.getSwapToLayer();
+
+           map.swapLayer(x, y, layerFrom, layerTo);
+
+
         }
 
 
