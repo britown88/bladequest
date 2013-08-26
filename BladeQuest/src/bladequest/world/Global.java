@@ -1292,7 +1292,9 @@ public class Global
 		InputStream is = null;
 		for(String filename : files)
 		{
-			if(filename.indexOf('.') != -1)
+			loadBitmaps(path+"/"+filename);
+			
+			if(filename.indexOf(".png") != -1)
 			{
 				try {is = activity.getAssets().open("drawable/" + path+"/"+filename);} catch (Exception e) {
 					Log.d(TAG, "Unable to open file "+path+"/"+filename);

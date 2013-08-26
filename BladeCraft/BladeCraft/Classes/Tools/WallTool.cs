@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 using BladeCraft.Forms;
 
@@ -22,7 +20,7 @@ namespace BladeCraft.Classes.Tools
 
         Point getPoint(int x, int y)
         {
-            if (!polyPts.Any())
+            if (polyPts.Count == 0)
             {
                 return new Point(x, y);
             }
@@ -247,7 +245,7 @@ namespace BladeCraft.Classes.Tools
             if (!selectingHeight)
             {
                 Point nextPt = getPoint(x, y);
-                if (polyPts.Any() && polyPts[polyPts.Count - 1].Equals(nextPt))
+                if (polyPts.Count > 0 && polyPts[polyPts.Count - 1].Equals(nextPt))
                 {
                     selectingHeight = true;
                     height = 0;

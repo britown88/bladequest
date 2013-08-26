@@ -6,7 +6,6 @@ using System.IO;
 using System.Xml;
 using System.Drawing;
 
-using System.Linq;
 using BladeCraft.Forms;
 
 using System.Text.RegularExpressions;
@@ -119,7 +118,7 @@ namespace BladeCraft.Classes
 
          public void endSection()
          {
-            if (sectionStack.Any())
+            if (sectionStack.Count != 0)
             {
                sectionStack[sectionStack.Count - 1].sections.Add(activeSection);
                activeSection = sectionStack[sectionStack.Count - 1];
@@ -790,7 +789,7 @@ namespace BladeCraft.Classes
          public void Dispose()
          {
             reader.Close();
-            reader.Dispose();
+            //reader.Dispose();
          }
       
          public IEnumerable<MapNode> getNodes()
@@ -1143,7 +1142,7 @@ namespace BladeCraft.Classes
          pathName = pathName.Substring(idx + 1, pathName.Length - (idx + 1));
 
          String output = "";
-         foreach (var c in pathName.AsEnumerable())
+         foreach (var c in pathName.ToCharArray())
          {
             if (c == '\\')
             {
@@ -1322,7 +1321,7 @@ namespace BladeCraft.Classes
       }
       public void redo()
       {
-         if (redoList.Any())
+         if (redoList.Count > 0)
          {
             Memento targetMemento = redoList[redoList.Count - 1];
             undoList.Add(targetMemento);

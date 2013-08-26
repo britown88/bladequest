@@ -84,7 +84,7 @@ namespace BladeCraft
         }
         private void loadBitmapFolderRecursive(string folder)
         {
-           foreach (var directory in System.IO.Directory.EnumerateDirectories(folder))
+           foreach (var directory in System.IO.Directory.GetDirectories(folder))
            {
               loadBitmapFolderRecursive(directory);
            }
@@ -306,7 +306,7 @@ namespace BladeCraft
           {
              directorySetter(nodes[nodeCnt], baseFolder, folderName);
           }
-          foreach (var directory in System.IO.Directory.EnumerateDirectories(folderName))
+          foreach (var directory in System.IO.Directory.GetDirectories(folderName))
           {
              addDrawNode(baseFolder, directory, filter, nodeSetter, directorySetter, nodes[nodeCnt].Nodes);
           }
