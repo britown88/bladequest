@@ -1142,7 +1142,21 @@ namespace BladeCraft.Classes
          idx = pathName.IndexOf('\\');
          pathName = pathName.Substring(idx + 1, pathName.Length - (idx + 1));
 
-         return pathName;
+         String output = "";
+         foreach (var c in pathName.AsEnumerable())
+         {
+            if (c == '\\')
+            {
+               output = output + '/';
+            }
+            else
+            {
+               output = output + c;
+            }
+            
+         }
+
+         return output;
       }
       private void writeData(BinaryWriter writer)
       {

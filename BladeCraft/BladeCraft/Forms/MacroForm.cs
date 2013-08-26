@@ -74,6 +74,11 @@ namespace BladeCraft.Forms
          if (node.Tag is NewMacroData)
          {
             //aw shiiiiiiiiiiiiiiiiet
+            //modal dialoggggu
+         }
+         else if (node.Tag is string) //existing macro polo
+         {
+            //load
          }
       }
    }
