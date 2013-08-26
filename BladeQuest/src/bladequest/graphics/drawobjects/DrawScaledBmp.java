@@ -16,6 +16,9 @@ public class DrawScaledBmp implements DrawObject {
 	
 	public DrawScaledBmp(Bitmap bitmap, Rect src, Rect dest, Paint paint)
 	{
+		if(bitmap == null)
+			throw new NullPointerException("FUCKFUCKFUCK");
+			
 		this.bitmap =bitmap;
 		this.src = src;
 		this.dest = dest;

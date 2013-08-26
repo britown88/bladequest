@@ -602,7 +602,8 @@ public class BqMap
 			int index = 0;
 			for (int i = 0; i < images; ++i)
 			{
-				Bitmap renderFrom = Global.bitmaps.get(readString());
+				String bmpName = readString();
+				Bitmap renderFrom = Global.bitmaps.get(bmpName);
 				int bmpWidth  = renderFrom.getWidth()/16;
 				int bmpHeight = renderFrom.getHeight()/16;
 				int bmpLen = bmpWidth*bmpHeight;
