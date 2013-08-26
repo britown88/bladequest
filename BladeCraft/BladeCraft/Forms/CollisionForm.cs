@@ -34,41 +34,6 @@ namespace BladeCraft.Forms
       Bitmap collArrows;
       Rectangle[] collArrowRects;
 
-      string stripPath(string path)
-      {
-
-         string mapName = path.Remove(0, path.LastIndexOf('\\') + 1);
-         mapName = mapName.Remove(mapName.LastIndexOf('.'));
-
-         return mapName;
-      }
-
-      void addNode(string folderName, TreeNodeCollection nodes)
-      {
-         int nodeCnt = TileSetTreeView.Nodes.Count;
-         nodes.Add(folderName.Remove(0, folderName.LastIndexOf('\\') + 1));
-         int i = 0;
-
-         foreach (var directory in System.IO.Directory.EnumerateDirectories(folderName))
-         {
-            addNode(directory, nodes[nodeCnt].Nodes);
-         }
-
-         foreach (var path in System.IO.Directory.GetFiles(folderName))
-         {
-            if (path.Substring(path.Length - 3) == "png")
-            {
-               TileSetTreeView.Nodes[nodeCnt].Nodes.Add(stripPath(path));
-               TileSetTreeView.Nodes[nodeCnt].Nodes[i++].Tag = path.Substring(Application.StartupPath.Length + 1);
-            }
-         }
-      }
-
-      void addNode(string folderName)
-      {
-         addNode(Application.StartupPath + "\\assets\\drawable\\" + folderName, TileSetTreeView.Nodes);
-      }
-
       public CollisionForm()
       {
          InitializeComponent();
@@ -83,10 +48,10 @@ namespace BladeCraft.Forms
          tileset = null;
          activePath = null;
 
-         addNode("materials");
-         addNode("walls");
-         addNode("stairs");
-         addNode("objects");
+         ImageTreeViewBuilder.BuildImageTreeView(
+            new ImageTreeViewArgs(TileSetTreeView.Nodes)
+             .onElement((node, basePath, path) => node.Tag = path)
+         );
 
          scale = 2.0f;
       }
@@ -225,11 +190,6 @@ namespace BladeCraft.Forms
          gridPoint.Y = (int)(e.Y / (MapForm.tileSize * scale));
 
          return gridPoint;
-      }
-
-      private void CollisionPanel_MouseClick(object sender, MouseEventArgs e)
-      {
-         
       }
 
       private void allToolStripMenuItem_Click(object sender, EventArgs e)

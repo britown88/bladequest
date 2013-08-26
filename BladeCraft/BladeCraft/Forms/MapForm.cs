@@ -145,44 +145,8 @@ namespace BladeCraft.Forms
          }
       }
 
-      private SwapLayerMapFormData swapLayerMapFormData;
-      string stripPath(string path)
-      {
+      private SwapLayerMapFormData swapLayerMapFormData; 
 
-         string mapName = path.Remove(0, path.LastIndexOf('\\') + 1);
-         mapName = mapName.Remove(mapName.LastIndexOf('.'));
-
-         return mapName;
-      }
-
-      void addDrawNode(string folderName)
-      {
-          addDrawNode(folderName, null);
-      }
-      void addDrawNode(string folderName, Action<string> onCall)
-      {
-         addDrawNode(Application.StartupPath + "\\assets\\drawable\\" + folderName, onCall, TileSetTreeView.Nodes);
-      }
-      void addDrawNode(string folderName, Action<string> onCall, TreeNodeCollection nodes)
-      {
-         int nodeCnt = nodes.Count;
-         nodes.Add(folderName.Remove(0, folderName.LastIndexOf('\\') + 1));
-         nodes[nodeCnt].Tag = onCall;
-         int i = 0;
-         foreach (var directory in System.IO.Directory.EnumerateDirectories(folderName))
-         {
-            addDrawNode(directory, onCall, nodes[nodeCnt].Nodes);
-         }
-
-         foreach (var path in System.IO.Directory.GetFiles(folderName))
-         {
-            if (path.Substring(path.Length - 3) == "png")
-            {
-               nodes[nodeCnt].Nodes.Add(stripPath(path));
-               nodes[nodeCnt].Nodes[i++].Tag = path.Substring(Application.StartupPath.Length + 1);
-            }
-         }
-      }
       private void setMaterialTile(string path)
       {
           selectedTile.tileType = Tile.Type.Material;
@@ -197,6 +161,17 @@ namespace BladeCraft.Forms
       {
           selectedTile.tileType = Tile.Type.Object;
           selectedTile.tileset = path;
+      }
+      void setSpecialHandler(TreeNode dirNode, string basePath)
+      {
+         Action<string> onCall = null;
+         switch (basePath)
+         {
+            case "materials": onCall = setMaterialTile; break;
+            case "walls": onCall = setWallTile; break;
+            case "objects": onCall = setObjectTile; break;
+         }
+         dirNode.Tag = onCall;
       }
       public MapForm(BQMap map)
       {
@@ -227,10 +202,12 @@ namespace BladeCraft.Forms
          swapLayerMapFormData = new SwapLayerMapFormData(this);
          mapFormTileSelection = new TileSelectionMapFormData(this);
 
-         addDrawNode("materials", path => setMaterialTile(path));
-         addDrawNode("walls", path => setWallTile(path));
-         addDrawNode("stairs");
-         addDrawNode("objects", path => setObjectTile(path));
+
+         ImageTreeViewBuilder.BuildImageTreeView(
+            new ImageTreeViewArgs(TileSetTreeView.Nodes)
+             .onDirectory((node, basePath, path) => setSpecialHandler(node, basePath))
+             .onElement((node, basePath, path) => node.Tag = path)
+            );
       }
 
       

@@ -248,6 +248,92 @@ namespace BladeCraft
         }
     }
 
+    public class ImageTreeViewArgs
+    {
+       public Func<String, bool> filter;
+       public Action<TreeNode, String, String> directorySetter;
+       public Action<TreeNode, String, String> nodeSetter;
+       public TreeNodeCollection baseNodes;
+       public ImageTreeViewArgs(TreeNodeCollection baseNodes)
+       {
+          this.baseNodes = baseNodes;
+       }
+       public ImageTreeViewArgs setFilter(Func<String, bool> filter)
+       {
+          this.filter = filter;
+          return this;
+       }
+       public ImageTreeViewArgs onDirectory(Action<TreeNode, String, String> directorySetter)
+       {
+          this.directorySetter = directorySetter;
+          return this;
+       }
+       public ImageTreeViewArgs onElement(Action<TreeNode, String, String> nodeSetter)
+       {
+          this.nodeSetter = nodeSetter;
+          return this;
+       }
+    }
+
+    public static class ImageTreeViewBuilder
+    {
+       static string stripPath(string path)
+       {
+
+          string mapName = path.Remove(0, path.LastIndexOf('\\') + 1);
+          mapName = mapName.Remove(mapName.LastIndexOf('.'));
+
+          return mapName;
+       }
+
+       static void addDrawNode(string folderName, Func<String, bool> filter, Action<TreeNode, String, String> nodeSetter, Action<TreeNode, String, String> directorySetter, TreeNodeCollection baseNodes)
+       {
+          addDrawNode(folderName, Application.StartupPath + "\\assets\\drawable\\" + folderName, filter, nodeSetter, directorySetter, baseNodes);
+       }
+       static void addDrawNode(string baseFolder, string folderName, Func<String, bool> filter, Action<TreeNode, String, String> nodeSetter, Action<TreeNode, String, String> directorySetter, TreeNodeCollection nodes)
+       {
+          int nodeCnt = nodes.Count;
+          nodes.Add(folderName.Remove(0, folderName.LastIndexOf('\\') + 1));
+          if (directorySetter != null)
+          {
+             directorySetter(nodes[nodeCnt], baseFolder, folderName);
+          }
+          foreach (var directory in System.IO.Directory.EnumerateDirectories(folderName))
+          {
+             addDrawNode(baseFolder, directory, filter, nodeSetter, directorySetter, nodes[nodeCnt].Nodes);
+          }
+
+          int i = nodes[nodeCnt].Nodes.Count;
+          foreach (var path in System.IO.Directory.GetFiles(folderName))
+          {
+             if (path.Substring(path.Length - 3) == "png" && (filter == null || filter(path)))
+             {
+                nodes[nodeCnt].Nodes.Add(stripPath(path));
+                if (nodeSetter != null)
+                {
+                  nodeSetter(nodes[nodeCnt].Nodes[i++], baseFolder, path.Substring(Application.StartupPath.Length + 1));
+                }
+             }
+          }
+       }
+       static void BuildImageTreeNode(Func<String, bool> filter, 
+          Action<TreeNode, String, String> directorySetter,
+          Action<TreeNode, String, String> nodeSetter, 
+          TreeNodeCollection baseNodes)
+       {
+          addDrawNode("materials", filter, nodeSetter, directorySetter, baseNodes);
+          addDrawNode("walls", filter, nodeSetter, directorySetter, baseNodes);
+          addDrawNode("stairs", filter, nodeSetter, directorySetter, baseNodes);
+          addDrawNode("objects", filter, nodeSetter, directorySetter, baseNodes);
+
+       }
+       public static void BuildImageTreeView(ImageTreeViewArgs args)
+       {
+          if (args == null) return;
+          BuildImageTreeNode(args.filter, args.directorySetter, args.nodeSetter, args.baseNodes);
+       }
+    }
+
     public class TileBitmap
     {
        public TileBitmap(TileBitmap rhs)

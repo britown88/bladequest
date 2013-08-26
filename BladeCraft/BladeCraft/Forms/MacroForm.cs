@@ -15,6 +15,7 @@ namespace BladeCraft.Forms
       public MacroForm()
       {
          InitializeComponent();
+
       }
    }
 }

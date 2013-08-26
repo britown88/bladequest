@@ -36,6 +36,7 @@
          this.macroPanel = new BladeCraft.Classes.DBPanel();
          this.tsPanel = new BladeCraft.Classes.DBPanel();
          this.tilesetPanel = new System.Windows.Forms.Panel();
+         this.treeView1 = new System.Windows.Forms.TreeView();
          this.toolStrip1.SuspendLayout();
          this.macroFrame.SuspendLayout();
          this.tilesetPanel.SuspendLayout();
@@ -63,7 +64,7 @@
          // 
          // TileSetTreeView
          // 
-         this.TileSetTreeView.Location = new System.Drawing.Point(12, 28);
+         this.TileSetTreeView.Location = new System.Drawing.Point(326, 28);
          this.TileSetTreeView.Name = "TileSetTreeView";
          this.TileSetTreeView.Size = new System.Drawing.Size(320, 364);
          this.TileSetTreeView.TabIndex = 12;
@@ -76,9 +77,9 @@
          this.macroFrame.AutoScroll = true;
          this.macroFrame.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
          this.macroFrame.Controls.Add(this.macroPanel);
-         this.macroFrame.Location = new System.Drawing.Point(338, 28);
+         this.macroFrame.Location = new System.Drawing.Point(652, 28);
          this.macroFrame.Name = "macroFrame";
-         this.macroFrame.Size = new System.Drawing.Size(729, 594);
+         this.macroFrame.Size = new System.Drawing.Size(416, 594);
          this.macroFrame.TabIndex = 11;
          // 
          // macroPanel
@@ -103,16 +104,24 @@
          this.tilesetPanel.AutoScroll = true;
          this.tilesetPanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
          this.tilesetPanel.Controls.Add(this.tsPanel);
-         this.tilesetPanel.Location = new System.Drawing.Point(12, 398);
+         this.tilesetPanel.Location = new System.Drawing.Point(326, 398);
          this.tilesetPanel.Name = "tilesetPanel";
          this.tilesetPanel.Size = new System.Drawing.Size(320, 224);
          this.tilesetPanel.TabIndex = 14;
+         // 
+         // treeView1
+         // 
+         this.treeView1.Location = new System.Drawing.Point(0, 28);
+         this.treeView1.Name = "treeView1";
+         this.treeView1.Size = new System.Drawing.Size(320, 588);
+         this.treeView1.TabIndex = 15;
          // 
          // MacroForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.ClientSize = new System.Drawing.Size(1079, 628);
+         this.Controls.Add(this.treeView1);
          this.Controls.Add(this.tilesetPanel);
          this.Controls.Add(this.toolStrip1);
          this.Controls.Add(this.TileSetTreeView);
@@ -137,5 +146,6 @@
       private Classes.DBPanel macroPanel;
       private Classes.DBPanel tsPanel;
       private System.Windows.Forms.Panel tilesetPanel;
+      private System.Windows.Forms.TreeView treeView1;
    }
 }
