@@ -28,6 +28,7 @@ namespace BladeCraft.Classes.Tools
            BQMap map = mapData.getMapData().getMap();
            if (map == null) return;
 
+           
            mapData.getMapData().invalidateDraw();
            lastPointAdded = new Point(x, y);
         }
