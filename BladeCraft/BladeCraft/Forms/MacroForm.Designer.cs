@@ -115,6 +115,7 @@
          this.MacroTreeView.Name = "MacroTreeView";
          this.MacroTreeView.Size = new System.Drawing.Size(320, 588);
          this.MacroTreeView.TabIndex = 15;
+         this.MacroTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.MacroTreeView_NodeMouseClick);
          // 
          // MacroForm
          // 

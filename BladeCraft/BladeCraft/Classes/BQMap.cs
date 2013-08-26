@@ -1136,13 +1136,13 @@ namespace BladeCraft.Classes
       //get the last two folders.
       private string getPath(string pathName)
       {
-         int idx  = pathName.LastIndexOf('\\');
-         int start = 1 + pathName.Substring(0, idx - 1).LastIndexOf('\\');
-         int final = pathName.LastIndexOf('.');
-         string outStr = pathName.Substring(start, idx - start) + "/" +
-                         pathName.Substring(idx+1, final - idx - 1);
+         int idx  = pathName.IndexOf('\\');
+         pathName = pathName.Substring(idx + 1, pathName.Length - (idx + 1));
 
-         return outStr;
+         idx = pathName.IndexOf('\\');
+         pathName = pathName.Substring(idx + 1, pathName.Length - (idx + 1));
+
+         return pathName;
       }
       private void writeData(BinaryWriter writer)
       {

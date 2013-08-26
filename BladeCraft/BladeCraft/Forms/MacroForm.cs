@@ -12,18 +12,27 @@ namespace BladeCraft.Forms
 {
    public partial class MacroForm : Form
    {
-      void addToDirectory(TreeNodeCollection nodes)
+      private class NewMacroData
+      {
+         public NewMacroData(string path)
+         {
+            this.path = path;
+         }
+         public string path;
+      }
+      void addToDirectory(string currentDirectory, TreeNodeCollection nodes)
       {
          TreeNode toRemove = null;
          foreach (TreeNode node in nodes)
          {
             if (node.Tag == null) //directory.
             {
-               addToDirectory(node.Nodes);
+               string nextDirectory = currentDirectory + node.Text + "\\";
+               addToDirectory(nextDirectory, node.Nodes);
                node.Nodes.Add("New macro...");
-               node.Tag = "cocks";
+               node.Tag = new NewMacroData(nextDirectory);
             }
-            else if (node.Tag is string)
+            else if (node.Tag is NewMacroData)
             {
                toRemove = node;
             }
@@ -35,7 +44,7 @@ namespace BladeCraft.Forms
       }
       void addNewMacroItems()
       {
-         addToDirectory(MacroTreeView.Nodes);
+         addToDirectory("", MacroTreeView.Nodes);
       }
       public MacroForm()
       {
@@ -57,6 +66,15 @@ namespace BladeCraft.Forms
                   );
 
          addNewMacroItems();
+      }
+
+      private void MacroTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+      {
+         var node = e.Node;
+         if (node.Tag is NewMacroData)
+         {
+            //aw shiiiiiiiiiiiiiiiiet
+         }
       }
    }
 }
