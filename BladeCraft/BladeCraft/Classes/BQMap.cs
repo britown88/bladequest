@@ -1156,7 +1156,7 @@ namespace BladeCraft.Classes
             
          }
 
-         return output;
+         return output.Substring(0, output.Length-4);
       }
       private void writeData(BinaryWriter writer)
       {
