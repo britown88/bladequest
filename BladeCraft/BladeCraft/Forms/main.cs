@@ -80,7 +80,15 @@ namespace BladeCraft
 
         private void loadBitmapFolder(string folder)
         {
-           foreach (var path in System.IO.Directory.GetFiles(Application.StartupPath + "\\assets\\drawable\\" + folder))
+           loadBitmapFolderRecursive(Application.StartupPath + "\\assets\\drawable\\" + folder);
+        }
+        private void loadBitmapFolderRecursive(string folder)
+        {
+           foreach (var directory in System.IO.Directory.EnumerateDirectories(folder))
+           {
+              loadBitmapFolderRecursive(directory);
+           }
+           foreach (var path in System.IO.Directory.GetFiles(folder))
            {
               var ext = path.Substring(path.Length - 3);
               if (ext == "png")
