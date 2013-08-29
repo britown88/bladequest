@@ -110,14 +110,16 @@ namespace BladeCraft.Forms
 
       private void insertMacro(string text)
       {
-         int start = txtScript.Selection.Start;
-         if (txtScript.Selection.Length > 0)
-            txtScript.Text = txtScript.Text.Replace(txtScript.Selection.Text, text);
-         else
-            txtScript.Text = txtScript.Text.Insert(txtScript.Selection.Start, text);
+         int start = txtScript.SelectionStart;
 
-         txtScript.Selection.Start = start + text.Length;
-         txtScript.Scrolling.ScrollToCaret();
+
+         if (txtScript.SelectedText.Length > 0)
+            txtScript.Text = txtScript.Text.Replace(txtScript.SelectedText, text);
+         else
+            txtScript.Text = txtScript.Text.Insert(start, text);
+
+         txtScript.SelectionStart = start + text.Length;
+         txtScript.ScrollToCaret();
       }
 
       private void tsbAddObject_Click(object sender, EventArgs e)
