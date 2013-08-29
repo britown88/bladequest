@@ -30,8 +30,7 @@
       {
          this.btnCancel = new System.Windows.Forms.Button();
          this.btnSave = new System.Windows.Forms.Button();
-         this.txtScript = new ScintillaNET.Scintilla();
-         ((System.ComponentModel.ISupportInitialize)(this.txtScript)).BeginInit();
+         this.txtScript = new System.Windows.Forms.RichTextBox();
          this.SuspendLayout();
          // 
          // btnCancel
@@ -58,25 +57,11 @@
          // 
          // txtScript
          // 
-         this.txtScript.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-         this.txtScript.Font = new System.Drawing.Font("Consolas", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
          this.txtScript.Location = new System.Drawing.Point(12, 12);
-         this.txtScript.Margins.Margin0.Width = 20;
          this.txtScript.Name = "txtScript";
-         this.txtScript.Scrolling.HorizontalWidth = 200;
          this.txtScript.Size = new System.Drawing.Size(495, 331);
-         this.txtScript.Styles.BraceBad.Size = 13F;
-         this.txtScript.Styles.BraceLight.Size = 13F;
-         this.txtScript.Styles.ControlChar.Size = 13F;
-         this.txtScript.Styles.Default.BackColor = System.Drawing.SystemColors.Window;
-         this.txtScript.Styles.Default.Size = 13F;
-         this.txtScript.Styles.IndentGuide.Size = 13F;
-         this.txtScript.Styles.LastPredefined.Size = 13F;
-         this.txtScript.Styles.LineNumber.Size = 13F;
-         this.txtScript.Styles.Max.Size = 13F;
-         this.txtScript.TabIndex = 8;
+         this.txtScript.TabIndex = 3;
+         this.txtScript.Text = "";
          // 
          // ObjectHeader
          // 
@@ -91,7 +76,6 @@
          this.ShowInTaskbar = false;
          this.Text = "Object Header";
          this.Load += new System.EventHandler(this.ObjectHeader_Load);
-         ((System.ComponentModel.ISupportInitialize)(this.txtScript)).EndInit();
          this.ResumeLayout(false);
 
       }
@@ -100,6 +84,6 @@
 
       private System.Windows.Forms.Button btnCancel;
       private System.Windows.Forms.Button btnSave;
-      private ScintillaNET.Scintilla txtScript;
+      private System.Windows.Forms.RichTextBox txtScript;
    }
 }
