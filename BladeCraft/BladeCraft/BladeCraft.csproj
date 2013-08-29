@@ -77,6 +77,7 @@
     <Compile Include="Classes\FileLineReader.cs" />
     <Compile Include="Classes\GameObject.cs" />
     <Compile Include="Classes\MapData.cs" />
+    <Compile Include="Classes\Path.cs" />
     <Compile Include="Classes\Tool.cs" />
     <Compile Include="Classes\Tools\AddTileTool.cs" />
     <Compile Include="Classes\Tools\CollisionTool.cs" />

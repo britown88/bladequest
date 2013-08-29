@@ -181,7 +181,7 @@ namespace BladeCraft.Forms
          //this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer, true);
          
          
-         collArrows = new Bitmap("misc\\collarrows.png");
+         collArrows = new Bitmap("misc/collarrows.png");
          collArrowRects = new Rectangle[4];
          collArrowRects[0] = new Rectangle(0, 0, 16, 16);
          collArrowRects[1] = new Rectangle(16, 0, 16, 16);
@@ -192,7 +192,7 @@ namespace BladeCraft.Forms
 
          map.writeMemento();
 
-         E = new Bitmap("misc\\E.png");
+         E = new Bitmap("misc/E.png");
          ERect = new Rectangle(0, 0, 16, 16);
 
          mapFormData = new MapFormData(this);

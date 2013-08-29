@@ -29,7 +29,7 @@ namespace BladeCraft.Classes
          XmlTextWriter xwriter;
          public XMLMapWriter(String name)
          {
-            xwriter = new XmlTextWriter("bcfiles\\" + name + ".xml", null);
+            xwriter = new XmlTextWriter("bcfiles/" + name + ".xml", null);
             xwriter.WriteStartDocument();
             
          }
@@ -199,7 +199,7 @@ namespace BladeCraft.Classes
          this.sizeX = x;
          this.sizeY = y;
          this.name = name;
-         this.path = "bcfiles\\" + name + ".xml";
+         this.path = "bcfiles/" + name + ".xml";
          this.displayName = displayName;
          this.save = save;
          this.BGM = BGM;
@@ -231,7 +231,7 @@ namespace BladeCraft.Classes
          this.path = filename;
 
          name = filename.Remove(filename.Length - 4);
-         name = name.Substring(name.LastIndexOf('\\') + 1);
+         name = name.Substring(name.LastIndexOf('/') + 1);
 
          readXML(filename);
          readObjectFile();
@@ -242,7 +242,7 @@ namespace BladeCraft.Classes
       {
          StreamReader reader;
          try {
-           reader = new StreamReader("assets\\maps\\omaps\\" + name + ".omap");
+            reader = new StreamReader("assets/maps/omaps/" + name + ".omap");
          }catch (FileNotFoundException e) { return; }
          
          string line;
@@ -674,7 +674,7 @@ namespace BladeCraft.Classes
       {
          if(objects.Count > 0)
          {
-            using (StreamWriter writer = new StreamWriter("assets\\maps\\omaps\\" + name + ".omap"))
+            using (StreamWriter writer = new StreamWriter("assets/maps/omaps/" + name + ".omap"))
             {
                writer.WriteLine("#!HEAD");
                writer.WriteLine(Header);
@@ -963,7 +963,7 @@ namespace BladeCraft.Classes
                            tileList[i] = new Tile[sizeX * sizeY];
                         break;
                      case "TileSet":
-                        newTile.tileset = node.elementData();
+                        newTile.tileset = Path.sanitize(node.elementData());
                         break;
                      case "Tile":
                         newTile = new Tile();
@@ -1135,16 +1135,16 @@ namespace BladeCraft.Classes
       //get the last two folders.
       private string getPath(string pathName)
       {
-         int idx  = pathName.IndexOf('\\');
+         int idx  = pathName.IndexOf('/');
          pathName = pathName.Substring(idx + 1, pathName.Length - (idx + 1));
 
-         idx = pathName.IndexOf('\\');
+         idx = pathName.IndexOf('/');
          pathName = pathName.Substring(idx + 1, pathName.Length - (idx + 1));
 
          String output = "";
          foreach (var c in pathName.ToCharArray())
          {
-            if (c == '\\')
+            if (c == '/')
             {
                output = output + '/';
             }
@@ -1248,7 +1248,7 @@ namespace BladeCraft.Classes
       }
       public void writeBQData()
       {
-         using (var file = File.Open("assets\\maps\\" + name + ".map", FileMode.Create))
+         using (var file = File.Open("assets/maps/" + name + ".map", FileMode.Create))
          {
             using (var writer = new BinaryWriter(file))
             {
@@ -1270,7 +1270,7 @@ namespace BladeCraft.Classes
 
       public void write(MapWriter writer)
       {
-         writer.writeComment("BladeCraft Map File for assets\\maps\\" + name + ".map");
+         writer.writeComment("BladeCraft Map File for assets/maps/" + name + ".map");
          writer.startSection("Map");
          writer.writeAttribute("Height", sizeY.ToString());
          writer.writeAttribute("Width", sizeX.ToString());

@@ -25,7 +25,7 @@ namespace BladeCraft.Forms
          {
             if (node.Tag == null) //directory.
             {
-               string nextDirectory = currentDirectory + node.Text + "\\";
+               string nextDirectory = currentDirectory + node.Text + "/";
                addToDirectory(nextDirectory, node.Nodes);
                node.Nodes.Add("New macro...");
                node.Tag = new NewMacroData(nextDirectory);

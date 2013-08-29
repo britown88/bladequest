@@ -36,7 +36,7 @@ namespace BladeCraft.Forms
       {
          InitializeComponent();
 
-         collArrows = new Bitmap("misc\\collarrows.png");
+         collArrows = new Bitmap("misc/collarrows.png");
          collArrowRects = new Rectangle[4];
          collArrowRects[0] = new Rectangle(0, 0, 16, 16);
          collArrowRects[1] = new Rectangle(16, 0, 16, 16);

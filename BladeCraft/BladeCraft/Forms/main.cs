@@ -17,6 +17,7 @@ namespace BladeCraft
     {
         //private BQMap map;
         private MapInfoForm infoForm;
+        public string StartupPath;
 
 
 
@@ -26,7 +27,8 @@ namespace BladeCraft
             //mapForm = new MapForm();
             //map = new BQMap("newmap", 30, 20, "New Map", "", false);
 
-            
+            StartupPath = Path.sanitize(Application.StartupPath);
+ 
         }
 
        private class TileDataElement
@@ -80,16 +82,17 @@ namespace BladeCraft
 
         private void loadBitmapFolder(string folder)
         {
-           loadBitmapFolderRecursive(Application.StartupPath + "\\assets\\drawable\\" + folder);
+           loadBitmapFolderRecursive(StartupPath + "/assets/drawable/" + folder);
         }
         private void loadBitmapFolderRecursive(string folder)
         {
            foreach (var directory in System.IO.Directory.GetDirectories(folder))
            {
-              loadBitmapFolderRecursive(directory);
+              loadBitmapFolderRecursive(Path.sanitize(directory));
            }
-           foreach (var path in System.IO.Directory.GetFiles(folder))
+           foreach (var p in System.IO.Directory.GetFiles(folder))
            {
+              var path = Path.sanitize(p);
               var ext = path.Substring(path.Length - 3);
               if (ext == "png")
               {
@@ -97,13 +100,13 @@ namespace BladeCraft
                  {
                     using (var reader = new XmlTextReader(path.Substring(0, path.Length - 3) + "dat"))
                     {
-                       Bitmaps.bitmaps.Add(path.Substring(Application.StartupPath.Length + 1), readTileImageData(path, reader));
+                       Bitmaps.bitmaps.Add(path.Substring(StartupPath.Length + 1), readTileImageData(path, reader));
                     }
                  }
                  catch (System.Exception ex)
                  {
                     //file not found LOL DICKS
-                    Bitmaps.bitmaps.Add(path.Substring(Application.StartupPath.Length + 1), new TileImage(new Bitmap(path)));
+                    Bitmaps.bitmaps.Add(path.Substring(StartupPath.Length + 1), new TileImage(new Bitmap(path)));
                  }
               }
            }
@@ -136,15 +139,16 @@ namespace BladeCraft
 
         public void readMaps()
         {
-            string[] mapFiles = System.IO.Directory.GetFiles(Application.StartupPath + "\\bcfiles");
+            string[] mapFiles = System.IO.Directory.GetFiles(StartupPath + "/bcfiles");
 
 
-            foreach (String path in mapFiles)
+            foreach (String p in mapFiles)
             {
+                String path = Path.sanitize(p);
                 MapForm mf = new MapForm(new BQMap(path));
                 mf.MdiParent = this;
 
-                string mapName = path.Remove(0, path.LastIndexOf('\\') + 1);
+                string mapName = path.Remove(0, path.LastIndexOf('/') + 1);
                 mapName = mapName.Remove(mapName.LastIndexOf('.'));
 
                 //check existing items
@@ -288,7 +292,7 @@ namespace BladeCraft
        static string stripPath(string path)
        {
 
-          string mapName = path.Remove(0, path.LastIndexOf('\\') + 1);
+          string mapName = path.Remove(0, path.LastIndexOf('/') + 1);
           mapName = mapName.Remove(mapName.LastIndexOf('.'));
 
           return mapName;
@@ -296,24 +300,25 @@ namespace BladeCraft
 
        static void addDrawNode(string folderName, Func<String, bool> filter, Action<TreeNode, String, String> nodeSetter, Action<TreeNode, String, String> directorySetter, TreeNodeCollection baseNodes)
        {
-          addDrawNode(folderName, Application.StartupPath + "\\assets\\drawable\\" + folderName, filter, nodeSetter, directorySetter, baseNodes);
+          addDrawNode(folderName, Path.sanitize(Application.StartupPath) + "/assets/drawable/" + folderName, filter, nodeSetter, directorySetter, baseNodes);
        }
        static void addDrawNode(string baseFolder, string folderName, Func<String, bool> filter, Action<TreeNode, String, String> nodeSetter, Action<TreeNode, String, String> directorySetter, TreeNodeCollection nodes)
        {
           int nodeCnt = nodes.Count;
-          nodes.Add(folderName.Remove(0, folderName.LastIndexOf('\\') + 1));
+          nodes.Add(folderName.Remove(0, folderName.LastIndexOf('/') + 1));
           if (directorySetter != null)
           {
              directorySetter(nodes[nodeCnt], baseFolder, folderName);
           }
           foreach (var directory in System.IO.Directory.GetDirectories(folderName))
           {
-             addDrawNode(baseFolder, directory, filter, nodeSetter, directorySetter, nodes[nodeCnt].Nodes);
+             addDrawNode(baseFolder, Path.sanitize(directory), filter, nodeSetter, directorySetter, nodes[nodeCnt].Nodes);
           }
 
           int i = nodes[nodeCnt].Nodes.Count;
-          foreach (var path in System.IO.Directory.GetFiles(folderName))
+          foreach (var p in System.IO.Directory.GetFiles(folderName))
           {
+             string path = Path.sanitize(p);
              if (path.Substring(path.Length - 3) == "png" && (filter == null || filter(path)))
              {
                 nodes[nodeCnt].Nodes.Add(stripPath(path));
