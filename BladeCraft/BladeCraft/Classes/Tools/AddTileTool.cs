@@ -30,14 +30,11 @@ namespace BladeCraft.Classes.Tools
             else
             {
                Tile t = tileSelection.selectedTile();
-               if (mapData.isAnimationFrame())
-                  map.animateTile(x, y, t.bmpX, t.bmpY, t.tileset, mapData.getCurrentLayer());
-               else
-               {
-                  map.addTile(new Tile(x, y, t.bmpX, t.bmpY, t.tileset, mapData.getCurrentLayer()));
-                  map.writeDefaultCollision(x, y, mapData.getCurrentLayer());
-               }
 
+               foreach (var writeTile in Tile.getTilesetTiles(t.tileset, x, y, t.bmpX, t.bmpY, mapData.getCurrentLayer(), Tile.Type.Singular))
+               {
+                  map.writeTile(writeTile, mapData.isAnimationFrame(), t.tileset, t.bmpX, t.bmpY);
+               }
             }
 
             lastPointAdded = new Point(x, y);

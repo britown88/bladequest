@@ -37,17 +37,10 @@ namespace BladeCraft.Classes.Tools
                 {
                     for (int i = 0; i < xSize; ++i)
                     {
-                        if (mapData.isAnimationFrame())
-                        {
-                            map.animateTile(x + i, y + j, i, j, t.tileset, mapData.getCurrentLayer());
-                        }
-                        else
-                        {
-                            var tile = new Tile(x + i, y + j, i, j, t.tileset, mapData.getCurrentLayer());
-                            tile.tileType = Tile.Type.Object;
-                            map.addTile(tile);
-                            map.writeDefaultCollision(x + i, y + i, mapData.getCurrentLayer());
-                        }
+                       foreach (var writeTile in Tile.getTilesetTiles(t.tileset, x + i, y + j, i , j, mapData.getCurrentLayer(), Tile.Type.Object))
+                       {
+                          map.writeTile(writeTile, mapData.isAnimationFrame(), t.tileset, t.bmpX, t.bmpY);
+                       }
                     }
                 }
 

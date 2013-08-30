@@ -56,10 +56,11 @@ namespace BladeCraft.Classes.Tools
             var layer = mapData.getCurrentLayer();
 
 
-            var tile = new Tile(x, y, bmpX, bmpY, tileset, layer);
-            tile.tileType = Tile.Type.Wall;
-            map.addTile(tile);
-            map.writeDefaultCollision(x, y, mapData.getCurrentLayer());
+
+            foreach (var writeTile in Tile.getTilesetTiles(tileset, x, y, bmpX, bmpY, layer, Tile.Type.Wall))
+            {
+               map.writeTile(writeTile, mapData.isAnimationFrame(), tileset, bmpX, bmpY);
+            }
         }
         void writeSubsection(Point p, bool diagForward, bool diagBack, bool leftWall, bool rightWall)
         {
@@ -268,7 +269,7 @@ namespace BladeCraft.Classes.Tools
         {
             if (selectingHeight)
             {
-                height = Math.Max(0, y - polyPts[polyPts.Count - 1].Y);
+                height = Math.Max(1, 1 + y - polyPts[polyPts.Count - 1].Y);
             }
             else
             {

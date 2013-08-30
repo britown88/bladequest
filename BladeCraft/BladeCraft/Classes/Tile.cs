@@ -1,10 +1,28 @@
 ﻿using System;
 using System.Drawing;
+using System.Collections.Generic;
+using BladeCraft.Forms;
 
 namespace BladeCraft.Classes
 {
     public class Tile
     {
+        public static IEnumerable<Tile> getTilesetTiles(string tileSet, int x, int y, int bmpX, int bmpY, int layer, Tile.Type type)
+        {
+           var image = Bitmaps.bitmaps[tileSet];
+           int xSize = image.xPixels / MapForm.tileSize;
+
+           foreach (var bmp in image.tiles[bmpX + xSize * bmpY].bitmaps)
+           {
+              int offsetLayer = bmp.layerOffset + layer;
+              if (offsetLayer < 8)
+              {
+                 var t = new Tile(x, y, bmp.x, bmp.y, bmp.bitmapPath, offsetLayer);
+                 t.tileType = type;
+                 yield return t;
+              }
+           }
+        }
 
         public enum Type
         {

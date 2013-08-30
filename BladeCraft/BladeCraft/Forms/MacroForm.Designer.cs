@@ -33,10 +33,10 @@
          this.saveButton1 = new System.Windows.Forms.ToolStripButton();
          this.TileSetTreeView = new System.Windows.Forms.TreeView();
          this.macroFrame = new System.Windows.Forms.Panel();
-         this.macroPanel = new BladeCraft.Classes.DBPanel();
-         this.tsPanel = new BladeCraft.Classes.DBPanel();
          this.tilesetPanel = new System.Windows.Forms.Panel();
          this.MacroTreeView = new System.Windows.Forms.TreeView();
+         this.tsPanel = new BladeCraft.Classes.DBPanel();
+         this.macroPanel = new BladeCraft.Classes.DBPanel();
          this.toolStrip1.SuspendLayout();
          this.macroFrame.SuspendLayout();
          this.tilesetPanel.SuspendLayout();
@@ -61,6 +61,7 @@
          this.saveButton1.Size = new System.Drawing.Size(23, 22);
          this.saveButton1.Text = "toolStripButton1";
          this.saveButton1.ToolTipText = "Save Map";
+         this.saveButton1.Click += new System.EventHandler(this.saveButton1_Click);
          // 
          // TileSetTreeView
          // 
@@ -68,6 +69,7 @@
          this.TileSetTreeView.Name = "TileSetTreeView";
          this.TileSetTreeView.Size = new System.Drawing.Size(320, 364);
          this.TileSetTreeView.TabIndex = 12;
+         this.TileSetTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TileSetTreeView_NodeMouseClick);
          // 
          // macroFrame
          // 
@@ -81,20 +83,6 @@
          this.macroFrame.Name = "macroFrame";
          this.macroFrame.Size = new System.Drawing.Size(416, 594);
          this.macroFrame.TabIndex = 11;
-         // 
-         // macroPanel
-         // 
-         this.macroPanel.Location = new System.Drawing.Point(4, 4);
-         this.macroPanel.Name = "macroPanel";
-         this.macroPanel.Size = new System.Drawing.Size(200, 100);
-         this.macroPanel.TabIndex = 0;
-         // 
-         // tsPanel
-         // 
-         this.tsPanel.Location = new System.Drawing.Point(4, 4);
-         this.tsPanel.Name = "tsPanel";
-         this.tsPanel.Size = new System.Drawing.Size(84, 100);
-         this.tsPanel.TabIndex = 0;
          // 
          // tilesetPanel
          // 
@@ -117,6 +105,25 @@
          this.MacroTreeView.TabIndex = 15;
          this.MacroTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.MacroTreeView_NodeMouseClick);
          // 
+         // tsPanel
+         // 
+         this.tsPanel.Location = new System.Drawing.Point(4, 4);
+         this.tsPanel.Name = "tsPanel";
+         this.tsPanel.Size = new System.Drawing.Size(309, 212);
+         this.tsPanel.TabIndex = 0;
+         this.tsPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.tsPanel_Paint);
+         this.tsPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tsPanel_MouseClick);
+         // 
+         // macroPanel
+         // 
+         this.macroPanel.CausesValidation = false;
+         this.macroPanel.Location = new System.Drawing.Point(4, 4);
+         this.macroPanel.Name = "macroPanel";
+         this.macroPanel.Size = new System.Drawing.Size(405, 290);
+         this.macroPanel.TabIndex = 0;
+         this.macroPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.macroPanel_Paint);
+         this.macroPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.macroPanel_MouseClick);
+         // 
          // MacroForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -127,8 +134,10 @@
          this.Controls.Add(this.toolStrip1);
          this.Controls.Add(this.TileSetTreeView);
          this.Controls.Add(this.macroFrame);
+         this.KeyPreview = true;
          this.Name = "MacroForm";
          this.Text = "MacroForm";
+         this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.MacroForm_KeyPress);
          this.toolStrip1.ResumeLayout(false);
          this.toolStrip1.PerformLayout();
          this.macroFrame.ResumeLayout(false);

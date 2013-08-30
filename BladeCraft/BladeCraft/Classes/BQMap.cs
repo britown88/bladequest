@@ -409,6 +409,19 @@ namespace BladeCraft.Classes
             tileList[i] = new Tile[x * y];
       }
 
+      public Tile writeTile(Tile tile, bool isAnimationFrame, string masterTileset, int bmpX, int bmpY)
+      {
+         if (isAnimationFrame)
+         {
+            animateTile(tile.x, tile.y, tile.bmpX, tile.bmpY, tile.tileset, tile.layer);
+         }
+         else
+         {
+            addTile(tile);
+            writeDefaultCollision(tile.x, tile.y, masterTileset, bmpX, bmpY);
+         }
+         return tile;
+      }
       public Tile addTile(Tile tile)
       {
          int index = tile.y * sizeX + tile.x;
@@ -448,6 +461,19 @@ namespace BladeCraft.Classes
          else 
             return null;
       }
+      public void writeDefaultCollision(int x, int y, string tileset, int bmpX, int bmpY)
+      {
+         var baseTile = getTile(x, y, 0);
+         if (baseTile == null) return;
+
+         var bmpImage = Bitmaps.bitmaps[tileset];
+         var tileData = bmpImage.tiles[bmpX + bmpY * bmpImage.xPixels / MapForm.tileSize];
+
+         baseTile.collSides[0] = baseTile.collSides[0] || tileData.colLeft;
+         baseTile.collSides[1] = baseTile.collSides[1] || tileData.colRight;
+         baseTile.collSides[2] = baseTile.collSides[2] || tileData.colTop;
+         baseTile.collSides[3] = baseTile.collSides[3] || tileData.colBottom;
+      }
       public void writeDefaultCollision(int x, int y, int layer)
       {
          Tile tile = null;
@@ -456,16 +482,7 @@ namespace BladeCraft.Classes
 
          if (tile == null || tile.tileset == null) return;
 
-         var baseTile = getTile(x, y, 0);
-         if (baseTile == null) return;
-
-         var bmpImage = Bitmaps.bitmaps[tile.tileset];
-         var tileData = bmpImage.tiles[tile.bmpX + tile.bmpY * bmpImage.xPixels / MapForm.tileSize];
-
-         baseTile.collSides[0] = baseTile.collSides[0] || tileData.colLeft;
-         baseTile.collSides[1] = baseTile.collSides[1] || tileData.colRight;
-         baseTile.collSides[2] = baseTile.collSides[2] || tileData.colTop;
-         baseTile.collSides[3] = baseTile.collSides[3] || tileData.colBottom;
+         writeDefaultCollision(x, y, tile.tileset, tile.bmpX, tile.bmpY);
       }
 
       private bool[] fillChecked;

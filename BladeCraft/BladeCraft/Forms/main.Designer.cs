@@ -36,6 +36,7 @@
          this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.gameDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.defaultCollisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.macrosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -45,7 +46,6 @@
          this.chMapName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
          this.mapRightClick = new System.Windows.Forms.ContextMenuStrip(this.components);
          this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-         this.macrosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.menuStrip1.SuspendLayout();
          this.statusStrip1.SuspendLayout();
          this.mapRightClick.SuspendLayout();
@@ -109,6 +109,13 @@
          this.defaultCollisionToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
          this.defaultCollisionToolStripMenuItem.Text = "Default Collision";
          this.defaultCollisionToolStripMenuItem.Click += new System.EventHandler(this.defaultCollisionToolStripMenuItem_Click);
+         // 
+         // macrosToolStripMenuItem
+         // 
+         this.macrosToolStripMenuItem.Name = "macrosToolStripMenuItem";
+         this.macrosToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+         this.macrosToolStripMenuItem.Text = "Macros";
+         this.macrosToolStripMenuItem.Click += new System.EventHandler(this.macrosToolStripMenuItem_Click);
          // 
          // helpToolStripMenuItem
          // 
@@ -183,13 +190,6 @@
          this.deleteToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
          this.deleteToolStripMenuItem.Text = "Delete";
          this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
-         // 
-         // macrosToolStripMenuItem
-         // 
-         this.macrosToolStripMenuItem.Name = "macrosToolStripMenuItem";
-         this.macrosToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
-         this.macrosToolStripMenuItem.Text = "Macros";
-         this.macrosToolStripMenuItem.Click += new System.EventHandler(this.macrosToolStripMenuItem_Click);
          // 
          // main
          // 

@@ -19,8 +19,6 @@ namespace BladeCraft
         private MapInfoForm infoForm;
         public string StartupPath;
 
-
-
         public main()
         {
             InitializeComponent();
@@ -46,7 +44,7 @@ namespace BladeCraft
           public string elementType;
        }
 
-        IEnumerable<TileDataElement> getNodes(XmlTextReader reader)
+        static IEnumerable<TileDataElement> getNodes(XmlTextReader reader)
         {
            while (reader.Read())
            {
@@ -59,9 +57,13 @@ namespace BladeCraft
 
         private TileImage readTileImageData(string path, XmlTextReader xmlReader)
         {
-           var bmp = new TileImage(new Bitmap(path));
+           var bmp = new TileImage(path, new Bitmap(path));
+           loadTileImageCollision(bmp, xmlReader);
+           return bmp;
+        }
 
-
+        private void loadTileImageCollision(TileImage image, XmlTextReader xmlReader)
+        {
            foreach (var node in getNodes(xmlReader))
            {
               if (node.elementType == "Map") continue;
@@ -74,11 +76,45 @@ namespace BladeCraft
               bool topCol = Convert.ToBoolean(node.getAttribute("colTop"));
               bool bottomCol = Convert.ToBoolean(node.getAttribute("colBottom"));
 
-              bmp.setCollision(x, y, leftCol, rightCol, topCol, bottomCol);
+              image.setCollision(x, y, leftCol, rightCol, topCol, bottomCol);
            }
-
-           return bmp;
         }
+
+
+        public static TileImage loadMacroImage(string path)
+        {
+           TileImage output = null;
+           
+           int xSize = 0;
+           List<TileBitmap> bmps = new List<TileBitmap>();
+
+           using (var reader = new XmlTextReader(path))
+           {
+              foreach (var node in getNodes(reader))
+              {
+                 if (node.elementType == "Macro") 
+                 {
+                    xSize = Convert.ToInt32(node.getAttribute("X"));
+                    int ySize = Convert.ToInt32(node.getAttribute("Y"));
+                    output = new TileImage(xSize, ySize);
+                 }
+                 else
+                 {
+                    int x = Convert.ToInt32(node.getAttribute("X"));
+                    int y = Convert.ToInt32(node.getAttribute("Y"));
+                    int bmpx = Convert.ToInt32(node.getAttribute("BmpX"));
+                    int bmpy = Convert.ToInt32(node.getAttribute("BmpY"));
+                    string imagepath = node.getAttribute("Image");
+                    int offset = Convert.ToInt32(node.getAttribute("Offset"));
+
+                    var tileData = output.tiles[y * xSize + x];
+                    tileData.bitmaps.Add(new TileBitmap(new Bitmap(imagepath), bmpx, bmpy, imagepath, offset));
+                 }
+              }
+           }
+           return output;
+        }
+
 
         private void loadBitmapFolder(string folder)
         {
@@ -96,18 +132,35 @@ namespace BladeCraft
               var ext = path.Substring(path.Length - 3);
               if (ext == "png")
               {
+                 var relPath = path.Substring(StartupPath.Length + 1);
                  try
                  {
                     using (var reader = new XmlTextReader(path.Substring(0, path.Length - 3) + "dat"))
                     {
-                       Bitmaps.bitmaps.Add(path.Substring(StartupPath.Length + 1), readTileImageData(path, reader));
+                       Bitmaps.bitmaps.Add(relPath, readTileImageData(relPath, reader));
                     }
                  }
                  catch (System.Exception ex)
                  {
                     //file not found LOL DICKS
-                    Bitmaps.bitmaps.Add(path.Substring(StartupPath.Length + 1), new TileImage(new Bitmap(path)));
+                    Bitmaps.bitmaps.Add(relPath, new TileImage(relPath, new Bitmap(path)));
                  }
+              }
+              else if (ext == "mif")
+              {
+                 var image = loadMacroImage(path);
+                 try
+                 {
+                    using (var reader = new XmlTextReader(path.Substring(0, path.Length - 3) + "dat"))
+                    {
+                       loadTileImageCollision(image, reader);
+                    }
+                 }
+                 catch (System.Exception )
+                 {
+
+                 }
+                 Bitmaps.bitmaps.Add(path.Substring(StartupPath.Length + 1), image);
               }
            }
         }
@@ -319,7 +372,8 @@ namespace BladeCraft
           foreach (var p in System.IO.Directory.GetFiles(folderName))
           {
              string path = Path.sanitize(p);
-             if (path.Substring(path.Length - 3) == "png" && (filter == null || filter(path)))
+             string ext = path.Substring(path.Length - 3) ;
+             if ((ext == "png" || ext == "mif") && (filter == null || filter(path)))
              {
                 nodes[nodeCnt].Nodes.Add(stripPath(path));
                 if (nodeSetter != null)
@@ -354,17 +408,20 @@ namespace BladeCraft
           this.x = rhs.x;
           this.y = rhs.y;
           this.bitmap = rhs.bitmap;
+          this.bitmapPath = rhs.bitmapPath;
           this.layerOffset = rhs.layerOffset;
        }
-       public TileBitmap(Bitmap bmp, int x,int y, int layerOffset)
+       public TileBitmap(Bitmap bmp, int x,int y, string bitmapPath, int layerOffset)
        {
           this.x = x;
           this.y = y;
           this.bitmap = bmp;
           this.layerOffset = layerOffset;
+          this.bitmapPath = bitmapPath;
        }
        public int layerOffset;
        public int x,y;
+       public string bitmapPath;
        public Bitmap bitmap;
     }
 
@@ -382,11 +439,16 @@ namespace BladeCraft
             bitmaps.Add(new TileBitmap(t));
          }
        }
-       public TileInfo(Bitmap bmp, int x, int y)
+       public TileInfo(string bitmapPath, Bitmap bmp, int x, int y)
        {
           colLeft = colRight =  colTop = colBottom = false;
           bitmaps = new List<TileBitmap>();
-          bitmaps.Add(new TileBitmap(bmp, x,y,0));
+          bitmaps.Add(new TileBitmap(bmp, x, y, bitmapPath,0));
+       }
+       public TileInfo()
+       {
+          colLeft = colRight = colTop = colBottom = false;
+          bitmaps = new List<TileBitmap>();
        }
        public void setCollision(bool left, bool right, bool top, bool bot)
        {
@@ -401,6 +463,24 @@ namespace BladeCraft
 
     public class TileImage
     {
+       public TileImage(int xSize, int ySize) 
+       {
+          xPixels = xSize * MapForm.tileSize;
+          yPixels = ySize * MapForm.tileSize;
+
+          tiles = new List<TileInfo>();
+
+          //got to add tiles manually from here
+
+          for (int j = 0; j < ySize; ++j)
+          {
+             for (int i = 0; i < xSize; ++i)
+             {
+                tiles.Add(new TileInfo());
+             }
+          }
+       }
+
        public TileImage(TileImage rhs)
        {
           this.xPixels = rhs.xPixels;
@@ -411,7 +491,7 @@ namespace BladeCraft
              this.tiles.Add(new TileInfo(t));
           }
        }
-       public TileImage(Bitmap bmp)
+       public TileImage(string bitmapPath, Bitmap bmp)
        {
           GraphicsUnit pixels = GraphicsUnit.Pixel;
           xPixels = (int)bmp.GetBounds(ref pixels).Width;
@@ -424,7 +504,7 @@ namespace BladeCraft
           {
              for (int i = 0; i < xSize; ++i)
              {
-                tiles.Add(new TileInfo(bmp, i, j));
+                tiles.Add(new TileInfo(bitmapPath, bmp, i, j));
              }
           }
        }

@@ -99,6 +99,8 @@ namespace BladeCraft.Forms
             xwriter.WriteEndDocument();
             xwriter.Close();
          }
+
+         MessageBox.Show("Collision saved!");
       }
 
       private void TileSetTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
@@ -160,19 +162,23 @@ namespace BladeCraft.Forms
             int tileSize = MapForm.tileSize;
             int xSize = tileset.xPixels / MapForm.tileSize;
             int ySize = tileset.yPixels / MapForm.tileSize;
-            for (int j = 0; j < ySize; ++j)
+            for (int layer = 0; layer < 8; ++layer)
             {
-               for (int i = 0; i < xSize; ++i)
+               for (int j = 0; j < ySize; ++j)
                {
-                  var t = tileset.tiles[i + j * xSize];
-                  Rectangle destRect = new Rectangle((int)(i * tileSize * scale), (int)(j * tileSize * scale), (int)(tileSize * scale), (int)(tileSize * scale));
-                  foreach (var bmp in t.bitmaps)
+                  for (int i = 0; i < xSize; ++i)
                   {
-                     g.DrawImage(bmp.bitmap,
-                        destRect,
-                        bmp.x * tileSize,
-                        bmp.y * tileSize,
-                        tileSize, tileSize, GraphicsUnit.Pixel);
+                     var t = tileset.tiles[i + j * xSize];
+                     Rectangle destRect = new Rectangle((int)(i * tileSize * scale), (int)(j * tileSize * scale), (int)(tileSize * scale), (int)(tileSize * scale));
+                     foreach (var bmp in t.bitmaps)
+                     {
+                        if (bmp.layerOffset != layer) continue;
+                        g.DrawImage(bmp.bitmap,
+                           destRect,
+                           bmp.x * tileSize,
+                           bmp.y * tileSize,
+                           tileSize, tileSize, GraphicsUnit.Pixel);
+                     }
                   }
                }
             }
@@ -216,6 +222,7 @@ namespace BladeCraft.Forms
       private void CollisionPanel_MouseDown(object sender, MouseEventArgs e)
       {
          mouseDown = true;
+         CollisionPanel_MouseMove(sender, e);
       }
 
       private void CollisionPanel_MouseMove(object sender, MouseEventArgs e)
