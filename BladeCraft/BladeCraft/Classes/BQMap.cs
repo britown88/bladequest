@@ -513,7 +513,7 @@ namespace BladeCraft.Classes
 
             fill = true;
          }
-         else if (fillingTile != null && fillingTile.IsMaterial() && t.hasSameMaterial(fillingTile.tileset))
+         else if (t != null && fillingTile != null && fillingTile.IsMaterial() && t.hasSameMaterial(fillingTile.tileset))
          {
             if (fillTo.IsMaterial())
                addMaterial(t.x, t.y, fillTo.tileset, frameTwo, layer);
