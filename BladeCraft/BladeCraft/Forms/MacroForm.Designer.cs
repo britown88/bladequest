@@ -116,6 +116,7 @@
          // 
          // macroPanel
          // 
+         this.macroPanel.BackColor = System.Drawing.Color.White;
          this.macroPanel.CausesValidation = false;
          this.macroPanel.Location = new System.Drawing.Point(4, 4);
          this.macroPanel.Name = "macroPanel";
