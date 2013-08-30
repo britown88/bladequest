@@ -134,12 +134,12 @@
          // 
          this.numX.Location = new System.Drawing.Point(158, 36);
          this.numX.Maximum = new decimal(new int[] {
-            250,
+            65000,
             0,
             0,
             0});
          this.numX.Minimum = new decimal(new int[] {
-            30,
+            14,
             0,
             0,
             0});
@@ -156,12 +156,12 @@
          // 
          this.numY.Location = new System.Drawing.Point(230, 36);
          this.numY.Maximum = new decimal(new int[] {
-            250,
+            65000,
             0,
             0,
             0});
          this.numY.Minimum = new decimal(new int[] {
-            20,
+            9,
             0,
             0,
             0});

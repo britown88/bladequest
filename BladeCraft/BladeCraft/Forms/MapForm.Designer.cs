@@ -57,7 +57,9 @@
          this.tsbOptions = new System.Windows.Forms.ToolStripButton();
          this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
          this.tilesetPanel = new System.Windows.Forms.Panel();
+         this.tsPanel = new BladeCraft.Classes.DBPanel();
          this.mapFrame = new System.Windows.Forms.Panel();
+         this.mapPanel = new BladeCraft.Classes.DBPanel();
          this.numMapZoom = new System.Windows.Forms.NumericUpDown();
          this.label1 = new System.Windows.Forms.Label();
          this.rightClickMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -69,8 +71,6 @@
          this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.TileSetTreeView = new System.Windows.Forms.TreeView();
-         this.mapPanel = new BladeCraft.Classes.DBPanel();
-         this.tsPanel = new BladeCraft.Classes.DBPanel();
          this.toolstrip.SuspendLayout();
          this.tilesetPanel.SuspendLayout();
          this.mapFrame.SuspendLayout();
@@ -338,8 +338,17 @@
          this.tilesetPanel.Controls.Add(this.tsPanel);
          this.tilesetPanel.Location = new System.Drawing.Point(12, 469);
          this.tilesetPanel.Name = "tilesetPanel";
-         this.tilesetPanel.Size = new System.Drawing.Size(326, 153);
+         this.tilesetPanel.Size = new System.Drawing.Size(206, 153);
          this.tilesetPanel.TabIndex = 1;
+         // 
+         // tsPanel
+         // 
+         this.tsPanel.Location = new System.Drawing.Point(4, 5);
+         this.tsPanel.Name = "tsPanel";
+         this.tsPanel.Size = new System.Drawing.Size(140, 100);
+         this.tsPanel.TabIndex = 0;
+         this.tsPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.tsPanel_Paint);
+         this.tsPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tsPanel_MouseClick);
          // 
          // mapFrame
          // 
@@ -349,12 +358,25 @@
          this.mapFrame.AutoScroll = true;
          this.mapFrame.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
          this.mapFrame.Controls.Add(this.mapPanel);
-         this.mapFrame.Location = new System.Drawing.Point(345, 29);
+         this.mapFrame.Location = new System.Drawing.Point(224, 29);
          this.mapFrame.Name = "mapFrame";
-         this.mapFrame.Size = new System.Drawing.Size(395, 593);
+         this.mapFrame.Size = new System.Drawing.Size(516, 593);
          this.mapFrame.TabIndex = 2;
          this.mapFrame.Scroll += new System.Windows.Forms.ScrollEventHandler(this.mapFrame_Scroll);
          this.mapFrame.Resize += new System.EventHandler(this.mapFrame_Resize);
+         // 
+         // mapPanel
+         // 
+         this.mapPanel.Location = new System.Drawing.Point(4, 4);
+         this.mapPanel.Name = "mapPanel";
+         this.mapPanel.Size = new System.Drawing.Size(200, 100);
+         this.mapPanel.TabIndex = 0;
+         this.mapPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.mapPanel_Paint);
+         this.mapPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.mapPanel_MouseClick);
+         this.mapPanel.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.mapPanel_MouseDoubleClick);
+         this.mapPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mapPanel_MouseDown);
+         this.mapPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mapPanel_MouseMove);
+         this.mapPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.mapPanel_MouseUp);
          // 
          // numMapZoom
          // 
@@ -460,31 +482,9 @@
          // 
          this.TileSetTreeView.Location = new System.Drawing.Point(18, 35);
          this.TileSetTreeView.Name = "TileSetTreeView";
-         this.TileSetTreeView.Size = new System.Drawing.Size(320, 428);
+         this.TileSetTreeView.Size = new System.Drawing.Size(200, 428);
          this.TileSetTreeView.TabIndex = 8;
          this.TileSetTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TileSetTreeView_NodeMouseClick);
-         // 
-         // mapPanel
-         // 
-         this.mapPanel.Location = new System.Drawing.Point(4, 4);
-         this.mapPanel.Name = "mapPanel";
-         this.mapPanel.Size = new System.Drawing.Size(200, 100);
-         this.mapPanel.TabIndex = 0;
-         this.mapPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.mapPanel_Paint);
-         this.mapPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.mapPanel_MouseClick);
-         this.mapPanel.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.mapPanel_MouseDoubleClick);
-         this.mapPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mapPanel_MouseDown);
-         this.mapPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mapPanel_MouseMove);
-         this.mapPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.mapPanel_MouseUp);
-         // 
-         // tsPanel
-         // 
-         this.tsPanel.Location = new System.Drawing.Point(4, 5);
-         this.tsPanel.Name = "tsPanel";
-         this.tsPanel.Size = new System.Drawing.Size(200, 100);
-         this.tsPanel.TabIndex = 0;
-         this.tsPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.tsPanel_Paint);
-         this.tsPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tsPanel_MouseClick);
          // 
          // MapForm
          // 
