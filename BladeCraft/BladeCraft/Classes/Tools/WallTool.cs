@@ -277,7 +277,10 @@ namespace BladeCraft.Classes.Tools
             }
             mapData.invalidateDraw();
         }
-
+        public bool handleRightClick(int x, int y)
+        {
+           return false;
+        }
         public void mouseUp(int x, int y)
         {
             

@@ -17,7 +17,10 @@ namespace BladeCraft.Classes.Tools
          this.mapData = mapData;
       }
 
-
+      public bool handleRightClick(int x, int y)
+      {
+         return false;
+      }
       public void onClick(int x, int y)
       {
          startPoint = new Point(x, y);

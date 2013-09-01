@@ -20,7 +20,10 @@ namespace BladeCraft.Classes.Tools
         {
             this.mapData = mapData;
         }
-
+        public bool handleRightClick(int x, int y)
+        {
+           return false;
+        }
         private void swapLayer(int x, int y)
         {
            BQMap map = mapData.getMapData().getMap();

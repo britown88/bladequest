@@ -54,6 +54,10 @@ namespace BladeCraft.Classes.Tools
                 setCollision(x, y);
             }
         }
+        public bool handleRightClick(int x, int y)
+        {
+           return false;
+        }
         public void onDraw(Graphics g) { }
 
         public void mouseUp(int x, int y)

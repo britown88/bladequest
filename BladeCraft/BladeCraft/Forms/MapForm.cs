@@ -157,6 +157,11 @@ namespace BladeCraft.Forms
           selectedTile.tileType = Tile.Type.Wall;
           selectedTile.tileset = path;
       }
+      private void setRoofTile(string path)
+      {
+         selectedTile.tileType = Tile.Type.Roof;
+         selectedTile.tileset = path;
+      }
       private void setObjectTile(string path)
       {
           selectedTile.tileType = Tile.Type.Object;
@@ -169,6 +174,7 @@ namespace BladeCraft.Forms
          {
             case "materials": onCall = setMaterialTile; break;
             case "walls": onCall = setWallTile; break;
+            case "roofs": onCall = setRoofTile; break;
             case "objects": onCall = setObjectTile; break;
          }
          dirNode.Tag = onCall;
@@ -529,6 +535,10 @@ namespace BladeCraft.Forms
              {
                  currentTool = new WallTool(mapFormData, mapFormTileSelection);
              }
+             else if (selectedTile.tileType == Tile.Type.Roof)
+             {
+                currentTool = new RoofTool(mapFormData, mapFormTileSelection);
+             }
              else if (selectedTile.tileType == Tile.Type.Object)
              {
                  currentTool = new ObjectTool(mapFormData, mapFormTileSelection);
@@ -646,6 +656,11 @@ namespace BladeCraft.Forms
       private void mapPanel_MouseClick(object sender, MouseEventArgs e)
       {
          Point gridPoint = clickedPoint(e);
+         updateTool(e);
+         if (e.Button == System.Windows.Forms.MouseButtons.Right && activeTool != null && activeTool.handleRightClick(gridPoint.X, gridPoint.Y))
+         {
+            return;
+         }
 
          if (!tsbObjectLayer.Checked)
          {

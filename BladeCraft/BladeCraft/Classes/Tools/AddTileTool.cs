@@ -59,7 +59,10 @@ namespace BladeCraft.Classes.Tools
             addTile(x, y);
          }
       }
-
+      public bool handleRightClick(int x, int y)
+      {
+         return false;
+      }
       public void mouseUp(int x, int y)
       {
          mouseDown = false;

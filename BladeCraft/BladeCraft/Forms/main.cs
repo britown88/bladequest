@@ -170,6 +170,7 @@ namespace BladeCraft
             Bitmaps.bitmaps = new Dictionary<string, TileImage>();
             loadBitmapFolder("stairs");
             loadBitmapFolder("walls");
+            loadBitmapFolder("roofs");
             loadBitmapFolder("materials");
             loadBitmapFolder("objects");
         }
@@ -390,6 +391,7 @@ namespace BladeCraft
        {
           addDrawNode("materials", filter, nodeSetter, directorySetter, baseNodes);
           addDrawNode("walls", filter, nodeSetter, directorySetter, baseNodes);
+          addDrawNode("roofs", filter, nodeSetter, directorySetter, baseNodes);
           addDrawNode("stairs", filter, nodeSetter, directorySetter, baseNodes);
           addDrawNode("objects", filter, nodeSetter, directorySetter, baseNodes);
 

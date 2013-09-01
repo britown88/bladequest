@@ -20,7 +20,10 @@ namespace BladeCraft.Classes.Tools
       public void onClick(int x, int y)
       {
       }
-
+      public bool handleRightClick(int x, int y)
+      {
+         return false;
+      }
       public void mouseMove(int x, int y)
       {
       }

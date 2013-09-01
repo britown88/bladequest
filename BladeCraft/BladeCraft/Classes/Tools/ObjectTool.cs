@@ -20,7 +20,10 @@ namespace BladeCraft.Classes.Tools
             this.tileSelection = tileSelection;
             mouseDown = false;
         }
-
+        public bool handleRightClick(int x, int y)
+        {
+           return false;
+        }
         private void addTile(int x, int y)
         {
             BQMap map = mapData.getMap();

@@ -29,7 +29,8 @@ namespace BladeCraft.Classes
             Singular,
             Material,
             Wall,
-            Object
+            Object,
+            Roof
         };
 
         public static int sideLeft = 0;
