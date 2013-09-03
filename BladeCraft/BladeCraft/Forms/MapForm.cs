@@ -162,6 +162,11 @@ namespace BladeCraft.Forms
          selectedTile.tileType = Tile.Type.Roof;
          selectedTile.tileset = path;
       }
+      private void setStaircaseTile(string path)
+      {
+         selectedTile.tileType = Tile.Type.Staircase;
+         selectedTile.tileset = path;
+      }
       private void setObjectTile(string path)
       {
           selectedTile.tileType = Tile.Type.Object;
@@ -175,6 +180,7 @@ namespace BladeCraft.Forms
             case "materials": onCall = setMaterialTile; break;
             case "walls": onCall = setWallTile; break;
             case "roofs": onCall = setRoofTile; break;
+            case "stairs": onCall = setStaircaseTile; break;
             case "objects": onCall = setObjectTile; break;
          }
          dirNode.Tag = onCall;
@@ -538,6 +544,10 @@ namespace BladeCraft.Forms
              else if (selectedTile.tileType == Tile.Type.Roof)
              {
                 currentTool = new RoofTool(mapFormData, mapFormTileSelection);
+             }
+             else if (selectedTile.tileType == Tile.Type.Staircase)
+             {
+                currentTool = new StaircaseTool(mapFormData, mapFormTileSelection);
              }
              else if (selectedTile.tileType == Tile.Type.Object)
              {

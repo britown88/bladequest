@@ -336,7 +336,7 @@ namespace BladeCraft.Classes.Tools
         {
             if (rhs == null) return false;
             var thisType = rhs as WallTool;
-            return thisType != null;  
+            return thisType != null;
         }
     }
 }

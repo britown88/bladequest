@@ -30,7 +30,8 @@ namespace BladeCraft.Classes
             Material,
             Wall,
             Object,
-            Roof
+            Roof,
+            Staircase
         };
 
         public static int sideLeft = 0;
