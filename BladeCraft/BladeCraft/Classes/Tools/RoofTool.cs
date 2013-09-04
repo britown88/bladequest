@@ -498,6 +498,10 @@ namespace BladeCraft.Classes.Tools
       }
       public bool handleRightClick(int x, int y)
       {
+         if (horizRoofs.Count == 0 && vertRoofs.Count == 0)
+         {
+            return false; //fall through if there are no roofs.
+         }
          //flush data
          horizRoofs.Sort();
 

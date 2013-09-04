@@ -963,7 +963,7 @@ namespace BladeCraft.Forms
 
             if (Bitmaps.bitmaps.TryGetValue(tilesetPath, out tileset))
             {
-                
+               erase = false;
                //pbTileset.Image = (Image)tileset;
                tsPanel.Width = (int)(tileset.xPixels* tsScale);
                tsPanel.Height = (int)(tileset.yPixels* tsScale);
