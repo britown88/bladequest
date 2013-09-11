@@ -24,6 +24,49 @@ namespace BladeCraft.Classes
 
    public class BQMap
    {
+
+      private enum LoadTypes
+      {
+         Header,
+         Object,
+         Unknown
+      }
+      private enum corners
+      {
+         TopRight = 1 << 0,
+         Top = 1 << 1,
+         TopLeft = 1 << 2,
+         Left = 1 << 3,
+         BottomLeft = 1 << 4,
+         Bottom = 1 << 5,
+         BottomRight = 1 << 6,
+         Right = 1 << 7
+      };
+      private int sizeX, sizeY;
+      private string name, path, displayName, BGM;
+      private bool save;
+
+      public int layerCount = 8;
+
+      private Tile[][] tileList;
+
+      public List<EncounterZone> zones;
+      public List<GameObject> objects;
+
+      public string Header { get; set;}
+      private LoadTypes loadType;
+
+      private ObjectHeader headerForm;
+      private Point[] materialPoints;
+
+      public List<Memento> undoList, redoList;
+
+      public List<Point> MatList;
+
+      public int spriteLayers = 4;
+      public List<ISprite>[] sprites;
+
+
       public class XMLMapWriter : MapWriter
       {
          XmlTextWriter xwriter;
@@ -142,43 +185,7 @@ namespace BladeCraft.Classes
          }
       }
 
-      private enum LoadTypes
-      {
-         Header,
-         Object,
-         Unknown
-      }
-      private enum corners
-      {
-         TopRight = 1 << 0,
-         Top = 1 << 1,
-         TopLeft = 1 << 2,
-         Left = 1 << 3,
-         BottomLeft = 1 << 4,
-         Bottom = 1 << 5,
-         BottomRight = 1 << 6,
-         Right = 1 << 7
-      };
-      private int sizeX, sizeY;
-      private string name, path, displayName, BGM;
-      private bool save;
 
-      public int layerCount = 8;
-
-      private Tile[][] tileList;
-
-      public List<EncounterZone> zones;
-      public List<GameObject> objects;
-
-      public string Header { get; set;}
-      private LoadTypes loadType;
-
-      private ObjectHeader headerForm;
-      private Point[] materialPoints;
-
-      public List<Memento> undoList, redoList;
-
-      public List<Point> MatList;
 
       public void openHeaderForm(System.Windows.Forms.Form parent)
       {
@@ -193,7 +200,24 @@ namespace BladeCraft.Classes
             headerForm.BringToFront();
          }
       }
-      
+      void clearSprites()
+      {
+         sprites = new List<ISprite>[spriteLayers];
+         for (int i = 0; i < spriteLayers; ++i)
+         {
+            sprites[i] = new List<ISprite>();
+         }
+      }
+      void buildBasicData()
+      {
+         clearSprites();
+
+         zones = new List<EncounterZone>();
+         objects = new List<GameObject>();
+         MatList = new List<Point>();
+         undoList = new List<Memento>();
+         redoList = new List<Memento>();
+      }
       public BQMap(string name, int x, int y, string displayName, string BGM, bool save)
       {
          this.sizeX = x;
@@ -206,27 +230,16 @@ namespace BladeCraft.Classes
 
          tileList = new Tile[layerCount][];
          for (int i = 0; i < layerCount; ++i)
+         {
             tileList[i] = new Tile[x * y];
+         }
 
-         zones = new List<EncounterZone>();
-         objects = new List<GameObject>();
-         MatList = new List<Point>();
-         undoList = new List<Memento>();
-         redoList = new List<Memento>();
+         buildBasicData();
          buildMaterialLocations();
-      }
-
-      void reset()
-      {
-         string[] values = new string[20];
-         zones = new List<EncounterZone>();
-         MatList = new List<Point>();
       }
       public BQMap(string filename)
       {
-         objects = new List<GameObject>();  //hack - not affected by undo-redo!
-         undoList = new List<Memento>();
-         redoList = new List<Memento>();
+         buildBasicData();
 
          this.path = filename;
 
@@ -237,6 +250,16 @@ namespace BladeCraft.Classes
          readObjectFile();
          buildMaterialLocations();
       }
+
+      void reset()
+      {
+         string[] values = new string[20];
+         zones = new List<EncounterZone>();
+         MatList = new List<Point>();
+
+         clearSprites();
+      }
+      
 
       private void readObjectFile()
       {
