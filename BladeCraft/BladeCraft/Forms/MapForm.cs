@@ -177,6 +177,11 @@ namespace BladeCraft.Forms
          selectedTile.tileType = Tile.Type.Pipe;
          selectedTile.tileset = path;
       }
+      private void setShadowTile(string path)
+      {
+         selectedTile.tileType = Tile.Type.Shadow;
+         selectedTile.tileset = path;
+      }
       void setSpecialHandler(TreeNode dirNode, string basePath)
       {
          Action<string> onCall = null;
@@ -186,6 +191,7 @@ namespace BladeCraft.Forms
             case "objects": onCall = setObjectTile; break;
             case "pipes": onCall = setPipeTile; break;
             case "roofs": onCall = setRoofTile; break;
+            case "shadows": onCall = setShadowTile; break;
             case "stairs": onCall = setStaircaseTile; break;
             case "walls": onCall = setWallTile; break;
          }
@@ -561,6 +567,16 @@ namespace BladeCraft.Forms
           return gridPoint;
       }
 
+      Point doublePrecisionClickedPoint(MouseEventArgs e)
+      {
+         float scale = 0.5f * tileSize * mapScale;
+         Point gridPoint = new Point();
+         gridPoint.X = (int)((e.X + scale/2) / (scale));
+         gridPoint.Y = (int)((e.Y + scale/2) / (scale));
+
+         return gridPoint;
+      }
+
       private void updateTool(MouseEventArgs e)
       {
          Tool currentTool = null;
@@ -577,6 +593,10 @@ namespace BladeCraft.Forms
              else if (selectedTile.tileType == Tile.Type.Roof)
              {
                 currentTool = new RoofTool(mapFormData, mapFormTileSelection);
+             }
+             else if (selectedTile.tileType == Tile.Type.Shadow)
+             {
+                currentTool = new ShadowTool(mapFormData, mapFormTileSelection);
              }
              else if (selectedTile.tileType == Tile.Type.Staircase)
              {
@@ -629,7 +649,14 @@ namespace BladeCraft.Forms
          {
              Point gridPoint = clickedPoint(e);
              updateTool(e);
-             if (activeTool != null) activeTool.onClick(gridPoint.X, gridPoint.Y);
+             if (activeTool != null)
+             {
+                if (activeTool.getSpecialFeatures().hasDoublePrecision())
+                {
+                   gridPoint = doublePrecisionClickedPoint(e);
+                }
+                activeTool.onClick(gridPoint.X, gridPoint.Y);
+             }
          }
       }
       private void mapPanel_MouseMove(object sender, MouseEventArgs e)
@@ -639,7 +666,14 @@ namespace BladeCraft.Forms
              gridPoint.X >= map.width() ||
              gridPoint.Y >= map.height()) return;
          updateTool(e);
-         if (activeTool != null) activeTool.mouseMove(gridPoint.X, gridPoint.Y);
+         if (activeTool != null)
+         {
+            if (activeTool.getSpecialFeatures().hasDoublePrecision())
+            {
+               gridPoint = doublePrecisionClickedPoint(e);
+            }
+            activeTool.mouseMove(gridPoint.X, gridPoint.Y);
+         }
       }
 
       private void mapPanel_MouseUp(object sender, MouseEventArgs e)
@@ -648,6 +682,10 @@ namespace BladeCraft.Forms
          updateTool(e);
          if (activeTool != null)
          {
+            if (activeTool.getSpecialFeatures().hasDoublePrecision())
+            {
+               gridPoint = doublePrecisionClickedPoint(e);
+            }
             activeTool.mouseUp(gridPoint.X, gridPoint.Y);
             map.writeMemento();
          }
@@ -704,9 +742,17 @@ namespace BladeCraft.Forms
       {
          Point gridPoint = clickedPoint(e);
          updateTool(e);
-         if (e.Button == System.Windows.Forms.MouseButtons.Right && activeTool != null && activeTool.handleRightClick(gridPoint.X, gridPoint.Y))
+         if (e.Button == System.Windows.Forms.MouseButtons.Right && activeTool != null)
          {
-            return;
+            if (activeTool.getSpecialFeatures().hasDoublePrecision())
+            {
+               Point p = doublePrecisionClickedPoint(e);
+               if (activeTool.handleRightClick(p.X, p.Y)) return;
+            }
+            else if (activeTool.handleRightClick(gridPoint.X, gridPoint.Y))
+            {
+               return;
+            }
          }
 
          if (!tsbObjectLayer.Checked)

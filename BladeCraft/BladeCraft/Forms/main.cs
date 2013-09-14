@@ -172,6 +172,7 @@ namespace BladeCraft
             loadBitmapFolder("pipes");
             loadBitmapFolder("objects");
             loadBitmapFolder("roofs");
+            loadBitmapFolder("shadows");
             loadBitmapFolder("stairs");
             loadBitmapFolder("walls");
         }
@@ -394,6 +395,7 @@ namespace BladeCraft
           addDrawNode("objects", filter, nodeSetter, directorySetter, baseNodes);
           addDrawNode("pipes", filter, nodeSetter, directorySetter, baseNodes);
           addDrawNode("roofs", filter, nodeSetter, directorySetter, baseNodes);
+          addDrawNode("shadows", filter, nodeSetter, directorySetter, baseNodes);
           addDrawNode("stairs", filter, nodeSetter, directorySetter, baseNodes);
           addDrawNode("walls", filter, nodeSetter, directorySetter, baseNodes);
 

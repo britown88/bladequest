@@ -33,7 +33,8 @@ namespace BladeCraft.Classes
             Object,
             Roof,
             Staircase,
-            Pipe
+            Pipe,
+            Shadow
         };
 
         public static int sideLeft = 0;

@@ -85,6 +85,7 @@
     <Compile Include="Classes\Tools\ObjectTool.cs" />
     <Compile Include="Classes\Tools\PipeTool.cs" />
     <Compile Include="Classes\Tools\RoofTool.cs" />
+    <Compile Include="Classes\Tools\ShadowTool.cs" />
     <Compile Include="Classes\Tools\StaircaseTool.cs" />
     <Compile Include="Classes\Tools\SwapLayerTool.cs" />
     <Compile Include="Classes\Tools\WallTool.cs" />

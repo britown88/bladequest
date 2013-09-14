@@ -31,6 +31,8 @@ namespace BladeCraft.Classes.Tools
             {
                Tile t = tileSelection.selectedTile();
 
+               if (t.tileset == null) return;
+
                foreach (var writeTile in Tile.getTilesetTiles(t.tileset, x, y, t.bmpX, t.bmpY, mapData.getCurrentLayer(), Tile.Type.Singular))
                {
                   map.writeTile(writeTile, mapData.isAnimationFrame(), t.tileset, t.bmpX, t.bmpY);
