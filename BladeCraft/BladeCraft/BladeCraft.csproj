@@ -75,6 +75,7 @@
     <Compile Include="Classes\GameObject.cs" />
     <Compile Include="Classes\MapData.cs" />
     <Compile Include="Classes\Path.cs" />
+    <Compile Include="Classes\Sprite.cs" />
     <Compile Include="Classes\Tool.cs" />
     <Compile Include="Classes\Tools\AddTileTool.cs" />
     <Compile Include="Classes\Tools\CollisionTool.cs" />
@@ -82,7 +83,9 @@
     <Compile Include="Classes\Tools\FillTool.cs" />
     <Compile Include="Classes\Tools\MaterialTool.cs" />
     <Compile Include="Classes\Tools\ObjectTool.cs" />
+    <Compile Include="Classes\Tools\PipeTool.cs" />
     <Compile Include="Classes\Tools\RoofTool.cs" />
+    <Compile Include="Classes\Tools\ShadowTool.cs" />
     <Compile Include="Classes\Tools\StaircaseTool.cs" />
     <Compile Include="Classes\Tools\SwapLayerTool.cs" />
     <Compile Include="Classes\Tools\WallTool.cs" />

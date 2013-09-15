@@ -24,6 +24,7 @@ namespace BladeCraft.Classes
            }
         }
 
+        //don't change order, stored numerically ;____________________;
         public enum Type
         {
             Singular,
@@ -31,7 +32,9 @@ namespace BladeCraft.Classes
             Wall,
             Object,
             Roof,
-            Staircase
+            Staircase,
+            Pipe,
+            Shadow
         };
 
         public static int sideLeft = 0;

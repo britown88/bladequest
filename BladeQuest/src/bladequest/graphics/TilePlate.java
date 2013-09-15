@@ -62,7 +62,6 @@ public class TilePlate
 		if (loading) return false;
 		if (loaded) return false;
 		if(tiles.size() == 0) return false;
-		loading = true;
 		if (p != null)
 		{
 			this.p = new Paint(p);	
@@ -71,6 +70,7 @@ public class TilePlate
 		{
 			this.p = null;
 		}
+		loading = true;		
 		return true;
 	}
 	
@@ -112,8 +112,6 @@ public class TilePlate
 		objects.add(go);
 	}
 	
-	public boolean Loaded() { return loaded; }
-	
 	public void Load() 
 	{
 		bmp = Global.getFreeTileBitmap();
@@ -121,13 +119,13 @@ public class TilePlate
 		empty = tiles.size() == 0;
 		Canvas canvas = new Canvas(bmp.bmp);
 		
-		if (!foreground)
+		if (foreground)
 		{
-			canvas.drawColor(Color.BLACK);	
+			canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 		}
 		else
 		{
-			canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);	
+			canvas.drawColor(Color.BLACK);		
 		}
 		
 		for (int i = 0; i < layerCount; ++i)
@@ -181,8 +179,8 @@ public class TilePlate
 					if(unloadAfterLoadFlag) return;
 					t.render(canvas, tileset, true, p);
 				}	
-			}			
-		}		
+			}
+		}
 	}
 	
 	public void Unload()

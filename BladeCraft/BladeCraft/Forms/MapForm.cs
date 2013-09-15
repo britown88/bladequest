@@ -172,16 +172,28 @@ namespace BladeCraft.Forms
           selectedTile.tileType = Tile.Type.Object;
           selectedTile.tileset = path;
       }
+      private void setPipeTile(string path)
+      {
+         selectedTile.tileType = Tile.Type.Pipe;
+         selectedTile.tileset = path;
+      }
+      private void setShadowTile(string path)
+      {
+         selectedTile.tileType = Tile.Type.Shadow;
+         selectedTile.tileset = path;
+      }
       void setSpecialHandler(TreeNode dirNode, string basePath)
       {
          Action<string> onCall = null;
          switch (basePath)
          {
             case "materials": onCall = setMaterialTile; break;
-            case "walls": onCall = setWallTile; break;
-            case "roofs": onCall = setRoofTile; break;
-            case "stairs": onCall = setStaircaseTile; break;
             case "objects": onCall = setObjectTile; break;
+            case "pipes": onCall = setPipeTile; break;
+            case "roofs": onCall = setRoofTile; break;
+            case "shadows": onCall = setShadowTile; break;
+            case "stairs": onCall = setStaircaseTile; break;
+            case "walls": onCall = setWallTile; break;
          }
          dirNode.Tag = onCall;
       }
@@ -334,7 +346,24 @@ namespace BladeCraft.Forms
          selectedTile.tileset = tilesetPath;
          tsPanel.Invalidate();
       }
+      void drawTiles(Graphics g, Rectangle frame, int startLayer, int endLayer, int currentLayer)
+      {
+         float alphaStep = 0.0f;
+         if (currentLayer < map.layerCount)
+         {
+            alphaStep = .75f / (map.layerCount - (currentLayer + 1));
+         }
 
+         for (int i = startLayer; i < endLayer; ++i)
+         {
+            float alpha = 1.0f;
+            if (i > currentLayer)
+            {
+               alpha -= alphaStep * (i - currentLayer);
+            }
+            drawTiles(g, frame, i, alpha);
+         }
+      }
       private void mapPanel_Paint(object sender, PaintEventArgs e)
       {
          Graphics g = e.Graphics;
@@ -348,28 +377,32 @@ namespace BladeCraft.Forms
             (int)(mapFrame.Height / (tileSize * mapScale))
                );
 
+            int halfLayers = map.layerCount / 2;
             if (!tsbObjectLayer.Checked)
             {
-               int belowLayers = currentLayer;
-               int aboveLayers = map.layerCount - currentLayer - 1;
+               
 
-               for (int i = 0; i < belowLayers; ++i)
-                  drawTiles(g, frame, i, 1.0f);
-
-               drawGrid(g, frame, gridPen);
-               drawTiles(g, frame, currentLayer, 1.0f);
-
-               for (int i = 1; i <= aboveLayers; ++i)
-                  drawTiles(g, frame, currentLayer + i, (1.0f-((float)i/(float)aboveLayers))*0.75f);
-
-
+               if (currentLayer < halfLayers)
+               {
+                  drawTiles(g, frame, 0, currentLayer, currentLayer);
+                  drawGrid(g, frame, gridPen);
+                  drawTiles(g, frame, currentLayer, halfLayers, currentLayer);
+                  drawTiles(g, frame, 4, map.layerCount, currentLayer);
+               }
+               else
+               {
+                  drawTiles(g, frame, 0, halfLayers, currentLayer);
+                  drawTiles(g, frame, halfLayers, currentLayer, currentLayer);
+                  drawGrid(g, frame, gridPen);
+                  drawTiles(g, frame, currentLayer, map.layerCount, currentLayer);
+               }
                if (tsbCollision.Checked)
                   drawCollision(g, frame);
             }
             else
             {
-               for (int i = 0; i < map.layerCount; ++i)
-                  drawTiles(g, frame, i, 1.0f);
+               drawTiles(g, frame, 0, halfLayers);
+               drawTiles(g, frame, halfLayers, map.layerCount);
 
                drawGrid(g, frame, gridPen);
                drawObjects(g, frame);
@@ -380,9 +413,7 @@ namespace BladeCraft.Forms
             }
 
             if (activeTool != null) activeTool.onDraw(g);
-
          }
-         
       }
 
       private void drawGrid(Graphics g, Rectangle frame, Pen pen)
@@ -413,7 +444,15 @@ namespace BladeCraft.Forms
            }
          }
       }
+      private void drawSprites(List<ISprite> sprites, Rectangle frame, float alpha)
+      {
+         ColorMatrix cm = new ColorMatrix();
+         cm.Matrix33 = alpha;
+         ImageAttributes ia = new ImageAttributes();
+         ia.SetColorMatrix(cm);
 
+
+      }
       private void drawTiles(Graphics g, Rectangle frame, int layer, float alpha)
       {
          ColorMatrix cm = new ColorMatrix();
@@ -528,6 +567,16 @@ namespace BladeCraft.Forms
           return gridPoint;
       }
 
+      Point doublePrecisionClickedPoint(MouseEventArgs e)
+      {
+         float scale = 0.5f * tileSize * mapScale;
+         Point gridPoint = new Point();
+         gridPoint.X = (int)((e.X + scale/2) / (scale));
+         gridPoint.Y = (int)((e.Y + scale/2) / (scale));
+
+         return gridPoint;
+      }
+
       private void updateTool(MouseEventArgs e)
       {
          Tool currentTool = null;
@@ -545,6 +594,10 @@ namespace BladeCraft.Forms
              {
                 currentTool = new RoofTool(mapFormData, mapFormTileSelection);
              }
+             else if (selectedTile.tileType == Tile.Type.Shadow)
+             {
+                currentTool = new ShadowTool(mapFormData, mapFormTileSelection);
+             }
              else if (selectedTile.tileType == Tile.Type.Staircase)
              {
                 currentTool = new StaircaseTool(mapFormData, mapFormTileSelection);
@@ -552,6 +605,10 @@ namespace BladeCraft.Forms
              else if (selectedTile.tileType == Tile.Type.Object)
              {
                  currentTool = new ObjectTool(mapFormData, mapFormTileSelection);
+             }
+             else if (selectedTile.tileType == Tile.Type.Pipe)
+             {
+                currentTool = new PipeTool(mapFormData, mapFormTileSelection);
              }
             if (e.Button == System.Windows.Forms.MouseButtons.Left && btnDraw.Checked)
             {
@@ -592,7 +649,14 @@ namespace BladeCraft.Forms
          {
              Point gridPoint = clickedPoint(e);
              updateTool(e);
-             if (activeTool != null) activeTool.onClick(gridPoint.X, gridPoint.Y);
+             if (activeTool != null)
+             {
+                if (activeTool.getSpecialFeatures().hasDoublePrecision())
+                {
+                   gridPoint = doublePrecisionClickedPoint(e);
+                }
+                activeTool.onClick(gridPoint.X, gridPoint.Y);
+             }
          }
       }
       private void mapPanel_MouseMove(object sender, MouseEventArgs e)
@@ -602,7 +666,14 @@ namespace BladeCraft.Forms
              gridPoint.X >= map.width() ||
              gridPoint.Y >= map.height()) return;
          updateTool(e);
-         if (activeTool != null) activeTool.mouseMove(gridPoint.X, gridPoint.Y);
+         if (activeTool != null)
+         {
+            if (activeTool.getSpecialFeatures().hasDoublePrecision())
+            {
+               gridPoint = doublePrecisionClickedPoint(e);
+            }
+            activeTool.mouseMove(gridPoint.X, gridPoint.Y);
+         }
       }
 
       private void mapPanel_MouseUp(object sender, MouseEventArgs e)
@@ -611,6 +682,10 @@ namespace BladeCraft.Forms
          updateTool(e);
          if (activeTool != null)
          {
+            if (activeTool.getSpecialFeatures().hasDoublePrecision())
+            {
+               gridPoint = doublePrecisionClickedPoint(e);
+            }
             activeTool.mouseUp(gridPoint.X, gridPoint.Y);
             map.writeMemento();
          }
@@ -667,9 +742,17 @@ namespace BladeCraft.Forms
       {
          Point gridPoint = clickedPoint(e);
          updateTool(e);
-         if (e.Button == System.Windows.Forms.MouseButtons.Right && activeTool != null && activeTool.handleRightClick(gridPoint.X, gridPoint.Y))
+         if (e.Button == System.Windows.Forms.MouseButtons.Right && activeTool != null)
          {
-            return;
+            if (activeTool.getSpecialFeatures().hasDoublePrecision())
+            {
+               Point p = doublePrecisionClickedPoint(e);
+               if (activeTool.handleRightClick(p.X, p.Y)) return;
+            }
+            else if (activeTool.handleRightClick(gridPoint.X, gridPoint.Y))
+            {
+               return;
+            }
          }
 
          if (!tsbObjectLayer.Checked)
@@ -913,7 +996,7 @@ namespace BladeCraft.Forms
             map.undo();
             mapPanel.Invalidate();
          }
-         if (e.KeyChar == 25  ) //ctrl-Y
+         if (e.KeyChar == 25) //ctrl-Y
          {
             map.redo();
             mapPanel.Invalidate();

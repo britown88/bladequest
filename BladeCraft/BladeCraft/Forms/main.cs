@@ -168,11 +168,13 @@ namespace BladeCraft
         private void loadBitmaps()
         {
             Bitmaps.bitmaps = new Dictionary<string, TileImage>();
+            loadBitmapFolder("materials");
+            loadBitmapFolder("pipes");
+            loadBitmapFolder("objects");
+            loadBitmapFolder("roofs");
+            loadBitmapFolder("shadows");
             loadBitmapFolder("stairs");
             loadBitmapFolder("walls");
-            loadBitmapFolder("roofs");
-            loadBitmapFolder("materials");
-            loadBitmapFolder("objects");
         }
 
         private void main_Load(object sender, EventArgs e)
@@ -390,10 +392,12 @@ namespace BladeCraft
           TreeNodeCollection baseNodes)
        {
           addDrawNode("materials", filter, nodeSetter, directorySetter, baseNodes);
-          addDrawNode("walls", filter, nodeSetter, directorySetter, baseNodes);
-          addDrawNode("roofs", filter, nodeSetter, directorySetter, baseNodes);
-          addDrawNode("stairs", filter, nodeSetter, directorySetter, baseNodes);
           addDrawNode("objects", filter, nodeSetter, directorySetter, baseNodes);
+          addDrawNode("pipes", filter, nodeSetter, directorySetter, baseNodes);
+          addDrawNode("roofs", filter, nodeSetter, directorySetter, baseNodes);
+          addDrawNode("shadows", filter, nodeSetter, directorySetter, baseNodes);
+          addDrawNode("stairs", filter, nodeSetter, directorySetter, baseNodes);
+          addDrawNode("walls", filter, nodeSetter, directorySetter, baseNodes);
 
        }
        public static void BuildImageTreeView(ImageTreeViewArgs args)
