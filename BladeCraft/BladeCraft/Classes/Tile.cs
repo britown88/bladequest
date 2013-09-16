@@ -43,13 +43,11 @@ namespace BladeCraft.Classes
         public static int sideBottom = 3;
         public static int numSides = 4;
 
-        public int x, y, bmpX, bmpY, animBmpX, animBmpY;
+        public int x, y, bmpX, bmpY;
         public int layer;
         public bool[] collSides;
 
         public Type tileType;
-
-        public bool animated;
         public string tileset;
 
         public Tile()
