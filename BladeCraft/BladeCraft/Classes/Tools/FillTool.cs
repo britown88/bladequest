@@ -9,7 +9,6 @@ namespace BladeCraft.Classes.Tools
    {
       MapData mapData;
       TileSelectionData selectionData;
-      bool mouseDown = false;
 
       public FillTool(MapData mapData, TileSelectionData selectionData)
       {
@@ -30,7 +29,7 @@ namespace BladeCraft.Classes.Tools
 
       public void mouseUp(int x, int y)
       {
-         mapData.getMap().fill(x, y, selectionData.selectedTile(), mapData.isAnimationFrame(), mapData.getCurrentLayer());
+         mapData.getMap().fill(x, y, selectionData.selectedTile(), mapData.getCurrentLayer());
          mapData.invalidateDraw();
       }
       public void onDraw(Graphics g) 

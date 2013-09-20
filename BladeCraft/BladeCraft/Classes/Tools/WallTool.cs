@@ -55,11 +55,10 @@ namespace BladeCraft.Classes.Tools
             string tileset = selectionData.selectedTile().tileset;
             var layer = mapData.getCurrentLayer();
 
-
-
+            map.deleteTile(x, y, mapData.getCurrentLayer());
             foreach (var writeTile in Tile.getTilesetTiles(tileset, x, y, bmpX, bmpY, layer, Tile.Type.Wall))
             {
-               map.writeTile(writeTile, mapData.isAnimationFrame(), tileset, bmpX, bmpY);
+               map.writeTile(writeTile,  tileset, bmpX, bmpY);
             }
         }
         void writeSubsection(Point p, bool diagForward, bool diagBack, bool leftWall, bool rightWall)
@@ -117,24 +116,31 @@ namespace BladeCraft.Classes.Tools
                 //diagonal walls always use at least two tiles, even if they are just one high.  This is because they're half in one tile, half in another.
                 //you also can't have rightwall && top or leftwall && bottom!
 
+               //walls are arranged in 2x5 sections.
+               
+
                 //0,0 <- leftWall && !top && !bottom
                 //1,0 <- rightWall && !top && !bottom
-                //2,0 <- no walls && !top && !bottom
-                //3,0 <- leftWall && top
                 //0,1 <- no walls && top
-                //1,1 <- rightWall && bottom
-                //2,1 <- useless
-                //3,1 <- no walls && bottom
+                //1,1 <- left wall && top
+                //0,2 <- right wall && bottom
+                //1,2 <- no walls && bottom
+                //0,3 <- no walls && !top && !bottom  (no borders)
+                //1,3 <- no walls && !top && !bottom  (top right)
+                //0,4 <- no walls && !top && !bottom  (bottom left)
+                //1,4 <- no walls && !top && !bottom  (both)
 
                 //the second set of walls are *mirrored!*
                 if (diagBack) p.Y--;
-                int baseY = diagForward ? 4 : 6;
+                int baseY = 4;
                 int wallHeight = height + 1;  //we use an extra tile because one tile is split into two halves.
                 for (int y = p.Y; y < p.Y + wallHeight; ++y)
                 {
                     int bmpY = 0, bmpX = 0;
                     bool top = y == p.Y;
                     bool bot = y == (p.Y + wallHeight - 1);
+                    bool nextTop = (y == p.Y - 1);
+                    bool nextBot = y == (p.Y + wallHeight - 2);
                     bool checkLeft = (diagForward ? leftWall : rightWall) && !bot;
                     bool checkRight = (diagForward ? rightWall : leftWall) && !top;
 
@@ -142,8 +148,8 @@ namespace BladeCraft.Classes.Tools
                     {
                         if (top)
                         {
-                            bmpX = 3;
-                            bmpY = 0;
+                            bmpX = 1;
+                            bmpY = 1;
                         }
                         else
                         {
@@ -173,13 +179,34 @@ namespace BladeCraft.Classes.Tools
                         }
                         else if (bot)
                         {
-                            bmpX = 3;
-                            bmpY = 1;
+                            bmpX = 1;
+                            bmpY = 2;
                         }
                         else
                         {
-                            bmpX = 2;
-                            bmpY = 0;
+                           if (nextTop)
+                           {
+                              if (nextBot)  //both
+                              {
+                                 bmpX = 1;
+                                 bmpY = 4;
+                              }
+                              else //only top
+                              {
+                                 bmpX = 1;
+                                 bmpY = 3;
+                              }
+                           }
+                           else if (nextBot) //only bot
+                           {
+                              bmpX = 0;
+                              bmpY = 4;
+                           }
+                           else //neither
+                           {
+                              bmpX = 0;
+                              bmpY = 3;
+                           }
                         }
                     }
                     if (diagBack)

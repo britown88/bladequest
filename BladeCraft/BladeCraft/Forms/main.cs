@@ -57,7 +57,7 @@ namespace BladeCraft
 
         private TileImage readTileImageData(string path, XmlTextReader xmlReader)
         {
-           var bmp = new TileImage(path, new Bitmap(path));
+           var bmp = new TileImage(path, Bitmaps.loadRawBitmap(path));
            loadTileImageCollision(bmp, xmlReader);
            return bmp;
         }
@@ -106,9 +106,18 @@ namespace BladeCraft
                     int bmpy = Convert.ToInt32(node.getAttribute("BmpY"));
                     string imagepath = node.getAttribute("Image");
                     int offset = Convert.ToInt32(node.getAttribute("Offset"));
+                    int frame = 0;
+                    try
+                    {
+                        frame = Convert.ToInt32(node.getAttribute("Frame"));
+                    }
+                    catch (System.Exception)
+                    {
+                     	
+                    }                    
 
                     var tileData = output.tiles[y * xSize + x];
-                    tileData.bitmaps.Add(new TileBitmap(new Bitmap(imagepath), bmpx, bmpy, imagepath, offset));
+                    tileData.bitmaps.Add(new TileBitmap(Bitmaps.loadRawBitmap(imagepath), bmpx, bmpy, imagepath, offset, frame));
                  }
               }
            }
@@ -120,12 +129,20 @@ namespace BladeCraft
         {
            loadBitmapFolderRecursive(StartupPath + "/assets/drawable/" + folder);
         }
+        private bool isNumeric(string path)
+        {
+            int num;
+            return int.TryParse(ImageTreeViewBuilder.stripPath(path),  out num);
+        }
         private void loadBitmapFolderRecursive(string folder)
         {
            foreach (var directory in System.IO.Directory.GetDirectories(folder))
            {
               loadBitmapFolderRecursive(Path.sanitize(directory));
            }
+           bool animated = true;
+           int count = 0;
+           List<string> animPaths = new List<string>();
            foreach (var p in System.IO.Directory.GetFiles(folder))
            {
               var path = Path.sanitize(p);
@@ -133,6 +150,9 @@ namespace BladeCraft
               if (ext == "png")
               {
                  var relPath = path.Substring(StartupPath.Length + 1);
+                 animPaths.Add(relPath);
+                 ++count;
+                 if (!isNumeric(relPath)) animated = false;
                  try
                  {
                     using (var reader = new XmlTextReader(path.Substring(0, path.Length - 3) + "dat"))
@@ -140,14 +160,15 @@ namespace BladeCraft
                        Bitmaps.bitmaps.Add(relPath, readTileImageData(relPath, reader));
                     }
                  }
-                 catch (System.Exception ex)
+                 catch (System.Exception )
                  {
                     //file not found LOL DICKS
-                    Bitmaps.bitmaps.Add(relPath, new TileImage(relPath, new Bitmap(path)));
+                    Bitmaps.bitmaps.Add(relPath, new TileImage(relPath, Bitmaps.loadRawBitmap(path)));
                  }
               }
               else if (ext == "mif")
               {
+                 animated = false;
                  var image = loadMacroImage(path);
                  try
                  {
@@ -163,11 +184,22 @@ namespace BladeCraft
                  Bitmaps.bitmaps.Add(path.Substring(StartupPath.Length + 1), image);
               }
            }
+           if (animated && count > 0)
+           {
+               //generate animation from this folder!
+               animPaths.Sort();
+               var relPath = folder.Substring(StartupPath.Length + 1);
+               if (count == 4 || count == 2)
+               {
+                   Bitmaps.bitmaps.Add(relPath, new TileImage(animPaths));
+               }
+           }
         }
 
         private void loadBitmaps()
         {
             Bitmaps.bitmaps = new Dictionary<string, TileImage>();
+            Bitmaps.rawBitmaps = new Dictionary<string, Bitmap>();
             loadBitmapFolder("materials");
             loadBitmapFolder("pipes");
             loadBitmapFolder("objects");
@@ -315,37 +347,43 @@ namespace BladeCraft
            macroForm.Focus();
         }
     }
-
-    public class ImageTreeViewArgs
+    public interface ImageHierarchyStrategy
     {
-       public Func<String, bool> filter;
-       public Action<TreeNode, String, String> directorySetter;
-       public Action<TreeNode, String, String> nodeSetter;
-       public TreeNodeCollection baseNodes;
-       public ImageTreeViewArgs(TreeNodeCollection baseNodes)
-       {
-          this.baseNodes = baseNodes;
-       }
-       public ImageTreeViewArgs setFilter(Func<String, bool> filter)
-       {
-          this.filter = filter;
-          return this;
-       }
-       public ImageTreeViewArgs onDirectory(Action<TreeNode, String, String> directorySetter)
-       {
-          this.directorySetter = directorySetter;
-          return this;
-       }
-       public ImageTreeViewArgs onElement(Action<TreeNode, String, String> nodeSetter)
-       {
-          this.nodeSetter = nodeSetter;
-          return this;
-       }
+        void onNode(TreeNode node, string baseFolder, string relativePath);
+        void onDirectory(TreeNode node, string baseFolder, string relativePath);
+        bool filter(string pathName);
+        void onAnimatedDirectory(TreeNode node, string baseFolder, string relativePath); //set after all are read.
+    }
+
+    class ElementHierarchyStrategy : ImageHierarchyStrategy
+    {
+        public ElementHierarchyStrategy(Action<TreeNode, string, string > action)
+        {
+            this.action = action;
+        }
+        Action<TreeNode, string , string > action;
+        public void  onNode(TreeNode node, string baseFolder, string relativePath)
+        {
+ 	        action(node, baseFolder, relativePath);
+        }
+
+        public void  onDirectory(TreeNode node, string baseFolder, string relativePath)
+        {
+        }
+
+        public bool  filter(string pathName)
+        {
+            return true;
+        }
+
+        public void  onAnimatedDirectory(TreeNode node, string baseFolder, string relativePath)
+        {
+        }
     }
 
     public static class ImageTreeViewBuilder
     {
-       static string stripPath(string path)
+       public static string stripPath(string path)
        {
 
           string mapName = path.Remove(0, path.LastIndexOf('/') + 1);
@@ -354,56 +392,53 @@ namespace BladeCraft
           return mapName;
        }
 
-       static void addDrawNode(string folderName, Func<String, bool> filter, Action<TreeNode, String, String> nodeSetter, Action<TreeNode, String, String> directorySetter, TreeNodeCollection baseNodes)
+       static void addDrawNode(string folderName, ImageHierarchyStrategy strategy, TreeNodeCollection baseNodes)
        {
-          addDrawNode(folderName, Path.sanitize(Application.StartupPath) + "/assets/drawable/" + folderName, filter, nodeSetter, directorySetter, baseNodes);
+           addDrawNode(folderName, Path.sanitize(Application.StartupPath) + "/assets/drawable/" + folderName, strategy, baseNodes);
        }
-       static void addDrawNode(string baseFolder, string folderName, Func<String, bool> filter, Action<TreeNode, String, String> nodeSetter, Action<TreeNode, String, String> directorySetter, TreeNodeCollection nodes)
+       static void addDrawNode(string baseFolder, string folderName, ImageHierarchyStrategy strategy, TreeNodeCollection nodes)
        {
           int nodeCnt = nodes.Count;
           nodes.Add(folderName.Remove(0, folderName.LastIndexOf('/') + 1));
-          if (directorySetter != null)
-          {
-             directorySetter(nodes[nodeCnt], baseFolder, folderName);
-          }
+          strategy.onDirectory(nodes[nodeCnt], baseFolder, folderName);
           foreach (var directory in System.IO.Directory.GetDirectories(folderName))
           {
-             addDrawNode(baseFolder, Path.sanitize(directory), filter, nodeSetter, directorySetter, nodes[nodeCnt].Nodes);
+             addDrawNode(baseFolder, Path.sanitize(directory), strategy, nodes[nodeCnt].Nodes);
           }
 
+          bool animatedDirectory = true;
+          int imageCount = 0;
           int i = nodes[nodeCnt].Nodes.Count;
           foreach (var p in System.IO.Directory.GetFiles(folderName))
           {
              string path = Path.sanitize(p);
              string ext = path.Substring(path.Length - 3) ;
-             if ((ext == "png" || ext == "mif") && (filter == null || filter(path)))
+             if ((ext == "png" || ext == "mif") && (strategy.filter(path)))
              {
-                nodes[nodeCnt].Nodes.Add(stripPath(path));
-                if (nodeSetter != null)
-                {
-                  nodeSetter(nodes[nodeCnt].Nodes[i++], baseFolder, path.Substring(Application.StartupPath.Length + 1));
-                }
+                ++imageCount;
+                string strippedPath = stripPath(path);
+                int num;
+                bool isNumber = int.TryParse(strippedPath, out num);
+                if (!isNumber) animatedDirectory = false;
+                nodes[nodeCnt].Nodes.Add(strippedPath);
+                strategy.onNode(nodes[nodeCnt].Nodes[i++], baseFolder, path.Substring(Application.StartupPath.Length + 1));
              }
           }
+          if (animatedDirectory && imageCount > 1)
+          {
+              strategy.onAnimatedDirectory(nodes[nodeCnt], baseFolder, folderName.Substring(Application.StartupPath.Length + 1));
+          }
        }
-       static void BuildImageTreeNode(Func<String, bool> filter, 
-          Action<TreeNode, String, String> directorySetter,
-          Action<TreeNode, String, String> nodeSetter, 
+       public static void BuildImageTreeView(ImageHierarchyStrategy strategy, 
           TreeNodeCollection baseNodes)
        {
-          addDrawNode("materials", filter, nodeSetter, directorySetter, baseNodes);
-          addDrawNode("objects", filter, nodeSetter, directorySetter, baseNodes);
-          addDrawNode("pipes", filter, nodeSetter, directorySetter, baseNodes);
-          addDrawNode("roofs", filter, nodeSetter, directorySetter, baseNodes);
-          addDrawNode("shadows", filter, nodeSetter, directorySetter, baseNodes);
-          addDrawNode("stairs", filter, nodeSetter, directorySetter, baseNodes);
-          addDrawNode("walls", filter, nodeSetter, directorySetter, baseNodes);
-
-       }
-       public static void BuildImageTreeView(ImageTreeViewArgs args)
-       {
-          if (args == null) return;
-          BuildImageTreeNode(args.filter, args.directorySetter, args.nodeSetter, args.baseNodes);
+           addDrawNode("materials", strategy, baseNodes);
+           addDrawNode("objects", strategy, baseNodes);
+           addDrawNode("pipes", strategy, baseNodes);
+           addDrawNode("roofs", strategy, baseNodes);
+           addDrawNode("shadows", strategy, baseNodes);
+           addDrawNode("stairs", strategy, baseNodes);
+           addDrawNode("walls", strategy, baseNodes);
        }
     }
 
@@ -416,15 +451,18 @@ namespace BladeCraft
           this.bitmap = rhs.bitmap;
           this.bitmapPath = rhs.bitmapPath;
           this.layerOffset = rhs.layerOffset;
+          this.frame = rhs.frame;
        }
-       public TileBitmap(Bitmap bmp, int x,int y, string bitmapPath, int layerOffset)
+       public TileBitmap(Bitmap bmp, int x,int y, string bitmapPath, int layerOffset, int frame)
        {
           this.x = x;
           this.y = y;
           this.bitmap = bmp;
           this.layerOffset = layerOffset;
           this.bitmapPath = bitmapPath;
+          this.frame = frame;
        }
+       public int frame;
        public int layerOffset;
        public int x,y;
        public string bitmapPath;
@@ -449,7 +487,7 @@ namespace BladeCraft
        {
           colLeft = colRight =  colTop = colBottom = false;
           bitmaps = new List<TileBitmap>();
-          bitmaps.Add(new TileBitmap(bmp, x, y, bitmapPath,0));
+          bitmaps.Add(new TileBitmap(bmp, x, y, bitmapPath,0, 0));
        }
        public TileInfo()
        {
@@ -497,14 +535,17 @@ namespace BladeCraft
              this.tiles.Add(new TileInfo(t));
           }
        }
+       void setSizeByBmp(Bitmap bmp)
+       {
+           GraphicsUnit pixels = GraphicsUnit.Pixel;
+           xPixels = (int)bmp.GetBounds(ref pixels).Width;
+           yPixels = (int)bmp.GetBounds(ref pixels).Height;
+       }
        public TileImage(string bitmapPath, Bitmap bmp)
        {
-          GraphicsUnit pixels = GraphicsUnit.Pixel;
-          xPixels = (int)bmp.GetBounds(ref pixels).Width;
-          yPixels = (int)bmp.GetBounds(ref pixels).Height;
+          setSizeByBmp(bmp);
           int xSize = (int)(xPixels / MapForm.tileSize);
           int ySize = (int)(yPixels / MapForm.tileSize);
-
           tiles = new List<TileInfo>();
           for (int j = 0; j < ySize; ++j)
           {
@@ -513,6 +554,28 @@ namespace BladeCraft
                 tiles.Add(new TileInfo(bitmapPath, bmp, i, j));
              }
           }
+       }
+       public TileImage(List<string> bmpPaths)
+       {
+           int step = 1;
+           if (bmpPaths.Count == 2) step = 2;
+           setSizeByBmp(Bitmaps.loadRawBitmap(bmpPaths[0]));
+           int xSize = (int)(xPixels / MapForm.tileSize);
+           int ySize = (int)(yPixels / MapForm.tileSize);
+           tiles = new List<TileInfo>();
+           for (int j = 0; j < ySize; ++j)
+           {
+               for (int i = 0; i < xSize; ++i)
+               {
+                   tiles.Add(new TileInfo());
+                   int frame = 0;
+                   foreach (var path in bmpPaths)
+                   {
+                       tiles[i + j * xSize].bitmaps.Add(new TileBitmap(Bitmaps.loadRawBitmap(path), i, j, path, 0, frame));
+                       frame += step;
+                   }
+               }
+           }
        }
        public void setCollision(int x, int y, bool left, bool right, bool top, bool bot)
        {
@@ -527,5 +590,17 @@ namespace BladeCraft
     public static class Bitmaps
     {
        public static Dictionary<string, TileImage> bitmaps;
+       public static Dictionary<string, Bitmap> rawBitmaps;
+       public static Bitmap loadRawBitmap(string path)
+       {
+           Bitmap outBitmap;
+           if (rawBitmaps.TryGetValue(path, out outBitmap))
+           {
+               return outBitmap;
+           }
+           outBitmap = new Bitmap(path);
+           rawBitmaps.Add(path, outBitmap);
+           return outBitmap;
+       }
     }
 }

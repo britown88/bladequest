@@ -47,8 +47,9 @@ namespace BladeCraft.Classes
       private bool save;
 
       public int layerCount = 8;
+      public int frameCount = 4;
 
-      private Tile[][] tileList;
+      private Tile[][][] tileList;  //Frame, Layer, Position
 
       public List<EncounterZone> zones;
       public List<GameObject> objects;
@@ -218,6 +219,20 @@ namespace BladeCraft.Classes
          undoList = new List<Memento>();
          redoList = new List<Memento>();
       }
+      void initMap()
+      {
+
+          tileList = new Tile[frameCount][][];
+
+          for (int j = 0; j < frameCount; ++j)
+          {
+              tileList[j] = new Tile[layerCount][];
+              for (int i = 0; i < layerCount; ++i)
+              {
+                  tileList[j][i] = new Tile[sizeX * sizeY];
+              }
+          }
+      }
       public BQMap(string name, int x, int y, string displayName, string BGM, bool save)
       {
          this.sizeX = x;
@@ -228,11 +243,7 @@ namespace BladeCraft.Classes
          this.save = save;
          this.BGM = BGM;
 
-         tileList = new Tile[layerCount][];
-         for (int i = 0; i < layerCount; ++i)
-         {
-            tileList[i] = new Tile[x * y];
-         }
+         initMap();
 
          buildBasicData();
          buildMaterialLocations();
@@ -266,7 +277,7 @@ namespace BladeCraft.Classes
          StreamReader reader;
          try {
             reader = new StreamReader("assets/maps/omaps/" + name + ".omap");
-         }catch (FileNotFoundException e) { return; }
+         }catch (FileNotFoundException) { return; }
          
          string line;
          loadType = LoadTypes.Unknown;
@@ -408,41 +419,34 @@ namespace BladeCraft.Classes
 
       public void updateSize(int x, int y)
       {
-         for (int i = 0; i < layerCount; ++i)
+         for (int j = 0; j < layerCount; ++j)
          {
-            Tile[] newTileList = new Tile[x * y];
+             for (int i = 0; i < layerCount; ++i)
+             {
+                 Tile[] newTileList = new Tile[x * y];
 
-            for (int j = 0; j < sizeX * sizeY && j < x * y; ++j)
-               newTileList[j] = tileList[i][j];
+                 for (int k = 0; k < sizeX * sizeY && k < x * y; ++k)
+                     newTileList[k] = tileList[j][i][k];
 
-            tileList[i] = newTileList;
+                 tileList[j][i] = newTileList;
+             }
          }
 
          sizeX = x;
          sizeY = y;
-
       }
 
       public void setSize(int x, int y)
       {
          sizeX = x;
          sizeY = y;
-         tileList = new Tile[layerCount][];
-         for (int i = 0; i < layerCount; ++i)
-            tileList[i] = new Tile[x * y];
+         initMap();
       }
 
-      public Tile writeTile(Tile tile, bool isAnimationFrame, string masterTileset, int bmpX, int bmpY)
+      public Tile writeTile(Tile tile, string masterTileset, int bmpX, int bmpY)
       {
-         if (isAnimationFrame)
-         {
-            animateTile(tile.x, tile.y, tile.bmpX, tile.bmpY, tile.tileset, tile.layer);
-         }
-         else
-         {
-            addTile(tile);
-            writeDefaultCollision(tile.x, tile.y, masterTileset, bmpX, bmpY);
-         }
+         addTile(tile);
+         writeDefaultCollision(tile.x, tile.y, masterTileset, bmpX, bmpY);
          return tile;
       }
       public Tile addTile(Tile tile)
@@ -450,43 +454,34 @@ namespace BladeCraft.Classes
          int index = tile.y * sizeX + tile.x;
 
          if (tile.x >= 0 && tile.x < sizeX && tile.y >= 0 && tile.y < sizeY)
-            tileList[tile.layer][index] = tile;
+            tileList[tile.frame][tile.layer][index] = tile;
 
          return tile;
       }
 
-      public Tile animateTile(int x, int y, int bmpX, int bmpY, string animationTileset, int layer)
-      {
-         int index = y * sizeX + x;
-         if (x >= 0 && x < sizeX && y >= 0 && y < sizeY)
-            if (tileList[layer][index] != null)
-            {
-               tileList[layer][index].animate(bmpX, bmpY);
-               return tileList[layer][index];
-            }
-
-         return null;
-               
-      }
-
       public void deleteTile(int x, int y, int layer)
       {
+          for (int i = 0; i < frameCount; ++i) deleteTile(x, y, layer, i);
+      }
+
+      public void deleteTile(int x, int y, int layer, int frame)
+      {
          int index = y * sizeX + x;
 
          if (x >= 0 && x < sizeX && y >= 0 && y < sizeY)
-            tileList[layer][index] = null;
+            tileList[frame][layer][index] = null;
       }
 
-      public Tile getTile(int x, int y, int layer) 
+      public Tile getTile(int x, int y, int layer, int frame) 
       { 
          if (x >= 0 && x < sizeX && y >= 0 && y < sizeY)
-            return tileList[layer][y*sizeX+x]; 
+             return tileList[frame][layer][y * sizeX + x]; 
          else 
             return null;
       }
       public void writeDefaultCollision(int x, int y, string tileset, int bmpX, int bmpY)
       {
-         var baseTile = getTile(x, y, 0);
+         var baseTile = getTile(x, y, 0, 0);
          if (baseTile == null) return;
 
          var bmpImage = Bitmaps.bitmaps[tileset];
@@ -501,7 +496,7 @@ namespace BladeCraft.Classes
       {
          Tile tile = null;
          if (x >= 0 && x < sizeX && y >= 0 && y < sizeY)
-            tile = tileList[layer][y * sizeX + x];
+            tile = tileList[0][layer][y * sizeX + x];
 
          if (tile == null || tile.tileset == null) return;
 
@@ -510,9 +505,9 @@ namespace BladeCraft.Classes
 
       private bool[] fillChecked;
 
-      public void fill(int x, int y, Tile t, bool frameTwo, int layer)
+      public void fill(int x, int y, Tile t, int layer)
       {
-         Tile[] tlist = tileList[layer];
+         Tile[] tlist = tileList[0][layer];
          Tile fillingTile = tlist[y * sizeX + x];
          if (fillingTile != null)
             fillingTile = new Tile(fillingTile);
@@ -527,14 +522,14 @@ namespace BladeCraft.Classes
             Point p = pList[pList.Count - 1];
             pList.RemoveAt(pList.Count - 1);
 
-            fillStep(fillingTile, p.X, p.Y, t, frameTwo, layer, pList);
+            fillStep(fillingTile, p.X, p.Y, t, layer, pList);
             
          }
       }
 
-      private void fillStep(Tile fillingTile, int x, int y, Tile fillTo, bool frameTwo, int layer, List<Point> pList)
+      private void fillStep(Tile fillingTile, int x, int y, Tile fillTo, int layer, List<Point> pList)
       {
-         Tile[] tlist = tileList[layer];
+         Tile[] tlist = tileList[0][layer];
          Tile t = tlist[y * sizeX + x];
          bool fill = false;
 
@@ -542,33 +537,24 @@ namespace BladeCraft.Classes
 
          if (fillingTile == null && t == null)
          {
-            tlist[y * sizeX + x] = new Tile(x, y, fillTo.bmpX, fillTo.bmpY, fillTo.tileset, layer);
+            tlist[y * sizeX + x] = new Tile(x, y, fillTo.bmpX, fillTo.bmpY, fillTo.tileset, layer, 0);
 
-            t = tlist[y * sizeX + x];            
+            t = tlist[y * sizeX + x];
 
             if (fillTo.IsMaterial())
-               addMaterial(t.x, t.y, fillTo.tileset, frameTwo, layer);
-            else if (frameTwo)
-               t.animate(fillTo.bmpX, fillTo.animBmpY);
+            {
+                addMaterial(t.x, t.y, fillTo.tileset, layer);
+            }
 
             fill = true;
          }
          else if (t != null && fillingTile != null && fillingTile.IsMaterial() && t.hasSameMaterial(fillingTile.tileset))
          {
             if (fillTo.IsMaterial())
-               addMaterial(t.x, t.y, fillTo.tileset, frameTwo, layer);
+               addMaterial(t.x, t.y, fillTo.tileset, layer);
             else
             {
-               if (frameTwo)
-               {
-                  t.animBmpX = fillTo.bmpX;
-                  t.animBmpY = fillTo.bmpY;
-               }
-               else
-               {
-                  tlist[y * sizeX + x] = new Tile(t.x, t.y, fillTo.bmpX, fillTo.bmpY, fillTo.tileset, layer);
-               }
-               
+                tlist[y * sizeX + x] = new Tile(t.x, t.y, fillTo.bmpX, fillTo.bmpY, fillTo.tileset, layer, 0);
             }
             fill = true;
          }
@@ -576,18 +562,10 @@ namespace BladeCraft.Classes
             t.bmpX == fillingTile.bmpX && t.bmpY == fillingTile.bmpY)
          {
              if (fillTo.IsMaterial())
-               addMaterial(t.x, t.y,fillTo.tileset, frameTwo, layer);
+               addMaterial(t.x, t.y,fillTo.tileset, layer);
             else
             {
-               if (frameTwo)
-               {
-                  t.animBmpX = fillTo.bmpX;
-                  t.animBmpY = fillTo.bmpY;
-               }
-               else
-               {
-                  tlist[y * sizeX + x] = new Tile(t.x, t.y, fillTo.bmpX, fillTo.bmpY, fillTo.tileset, layer);
-               }
+                tlist[y * sizeX + x] = new Tile(t.x, t.y, fillTo.bmpX, fillTo.bmpY, fillTo.tileset, layer, 0);
             }
             
             fill = true;
@@ -623,36 +601,35 @@ namespace BladeCraft.Classes
       public String getBGM() { return BGM; }
 
 
-      public void addMaterial(int x, int y, string tileset, bool frameTwo, int layer)
+      public void addMaterial(int x, int y, string tileset, int layer)
       {
          int index = y * sizeX + x;
-         Tile[] tlist = tileList[layer];
 
-         if (tlist[index] == null)
-            addTile(new Tile(x, y, 0, 0, tileset, layer));
-                  
-         tlist[index].addToMaterial();
-         tlist[index].tileset = tileset;
+         deleteTile(x, y, layer);
+         foreach (var materialTile in Tile.getTilesetTiles(tileset, x, y, 0, 0, layer, Tile.Type.Material))
+         {
+             addTile(materialTile);
+         }
 
-         updateMaterialTile(x - 1, y - 1, tileset, layer, frameTwo);
-         updateMaterialTile(x, y - 1, tileset, layer, frameTwo);
-         updateMaterialTile(x + 1, y - 1, tileset, layer, frameTwo);
-         updateMaterialTile(x - 1, y, tileset, layer, frameTwo);
-         updateMaterialTile(x, y, tileset, layer, frameTwo);
-         updateMaterialTile(x + 1, y, tileset, layer, frameTwo);
-         updateMaterialTile(x - 1, y + 1, tileset, layer, frameTwo);
-         updateMaterialTile(x, y + 1, tileset, layer, frameTwo);
-         updateMaterialTile(x + 1, y + 1, tileset, layer, frameTwo);
+         updateMaterialTile(x - 1, y - 1, tileset, layer);
+         updateMaterialTile(x, y - 1, tileset, layer);
+         updateMaterialTile(x + 1, y - 1, tileset, layer);
+         updateMaterialTile(x - 1, y, tileset, layer);
+         updateMaterialTile(x, y, tileset, layer);
+         updateMaterialTile(x + 1, y, tileset, layer);
+         updateMaterialTile(x - 1, y + 1, tileset, layer);
+         updateMaterialTile(x, y + 1, tileset, layer);
+         updateMaterialTile(x + 1, y + 1, tileset, layer);
 
       }
 
-      private bool hasSameMaterial(int x, int y, string tileset, int layer)
+      private bool hasSameMaterial(int x, int y, string tileset, int layer, int frame)
       {
          if (x < 0 || x >= sizeX || y < 0 || y >= sizeY)
             return true;
 
          int index = y * sizeX + x;
-         Tile[] tlist = tileList[layer];
+         Tile[] tlist = tileList[frame][layer];
          if (tlist[index] != null)
             return tlist[index].hasSameMaterial(tileset);
          else
@@ -661,8 +638,8 @@ namespace BladeCraft.Classes
 
       public void swapLayer(int x, int y, int fromLayer, int tolayer)
       {
-         Tile[] fromList = tileList[fromLayer];
-         Tile[] toList = tileList[tolayer];
+         Tile[] fromList = tileList[0][fromLayer];
+         Tile[] toList = tileList[0][tolayer];
          int index = y * sizeX + x;
          if(fromList[index] != null)
          {
@@ -674,24 +651,30 @@ namespace BladeCraft.Classes
 
          //fromList[index].
       }
-
-      private void updateMaterialTile(int x, int y, string tileSet, int layer, bool frameTwo)
+      private void updateMaterialTile(int x, int y, string tileSet, int layer)
+      {
+          foreach (var materialTile in Tile.getTilesetTiles(tileSet, x, y, 0, 0, layer, Tile.Type.Material))
+          {
+              updateMaterialTile(x, y, materialTile.tileset, layer, materialTile.frame);
+          }
+      }
+      private void updateMaterialTile(int x, int y, string tileSet, int layer, int frame)
       {
          int index = y * sizeX + x;
-         Tile[] tlist = tileList[layer];
+         Tile[] tlist = tileList[frame][layer];
 
          if (x < 0 || y < 0 || x >= sizeX || y >= sizeY || tlist[index] == null || !tlist[index].hasSameMaterial(tileSet))
             return;
 
-         bool top = y > 0 ? hasSameMaterial(x, y - 1, tileSet, layer) : true;
-         bool left = x > 0 ? hasSameMaterial(x - 1, y, tileSet, layer) : true;
-         bool right = x < sizeX - 1 ? hasSameMaterial(x + 1, y, tileSet, layer) : true;
-         bool bottom = y < sizeY - 1 ? hasSameMaterial(x, y + 1, tileSet, layer) : true;
+         bool top = y > 0 ? hasSameMaterial(x, y - 1, tileSet, layer, frame) : true;
+         bool left = x > 0 ? hasSameMaterial(x - 1, y, tileSet, layer, frame) : true;
+         bool right = x < sizeX - 1 ? hasSameMaterial(x + 1, y, tileSet, layer, frame) : true;
+         bool bottom = y < sizeY - 1 ? hasSameMaterial(x, y + 1, tileSet, layer, frame) : true;
 
-         bool topLeft = top && left && hasSameMaterial(x - 1, y - 1, tileSet, layer);
-         bool bottomLeft = bottom && left && hasSameMaterial(x - 1, y + 1, tileSet, layer);
-         bool bottomRight = bottom && right && hasSameMaterial(x + 1, y + 1, tileSet, layer);
-         bool topRight = top && right && hasSameMaterial(x + 1, y - 1, tileSet, layer);
+         bool topLeft = top && left && hasSameMaterial(x - 1, y - 1, tileSet, layer, frame);
+         bool bottomLeft = bottom && left && hasSameMaterial(x - 1, y + 1, tileSet, layer, frame);
+         bool bottomRight = bottom && right && hasSameMaterial(x + 1, y + 1, tileSet, layer, frame);
+         bool topRight = top && right && hasSameMaterial(x + 1, y - 1, tileSet, layer, frame);
 
          char flags = (char)((top ? (char)corners.Top : (char)0) | (bottom ? (char)corners.Bottom : (char)0) |
                   (right ? (char)corners.Right : (char)0) | (left ? (char)corners.Left : (char)0) |
@@ -701,13 +684,8 @@ namespace BladeCraft.Classes
 
          Point p = materialPoints[flags];
 
-         if (frameTwo)
-            animateTile(x, y, p.X, p.Y, tileSet, layer);
-         else
-         {
-            tlist[index].bmpX = p.X;
-            tlist[index].bmpY = p.Y;
-         }
+         tlist[index].bmpX = p.X;
+         tlist[index].bmpY = p.Y;
       }
 
       public void writeObjects()
@@ -747,6 +725,8 @@ namespace BladeCraft.Classes
          writer.writeAttribute("Y", t.bmpY.ToString());
          writer.endSection();
 
+         writer.writeElement("Frame", t.frame.ToString());
+
          writer.writeElement("Layer", t.layer.ToString());
 
          writer.startSection("CollisionData");
@@ -756,15 +736,7 @@ namespace BladeCraft.Classes
          writer.writeAttribute("Down", t.collSides[3].ToString());
          writer.endSection();
 
-         if (t.animated)
-         {
-            writer.startSection("AnimatedBitmapCoordinates");
-            writer.writeAttribute("X", t.animBmpX.ToString());
-            writer.writeAttribute("Y", t.animBmpY.ToString());
-            writer.endSection();
-         }
-
-          writer.writeElement("TileType", t.tileType.ToString());
+         writer.writeElement("TileType", t.tileType.ToString());
 
 
          writer.endSection();
@@ -998,9 +970,7 @@ namespace BladeCraft.Classes
                         sizeX = Convert.ToInt32(node.getAttribute("Width"));
                         sizeY = Convert.ToInt32(node.getAttribute("Height"));
 
-                        tileList = new Tile[layerCount][];
-                        for (int i = 0; i < layerCount; ++i)
-                           tileList[i] = new Tile[sizeX * sizeY];
+                        initMap();
                         break;
                      case "TileSet":
                         newTile.tileset = Path.sanitize(node.elementData());
@@ -1024,14 +994,14 @@ namespace BladeCraft.Classes
                      case "Layer":
                         newTile.layer = Convert.ToInt32(node.elementData());
                         break;
+                     case "Frame":
+                        newTile.frame = Convert.ToInt32(node.elementData());
+                        break;
                      case "CollisionData":
                         newTile.collSides[0] = Convert.ToBoolean(node.getAttribute("Left"));
                         newTile.collSides[1] = Convert.ToBoolean(node.getAttribute("Top"));
                         newTile.collSides[2] = Convert.ToBoolean(node.getAttribute("Right"));
                         newTile.collSides[3] = Convert.ToBoolean(node.getAttribute("Down"));
-                        break;
-                     case "AnimatedBitmapCoordinates":
-                        newTile.animate(Convert.ToInt32(node.getAttribute("X")), Convert.ToInt32(node.getAttribute("Y")));
                         break;
                      case "TileType":
                         newTile.tileType = (Tile.Type)Enum.Parse(typeof(Tile.Type), node.elementData());
@@ -1117,35 +1087,41 @@ namespace BladeCraft.Classes
             totalImages = 0;
          }
       }
+      IEnumerable<Tile> getAllTiles()
+      {
+          foreach (Tile[][] tilesByFrame in tileList)
+          {
+              foreach (Tile[] tilesByLayer in tilesByFrame)
+              {
+                  foreach (Tile tile in tilesByLayer)
+                  {
+                      if (tile != null && tile.tileset != null)
+                      {
+                          yield return tile;
+                      }
+                  }
+              }
+          }
+      }
       TileSet getTileData()
       {
          var output = new TileSet();
-         foreach (Tile[] tiles in tileList)
+         foreach (var t in getAllTiles())
          {
-            foreach (Tile t in tiles)
+            TileImage imageData = null;
+            if (!output.images.TryGetValue(t.tileset, out imageData))
             {
-               if (t == null || t.tileset == null) continue;
-
-               TileImage imageData = null;
-               if (!output.images.TryGetValue(t.tileset, out imageData))
-               {
-                  imageData = new TileImage();
-                  output.images.Add(t.tileset, imageData);
-                  GraphicsUnit unit = GraphicsUnit.Pixel;
-                  var tileData = Bitmaps.bitmaps[t.tileset];
-                  imageData.xSize = (int)(tileData.xPixels / 16);
-                  imageData.ySize = (int)(tileData.yPixels / 16);
-                  for (int i = 0; i < imageData.xSize * imageData.ySize; ++i)
-                  {
-                     imageData.used.Add(false);
-                  }
-               }
-               imageData.used[t.bmpX + t.bmpY * imageData.xSize] = true;
-               if (t.animated)
-               {
-                  imageData.used[t.animBmpX + t.animBmpY * imageData.xSize] = true;
-               }
+                imageData = new TileImage();
+                output.images.Add(t.tileset, imageData);
+                var tileData = Bitmaps.bitmaps[t.tileset];
+                imageData.xSize = (int)(tileData.xPixels / 16);
+                imageData.ySize = (int)(tileData.yPixels / 16);
+                for (int i = 0; i < imageData.xSize * imageData.ySize; ++i)
+                {
+                    imageData.used.Add(false);
+                }
             }
+            imageData.used[t.bmpX + t.bmpY * imageData.xSize] = true;
          }
          int idx = 0;
          foreach (TileImage t in output.images.Values)
@@ -1233,51 +1209,46 @@ namespace BladeCraft.Classes
          }
 
          //individual tiles, by layer.
-         for (int i = 0; i < 8; ++i)
+         for (int j = 0; j < frameCount; ++j)
          {
-            int count = 0;
-            foreach (Tile t in tileList[i])
-            {
-               if (t == null || t.tileset == null) continue;
+             for (int i = 0; i < layerCount; ++i)
+             {
+                 int count = 0;
+                 foreach (Tile t in tileList[j][i])
+                 {
+                     if (t == null || t.tileset == null) continue;
 
-               ++count;
-            }
+                     ++count;
+                 }
 
-            //int - number of tiles in this layer.
-            writer.Write(count);
+                 //int - number of tiles in this layer.
+                 writer.Write(count);
 
-            foreach (Tile t in tileList[i])
-            {
-               if (t == null || t.tileset == null) continue;
+                 foreach (Tile t in tileList[j][i])
+                 {
+                     if (t == null || t.tileset == null) continue;
 
-               byte collisionOut = (byte)(t.animated ? 1 : 0);
-               if (i == 0)  //layer 0 == collision
-               {
-                  //collision walls (bits, 1,2,3,4). 
-                  if (t.collSides[0]) collisionOut += 2;
-                  if (t.collSides[1]) collisionOut += 4;
-                  if (t.collSides[2]) collisionOut += 8;
-                  if (t.collSides[3]) collisionOut += 16;  
-               }
-               //byte - is this tile animated? (bit 0.)  collision data(bits 1-4).
-               writer.Write(collisionOut);
+                     if (j == 0 && i == 0)  //layer 0 == collision
+                     {
+                         int collisionOut = 0;
+                         //collision walls (bits, 1,2,3,4). 
+                         if (t.collSides[0]) collisionOut += 1;
+                         if (t.collSides[1]) collisionOut += 2;
+                         if (t.collSides[2]) collisionOut += 4;
+                         if (t.collSides[3]) collisionOut += 8;
+                         writer.Write(collisionOut);
+                     }
 
-               //two shorts - X and Y
-               writer.Write((short)t.x);
-               writer.Write((short)t.y);
+                     //two shorts - X and Y
+                     writer.Write((short)t.x);
+                     writer.Write((short)t.y);
 
-               //short - image
-               var image = tileData.images[t.tileset];
-               writer.Write((short)(image.index[t.bmpX + t.bmpY * image.xSize]));
-
-               if (t.animated)
-               {
-                  //1 short - animation image index.
-                  writer.Write((short)(image.index[t.animBmpX + t.animBmpY * image.xSize]));
-               }
-            }
+                     //short - image
+                     var image = tileData.images[t.tileset];
+                     writer.Write((short)(image.index[t.bmpX + t.bmpY * image.xSize]));
+                 }
+             }
          }
-
          //encounter zones.
          writer.Write(zones.Count);
 
@@ -1319,10 +1290,10 @@ namespace BladeCraft.Classes
          writer.writeAttribute("DisplayName", displayName);
          writer.writeAttribute("BGM", BGM);
 
-         foreach(Tile[] tList in tileList)
-            foreach (Tile t in tList) 
-               if (t != null) 
-                  writeTile(t, writer);
+         foreach (var t in getAllTiles())
+         {
+             writeTile(t, writer);
+         }
 
          foreach (EncounterZone ez in zones)
             ez.write(writer);

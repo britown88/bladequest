@@ -233,11 +233,12 @@ namespace BladeCraft.Classes.Tools
       {
          var map = mapData.getMap();
          string tileset = selectionData.selectedTile().tileset;
-         var layer = mapData.getCurrentLayer();                                                                                                                                                                                                                        
+         var layer = mapData.getCurrentLayer();
 
+         map.deleteTile(x, y, mapData.getCurrentLayer());
          foreach (var writeTile in Tile.getTilesetTiles(tileset, x, y, bmpX, bmpY, layer, Tile.Type.Shadow))
          {
-            map.writeTile(writeTile, mapData.isAnimationFrame(), tileset, bmpX, bmpY);
+            map.writeTile(writeTile, tileset, bmpX, bmpY);
          }
       } 
       void writeShadowTile(int x, int y)

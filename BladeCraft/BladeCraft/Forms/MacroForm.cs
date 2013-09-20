@@ -55,24 +55,40 @@ namespace BladeCraft.Forms
       {
          addToDirectory("assets/drawable/", MacroTreeView.Nodes);
       }
+
+      class MacroFilteredStrategy : ImageHierarchyStrategy
+      {
+          string pathFilter;
+          public MacroFilteredStrategy(string pathFilter)
+          {
+              this.pathFilter = pathFilter;
+          }
+          public void onNode(TreeNode node, string baseFolder, string relativePath)
+          {
+              node.Tag = relativePath;
+          }
+
+          public void onDirectory(TreeNode node, string baseFolder, string relativePath)
+          {
+          }
+
+          public bool filter(string pathName)
+          {
+              return pathName.Substring(pathName.Length - 3) == pathFilter;
+          }
+
+          public void onAnimatedDirectory(TreeNode node, string baseFolder, string relativePath)
+          {
+          }
+      }
+
+
       public MacroForm()
       {
          InitializeComponent();
 
-         Func<string, bool> filterPng = (path) => (path.Substring(path.Length - 3) == "png");
-         Func<string, bool> filterMif = (path) => (path.Substring(path.Length - 3) == "mif");
-
-         ImageTreeViewBuilder.BuildImageTreeView(
-                     new ImageTreeViewArgs(TileSetTreeView.Nodes)
-                     .setFilter(filterPng)
-                     .onElement((node, basePath, path) => node.Tag = path)
-                  );
-
-         ImageTreeViewBuilder.BuildImageTreeView(
-                     new ImageTreeViewArgs(MacroTreeView.Nodes)
-                     .setFilter(filterMif)
-                     .onElement((node, basePath, path) => node.Tag = path)
-                  );
+         ImageTreeViewBuilder.BuildImageTreeView(new MacroFilteredStrategy("png"), TileSetTreeView.Nodes);
+         ImageTreeViewBuilder.BuildImageTreeView(new MacroFilteredStrategy("mif"), MacroTreeView.Nodes);
 
          addNewMacroItems();
 
@@ -330,7 +346,7 @@ namespace BladeCraft.Forms
 
          var tileData = activeImage.tiles[pos.X + pos.Y * xSize];
 
-         var bmp = new TileBitmap(tileset.tiles[selX + selY * tX].bitmaps[0].bitmap, selX, selY, tileset.tiles[selX + selY * tX].bitmaps[0].bitmapPath, offsetLayer);
+         var bmp = new TileBitmap(tileset.tiles[selX + selY * tX].bitmaps[0].bitmap, selX, selY, tileset.tiles[selX + selY * tX].bitmaps[0].bitmapPath, offsetLayer, 0);
 
          foreach (var bitmap in tileData.bitmaps)
          {

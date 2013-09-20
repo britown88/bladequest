@@ -45,9 +45,10 @@ namespace BladeCraft.Classes.Tools
          string tileset = selectionData.selectedTile().tileset;
          var layer = mapData.getCurrentLayer();
 
+         map.deleteTile(x, y, mapData.getCurrentLayer());
          foreach (var writeTile in Tile.getTilesetTiles(tileset, x, y, bmpX, bmpY, layer, Tile.Type.Pipe))
          {
-            map.writeTile(writeTile, mapData.isAnimationFrame(), tileset, bmpX, bmpY);
+            map.writeTile(writeTile, tileset, bmpX, bmpY);
          }
       }
       public PipeTool(MapData mapData, TileSelectionData selectionData)

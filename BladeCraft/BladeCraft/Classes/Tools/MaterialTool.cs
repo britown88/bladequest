@@ -32,8 +32,7 @@ namespace BladeCraft.Classes.Tools
          else
          {
             Tile t = selectionData.selectedTile();
-            map.addMaterial(x, y, t.tileset,
-               mapData.isAnimationFrame(), mapData.getCurrentLayer());
+            map.addMaterial(x, y, t.tileset, mapData.getCurrentLayer());
 
             map.writeDefaultCollision(x, y, mapData.getCurrentLayer());
 

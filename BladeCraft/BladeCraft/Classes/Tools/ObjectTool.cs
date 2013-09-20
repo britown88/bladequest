@@ -40,9 +40,10 @@ namespace BladeCraft.Classes.Tools
                 {
                     for (int i = 0; i < xSize; ++i)
                     {
+                       map.deleteTile(x+i, y+j, mapData.getCurrentLayer());
                        foreach (var writeTile in Tile.getTilesetTiles(t.tileset, x + i, y + j, i , j, mapData.getCurrentLayer(), Tile.Type.Object))
                        {
-                          map.writeTile(writeTile, mapData.isAnimationFrame(), t.tileset, t.bmpX, t.bmpY);
+                          map.writeTile(writeTile, t.tileset, i, j);
                        }
                     }
                 }

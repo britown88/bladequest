@@ -26,7 +26,7 @@ namespace BladeCraft.Classes.Tools
         {
            BQMap map = mapData.getMapData().getMap();
             if (map == null) return;
-            Tile t = map.getTile(x, y, 0);
+            Tile t = map.getTile(x, y, 0, 0);
             if (t != null)
             {
                 for (int i = 0; i < Tile.numSides; ++i)

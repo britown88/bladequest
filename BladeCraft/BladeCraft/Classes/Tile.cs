@@ -17,7 +17,7 @@ namespace BladeCraft.Classes
               int offsetLayer = bmp.layerOffset + layer;
               if (offsetLayer < 8)
               {
-                 var t = new Tile(x, y, bmp.x, bmp.y, bmp.bitmapPath, offsetLayer);
+                 var t = new Tile(x, y, bmp.x, bmp.y, bmp.bitmapPath, offsetLayer, bmp.frame);
                  t.tileType = type;
                  yield return t;
               }
@@ -45,6 +45,7 @@ namespace BladeCraft.Classes
 
         public int x, y, bmpX, bmpY;
         public int layer;
+        public int frame;
         public bool[] collSides;
 
         public Type tileType;
@@ -53,11 +54,11 @@ namespace BladeCraft.Classes
         public Tile()
         {
            collSides = new bool[4];
-           animated = false;
            tileType = Type.Singular;
+           frame = 0;
         }
 
-        public Tile(int x, int y, int bmpX, int bmpY, string tileset, int layer)
+        public Tile(int x, int y, int bmpX, int bmpY, string tileset, int layer, int frame)
         {
             this.x = x;
             this.y = y;
@@ -71,17 +72,9 @@ namespace BladeCraft.Classes
 
             tileType = Type.Singular;
 
-            animated = false;
+            this.frame = frame;
             this.tileset = tileset;
         }
-
-        public void animate(int animBmpX, int animBmpY)
-        {
-            animated = true;
-            this.animBmpX = animBmpX;
-            this.animBmpY = animBmpY;
-        }
-
         public void addToMaterial()
         {
             tileType = Type.Material;
@@ -99,9 +92,7 @@ namespace BladeCraft.Classes
             this.y = t.y;
             this.bmpX = t.bmpX;
             this.bmpY = t.bmpY;
-            this.animBmpX = t.animBmpX;
-            this.animBmpY = t.animBmpY;
-            this.animated = t.animated;
+            this.frame = t.frame;
             this.tileType = t.tileType;
             this.layer = t.layer;
             this.tileset = t.tileset;

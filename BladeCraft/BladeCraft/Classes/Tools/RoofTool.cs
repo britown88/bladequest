@@ -363,7 +363,6 @@ namespace BladeCraft.Classes.Tools
       List<VertRoof> vertRoofs;
 
       Point lastPointAdded;
-      bool mouseDown = false;
 
       public RoofTool(MapData mapData, TileSelectionData tileSelection)
       {
@@ -377,7 +376,6 @@ namespace BladeCraft.Classes.Tools
       {
          lastPointAdded = new Point(x, y);
          subTool.onClick(x, y);
-         mouseDown = true;
       }
 
       public void mouseMove(int x, int y)
@@ -396,10 +394,10 @@ namespace BladeCraft.Classes.Tools
          var layer = mapData.getCurrentLayer();
 
 
-
+         map.deleteTile(x, y, mapData.getCurrentLayer());
          foreach (var writeTile in Tile.getTilesetTiles(tileset, x, y, bmpX, bmpY, layer, Tile.Type.Wall))
          {
-            map.writeTile(writeTile, mapData.isAnimationFrame(), tileset, bmpX, bmpY);
+            map.writeTile(writeTile, tileset, bmpX, bmpY);
          }
       }
       void addRoof(HorizRoof roof)
@@ -523,7 +521,6 @@ namespace BladeCraft.Classes.Tools
       }
       public void mouseUp(int x, int y)
       {
-         mouseDown = false;
       }
 
       public void onDraw(Graphics g) 

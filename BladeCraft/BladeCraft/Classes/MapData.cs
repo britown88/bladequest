@@ -13,7 +13,6 @@ namespace BladeCraft.Classes
 
    public interface MapData
    {
-      bool isAnimationFrame();
       int getCurrentLayer();
 
       BQMap getMap();

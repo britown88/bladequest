@@ -36,7 +36,7 @@ namespace BladeCraft.Forms
       {
          InitializeComponent();
 
-         collArrows = new Bitmap("misc/collarrows.png");
+         collArrows = Bitmaps.loadRawBitmap("misc/collarrows.png");
          collArrowRects = new Rectangle[4];
          collArrowRects[0] = new Rectangle(0, 0, 16, 16);
          collArrowRects[1] = new Rectangle(16, 0, 16, 16);
@@ -46,9 +46,10 @@ namespace BladeCraft.Forms
          tileset = null;
          activePath = null;
 
+
          ImageTreeViewBuilder.BuildImageTreeView(
-            new ImageTreeViewArgs(TileSetTreeView.Nodes)
-             .onElement((node, basePath, path) => node.Tag = path)
+            new ElementHierarchyStrategy((node, basePath, path) => node.Tag = path),
+            TileSetTreeView.Nodes
          );
 
          scale = 2.0f;
