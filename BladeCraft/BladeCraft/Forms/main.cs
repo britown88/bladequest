@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
+using System.IO;
 using System.Windows.Forms;
 using BladeCraft.Forms;
 using BladeCraft.Classes;
@@ -25,9 +26,76 @@ namespace BladeCraft
             //mapForm = new MapForm();
             //map = new BQMap("newmap", 30, 20, "New Map", "", false);
 
-            StartupPath = Path.sanitize(Application.StartupPath);
+            StartupPath = BladeCraft.Classes.Path.sanitize(Application.StartupPath);
  
         }
+        public static void writeString(BinaryWriter writer, string s)
+        {
+           //use null terminated strings...
+           foreach (char c in s.ToCharArray())
+           {
+              writer.Write(c);
+           }
+           writer.Write((char)0);
+       }
+        private void writeIndexRecursive(BinaryWriter writer, string prevFolder, string folder)
+        {
+           writer.Write((short)-1);
+           writeString(writer, folder.Substring(prevFolder.Length + 1));
+
+           foreach (var directory in System.IO.Directory.GetDirectories(folder))
+           {
+              writeIndexRecursive(writer, folder, BladeCraft.Classes.Path.sanitize(directory));
+           }
+
+           short fileCount = 0;
+           foreach (var p in System.IO.Directory.GetFiles(folder))
+           {
+              var ext = p.Substring(p.Length - 3);
+              if (ext == "png")
+              {
+                 ++fileCount;
+              }
+           }
+           writer.Write(fileCount);
+
+           foreach (var p in System.IO.Directory.GetFiles(folder))
+           {
+              var path = BladeCraft.Classes.Path.sanitize(p);
+              var ext = path.Substring(path.Length - 3);
+              if (ext == "png")
+              {
+                 var relPath = path.Substring(StartupPath.Length + 1);
+                 var bmp = Bitmaps.loadRawBitmap(relPath);
+
+                 GraphicsUnit pixels = GraphicsUnit.Pixel;
+                 int xPixels = (int)bmp.GetBounds(ref pixels).Width;
+                 int yPixels = (int)bmp.GetBounds(ref pixels).Height;
+
+                 //string, name
+                 //it's overkill to write the whole name here, but it's easy peasy and we can always update the indexing code in the futre.
+                 writeString(writer, path.Substring(folder.Length + 1));
+                 //two shorts, xSize, ySize
+                 writer.Write((short)xPixels);
+                 writer.Write((short)yPixels);
+              }
+           }
+       }
+       void writeDefaultIndex()
+       {
+          using (var file = File.Open("assets/graphics.index", FileMode.Create))
+          {
+             using (var writer = new BinaryWriter(file))
+             {
+                writeIndex(writer);
+             }
+          }
+       }
+       public void writeIndex(BinaryWriter writer)
+       {
+          writeIndexRecursive(writer, StartupPath + "/assets", StartupPath + "/assets/drawable");
+          writer.Write((short)-2);
+       }
 
        private class TileDataElement
        {
@@ -138,14 +206,14 @@ namespace BladeCraft
         {
            foreach (var directory in System.IO.Directory.GetDirectories(folder))
            {
-              loadBitmapFolderRecursive(Path.sanitize(directory));
+              loadBitmapFolderRecursive(BladeCraft.Classes.Path.sanitize(directory));
            }
            bool animated = true;
            int count = 0;
            List<string> animPaths = new List<string>();
            foreach (var p in System.IO.Directory.GetFiles(folder))
            {
-              var path = Path.sanitize(p);
+              var path = BladeCraft.Classes.Path.sanitize(p);
               var ext = path.Substring(path.Length - 3);
               if (ext == "png")
               {
@@ -212,6 +280,7 @@ namespace BladeCraft
         private void main_Load(object sender, EventArgs e)
         {
             loadBitmaps();
+            writeDefaultIndex();
             readMaps();
 
             //bitmapselect selectform = new bitmapselect(gamedata.bitmaps);
@@ -232,7 +301,7 @@ namespace BladeCraft
 
             foreach (String p in mapFiles)
             {
-                String path = Path.sanitize(p);
+               String path = BladeCraft.Classes.Path.sanitize(p);
                 MapForm mf = new MapForm(new BQMap(path));
                 mf.MdiParent = this;
 
@@ -394,7 +463,7 @@ namespace BladeCraft
 
        static void addDrawNode(string folderName, ImageHierarchyStrategy strategy, TreeNodeCollection baseNodes)
        {
-           addDrawNode(folderName, Path.sanitize(Application.StartupPath) + "/assets/drawable/" + folderName, strategy, baseNodes);
+          addDrawNode(folderName, BladeCraft.Classes.Path.sanitize(Application.StartupPath) + "/assets/drawable/" + folderName, strategy, baseNodes);
        }
        static void addDrawNode(string baseFolder, string folderName, ImageHierarchyStrategy strategy, TreeNodeCollection nodes)
        {
@@ -403,7 +472,7 @@ namespace BladeCraft
           strategy.onDirectory(nodes[nodeCnt], baseFolder, folderName);
           foreach (var directory in System.IO.Directory.GetDirectories(folderName))
           {
-             addDrawNode(baseFolder, Path.sanitize(directory), strategy, nodes[nodeCnt].Nodes);
+             addDrawNode(baseFolder, BladeCraft.Classes.Path.sanitize(directory), strategy, nodes[nodeCnt].Nodes);
           }
 
           bool animatedDirectory = true;
@@ -411,7 +480,7 @@ namespace BladeCraft
           int i = nodes[nodeCnt].Nodes.Count;
           foreach (var p in System.IO.Directory.GetFiles(folderName))
           {
-             string path = Path.sanitize(p);
+             string path = BladeCraft.Classes.Path.sanitize(p);
              string ext = path.Substring(path.Length - 3) ;
              if ((ext == "png" || ext == "mif") && (strategy.filter(path)))
              {

@@ -73,6 +73,8 @@ import bladequest.graphics.AnimationPosition;
 import bladequest.graphics.BattleAnim;
 import bladequest.graphics.BattleSprite;
 import bladequest.graphics.Icon;
+import bladequest.graphics.Image;
+import bladequest.graphics.ImageManager;
 import bladequest.graphics.ReactionBubble;
 import bladequest.graphics.Renderer;
 import bladequest.graphics.Scene;
@@ -92,7 +94,6 @@ import bladequest.spudquest.CardParameters;
 import bladequest.spudquest.Game;
 import bladequest.spudquest.GameParameters;
 import bladequest.spudquest.HumanPlayer;
-import bladequest.spudquest.Player;
 import bladequest.spudquest.SpudUI;
 import bladequest.spudquest.SpudUIStrategy;
 import bladequest.statuseffects.StatusEffect;
@@ -108,7 +109,7 @@ public class Global
 	public static ContextMenu contextMenu;
 	
 	private static ActionScript gameOverScript;
-	private static final String TAG = Global.class.getSimpleName();
+	public static final String TAG = Global.class.getSimpleName();
 	public static LoadingScreen loadingScreen;
 	public final static int MAX_FPS = 60;
 	public final static int FRAME_PERIOD = 1000 / MAX_FPS;
@@ -129,6 +130,7 @@ public class Global
 	
 	public static Map<String, AnimationBuilder> animationBuilders;
 	public static Map<String, Bitmap> bitmaps;
+	public static Map<String, Image> images;
 	public static Map<String, Scene> scenes;
 	public static Map<String, Sprite> sprites;
 	public static Map<String, PlayerCharacter> characters;
@@ -154,6 +156,8 @@ public class Global
 	public static PlayTimer playTimer;
 	
 	public static GameSaveLoader saveLoader;
+	
+	public static ImageManager imageManager;
 	
 	public static BqMap map;
 	private static String encounter;
@@ -1107,11 +1111,13 @@ public class Global
 	{
 		if(!appRunning)
         {
+			Log.d(TAG, "BLERDQUESRT");
+			
         	appRunning = true;        	
         	
         	properties = new WorkingPropertyMap();        	
         	saveLoader = new GameSaveLoader();
-        	
+        	imageManager = new ImageManager();
         	
         	saveLoader.registerFactory(actDisableBattleMusic.DisabledBattleMusicListener.tag, new actDisableBattleMusic.DisabledBattleMusicListenerDeserializer());
         	
@@ -1291,9 +1297,7 @@ public class Global
 		
 		InputStream is = null;
 		for(String filename : files)
-		{
-			loadBitmaps(path+"/"+filename);
-			
+		{			
 			if(filename.indexOf(".png") != -1)
 			{
 				try {is = activity.getAssets().open("drawable/" + path+"/"+filename);} catch (Exception e) {
@@ -1305,9 +1309,11 @@ public class Global
 				if(is != null)
 					bitmaps.put(path+"/"+bmpName, BitmapFactory.decodeStream(is));
 			}			
-			
-		}
-		
+			else
+			{
+				loadBitmaps(path+"/"+filename);
+			}
+		}		
 	}
 	
 	
@@ -1549,6 +1555,90 @@ public class Global
 		weaponSwingModels.put("dagger", new WeaponSwing("dagger", 0, 1));
 		weaponSwingModels.put("staff", new WeaponSwing("staff", 0, 2));
 	}
+	private static short readShort(InputStream is)
+	{
+		try {
+			int out = 0;
+			out += is.read();
+			out += is.read()  << 8;			
+			return (short)(out);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
+	private static  int readInt(InputStream is)
+	{
+		try {
+			int out = 0;
+			out += is.read(); 
+			out += is.read() << 8; 
+			out += is.read() << 16;
+			out += is.read() << 24;
+			return out ;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}	
+			
+	private static String readString(InputStream is)
+	{
+		StringBuilder s = new StringBuilder();
+		for(;;)
+		{
+			try {
+				int i = is.read();
+				if (i == 0) break;
+				s.append((char)i);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}			
+		}
+		return s.toString();
+	}	
+	private static void loadGraphicsIndex()
+	{
+		InputStream is = null;
+		try {is = activity.getAssets().open("graphics.index");} catch (Exception e) {
+			Log.d(TAG, "Unable to open graphics index!");
+			closeGame();}
+		
+		List<String> directoryStack = new ArrayList<String>();
+		String currentDirectory = null;
+		for(;;)
+		{
+			short fileCount = readShort(is); 
+			if (fileCount == -2) break; //all files loaded!
+			if (fileCount == -1) //this is a directory!
+			{
+				String s = readString(is);
+				if (directoryStack.size() != 0)
+				{
+					s = directoryStack.get(directoryStack.size()-1) + "/" + directoryStack;
+				}
+				currentDirectory = s;
+				directoryStack.add(s);
+			}
+			else
+			{
+				for (int i = 0; i < fileCount; ++i)
+				{
+					String s = readString(is);
+					short xSize = readShort(is);
+					short ySize = readShort(is);
+					images.put(currentDirectory + "/" + s, new Image(s, xSize, ySize));					
+				}
+				directoryStack.remove(directoryStack.size()-1);
+				currentDirectory = directoryStack.get(directoryStack.size()-1);				
+			}
+		} 
+		try {
+			is.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	public static void loadResources()
 	{
 		updatePaints();
@@ -1560,6 +1650,10 @@ public class Global
 		playingReactions = new HashMap<String,ReactionBubble>();
 		
 		bitmaps = new HashMap<String, Bitmap>();
+		images = new HashMap<String, Image>();
+		
+		loadGraphicsIndex();
+		
 		loadBitmaps("characters");
 		loadBitmaps("misc");
 		loadBitmaps("title");

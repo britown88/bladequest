@@ -1160,7 +1160,7 @@ namespace BladeCraft.Classes
          String output = "";
          foreach (var c in pathName.ToCharArray())
          {
-            if (c == '/')
+            if (c == '\\')
             {
                output = output + '/';
             }

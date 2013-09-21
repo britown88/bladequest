@@ -161,8 +161,8 @@ namespace BladeCraft.Classes.Tools
                     {
                         if (bot)
                         {
-                            bmpX = 1;
-                            bmpY = 1;
+                            bmpX = 0;
+                            bmpY = 2;
                         }
                         else
                         {
