@@ -59,6 +59,7 @@ namespace BladeCraft.Classes
 
       private ObjectHeader headerForm;
       private Point[] materialPoints;
+      private Point[] materialDiagPoints;
 
       public List<Memento> undoList, redoList;
 
@@ -333,6 +334,7 @@ namespace BladeCraft.Classes
       private void buildMaterialLocations()
       {
          materialPoints = new Point[1 << 8];
+         
 
 
          materialPoints[(char)corners.Bottom | (char)corners.Right | (char)corners.BottomRight] = new Point(0, 0);
@@ -391,6 +393,13 @@ namespace BladeCraft.Classes
          materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopRight] = new Point(3, 5);
          materialPoints[(char)corners.Bottom | (char)corners.Left | (char)corners.Right | (char)corners.Top | (char)corners.TopLeft] = new Point(4, 5);
 
+
+         //holds the diagonals, topleft, clockwise starting with topright, botright, botleft, topleft
+         materialDiagPoints = new Point[4];
+         materialDiagPoints[0] = new Point(6, 5);
+         materialDiagPoints[1] = new Point(5, 5);
+         materialDiagPoints[2] = new Point(8, 5);
+         materialDiagPoints[3] = new Point(7, 5);
       }
 
       public List<GameObject> getObjects(){ return objects; }
@@ -601,6 +610,25 @@ namespace BladeCraft.Classes
       public String getBGM() { return BGM; }
 
 
+      public void addDiagonalMaterialCorner(int x, int y, string tileset, int layer)
+      {
+         int index = y * sizeX + x;
+
+         deleteTile(x, y, layer);
+         
+
+         foreach (var materialTile in Tile.getTilesetTiles(tileset, x, y, 0, 0, layer, Tile.Type.Material))
+         {
+            Point matPoint = determineMaterialCorner(x, y, tileset, layer, materialTile.frame);
+            materialTile.bmpX = matPoint.X;
+            materialTile.bmpY = matPoint.Y;
+
+            addTile(materialTile);
+         }
+
+         updateSurroundingMaterialTiles(x, y, tileset, layer);   
+      }
+
       public void addMaterial(int x, int y, string tileset, int layer)
       {
          int index = y * sizeX + x;
@@ -611,16 +639,22 @@ namespace BladeCraft.Classes
              addTile(materialTile);
          }
 
+         updateMaterialTile(x, y, tileset, layer);
+         updateSurroundingMaterialTiles(x, y, tileset, layer);         
+
+      }
+
+      private void updateSurroundingMaterialTiles(int x, int y, string tileset, int layer)
+      {
          updateMaterialTile(x - 1, y - 1, tileset, layer);
          updateMaterialTile(x, y - 1, tileset, layer);
          updateMaterialTile(x + 1, y - 1, tileset, layer);
          updateMaterialTile(x - 1, y, tileset, layer);
-         updateMaterialTile(x, y, tileset, layer);
+         
          updateMaterialTile(x + 1, y, tileset, layer);
          updateMaterialTile(x - 1, y + 1, tileset, layer);
          updateMaterialTile(x, y + 1, tileset, layer);
          updateMaterialTile(x + 1, y + 1, tileset, layer);
-
       }
 
       private bool hasSameMaterial(int x, int y, string tileset, int layer, int frame)
@@ -658,14 +692,8 @@ namespace BladeCraft.Classes
               updateMaterialTile(x, y, materialTile.tileset, layer, materialTile.frame);
           }
       }
-      private void updateMaterialTile(int x, int y, string tileSet, int layer, int frame)
+      private char getMaterialFlags(int x, int y, string tileSet, int layer, int frame)
       {
-         int index = y * sizeX + x;
-         Tile[] tlist = tileList[frame][layer];
-
-         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY || tlist[index] == null || !tlist[index].hasSameMaterial(tileSet))
-            return;
-
          bool top = y > 0 ? hasSameMaterial(x, y - 1, tileSet, layer, frame) : true;
          bool left = x > 0 ? hasSameMaterial(x - 1, y, tileSet, layer, frame) : true;
          bool right = x < sizeX - 1 ? hasSameMaterial(x + 1, y, tileSet, layer, frame) : true;
@@ -681,11 +709,52 @@ namespace BladeCraft.Classes
                   (topRight ? (char)corners.TopRight : (char)0) | (bottomRight ? (char)corners.BottomRight : (char)0) |
                   (topLeft ? (char)corners.TopLeft : (char)0) | (bottomLeft ? (char)corners.BottomLeft : (char)0));
 
+         return flags;
+      }
 
-         Point p = materialPoints[flags];
+      private void updateMaterialTile(int x, int y, string tileSet, int layer, int frame)
+      {
+         int index = y * sizeX + x;
+         Tile[] tlist = tileList[frame][layer];
+
+         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY || tlist[index] == null || !tlist[index].hasSameMaterial(tileSet))
+            return;
+
+         Point p = materialPoints[getMaterialFlags(x, y, tileSet, layer, frame)];
 
          tlist[index].bmpX = p.X;
          tlist[index].bmpY = p.Y;
+      }
+
+      private Point determineMaterialCorner(int x, int y, string tileSet, int layer, int frame)
+      {
+         int index = y * sizeX + x;
+         Tile[] tlist = tileList[frame][layer];
+
+         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY)
+            return materialDiagPoints[0];
+
+         char flags = getMaterialFlags(x, y, tileSet, layer, frame);
+
+         if ((flags & (char)corners.Top) != 0)
+         {
+            if((flags & (char)corners.Right) != 0) 
+               return materialDiagPoints[2];
+
+            if ((flags & (char)corners.Left) != 0)
+               return materialDiagPoints[1];
+         }
+
+         if ((flags & (char)corners.Bottom) != 0)
+         {
+            if ((flags & (char)corners.Right) != 0)
+               return materialDiagPoints[3];
+
+            if ((flags & (char)corners.Left) != 0)
+               return materialDiagPoints[0];
+         } 
+
+         return materialDiagPoints[0];
       }
 
       public void writeObjects()

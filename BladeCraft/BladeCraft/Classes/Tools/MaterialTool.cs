@@ -5,6 +5,8 @@ using System.Text;
 
 using BladeCraft.Forms;
 
+using System.Windows.Forms;
+
 namespace BladeCraft.Classes.Tools
 {
    class MaterialTool : Tool
@@ -31,8 +33,12 @@ namespace BladeCraft.Classes.Tools
             map.deleteTile(x, y, mapData.getCurrentLayer());
          else
          {
-            Tile t = selectionData.selectedTile();
-            map.addMaterial(x, y, t.tileset, mapData.getCurrentLayer());
+            Tile t = selectionData.selectedTile();            
+            
+            if (Form.ModifierKeys == Keys.Shift)
+               map.addDiagonalMaterialCorner(x, y, t.tileset, mapData.getCurrentLayer());
+            else
+               map.addMaterial(x, y, t.tileset, mapData.getCurrentLayer());
 
             map.writeDefaultCollision(x, y, mapData.getCurrentLayer());
 
@@ -45,6 +51,7 @@ namespace BladeCraft.Classes.Tools
       {
          addMaterial(x, y);
          mouseDown = true;
+
       }
 
       public void mouseMove(int x, int y)
