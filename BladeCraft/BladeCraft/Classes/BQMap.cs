@@ -494,7 +494,12 @@ namespace BladeCraft.Classes
          if (baseTile == null) return;
 
          var bmpImage = Bitmaps.bitmaps[tileset];
-         var tileData = bmpImage.tiles[bmpX + bmpY * bmpImage.xPixels / MapForm.tileSize];
+         int dataIndex = bmpX + bmpY * bmpImage.xPixels / MapForm.tileSize;
+
+         if(dataIndex >= bmpImage.tiles.Count) 
+            return;
+
+         var tileData = bmpImage.tiles[dataIndex];
 
          baseTile.collSides[0] = baseTile.collSides[0] || tileData.colLeft;
          baseTile.collSides[1] = baseTile.collSides[1] || tileData.colRight;
@@ -619,7 +624,7 @@ namespace BladeCraft.Classes
 
          foreach (var materialTile in Tile.getTilesetTiles(tileset, x, y, 0, 0, layer, Tile.Type.Material))
          {
-            Point matPoint = determineMaterialCorner(x, y, tileset, layer, materialTile.frame);
+            Point matPoint = determineMaterialCorner(x, y, materialTile.tileset, layer, materialTile.frame);
             materialTile.bmpX = matPoint.X;
             materialTile.bmpY = matPoint.Y;
 
@@ -718,6 +723,10 @@ namespace BladeCraft.Classes
          Tile[] tlist = tileList[frame][layer];
 
          if (x < 0 || y < 0 || x >= sizeX || y >= sizeY || tlist[index] == null || !tlist[index].hasSameMaterial(tileSet))
+            return;
+
+         //don't update diagonal corners (yes this is the worst hack ever iot is 2:49AM)
+         if (tlist[index].bmpY * 9 + tlist[index].bmpX >= 50)
             return;
 
          Point p = materialPoints[getMaterialFlags(x, y, tileSet, layer, frame)];
